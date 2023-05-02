@@ -13,7 +13,16 @@
 		<DependedModule Id="CustomBattle"/>
 		<DependedModule Id="StoryMode"/>
 	</DependedModules>
-	<SubModules/>
+	<SubModules>
+	 <SubModule>
+             <Name value="DellarteDellaGuerra"/>
+             <DLLName value="DellarteDellaGuerra.dll"/>
+             <SubModuleClassType value="DellarteDellaGuerra.SubModule"/>
+             <Tags>
+                 <Tag key="DedicatedServerType" value="none" />
+                 <Tag key="IsNoRenderModeElement" value="false" />
+             </Tags>
+	 </SubModule>
 	<Xmls>
 		<XmlNode>
 			<XmlName id="CraftingPieces" path="DDG_CraftingPieces"/>
