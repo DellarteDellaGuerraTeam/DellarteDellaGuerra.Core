@@ -1,11 +1,9 @@
 <Module>
-	<Name value="DellarteDellaGuerra"/>
+	<Name value="Dellarte Della Guerra"/>
 	<Id value="DellarteDellaGuerra"/>
-	<Version value="e1.5.2"/>
-	<DefaultModule value="false"/>
+	<Version value="v1.1.1"/>
 	<SingleplayerModule value="true"/>
 	<MultiplayerModule value="false"/>
-	<Official value="false"/>
 	<DependedModules>
 		<DependedModule Id="Native"/>
 		<DependedModule Id="SandBoxCore"/>
@@ -13,7 +11,17 @@
 		<DependedModule Id="CustomBattle"/>
 		<DependedModule Id="StoryMode"/>
 	</DependedModules>
-	<SubModules/>
+	<SubModules>
+	 <SubModule>
+             <Name value="DellarteDellaGuerra"/>
+             <DLLName value="DADG_Core.dll"/>
+             <SubModuleClassType value="DADG_Core.SubModule"/>
+             <Tags>
+                 <Tag key="DedicatedServerType" value="none" />
+                 <Tag key="IsNoRenderModeElement" value="false" />
+             </Tags>
+	 </SubModule>
+	</SubModules>
 	<Xmls>
 		<XmlNode>
 			<XmlName id="CraftingPieces" path="DDG_CraftingPieces"/>
