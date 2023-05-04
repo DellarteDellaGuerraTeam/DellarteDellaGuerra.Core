@@ -23,6 +23,7 @@
                  <Tag key="IsNoRenderModeElement" value="false" />
              </Tags>
 	 </SubModule>
+	</SubModules>
 	<Xmls>
 		<XmlNode>
 			<XmlName id="CraftingPieces" path="DDG_CraftingPieces"/>
