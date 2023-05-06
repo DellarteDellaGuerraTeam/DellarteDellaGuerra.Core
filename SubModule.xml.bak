@@ -23,7 +23,6 @@
 	 </SubModule>
 	</SubModules>
 	<Xmls>
-		<!-- 
 		<XmlNode>
 			<XmlName id="CraftingPieces" path="DDG_CraftingPieces"/>
 			<IncludedGameTypes>
@@ -48,7 +47,7 @@
 								<GameType value="CustomGame"/>
 			</IncludedGameTypes>
 		</XmlNode>
-	 
+	<!-- 
 	<XmlNode>
 			<XmlName id="BodyProperties" path="DDG_BodyProperties"/>
 			<IncludedGameTypes>

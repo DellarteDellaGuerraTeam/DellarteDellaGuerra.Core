@@ -47,12 +47,14 @@ namespace DADG_Core.HarmonyPatches
         [HarmonyPatch(typeof(MapScene), "GetMapBorders")]
         public static void CustomBorders(MapScene __instance, ref Vec2 minimumPosition, ref Vec2 maximumPosition, ref float maximumHeight)
         {
-            minimumPosition = new Vec2(850, 600);
-            maximumPosition = new Vec2(1700, 1300);
+            minimumPosition = new Vec2(000, 000);
+            maximumPosition = new Vec2(1100, 1100);
             maximumHeight = 350;
         }
         
         [HarmonyPrefix]
+
+
         [HarmonyPatch(typeof(MobileParty), "RecoverPositionsForNavMeshUpdate")]
         public static bool WorldMapNavMeshDebugPatch(ref MobileParty __instance)
         {
