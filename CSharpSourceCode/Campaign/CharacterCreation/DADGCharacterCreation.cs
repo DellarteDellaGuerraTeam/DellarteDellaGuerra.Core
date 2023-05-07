@@ -27,7 +27,7 @@ namespace DADG_Core.Campaign.CharacterCreation
                     position2D = new Vec2(750f, 300f);
                     break;
                 default:
-                    position2D = new Vec2(1420.97f, 981.37f);
+                    position2D = new Vec2(750f, 300f);
                     break;
             }
             MobileParty.MainParty.Position2D = position2D;
@@ -39,7 +39,7 @@ namespace DADG_Core.Campaign.CharacterCreation
             }
         }
 
-        public override TextObject ReviewPageDescription => new TextObject("{=W6pKpEoT}You prepare to set off for a grand adventure in Calradia! Here is your character. Continue if you are ready, or go back to make changes.");
+        public override TextObject ReviewPageDescription => new TextObject("{=W6pKpEoT}You prepare to set off for a grand adventure in England! Here is your character. Continue if you are ready, or go back to make changes.");
         
         
     }
