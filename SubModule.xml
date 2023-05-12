@@ -24,31 +24,7 @@
 	</SubModules>
 	<Xmls>
 		<!-- 
-		<XmlNode>
-			<XmlName id="CraftingPieces" path="DDG_CraftingPieces"/>
-			<IncludedGameTypes>
-				<GameType value="Campaign"/>
-				<GameType value="CampaignStoryMode"/>
-								<GameType value="CustomGame"/>
-			</IncludedGameTypes>
-		</XmlNode>
-		<XmlNode>
-			<XmlName id="CraftingTemplates" path="DDG_CraftingTemplates"/>
-			<IncludedGameTypes>
-				<GameType value="Campaign"/>
-				<GameType value="CampaignStoryMode"/>
-								<GameType value="CustomGame"/>
-			</IncludedGameTypes>
-		</XmlNode>
-		<XmlNode>
-			<XmlName id="Items" path="DDG_Weapons"/>
-			<IncludedGameTypes>
-				<GameType value="Campaign"/>
-				<GameType value="CampaignStoryMode"/>
-								<GameType value="CustomGame"/>
-			</IncludedGameTypes>
-		</XmlNode>
-	 
+
 	<XmlNode>
 			<XmlName id="BodyProperties" path="DDG_BodyProperties"/>
 			<IncludedGameTypes>
@@ -57,47 +33,8 @@
 				<GameType value="CustomGame"/>
 			</IncludedGameTypes>
 		</XmlNode>
-		<XmlNode>
-			<XmlName id="NPCCharacters" path="DDG_Lords"/>
-			<IncludedGameTypes>
-				<GameType value="Campaign"/>
-				<GameType value="CampaignStoryMode"/>
-				<GameType value="CustomGame"/>
-			</IncludedGameTypes>
-		</XmlNode>
 
-		<XmlNode>
-			<XmlName id="Heroes" path="DDG_Heroes"/>
-			<IncludedGameTypes>
-				<GameType value="Campaign"/>
-				<GameType value="CampaignStoryMode"/>
-				<GameType value="CustomGame"/>
-			</IncludedGameTypes>
-		</XmlNode>
-		<XmlNode>
-			<XmlName id="Factions" path="DDG_Factions"/>
-			<IncludedGameTypes>
-				<GameType value="Campaign"/>
-				<GameType value="CampaignStoryMode"/>
-				<GameType value="CustomGame"/>
-			</IncludedGameTypes>
-		</XmlNode>
-		<XmlNode>
-			<XmlName id="Kingdoms" path="DDG_Kingdoms"/>
-			<IncludedGameTypes>
-				<GameType value="Campaign"/>
-				<GameType value="CampaignStoryMode"/>
-				<GameType value="CustomGame"/>
-			</IncludedGameTypes>
-		</XmlNode>
-		<XmlNode>
-			<XmlName id="Settlements" path="DDG_Settlements"/>
-			<IncludedGameTypes>
-				<GameType value="Campaign"/>
-				<GameType value="CampaignStoryMode"/>
-				<GameType value="CustomGame"/>
-			</IncludedGameTypes>
-		</XmlNode>
+
 			
 			<XmlNode>
 			<XmlName id="NPCCharacters" path="DDG_BattleTemplates"/>
@@ -117,17 +54,17 @@
 		</XmlNode>
 
 
+		<XmlNode>
+			<XmlName id="partyTemplates" path="dadg_pre_partyTemplates"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+				<GameType value="CustomGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
 
 		<XmlNode>
-			<XmlName id="NPCCharacters" path="Troops"/>
-			<IncludedGameTypes>
-				<GameType value="Campaign"/>
-				<GameType value="CampaignStoryMode"/>
-				<GameType value="CustomGame"/>
-			</IncludedGameTypes>
-		</XmlNode>
-	<XmlNode>
-			<XmlName id="WeaponDescriptions" path="DDG_WeaponDescriptions"/>
+			<XmlName id="partyTemplates" path="dadg_partyTemplates"/>
 			<IncludedGameTypes>
 				<GameType value="Campaign"/>
 				<GameType value="CampaignStoryMode"/>
@@ -135,7 +72,82 @@
 			</IncludedGameTypes>
 		</XmlNode>
 
+
+		<XmlNode>
+			<XmlName id="NPCCharacters" path="dadg_troops"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+				<GameType value="CustomGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+	-->		
+	
+		<!-- 
+
+
+			
+			<XmlNode>
+			<XmlName id="CraftingTemplates" path="DDG_pre_CraftingTemplates"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+								<GameType value="CustomGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+	-->	
+		<XmlNode>                
+			<XmlName id="GameText" path="dadg_module_strings"/>
+		</XmlNode>  
 		
+	<XmlNode>
+			<XmlName id="CraftingPieces" path="DDG_CraftingPieces"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+								<GameType value="CustomGame"/>
+			</IncludedGameTypes>
+		</XmlNode>		
+	
+	<XmlNode>
+			<XmlName id="Items" path="DDG_Weapons"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+								<GameType value="CustomGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+
+	
+
+		<XmlNode>
+			<XmlName id="CraftingTemplates" path="dadg_pre_crafting_templates"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+								<GameType value="CustomGame"/>
+			</IncludedGameTypes>
+		</XmlNode>	 	
+
+		<XmlNode>
+			<XmlName id="CraftingTemplates" path="dadg_crafting_templates"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+								<GameType value="CustomGame"/>
+			</IncludedGameTypes>
+		</XmlNode>	 	
+
+	<XmlNode>
+			<XmlName id="WeaponDescriptions" path="dadg_weapon_descriptions"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+				<GameType value="CustomGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+	
+			
 		<XmlNode>
 			<XmlName id="Items" path="items"/>
 			<IncludedGameTypes>
@@ -144,7 +156,7 @@
 				<GameType value="CustomGame"/>
 			</IncludedGameTypes>
 		</XmlNode>
-	-->
+
 	
 	</Xmls>
 </Module>

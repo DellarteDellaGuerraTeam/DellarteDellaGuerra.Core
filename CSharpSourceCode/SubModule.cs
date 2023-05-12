@@ -15,7 +15,7 @@ namespace DADG_Core
         }
         protected override void OnSubModuleLoad()
         {
-            CampaignTime startTime = CampaignTime.Years(1471)+CampaignTime.Weeks(5)+CampaignTime.Days(4);
+            CampaignTime startTime = CampaignTime.Years(1471)+CampaignTime.Weeks(4)+CampaignTime.Days(1);
             typeof(CampaignData).GetField("CampaignStartTime",BindingFlags.Static|BindingFlags.Public)?.SetValue(null,startTime);
             
             HarmonyInstance = new Harmony("mod.harmony.dellartedellaguerra");
