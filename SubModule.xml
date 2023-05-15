@@ -96,7 +96,25 @@
 			</IncludedGameTypes>
 		</XmlNode>
 	-->	
-		<XmlNode>                
+	
+	
+				<XmlNode>
+			<XmlName id="NPCCharacters" path="dadg_pre_joust_characters"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+				<GameType value="CustomGame"/>
+			</IncludedGameTypes>
+		</XmlNode>			<XmlNode>
+			<XmlName id="NPCCharacters" path="dadg_joust_characters"/>
+			<IncludedGameTypes>
+				<GameType value="Campaign"/>
+				<GameType value="CampaignStoryMode"/>
+				<GameType value="CustomGame"/>
+			</IncludedGameTypes>
+		</XmlNode>
+	
+	<XmlNode>                
 			<XmlName id="GameText" path="dadg_module_strings"/>
 		</XmlNode>  
 		
