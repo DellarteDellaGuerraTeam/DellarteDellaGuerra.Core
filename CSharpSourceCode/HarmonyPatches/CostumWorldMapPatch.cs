@@ -15,6 +15,20 @@ namespace DADG_Core.HarmonyPatches
     [HarmonyPatch]
     public static class CustomWorldMapPatch
     {
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(GameSceneDataManager), "LoadSPBattleScenes", argumentTypes: typeof(XmlDocument))]
+        public static void LoadSinglePlayerBattleScenes(GameSceneDataManager __instance, ref XmlDocument doc)
+        {
+            string path = Utilities.DADGPaths.DellarteDellaGuerraModuleDataPath + "dadg_battle_scenes.xml";
+            if (File.Exists(path))
+            {
+                XmlDocument moredoc = new XmlDocument();
+                moredoc.Load(path);
+                doc = moredoc;
+            }
+        }
+
+
         [HarmonyPatch(typeof(MapScene), "Load")]
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
