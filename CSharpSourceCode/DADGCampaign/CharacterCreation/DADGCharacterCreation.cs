@@ -8,14 +8,10 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
-namespace DADG_Core.Campaign.CharacterCreation
+namespace DADG_Core.DADGCampaign.CharacterCreation
 {
     public class DADGCharacterCreation : SandboxCharacterCreationContent
     {
-        
-        
-
-
         public override void OnCharacterCreationFinalized()
         {
             CultureObject culture = CharacterObject.PlayerCharacter.Culture;

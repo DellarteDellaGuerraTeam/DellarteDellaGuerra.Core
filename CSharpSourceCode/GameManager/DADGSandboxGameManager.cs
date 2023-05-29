@@ -1,4 +1,4 @@
-﻿using DADG_Core.Campaign.CharacterCreation;
+﻿using DADG_Core.DADGCampaign.CharacterCreation;
 using SandBox;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TaleWorlds.Core;
