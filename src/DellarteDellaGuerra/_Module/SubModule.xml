@@ -1,36 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- This is an auto-generated SubModule.xml file -->
 <Module>
-  <Id value="DellarteDellaGuerra" />
-  <Name value="Dell'Arte Della Guerra" />
-  <Version value="e1.0.0" />
+  <Id value="$moduleid$" />
+  <Name value="$modulename$" />
+  <Version value="e$version$" />
   <DefaultModule value="false" />
   <ModuleCategory value="Singleplayer"/>
   <ModuleType value="Community" />
   <!-- Community Dependency Metadata -->
   <DependedModules>
-    <DependedModule Id="Bannerlord.Harmony" DependentVersion="v2.3.0"/>
-    <DependedModule Id="Native" DependentVersion="v1.2.8"/>
-    <DependedModule Id="SandBoxCore" DependentVersion="v1.2.8"/>
-    <DependedModule Id="Sandbox" DependentVersion="v1.2.8"/>
-    <DependedModule Id="CustomBattle" DependentVersion="v1.2.8"/>
-    <DependedModule Id="StoryMode" DependentVersion="v1.2.8"/>
+    <DependedModule Id="Bannerlord.Harmony" DependentVersion="v$harmonyversion$"/>
+    <DependedModule Id="Native" DependentVersion="$gameversion$"/>
+    <DependedModule Id="SandBoxCore" DependentVersion="$gameversion$"/>
+    <DependedModule Id="Sandbox" DependentVersion="$gameversion$"/>
+    <DependedModule Id="CustomBattle" DependentVersion="$gameversion$"/>
+    <DependedModule Id="StoryMode" DependentVersion="$gameversion$"/>
   </DependedModules>
   <!-- Community Dependency Metadata -->
   <!-- https://github.com/BUTR/Bannerlord.BLSE#community-dependency-metadata -->
   <DependedModuleMetadatas>
-    <DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" version="v2.3.0"/>
-    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.2.8.*"/>
-    <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" version="v1.2.8.*"/>
-    <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" version="v1.2.8.*"/>
-    <DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" version="v1.2.8.*"/>
-    <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" version="v1.2.8.*"/>
+    <DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" version="v$harmonyversion$"/>
+    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="$gameversion$.*"/>
+    <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" version="$gameversion$.*"/>
+    <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" version="$gameversion$.*"/>
+    <DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" version="$gameversion$.*"/>
+    <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" version="$gameversion$.*"/>
   </DependedModuleMetadatas>
   <SubModules>
     <SubModule>
-      <Name value="DellarteDellaGuerra" />
-      <DLLName value="DellarteDellaGuerra.dll" />
-      <SubModuleClassType value="DellarteDellaGuerra.SubModule" />
+      <Name value="$moduleid$" />
+      <DLLName value="$moduleid$.dll" />
+      <SubModuleClassType value="$moduleid$.SubModule" />
       <Tags />
     </SubModule>
   </SubModules>
