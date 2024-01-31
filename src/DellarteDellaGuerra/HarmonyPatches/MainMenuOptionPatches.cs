@@ -26,7 +26,7 @@ namespace DellarteDellaGuerra.HarmonyPatches
 
         private static void OnCLick()
         {
-            MBGameManager.StartNewGame(new DADGSandboxGameManager());
+            MBGameManager.StartNewGame(new DadgGameManager());
         }
 
         private static (bool, TextObject) IsDisabledAndReason()

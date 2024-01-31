@@ -1,11 +1,11 @@
-﻿using DellarteDellaGuerra.DADGCampaign.CharacterCreation;
+﻿using DellarteDellaGuerra.DadgCampaign.CharacterCreation;
 using SandBox;
 using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TaleWorlds.Core;
 
 namespace DellarteDellaGuerra.GameManager
 {
-    public  class DADGSandboxGameManager : SandBoxGameManager
+    public  class DadgGameManager : SandBoxGameManager
     {
         public override void OnLoadFinished()
         {
@@ -15,7 +15,7 @@ namespace DellarteDellaGuerra.GameManager
 
         private void LaunchCharacterCreation()
         {
-            var gameState = Game.Current.GameStateManager?.CreateState<CharacterCreationState>(new DADGCharacterCreation());
+            var gameState = Game.Current.GameStateManager?.CreateState<CharacterCreationState>(new DadgCharacterCreation());
             Game.Current.GameStateManager?.CleanAndPushState(gameState);
         }
     }
