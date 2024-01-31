@@ -6,12 +6,13 @@ using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 
-namespace DellarteDellaGuerra.DADGCampaign.CharacterCreation
+namespace DellarteDellaGuerra.DadgCampaign.CharacterCreation
 {
-    public class DADGCharacterCreation : SandboxCharacterCreationContent
+    public class DadgCharacterCreation : SandboxCharacterCreationContent
     {
         public override void OnCharacterCreationFinalized()
         {
+            
             CultureObject culture = CharacterObject.PlayerCharacter.Culture;
             Vec2 position2D = default(Vec2);
 

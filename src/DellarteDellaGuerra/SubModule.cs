@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using DellarteDellaGuerra.DadgCampaign;
 using DellarteDellaGuerra.Logging;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
@@ -17,6 +18,12 @@ namespace DellarteDellaGuerra
     {
         private static readonly NLog.Logger Logger = LoggerFactory.GetLogger<SubModule>();
         private static readonly Harmony Harmony = new ("mod.harmony.dellartedellaguerra");
+        private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler;
+
+        public SubModule()
+        {
+            _campaignBehaviourDisabler = new CampaignBehaviourDisabler();
+        }
     
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
@@ -39,6 +46,7 @@ namespace DellarteDellaGuerra
         {
             base.OnGameInitializationFinished(game);
             LoadDadgBattleScenes();
+            _campaignBehaviourDisabler.Disable(Campaign.Current.CampaignBehaviorManager);
         }
 
         protected override void OnSubModuleUnloaded()
