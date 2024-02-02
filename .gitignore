@@ -93,3 +93,6 @@ ipch/
 #bannerlord
 AssetPackages/
 Shaders/
+
+#DADG
+/config/

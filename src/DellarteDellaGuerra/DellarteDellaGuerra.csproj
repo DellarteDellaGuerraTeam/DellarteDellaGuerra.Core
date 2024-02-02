@@ -40,9 +40,12 @@
 
   <Target Name="Copy config files to bin folder" BeforeTargets="BeforeBuild">
     <ItemGroup>
+      <ConfigFolderOutput Include="$(MSBuildThisFileDirectory)..\..\config\" />
       <LogConfigFile Include="$(MSBuildThisFileDirectory)..\config\nlog.$(Env).config" />
-    </ItemGroup>
-    <Copy SourceFiles="@(LogConfigFile)" DestinationFiles="$(MSBuildThisFileDirectory)$(outputPath)\nlog.config" />
+      <DadgConfigFile Include="$(MSBuildThisFileDirectory)..\config\dadg.config.xml" />
+    </ItemGroup>    
+    <Copy SourceFiles="@(LogConfigFile)" DestinationFiles="$(MSBuildThisFileDirectory)..\..\config\nlog.config" />
+    <Copy SourceFiles="@(DadgConfigFile)" DestinationFolder="$(MSBuildThisFileDirectory)..\..\config" />
   </Target>
 
 </Project>

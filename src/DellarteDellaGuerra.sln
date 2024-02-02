@@ -31,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{9D03C9
 	ProjectSection(SolutionItems) = preProject
 		config\nlog.dev.config = config\nlog.dev.config
 		config\nlog.prod.config = config\nlog.prod.config
+		config\dadg.config.xml = config\dadg.config.xml
 	EndProjectSection
 EndProject
 Global
