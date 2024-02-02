@@ -1,13 +1,12 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
+using DellarteDellaGuerra.Configuration.Providers;
 using NLog;
-using TaleWorlds.MountAndBlade;
 
 namespace DellarteDellaGuerra.Logging;
 
 public static class LoggerFactory
 {
-    private const string LogConfigFileName = "nlog.config";
+    private static readonly IConfigurationProvider<string> ConfigProvider = new LoggerConfigPathProvider();
 
     /**
      * <summary>
@@ -24,22 +23,8 @@ public static class LoggerFactory
      */
     public static Logger GetLogger<T>()
     {
-        var configFilePath = GetConfigurationFilePath();
         var shortenedLoggerName = ShortenLoggerName(typeof(T).FullName ?? string.Empty);
-        return LogManager.Setup().LoadConfigurationFromFile(configFilePath).GetLogger(shortenedLoggerName);
-    }
-
-    private static string? GetConfigurationFilePath()
-    {
-        var fullSubModuleName = typeof(SubModule).FullName;
-        if (string.IsNullOrWhiteSpace(fullSubModuleName))
-        {
-            return null;
-        }
-        var assemblyPath = Module.CurrentModule?.GetSubModule(fullSubModuleName).Assembly.Location;
-        return string.IsNullOrWhiteSpace(assemblyPath)
-            ? null
-            : Path.Combine(Directory.GetParent(assemblyPath)?.FullName ?? string.Empty, LogConfigFileName);
+        return LogManager.Setup().LoadConfigurationFromFile(ConfigProvider.Config).GetLogger(shortenedLoggerName);
     }
 
     private static string ShortenLoggerName(string loggerName, int namespaceLimit = 1, int loggerNameLimit = 30)
