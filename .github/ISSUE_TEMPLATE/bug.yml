@@ -1,0 +1,57 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: "Provide a clear and concise description of what the bug is.\nDo not hesitate to drag screenshots or a crash report in the text area."
+      placeholder: Tell us what you see!
+      value: "A bug happened!"
+    validations:
+      required: true
+  - type: textarea
+    id: how-to-reproduce
+    attributes:
+      label: How can it be reproduced ?
+      description: "Provide the steps to reproduce the problem.\nDo not hesitate to drag a save file and/or screenshots in the text area."
+      placeholder: Tell us how you did it!
+      value: "Example:\n1. Go to '...'\n2. Click on '....'\n3. Scroll down to '....'\n4. See error"
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behaviour
+    attributes:
+      label: What is the expected behaviour ?
+      description: Provide a description of what you expected to happen.
+      placeholder: Tell us what you expected!
+      value: "It should ..."
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context.
+      description: You can tag other issues here, add workarounds and other useful information.
+  - type: input
+    id: bannerlord-version
+    attributes:
+      label: Bannerlord version
+      description: What was the version of Bannerlord when you encountered this issue ?
+      placeholder: ex. v1.2.8
+    validations:
+      required: true
+  - type: input
+    id: dadg-version
+    attributes:
+      label: DellarteDellaGuerra version
+      description: What was the version of the DellarteDellaGuerra module when you encountered this issue ?
+      placeholder: ex. e1.0.0
+    validations:
+      required: true
