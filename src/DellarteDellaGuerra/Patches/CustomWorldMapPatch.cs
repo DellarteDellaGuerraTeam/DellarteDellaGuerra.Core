@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection.Emit;
-using System.Xml;
 using HarmonyLib;
 using SandBox;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
 
-namespace DellarteDellaGuerra.HarmonyPatches
+namespace DellarteDellaGuerra.Patches
 {
     [HarmonyPatch]
     public static class CustomWorldMapPatch
@@ -45,21 +41,21 @@ namespace DellarteDellaGuerra.HarmonyPatches
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(MapScene), "GetMapBorders")]
-        public static void CustomBorders(MapScene __instance, ref Vec2 minimumPosition, ref Vec2 maximumPosition, ref float maximumHeight)
+        public static void CustomBorders(ref Vec2 minimumPosition, ref Vec2 maximumPosition, ref float maximumHeight)
         {
-            minimumPosition = new Vec2(000, 000);
-            maximumPosition = new Vec2(1100, 1100);
-            maximumHeight = 350;
+            minimumPosition = new Vec2(0f, 0f);
+            maximumPosition = new Vec2(1100f, 1100f);
+            maximumHeight = 350f;
         }
-        
+
         [HarmonyPrefix]
         [HarmonyPatch(typeof(MobileParty), "RecoverPositionsForNavMeshUpdate")]
         public static bool WorldMapNavMeshDebugPatch(ref MobileParty __instance)
         {
-            if (!__instance.Position2D.IsNonZero() || !PartyBase.IsPositionOkForTraveling(__instance.Position2D))
+            if (Settlement.All.Count > 0 && (!__instance.Position2D.IsNonZero() || !PartyBase.IsPositionOkForTraveling(__instance.Position2D)))
             {
                 //teleport party to a valid navmesh position.
-                __instance.Position2D = Settlement.All.First().GatePosition;
+                __instance.Position2D = Settlement.All[0].GatePosition;
             }
             return true;
         }

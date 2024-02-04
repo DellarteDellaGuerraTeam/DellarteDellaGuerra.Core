@@ -6,7 +6,7 @@ using HarmonyLib;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 
-namespace DellarteDellaGuerra.HarmonyPatches
+namespace DellarteDellaGuerra.Patches
 {
     [HarmonyPatch]
     public class MainMenuOptionPatches

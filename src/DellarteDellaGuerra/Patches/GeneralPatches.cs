@@ -6,7 +6,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade.View;
 
-namespace DellarteDellaGuerra.HarmonyPatches
+namespace DellarteDellaGuerra.Patches
 {
     [HarmonyPatch]
     public static class GeneralPatches

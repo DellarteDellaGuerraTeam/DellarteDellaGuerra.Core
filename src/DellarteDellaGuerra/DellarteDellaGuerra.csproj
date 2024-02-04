@@ -15,8 +15,6 @@
   
   <!-- Project properties -->
   <PropertyGroup>
-    <GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Win64_Shipping_Client\Bannerlord.exe')">Win64_Shipping_Client</GameBinariesFolder>
-    <GameBinariesFolder Condition="Exists('$(GameFolder)\bin\Gaming.Desktop.x64_Shipping_Client\Bannerlord.exe')">Gaming.Desktop.x64_Shipping_Client</GameBinariesFolder>
     <Env Condition="'$(Configuration)'=='Release'">prod</Env>
     <Env Condition="'$(Configuration)'=='Debug'">dev</Env>
   </PropertyGroup>
@@ -39,11 +37,12 @@
   </ItemGroup>
 
   <Target Name="Copy config files to bin folder" BeforeTargets="BeforeBuild">
+    <Message Importance="high" Text="Copy config files to bin folder" />
     <ItemGroup>
       <ConfigFolderOutput Include="$(MSBuildThisFileDirectory)..\..\config\" />
       <LogConfigFile Include="$(MSBuildThisFileDirectory)..\config\nlog.$(Env).config" />
       <DadgConfigFile Include="$(MSBuildThisFileDirectory)..\config\dadg.config.xml" />
-    </ItemGroup>    
+    </ItemGroup>
     <Copy SourceFiles="@(LogConfigFile)" DestinationFiles="$(MSBuildThisFileDirectory)..\..\config\nlog.config" />
     <Copy SourceFiles="@(DadgConfigFile)" DestinationFolder="$(MSBuildThisFileDirectory)..\..\config" />
   </Target>
