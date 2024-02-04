@@ -22,6 +22,6 @@ public class LoggerConfigPathProvider : IConfigurationProvider<string>
      */
     public string Config
     {
-        get => Path.Combine(FolderLocator.GetConfigurationFolder(), LogConfigFileName);
+        get => Path.Combine(ResourceLocator.GetConfigurationFolderPath(), LogConfigFileName);
     }
 }

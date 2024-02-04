@@ -27,7 +27,7 @@ public class DadgConfigWatcher : IConfigurationProvider<DadgConfig>
         // TODO - correctly dispose of the watcher
         var watcher = new FileSystemWatcher
         {
-            Path = FolderLocator.GetConfigurationFolder(),
+            Path = ResourceLocator.GetConfigurationFolderPath(),
             Filter = ConfigFileName,
             NotifyFilter = NotifyFilters.LastWrite,
             EnableRaisingEvents = true
@@ -54,7 +54,7 @@ public class DadgConfigWatcher : IConfigurationProvider<DadgConfig>
 
     private void LoadConfig()
     {
-        var configPath = Path.Combine(FolderLocator.GetConfigurationFolder(), ConfigFileName);
+        var configPath = Path.Combine(ResourceLocator.GetConfigurationFolderPath(), ConfigFileName);
         var serialiser = new XmlSerializer(typeof(DadgConfig));
         try
         {
