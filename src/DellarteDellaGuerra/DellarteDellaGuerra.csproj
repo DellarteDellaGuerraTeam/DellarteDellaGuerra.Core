@@ -12,7 +12,7 @@
     <ModuleId>$(MSBuildProjectName)</ModuleId>
     <ModuleName>Dell'Arte Della Guerra</ModuleName>
   </PropertyGroup>
-  
+
   <!-- Project properties -->
   <PropertyGroup>
     <Env Condition="'$(Configuration)'=='Release'">prod</Env>

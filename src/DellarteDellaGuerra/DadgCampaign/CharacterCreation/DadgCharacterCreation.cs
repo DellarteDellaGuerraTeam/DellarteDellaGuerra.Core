@@ -1,5 +1,4 @@
-﻿using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.CharacterCreationContent;
+﻿using TaleWorlds.CampaignSystem.CharacterCreationContent;
 using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
@@ -12,22 +11,9 @@ namespace DellarteDellaGuerra.DadgCampaign.CharacterCreation
     {
         public override void OnCharacterCreationFinalized()
         {
-            
-            CultureObject culture = CharacterObject.PlayerCharacter.Culture;
-            Vec2 position2D = default(Vec2);
-
-            switch (culture.StringId)
-            {
-                case "vlandia":
-                    position2D = new Vec2(750f, 300f);
-                    break;
-                default:
-                    position2D = new Vec2(750f, 300f);
-                    break;
-            }
-            MobileParty.MainParty.Position2D = position2D;
-            MapState mapState;
-            if ((mapState = (GameStateManager.Current.ActiveState as MapState)) != null)
+            MobileParty.MainParty.Position2D = new Vec2(750f, 300f);;
+            GameState? gameState = GameStateManager.Current?.ActiveState;
+            if (gameState is MapState mapState)
             {
                 mapState.Handler.ResetCamera(true, true);
                 mapState.Handler.TeleportCameraToMainParty();
