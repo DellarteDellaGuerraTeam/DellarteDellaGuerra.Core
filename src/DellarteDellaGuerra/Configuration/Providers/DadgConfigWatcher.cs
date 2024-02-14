@@ -13,28 +13,15 @@ namespace DellarteDellaGuerra.Configuration.Providers;
  *  Detects changes in the mod's configuration file and updates the in-memory configuration accordingly.
  *  <br/>
  *  <br/>
- * The configuration file is expected to be named "dadg.config.xml" and should be located in mod's root config folder.
+ * The configuration file is expected to be named "dadg.config.xml" and should be located in the mod's root config folder.
  * </summary>
  */
 public class DadgConfigWatcher : IConfigurationProvider<DadgConfig>
 {
-    private static readonly Logger Logger = LoggerFactory.GetLogger<DadgConfigWatcher>();
     private const string ConfigFileName = "dadg.config.xml";
-    private DadgConfig? _config;
-
-    public DadgConfigWatcher()
-    {
-        // TODO - correctly dispose of the watcher
-        var watcher = new FileSystemWatcher
-        {
-            Path = ResourceLocator.GetConfigurationFolderPath(),
-            Filter = ConfigFileName,
-            NotifyFilter = NotifyFilters.LastWrite,
-            EnableRaisingEvents = true
-        };
-        watcher.Changed += OnConfigChanged;
-        LoadConfig();
-    }
+    private static readonly Logger Logger = LoggerFactory.GetLogger<DadgConfigWatcher>();
+    private static readonly FileSystemWatcher? ConfigWatcher = InitialiseConfigWatcher();
+    private static DadgConfig? _config;
 
     /**
      * <summary>
@@ -42,30 +29,62 @@ public class DadgConfigWatcher : IConfigurationProvider<DadgConfig>
      * </summary>
      * 
      */
-    public DadgConfig? Config
+    public DadgConfig? Config => _config;
+
+    /**
+     * <summary>
+     * Disposes of the configuration watcher.
+     * </summary>
+     */
+    public static void Destroy()
     {
-        get => _config;
+        ConfigWatcher?.Dispose();
     }
 
-    private void OnConfigChanged(object sender, FileSystemEventArgs e)
+    private static FileSystemWatcher? InitialiseConfigWatcher()
+    {
+        string? configFolderPath = ResourceLocator.GetConfigurationFolderPath();
+        if (configFolderPath == null)
+        {
+            Logger.Warn("No configuration folder found");
+            return null;
+        }
+        var watcher = new FileSystemWatcher
+        {
+            Path = configFolderPath,
+            Filter = ConfigFileName,
+            NotifyFilter = NotifyFilters.LastWrite,
+            EnableRaisingEvents = true
+        };
+        watcher.Changed += OnConfigChanged;
+        watcher.Created += OnConfigChanged;
+        LoadConfig();
+        return watcher;
+    }
+
+    private static void OnConfigChanged(object sender, FileSystemEventArgs e)
     {
         LoadConfig();
     }
 
-    private void LoadConfig()
+    private static void LoadConfig()
     {
-        var configPath = Path.Combine(ResourceLocator.GetConfigurationFolderPath(), ConfigFileName);
+        // Config file exists as a change was detected 
+        string configFolderPath = ResourceLocator.GetConfigurationFolderPath()!;
+        var configPath = Path.Combine(configFolderPath, ConfigFileName);
         var serialiser = new XmlSerializer(typeof(DadgConfig));
+
         try
         {
             using var writer = new FileStream(configPath, FileMode.Open);
-            _config = (DadgConfig)serialiser.Deserialize(writer);
+            _config = (DadgConfig) serialiser.Deserialize(writer);
         }
         catch (InvalidOperationException e)
         {
             Logger.Error("Failed to parse config file: {}", e.InnerException);
         }
-        catch(IOException e) {
+        catch (IOException e)
+        {
             Logger.Error("Failed to read config file: {}", e);
         }
     }

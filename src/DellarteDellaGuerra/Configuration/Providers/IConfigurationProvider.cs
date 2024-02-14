@@ -15,9 +15,9 @@ public interface IConfigurationProvider<out T>
      * <summary>
      *  Gets the configuration.
      * </summary>
-     * <param name="T">
-     * The type of the configuration.
-     * </param>
+     * <returns>
+     * The configuration or null if the configuration is not available.
+     * </returns>
      */
     public T? Config
     {

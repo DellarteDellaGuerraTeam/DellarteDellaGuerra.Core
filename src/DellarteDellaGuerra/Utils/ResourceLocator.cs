@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using DellarteDellaGuerra.Logging;
+using NLog;
 using TaleWorlds.ModuleManager;
 
 namespace DellarteDellaGuerra.Utils;
@@ -12,16 +14,17 @@ namespace DellarteDellaGuerra.Utils;
  */
 public static class ResourceLocator
 {
-    private static string? GetModuleDataFile(string filename)
+    /**
+     * <summary>
+     * Gets the existing path to the mod's folder.
+     * </summary>
+     * <returns>
+     * The first found where the submodule id is valid, return null otherwise.
+     * </returns>
+     */
+    public static string? GetModuleFolder()
     {
-        return GetResourceFromModModules(Path.Combine("ModuleData", filename));
-    }
-
-    private static string? GetResourceFromModModules(string pathRelativeToModFolder)
-    {
-        return Enum.GetNames(typeof(ModuleId))
-            .Select(moduleId => Path.Combine(ModuleHelper.GetModuleFullPath(moduleId), pathRelativeToModFolder))
-            .FirstOrDefault(path => File.Exists(path) || Directory.Exists(path));
+        return GetResourceFromModModules("");
     }
 
     /**
@@ -61,5 +64,17 @@ public static class ResourceLocator
     public static string? GetSettlementDistanceCacheFilePath()
     {
         return GetModuleDataFile("settlements_distance_cache.bin");
+    }
+    
+    private static string? GetModuleDataFile(string filename)
+    {
+        return GetResourceFromModModules(Path.Combine("ModuleData", filename));
+    }
+
+    private static string? GetResourceFromModModules(string pathRelativeToModFolder)
+    {
+        return Enum.GetNames(typeof(ModuleId))
+            .Select(moduleId => Path.Combine(ModuleHelper.GetModuleFullPath(moduleId), pathRelativeToModFolder))
+            .FirstOrDefault(path => File.Exists(path) || Directory.Exists(path));
     }
 }

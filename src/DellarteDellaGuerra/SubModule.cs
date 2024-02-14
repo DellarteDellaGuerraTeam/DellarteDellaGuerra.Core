@@ -41,8 +41,8 @@ namespace DellarteDellaGuerra
 
         protected override void OnSubModuleUnloaded()
         {
-            base.OnSubModuleUnloaded();
             LogManager.Shutdown();
+            DadgConfigWatcher.Destroy();
         }
 
         public override void OnGameInitializationFinished(Game game)

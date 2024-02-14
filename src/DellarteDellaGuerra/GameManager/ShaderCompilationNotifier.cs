@@ -20,7 +20,7 @@ namespace DellarteDellaGuerra.GameManager;
 public class ShaderCompilationNotifier<T> : GameHandler where T : IConfigurationProvider<DadgConfig>, new()
 {
     private float _tickCount;
-    private readonly T _configWatcher = Activator.CreateInstance<T>();
+    private readonly T _dadgConfig = Activator.CreateInstance<T>();
 
     protected override void OnTick(float dt)
     {
@@ -28,7 +28,7 @@ public class ShaderCompilationNotifier<T> : GameHandler where T : IConfiguration
         _tickCount += dt;
         if (LoadingWindow.IsLoadingWindowActive
             || _tickCount <= 1
-            || !(_configWatcher.Config?.EnableShaderCompilationNotifications ?? true))
+            || !(_dadgConfig.Config?.EnableShaderCompilationNotifications ?? true))
         {
             return;
         }
