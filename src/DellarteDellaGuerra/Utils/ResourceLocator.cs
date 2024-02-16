@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using DellarteDellaGuerra.Logging;
-using NLog;
 using TaleWorlds.ModuleManager;
 
 namespace DellarteDellaGuerra.Utils;
@@ -16,10 +14,11 @@ public static class ResourceLocator
 {
     /**
      * <summary>
-     * Gets the existing path to the mod's folder.
+     * Gets the path to the mod's folder.
+     * Its existence is checked.
      * </summary>
      * <returns>
-     * The first found where the submodule id is valid, return null otherwise.
+     * The first found with a valid submodule id or null if all are invalid.
      * </returns>
      */
     public static string? GetModuleFolder()
@@ -29,10 +28,11 @@ public static class ResourceLocator
 
     /**
      * <summary>
-     * Gets the existing path to the configuration folder.
+     * Gets the path to the configuration folder.
+     * Its existence is checked.
      * </summary>
      * <returns>
-     * The first found among all of the mod's modules; otherwise null will be returned.
+     * The first found among all of the mod's modules or null if not found.
      * </returns>
      */
     public static string? GetConfigurationFolderPath()
@@ -42,28 +42,44 @@ public static class ResourceLocator
 
     /**
      * <summary>
-     * Gets the existing path to the settlements.xml file in the ModuleData folder.
+     * Gets the path to the settlements.xml file in the ModuleData folder.
+     * Its existence is checked.
      * </summary>
      * <returns>
-     * The first found among all of the mod's modules; otherwise null will be returned.
+     * The first found among all of the mod's modules or null if not found.
      * </returns>
      */
-    public static string? GetModuleDataSettlementFilePath()
+    public static string? GetSettlementsFilePath()
     {
         return GetModuleDataFile("settlements.xml");
     }
 
     /**
      * <summary>
-     * Gets the existing path to the settlements_distance_cache.bin file in the ModuleData folder.
+     * Gets the path to the settlements_distance_cache.bin file in the ModuleData folder.
+     * Its existence is checked.
      * </summary>
      * <returns>
-     * The first found among all of the mod's modules; otherwise null will be returned.
+     * The first found among all of the mod's modules or null if not found.
      * </returns>
      */
     public static string? GetSettlementDistanceCacheFilePath()
     {
         return GetModuleDataFile("settlements_distance_cache.bin");
+    }
+
+    /**
+     * <summary>
+     * Gets the path to the dadg_battle_scenes.xml file in the ModuleData folder.
+     * Its existence is checked.
+     * </summary>
+     * <returns>
+     * The first found among all of the mod's modules or null if not found.
+     * </returns>
+     */
+    public static string? GetBattleScenesFilePath()
+    {
+        return GetModuleDataFile("dadg_battle_scenes.xml");
     }
     
     private static string? GetModuleDataFile(string filename)
