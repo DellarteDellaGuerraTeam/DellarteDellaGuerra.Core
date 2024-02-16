@@ -27,9 +27,9 @@ namespace DellarteDellaGuerra
             InfoPrinter.Display("DADG loaded");
         }
 
+        // load the harmony patches once as soon as possible before reaching the main menu 
         protected override void OnSubModuleLoad()
         {
-            SetCampaignStartingDate();
             try
             {
                 Harmony.PatchAll();   
@@ -45,11 +45,21 @@ namespace DellarteDellaGuerra
             DadgConfigWatcher.Destroy();
         }
 
+        protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
+        {
+            game.AddGameHandler<ShaderCompilationNotifier<DadgConfigWatcher>>();
+
+            if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
+
+            campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
+        }
+
         public override void OnGameInitializationFinished(Game game)
         {
-            base.OnGameInitializationFinished(game);
-            game.AddGameHandler<ShaderCompilationNotifier<DadgConfigWatcher>>();
+            if (game.GameType is not Campaign) return;
+
             _campaignBehaviourDisabler.Disable(Campaign.Current.CampaignBehaviorManager);
+            SetCampaignStartingDate();
             LoadDadgBattleScenes();
         }
 
@@ -61,8 +71,8 @@ namespace DellarteDellaGuerra
 
         private void LoadDadgBattleScenes()
         {
-            var battleScenesFilePath = $"{ ModuleHelper.GetModuleFullPath("DellarteDellaGuerra") }ModuleData/dadg_battle_scenes.xml";
-            if (!File.Exists(battleScenesFilePath))
+            var battleScenesFilePath = ResourceLocator.GetBattleScenesFilePath();
+            if (battleScenesFilePath is null)
             {
                 Logger.Warn("Could not find DADG battle scenes at {}. Using SandBox's battle scenes instead", battleScenesFilePath);
                 return;

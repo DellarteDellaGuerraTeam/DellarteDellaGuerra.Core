@@ -24,5 +24,7 @@ public class CampaignBehaviourDisabler
         // Introduces a grudge between two sandbox kings using hardcoded lord ids.
         // We do not need this in our mod.
         campaignBehaviorManager.RemoveBehavior<BackstoryCampaignBehavior>();
+        // This adds new children on campaign start.
+        campaignBehaviorManager.RemoveBehavior<InitialChildGenerationCampaignBehavior>();
     }
 }
