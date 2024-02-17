@@ -27,11 +27,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ModuleData", "ModuleData", 
 		..\ModuleData\items.xml = ..\ModuleData\items.xml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{9D03C908-71BC-4E5D-BA67-F673DF4F1CFC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{F1AF53B1-6B28-4A2D-A967-B7BE6EC15C84}"
 	ProjectSection(SolutionItems) = preProject
-		config\nlog.dev.config = config\nlog.dev.config
-		config\nlog.prod.config = config\nlog.prod.config
-		config\dadg.config.xml = config\dadg.config.xml
+		technical-config\nlog.dev.config = technical-config\nlog.dev.config
+		technical-config\nlog.prod.config = technical-config\nlog.prod.config
+		..\config\dadg.config.xml = ..\config\dadg.config.xml
+		..\config\poc.config.json = ..\config\poc.config.json
 	EndProjectSection
 EndProject
 Global
@@ -57,7 +58,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CB20C6C8-2857-4B1E-9C00-265893C094E3} = {12CCA2B5-A874-47B3-BB43-799275014D7B}
 		{F3FF0EA7-9E28-4D27-9FA8-70754A123DF7} = {12CCA2B5-A874-47B3-BB43-799275014D7B}
-		{9D03C908-71BC-4E5D-BA67-F673DF4F1CFC} = {12CCA2B5-A874-47B3-BB43-799275014D7B}
+		{F1AF53B1-6B28-4A2D-A967-B7BE6EC15C84} = {12CCA2B5-A874-47B3-BB43-799275014D7B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B3D4AB65-9162-4EE2-9413-1867C12DC041}

@@ -1,16 +1,15 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using System.Xml;
 using DellarteDellaGuerra.Configuration.Providers;
 using DellarteDellaGuerra.DadgCampaign;
 using DellarteDellaGuerra.GameManager;
 using DellarteDellaGuerra.Logging;
+using DellarteDellaGuerra.Patches;
 using DellarteDellaGuerra.Utils;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
-using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
 using NLog;
 
@@ -20,7 +19,7 @@ namespace DellarteDellaGuerra
     {
         private static readonly Logger Logger = LoggerFactory.GetLogger<SubModule>();
         private static readonly Harmony Harmony = new ("mod.harmony.dellartedellaguerra");
-        private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler = new();
+        private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler = new ();
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
@@ -32,7 +31,8 @@ namespace DellarteDellaGuerra
         {
             try
             {
-                Harmony.PatchAll();   
+                PocConfigReaderPatch.Patch(Harmony);
+                Harmony.PatchAll();
             } catch (Exception e)
             {
                 Logger.Error("Harmony patches failed: {}", e);
