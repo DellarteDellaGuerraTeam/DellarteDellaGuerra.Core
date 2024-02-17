@@ -36,15 +36,13 @@
     <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All" />
   </ItemGroup>
 
-  <Target Name="Copy config files to bin folder" BeforeTargets="BeforeBuild">
+  <Target Name="Copy technical config files to bin folder" BeforeTargets="BeforeBuild">
     <Message Importance="high" Text="Copy config files to bin folder" />
     <ItemGroup>
       <ConfigFolderOutput Include="$(MSBuildThisFileDirectory)..\..\config\" />
-      <LogConfigFile Include="$(MSBuildThisFileDirectory)..\config\nlog.$(Env).config" />
-      <DadgConfigFile Include="$(MSBuildThisFileDirectory)..\config\dadg.config.xml" />
+      <LogConfigFile Include="$(MSBuildThisFileDirectory)..\technical-config\nlog.$(Env).config" />
     </ItemGroup>
     <Copy SourceFiles="@(LogConfigFile)" DestinationFiles="$(MSBuildThisFileDirectory)..\..\config\nlog.config" />
-    <Copy SourceFiles="@(DadgConfigFile)" DestinationFolder="$(MSBuildThisFileDirectory)..\..\config" />
   </Target>
 
 </Project>

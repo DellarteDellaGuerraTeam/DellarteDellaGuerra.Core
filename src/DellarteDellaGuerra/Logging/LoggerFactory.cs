@@ -74,7 +74,7 @@ public static class LoggerFactory
         var logfile = new FileTarget("logfile")
         {
             FileName = path,
-            Layout = "[${date:format=yyyy-MM-dd HH\\:mm\\:ss} | ${uppercase:${level}} | ${logger}] ${message}${exception:format=tostring}"
+            Layout = "[${date:format=yyyy-MM-dd HH\\:mm\\:ss} | ${uppercase:${level:format=FirstCharacter}} | ${logger}] ${message}${exception:format=tostring}"
         };
 #if DEBUG
         config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
