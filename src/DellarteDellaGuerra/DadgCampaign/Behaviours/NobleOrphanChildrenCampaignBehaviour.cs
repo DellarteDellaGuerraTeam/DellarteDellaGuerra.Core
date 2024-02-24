@@ -4,7 +4,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 
-namespace DellarteDellaGuerra.DadgCampaign;
+namespace DellarteDellaGuerra.DadgCampaign.Behaviours;
 
 /**
  * <summary>
