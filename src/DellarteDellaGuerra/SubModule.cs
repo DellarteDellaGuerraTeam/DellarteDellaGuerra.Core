@@ -2,7 +2,9 @@
 using System.Reflection;
 using System.Xml;
 using DellarteDellaGuerra.Configuration.Providers;
+using DellarteDellaGuerra.Missions;
 using DellarteDellaGuerra.DadgCampaign;
+using DellarteDellaGuerra.DadgCampaign.Behaviours;
 using DellarteDellaGuerra.GameManager;
 using DellarteDellaGuerra.Logging;
 using DellarteDellaGuerra.Patches;
@@ -20,6 +22,12 @@ namespace DellarteDellaGuerra
         private static readonly Logger Logger = LoggerFactory.GetLogger<SubModule>();
         private static readonly Harmony Harmony = new ("mod.harmony.dellartedellaguerra");
         private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler = new ();
+
+        public override void OnBeforeMissionBehaviorInitialize(Mission mission)
+        {
+            base.OnBeforeMissionBehaviorInitialize(mission);
+            DadgMission.Decorate(mission, Campaign.Current.CampaignBehaviorManager);
+        }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
@@ -52,6 +60,7 @@ namespace DellarteDellaGuerra
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
             campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
+            campaignGameStarter.AddBehavior(new TroopEquipmentPoolsCampaignBehaviour());
         }
 
         public override void OnGameInitializationFinished(Game game)
