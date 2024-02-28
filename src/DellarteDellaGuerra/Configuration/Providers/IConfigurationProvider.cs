@@ -1,26 +1,28 @@
-﻿namespace DellarteDellaGuerra.Configuration.Providers;
-
-/**
- * <summary>
- *  The interface for a configuration provider.
- * </summary>
- * <typeparam name="T">
- *  The type of the configuration.
- * </typeparam>
- */
-public interface IConfigurationProvider<out T>
+﻿namespace DellarteDellaGuerra.Configuration.Providers
 {
 
     /**
      * <summary>
-     *  Gets the configuration.
+     *  The interface for a configuration provider.
      * </summary>
-     * <param name="T">
-     * The type of the configuration.
-     * </param>
+     * <typeparam name="T">
+     *  The type of the configuration.
+     * </typeparam>
      */
-    public T? Config
+    public interface IConfigurationProvider<out T>
     {
-        get;
+
+        /**
+         * <summary>
+         *  Gets the configuration.
+         * </summary>
+         * <param name="T">
+         * The type of the configuration.
+         * </param>
+         */
+        public T? Config
+        {
+            get;
+        }
     }
 }

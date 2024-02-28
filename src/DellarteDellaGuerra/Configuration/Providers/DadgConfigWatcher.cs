@@ -6,67 +6,70 @@ using DellarteDellaGuerra.Logging;
 using DellarteDellaGuerra.Utils;
 using NLog;
 
-namespace DellarteDellaGuerra.Configuration.Providers;
-
-/**
- * <summary>
- *  Detects changes in the mod's configuration file and updates the in-memory configuration accordingly.
- *  <br/>
- *  <br/>
- * The configuration file is expected to be named "dadg.config.xml" and should be located in mod's root config folder.
- * </summary>
- */
-public class DadgConfigWatcher : IConfigurationProvider<DadgConfig>
+namespace DellarteDellaGuerra.Configuration.Providers
 {
-    private static readonly Logger Logger = LoggerFactory.GetLogger<DadgConfigWatcher>();
-    private const string ConfigFileName = "dadg.config.xml";
-    private DadgConfig? _config;
-
-    public DadgConfigWatcher()
-    {
-        // TODO - correctly dispose of the watcher
-        var watcher = new FileSystemWatcher
-        {
-            Path = ResourceLocator.GetConfigurationFolderPath(),
-            Filter = ConfigFileName,
-            NotifyFilter = NotifyFilters.LastWrite,
-            EnableRaisingEvents = true
-        };
-        watcher.Changed += OnConfigChanged;
-        LoadConfig();
-    }
 
     /**
      * <summary>
-     * Gets the mod's configuration.
+     *  Detects changes in the mod's configuration file and updates the in-memory configuration accordingly.
+     *  <br/>
+     *  <br/>
+     * The configuration file is expected to be named "dadg.config.xml" and should be located in mod's root config folder.
      * </summary>
-     * 
      */
-    public DadgConfig? Config
+    public class DadgConfigWatcher : IConfigurationProvider<DadgConfig>
     {
-        get => _config;
-    }
+        private static readonly Logger Logger = LoggerFactory.GetLogger<DadgConfigWatcher>();
+        private const string ConfigFileName = "dadg.config.xml";
+        private DadgConfig? _config;
 
-    private void OnConfigChanged(object sender, FileSystemEventArgs e)
-    {
-        LoadConfig();
-    }
+        public DadgConfigWatcher()
+        {
+            // TODO - correctly dispose of the watcher
+            var watcher = new FileSystemWatcher
+            {
+                Path = ResourceLocator.GetConfigurationFolderPath(),
+                Filter = ConfigFileName,
+                NotifyFilter = NotifyFilters.LastWrite,
+                EnableRaisingEvents = true
+            };
+            watcher.Changed += OnConfigChanged;
+            LoadConfig();
+        }
 
-    private void LoadConfig()
-    {
-        var configPath = Path.Combine(ResourceLocator.GetConfigurationFolderPath(), ConfigFileName);
-        var serialiser = new XmlSerializer(typeof(DadgConfig));
-        try
+        /**
+         * <summary>
+         * Gets the mod's configuration.
+         * </summary>
+         * 
+         */
+        public DadgConfig? Config
         {
-            using var writer = new FileStream(configPath, FileMode.Open);
-            _config = (DadgConfig)serialiser.Deserialize(writer);
+            get => _config;
         }
-        catch (InvalidOperationException e)
+
+        private void OnConfigChanged(object sender, FileSystemEventArgs e)
         {
-            Logger.Error("Failed to parse config file: {}", e.InnerException);
+            LoadConfig();
         }
-        catch(IOException e) {
-            Logger.Error("Failed to read config file: {}", e);
+
+        private void LoadConfig()
+        {
+            var configPath = Path.Combine(ResourceLocator.GetConfigurationFolderPath(), ConfigFileName);
+            var serialiser = new XmlSerializer(typeof(DadgConfig));
+            try
+            {
+                using var writer = new FileStream(configPath, FileMode.Open);
+                _config = (DadgConfig)serialiser.Deserialize(writer);
+            }
+            catch (InvalidOperationException e)
+            {
+                Logger.Error("Failed to parse config file: {}", e.InnerException);
+            }
+            catch (IOException e)
+            {
+                Logger.Error("Failed to read config file: {}", e);
+            }
         }
     }
 }
