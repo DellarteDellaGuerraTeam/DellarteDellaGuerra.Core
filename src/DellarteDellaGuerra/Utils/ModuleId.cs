@@ -1,8 +1,9 @@
-﻿namespace DellarteDellaGuerra.Utils;
-
-public enum ModuleId
+﻿namespace DellarteDellaGuerra.Utils
 {
-    DellarteDellaGuerra,
-    DellarteDellaGuerraMap,
-    DellarteDellaGuerraScenes
+    public enum ModuleId
+    {
+        DellarteDellaGuerra,
+        DellarteDellaGuerraMap,
+        DellarteDellaGuerraScenes
+    }    
 }
