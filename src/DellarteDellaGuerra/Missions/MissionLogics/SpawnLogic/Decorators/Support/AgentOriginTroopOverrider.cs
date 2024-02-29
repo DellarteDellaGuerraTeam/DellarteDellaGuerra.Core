@@ -1,57 +1,59 @@
 ﻿using TaleWorlds.Core;
 
-namespace DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Decorators.Support;
-
-/**
- * <summary>
- * This IAgentOriginBase decorator provides a way to override the troop origin.
- * </summary>
- */
-internal class AgentOriginTroopOverrider : IAgentOriginBase
+namespace DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Decorators.Support
 {
-    private readonly IAgentOriginBase _agentOriginBase;
-
-    public AgentOriginTroopOverrider(IAgentOriginBase agentOriginBase)
+    /**
+     * <summary>
+     * This IAgentOriginBase decorator provides a way to override the troop origin.
+     * </summary>
+     */
+    internal class AgentOriginTroopOverrider : IAgentOriginBase
     {
-        _agentOriginBase = agentOriginBase;
-        Troop = agentOriginBase.Troop;
-    }
+        private readonly IAgentOriginBase _agentOriginBase;
 
-    public void SetWounded() => _agentOriginBase.SetWounded();
+        public AgentOriginTroopOverrider(IAgentOriginBase agentOriginBase)
+        {
+            _agentOriginBase = agentOriginBase;
+            Troop = agentOriginBase.Troop;
+        }
 
-    public void SetKilled() => _agentOriginBase.SetKilled();
+        public void SetWounded() => _agentOriginBase.SetWounded();
 
-    public void SetRouted() => _agentOriginBase.SetRouted();
+        public void SetKilled() => _agentOriginBase.SetKilled();
 
-    public void OnAgentRemoved(float agentHealth) => _agentOriginBase.OnAgentRemoved(agentHealth);
+        public void SetRouted() => _agentOriginBase.SetRouted();
 
-    public void OnScoreHit(
-        BasicCharacterObject victim,
-        BasicCharacterObject formationCaptain,
-        int damage,
-        bool isFatal,
-        bool isTeamKill,
-        WeaponComponentData attackerWeapon
-    )
-    {
-        _agentOriginBase.OnScoreHit(victim, formationCaptain, damage, isFatal, isTeamKill, attackerWeapon);
-    }
+        public void OnAgentRemoved(float agentHealth) => _agentOriginBase.OnAgentRemoved(agentHealth);
 
-    public void SetBanner(Banner banner) => _agentOriginBase.SetBanner(banner);
+        public void OnScoreHit(
+            BasicCharacterObject victim,
+            BasicCharacterObject formationCaptain,
+            int damage,
+            bool isFatal,
+            bool isTeamKill,
+            WeaponComponentData attackerWeapon
+        )
+        {
+            _agentOriginBase.OnScoreHit(victim, formationCaptain, damage, isFatal, isTeamKill, attackerWeapon);
+        }
 
-    public bool IsUnderPlayersCommand => _agentOriginBase.IsUnderPlayersCommand;
+        public void SetBanner(Banner banner) => _agentOriginBase.SetBanner(banner);
 
-    public uint FactionColor => _agentOriginBase.FactionColor;
+        public bool IsUnderPlayersCommand => _agentOriginBase.IsUnderPlayersCommand;
 
-    public uint FactionColor2 => _agentOriginBase.FactionColor2;
+        public uint FactionColor => _agentOriginBase.FactionColor;
 
-    public IBattleCombatant BattleCombatant => _agentOriginBase.BattleCombatant;
+        public uint FactionColor2 => _agentOriginBase.FactionColor2;
 
-    public int UniqueSeed => _agentOriginBase.UniqueSeed;
+        public IBattleCombatant BattleCombatant => _agentOriginBase.BattleCombatant;
 
-    public int Seed => _agentOriginBase.Seed;
+        public int UniqueSeed => _agentOriginBase.UniqueSeed;
 
-    public Banner Banner => _agentOriginBase.Banner;
+        public int Seed => _agentOriginBase.Seed;
 
-    public BasicCharacterObject Troop { get; init; }
+        public Banner Banner => _agentOriginBase.Banner;
+
+        public BasicCharacterObject Troop { get; init; }
+    }    
 }
+
