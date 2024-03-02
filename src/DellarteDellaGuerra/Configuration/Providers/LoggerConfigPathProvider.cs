@@ -3,7 +3,6 @@ using DellarteDellaGuerra.Utils;
 
 namespace DellarteDellaGuerra.Configuration.Providers
 {
-
     /**
      * <summary>
      *  A provider for the path to the logger configuration file.
@@ -13,6 +12,8 @@ namespace DellarteDellaGuerra.Configuration.Providers
     {
         private const string LogConfigFileName = "nlog.config";
 
+        private static readonly string? LogConfigPath = GetConfigFilePath();
+
         /**
          * <summary>
          * Gets the path to the logger configuration file.
@@ -21,9 +22,12 @@ namespace DellarteDellaGuerra.Configuration.Providers
          * The path to the logger configuration file.
          * </returns>
          */
-        public string Config
+        public string? Config => LogConfigPath;
+
+        private static string? GetConfigFilePath()
         {
-            get => Path.Combine(ResourceLocator.GetConfigurationFolderPath(), LogConfigFileName);
+            string? configFolderPath = ResourceLocator.GetConfigurationFolderPath();
+            return configFolderPath != null ? Path.Combine(configFolderPath, LogConfigFileName) : null;
         }
     }
 }

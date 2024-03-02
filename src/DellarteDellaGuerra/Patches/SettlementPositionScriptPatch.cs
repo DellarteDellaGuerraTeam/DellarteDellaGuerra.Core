@@ -23,7 +23,7 @@ namespace DellarteDellaGuerra.Patches
         [HarmonyPatch(typeof(SettlementPositionScript), "get_SettlementsXmlPath")]
         private static void OverrideSettlementsXmlPath(ref string __result)
         {
-            string? path = ResourceLocator.GetModuleDataSettlementFilePath();
+            string? path = ResourceLocator.GetSettlementsFilePath();
             if (path == null)
             {
                 Logger.Error("Could not find the settlement file");

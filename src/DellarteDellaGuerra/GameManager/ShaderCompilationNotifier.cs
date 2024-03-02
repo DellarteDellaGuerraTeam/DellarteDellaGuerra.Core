@@ -7,7 +7,6 @@ using TaleWorlds.Engine;
 
 namespace DellarteDellaGuerra.GameManager
 {
-
     /**
      * <summary>
      *    This class is responsible for notifying the user when the game is compiling shaders.
@@ -21,7 +20,7 @@ namespace DellarteDellaGuerra.GameManager
     public class ShaderCompilationNotifier<T> : GameHandler where T : IConfigurationProvider<DadgConfig>, new()
     {
         private float _tickCount;
-        private readonly T _configWatcher = Activator.CreateInstance<T>();
+        private readonly T _dadgConfig = Activator.CreateInstance<T>();
 
         protected override void OnTick(float dt)
         {
@@ -29,7 +28,7 @@ namespace DellarteDellaGuerra.GameManager
             _tickCount += dt;
             if (LoadingWindow.IsLoadingWindowActive
                 || _tickCount <= 1
-                || !(_configWatcher.Config?.EnableShaderCompilationNotifications ?? true))
+                || !(_dadgConfig.Config?.EnableShaderCompilationNotifications ?? true))
             {
                 return;
             }
@@ -46,5 +45,5 @@ namespace DellarteDellaGuerra.GameManager
         public override void OnBeforeSave() { }
 
         public override void OnAfterSave() { }
-    }
+    }    
 }

@@ -1,16 +1,17 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using System.Xml;
 using DellarteDellaGuerra.Configuration.Providers;
+using DellarteDellaGuerra.Missions;
 using DellarteDellaGuerra.DadgCampaign;
+using DellarteDellaGuerra.DadgCampaign.Behaviours;
 using DellarteDellaGuerra.GameManager;
 using DellarteDellaGuerra.Logging;
+using DellarteDellaGuerra.Patches;
 using DellarteDellaGuerra.Utils;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
-using TaleWorlds.ModuleManager;
 using TaleWorlds.MountAndBlade;
 using NLog;
 
@@ -20,19 +21,26 @@ namespace DellarteDellaGuerra
     {
         private static readonly Logger Logger = LoggerFactory.GetLogger<SubModule>();
         private static readonly Harmony Harmony = new ("mod.harmony.dellartedellaguerra");
-        private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler = new();
+        private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler = new ();
+
+        public override void OnBeforeMissionBehaviorInitialize(Mission mission)
+        {
+            base.OnBeforeMissionBehaviorInitialize(mission);
+            DadgMission.Decorate(mission, Campaign.Current.CampaignBehaviorManager);
+        }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             InfoPrinter.Display("DADG loaded");
         }
 
+        // load the harmony patches once as soon as possible before reaching the main menu 
         protected override void OnSubModuleLoad()
         {
-            SetCampaignStartingDate();
             try
             {
-                Harmony.PatchAll();   
+                PocConfigReaderPatch.Patch(Harmony);
+                Harmony.PatchAll();
             } catch (Exception e)
             {
                 Logger.Error("Harmony patches failed: {}", e);
@@ -41,15 +49,26 @@ namespace DellarteDellaGuerra
 
         protected override void OnSubModuleUnloaded()
         {
-            base.OnSubModuleUnloaded();
             LogManager.Shutdown();
+            DadgConfigWatcher.Destroy();
+        }
+
+        protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
+        {
+            game.AddGameHandler<ShaderCompilationNotifier<DadgConfigWatcher>>();
+
+            if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
+
+            campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
+            campaignGameStarter.AddBehavior(new TroopEquipmentPoolsCampaignBehaviour());
         }
 
         public override void OnGameInitializationFinished(Game game)
         {
-            base.OnGameInitializationFinished(game);
-            game.AddGameHandler<ShaderCompilationNotifier<DadgConfigWatcher>>();
+            if (game.GameType is not Campaign) return;
+
             _campaignBehaviourDisabler.Disable(Campaign.Current.CampaignBehaviorManager);
+            SetCampaignStartingDate();
             LoadDadgBattleScenes();
         }
 
@@ -61,8 +80,8 @@ namespace DellarteDellaGuerra
 
         private void LoadDadgBattleScenes()
         {
-            var battleScenesFilePath = $"{ ModuleHelper.GetModuleFullPath("DellarteDellaGuerra") }ModuleData/dadg_battle_scenes.xml";
-            if (!File.Exists(battleScenesFilePath))
+            var battleScenesFilePath = ResourceLocator.GetBattleScenesFilePath();
+            if (battleScenesFilePath is null)
             {
                 Logger.Warn("Could not find DADG battle scenes at {}. Using SandBox's battle scenes instead", battleScenesFilePath);
                 return;
