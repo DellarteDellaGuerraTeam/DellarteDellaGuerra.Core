@@ -1,13 +1,9 @@
-﻿using System;
-using DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Decorators;
-using DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Decorators.Support;
-using DellarteDellaGuerra.DadgCampaign.Behaviours;
+﻿using DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Adapters;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.TroopSuppliers;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.ObjectSystem;
 
 namespace DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic
 {
@@ -18,11 +14,11 @@ namespace DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic
      */
     public class MissionAgentSpawnLogicBuilder
     {
-        private Func<MapEvent, BattleSideEnum, IMissionTroopSupplier> _decoratedTroopSupplier = GetDefaultMissionTroopSupplier;
+        private IMissionTroopEquipmentProvider? _equipmentPoolProvider;
 
         /**
          * <summary>
-         * This method creates a MissionAgentSpawnLogic instance with all the decorated behaviour.
+         * This method creates a MissionAgentSpawnLogic instance with the additional behaviours provided by the builder.
          * </summary>
          * <returns>The MissionAgentSpawnLogic instance.</returns>
          * <remarks>
@@ -31,28 +27,24 @@ namespace DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic
          */
         public MissionAgentSpawnLogic Build()
         {
-            // use MapEvent.PlayerMapEvent like the native behaviour
-            var attacker = _decoratedTroopSupplier(MapEvent.PlayerMapEvent, BattleSideEnum.Attacker);
-            var defender = _decoratedTroopSupplier(MapEvent.PlayerMapEvent, BattleSideEnum.Defender);
             return new CharacterSpawnCleanUpLogic(new []
             {
-                defender, attacker
+                ResolveDecoratedMissionTroopSupplier(BattleSideEnum.Defender),
+                ResolveDecoratedMissionTroopSupplier(BattleSideEnum.Attacker),
                 // use PartyBase.MainParty.Side like the native behaviour
             }, PartyBase.MainParty.Side, ResolveBattleSizeType());
         }
 
         /**
          * <summary>
-         * This method decoarates the MissionAgentSpawnLogic with the expanded equipment randomisation behaviour.
+         * Add a provider enabling more control over the equipment pool of the troops.
          * </summary>
-         * <param name="troopEquipmentPoolsBehaviour">The troop equipment pools behaviour.</param>
+         * <param name="missionTroopEquipmentProvider">The troop equipment pool provider.</param>
          * <returns>The MissionAgentSpawnLogicBuilder instance.</returns>
          */
-        public MissionAgentSpawnLogicBuilder UseExpandedEquipmentRandomisation(TroopEquipmentPoolsCampaignBehaviour troopEquipmentPoolsBehaviour)
+        public MissionAgentSpawnLogicBuilder AddMissionTroopEquipmentProvider(IMissionTroopEquipmentProvider missionTroopEquipmentProvider)
         {
-            var decoratedMissionTroopSupplier = _decoratedTroopSupplier;
-            _decoratedTroopSupplier = (mapEvent, battleSide) => 
-                new TroopEquipmentRandomisationDecorator(decoratedMissionTroopSupplier(mapEvent, battleSide), troopEquipmentPoolsBehaviour);
+            _equipmentPoolProvider = missionTroopEquipmentProvider;
             return this;
         }
 
@@ -86,47 +78,18 @@ namespace DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic
             return Mission.BattleSizeType.Battle;
         }
 
-        private sealed class CharacterSpawnCleanUpLogic : MissionAgentSpawnLogic
+        /**
+         * <summary>
+         * This method adapts the given IMissionEquipmentProvider to the IMissionTroopSupplier interface.
+         * It returns the defaults IMissionTroopSupplier if the IMissionEquipmentProvider was not given.
+         * </summary>
+         */
+        private IMissionTroopSupplier ResolveDecoratedMissionTroopSupplier(BattleSideEnum battleSide)
         {
-            public CharacterSpawnCleanUpLogic(
-                IMissionTroopSupplier[] missionTroopSuppliers,
-                BattleSideEnum playerSide,
-                Mission.BattleSizeType battleSizeType) : base(missionTroopSuppliers, playerSide, battleSizeType)
-            {
-            }
-
-            /**
-             * <summary>
-             * This method is called when an agent is built.
-             * <br/>
-             * Natively, the troops with the same id reference the same character object. 
-             * So here, we make sure to override the agent's character with the global character object if needed.
-             * </summary>
-             * <param name="agent">The agent to build.</param>
-             * <param name="banner">The banner of the agent.</param>
-             * <remarks>
-             * This method is called when an agent is built and should not be called else where.
-             * </remarks>
-             */
-            public override void OnAgentBuild(Agent agent, Banner banner)
-            {
-                base.OnAgentBuild(agent, banner);
-
-                if (agent?.Character?.StringId is null) return;
-
-                var globalCharacterObject = MBObjectManager.Instance.GetObject<BasicCharacterObject>(agent.Character.StringId);
-                if (globalCharacterObject is null || agent.Character == globalCharacterObject) return;
-                
-                agent.Character = globalCharacterObject;
-
-                if (agent.Origin is null) return;
-
-                agent.Origin = new AgentOriginTroopOverrider(agent.Origin)
-                {
-                    Troop = globalCharacterObject
-                };
-            }
+            var missionTroopSupplier = GetDefaultMissionTroopSupplier(MapEvent.PlayerMapEvent, battleSide);
+            return _equipmentPoolProvider is null ? 
+                missionTroopSupplier :
+                new MissionEquipmentTroopProviderAdapter(_equipmentPoolProvider, missionTroopSupplier);
         }
     }
 }
-

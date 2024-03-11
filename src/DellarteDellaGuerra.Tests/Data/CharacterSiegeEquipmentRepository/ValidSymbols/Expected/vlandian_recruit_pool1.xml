@@ -1,0 +1,17 @@
+<Equipments>
+    <EquipmentRoster pool="1" siege="true">
+        <equipment slot="Item0" id="Item.ddg_polearm_longspear"/>
+        <equipment slot="Body" id="Item.jack_sleeveless_with_splints"/>
+        <equipment slot="Leg" id="Item.hosen_a"/>
+        <equipment slot="Head" id="Item.war_hat"/>
+        <equipment slot="Gloves" id="Item.mitten_gauntlets"/>
+    </EquipmentRoster>
+    <EquipmentRoster pool="1" siege="true">
+        <equipment slot="Item0" id="Item.ddg_polearm_billhook"/>
+        <equipment slot="Body" id="Item.jack"/>
+        <equipment slot="Leg" id="Item.hosen_with_poleyns_a"/>
+        <equipment slot="Head" id="Item.caramel_sallet_opened"/>
+        <equipment slot="Gloves" id="Item.mitten_gauntlets"/>
+    </EquipmentRoster>
+    <EquipmentSet pool="1" siege="true" id="vlandia_troop_civilian_template_t1"/>
+</Equipments>

@@ -39,14 +39,14 @@ namespace DellarteDellaGuerra.Missions
 
         private static MissionAgentSpawnLogic? GetSpawnLogic(ICampaignBehaviorManager campaignBehaviorManager)
         {
-            var troopEquipmentPoolsBehaviour = campaignBehaviorManager.GetBehavior<TroopEquipmentPoolsCampaignBehaviour>();
+            var troopEquipmentPoolsBehaviour = campaignBehaviorManager.GetBehavior<MissionTroopEquipmentCampaignBehaviour>();
             if (troopEquipmentPoolsBehaviour is null)
             {
-                Logger.Error("The CampaignBehaviorManager could not find {0}", nameof(TroopEquipmentPoolsCampaignBehaviour));
+                Logger.Error("The CampaignBehaviorManager could not find {0}", nameof(MissionTroopEquipmentCampaignBehaviour));
                 return null;
             }
             return new MissionAgentSpawnLogicBuilder()
-                .UseExpandedEquipmentRandomisation(troopEquipmentPoolsBehaviour)
+                .AddMissionTroopEquipmentProvider(troopEquipmentPoolsBehaviour)
                 .Build();
         }
 

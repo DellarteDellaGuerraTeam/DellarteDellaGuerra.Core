@@ -1,0 +1,11 @@
+<Equipments>
+    <EquipmentRoster pool="0">
+        <equipment slot="Item0" id="Item.ddg_polearm_longspear"/>
+        <equipment slot="Body" id="Item.jack_sleeveless_with_splints"/>
+        <equipment slot="Leg" id="Item.hosen_a"/>
+        <equipment slot="Head" id="Item.war_hat"/>
+        <equipment slot="Gloves" id="Item.mitten_gauntlets"/>
+    </EquipmentRoster>
+    <EquipmentSet id="vlandia_troop_civilian_template_t1"
+                  civilian="false"/>
+</Equipments>

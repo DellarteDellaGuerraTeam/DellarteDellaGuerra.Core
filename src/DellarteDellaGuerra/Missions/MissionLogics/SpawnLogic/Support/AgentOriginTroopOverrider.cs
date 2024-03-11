@@ -1,6 +1,6 @@
 ﻿using TaleWorlds.Core;
 
-namespace DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Decorators.Support
+namespace DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Support
 {
     /**
      * <summary>

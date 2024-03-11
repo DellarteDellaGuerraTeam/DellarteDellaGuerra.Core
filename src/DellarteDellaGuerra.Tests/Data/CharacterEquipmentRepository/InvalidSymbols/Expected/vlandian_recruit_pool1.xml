@@ -1,0 +1,12 @@
+<Equipments>
+    <EquipmentRoster pool="1">
+        <equipment slot="Item0"
+                   id="Item.ddg_polearm_longspear6"/>
+        <equipment slot="Body"
+                   id="Item.jack_sleeveless_with_splints6"/>
+        <equipment slot="Leg"
+                   id="Item.hosen_with_boots_c6"/>
+        <equipment slot="Head"
+                   id="Item.war_hat6"/>
+    </EquipmentRoster>   
+</Equipments>

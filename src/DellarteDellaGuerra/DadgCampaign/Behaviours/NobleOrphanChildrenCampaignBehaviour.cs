@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.MountAndBlade;
-using TaleWorlds.ObjectSystem;
 
 namespace DellarteDellaGuerra.DadgCampaign.Behaviours
 {

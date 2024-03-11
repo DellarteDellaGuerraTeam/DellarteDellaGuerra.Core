@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{10714220-ACE
 		..\doc\equipment-randomisation.md = ..\doc\equipment-randomisation.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Tests", "DellarteDellaGuerra.Tests\DellarteDellaGuerra.Tests.csproj", "{F97F1466-6F66-481A-AB22-E78BD611979E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -57,6 +59,10 @@ Global
 		{17F43D01-48C7-43DC-A6E6-28C303AAC8DB}.Release|x64.ActiveCfg = Release|x64
 		{17F43D01-48C7-43DC-A6E6-28C303AAC8DB}.Release|x64.Build.0 = Release|x64
 
+		{F97F1466-6F66-481A-AB22-E78BD611979E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F97F1466-6F66-481A-AB22-E78BD611979E}.Debug|x64.Build.0 = Debug|Any CPU
+		{F97F1466-6F66-481A-AB22-E78BD611979E}.Release|x64.ActiveCfg = Release|Any CPU
+		{F97F1466-6F66-481A-AB22-E78BD611979E}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,6 +9,9 @@ using DellarteDellaGuerra.GameManager;
 using DellarteDellaGuerra.Logging;
 using DellarteDellaGuerra.Patches;
 using DellarteDellaGuerra.Utils;
+using DellarteDellaGuerra.Xml;
+using DellarteDellaGuerra.Xml.Characters;
+using DellarteDellaGuerra.Xml.Characters.Repositories;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -60,7 +63,7 @@ namespace DellarteDellaGuerra
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
             campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
-            campaignGameStarter.AddBehavior(new TroopEquipmentPoolsCampaignBehaviour());
+            campaignGameStarter.AddBehavior(new MissionTroopEquipmentCampaignBehaviour(new CharacterEquipmentRepository()));
         }
 
         public override void OnGameInitializationFinished(Game game)

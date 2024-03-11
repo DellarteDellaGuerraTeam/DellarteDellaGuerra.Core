@@ -1,0 +1,23 @@
+<Equipments>
+     <EquipmentRoster pool="0" siege="true">
+        <equipment slot="Item0"
+                   id="Item.ddg_polearm_longspear"/>
+        <equipment slot="Body"
+                   id="Item.jack_sleeveless_with_splints"/>
+        <equipment slot="Leg"
+                   id="Item.hosen_with_boots_c"/>
+        <equipment slot="Head"
+                   id="Item.war_hat"/>
+    </EquipmentRoster>
+    <EquipmentRoster pool="0" siege="true">
+        <equipment slot="Item0"
+                   id="Item.ddg_polearm_boarspear"/>
+        <equipment slot="Body"
+                   id="Item.livery_coat_over_doublet"/>
+        <equipment slot="Leg"
+                   id="Item.hosen_with_boots_a"/>
+        <equipment slot="Head"
+                   id="Item.open_sallet_01e"/>
+        <equipment slot="Gloves" id="Item.mitten_gauntlets"/>
+    </EquipmentRoster>
+</Equipments>

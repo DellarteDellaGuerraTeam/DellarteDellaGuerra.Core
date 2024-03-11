@@ -1,14 +1,12 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Decorators.Support;
-using DellarteDellaGuerra.DadgCampaign.Behaviours;
+using DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Support;
 using Force.DeepCloner;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
 
-namespace DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Decorators
+namespace DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Adapters
 {
     /**
      * <summary>
@@ -27,28 +25,42 @@ namespace DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Decorators
      * On the other hand, if each group has one and only one equipment, then the troop will randomly select an equipment set.
      * </remarks>
      */
-    public class TroopEquipmentRandomisationDecorator : MissionTroopSupplierDecorator
+    public class MissionEquipmentTroopProviderAdapter : IMissionTroopSupplier
     {
-        private readonly TroopEquipmentPoolsCampaignBehaviour _troopEquipmentPools;
-        private readonly Random _random = new ();
+        private readonly IMissionTroopSupplier _missionTroopSupplier;
+        private readonly IMissionTroopEquipmentProvider _missionTroopEquipmentProvider;
         private readonly Dictionary<int, MBEquipmentRoster> _troopEquipmentPool = new ();
+        private readonly Random _random = new ();
 
-        public TroopEquipmentRandomisationDecorator(
-            IMissionTroopSupplier missionTroopSupplier,
-            TroopEquipmentPoolsCampaignBehaviour troopEquipmentPools) : base(missionTroopSupplier)
+        public MissionEquipmentTroopProviderAdapter(IMissionTroopEquipmentProvider missionTroopEquipmentProvider, IMissionTroopSupplier missionTroopSupplier)
         {
-            _troopEquipmentPools = troopEquipmentPools;
+            _missionTroopEquipmentProvider = missionTroopEquipmentProvider;
+            _missionTroopSupplier = missionTroopSupplier;
+        }
+        
+        public IEnumerable<IAgentOriginBase> SupplyTroops(int numberToAllocate)
+        {
+            return _missionTroopSupplier.SupplyTroops(numberToAllocate).Select(ResolveTroopEquipmentPool);
         }
 
-        public override IEnumerable<IAgentOriginBase> SupplyTroops(int numberToAllocate)
+        public IEnumerable<IAgentOriginBase> GetAllTroops()
         {
-            return base.SupplyTroops(numberToAllocate).Select(ResolveTroopEquipmentPool);
+            return _missionTroopSupplier.GetAllTroops().Select(ResolveTroopEquipmentPool);
         }
 
-        public override IEnumerable<IAgentOriginBase> GetAllTroops()
+        public BasicCharacterObject GetGeneralCharacter()
         {
-            return base.GetAllTroops().Select(ResolveTroopEquipmentPool);
+            return _missionTroopSupplier.GetGeneralCharacter();
         }
+
+        public int GetNumberOfPlayerControllableTroops()
+        {
+            return _missionTroopSupplier.GetNumberOfPlayerControllableTroops();
+        }
+
+        public int NumRemovedTroops => _missionTroopSupplier.NumRemovedTroops;
+        public int NumTroopsNotSupplied => _missionTroopSupplier.NumTroopsNotSupplied;
+        public bool AnyTroopRemainsToBeSupplied => _missionTroopSupplier.AnyTroopRemainsToBeSupplied;
 
         private IAgentOriginBase ResolveTroopEquipmentPool(IAgentOriginBase agent)
         {
@@ -84,8 +96,8 @@ namespace DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Decorators
         private MBEquipmentRoster GetRandomEquipmentPool(IAgentOriginBase agent)
         {
             // Creates a list of equipment pools where each pool is present as many times as the number of equipments it contains 
-            List<MBEquipmentRoster> equipmentWeightedPools =
-                _troopEquipmentPools
+            IList<MBEquipmentRoster> equipmentWeightedPools =
+                _missionTroopEquipmentProvider
                     .GetTroopEquipmentPools(agent.Troop)
                     .SelectMany(pool => pool.AllEquipments, (pool, equipment) => (pool, equipment))
                     .Where(e => !e.equipment.IsCivilian)
@@ -104,4 +116,3 @@ namespace DellarteDellaGuerra.Missions.MissionLogics.SpawnLogic.Decorators
         }
     }
 }
-
