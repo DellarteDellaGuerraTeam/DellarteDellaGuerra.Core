@@ -1,8 +1,8 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using SandBox.View.Missions;
-using System;
-using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade.View;
 
