@@ -33,7 +33,7 @@
   },
 
   "kingdoms": {
-    "Vlandia": {
+    "House of York": {
       "mode": 1,
       "color": [
         "#830808",
@@ -184,7 +184,7 @@
         }
       }
     },
-    "Sturgia": {
+    "House of Lancaster": {
       "mode": 1,
       "color": [
         "#830808",
