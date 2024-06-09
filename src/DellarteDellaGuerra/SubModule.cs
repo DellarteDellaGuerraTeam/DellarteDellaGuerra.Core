@@ -5,6 +5,7 @@ using DellarteDellaGuerra.Configuration.Providers;
 using DellarteDellaGuerra.Missions;
 using DellarteDellaGuerra.DadgCampaign;
 using DellarteDellaGuerra.DadgCampaign.Behaviours;
+using DellarteDellaGuerra.DadgCampaign.Tournament;
 using DellarteDellaGuerra.GameManager;
 using DellarteDellaGuerra.Logging;
 using DellarteDellaGuerra.Patches;
@@ -61,6 +62,8 @@ namespace DellarteDellaGuerra
 
             campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
             campaignGameStarter.AddBehavior(new TroopEquipmentPoolsCampaignBehaviour());
+
+            campaignGameStarter.AddModel(new TournamentModel());
         }
 
         public override void OnGameInitializationFinished(Game game)
