@@ -1,5 +1,6 @@
 ﻿
-using DellarteDellaGuerra.Domain.Logging.Port;
+using System;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 
 namespace DellarteDellaGuerra.Infrastructure.Logging
 {
@@ -12,29 +13,44 @@ namespace DellarteDellaGuerra.Infrastructure.Logging
             _logger = logger;
         }
 
-        public void Debug(string message)
+        public void Debug(string message, Exception? exception = null)
         {
-            _logger.Debug(message);
+            if (exception is null)
+                _logger.Debug(message);
+            else
+                _logger.Debug(exception, message);
         }
 
-        public void Info(string message)
+        public void Info(string message, Exception? exception = null)
         {
-            _logger.Info(message);
+            if (exception is null)
+                _logger.Info(message);
+            else
+                _logger.Info(exception, message);
         }
 
-        public void Warn(string message)
+        public void Warn(string message, Exception? exception = null)
         {
-            _logger.Warn(message);
+            if (exception is null)
+                _logger.Warn(message);
+            else
+                _logger.Warn(exception, message);
         }
 
-        public void Error(string message)
+        public void Error(string message, Exception? exception = null)
         {
-            _logger.Error(message);
+            if (exception is null)
+                _logger.Error(message);
+            else
+                _logger.Error(exception, message);
         }
 
-        public void Fatal(string message)
+        public void Fatal(string message, Exception? exception = null)
         {
-            _logger.Fatal(message);
+            if (exception is null)
+                _logger.Fatal(message);
+            else
+                _logger.Fatal(exception, message);
         }
     }
 }

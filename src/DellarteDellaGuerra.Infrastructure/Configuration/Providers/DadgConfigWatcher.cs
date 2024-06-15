@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Serialization;
-using DellarteDellaGuerra.Domain.Logging.Port;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Infrastructure.Configuration.Models;
 using DellarteDellaGuerra.Infrastructure.Utils;
 

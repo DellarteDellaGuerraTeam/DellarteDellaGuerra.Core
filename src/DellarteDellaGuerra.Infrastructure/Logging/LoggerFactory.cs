@@ -1,12 +1,12 @@
 ﻿using System.IO;
 using System.Linq;
-using DellarteDellaGuerra.Domain.Logging.Port;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using ILogger = DellarteDellaGuerra.Domain.Logging.Port.ILogger;
+using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
 
 namespace DellarteDellaGuerra.Infrastructure.Logging
 {

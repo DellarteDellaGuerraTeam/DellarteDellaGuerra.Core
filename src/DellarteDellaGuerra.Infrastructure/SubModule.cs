@@ -1,37 +1,32 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Xml;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders;
-using DellarteDellaGuerra.DisplayCompilingShaders.Adapters;
+using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders.Ports;
-using DellarteDellaGuerra.Domain.Logging.Port;
-using DellarteDellaGuerra.Domain.SpawnEquipmentPools.ListEquipment;
-using DellarteDellaGuerra.Domain.SpawnEquipmentPools.ListEquipment.Port;
+using DellarteDellaGuerra.Domain.Equipment.List.Port;
+using DellarteDellaGuerra.Domain.Equipment.List.Util;
+using DellarteDellaGuerra.Equipment.List.Mappers;
+using DellarteDellaGuerra.Equipment.List.MissionBehaviours;
+using DellarteDellaGuerra.Equipment.List.MissionLogic;
 using DellarteDellaGuerra.Infrastructure.Configuration.Models;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Adapters;
+using DellarteDellaGuerra.Infrastructure.Equipment.List.Repositories;
+using DellarteDellaGuerra.Infrastructure.Equipment.List.Utils;
 using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.Patches;
-using DellarteDellaGuerra.Infrastructure.Poc.Patches;
-using DellarteDellaGuerra.Infrastructure.SpawnEquipmentPools.ListEquipment.Repositories;
-using DellarteDellaGuerra.Infrastructure.SpawnEquipmentPools.ListEquipment.Utils;
-using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
-using DellarteDellaGuerra.SpawnEquipmentPools.Mappers;
-using DellarteDellaGuerra.SpawnEquipmentPools.MissionBehaviours;
-using DellarteDellaGuerra.SpawnEquipmentPools.MissionLogic;
 using DellarteDellaGuerra.Utils;
-using HarmonyLib;
 using NLog;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
-using ILogger = DellarteDellaGuerra.Domain.Logging.Port.ILogger;
+using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
 
 namespace DellarteDellaGuerra.Infrastructure
 {
@@ -42,7 +37,6 @@ namespace DellarteDellaGuerra.Infrastructure
         private readonly IConfigurationProvider<string> _loggerConfigProvider;
         private readonly ILoggerFactory _loggerFactory;
 
-        private readonly DadgMission _dadgMission;
         private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler;
 
         private readonly DadgConfigWatcher _dadgConfigWatcher;
@@ -54,9 +48,9 @@ namespace DellarteDellaGuerra.Infrastructure
         private ListBattleEquipment _listBattleEquipment;
         private EquipmentPoolMapper _equipmentMapper;
         private MissionTroopEquipmentCampaignBehaviour _missionTroopEquipmentCampaignBehaviour;
-        private ICharacterEquipmentRepository _characterEquipmentRepository;
-        private ICharacterCivilianEquipmentRepository _characterCivilianEquipmentRepository;
-        private ICharacterSiegeEquipmentRepository _characterSiegeEquipmentRepository;
+        private IEquipmentRepository _equipmentRepository;
+        private ICivilianEquipmentRepository _civilianEquipmentRepository;
+        private ISiegeEquipmentRepository _siegeEquipmentRepository;
         #endregion
 
         #region DisplayCompilingShaders
@@ -72,7 +66,6 @@ namespace DellarteDellaGuerra.Infrastructure
             _loggerConfigProvider = new LoggerConfigPathProvider();
             _loggerFactory = new LoggerFactory(_loggerConfigProvider);
 
-            _dadgMission = new DadgMission(_loggerFactory);
             _campaignBehaviourDisabler = new CampaignBehaviourDisabler();
 
             _dadgConfigWatcher = new DadgConfigWatcher(_loggerFactory);
@@ -85,7 +78,7 @@ namespace DellarteDellaGuerra.Infrastructure
         public override void OnBeforeMissionBehaviorInitialize(Mission mission)
         {
             base.OnBeforeMissionBehaviorInitialize(mission);
-            _dadgMission.Decorate(mission, Campaign.Current.CampaignBehaviorManager);
+            mission.AddMissionBehavior(new TroopEquipmentSpawnLogic(_missionTroopEquipmentCampaignBehaviour));
         }
         
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
@@ -158,10 +151,11 @@ namespace DellarteDellaGuerra.Infrastructure
         {
 
             _npcCharacterXmlProcessor = new NpcCharacterXmlProcessor(_loggerFactory);
-            _characterEquipmentRepository = new CharacterEquipmentRepository(_npcCharacterXmlProcessor);
-            _characterCivilianEquipmentRepository = new CharacterCivilianEquipmentRepository(_characterEquipmentRepository);
-            _characterSiegeEquipmentRepository = new CharacterSiegeEquipmentRepository(_characterEquipmentRepository);
-            _listBattleEquipment = new ListBattleEquipment(_characterEquipmentRepository, _characterSiegeEquipmentRepository, _characterCivilianEquipmentRepository);
+            _equipmentRepository = new EquipmentRepository(_npcCharacterXmlProcessor);
+            _civilianEquipmentRepository = new CivilianEquipmentRepository(_equipmentRepository);
+            _siegeEquipmentRepository = new SiegeEquipmentRepository(_equipmentRepository);
+            _listBattleEquipment = new ListBattleEquipment(_equipmentRepository, _siegeEquipmentRepository,
+                _civilianEquipmentRepository);
             _equipmentMapper = new EquipmentPoolMapper(MBObjectManager.Instance);
             _missionTroopEquipmentCampaignBehaviour = new MissionTroopEquipmentCampaignBehaviour(_loggerFactory, _listBattleEquipment, _equipmentMapper);
         }
