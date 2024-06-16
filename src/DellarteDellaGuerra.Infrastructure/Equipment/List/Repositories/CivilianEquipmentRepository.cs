@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DellarteDellaGuerra.Domain.Equipment.List.Model;
-using DellarteDellaGuerra.Domain.Equipment.List.Port;
+using DellarteDellaGuerra.Domain.Equipment.Get.Model;
 using DellarteDellaGuerra.Infrastructure.Equipment.List.Repositories.EquipmentSorters;
 
 namespace DellarteDellaGuerra.Infrastructure.Equipment.List.Repositories

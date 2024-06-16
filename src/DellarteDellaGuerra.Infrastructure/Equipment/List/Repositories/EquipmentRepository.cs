@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.XPath;
-using DellarteDellaGuerra.Domain.Equipment.List.Model;
-using DellarteDellaGuerra.Domain.Equipment.List.Port;
+using DellarteDellaGuerra.Domain.Equipment.Get.Model;
 using DellarteDellaGuerra.Infrastructure.Equipment.List.Repositories.EquipmentSorters;
 using DellarteDellaGuerra.Infrastructure.Equipment.List.Utils;
 using SafeFluentXPath.Implementation.Api;

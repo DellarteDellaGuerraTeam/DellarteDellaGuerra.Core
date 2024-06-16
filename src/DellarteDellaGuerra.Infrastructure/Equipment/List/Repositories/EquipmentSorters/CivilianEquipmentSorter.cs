@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using DellarteDellaGuerra.Domain.Equipment.List.Model;
+using DellarteDellaGuerra.Domain.Equipment.Get.Model;
 
 namespace DellarteDellaGuerra.Infrastructure.Equipment.List.Repositories.EquipmentSorters
 {

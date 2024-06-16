@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using DellarteDellaGuerra.Domain.Equipment.List.Model;
+using DellarteDellaGuerra.Domain.Equipment.Get.Model;
 
 namespace DellarteDellaGuerra.Infrastructure.Equipment.List.Repositories.EquipmentSorters
 {
@@ -21,11 +21,11 @@ namespace DellarteDellaGuerra.Infrastructure.Equipment.List.Repositories.Equipme
             if (!_equipmentPools.ContainsKey(poolId))
             {
                 _equipmentPools.Add(poolId,
-                    new EquipmentPool(new List<Domain.Equipment.List.Model.Equipment>(), poolId));
+                    new EquipmentPool(new List<Domain.Equipment.Get.Model.Equipment>(), poolId));
             }
 
             var equipment = _equipmentPools[poolId].GetEquipmentLoadouts();
-            equipment.Add(new Domain.Equipment.List.Model.Equipment(node));
+            equipment.Add(new Domain.Equipment.Get.Model.Equipment(node));
 
             _equipmentPools[poolId] = new EquipmentPool(equipment, poolId);
         }

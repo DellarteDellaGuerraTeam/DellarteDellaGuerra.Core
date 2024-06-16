@@ -1,5 +1,5 @@
 ﻿using System.Xml.Linq;
-using DellarteDellaGuerra.Domain.Equipment.List.Model;
+using DellarteDellaGuerra.Domain.Equipment.Get.Model;
 using NUnit.Framework;
 
 namespace DellarteDellaGuerra.Domain.Tests.Equipment.List.Model;
@@ -12,9 +12,9 @@ public class EquipmentPoolShould
         int poolId = 0;
         var equipment = CreateEquipment("1");
         var leftEquipmentPool =
-            new EquipmentPool(new List<Domain.Equipment.List.Model.Equipment> { equipment }, poolId);
+            new EquipmentPool(new List<Domain.Equipment.Get.Model.Equipment> { equipment }, poolId);
         var rightEquipmentPool =
-            new EquipmentPool(new List<Domain.Equipment.List.Model.Equipment> { equipment }, poolId);
+            new EquipmentPool(new List<Domain.Equipment.Get.Model.Equipment> { equipment }, poolId);
 
         var isEqual = leftEquipmentPool.Equals(rightEquipmentPool);
 
@@ -28,9 +28,9 @@ public class EquipmentPoolShould
         var leftEquipment = CreateEquipment("1");
         var rightEquipment = CreateEquipment("1");
         var leftEquipmentPool =
-            new EquipmentPool(new List<Domain.Equipment.List.Model.Equipment> { leftEquipment }, poolId);
+            new EquipmentPool(new List<Domain.Equipment.Get.Model.Equipment> { leftEquipment }, poolId);
         var rightEquipmentPool =
-            new EquipmentPool(new List<Domain.Equipment.List.Model.Equipment> { rightEquipment }, poolId);
+            new EquipmentPool(new List<Domain.Equipment.Get.Model.Equipment> { rightEquipment }, poolId);
 
         var isEqual = leftEquipmentPool.Equals(rightEquipmentPool);
 
@@ -44,9 +44,9 @@ public class EquipmentPoolShould
         var leftEquipment = CreateEquipment("1");
         var rightEquipment = CreateEquipment("2");
         var leftEquipmentPool =
-            new EquipmentPool(new List<Domain.Equipment.List.Model.Equipment> { leftEquipment }, poolId);
+            new EquipmentPool(new List<Domain.Equipment.Get.Model.Equipment> { leftEquipment }, poolId);
         var rightEquipmentPool =
-            new EquipmentPool(new List<Domain.Equipment.List.Model.Equipment> { rightEquipment }, poolId);
+            new EquipmentPool(new List<Domain.Equipment.Get.Model.Equipment> { rightEquipment }, poolId);
 
         var isEqual = leftEquipmentPool.Equals(rightEquipmentPool);
 
@@ -61,18 +61,18 @@ public class EquipmentPoolShould
         var leftEquipment = CreateEquipment("1");
         var rightEquipment = CreateEquipment("1");
         var leftEquipmentPool =
-            new EquipmentPool(new List<Domain.Equipment.List.Model.Equipment> { leftEquipment }, leftPoolId);
+            new EquipmentPool(new List<Domain.Equipment.Get.Model.Equipment> { leftEquipment }, leftPoolId);
         var rightEquipmentPool =
-            new EquipmentPool(new List<Domain.Equipment.List.Model.Equipment> { rightEquipment }, rightPoolId);
+            new EquipmentPool(new List<Domain.Equipment.Get.Model.Equipment> { rightEquipment }, rightPoolId);
 
         var isEqual = leftEquipmentPool.Equals(rightEquipmentPool);
 
         Assert.That(isEqual, Is.False);
     }
 
-    private Domain.Equipment.List.Model.Equipment CreateEquipment(string id)
+    private Domain.Equipment.Get.Model.Equipment CreateEquipment(string id)
     {
-        return new Domain.Equipment.List.Model.Equipment(XDocument
+        return new Domain.Equipment.Get.Model.Equipment(XDocument
             .Parse($"<EquipmentRoster id=\"Equipment{id}\"/>").Root!);
     }
 }

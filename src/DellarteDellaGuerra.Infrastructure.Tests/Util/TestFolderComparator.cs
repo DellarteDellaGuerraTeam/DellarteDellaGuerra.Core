@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using DellarteDellaGuerra.Domain.Equipment.List.Model;
+using DellarteDellaGuerra.Domain.Equipment.Get.Model;
 using NUnit.Framework;
 
 namespace DellarteDellaGuerra.Infrastructure.Tests.Util;

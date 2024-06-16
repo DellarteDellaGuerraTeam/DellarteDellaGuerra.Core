@@ -6,14 +6,15 @@ using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders.Ports;
-using DellarteDellaGuerra.Domain.Equipment.List.Port;
-using DellarteDellaGuerra.Domain.Equipment.List.Util;
-using DellarteDellaGuerra.Equipment.List.Mappers;
-using DellarteDellaGuerra.Equipment.List.MissionBehaviours;
-using DellarteDellaGuerra.Equipment.List.MissionLogic;
-using DellarteDellaGuerra.Infrastructure.Configuration.Models;
+using DellarteDellaGuerra.Domain.Equipment.Get;
+using DellarteDellaGuerra.Domain.Equipment.Get.Port;
+using DellarteDellaGuerra.Equipment.Get.Mappers;
+using DellarteDellaGuerra.Equipment.Get.MissionLogic;
+using DellarteDellaGuerra.Equipment.Get.Providers;
+using DellarteDellaGuerra.Infrastructure.Cache;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
-using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Adapters;
+using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
+using DellarteDellaGuerra.Infrastructure.Equipment.Get;
 using DellarteDellaGuerra.Infrastructure.Equipment.List.Repositories;
 using DellarteDellaGuerra.Infrastructure.Equipment.List.Utils;
 using DellarteDellaGuerra.Infrastructure.Logging;
@@ -43,14 +44,21 @@ namespace DellarteDellaGuerra.Infrastructure
 
         private readonly HarmonyPatcher _harmonyPatcher;
 
+        private readonly ICacheProvider _cacheProvider;
+
         #region SpawnEquipmentPools
         private INpcCharacterXmlProcessor _npcCharacterXmlProcessor;
-        private ListBattleEquipment _listBattleEquipment;
-        private EquipmentPoolMapper _equipmentMapper;
-        private MissionTroopEquipmentCampaignBehaviour _missionTroopEquipmentCampaignBehaviour;
         private IEquipmentRepository _equipmentRepository;
         private ICivilianEquipmentRepository _civilianEquipmentRepository;
         private ISiegeEquipmentRepository _siegeEquipmentRepository;
+        private IBattleEquipmentRepository _battleEquipmentRepository;
+        private IEncounterTypeProvider _encounterTypeProvider;
+        private ITroopBattleEquipmentProvider _troopBattleEquipmentProvider;
+        private ITroopSiegeEquipmentProvider _troopSiegeEquipmentProvider;
+        private ITroopCivilianEquipmentProvider _troopCivilianEquipmentProvider;
+        private IGetTroopEquipment _getTroopEquipment;
+        private EquipmentPoolMapper _equipmentMapper;
+        private TroopEquipmentSpawnLogic _troopEquipmentSpawnLogic;
         #endregion
 
         #region DisplayCompilingShaders
@@ -58,7 +66,6 @@ namespace DellarteDellaGuerra.Infrastructure
         private ICompilingShaderNotifierConfig _compilingShaderNotifierConfig;
         private ICompilingShaderNumberProvider _compilingShaderNumberProvider;
         private DisplayShaderNumber _displayShaderNumber;
-        private IConfigurationProvider<DadgConfig> _configProvider;
         #endregion
 
         public SubModule()
@@ -71,6 +78,8 @@ namespace DellarteDellaGuerra.Infrastructure
             _dadgConfigWatcher = new DadgConfigWatcher(_loggerFactory);
 
             _harmonyPatcher = new HarmonyPatcher(_loggerFactory);
+
+            _cacheProvider = new CacheCampaignBehaviour();
             
             _logger = _loggerFactory.CreateLogger<SubModule>();
         }
@@ -78,7 +87,7 @@ namespace DellarteDellaGuerra.Infrastructure
         public override void OnBeforeMissionBehaviorInitialize(Mission mission)
         {
             base.OnBeforeMissionBehaviorInitialize(mission);
-            mission.AddMissionBehavior(new TroopEquipmentSpawnLogic(_missionTroopEquipmentCampaignBehaviour));
+            mission.AddMissionBehavior(_troopEquipmentSpawnLogic);
         }
         
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
@@ -109,7 +118,7 @@ namespace DellarteDellaGuerra.Infrastructure
             game.AddGameHandler<CompilingShaderNotifier>();
             
             campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
-            campaignGameStarter.AddBehavior(_missionTroopEquipmentCampaignBehaviour);
+            campaignGameStarter.AddBehavior(_cacheProvider as CampaignBehaviorBase);
         }
 
         public override void OnGameInitializationFinished(Game game)
@@ -154,10 +163,20 @@ namespace DellarteDellaGuerra.Infrastructure
             _equipmentRepository = new EquipmentRepository(_npcCharacterXmlProcessor);
             _civilianEquipmentRepository = new CivilianEquipmentRepository(_equipmentRepository);
             _siegeEquipmentRepository = new SiegeEquipmentRepository(_equipmentRepository);
-            _listBattleEquipment = new ListBattleEquipment(_equipmentRepository, _siegeEquipmentRepository,
+            _battleEquipmentRepository = new BattleEquipmentRepository(_equipmentRepository,
+                _siegeEquipmentRepository,
                 _civilianEquipmentRepository);
             _equipmentMapper = new EquipmentPoolMapper(MBObjectManager.Instance);
-            _missionTroopEquipmentCampaignBehaviour = new MissionTroopEquipmentCampaignBehaviour(_loggerFactory, _listBattleEquipment, _equipmentMapper);
+            _troopBattleEquipmentProvider =
+                new TroopBattleEquipmentProvider(_loggerFactory, _battleEquipmentRepository, _cacheProvider);
+            _troopSiegeEquipmentProvider =
+                new TroopSiegeEquipmentProvider(_loggerFactory, _siegeEquipmentRepository, _cacheProvider);
+            _troopCivilianEquipmentProvider =
+                new TroopCivilianEquipmentProvider(_loggerFactory, _civilianEquipmentRepository, _cacheProvider);
+            _encounterTypeProvider = new EncounterTypeProvider();
+            _getTroopEquipment = new GetTroopEquipment(_encounterTypeProvider, _troopBattleEquipmentProvider,
+                _troopSiegeEquipmentProvider, _troopCivilianEquipmentProvider);
+            _troopEquipmentSpawnLogic = new TroopEquipmentSpawnLogic(_getTroopEquipment, _equipmentMapper);
         }
         #endregion
 

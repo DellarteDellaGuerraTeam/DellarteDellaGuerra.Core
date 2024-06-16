@@ -1,5 +1,4 @@
-﻿using DellarteDellaGuerra.Domain.Equipment.List.Model;
-using DellarteDellaGuerra.Domain.Equipment.List.Port;
+﻿using DellarteDellaGuerra.Domain.Equipment.Get.Model;
 using DellarteDellaGuerra.Infrastructure.Equipment.List.Repositories;
 using DellarteDellaGuerra.Infrastructure.Tests.Util;
 using Moq;
@@ -50,7 +49,7 @@ public class CivilianEquipmentRepositoryShould : TestFolderComparator
         IList<EquipmentPool> equipmentPools = Directory.EnumerateFiles(inputFolderPath).Select((filePath, poolId) =>
         {
             var equipmentPoolNodes = EvaluateFileXPath(filePath, "Equipments/*")
-                .Select(node => new Domain.Equipment.List.Model.Equipment(node))
+                .Select(node => new Domain.Equipment.Get.Model.Equipment(node))
                 .ToList();
             return new EquipmentPool(equipmentPoolNodes, poolId);
         }).ToList();

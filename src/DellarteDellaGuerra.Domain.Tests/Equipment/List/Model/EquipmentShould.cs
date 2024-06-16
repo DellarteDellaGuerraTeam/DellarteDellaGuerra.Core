@@ -8,7 +8,7 @@ public class EquipmentShould
     [Test]
     public void EqualEquipmentWithSameEquipmentReference()
     {
-        var equipment = new Domain.Equipment.List.Model.Equipment(CreateEquipmentNode("1"));
+        var equipment = new Domain.Equipment.Get.Model.Equipment(CreateEquipmentNode("1"));
 
         var isEqual = equipment.Equals(equipment);
 
@@ -18,8 +18,8 @@ public class EquipmentShould
     [Test]
     public void EqualEquipmentWithSameEquipmentContent()
     {
-        var leftEquipment = new Domain.Equipment.List.Model.Equipment(CreateEquipmentNode("1"));
-        var rightEquipment = new Domain.Equipment.List.Model.Equipment(CreateEquipmentNode("1"));
+        var leftEquipment = new Domain.Equipment.Get.Model.Equipment(CreateEquipmentNode("1"));
+        var rightEquipment = new Domain.Equipment.Get.Model.Equipment(CreateEquipmentNode("1"));
 
         var isEqual = leftEquipment.Equals(rightEquipment);
 
@@ -29,8 +29,8 @@ public class EquipmentShould
     [Test]
     public void NotEqualEquipmentWithDifferentContent()
     {
-        var leftEquipment = new Domain.Equipment.List.Model.Equipment(CreateEquipmentNode("1"));
-        var rightEquipment = new Domain.Equipment.List.Model.Equipment(CreateEquipmentNode("2"));
+        var leftEquipment = new Domain.Equipment.Get.Model.Equipment(CreateEquipmentNode("1"));
+        var rightEquipment = new Domain.Equipment.Get.Model.Equipment(CreateEquipmentNode("2"));
 
         var isEqual = leftEquipment.Equals(rightEquipment);
 
