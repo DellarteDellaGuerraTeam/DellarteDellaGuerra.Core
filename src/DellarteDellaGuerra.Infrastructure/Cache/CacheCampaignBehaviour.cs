@@ -41,13 +41,20 @@ namespace DellarteDellaGuerra.Infrastructure.Cache
             return (T)_cache[id];
         }
 
+        private void ResetCache()
+        {
+            _cache.Clear();
+        }
+        
         private void OnGameLoadFinished()
         {
+            ResetCache();
             foreach (var callback in _onGameLoadFinishedCallbacks) _cache.Add(callback.Key, callback.Value());
         }
 
         private void OnNewGameCreated()
         {
+            ResetCache();
             foreach (var callback in _onNewGameCreatedCallbacks) _cache.Add(callback.Key, callback.Value());
         }
 

@@ -88,6 +88,8 @@ namespace DellarteDellaGuerra.Infrastructure
         {
             base.OnBeforeMissionBehaviorInitialize(mission);
             mission.AddMissionBehavior(_troopEquipmentSpawnLogic);
+            // mission.MissionBehaviors.Insert(0, _troopEquipmentSpawnLogic);
+            // mission.MissionLogics.Insert(0, _troopEquipmentSpawnLogic);
         }
         
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
