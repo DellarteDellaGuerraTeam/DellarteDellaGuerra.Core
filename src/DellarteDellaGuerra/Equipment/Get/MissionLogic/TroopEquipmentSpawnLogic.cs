@@ -41,7 +41,7 @@ namespace DellarteDellaGuerra.Equipment.Get.MissionLogic
             // Creates a list of equipment pools where each pool is present as many times as the number of equipments it contains 
             IList<MBEquipmentRoster> equipmentWeightedPools =
                 _equipmentPoolMapper.MapEquipmentPool(_getTroopEquipment
-                        .GetEquipmentPools(agent.Troop.StringId))
+                        .GetEquipmentPools(agent.Troop.StringId), agent.Troop.StringId)
                     .SelectMany(pool => pool.AllEquipments, (pool, equipment) => (pool, equipment))
                     .Select(e => e.pool)
                     .ToList();
