@@ -1,0 +1,106 @@
+name: Build Binaries
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore src/DellarteDellaGuerra.sln
+
+      - name: Build solution
+        run: |
+          artifact=$(pwd)/artifact
+          mkdir -p $artifact
+          dotnet build src/DellarteDellaGuerra.sln --configuration Release -p:GameFolder="$artifact"
+
+      - name: Compress Artifact
+        run: |
+          7z a -t7z artifact.7z ./artifact/* -mx9
+
+      - name: Install Bannerlord.ChangelogParser
+        run: dotnet tool install -g Bannerlord.ChangelogParser
+        shell: pwsh
+
+      - name: Set Version
+        id: set_version
+        run: |
+          vers=$(bannerlord_changelog_parser latestversion -f "src/changelog.txt")
+          echo "::set-output name=mod_version::$vers"
+
+      - name: Set Description
+        id: set_description
+        run: |
+          desc=$(bannerlord_changelog_parser fulldescription -f "src/changelog.txt")
+          desc="${desc//'%'/'%25'}"
+          desc="${desc//$'"'/'%22'}"
+          desc="${desc//$'\n'/'%0A'}"
+          desc="${desc//$'\r'/'%0D'}"
+          echo "::set-output name=mod_description::$desc"
+
+      - name: Get branch name
+        id: get_branch
+        run: |
+          branch_name=${GITHUB_REF#refs/heads/}
+          echo "Branch name is: $branch_name"
+          echo "::set-output name=branch_name::$branch_name"
+
+      - name: Check for existing release
+        id: check_release
+        run: |
+          TAG=latest-${{ steps.get_branch.outputs.branch_name }}-bin
+          RELEASE_ID=$(curl -H "Authorization: token $GITHUB_TOKEN" \
+                   -H "Accept: application/vnd.github.v3+json" \
+                   "https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG" | jq '.id' || echo "none")
+          echo "release_id=$RELEASE_ID" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete existing release if any
+        if: env.release_id != 'none'
+        run: |
+          TAG=latest-${{ steps.get_branch.outputs.branch_name }}-bin
+          curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
+               -H "Accept: application/vnd.github.v3+json" \
+               "https://api.github.com/repos/${{ github.repository }}/releases/${{ env.release_id }}"
+          curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ github.repository }}/git/refs/tags/$TAG"          
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Create Release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          tag_name: latest-${{ steps.get_branch.outputs.branch_name }}-bin
+          release_name: Latest ${{ steps.get_branch.outputs.branch_name }} binaries
+          body: ${{ steps.set_description.outputs.mod_description }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifact.7z
+          asset_name: latest-${{ steps.get_branch.outputs.branch_name }}-bin.7z
+          asset_content_type: application/x-7z-compressed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

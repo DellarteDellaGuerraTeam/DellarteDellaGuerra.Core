@@ -49,6 +49,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Infrast
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Infrastructure.Tests", "DellarteDellaGuerra.Infrastructure.Tests\DellarteDellaGuerra.Infrastructure.Tests.csproj", "{3FA3639C-31CF-45D6-8AE0-12C99A663281}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{DC0E0D39-ABB7-4F0C-BC60-0C7F22013D30}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{4EB07234-ED44-4ED0-99C5-3354815693F4}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\build-binaries.yml = ..\.github\workflows\build-binaries.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -90,6 +97,8 @@ Global
 		{F3FF0EA7-9E28-4D27-9FA8-70754A123DF7} = {12CCA2B5-A874-47B3-BB43-799275014D7B}
 		{F1AF53B1-6B28-4A2D-A967-B7BE6EC15C84} = {12CCA2B5-A874-47B3-BB43-799275014D7B}
 		{10714220-ACE7-40E5-9DC2-ACE17923B206} = {12CCA2B5-A874-47B3-BB43-799275014D7B}
+		{DC0E0D39-ABB7-4F0C-BC60-0C7F22013D30} = {12CCA2B5-A874-47B3-BB43-799275014D7B}
+		{4EB07234-ED44-4ED0-99C5-3354815693F4} = {DC0E0D39-ABB7-4F0C-BC60-0C7F22013D30}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B3D4AB65-9162-4EE2-9413-1867C12DC041}
