@@ -16,6 +16,7 @@ using DellarteDellaGuerra.Infrastructure.Equipment.Get;
 using DellarteDellaGuerra.Infrastructure.Equipment.List.Repositories;
 using DellarteDellaGuerra.Infrastructure.Equipment.List.Utils;
 using DellarteDellaGuerra.Infrastructure.Logging;
+using DellarteDellaGuerra.Infrastructure.Missions;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
@@ -32,41 +33,39 @@ namespace DellarteDellaGuerra.Infrastructure
     public class SubModule : MBSubModuleBase
     {
         private readonly ILogger _logger;
-
         private readonly ILoggerFactory _loggerFactory;
-
         private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler;
-
         private readonly DadgConfigWatcher _dadgConfigWatcher;
-
         private readonly HarmonyPatcher _harmonyPatcher;
-
+        private readonly MissionLogicOverrider _missionLogicOverrider;
         private readonly ICacheProvider _cacheProvider;
-
-        private TroopEquipmentSpawnLogic _troopEquipmentSpawnLogic;
         private DisplayShaderNumber _displayShaderNumber;
 
+        private IGetTroopEquipment _getTroopEquipment;
+        private EquipmentPoolMapper _equipmentMapper;
+        
         public SubModule()
         {
             _loggerFactory = new LoggerFactory(new LoggerConfigPathProvider());
-
             _campaignBehaviourDisabler = new CampaignBehaviourDisabler();
-
             _dadgConfigWatcher = new DadgConfigWatcher(_loggerFactory);
-
             _harmonyPatcher = new HarmonyPatcher(_loggerFactory);
-
+            _missionLogicOverrider = new MissionLogicOverrider(_loggerFactory);
             _cacheProvider = new CacheCampaignBehaviour();
-            
             _logger = _loggerFactory.CreateLogger<SubModule>();
         }
 
         public override void OnBeforeMissionBehaviorInitialize(Mission mission)
         {
             base.OnBeforeMissionBehaviorInitialize(mission);
-            mission.AddMissionBehavior(_troopEquipmentSpawnLogic);
+
+            if (mission.GetMissionBehavior<IMissionAgentSpawnLogic>() is null) return;
+            var missionAgentSpawnLogic = new MissionAgentSpawnLogicBuilder()
+                .UseExpandedEquipmentRandomisation(_getTroopEquipment, _equipmentMapper)
+                .Build();
+            _missionLogicOverrider.OverrideMissionLogic<IMissionAgentSpawnLogic>(mission, missionAgentSpawnLogic);
         }
-        
+
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             InfoPrinter.Display("DADG loaded");
@@ -144,7 +143,6 @@ namespace DellarteDellaGuerra.Infrastructure
             var battleEquipmentRepository = new BattleEquipmentRepository(equipmentRepository,
                 siegeEquipmentRepository,
                 civilianEquipmentRepository);
-            var equipmentMapper = new EquipmentPoolMapper(MBObjectManager.Instance);
             var troopBattleEquipmentProvider =
                 new TroopBattleEquipmentProvider(_loggerFactory, battleEquipmentRepository, _cacheProvider);
             var troopSiegeEquipmentProvider =
@@ -152,9 +150,9 @@ namespace DellarteDellaGuerra.Infrastructure
             var troopCivilianEquipmentProvider =
                 new TroopCivilianEquipmentProvider(_loggerFactory, civilianEquipmentRepository, _cacheProvider);
             var encounterTypeProvider = new EncounterTypeProvider();
-            var getTroopEquipment = new GetTroopEquipment(encounterTypeProvider, troopBattleEquipmentProvider,
+            _equipmentMapper = new EquipmentPoolMapper(MBObjectManager.Instance);
+            _getTroopEquipment = new GetTroopEquipment(encounterTypeProvider, troopBattleEquipmentProvider,
                 troopSiegeEquipmentProvider, troopCivilianEquipmentProvider);
-            _troopEquipmentSpawnLogic = new TroopEquipmentSpawnLogic(getTroopEquipment, equipmentMapper);
         }
         #endregion
 
