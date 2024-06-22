@@ -34,13 +34,8 @@ public class TroopSiegeEquipmentProviderShould
         _cacheProvider = new Mock<ICacheProvider>();
         _cacheProvider
             .Setup(
-                cache => cache.CacheObjectOnGameLoadFinished(It.IsAny<Func<object>>()))
+                cache => cache.CacheObject(It.IsAny<Func<object>>(), CachedEvent.OnSessionLaunched))
             .Returns(cachedOnLoadEquipmentPoolsKey);
-
-        _cacheProvider
-            .Setup(
-                cache => cache.CacheObjectOnNewGameCreated(It.IsAny<Func<object>>()))
-            .Returns(cachedOnNewEquipmentPoolsKey);
 
         _troopSiegeEquipmentProvider =
             new TroopSiegeEquipmentProvider(_loggerFactory.Object, _siegeEquipmentRepository.Object,

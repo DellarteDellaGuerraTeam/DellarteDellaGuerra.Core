@@ -12,8 +12,7 @@ namespace DellarteDellaGuerra.Infrastructure.Equipment.Get
         private readonly ILogger _logger;
         private readonly ISiegeEquipmentRepository _siegeEquipmentRepository;
         private readonly ICacheProvider _cacheProvider;
-        private readonly string _onGameLoadFinishedCachedObjectId;
-        private readonly string _onNewGameCreatedCachedObjectId;
+        private readonly string _onSessionLaunchedCachedObjectId;
 
         public TroopSiegeEquipmentProvider(
             ILoggerFactory loggerFactory,
@@ -23,9 +22,8 @@ namespace DellarteDellaGuerra.Infrastructure.Equipment.Get
             _logger = loggerFactory.CreateLogger<TroopSiegeEquipmentProvider>();
             _siegeEquipmentRepository = siegeEquipmentRepository;
             _cacheProvider = cacheProvider;
-            _onGameLoadFinishedCachedObjectId =
-                _cacheProvider.CacheObjectOnGameLoadFinished(ReadAllTroopEquipmentPools);
-            _onNewGameCreatedCachedObjectId = _cacheProvider.CacheObjectOnNewGameCreated(ReadAllTroopEquipmentPools);
+            _onSessionLaunchedCachedObjectId =
+                _cacheProvider.CacheObject(ReadAllTroopEquipmentPools, CachedEvent.OnSessionLaunched);
         }
 
         public IList<EquipmentPool> GetSiegeTroopEquipmentPools(string troopId)
@@ -54,9 +52,7 @@ namespace DellarteDellaGuerra.Infrastructure.Equipment.Get
         private IDictionary<string, IList<EquipmentPool>> GetCachedTroopEquipmentPools()
         {
             return _cacheProvider.GetCachedObject<IDictionary<string, IList<EquipmentPool>>>(
-                       _onGameLoadFinishedCachedObjectId) ??
-                   _cacheProvider.GetCachedObject<IDictionary<string, IList<EquipmentPool>>>(
-                       _onNewGameCreatedCachedObjectId) ?? new Dictionary<string, IList<EquipmentPool>>();
+                _onSessionLaunchedCachedObjectId) ?? new Dictionary<string, IList<EquipmentPool>>();
         }
     }
 }

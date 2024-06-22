@@ -5,9 +5,7 @@ using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
-using DellarteDellaGuerra.Domain.DisplayCompilingShaders.Ports;
 using DellarteDellaGuerra.Domain.Equipment.Get;
-using DellarteDellaGuerra.Domain.Equipment.Get.Port;
 using DellarteDellaGuerra.Equipment.Get.Mappers;
 using DellarteDellaGuerra.Equipment.Get.MissionLogic;
 using DellarteDellaGuerra.Equipment.Get.Providers;
@@ -35,7 +33,6 @@ namespace DellarteDellaGuerra.Infrastructure
     {
         private readonly ILogger _logger;
 
-        private readonly IConfigurationProvider<string> _loggerConfigProvider;
         private readonly ILoggerFactory _loggerFactory;
 
         private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler;
@@ -46,32 +43,12 @@ namespace DellarteDellaGuerra.Infrastructure
 
         private readonly ICacheProvider _cacheProvider;
 
-        #region SpawnEquipmentPools
-        private INpcCharacterXmlProcessor _npcCharacterXmlProcessor;
-        private IEquipmentRepository _equipmentRepository;
-        private ICivilianEquipmentRepository _civilianEquipmentRepository;
-        private ISiegeEquipmentRepository _siegeEquipmentRepository;
-        private IBattleEquipmentRepository _battleEquipmentRepository;
-        private IEncounterTypeProvider _encounterTypeProvider;
-        private ITroopBattleEquipmentProvider _troopBattleEquipmentProvider;
-        private ITroopSiegeEquipmentProvider _troopSiegeEquipmentProvider;
-        private ITroopCivilianEquipmentProvider _troopCivilianEquipmentProvider;
-        private IGetTroopEquipment _getTroopEquipment;
-        private EquipmentPoolMapper _equipmentMapper;
         private TroopEquipmentSpawnLogic _troopEquipmentSpawnLogic;
-        #endregion
-
-        #region DisplayCompilingShaders
-        private ICompilingShaderDisplayer _compilingShaderDisplayer;
-        private ICompilingShaderNotifierConfig _compilingShaderNotifierConfig;
-        private ICompilingShaderNumberProvider _compilingShaderNumberProvider;
         private DisplayShaderNumber _displayShaderNumber;
-        #endregion
 
         public SubModule()
         {
-            _loggerConfigProvider = new LoggerConfigPathProvider();
-            _loggerFactory = new LoggerFactory(_loggerConfigProvider);
+            _loggerFactory = new LoggerFactory(new LoggerConfigPathProvider());
 
             _campaignBehaviourDisabler = new CampaignBehaviourDisabler();
 
@@ -88,8 +65,6 @@ namespace DellarteDellaGuerra.Infrastructure
         {
             base.OnBeforeMissionBehaviorInitialize(mission);
             mission.AddMissionBehavior(_troopEquipmentSpawnLogic);
-            // mission.MissionBehaviors.Insert(0, _troopEquipmentSpawnLogic);
-            // mission.MissionLogics.Insert(0, _troopEquipmentSpawnLogic);
         }
         
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
@@ -111,6 +86,8 @@ namespace DellarteDellaGuerra.Infrastructure
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
+            _cacheProvider.InvalidateCache();
+
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
             HandleSpawnEquipmentPoolsDependencies();
@@ -160,35 +137,35 @@ namespace DellarteDellaGuerra.Infrastructure
         #region SpawnEquipmentPools
         private void HandleSpawnEquipmentPoolsDependencies()
         {
-
-            _npcCharacterXmlProcessor = new NpcCharacterXmlProcessor(_loggerFactory);
-            _equipmentRepository = new EquipmentRepository(_npcCharacterXmlProcessor);
-            _civilianEquipmentRepository = new CivilianEquipmentRepository(_equipmentRepository);
-            _siegeEquipmentRepository = new SiegeEquipmentRepository(_equipmentRepository);
-            _battleEquipmentRepository = new BattleEquipmentRepository(_equipmentRepository,
-                _siegeEquipmentRepository,
-                _civilianEquipmentRepository);
-            _equipmentMapper = new EquipmentPoolMapper(MBObjectManager.Instance);
-            _troopBattleEquipmentProvider =
-                new TroopBattleEquipmentProvider(_loggerFactory, _battleEquipmentRepository, _cacheProvider);
-            _troopSiegeEquipmentProvider =
-                new TroopSiegeEquipmentProvider(_loggerFactory, _siegeEquipmentRepository, _cacheProvider);
-            _troopCivilianEquipmentProvider =
-                new TroopCivilianEquipmentProvider(_loggerFactory, _civilianEquipmentRepository, _cacheProvider);
-            _encounterTypeProvider = new EncounterTypeProvider();
-            _getTroopEquipment = new GetTroopEquipment(_encounterTypeProvider, _troopBattleEquipmentProvider,
-                _troopSiegeEquipmentProvider, _troopCivilianEquipmentProvider);
-            _troopEquipmentSpawnLogic = new TroopEquipmentSpawnLogic(_getTroopEquipment, _equipmentMapper);
+            var npcCharacterXmlProcessor = new NpcCharacterXmlProcessor(_loggerFactory, _cacheProvider);
+            var equipmentRepository = new EquipmentRepository(npcCharacterXmlProcessor);
+            var civilianEquipmentRepository = new CivilianEquipmentRepository(equipmentRepository);
+            var siegeEquipmentRepository = new SiegeEquipmentRepository(equipmentRepository);
+            var battleEquipmentRepository = new BattleEquipmentRepository(equipmentRepository,
+                siegeEquipmentRepository,
+                civilianEquipmentRepository);
+            var equipmentMapper = new EquipmentPoolMapper(MBObjectManager.Instance);
+            var troopBattleEquipmentProvider =
+                new TroopBattleEquipmentProvider(_loggerFactory, battleEquipmentRepository, _cacheProvider);
+            var troopSiegeEquipmentProvider =
+                new TroopSiegeEquipmentProvider(_loggerFactory, siegeEquipmentRepository, _cacheProvider);
+            var troopCivilianEquipmentProvider =
+                new TroopCivilianEquipmentProvider(_loggerFactory, civilianEquipmentRepository, _cacheProvider);
+            var encounterTypeProvider = new EncounterTypeProvider();
+            var getTroopEquipment = new GetTroopEquipment(encounterTypeProvider, troopBattleEquipmentProvider,
+                troopSiegeEquipmentProvider, troopCivilianEquipmentProvider);
+            _troopEquipmentSpawnLogic = new TroopEquipmentSpawnLogic(getTroopEquipment, equipmentMapper);
         }
         #endregion
 
         #region DisplayCompilingShaders
         private void HandleDisplayCompilingShadersDependencies()
         {
-            _compilingShaderDisplayer = new CompilingShaderDisplayer();
-            _compilingShaderNotifierConfig = new CompilingShaderNotifierConfig(_dadgConfigWatcher);
-            _compilingShaderNumberProvider = new CompilingShaderNumberProvider();
-            _displayShaderNumber = new DisplayShaderNumber(_compilingShaderNotifierConfig, _compilingShaderNumberProvider, _compilingShaderDisplayer);
+            var compilingShaderDisplayer = new CompilingShaderDisplayer();
+            var compilingShaderNotifierConfig = new CompilingShaderNotifierConfig(_dadgConfigWatcher);
+            var compilingShaderNumberProvider = new CompilingShaderNumberProvider();
+            _displayShaderNumber = new DisplayShaderNumber(compilingShaderNotifierConfig, compilingShaderNumberProvider,
+                compilingShaderDisplayer);
         }
         #endregion
     }

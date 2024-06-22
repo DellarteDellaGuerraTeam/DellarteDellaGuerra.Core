@@ -4,8 +4,11 @@ namespace DellarteDellaGuerra.Infrastructure.Cache
 {
     public interface ICacheProvider
     {
-        string CacheObjectOnGameLoadFinished(Func<object> cacheObject);
-        string CacheObjectOnNewGameCreated(Func<object> cacheObject);
+        string CacheObject(object cacheObject);
+        string CacheObject(Func<object> cacheRequest, CachedEvent cachedEvent);
         T? GetCachedObject<T>(string id);
+        void InvalidateCache();
+        void InvalidateCache(string id);
+        void InvalidateCache(string id, CachedEvent cachedEvent);
     }
 }
