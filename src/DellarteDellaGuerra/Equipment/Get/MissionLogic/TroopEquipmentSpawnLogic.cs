@@ -27,6 +27,7 @@ namespace DellarteDellaGuerra.Equipment.Get.MissionLogic
 
             var equipmentPool = GetRandomEquipmentPool(agent.Origin);
             var equipment = GetRandomEquipmentLoadout(equipmentPool);
+            agent.ClearEquipment();
             agent.UpdateSpawnEquipmentAndRefreshVisuals(equipment);
         }
 

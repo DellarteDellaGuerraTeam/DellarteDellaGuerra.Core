@@ -13,13 +13,13 @@
     "Standalone": {
       "commandName": "Executable",
       "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_Client\\Bannerlord.exe",
-      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*PocColor*$(ModuleId)*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*_MODULES_",
+      "commandLineArgs": "/singleplayer /continuegame _MODULES_*Bannerlord.Harmony*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*PocColor*$(ModuleId)*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*_MODULES_",
       "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_Client"
     },
     "Standalone.BLSE": {
       "commandName": "Executable",
       "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_Client\\Bannerlord.BLSE.Standalone.exe",
-      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Bannerlord.ButterLib*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*PocColor*$(ModuleId)*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*_MODULES_",
+      "commandLineArgs": "/singleplayer /continuegame _MODULES_*Bannerlord.Harmony*Bannerlord.ButterLib*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*PocColor*$(ModuleId)*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*_MODULES_",
       "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_Client"
     }
   }
