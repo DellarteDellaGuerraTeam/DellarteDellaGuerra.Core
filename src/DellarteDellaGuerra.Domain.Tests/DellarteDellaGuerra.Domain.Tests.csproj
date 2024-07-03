@@ -19,8 +19,4 @@
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Equipment\List\Util\"/>
-    </ItemGroup>
-
 </Project>

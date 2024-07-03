@@ -24,8 +24,4 @@
     <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-      <Folder Include="Equipment\Get\"/>
-  </ItemGroup>
-
 </Project>

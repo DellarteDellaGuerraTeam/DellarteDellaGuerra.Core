@@ -5,21 +5,22 @@ using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
-using DellarteDellaGuerra.Domain.Equipment.Get;
-using DellarteDellaGuerra.Equipment.Get.Mappers;
-using DellarteDellaGuerra.Equipment.Get.MissionLogic;
-using DellarteDellaGuerra.Equipment.Get.Providers;
+using DellarteDellaGuerra.Domain.EquipmentPool;
+using DellarteDellaGuerra.Domain.EquipmentPool.Util;
 using DellarteDellaGuerra.Infrastructure.Cache;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
-using DellarteDellaGuerra.Infrastructure.Equipment.Get;
-using DellarteDellaGuerra.Infrastructure.Equipment.List.Repositories;
-using DellarteDellaGuerra.Infrastructure.Equipment.List.Utils;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.Get;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Utils;
 using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.Missions;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
+using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPool.Mappers;
+using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPool.Providers;
+using DellarteDellaGuerra.SetSpawnEquipment.MissionLogic;
 using DellarteDellaGuerra.Utils;
 using NLog;
 using TaleWorlds.CampaignSystem;
@@ -41,7 +42,7 @@ namespace DellarteDellaGuerra.Infrastructure
         private readonly ICacheProvider _cacheProvider;
         private DisplayShaderNumber _displayShaderNumber;
 
-        private IGetTroopEquipment _getTroopEquipment;
+        private IGetEquipmentPool _getEquipmentPool;
         private EquipmentPoolMapper _equipmentMapper;
         
         public SubModule()
@@ -59,11 +60,7 @@ namespace DellarteDellaGuerra.Infrastructure
         {
             base.OnBeforeMissionBehaviorInitialize(mission);
 
-            if (mission.GetMissionBehavior<IMissionAgentSpawnLogic>() is null) return;
-            var missionAgentSpawnLogic = new MissionAgentSpawnLogicBuilder()
-                .UseExpandedEquipmentRandomisation(_getTroopEquipment, _equipmentMapper)
-                .Build();
-            _missionLogicOverrider.OverrideMissionLogic<IMissionAgentSpawnLogic>(mission, missionAgentSpawnLogic);
+            AddEquipmentSpawnMissionBehaviour(mission);
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
@@ -89,7 +86,7 @@ namespace DellarteDellaGuerra.Infrastructure
 
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
-            HandleSpawnEquipmentPoolsDependencies();
+            HandleEquipmentSpawnDependencies();
             HandleDisplayCompilingShadersDependencies();
 
             CompilingShaderNotifier.Init(_displayShaderNumber);
@@ -133,8 +130,9 @@ namespace DellarteDellaGuerra.Infrastructure
             }
         }
 
-        #region SpawnEquipmentPools
-        private void HandleSpawnEquipmentPoolsDependencies()
+        #region GetEquipmentSpawn
+
+        private void HandleEquipmentSpawnDependencies()
         {
             var npcCharacterXmlProcessor = new NpcCharacterXmlProcessor(_loggerFactory, _cacheProvider);
             var equipmentRepository = new EquipmentRepository(npcCharacterXmlProcessor);
@@ -150,9 +148,23 @@ namespace DellarteDellaGuerra.Infrastructure
             var troopCivilianEquipmentProvider =
                 new TroopCivilianEquipmentProvider(_loggerFactory, civilianEquipmentRepository, _cacheProvider);
             var encounterTypeProvider = new EncounterTypeProvider();
+
+            var random = new Random();
+            var equipmentPicker = new EquipmentPoolPoolPicker(random);
+            
             _equipmentMapper = new EquipmentPoolMapper(MBObjectManager.Instance);
-            _getTroopEquipment = new GetTroopEquipment(encounterTypeProvider, troopBattleEquipmentProvider,
-                troopSiegeEquipmentProvider, troopCivilianEquipmentProvider);
+            _getEquipmentPool = new GetEquipmentPool(encounterTypeProvider, troopBattleEquipmentProvider,
+                troopSiegeEquipmentProvider, troopCivilianEquipmentProvider, equipmentPicker);
+        }
+
+        private void AddEquipmentSpawnMissionBehaviour(Mission mission)
+        {
+            // TODO: implement generic way by getting all MissionBehaviours from DADG assemblies and adding them to the mission
+            if (mission.GetMissionBehavior<IMissionAgentSpawnLogic>() is null) return;
+            var missionAgentSpawnLogic = new MissionAgentSpawnLogicBuilder()
+                .UseExpandedEquipmentRandomisation(_getEquipmentPool, _equipmentMapper)
+                .Build();
+            _missionLogicOverrider.OverrideMissionLogic<IMissionAgentSpawnLogic>(mission, missionAgentSpawnLogic);
         }
         #endregion
 

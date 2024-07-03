@@ -25,12 +25,12 @@ namespace DellarteDellaGuerra.Infrastructure.Missions
          *     Currently, it expands equipment randomisation for each troop at spawn.
          * </remarks>
          */
-        // public void Decorate(Mission mission, IGetTroopEquipment getTroopEquipment,
+        // public void Decorate(Mission mission, IGetEquipmentPool getEquipmentPool,
         //     EquipmentPoolMapper equipmentPoolMapper)
         // {
         //     if (mission.GetMissionBehavior<IMissionAgentSpawnLogic>() is null) return;
         //
-        //     var spawnLogic = GetSpawnLogic(getTroopEquipment, equipmentPoolMapper);
+        //     var spawnLogic = GetSpawnLogic(getEquipmentPool, equipmentPoolMapper);
         //     OverrideMissionLogic<IMissionAgentSpawnLogic>(mission, spawnLogic);
         // }
         public void OverrideMissionLogic<T>(Mission mission, MissionLogic newMissionLogic)

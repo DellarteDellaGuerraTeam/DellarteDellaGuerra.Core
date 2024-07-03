@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using DellarteDellaGuerra.Domain.Equipment.Get.Model;
 using NUnit.Framework;
 
 namespace DellarteDellaGuerra.Infrastructure.Tests.Util;
@@ -10,7 +9,7 @@ public class TestFolderComparator
 {
     protected void AssertCharacterEquipmentPools(
         string expectedXmlFolderPath,
-        IDictionary<string,IList<EquipmentPool>> allTroopEquipmentPools,
+        IDictionary<string,IList<Domain.EquipmentPool.Model.EquipmentPool>> allTroopEquipmentPools,
         string troopId,
         int poolId)
     {
