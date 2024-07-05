@@ -5,7 +5,7 @@ using TaleWorlds.ObjectSystem;
 
 namespace DellarteDellaGuerra.SetSpawnEquipment.MissionLogic
 {
-    public class CharacterSpawnCleanUpLogic : MissionAgentSpawnLogic
+    public class CharacterSpawnCleanUpLogic : TaleWorlds.MountAndBlade.MissionLogic
     {
         /**
          * <summary>
@@ -38,11 +38,6 @@ namespace DellarteDellaGuerra.SetSpawnEquipment.MissionLogic
             {
                 Troop = globalCharacterObject
             };
-        }
-
-        public CharacterSpawnCleanUpLogic(IMissionTroopSupplier[] suppliers, BattleSideEnum playerSide,
-            Mission.BattleSizeType battleSizeType) : base(suppliers, playerSide, battleSizeType)
-        {
         }
     }
 }

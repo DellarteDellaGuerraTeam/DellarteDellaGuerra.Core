@@ -14,7 +14,6 @@ using DellarteDellaGuerra.Infrastructure.EquipmentPool.Get;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Utils;
 using DellarteDellaGuerra.Infrastructure.Logging;
-using DellarteDellaGuerra.Infrastructure.Missions;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
@@ -38,12 +37,10 @@ namespace DellarteDellaGuerra.Infrastructure
         private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler;
         private readonly DadgConfigWatcher _dadgConfigWatcher;
         private readonly HarmonyPatcher _harmonyPatcher;
-        private readonly MissionLogicOverrider _missionLogicOverrider;
         private readonly ICacheProvider _cacheProvider;
         private DisplayShaderNumber _displayShaderNumber;
 
-        private IGetEquipmentPool _getEquipmentPool;
-        private EquipmentPoolMapper _equipmentMapper;
+        private SpawnEquipmentInitialiser _spawnEquipmentInitialiser;
         
         public SubModule()
         {
@@ -51,7 +48,6 @@ namespace DellarteDellaGuerra.Infrastructure
             _campaignBehaviourDisabler = new CampaignBehaviourDisabler();
             _dadgConfigWatcher = new DadgConfigWatcher(_loggerFactory);
             _harmonyPatcher = new HarmonyPatcher(_loggerFactory);
-            _missionLogicOverrider = new MissionLogicOverrider(_loggerFactory);
             _cacheProvider = new CacheCampaignBehaviour();
             _logger = _loggerFactory.CreateLogger<SubModule>();
         }
@@ -151,20 +147,17 @@ namespace DellarteDellaGuerra.Infrastructure
 
             var random = new Random();
             var equipmentPicker = new EquipmentPoolPoolPicker(random);
-            
-            _equipmentMapper = new EquipmentPoolMapper(MBObjectManager.Instance);
-            _getEquipmentPool = new GetEquipmentPool(encounterTypeProvider, troopBattleEquipmentProvider,
+
+            var equipmentMapper = new EquipmentPoolMapper(MBObjectManager.Instance);
+            var getEquipmentPool = new GetEquipmentPool(encounterTypeProvider, troopBattleEquipmentProvider,
                 troopSiegeEquipmentProvider, troopCivilianEquipmentProvider, equipmentPicker);
+
+            _spawnEquipmentInitialiser = new SpawnEquipmentInitialiser(getEquipmentPool, equipmentMapper);
         }
 
         private void AddEquipmentSpawnMissionBehaviour(Mission mission)
         {
-            // TODO: implement generic way by getting all MissionBehaviours from DADG assemblies and adding them to the mission
-            if (mission.GetMissionBehavior<IMissionAgentSpawnLogic>() is null) return;
-            var missionAgentSpawnLogic = new MissionAgentSpawnLogicBuilder()
-                .UseExpandedEquipmentRandomisation(_getEquipmentPool, _equipmentMapper)
-                .Build();
-            _missionLogicOverrider.OverrideMissionLogic<IMissionAgentSpawnLogic>(mission, missionAgentSpawnLogic);
+            _spawnEquipmentInitialiser.Initialise(mission);
         }
         #endregion
 
