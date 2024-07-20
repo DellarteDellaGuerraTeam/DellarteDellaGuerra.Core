@@ -4,6 +4,6 @@ namespace DellarteDellaGuerra.Domain.EquipmentPool.Port
 {
     public interface ITroopSiegeEquipmentProvider
     {
-        IList<Model.EquipmentPool> GetSiegeTroopEquipmentPools(string troopId);
+        IList<Model.EquipmentPool> GetSiegeTroopEquipmentPools(string equipmentId);
     }
 }

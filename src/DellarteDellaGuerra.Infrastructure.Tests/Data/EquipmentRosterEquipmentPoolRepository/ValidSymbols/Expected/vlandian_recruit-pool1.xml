@@ -1,0 +1,9 @@
+<Equipments>
+    <EquipmentSet pool="1" civilian="true">
+        <Equipment slot="Head" id="Item.dadg_sheperds_hat" />
+        <Equipment slot="Body"
+                   id="Item.pleatedjacketfurtrim_blue" />
+        <Equipment slot="Leg"
+                   id="Item.hosen_with_boots_a" />
+    </EquipmentSet> 
+</Equipments>

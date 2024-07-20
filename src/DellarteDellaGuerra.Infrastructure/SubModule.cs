@@ -7,19 +7,25 @@ using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.EquipmentPool;
 using DellarteDellaGuerra.Domain.EquipmentPool.Util;
-using DellarteDellaGuerra.Infrastructure.Cache;
+using DellarteDellaGuerra.Infrastructure.Caching;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.Get;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Civilian;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Siege;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Utils;
 using DellarteDellaGuerra.Infrastructure.Logging;
+using DellarteDellaGuerra.Infrastructure.Missions.Events;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
 using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPool.Mappers;
 using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPool.Providers;
 using DellarteDellaGuerra.SetSpawnEquipment.MissionLogic;
+using DellarteDellaGuerra.SetSpawnEquipment.MissionLogic.Utils;
+using DellarteDellaGuerra.SetSpawnEquipment.Ports;
 using DellarteDellaGuerra.Utils;
 using NLog;
 using TaleWorlds.CampaignSystem;
@@ -38,9 +44,11 @@ namespace DellarteDellaGuerra.Infrastructure
         private readonly DadgConfigWatcher _dadgConfigWatcher;
         private readonly HarmonyPatcher _harmonyPatcher;
         private readonly ICacheProvider _cacheProvider;
+        private readonly IMissionEventCallbackRegister _missionEventExecutor;
         private DisplayShaderNumber _displayShaderNumber;
 
-        private SpawnEquipmentInitialiser _spawnEquipmentInitialiser;
+        private BattleMissionSpawnEquipmentPoolSetter _battleMissionSpawnEquipmentInitialiser;
+        private FriendlyMissionSpawnEquipmentPoolSetter _friendlyMissionSpawnEquipmentInitialiser;
         
         public SubModule()
         {
@@ -49,6 +57,7 @@ namespace DellarteDellaGuerra.Infrastructure
             _dadgConfigWatcher = new DadgConfigWatcher(_loggerFactory);
             _harmonyPatcher = new HarmonyPatcher(_loggerFactory);
             _cacheProvider = new CacheCampaignBehaviour();
+            _missionEventExecutor = new MissionEventExecutor();
             _logger = _loggerFactory.CreateLogger<SubModule>();
         }
 
@@ -56,6 +65,8 @@ namespace DellarteDellaGuerra.Infrastructure
         {
             base.OnBeforeMissionBehaviorInitialize(mission);
 
+            mission.MissionBehaviors.Insert(0, _missionEventExecutor as MissionBehavior);
+            mission.MissionLogics.Insert(0, _missionEventExecutor as MissionLogic);
             AddEquipmentSpawnMissionBehaviour(mission);
         }
 
@@ -130,13 +141,17 @@ namespace DellarteDellaGuerra.Infrastructure
 
         private void HandleEquipmentSpawnDependencies()
         {
-            var npcCharacterXmlProcessor = new NpcCharacterXmlProcessor(_loggerFactory, _cacheProvider);
-            var equipmentRepository = new EquipmentRepository(npcCharacterXmlProcessor);
-            var civilianEquipmentRepository = new CivilianEquipmentRepository(equipmentRepository);
-            var siegeEquipmentRepository = new SiegeEquipmentRepository(equipmentRepository);
-            var battleEquipmentRepository = new BattleEquipmentRepository(equipmentRepository,
-                siegeEquipmentRepository,
-                civilianEquipmentRepository);
+            var npcCharacterXmlProcessor = new MergedModulesXmlProcessor(_loggerFactory, _cacheProvider);
+            var characterEquipmentRepository = new CharacterEquipmentPoolRepository(npcCharacterXmlProcessor);
+            var equipmentRosterRepository = new EquipmentRosterEquipmentPoolRepository(npcCharacterXmlProcessor);
+            var civilianEquipmentRepository =
+                new CivilianEquipmentPoolProvider(_loggerFactory, characterEquipmentRepository,
+                    equipmentRosterRepository);
+            var siegeEquipmentRepository =
+                new SiegeEquipmentPoolProvider(_loggerFactory, characterEquipmentRepository, equipmentRosterRepository);
+            var battleEquipmentRepository =
+                new BattleEquipmentPoolProvider(_loggerFactory, siegeEquipmentRepository, civilianEquipmentRepository,
+                    characterEquipmentRepository, equipmentRosterRepository);
             var troopBattleEquipmentProvider =
                 new TroopBattleEquipmentProvider(_loggerFactory, battleEquipmentRepository, _cacheProvider);
             var troopSiegeEquipmentProvider =
@@ -152,12 +167,21 @@ namespace DellarteDellaGuerra.Infrastructure
             var getEquipmentPool = new GetEquipmentPool(encounterTypeProvider, troopBattleEquipmentProvider,
                 troopSiegeEquipmentProvider, troopCivilianEquipmentProvider, equipmentPicker);
 
-            _spawnEquipmentInitialiser = new SpawnEquipmentInitialiser(getEquipmentPool, equipmentMapper);
+            var agentSpawnEquipmentPoolSetter = new AgentSpawnEquipmentPoolSetter(getEquipmentPool, equipmentMapper,
+                _missionEventExecutor, MBObjectManager.Instance);
+
+            _battleMissionSpawnEquipmentInitialiser =
+                new BattleMissionSpawnEquipmentPoolSetter(agentSpawnEquipmentPoolSetter);
+            _friendlyMissionSpawnEquipmentInitialiser =
+                new FriendlyMissionSpawnEquipmentPoolSetter(getEquipmentPool, equipmentMapper, _loggerFactory);
         }
 
         private void AddEquipmentSpawnMissionBehaviour(Mission mission)
         {
-            _spawnEquipmentInitialiser.Initialise(mission);
+            // mission.MissionBehaviors.Insert(1, _friendlyMissionSpawnEquipmentInitialiser);
+            // mission.MissionLogics.Insert(1, _friendlyMissionSpawnEquipmentInitialiser);
+            mission.AddMissionBehavior(_friendlyMissionSpawnEquipmentInitialiser);
+            // mission.AddMissionBehavior(_battleMissionSpawnEquipmentInitialiser);
         }
         #endregion
 

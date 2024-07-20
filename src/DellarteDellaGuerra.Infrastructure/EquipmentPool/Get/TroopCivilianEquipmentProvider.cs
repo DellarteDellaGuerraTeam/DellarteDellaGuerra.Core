@@ -1,51 +1,51 @@
 ﻿using System.Collections.Generic;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.EquipmentPool.Port;
-using DellarteDellaGuerra.Infrastructure.Cache;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
+using DellarteDellaGuerra.Infrastructure.Caching;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Civilian;
 
 namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.Get
 {
     public class TroopCivilianEquipmentProvider : ITroopCivilianEquipmentProvider
     {
         private readonly ILogger _logger;
-        private readonly ICivilianEquipmentRepository _civilianEquipmentRepository;
+        private readonly ICivilianEquipmentPoolProvider _civilianEquipmentPoolProvider;
         private readonly ICacheProvider _cacheProvider;
         private readonly string _onSessionLaunchedCachedObjectId;
 
         public TroopCivilianEquipmentProvider(
             ILoggerFactory loggerFactory,
-            ICivilianEquipmentRepository civilianEquipmentRepository,
+            ICivilianEquipmentPoolProvider civilianEquipmentPoolProvider,
             ICacheProvider cacheProvider)
         {
             _logger = loggerFactory.CreateLogger<TroopCivilianEquipmentProvider>();
-            _civilianEquipmentRepository = civilianEquipmentRepository;
+            _civilianEquipmentPoolProvider = civilianEquipmentPoolProvider;
             _cacheProvider = cacheProvider;
             _onSessionLaunchedCachedObjectId =
-                _cacheProvider.CacheObject(ReadAllTroopEquipmentPools, CachedEvent.OnSessionLaunched);
+                _cacheProvider.CacheObject(ReadAllTroopEquipmentPools, CampaignEvent.OnSessionLaunched);
         }
 
-        public IList<Domain.EquipmentPool.Model.EquipmentPool> GetCivilianTroopEquipmentPools(string troopId)
+        public IList<Domain.EquipmentPool.Model.EquipmentPool> GetCivilianTroopEquipmentPools(string equipmentId)
         {
-            if (string.IsNullOrWhiteSpace(troopId))
+            if (string.IsNullOrWhiteSpace(equipmentId))
             {
-                _logger.Debug("The character string id is null or empty.");
+                _logger.Debug("The equipment id is null or empty.");
                 return new List<Domain.EquipmentPool.Model.EquipmentPool>();
             }
 
             var troopEquipmentPools = GetCachedTroopEquipmentPools();
-            if (!troopEquipmentPools.ContainsKey(troopId))
+            if (!troopEquipmentPools.ContainsKey(equipmentId))
             {
-                _logger.Warn($"The character string id {troopId} is not in the civilian equipment pools.");
+                _logger.Warn($"The equipment id {equipmentId} is not in the civilian equipment pools.");
                 return new List<Domain.EquipmentPool.Model.EquipmentPool>();
             }
 
-            return troopEquipmentPools[troopId];
+            return troopEquipmentPools[equipmentId];
         }
 
         private IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> ReadAllTroopEquipmentPools()
         {
-            return _civilianEquipmentRepository.GetCivilianEquipmentByCharacterAndPool();
+            return _civilianEquipmentPoolProvider.GetCivilianEquipmentByCharacterAndPool();
         }
 
         private IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> GetCachedTroopEquipmentPools()

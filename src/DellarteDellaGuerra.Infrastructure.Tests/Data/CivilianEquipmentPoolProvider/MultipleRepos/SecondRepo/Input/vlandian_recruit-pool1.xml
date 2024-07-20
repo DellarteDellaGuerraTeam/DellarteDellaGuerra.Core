@@ -1,0 +1,7 @@
+<Equipments>
+    <EquipmentSet pool="1" civilian="true" id="vlandia_troop_civilian_template_t1"/>
+    <!-- this was created for testing purposes, it does not exist in game -->
+    <EquipmentSet pool="1" civilian="false" id="vlandia_troop_civilian_template_t2"/>
+    <!-- this was created for testing purposes, it does not exist in game -->
+    <EquipmentSet pool="1" id="vlandia_troop_civilian_template_t3"/>
+</Equipments>

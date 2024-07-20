@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.EquipmentPool.Port;
-using DellarteDellaGuerra.Infrastructure.Cache;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
+using DellarteDellaGuerra.Infrastructure.Caching;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle;
 
 namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.Get
 {
@@ -24,54 +24,54 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.Get
     public class TroopBattleEquipmentProvider : ITroopBattleEquipmentProvider
     {
         private readonly ILogger _logger;
-        private readonly IBattleEquipmentRepository _battleEquipmentRepository;
+        private readonly IBattleEquipmentPoolProvider _battleEquipmentPoolProvider;
         private readonly ICacheProvider _cacheProvider;
         private readonly string _onSessionLaunchedCachedObjectId;
 
         public TroopBattleEquipmentProvider(
             ILoggerFactory loggerFactory,
-            IBattleEquipmentRepository battleEquipmentRepository,
+            IBattleEquipmentPoolProvider battleEquipmentPoolProvider,
             ICacheProvider cacheProvider)
         {
             _logger = loggerFactory.CreateLogger<TroopBattleEquipmentProvider>();
-            _battleEquipmentRepository = battleEquipmentRepository;
+            _battleEquipmentPoolProvider = battleEquipmentPoolProvider;
             _cacheProvider = cacheProvider;
             _onSessionLaunchedCachedObjectId =
-                _cacheProvider.CacheObject(ReadAllTroopEquipmentPools, CachedEvent.OnSessionLaunched);
+                _cacheProvider.CacheObject(ReadAllTroopEquipmentPools, CampaignEvent.OnSessionLaunched);
         }
 
         /**
          * <summary>
          *     Get the equipment pools for a troop.
          * </summary>
-         * <param name="troopId">The troop character</param>
+         * <param name="equipmentId">The troop character</param>
          * <returns>The equipment pools for the troop</returns>
          * <remarks>
          *     If the character is a hero or a non combatant character, then an empty list is returned.
          *     If the character is null or the character string id is null or empty, then an empty list is returned.
          * </remarks>
          */
-        public IList<Domain.EquipmentPool.Model.EquipmentPool> GetBattleTroopEquipmentPools(string troopId)
+        public IList<Domain.EquipmentPool.Model.EquipmentPool> GetBattleTroopEquipmentPools(string equipmentId)
         {
-            if (string.IsNullOrWhiteSpace(troopId))
+            if (string.IsNullOrWhiteSpace(equipmentId))
             {
-                _logger.Debug("The character string id is null or empty.");
+                _logger.Debug("The equipment id is null or empty.");
                 return new List<Domain.EquipmentPool.Model.EquipmentPool>();
             }
 
             var troopEquipmentPools = GetCachedTroopEquipmentPools();
-            if (!troopEquipmentPools.ContainsKey(troopId))
+            if (!troopEquipmentPools.ContainsKey(equipmentId))
             {
-                _logger.Warn($"The character string id {troopId} is not in the battle equipment pools.");
+                _logger.Warn($"The equipment id {equipmentId} is not in the battle equipment pools.");
                 return new List<Domain.EquipmentPool.Model.EquipmentPool>();
             }
 
-            return troopEquipmentPools[troopId];
+            return troopEquipmentPools[equipmentId];
         }
 
         private IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> ReadAllTroopEquipmentPools()
         {
-            return _battleEquipmentRepository.GetBattleEquipmentByCharacterAndPool();
+            return _battleEquipmentPoolProvider.GetBattleEquipmentByCharacterAndPool();
         }
 
         private IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> GetCachedTroopEquipmentPools()

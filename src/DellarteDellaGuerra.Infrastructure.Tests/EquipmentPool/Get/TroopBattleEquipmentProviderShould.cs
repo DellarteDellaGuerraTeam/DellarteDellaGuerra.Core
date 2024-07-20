@@ -1,7 +1,7 @@
 ﻿using DellarteDellaGuerra.Domain.Common.Logging.Port;
-using DellarteDellaGuerra.Infrastructure.Cache;
+using DellarteDellaGuerra.Infrastructure.Caching;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.Get;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle;
 using Moq;
 using NUnit.Framework;
 
@@ -11,13 +11,12 @@ public class TroopBattleEquipmentProviderShould
 {
     private const string firstTroopId = "first unrelevant troop id";
     private const string secondTroopId = "second unrelevant troop id";
-    private const string cachedOnNewEquipmentPoolsKey = "cachedOnNewEquipmentPoolsKey";
     private const string cachedOnLoadEquipmentPoolsKey = "cachedOnLoadEquipmentPoolsKey";
 
     private Mock<IList<Domain.EquipmentPool.Model.EquipmentPool>> _troopEquipmentPools;
 
     private Mock<ILoggerFactory> _loggerFactory;
-    private Mock<IBattleEquipmentRepository> _battleEquipmentRepository;
+    private Mock<IBattleEquipmentPoolProvider> _battleEquipmentRepository;
     private Mock<ICacheProvider> _cacheProvider;
     private TroopBattleEquipmentProvider _troopBattleEquipmentProvider;
 
@@ -25,14 +24,14 @@ public class TroopBattleEquipmentProviderShould
     public void Setup()
     {
         _troopEquipmentPools = new Mock<IList<Domain.EquipmentPool.Model.EquipmentPool>>();
-        _battleEquipmentRepository = new Mock<IBattleEquipmentRepository>();
+        _battleEquipmentRepository = new Mock<IBattleEquipmentPoolProvider>();
         _loggerFactory = new Mock<ILoggerFactory>();
         _loggerFactory.Setup(factory => factory.CreateLogger<TroopBattleEquipmentProvider>())
             .Returns(new Mock<ILogger>().Object);
         _cacheProvider = new Mock<ICacheProvider>();
         _cacheProvider
             .Setup(
-                cache => cache.CacheObject(It.IsAny<Func<object>>(), CachedEvent.OnSessionLaunched))
+                cache => cache.CacheObject(It.IsAny<Func<object>>(), CampaignEvent.OnSessionLaunched))
             .Returns(cachedOnLoadEquipmentPoolsKey);
 
         _troopBattleEquipmentProvider =

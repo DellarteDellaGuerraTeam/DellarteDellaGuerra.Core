@@ -1,8 +1,8 @@
 ﻿using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.EquipmentPool.Port;
-using DellarteDellaGuerra.Infrastructure.Cache;
+using DellarteDellaGuerra.Infrastructure.Caching;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.Get;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Civilian;
 using Moq;
 using NUnit.Framework;
 
@@ -12,13 +12,12 @@ public class TroopCivilianEquipmentProviderShould
 {
     private const string firstTroopId = "first unrelevant troop id";
     private const string secondTroopId = "second unrelevant troop id";
-    private const string cachedOnNewEquipmentPoolsKey = "cachedOnNewEquipmentPoolsKey";
     private const string cachedOnLoadEquipmentPoolsKey = "cachedOnLoadEquipmentPoolsKey";
 
     private Mock<IList<Domain.EquipmentPool.Model.EquipmentPool>> _troopEquipmentPools;
 
     private Mock<ILoggerFactory> _loggerFactory;
-    private Mock<ICivilianEquipmentRepository> _civilianEquipmentRepository;
+    private Mock<ICivilianEquipmentPoolProvider> _civilianEquipmentRepository;
     private Mock<ICacheProvider> _cacheProvider;
     private ITroopCivilianEquipmentProvider _troopCivilianEquipmentProvider;
 
@@ -26,14 +25,14 @@ public class TroopCivilianEquipmentProviderShould
     public void Setup()
     {
         _troopEquipmentPools = new Mock<IList<Domain.EquipmentPool.Model.EquipmentPool>>();
-        _civilianEquipmentRepository = new Mock<ICivilianEquipmentRepository>();
+        _civilianEquipmentRepository = new Mock<ICivilianEquipmentPoolProvider>();
         _loggerFactory = new Mock<ILoggerFactory>();
         _loggerFactory.Setup(factory => factory.CreateLogger<TroopCivilianEquipmentProvider>())
             .Returns(new Mock<ILogger>().Object);
         _cacheProvider = new Mock<ICacheProvider>();
         _cacheProvider
             .Setup(
-                cache => cache.CacheObject(It.IsAny<Func<object>>(), CachedEvent.OnSessionLaunched))
+                cache => cache.CacheObject(It.IsAny<Func<object>>(), CampaignEvent.OnSessionLaunched))
             .Returns(cachedOnLoadEquipmentPoolsKey);
 
         _troopCivilianEquipmentProvider =
