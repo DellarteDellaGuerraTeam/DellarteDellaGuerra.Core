@@ -17,15 +17,12 @@ using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Siege;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Utils;
 using DellarteDellaGuerra.Infrastructure.Logging;
-using DellarteDellaGuerra.Infrastructure.Missions.Events;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
 using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPool.Mappers;
 using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPool.Providers;
 using DellarteDellaGuerra.SetSpawnEquipment.MissionLogic;
-using DellarteDellaGuerra.SetSpawnEquipment.MissionLogic.Utils;
-using DellarteDellaGuerra.SetSpawnEquipment.Ports;
 using DellarteDellaGuerra.Utils;
 using NLog;
 using TaleWorlds.CampaignSystem;
@@ -44,11 +41,9 @@ namespace DellarteDellaGuerra.Infrastructure
         private readonly DadgConfigWatcher _dadgConfigWatcher;
         private readonly HarmonyPatcher _harmonyPatcher;
         private readonly ICacheProvider _cacheProvider;
-        private readonly IMissionEventCallbackRegister _missionEventExecutor;
         private DisplayShaderNumber _displayShaderNumber;
 
-        private BattleMissionSpawnEquipmentPoolSetter _battleMissionSpawnEquipmentInitialiser;
-        private FriendlyMissionSpawnEquipmentPoolSetter _friendlyMissionSpawnEquipmentInitialiser;
+        private MissionSpawnEquipmentPoolSetter _missionSpawnEquipmentInitialiser;
         
         public SubModule()
         {
@@ -57,7 +52,6 @@ namespace DellarteDellaGuerra.Infrastructure
             _dadgConfigWatcher = new DadgConfigWatcher(_loggerFactory);
             _harmonyPatcher = new HarmonyPatcher(_loggerFactory);
             _cacheProvider = new CacheCampaignBehaviour();
-            _missionEventExecutor = new MissionEventExecutor();
             _logger = _loggerFactory.CreateLogger<SubModule>();
         }
 
@@ -65,8 +59,6 @@ namespace DellarteDellaGuerra.Infrastructure
         {
             base.OnBeforeMissionBehaviorInitialize(mission);
 
-            mission.MissionBehaviors.Insert(0, _missionEventExecutor as MissionBehavior);
-            mission.MissionLogics.Insert(0, _missionEventExecutor as MissionLogic);
             AddEquipmentSpawnMissionBehaviour(mission);
         }
 
@@ -167,21 +159,13 @@ namespace DellarteDellaGuerra.Infrastructure
             var getEquipmentPool = new GetEquipmentPool(encounterTypeProvider, troopBattleEquipmentProvider,
                 troopSiegeEquipmentProvider, troopCivilianEquipmentProvider, equipmentPicker);
 
-            var agentSpawnEquipmentPoolSetter = new AgentSpawnEquipmentPoolSetter(getEquipmentPool, equipmentMapper,
-                _missionEventExecutor, MBObjectManager.Instance);
-
-            _battleMissionSpawnEquipmentInitialiser =
-                new BattleMissionSpawnEquipmentPoolSetter(agentSpawnEquipmentPoolSetter);
-            _friendlyMissionSpawnEquipmentInitialiser =
-                new FriendlyMissionSpawnEquipmentPoolSetter(getEquipmentPool, equipmentMapper, _loggerFactory);
+            _missionSpawnEquipmentInitialiser =
+                new MissionSpawnEquipmentPoolSetter(getEquipmentPool, equipmentMapper, _loggerFactory);
         }
 
         private void AddEquipmentSpawnMissionBehaviour(Mission mission)
         {
-            // mission.MissionBehaviors.Insert(1, _friendlyMissionSpawnEquipmentInitialiser);
-            // mission.MissionLogics.Insert(1, _friendlyMissionSpawnEquipmentInitialiser);
-            mission.AddMissionBehavior(_friendlyMissionSpawnEquipmentInitialiser);
-            // mission.AddMissionBehavior(_battleMissionSpawnEquipmentInitialiser);
+            mission.AddMissionBehavior(_missionSpawnEquipmentInitialiser);
         }
         #endregion
 

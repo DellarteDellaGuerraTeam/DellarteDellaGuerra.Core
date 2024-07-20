@@ -11,7 +11,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace DellarteDellaGuerra.SetSpawnEquipment.MissionLogic
 {
-    public class FriendlyMissionSpawnEquipmentPoolSetter : TaleWorlds.MountAndBlade.MissionLogic
+    public class MissionSpawnEquipmentPoolSetter : TaleWorlds.MountAndBlade.MissionLogic
     {
         private readonly FieldInfo _equipmentRosterField =
             typeof(BasicCharacterObject).GetField("_equipmentRoster", BindingFlags.NonPublic | BindingFlags.Instance)!;
@@ -21,14 +21,14 @@ namespace DellarteDellaGuerra.SetSpawnEquipment.MissionLogic
 
         private readonly Dictionary<string, MBEquipmentRoster> _nativeEquipmentPools = new();
 
-        public FriendlyMissionSpawnEquipmentPoolSetter(IGetEquipmentPool getEquipmentPool,
+        public MissionSpawnEquipmentPoolSetter(IGetEquipmentPool getEquipmentPool,
             EquipmentPoolMapper equipmentPoolMapper, ILoggerFactory loggerFactory)
         {
             _getEquipmentPool = getEquipmentPool;
             _equipmentPoolMapper = equipmentPoolMapper;
 
             if (_equipmentRosterField is null || _equipmentRosterField.FieldType != typeof(MBEquipmentRoster))
-                loggerFactory.CreateLogger<FriendlyMissionSpawnEquipmentPoolSetter>()
+                loggerFactory.CreateLogger<MissionSpawnEquipmentPoolSetter>()
                     .Error(
                         "BasicCharacterObject's _mbEquipmentRoster field could not be found preventing equipment pool override in friendly missions");
         }

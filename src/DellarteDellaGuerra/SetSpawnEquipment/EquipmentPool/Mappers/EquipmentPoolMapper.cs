@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.XPath;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.ObjectSystem;
@@ -29,11 +28,6 @@ namespace DellarteDellaGuerra.SetSpawnEquipment.EquipmentPool.Mappers
             var equipmentNodes = equipmentPool.GetEquipmentLoadouts()
                 .Select(equipmentLoadout => equipmentLoadout.GetEquipmentNode());
 
-            equipmentNodes = XDocument
-                .Parse(
-                    "<EquipmentRoster><equipment slot=\"Item0\" id=\"Item.lance_b\"/><equipment slot=\"Item1\" id=\"Item.ddg_mace_frenchmace\"/><equipment slot=\"Item2\" id=\"Item.wallace_A462\"/><equipment slot=\"Item3\" id=\"Item.inv_shield\"/><equipment slot=\"Body\" id=\"Item.simple_livery_coat_over_mail\"/><equipment slot=\"Leg\" id=\"Item.hosen_with_boots_a\"/><equipment slot=\"Head\" id=\"Item.open_decorated_helmet_with_orle\"/><equipment slot=\"Horse\" id=\"Item.t2_vlandia_horse\"/><equipment slot=\"HorseHarness\" id=\"Item.harness_mixed_a\"/></EquipmentRoster>")
-                .XPathSelectElements("./EquipmentRoster");
-            
             foreach (var equipmentLoadoutNode in equipmentNodes)
             {
                 var node = MapNode(equipmentLoadoutNode);
@@ -62,13 +56,13 @@ namespace DellarteDellaGuerra.SetSpawnEquipment.EquipmentPool.Mappers
                 new Equipment(bool.Parse(equipmentRosterNode.Attributes?["civilian"]?.Value ?? "false"));
             equipmentLoadout.Deserialize(_mbObjectManager, equipmentRosterNode);
 
-            // var nativeEquipmentLoadout = FindMatchingEquipment(equipmentId, equipmentLoadout);
+            var nativeEquipmentLoadout = FindMatchingEquipment(equipmentId, equipmentLoadout);
 
-            // if (nativeEquipmentLoadout is null)
-            //     return;
+            if (nativeEquipmentLoadout is null)
+                return;
 
             var equipment = (MBList<Equipment>)_mbEquipmentRosterEquipmentsField.GetValue(equipmentRoster);
-            equipment.Add(equipmentLoadout);
+            equipment.Add(nativeEquipmentLoadout);
         }
 
         private void AddReferencedEquipmentsToPool(XmlNode referencedEquipmentNode, MBEquipmentRoster equipmentRoster,
