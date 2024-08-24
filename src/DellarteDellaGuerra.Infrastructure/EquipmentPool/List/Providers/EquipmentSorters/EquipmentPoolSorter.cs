@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 using DellarteDellaGuerra.Domain.EquipmentPool.Model;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Models;
 
 namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.EquipmentSorters
 {
@@ -15,9 +18,9 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Equipm
             return _equipmentPools.Values.OrderBy(equipmentPool => equipmentPool.GetPoolId()).ToList();
         }
 
-        public void AddEquipmentLoadout(XNode node)
+        public void AddEquipmentLoadout<T>(T flagGetter) where T : IPoolFlagGetter
         {
-            int poolId = GetPoolId(node);
+            int poolId = GetPoolId(flagGetter.Pool);
             if (!_equipmentPools.ContainsKey(poolId))
             {
                 _equipmentPools.Add(poolId,
@@ -25,20 +28,44 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Equipm
             }
 
             var equipment = _equipmentPools[poolId].GetEquipmentLoadouts();
-            equipment.Add(new Equipment(node));
+            equipment.Add(new Equipment(GetEquipmentNode(flagGetter)));
 
             _equipmentPools[poolId] = new Domain.EquipmentPool.Model.EquipmentPool(equipment, poolId);
         }
 
-        private int GetPoolId(XNode node)
+        private int GetPoolId(string? pool)
         {
-            if (node.NodeType is not XmlNodeType.Element)
-                return -1;
-            var element = (XElement) node;
-            var pool = element.Attribute("pool")?.Value.Trim();
-            // default pool is 0 if not specified
+            // If the pool attribute is not present, then the pool id is 0.
             int.TryParse(pool, out var poolId);
             return poolId;
+        }
+
+        // TODO: remove when XNode is replaced in the domain model
+        private XNode GetEquipmentNode<T>(T equipmentRoster)
+        {
+            // using var stream = new MemoryStream();
+            // using var writer = new StreamWriter(stream);
+            // var xns = new XmlSerializerNamespaces();
+            // xns.Add(string.Empty, string.Empty);
+            // var serialiser = new XmlSerializer(typeof(T));
+            // serialiser.Serialize(writer, equipmentRoster, xns);
+            // // Enables to re-use the stream
+            // stream.Position = 0;
+            //
+            // using var reader = XmlReader.Create(stream);
+            // reader.MoveToContent(); // Ensure the reader is in the Interactive state
+            // return XNode.ReadFrom(reader);
+            var serializer = new XmlSerializer(typeof(T));
+            using var stream = new MemoryStream();
+            using var writer = new StreamWriter(stream);
+            var xns = new XmlSerializerNamespaces();
+            xns.Add(string.Empty, string.Empty);
+            serializer.Serialize(writer, equipmentRoster, xns);
+            stream.Position = 0;
+
+            using var reader = XmlReader.Create(stream);
+            reader.MoveToContent();
+            return XElement.Load(reader);
         }
     }
 }

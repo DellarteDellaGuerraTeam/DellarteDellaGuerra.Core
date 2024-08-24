@@ -4,14 +4,13 @@ using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.EquipmentPool.Model;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Civilian;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Siege;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
 
 namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle
 {
     public class BattleEquipmentPoolProvider : IBattleEquipmentPoolProvider
     {
         private readonly ILogger _logger;
-        private readonly IEquipmentPoolRepository[] _equipmentPoolRepositories;
+        private readonly IEquipmentPoolsRepository[] _equipmentPoolRepositories;
         private readonly ISiegeEquipmentPoolProvider _siegeEquipmentPoolProvider;
         private readonly ICivilianEquipmentPoolProvider _civilianEquipmentPoolProvider;
 
@@ -19,7 +18,7 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle
             ILoggerFactory loggerFactory,
             ISiegeEquipmentPoolProvider siegeEquipmentPoolProvider,
             ICivilianEquipmentPoolProvider civilianEquipmentPoolProvider,
-            params IEquipmentPoolRepository[] equipmentPoolRepositories)
+            params IEquipmentPoolsRepository[] equipmentPoolRepositories)
         {
             _logger = loggerFactory.CreateLogger<BattleEquipmentPoolProvider>();
             _equipmentPoolRepositories = equipmentPoolRepositories;

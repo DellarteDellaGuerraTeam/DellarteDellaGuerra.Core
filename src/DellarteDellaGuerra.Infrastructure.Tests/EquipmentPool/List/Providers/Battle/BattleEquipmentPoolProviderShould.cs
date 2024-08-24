@@ -1,10 +1,10 @@
 ﻿using System.Xml.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.EquipmentPool.Model;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Civilian;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Siege;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
 using Moq;
 using NUnit.Framework;
 
@@ -310,10 +310,10 @@ public class BattleEquipmentPoolProviderShould
         );
     }
 
-    private IEquipmentPoolRepository EquipmentRepositoryReturns(
+    private IEquipmentPoolsRepository EquipmentRepositoryReturns(
         IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> equipmentPoolsByCharacter)
     {
-        var equipmentRepository = new Mock<IEquipmentPoolRepository>();
+        var equipmentRepository = new Mock<IEquipmentPoolsRepository>();
         equipmentRepository.Setup(repo => repo.GetEquipmentPoolsById()).Returns(equipmentPoolsByCharacter);
         return equipmentRepository.Object;
     }

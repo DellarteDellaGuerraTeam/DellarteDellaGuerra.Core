@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.EquipmentPool;
-using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPool.Mappers;
+using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPools.Mappers;
 using SandBox.Missions.MissionLogics;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -17,15 +17,15 @@ namespace DellarteDellaGuerra.SetSpawnEquipment.MissionLogic
             typeof(BasicCharacterObject).GetField("_equipmentRoster", BindingFlags.NonPublic | BindingFlags.Instance)!;
 
         private readonly IGetEquipmentPool _getEquipmentPool;
-        private readonly EquipmentPoolMapper _equipmentPoolMapper;
+        private readonly EquipmentPoolsMapper _equipmentPoolsMapper;
 
         private readonly Dictionary<string, MBEquipmentRoster> _nativeEquipmentPools = new();
 
         public MissionSpawnEquipmentPoolSetter(IGetEquipmentPool getEquipmentPool,
-            EquipmentPoolMapper equipmentPoolMapper, ILoggerFactory loggerFactory)
+            EquipmentPoolsMapper equipmentPoolsMapper, ILoggerFactory loggerFactory)
         {
             _getEquipmentPool = getEquipmentPool;
-            _equipmentPoolMapper = equipmentPoolMapper;
+            _equipmentPoolsMapper = equipmentPoolsMapper;
 
             if (_equipmentRosterField is null || _equipmentRosterField.FieldType != typeof(MBEquipmentRoster))
                 loggerFactory.CreateLogger<MissionSpawnEquipmentPoolSetter>()
@@ -54,7 +54,7 @@ namespace DellarteDellaGuerra.SetSpawnEquipment.MissionLogic
 
             var equipmentPool = _getEquipmentPool.GetTroopEquipmentPool(equipmentRoster.StringId);
             OverrideTroopEquipment(agent,
-                _equipmentPoolMapper.MapEquipmentPool(equipmentPool, agent.Character.StringId));
+                _equipmentPoolsMapper.MapEquipmentPool(equipmentPool, agent.Character.StringId));
         }
 
         public override void OnAgentBuild(Agent agent, Banner banner)

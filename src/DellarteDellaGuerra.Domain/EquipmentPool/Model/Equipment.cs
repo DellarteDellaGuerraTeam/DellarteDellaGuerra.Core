@@ -32,7 +32,14 @@ namespace DellarteDellaGuerra.Domain.EquipmentPool.Model
 
         private bool Equals(Equipment other)
         {
-            return _xNodeComparer.Equals(_equipmentNode, other._equipmentNode);
+            return _equipmentNode.ToString().Equals(other._equipmentNode.ToString());
+
+            // return _xNodeComparer.Equals(_equipmentNode, other._equipmentNode);
+        }
+
+        public override string ToString()
+        {
+            return _equipmentNode.ToString();
         }
     }
 }

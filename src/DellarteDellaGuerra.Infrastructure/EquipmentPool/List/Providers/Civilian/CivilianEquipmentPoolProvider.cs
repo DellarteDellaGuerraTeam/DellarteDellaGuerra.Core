@@ -2,17 +2,16 @@
 using System.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.EquipmentSorters;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
 
 namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Civilian
 {
     public class CivilianEquipmentPoolProvider : ICivilianEquipmentPoolProvider
     {
         private readonly ILogger _logger;
-        private readonly IEquipmentPoolRepository[] _equipmentRepositories;
+        private readonly IEquipmentPoolsRepository[] _equipmentRepositories;
 
         public CivilianEquipmentPoolProvider(ILoggerFactory loggerFactory,
-            params IEquipmentPoolRepository[] equipmentRepositories)
+            params IEquipmentPoolsRepository[] equipmentRepositories)
         {
             _logger = loggerFactory.CreateLogger<CivilianEquipmentPoolProvider>();
             _equipmentRepositories = equipmentRepositories;

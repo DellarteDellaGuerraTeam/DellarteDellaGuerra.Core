@@ -11,6 +11,8 @@ using DellarteDellaGuerra.Infrastructure.Caching;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.Get;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Mappers;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Civilian;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Siege;
@@ -20,8 +22,8 @@ using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
-using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPool.Mappers;
-using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPool.Providers;
+using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPools.Mappers;
+using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPools.Providers;
 using DellarteDellaGuerra.SetSpawnEquipment.MissionLogic;
 using DellarteDellaGuerra.Utils;
 using NLog;
@@ -133,17 +135,25 @@ namespace DellarteDellaGuerra.Infrastructure
 
         private void HandleEquipmentSpawnDependencies()
         {
-            var npcCharacterXmlProcessor = new MergedModulesXmlProcessor(_loggerFactory, _cacheProvider);
-            var characterEquipmentRepository = new CharacterEquipmentPoolRepository(npcCharacterXmlProcessor);
-            var equipmentRosterRepository = new EquipmentRosterEquipmentPoolRepository(npcCharacterXmlProcessor);
+            var xmlProcessor = new MergedModulesXmlProcessor(_loggerFactory, _cacheProvider);
+            var npcCharacterRepository = new NpcCharacterRepository(xmlProcessor);
+            var equipmentPoolRoster = new EquipmentRosterMapper();
+            var equipmentRosterRepository = new EquipmentRosterRepository(xmlProcessor);
+            var equipmentPoolMapper =
+                new CharacterEquipmentRostersMapper(equipmentRosterRepository, equipmentPoolRoster, _loggerFactory);
+            var characterEquipmentPoolRepository =
+                new NpcCharacterEquipmentPoolsProvider(npcCharacterRepository, equipmentPoolMapper);
+            var equipmentRosterEquipmentPoolRepository =
+                new EquipmentRosterEquipmentPoolsProvider(equipmentRosterRepository);
             var civilianEquipmentRepository =
-                new CivilianEquipmentPoolProvider(_loggerFactory, characterEquipmentRepository,
-                    equipmentRosterRepository);
+                new CivilianEquipmentPoolProvider(_loggerFactory, characterEquipmentPoolRepository,
+                    equipmentRosterEquipmentPoolRepository);
             var siegeEquipmentRepository =
-                new SiegeEquipmentPoolProvider(_loggerFactory, characterEquipmentRepository, equipmentRosterRepository);
+                new SiegeEquipmentPoolProvider(_loggerFactory, characterEquipmentPoolRepository,
+                    equipmentRosterEquipmentPoolRepository);
             var battleEquipmentRepository =
                 new BattleEquipmentPoolProvider(_loggerFactory, siegeEquipmentRepository, civilianEquipmentRepository,
-                    characterEquipmentRepository, equipmentRosterRepository);
+                    characterEquipmentPoolRepository, equipmentRosterEquipmentPoolRepository);
             var troopBattleEquipmentProvider =
                 new TroopBattleEquipmentProvider(_loggerFactory, battleEquipmentRepository, _cacheProvider);
             var troopSiegeEquipmentProvider =
@@ -155,7 +165,8 @@ namespace DellarteDellaGuerra.Infrastructure
             var random = new Random();
             var equipmentPicker = new EquipmentPoolPoolPicker(random);
 
-            var equipmentMapper = new EquipmentPoolMapper(MBObjectManager.Instance);
+            var equipmentMapper =
+                new EquipmentPoolsMapper(MBObjectManager.Instance);
             var getEquipmentPool = new GetEquipmentPool(encounterTypeProvider, troopBattleEquipmentProvider,
                 troopSiegeEquipmentProvider, troopCivilianEquipmentProvider, equipmentPicker);
 

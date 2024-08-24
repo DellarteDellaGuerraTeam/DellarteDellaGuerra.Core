@@ -1,6 +1,6 @@
 ﻿using DellarteDellaGuerra.Domain.Common.Logging.Port;
+using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Civilian;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
 using Moq;
 using NUnit.Framework;
 using static DellarteDellaGuerra.Infrastructure.Tests.EquipmentPool.TestUtil.TestFolderComparator;
@@ -79,14 +79,14 @@ public class CivilianEquipmentPoolProviderShould
 
         var allTroopEquipmentPools = troopEquipmentReader.GetCivilianEquipmentByCharacterAndPool();
 
-        Assert.NotNull(allTroopEquipmentPools);
+        Assert.That(allTroopEquipmentPools, Is.Not.Null);
         Assert.That(allTroopEquipmentPools.Count, Is.EqualTo(1));
         Assert.That(allTroopEquipmentPools[recruitId].Count, Is.EqualTo(0));
     }
 
-    private IEquipmentPoolRepository CreateEquipmentRepository(string inputFolderPath)
+    private IEquipmentPoolsRepository CreateEquipmentRepository(string inputFolderPath)
     {
-        var characterEquipmentRepository = new Mock<IEquipmentPoolRepository>();
+        var characterEquipmentRepository = new Mock<IEquipmentPoolsRepository>();
         characterEquipmentRepository
             .Setup(repository => repository.GetEquipmentPoolsById())
             .Returns(ReadEquipmentPoolFromDataFolder(inputFolderPath));

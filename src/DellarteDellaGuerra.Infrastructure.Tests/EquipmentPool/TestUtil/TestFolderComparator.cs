@@ -8,16 +8,17 @@ using NUnit.Framework;
 
 namespace DellarteDellaGuerra.Infrastructure.Tests.EquipmentPool.TestUtil;
 
-public class TestFolderComparator
+public static class TestFolderComparator
 {
     public static void AssertCharacterEquipmentPools(
         string expectedXmlFolderPath,
         IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> allTroopEquipmentPools)
     {
-        var expectedEquipmentPoolsByCharacter = ReadEquipmentPoolFromDataFolder(expectedXmlFolderPath);
+        IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> expectedEquipmentPoolsByCharacter =
+            ReadEquipmentPoolFromDataFolder(expectedXmlFolderPath);
 
         Assert.That(allTroopEquipmentPools,
-            Is.EqualTo(expectedEquipmentPoolsByCharacter).Using<XNode>(new XNodeEqualityComparer()));
+            Is.EquivalentTo(expectedEquipmentPoolsByCharacter));
     }
 
     public static IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> ReadEquipmentPoolFromDataFolder(
