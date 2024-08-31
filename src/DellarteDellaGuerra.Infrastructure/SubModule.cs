@@ -137,10 +137,10 @@ namespace DellarteDellaGuerra.Infrastructure
         {
             var xmlProcessor = new MergedModulesXmlProcessor(_loggerFactory, _cacheProvider);
             var npcCharacterRepository = new NpcCharacterRepository(xmlProcessor);
-            var equipmentPoolRoster = new EquipmentRosterMapper();
+            var equipmentPoolRoster = new EquipmentSetMapper();
             var equipmentRosterRepository = new EquipmentRosterRepository(xmlProcessor);
             var equipmentPoolMapper =
-                new CharacterEquipmentRostersMapper(equipmentRosterRepository, equipmentPoolRoster, _loggerFactory);
+                new NpcCharacterMapper(equipmentRosterRepository, equipmentPoolRoster, _loggerFactory);
             var characterEquipmentPoolRepository =
                 new NpcCharacterEquipmentPoolsProvider(npcCharacterRepository, equipmentPoolMapper);
             var equipmentRosterEquipmentPoolRepository =

@@ -6,9 +6,9 @@ using EquipmentSet = DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Model
 
 namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Mappers;
 
-public class EquipmentRosterMapper : IEquipmentRosterMapper
+public class EquipmentSetMapper : IEquipmentSetMapper
 {
-    public EquipmentRoster Map(EquipmentSet equipmentSet)
+    public EquipmentRoster MapToEquipmentRoster(EquipmentSet equipmentSet)
     {
         if (equipmentSet == null) throw new ArgumentNullException(nameof(equipmentSet));
 

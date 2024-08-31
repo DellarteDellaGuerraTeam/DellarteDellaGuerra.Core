@@ -3,7 +3,7 @@ using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Models.NpcCharacters
 
 namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Mappers;
 
-public interface ICharacterEquipmentRostersMapper
+public interface INpcCharacterMapper
 {
-    IList<EquipmentRoster> Map(NpcCharacter npcCharacter);
+    IList<EquipmentRoster> MapToEquipmentRosters(NpcCharacter npcCharacter);
 }

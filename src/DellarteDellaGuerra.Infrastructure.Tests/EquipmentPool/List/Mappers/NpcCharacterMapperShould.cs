@@ -11,24 +11,24 @@ using EquipmentSet = DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Model
 
 namespace DellarteDellaGuerra.Infrastructure.Tests.EquipmentPool.List.Mappers;
 
-public class CharacterEquipmentRostersMapperShould
+public class NpcCharacterMapperShould
 {
     private Mock<IEquipmentRosterRepository> _equipmentRosterRepository;
-    private Mock<IEquipmentRosterMapper> _equipmentRosterMapper;
+    private Mock<IEquipmentSetMapper> _equipmentRosterMapper;
     private Mock<ILoggerFactory> _loggerFactory;
 
-    private ICharacterEquipmentRostersMapper _characterEquipmentRostersMapper;
+    private INpcCharacterMapper _npcCharacterMapper;
 
     [SetUp]
     public void SetUp()
     {
         _equipmentRosterRepository = new Mock<IEquipmentRosterRepository>();
-        _equipmentRosterMapper = new Mock<IEquipmentRosterMapper>();
+        _equipmentRosterMapper = new Mock<IEquipmentSetMapper>();
         _loggerFactory = new Mock<ILoggerFactory>();
-        _loggerFactory.Setup(factory => factory.CreateLogger<CharacterEquipmentRostersMapper>())
+        _loggerFactory.Setup(factory => factory.CreateLogger<NpcCharacterMapper>())
             .Returns(new Mock<ILogger>().Object);
-        _characterEquipmentRostersMapper =
-            new CharacterEquipmentRostersMapper(_equipmentRosterRepository.Object, _equipmentRosterMapper.Object,
+        _npcCharacterMapper =
+            new NpcCharacterMapper(_equipmentRosterRepository.Object, _equipmentRosterMapper.Object,
                 _loggerFactory.Object);
     }
 
@@ -72,7 +72,7 @@ public class CharacterEquipmentRostersMapperShould
             }
         };
 
-        IList<EquipmentRoster> equipmentPools = _characterEquipmentRostersMapper.Map(npcCharacter);
+        IList<EquipmentRoster> equipmentPools = _npcCharacterMapper.MapToEquipmentRosters(npcCharacter);
 
         Assert.That(equipmentPools, Is.EqualTo(npcCharacter.Equipments.EquipmentRoster));
     }
@@ -141,17 +141,193 @@ public class CharacterEquipmentRostersMapperShould
 
         List<EquipmentRoster> mappedEquipmentRosters = new List<EquipmentRoster>
             { new() { Pool = "0" }, new() { Pool = "1" }, new() { Pool = "1" } };
-        _equipmentRosterMapper.Setup(mapper => mapper.Map(equipmentSets[0])).Returns(mappedEquipmentRosters[0]);
-        _equipmentRosterMapper.Setup(mapper => mapper.Map(equipmentSets[1])).Returns(mappedEquipmentRosters[1]);
-        _equipmentRosterMapper.Setup(mapper => mapper.Map(equipmentSets[2])).Returns(mappedEquipmentRosters[2]);
+        _equipmentRosterMapper.Setup(mapper => mapper.MapToEquipmentRoster(equipmentSets[0]))
+            .Returns(mappedEquipmentRosters[0]);
+        _equipmentRosterMapper.Setup(mapper => mapper.MapToEquipmentRoster(equipmentSets[1]))
+            .Returns(mappedEquipmentRosters[1]);
+        _equipmentRosterMapper.Setup(mapper => mapper.MapToEquipmentRoster(equipmentSets[2]))
+            .Returns(mappedEquipmentRosters[2]);
 
         // Act
-        var equipmentPools = _characterEquipmentRostersMapper.Map(npcCharacter);
+        var equipmentPools = _npcCharacterMapper.MapToEquipmentRosters(npcCharacter);
 
         // Assert
         Assert.That(equipmentPools, Is.EqualTo(mappedEquipmentRosters));
     }
 
+    [Test]
+    public void MapsCivilianEquipmentSetsToCivilianEquipmentOnly()
+    {
+        // Arrange
+        NpcCharacter npcCharacter = new NpcCharacter
+        {
+            Id = "npc1",
+            Equipments = new Equipments
+            {
+                EquipmentSet = new List<EquipmentSet>
+                {
+                    new()
+                    {
+                        IsCivilian = "true",
+                        Id = "equipmentSet1"
+                    },
+                    new()
+                    {
+                        IsCivilian = "true",
+                        Id = "equipmentSet2"
+                    }
+                }
+            }
+        };
+
+        List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.EquipmentSet> equipmentSets =
+            new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.EquipmentSet>
+            {
+                new()
+                {
+                    IsCivilian = "true",
+                    Equipment =
+                        new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.Equipment>
+                        {
+                            new() { Id = "item1" }
+                        }
+                },
+                new() { IsCivilian = "false" },
+                new()
+                {
+                    IsCivilian = "true",
+                    Equipment =
+                        new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.Equipment>
+                        {
+                            new() { Id = "item2" }
+                        }
+                }
+            };
+
+        _equipmentRosterRepository.Setup(repo => repo.GetEquipmentRosters()).Returns(new EquipmentRosters
+        {
+            EquipmentRoster = new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.EquipmentRoster>
+            {
+                new()
+                {
+                    Id = "equipmentSet1",
+                    EquipmentSet = equipmentSets
+                },
+                new()
+                {
+                    Id = "equipmentSet2",
+                    EquipmentSet = equipmentSets
+                }
+            }
+        });
+
+        List<EquipmentRoster> mappedEquipmentRosters = new List<EquipmentRoster>
+            { new() { Pool = "0" }, new() { Pool = "1" } };
+        _equipmentRosterMapper.Setup(mapper => mapper.MapToEquipmentRoster(equipmentSets[0]))
+            .Returns(mappedEquipmentRosters[0]);
+        _equipmentRosterMapper.Setup(mapper => mapper.MapToEquipmentRoster(equipmentSets[2]))
+            .Returns(mappedEquipmentRosters[1]);
+
+        // Act
+        IList<EquipmentRoster> equipmentRosters = _npcCharacterMapper.MapToEquipmentRosters(npcCharacter);
+
+        // Assert
+        Assert.That(equipmentRosters, Is.EqualTo(new List<EquipmentRoster>
+        {
+            mappedEquipmentRosters[0],
+            mappedEquipmentRosters[1],
+            mappedEquipmentRosters[0],
+            mappedEquipmentRosters[1]
+        }));
+    }
+
+    [Test]
+    public void MapsSiegeEquipmentSetsToSiegeEquipmentOnly()
+    {
+        // Arrange
+        NpcCharacter npcCharacter = new NpcCharacter
+        {
+            Id = "npc1",
+            Equipments = new Equipments
+            {
+                EquipmentSet = new List<EquipmentSet>
+                {
+                    new()
+                    {
+                        IsSiege = "true",
+                        Id = "equipmentSet1"
+                    },
+                    new()
+                    {
+                        IsSiege = "true",
+                        Id = "equipmentSet2"
+                    }
+                }
+            }
+        };
+
+        List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.EquipmentSet> equipmentSets =
+            new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.EquipmentSet>
+            {
+                new()
+                {
+                    IsSiege = "true",
+                    Equipment =
+                        new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.Equipment>
+                        {
+                            new() { Id = "item1" }
+                        }
+                },
+                new() { IsSiege = "false" },
+                new()
+                {
+                    IsSiege = "true",
+                    Equipment =
+                        new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.Equipment>
+                        {
+                            new() { Id = "item2" }
+                        }
+                }
+            };
+
+        _equipmentRosterRepository.Setup(repo => repo.GetEquipmentRosters()).Returns(new EquipmentRosters
+        {
+            EquipmentRoster = new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.EquipmentRoster>
+            {
+                new()
+                {
+                    Id = "equipmentSet1",
+                    EquipmentSet = equipmentSets
+                },
+                new()
+                {
+                    Id = "equipmentSet2",
+                    EquipmentSet = equipmentSets
+                }
+            }
+        });
+
+        List<EquipmentRoster> mappedEquipmentRosters = new List<EquipmentRoster>
+            { new() { Pool = "0" }, new() { Pool = "1" } };
+        _equipmentRosterMapper.Setup(mapper => mapper.MapToEquipmentRoster(equipmentSets[0]))
+            .Returns(mappedEquipmentRosters[0]);
+        _equipmentRosterMapper.Setup(mapper => mapper.MapToEquipmentRoster(equipmentSets[2]))
+            .Returns(mappedEquipmentRosters[1]);
+
+        // Act
+        IList<EquipmentRoster> equipmentRosters = _npcCharacterMapper.MapToEquipmentRosters(npcCharacter);
+
+        // Assert
+        // Assert
+        Assert.That(equipmentRosters, Is.EqualTo(new List<EquipmentRoster>
+        {
+            mappedEquipmentRosters[0],
+            mappedEquipmentRosters[1],
+            mappedEquipmentRosters[0],
+            mappedEquipmentRosters[1]
+        }));
+    }
+    
     [Test]
     public void OverridesEquipmentRosterSlotsWithRootEquipmentSlots()
     {
@@ -195,7 +371,7 @@ public class CharacterEquipmentRostersMapperShould
             }
         };
 
-        var equipmentPools = _characterEquipmentRostersMapper.Map(npcCharacter);
+        var equipmentPools = _npcCharacterMapper.MapToEquipmentRosters(npcCharacter);
 
         // Assert
         Assert.That(equipmentPools, Is.EqualTo(new List<EquipmentRoster>

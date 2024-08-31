@@ -50,11 +50,18 @@ namespace DellarteDellaGuerra.SetSpawnEquipment.MissionLogic
             var equipmentRoster =
                 (MBEquipmentRoster)_equipmentRosterField.GetValue(agent.Character);
 
+            string id = agent.Character.StringId;
+            if (agent.Character is CharacterObject characterObject)
+                id = characterObject.OriginalCharacter?.StringId ?? id;
+
             _nativeEquipmentPools[agent.Character.StringId] = equipmentRoster;
 
-            var equipmentPool = _getEquipmentPool.GetTroopEquipmentPool(equipmentRoster.StringId);
+            var equipmentPool = _getEquipmentPool.GetTroopEquipmentPool(id);
+            if (equipmentPool.IsEmpty())
+                equipmentPool = _getEquipmentPool.GetTroopEquipmentPool(equipmentRoster.StringId);
+
             OverrideTroopEquipment(agent,
-                _equipmentPoolsMapper.MapEquipmentPool(equipmentPool, agent.Character.StringId));
+                _equipmentPoolsMapper.MapEquipmentPool(equipmentPool, equipmentRoster.StringId));
         }
 
         public override void OnAgentBuild(Agent agent, Banner banner)

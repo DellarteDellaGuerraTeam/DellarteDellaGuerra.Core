@@ -36,7 +36,6 @@ public class EquipmentRosterEquipmentPoolRepositoryShould
                 new()
                 {
                     Id = "vlandian_recruit",
-                    Culture = "Culture.empire",
                     EquipmentSet = new List<EquipmentSet>
                     {
                         new()
@@ -98,7 +97,6 @@ public class EquipmentRosterEquipmentPoolRepositoryShould
                 new()
                 {
                     Id = "vlandian_footman",
-                    Culture = "Culture.empire",
                     EquipmentSet = new List<EquipmentSet>
                     {
                         new()
@@ -202,7 +200,6 @@ public class EquipmentRosterEquipmentPoolRepositoryShould
                 new()
                 {
                     Id = "vlandian_recruit",
-                    Culture = "Culture.empire",
                     EquipmentSet = new List<EquipmentSet>
                     {
                         new()

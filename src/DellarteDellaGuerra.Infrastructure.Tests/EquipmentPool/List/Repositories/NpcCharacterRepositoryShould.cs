@@ -25,14 +25,14 @@ public class NpcRepositoryRepositoryShould
     {
         string xml =
             """
-            <NpcCharacters>
-                <NpcCharacter id="irrelevant_character_id_1" culture="irrelevant_culture_id">
+            <NPCCharacters>
+                <NPCCharacter id="irrelevant_character_id_1" culture="irrelevant_culture_id">
                     <Equipments>
                          <EquipmentRoster/>
                         <EquipmentSet/>
                     </Equipments>
-                </NpcCharacter>
-                <NpcCharacter id="irrelevant_character_id_2" culture="irrelevant_culture_id">
+                </NPCCharacter>
+                <NPCCharacter id="irrelevant_character_id_2" culture="irrelevant_culture_id">
                     <Equipments>
                         <EquipmentRoster pool="irrelevant_pool_id">
                             <equipment slot="irrelevant_slot_1" id="irrelevant_slot_id_1"/>
@@ -41,8 +41,8 @@ public class NpcRepositoryRepositoryShould
                         <EquipmentSet pool="irrelevant_pool_id" id="irrelevant_equipment_set_id"
                             civilian="irrelevant_civilian_flag" siege="irrelevant_siege_flag" />
                     </Equipments>
-                </NpcCharacter>
-            </NpcCharacters>
+                </NPCCharacter>
+            </NPCCharacters>
             """;
 
         _xmlProcessor.Setup(processor => processor.GetXmlNodes(NpcCharacterRepository.NpcCharacterRootTag))

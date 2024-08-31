@@ -5,7 +5,7 @@ using EquipmentRoster = DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Mo
 
 namespace DellarteDellaGuerra.Infrastructure.Tests.EquipmentPool.List.Mappers;
 
-public class EquipmentRosterMapperShould
+public class EquipmentSetMapperShould
 {
     private const string Pool = "irrelevant_pool_id";
     private const string IsCivilian = "irrelevant_civilian_flag";
@@ -15,22 +15,22 @@ public class EquipmentRosterMapperShould
     private const string EquipmentId1 = "irrelevant_equipment_id1";
     private const string EquipmentId2 = "irrelevant_equipment_id2";
 
-    private IEquipmentRosterMapper _equipmentRosterMapper;
+    private IEquipmentSetMapper _equipmentSetMapper;
 
     [SetUp]
     public void SetUp()
     {
-        _equipmentRosterMapper = new EquipmentRosterMapper();
+        _equipmentSetMapper = new EquipmentSetMapper();
     }
 
     [Test]
     public void ThrowsArgumentNullExceptionWhenEquipmentSetIsNull()
     {
-        Assert.Throws<ArgumentNullException>(() => _equipmentRosterMapper.Map(null));
+        Assert.Throws<ArgumentNullException>(() => _equipmentSetMapper.MapToEquipmentRoster(null));
     }
 
     [Test]
-    public void MapsEquipmentSet()
+    public void MapEquipmentSet()
     {
         EquipmentSet equipmentSet = new EquipmentSet
         {
@@ -44,7 +44,7 @@ public class EquipmentRosterMapperShould
             }
         };
 
-        EquipmentRoster equipmentRoster = _equipmentRosterMapper.Map(equipmentSet);
+        EquipmentRoster equipmentRoster = _equipmentSetMapper.MapToEquipmentRoster(equipmentSet);
 
         Assert.That(equipmentRoster, Is.EqualTo(new EquipmentRoster
         {
@@ -60,7 +60,7 @@ public class EquipmentRosterMapperShould
     }
 
     [Test]
-    public void MapsEquipmentSetWithEmptyValues()
+    public void MapEquipmentSetWithEmptyValues()
     {
         EquipmentSet equipmentSet = new EquipmentSet
         {
@@ -70,7 +70,7 @@ public class EquipmentRosterMapperShould
             Equipment = null
         };
 
-        EquipmentRoster equipmentRoster = _equipmentRosterMapper.Map(equipmentSet);
+        EquipmentRoster equipmentRoster = _equipmentSetMapper.MapToEquipmentRoster(equipmentSet);
 
         Assert.That(equipmentRoster, Is.EqualTo(new EquipmentRoster
         {

@@ -10,7 +10,7 @@ namespace DellarteDellaGuerra.Infrastructure.Tests.EquipmentPool.List.Repositori
 
 public class NpcCharacterEquipmentPoolRepositoryShould
 {
-    private Mock<ICharacterEquipmentRostersMapper> _equipmentPoolMapper;
+    private Mock<INpcCharacterMapper> _equipmentPoolMapper;
     private Mock<INpcCharacterRepository> _npcCharacterRepository;
 
     private NpcCharacterEquipmentPoolsProvider _npcCharacterEquipmentPoolsProvider;
@@ -18,7 +18,7 @@ public class NpcCharacterEquipmentPoolRepositoryShould
     [SetUp]
     public void Setup()
     {
-        _equipmentPoolMapper = new Mock<ICharacterEquipmentRostersMapper>();
+        _equipmentPoolMapper = new Mock<INpcCharacterMapper>();
         _npcCharacterRepository = new Mock<INpcCharacterRepository>();
         _npcCharacterEquipmentPoolsProvider =
             new NpcCharacterEquipmentPoolsProvider(_npcCharacterRepository.Object, _equipmentPoolMapper.Object);
@@ -55,9 +55,9 @@ public class NpcCharacterEquipmentPoolRepositoryShould
         };
         _npcCharacterRepository.Setup(repository => repository.GetNpcCharacters())
             .Returns(npcCharacters);
-        _equipmentPoolMapper.Setup(mapper => mapper.Map(npcCharacters.NpcCharacter[0]))
+        _equipmentPoolMapper.Setup(mapper => mapper.MapToEquipmentRosters(npcCharacters.NpcCharacter[0]))
             .Returns(firstEquipmentRosters);
-        _equipmentPoolMapper.Setup(mapper => mapper.Map(npcCharacters.NpcCharacter[1]))
+        _equipmentPoolMapper.Setup(mapper => mapper.MapToEquipmentRosters(npcCharacters.NpcCharacter[1]))
             .Returns(secondEquipmentRosters);
 
         var allTroopEquipmentPools = _npcCharacterEquipmentPoolsProvider.GetEquipmentPoolsById();
@@ -140,7 +140,7 @@ public class NpcCharacterEquipmentPoolRepositoryShould
 
         _npcCharacterRepository.Setup(repository => repository.GetNpcCharacters())
             .Returns(npcCharacters);
-        _equipmentPoolMapper.Setup(mapper => mapper.Map(npcCharacters.NpcCharacter[0]))
+        _equipmentPoolMapper.Setup(mapper => mapper.MapToEquipmentRosters(npcCharacters.NpcCharacter[0]))
             .Returns(equipmentRosters);
 
         var allTroopEquipmentPools = _npcCharacterEquipmentPoolsProvider.GetEquipmentPoolsById();

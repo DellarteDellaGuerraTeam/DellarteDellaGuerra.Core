@@ -49,7 +49,6 @@ public class EquipmentRosterRepositoryShould
                 new()
                 {
                     Id = "irrelevant_equipment_roster_id",
-                    Culture = "irrelevant_culture_id",
                     EquipmentSet = new List<EquipmentSet>
                     {
                         new()

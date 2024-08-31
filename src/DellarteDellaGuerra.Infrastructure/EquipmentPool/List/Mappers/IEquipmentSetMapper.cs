@@ -3,7 +3,7 @@ using EquipmentSet = DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Model
 
 namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Mappers;
 
-public interface IEquipmentRosterMapper
+public interface IEquipmentSetMapper
 {
-    EquipmentRoster Map(EquipmentSet equipmentSet);
+    EquipmentRoster MapToEquipmentRoster(EquipmentSet equipmentSet);
 }

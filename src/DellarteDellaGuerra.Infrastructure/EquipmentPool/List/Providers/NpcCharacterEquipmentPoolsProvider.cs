@@ -9,7 +9,7 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers;
 
 public class NpcCharacterEquipmentPoolsProvider
 (INpcCharacterRepository npcCharacterRepository,
-    ICharacterEquipmentRostersMapper characterEquipmentRostersMapper) : IEquipmentPoolsRepository
+    INpcCharacterMapper npcCharacterMapper) : IEquipmentPoolsRepository
 {
     public IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> GetEquipmentPoolsById()
     {
@@ -20,11 +20,11 @@ public class NpcCharacterEquipmentPoolsProvider
             (characterEquipmentPools, npcCharacter) =>
             {
                 if (npcCharacter.Id != null)
-                    characterEquipmentPools[npcCharacter.Id] = characterEquipmentRostersMapper.Map(npcCharacter)
+                    characterEquipmentPools[npcCharacter.Id] = npcCharacterMapper.MapToEquipmentRosters(npcCharacter)
                         .Aggregate(
-                            new EquipmentPoolSorter(), (equipmentPoolSorter, characterEquipmentRoster) =>
+                            new EquipmentPoolSorter(), (equipmentPoolSorter, characterEquipmentRosters) =>
                             {
-                                equipmentPoolSorter.AddEquipmentLoadout(characterEquipmentRoster);
+                                equipmentPoolSorter.AddEquipmentLoadout(characterEquipmentRosters);
                                 return equipmentPoolSorter;
                             }).GetEquipmentPools();
 
