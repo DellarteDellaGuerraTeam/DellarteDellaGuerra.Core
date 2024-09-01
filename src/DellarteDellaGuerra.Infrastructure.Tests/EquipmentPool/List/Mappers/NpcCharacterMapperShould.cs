@@ -364,17 +364,57 @@ public class NpcCharacterMapperShould
                         }
                     }
                 },
+                EquipmentSet = new List<EquipmentSet>
+                {
+                    new()
+                    {
+                        Id = "equipmentSet1"
+                    }
+                },
                 Equipment = new List<Equipment>
                 {
-                    new() { Slot = "Arm", Id = "item4" }
+                    new() { Slot = "Arm", Id = "item4" },
+                    new() { Slot = "Item0", Id = "item0" }
                 }
             }
         };
 
+        EquipmentRosters equipmentRosters = new EquipmentRosters
+        {
+            EquipmentRoster = new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.EquipmentRoster>
+            {
+                new()
+                {
+                    Id = "equipmentSet1",
+                    EquipmentSet = new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.EquipmentSet>
+                    {
+                        new()
+                        {
+                            Equipment = new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.Equipment>
+                            {
+                                new() { Slot = "Arm", Id = "item1" }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        _equipmentRosterRepository.Setup(repo => repo.GetEquipmentRosters()).Returns(equipmentRosters);
+        _equipmentRosterMapper.Setup(mapper =>
+                mapper.MapToEquipmentRoster(equipmentRosters.EquipmentRoster[0].EquipmentSet[0]))
+            .Returns(new EquipmentRoster
+            {
+                Pool = "0",
+                Equipment = new List<Equipment>
+                {
+                    new() { Slot = "Arm", Id = "item1" }
+                }
+            });
+
         var equipmentPools = _npcCharacterMapper.MapToEquipmentRosters(npcCharacter);
 
         // Assert
-        Assert.That(equipmentPools, Is.EqualTo(new List<EquipmentRoster>
+        Assert.That(equipmentPools, Is.EquivalentTo(new List<EquipmentRoster>
         {
             new()
             {
@@ -382,7 +422,8 @@ public class NpcCharacterMapperShould
                 Equipment = new List<Equipment>
                 {
                     new() { Slot = "Arm", Id = "item4" },
-                    new() { Slot = "Body", Id = "item1" }
+                    new() { Slot = "Body", Id = "item1" },
+                    new() { Slot = "Item0", Id = "item0" }
                 }
             },
             new()
@@ -390,7 +431,9 @@ public class NpcCharacterMapperShould
                 Pool = "1",
                 Equipment = new List<Equipment>
                 {
-                    new() { Slot = "Body", Id = "item2" }
+                    new() { Slot = "Body", Id = "item2" },
+                    new() { Slot = "Arm", Id = "item4" },
+                    new() { Slot = "Item0", Id = "item0" }
                 }
             },
             new()
@@ -398,7 +441,17 @@ public class NpcCharacterMapperShould
                 Pool = "2",
                 Equipment = new List<Equipment>
                 {
-                    new() { Slot = "Arm", Id = "item4" }
+                    new() { Slot = "Arm", Id = "item4" },
+                    new() { Slot = "Item0", Id = "item0" }
+                }
+            },
+            new()
+            {
+                Pool = "0",
+                Equipment = new List<Equipment>
+                {
+                    new() { Slot = "Arm", Id = "item4" },
+                    new() { Slot = "Item0", Id = "item0" }
                 }
             }
         }));

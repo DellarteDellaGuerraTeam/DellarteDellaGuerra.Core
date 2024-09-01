@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.EquipmentPool.Model;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -14,13 +15,15 @@ namespace DellarteDellaGuerra.SetSpawnEquipment.EquipmentPools.Mappers
     public class EquipmentPoolsMapper
     {
         private readonly MBObjectManager _mbObjectManager;
+        private readonly ILogger _logger;
 
         private readonly FieldInfo _mbEquipmentRosterEquipmentsField =
             typeof(MBEquipmentRoster).GetField("_equipments", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public EquipmentPoolsMapper(MBObjectManager mbObjectManager)
+        public EquipmentPoolsMapper(MBObjectManager mbObjectManager, ILoggerFactory loggerFactory)
         {
             _mbObjectManager = mbObjectManager;
+            _logger = loggerFactory.CreateLogger<EquipmentPoolsMapper>();
         }
 
         public MBEquipmentRoster MapEquipmentPool(EquipmentPool equipmentPool,
@@ -61,7 +64,10 @@ namespace DellarteDellaGuerra.SetSpawnEquipment.EquipmentPools.Mappers
             var nativeEquipmentLoadout = FindMatchingEquipment(equipmentId, equipmentLoadout);
 
             if (nativeEquipmentLoadout is null)
+            {
+                _logger.Error($"Could not find {equipmentLoadout} among native '{equipmentId}' equipment roster");
                 return;
+            }
 
             var equipment = (MBList<Equipment>)_mbEquipmentRosterEquipmentsField.GetValue(equipmentRoster);
             equipment.Add(nativeEquipmentLoadout);

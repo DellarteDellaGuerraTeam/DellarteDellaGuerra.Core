@@ -45,7 +45,8 @@ namespace DellarteDellaGuerra.Infrastructure
         private readonly ICacheProvider _cacheProvider;
         private DisplayShaderNumber _displayShaderNumber;
 
-        private MissionSpawnEquipmentPoolSetter _missionSpawnEquipmentInitialiser;
+        private ForceCivilianEquipmentSetter _forceCivilianEquipmentSetter;
+        private MissionSpawnEquipmentPoolSetter _missionSpawnEquipmentPoolSetter;
         
         public SubModule()
         {
@@ -143,17 +144,15 @@ namespace DellarteDellaGuerra.Infrastructure
                 new NpcCharacterMapper(equipmentRosterRepository, equipmentPoolRoster, _loggerFactory);
             var characterEquipmentPoolRepository =
                 new NpcCharacterEquipmentPoolsProvider(npcCharacterRepository, equipmentPoolMapper);
-            var equipmentRosterEquipmentPoolRepository =
-                new EquipmentRosterEquipmentPoolsProvider(equipmentRosterRepository);
+            // var equipmentRosterEquipmentPoolRepository =
+            //     new EquipmentRosterEquipmentPoolsProvider(equipmentRosterRepository);
             var civilianEquipmentRepository =
-                new CivilianEquipmentPoolProvider(_loggerFactory, characterEquipmentPoolRepository,
-                    equipmentRosterEquipmentPoolRepository);
+                new CivilianEquipmentPoolProvider(_loggerFactory, characterEquipmentPoolRepository);
             var siegeEquipmentRepository =
-                new SiegeEquipmentPoolProvider(_loggerFactory, characterEquipmentPoolRepository,
-                    equipmentRosterEquipmentPoolRepository);
+                new SiegeEquipmentPoolProvider(_loggerFactory, characterEquipmentPoolRepository);
             var battleEquipmentRepository =
                 new BattleEquipmentPoolProvider(_loggerFactory, siegeEquipmentRepository, civilianEquipmentRepository,
-                    characterEquipmentPoolRepository, equipmentRosterEquipmentPoolRepository);
+                    characterEquipmentPoolRepository);
             var troopBattleEquipmentProvider =
                 new TroopBattleEquipmentProvider(_loggerFactory, battleEquipmentRepository, _cacheProvider);
             var troopSiegeEquipmentProvider =
@@ -166,17 +165,19 @@ namespace DellarteDellaGuerra.Infrastructure
             var equipmentPicker = new EquipmentPoolPoolPicker(random);
 
             var equipmentMapper =
-                new EquipmentPoolsMapper(MBObjectManager.Instance);
+                new EquipmentPoolsMapper(MBObjectManager.Instance, _loggerFactory);
             var getEquipmentPool = new GetEquipmentPool(encounterTypeProvider, troopBattleEquipmentProvider,
-                troopSiegeEquipmentProvider, troopCivilianEquipmentProvider, equipmentPicker);
+                troopSiegeEquipmentProvider, troopCivilianEquipmentProvider, equipmentPicker, _loggerFactory);
 
-            _missionSpawnEquipmentInitialiser =
+            _forceCivilianEquipmentSetter = new ForceCivilianEquipmentSetter();
+            _missionSpawnEquipmentPoolSetter =
                 new MissionSpawnEquipmentPoolSetter(getEquipmentPool, equipmentMapper, _loggerFactory);
         }
 
         private void AddEquipmentSpawnMissionBehaviour(Mission mission)
         {
-            mission.AddMissionBehavior(_missionSpawnEquipmentInitialiser);
+            mission.AddMissionBehavior(_forceCivilianEquipmentSetter);
+            mission.AddMissionBehavior(_missionSpawnEquipmentPoolSetter);
         }
         #endregion
 

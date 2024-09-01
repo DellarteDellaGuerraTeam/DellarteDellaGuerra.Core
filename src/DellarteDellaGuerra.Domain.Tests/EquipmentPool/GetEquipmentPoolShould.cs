@@ -1,4 +1,5 @@
 ﻿using System.Xml.Linq;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.EquipmentPool;
 using DellarteDellaGuerra.Domain.EquipmentPool.Model;
 using DellarteDellaGuerra.Domain.EquipmentPool.Port;
@@ -18,6 +19,7 @@ public class GetEquipmentPoolShould
     private Mock<ITroopCivilianEquipmentProvider> _troopCivilianEquipmentProvider;
     private Mock<IEncounterTypeProvider> _encounterTypeProvider;
     private Mock<IEquipmentPoolPicker> _equipmentPicker;
+    private Mock<ILoggerFactory> _loggerFactory;
     private GetEquipmentPool _getEquipmentPool;
 
     [SetUp]
@@ -29,9 +31,12 @@ public class GetEquipmentPoolShould
         _troopCivilianEquipmentProvider = new Mock<ITroopCivilianEquipmentProvider>();
         _encounterTypeProvider = new Mock<IEncounterTypeProvider>();
         _equipmentPicker = new Mock<IEquipmentPoolPicker>();
+        _loggerFactory = new Mock<ILoggerFactory>();
+        _loggerFactory.Setup(factory => factory.CreateLogger<GetEquipmentPool>())
+            .Returns(new Mock<ILogger>().Object);
         _getEquipmentPool = new GetEquipmentPool(_encounterTypeProvider.Object,
             _troopBattleEquipmentProvider.Object, _troopSiegeEquipmentProvider.Object,
-            _troopCivilianEquipmentProvider.Object, _equipmentPicker.Object);
+            _troopCivilianEquipmentProvider.Object, _equipmentPicker.Object, _loggerFactory.Object);
     }
 
     [Test]

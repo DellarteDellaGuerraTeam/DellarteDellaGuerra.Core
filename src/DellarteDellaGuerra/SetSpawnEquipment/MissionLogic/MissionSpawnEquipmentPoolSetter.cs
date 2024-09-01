@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.EquipmentPool;
@@ -79,7 +78,7 @@ namespace DellarteDellaGuerra.SetSpawnEquipment.MissionLogic
             return (Mission.Current?.GetMissionBehavior<MissionAgentHandler>() is not null ||
                     Mission.Current?.GetMissionBehavior<IMissionAgentSpawnLogic>() is not null) &&
                    agent?.Character is not null &&
-                   !(Clan.PlayerClan?.Heroes?.Any(
+                   !(Clan.PlayerClan?.Heroes?.Exists(
                        hero => hero?.StringId is not null && agent?.Character?.StringId == hero.StringId) ?? true);
         }
 
