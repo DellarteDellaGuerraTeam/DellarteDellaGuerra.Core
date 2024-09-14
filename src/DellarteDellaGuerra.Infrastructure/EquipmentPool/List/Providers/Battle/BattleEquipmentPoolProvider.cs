@@ -2,6 +2,7 @@
 using System.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.EquipmentPool.Model;
+using DellarteDellaGuerra.Infrastructure.Caching;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Civilian;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Siege;
 
@@ -10,17 +11,22 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle
     public class BattleEquipmentPoolProvider : IBattleEquipmentPoolProvider
     {
         private readonly ILogger _logger;
+        private readonly ICacheProvider _cacheProvider;
         private readonly IEquipmentPoolsRepository[] _equipmentPoolRepositories;
         private readonly ISiegeEquipmentPoolProvider _siegeEquipmentPoolProvider;
         private readonly ICivilianEquipmentPoolProvider _civilianEquipmentPoolProvider;
 
+        private string? _onSessionLaunchedCachedObjectId;
+        
         public BattleEquipmentPoolProvider(
             ILoggerFactory loggerFactory,
+            ICacheProvider cacheProvider,
             ISiegeEquipmentPoolProvider siegeEquipmentPoolProvider,
             ICivilianEquipmentPoolProvider civilianEquipmentPoolProvider,
             params IEquipmentPoolsRepository[] equipmentPoolRepositories)
         {
             _logger = loggerFactory.CreateLogger<BattleEquipmentPoolProvider>();
+            _cacheProvider = cacheProvider;
             _equipmentPoolRepositories = equipmentPoolRepositories;
             _siegeEquipmentPoolProvider = siegeEquipmentPoolProvider;
             _civilianEquipmentPoolProvider = civilianEquipmentPoolProvider;
@@ -28,6 +34,18 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle
 
         public IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> GetBattleEquipmentByCharacterAndPool()
         {
+            if (_onSessionLaunchedCachedObjectId is not null)
+            {
+                IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>? cachedNpcCharacters =
+                    _cacheProvider
+                        .GetCachedObject<IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>>(
+                            _onSessionLaunchedCachedObjectId);
+                if (cachedNpcCharacters is not null) return cachedNpcCharacters;
+
+                _logger.Error("The cached equipment pools are null.");
+                return new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>();
+            }
+            
             var siegeEquipmentPoolsByCharacter = _siegeEquipmentPoolProvider.GetSiegeEquipmentByCharacterAndPool();
             var civilianEquipmentPoolsByCharacter =
                 _civilianEquipmentPoolProvider.GetCivilianEquipmentByCharacterAndPool();
@@ -56,6 +74,10 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle
                 FilterOutMatchingEquipment(equipmentPoolsByCharacter, siegeEquipmentPoolsByCharacter);
             var equipmentPoolsByCharacterWithoutCivilianAndSiege =
                 FilterOutMatchingEquipment(equipmentPoolsByCharacterWithoutSiege, civilianEquipmentPoolsByCharacter);
+
+            _onSessionLaunchedCachedObjectId =
+                _cacheProvider.CacheObject(equipmentPoolsByCharacterWithoutCivilianAndSiege);
+            _cacheProvider.InvalidateCache(_onSessionLaunchedCachedObjectId, CampaignEvent.OnAfterSessionLaunched);
 
             return equipmentPoolsByCharacterWithoutCivilianAndSiege;
         }

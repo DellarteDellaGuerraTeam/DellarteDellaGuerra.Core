@@ -1,4 +1,5 @@
 ﻿using DellarteDellaGuerra.Domain.Common.Logging.Port;
+using DellarteDellaGuerra.Infrastructure.Caching;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Civilian;
 using Moq;
@@ -9,6 +10,8 @@ namespace DellarteDellaGuerra.Infrastructure.Tests.EquipmentPool.List.Providers.
 
 public class CivilianEquipmentPoolProviderShould
 {
+    private const string CachedObjectId = "irrelevant_cached_object_id";
+    
     private const string ValidSiegeEquipmentDataFolderPath = "Data\\CivilianEquipmentPoolProvider\\ValidSymbols";
     private const string InvalidSiegeEquipmentDataFolderPath = "Data\\CivilianEquipmentPoolProvider\\InvalidSymbols";
 
@@ -21,17 +24,18 @@ public class CivilianEquipmentPoolProviderShould
     private const string SecondEquipmentRepositoryDataFolderPath =
         "Data\\CivilianEquipmentPoolProvider\\MultipleRepos\\SecondRepo";
 
+    private Mock<ICacheProvider> _cacheProvider;
     private Mock<ILogger> _logger;
-    private ILoggerFactory _loggerFactory;
+    private Mock<ILoggerFactory> _loggerFactory;
 
     [SetUp]
     public void SetUp()
     {
+        _cacheProvider = new Mock<ICacheProvider>();
         _logger = new Mock<ILogger>();
-        var loggerFactory = new Mock<ILoggerFactory>();
-        loggerFactory.Setup(factory => factory.CreateLogger<CivilianEquipmentPoolProvider>())
+        _loggerFactory = new Mock<ILoggerFactory>();
+        _loggerFactory.Setup(factory => factory.CreateLogger<CivilianEquipmentPoolProvider>())
             .Returns(_logger.Object);
-        _loggerFactory = loggerFactory.Object;
     }
 
     [Test]
@@ -39,7 +43,8 @@ public class CivilianEquipmentPoolProviderShould
     {
         var firstEquipmentRepository =
             CreateEquipmentRepository(InputFolder(ValidSiegeEquipmentDataFolderPath));
-        var troopEquipmentReader = new CivilianEquipmentPoolProvider(_loggerFactory, firstEquipmentRepository);
+        var troopEquipmentReader =
+            new CivilianEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object, firstEquipmentRepository);
 
         var allTroopEquipmentPools = troopEquipmentReader.GetCivilianEquipmentByCharacterAndPool();
 
@@ -54,7 +59,7 @@ public class CivilianEquipmentPoolProviderShould
         var secondEquipmentRepository =
             CreateEquipmentRepository(InputFolder(SecondEquipmentRepositoryDataFolderPath));
         var troopEquipmentReader =
-            new CivilianEquipmentPoolProvider(_loggerFactory, firstEquipmentRepository,
+            new CivilianEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object, firstEquipmentRepository,
                 secondEquipmentRepository);
 
         var allTroopEquipmentPools = troopEquipmentReader.GetCivilianEquipmentByCharacterAndPool();
@@ -75,7 +80,8 @@ public class CivilianEquipmentPoolProviderShould
         var characterEquipmentRepository =
             CreateEquipmentRepository(InputFolder(InvalidSiegeEquipmentDataFolderPath));
         var troopEquipmentReader =
-            new CivilianEquipmentPoolProvider(_loggerFactory, characterEquipmentRepository);
+            new CivilianEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object,
+                characterEquipmentRepository);
 
         var allTroopEquipmentPools = troopEquipmentReader.GetCivilianEquipmentByCharacterAndPool();
 
@@ -84,6 +90,33 @@ public class CivilianEquipmentPoolProviderShould
         Assert.That(allTroopEquipmentPools[recruitId].Count, Is.EqualTo(0));
     }
 
+    [Test]
+    public void GetCachedEquipmentPools()
+    {
+        var characterEquipmentRepository =
+            CreateEquipmentRepository(InputFolder(InvalidSiegeEquipmentDataFolderPath));
+        var troopEquipmentReader =
+            new CivilianEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object,
+                characterEquipmentRepository);
+
+        _cacheProvider.Setup(provider => provider.CacheObject(It.IsAny<object>()))
+            .Returns(CachedObjectId);
+        _cacheProvider.Setup(provider =>
+            provider.InvalidateCache(CachedObjectId, CampaignEvent.OnAfterSessionLaunched));
+
+        var allTroopEquipmentPools = troopEquipmentReader.GetCivilianEquipmentByCharacterAndPool();
+
+        _cacheProvider.Setup(cacheProvider =>
+                cacheProvider.GetCachedObject<IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>>(
+                    CachedObjectId))
+            .Returns(allTroopEquipmentPools);
+
+        var cachedAllTroopEquipmentPools = troopEquipmentReader.GetCivilianEquipmentByCharacterAndPool();
+
+        _cacheProvider.VerifyAll();
+        Assert.That(cachedAllTroopEquipmentPools, Is.EqualTo(allTroopEquipmentPools));
+    }
+    
     private IEquipmentPoolsRepository CreateEquipmentRepository(string inputFolderPath)
     {
         var characterEquipmentRepository = new Mock<IEquipmentPoolsRepository>();

@@ -1,5 +1,7 @@
 ﻿using System.Xml.Linq;
 using DellarteDellaGuerra.Domain.Common.Exception;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
+using DellarteDellaGuerra.Infrastructure.Caching;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Models.EquipmentRosters;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Utils;
@@ -10,14 +12,23 @@ namespace DellarteDellaGuerra.Infrastructure.Tests.EquipmentPool.List.Repositori
 
 public class EquipmentRosterRepositoryShould
 {
+    private const string CachedObjectId = "irrelevant_cached_object_id"; 
+    
     private Mock<IXmlProcessor> _xmlProcessor;
+    private Mock<ICacheProvider> _cacheProvider;
+    private Mock<ILoggerFactory> _loggerFactory;
     private IEquipmentRosterRepository _equipmentRosterRepository;
 
     [SetUp]
     public void Setup()
     {
-        _xmlProcessor = new Mock<IXmlProcessor>();
-        _equipmentRosterRepository = new EquipmentRosterRepository(_xmlProcessor.Object);
+        _xmlProcessor = new Mock<IXmlProcessor>(MockBehavior.Strict);
+        _cacheProvider = new Mock<ICacheProvider>(MockBehavior.Strict);
+        _loggerFactory = new Mock<ILoggerFactory>(MockBehavior.Strict);
+        _loggerFactory.Setup(factory => factory.CreateLogger<IEquipmentRosterRepository>())
+            .Returns(new Mock<ILogger>(MockBehavior.Strict).Object);
+        _equipmentRosterRepository =
+            new EquipmentRosterRepository(_xmlProcessor.Object, _cacheProvider.Object, _loggerFactory.Object);
     }
 
     [Test]
@@ -81,6 +92,32 @@ public class EquipmentRosterRepositoryShould
         }));
     }
 
+    [Test]
+    public void GetCachedNpcCharacters()
+    {
+        string xml = "<EquipmentRosters/>";
+
+        _xmlProcessor.Setup(processor => processor.GetXmlNodes(EquipmentRosterRepository.EquipmentRostersRootTag))
+            .Returns(XDocument.Parse(xml));
+        _cacheProvider.Setup(provider => provider.CacheObject(It.IsAny<EquipmentRosters>()))
+            .Returns(CachedObjectId);
+        _cacheProvider.Setup(provider =>
+            provider.InvalidateCache(CachedObjectId, CampaignEvent.OnAfterSessionLaunched));
+
+        // First call to populate cache
+        var equipmentRosters = _equipmentRosterRepository.GetEquipmentRosters();
+
+        _cacheProvider.Verify(provider => provider.CacheObject(equipmentRosters), Times.Once);
+
+        _cacheProvider.Setup(cache => cache.GetCachedObject<EquipmentRosters>(CachedObjectId))
+            .Returns(new EquipmentRosters());
+
+        EquipmentRosters cachedEquipmentRosters = _equipmentRosterRepository.GetEquipmentRosters();
+
+        _cacheProvider.VerifyAll();
+        Assert.That(cachedEquipmentRosters, Is.EqualTo(equipmentRosters));
+    }
+    
     [Test]
     public void ThrowsTechnicalException_WhenIOErrorOccurs()
     {

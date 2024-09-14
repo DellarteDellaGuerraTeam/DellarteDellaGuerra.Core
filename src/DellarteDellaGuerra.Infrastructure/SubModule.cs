@@ -137,9 +137,9 @@ namespace DellarteDellaGuerra.Infrastructure
         private void HandleEquipmentSpawnDependencies()
         {
             var xmlProcessor = new MergedModulesXmlProcessor(_loggerFactory, _cacheProvider);
-            var npcCharacterRepository = new NpcCharacterRepository(xmlProcessor);
+            var npcCharacterRepository = new NpcCharacterRepository(xmlProcessor, _cacheProvider, _loggerFactory);
             var equipmentPoolRoster = new EquipmentSetMapper();
-            var equipmentRosterRepository = new EquipmentRosterRepository(xmlProcessor);
+            var equipmentRosterRepository = new EquipmentRosterRepository(xmlProcessor, _cacheProvider, _loggerFactory);
             var equipmentPoolMapper =
                 new NpcCharacterMapper(equipmentRosterRepository, equipmentPoolRoster, _loggerFactory);
             var characterEquipmentPoolRepository =
@@ -147,11 +147,12 @@ namespace DellarteDellaGuerra.Infrastructure
             // var equipmentRosterEquipmentPoolRepository =
             //     new EquipmentRosterEquipmentPoolsProvider(equipmentRosterRepository);
             var civilianEquipmentRepository =
-                new CivilianEquipmentPoolProvider(_loggerFactory, characterEquipmentPoolRepository);
+                new CivilianEquipmentPoolProvider(_loggerFactory, _cacheProvider, characterEquipmentPoolRepository);
             var siegeEquipmentRepository =
-                new SiegeEquipmentPoolProvider(_loggerFactory, characterEquipmentPoolRepository);
+                new SiegeEquipmentPoolProvider(_loggerFactory, _cacheProvider, characterEquipmentPoolRepository);
             var battleEquipmentRepository =
-                new BattleEquipmentPoolProvider(_loggerFactory, siegeEquipmentRepository, civilianEquipmentRepository,
+                new BattleEquipmentPoolProvider(_loggerFactory, _cacheProvider, siegeEquipmentRepository,
+                    civilianEquipmentRepository,
                     characterEquipmentPoolRepository);
             var troopBattleEquipmentProvider =
                 new TroopBattleEquipmentProvider(_loggerFactory, battleEquipmentRepository, _cacheProvider);

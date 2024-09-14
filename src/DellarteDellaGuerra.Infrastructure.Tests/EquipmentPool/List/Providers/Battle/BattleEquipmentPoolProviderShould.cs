@@ -1,6 +1,7 @@
 ﻿using System.Xml.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.EquipmentPool.Model;
+using DellarteDellaGuerra.Infrastructure.Caching;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Civilian;
@@ -12,12 +13,16 @@ namespace DellarteDellaGuerra.Infrastructure.Tests.EquipmentPool.List.Providers.
 
 public class BattleEquipmentPoolProviderShould
 {
+    private const string CachedObjectId = "irrelevant_cached_object_id";
+
+    private Mock<ICacheProvider> _cacheProvider;
     private Mock<ILogger> _logger;
     private Mock<ILoggerFactory> _loggerFactory;
 
     [SetUp]
     public void SetUp()
     {
+        _cacheProvider = new Mock<ICacheProvider>();
         _logger = new Mock<ILogger>();
         _loggerFactory = new Mock<ILoggerFactory>();
         _loggerFactory.Setup(factory => factory.CreateLogger<BattleEquipmentPoolProvider>())
@@ -50,7 +55,8 @@ public class BattleEquipmentPoolProviderShould
         var civilianEquipmentRepository =
             CivilianEquipmentRepositoryReturns(
                 new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>());
-        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, siegeEquipmentRepository,
+        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object,
+            siegeEquipmentRepository,
             civilianEquipmentRepository, equipmentRepository);
 
         var characterBattleEquipment = battleEquipmentRepository.GetBattleEquipmentByCharacterAndPool();
@@ -105,7 +111,8 @@ public class BattleEquipmentPoolProviderShould
         var civilianEquipmentRepository =
             CivilianEquipmentRepositoryReturns(
                 new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>());
-        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, siegeEquipmentRepository,
+        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object,
+            siegeEquipmentRepository,
             civilianEquipmentRepository, leftEquipmentRepository, rightEquipmentRepository);
 
         var characterBattleEquipment = battleEquipmentRepository.GetBattleEquipmentByCharacterAndPool();
@@ -160,7 +167,8 @@ public class BattleEquipmentPoolProviderShould
         var civilianEquipmentRepository =
             CivilianEquipmentRepositoryReturns(
                 new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>());
-        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, siegeEquipmentRepository,
+        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object,
+            siegeEquipmentRepository,
             civilianEquipmentRepository, leftEquipmentRepository, rightEquipmentRepository);
 
         var characterBattleEquipment = battleEquipmentRepository.GetBattleEquipmentByCharacterAndPool();
@@ -224,7 +232,8 @@ public class BattleEquipmentPoolProviderShould
                     }
                 }
             });
-        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, siegeEquipmentRepository,
+        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object,
+            siegeEquipmentRepository,
             civilianEquipmentRepository, equipmentRepository);
 
         var characterBattleEquipment = battleEquipmentRepository.GetBattleEquipmentByCharacterAndPool();
@@ -288,7 +297,8 @@ public class BattleEquipmentPoolProviderShould
         var civilianEquipmentRepository =
             CivilianEquipmentRepositoryReturns(
                 new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>());
-        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, siegeEquipmentRepository,
+        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object,
+            siegeEquipmentRepository,
             civilianEquipmentRepository, equipmentRepository);
 
         var characterBattleEquipment = battleEquipmentRepository.GetBattleEquipmentByCharacterAndPool();
@@ -308,6 +318,37 @@ public class BattleEquipmentPoolProviderShould
                 }
             })
         );
+    }
+
+    [Test]
+    public void GetCachedEquipmentPools()
+    {
+        var equipmentPools = new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>();
+        var equipmentRepository = EquipmentRepositoryReturns(equipmentPools);
+        var siegeEquipmentPools = new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>();
+        var siegeEquipmentRepository = SiegeEquipmentRepositoryReturns(siegeEquipmentPools);
+        var civilianEquipmentPools = new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>();
+        var civilianEquipmentRepository = CivilianEquipmentRepositoryReturns(civilianEquipmentPools);
+        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object,
+            siegeEquipmentRepository,
+            civilianEquipmentRepository, equipmentRepository);
+
+        _cacheProvider.Setup(provider => provider.CacheObject(It.IsAny<object>()))
+            .Returns(CachedObjectId);
+        _cacheProvider.Setup(provider =>
+            provider.InvalidateCache(CachedObjectId, CampaignEvent.OnAfterSessionLaunched));
+
+        var characterBattleEquipment = battleEquipmentRepository.GetBattleEquipmentByCharacterAndPool();
+
+        _cacheProvider.Setup(cacheProvider =>
+                cacheProvider.GetCachedObject<IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>>(
+                    CachedObjectId))
+            .Returns(characterBattleEquipment);
+
+        var cachedCharacterBattleEquipment = battleEquipmentRepository.GetBattleEquipmentByCharacterAndPool();
+
+        Assert.That(cachedCharacterBattleEquipment, Is.EqualTo(characterBattleEquipment));
+        _cacheProvider.VerifyAll();
     }
 
     private IEquipmentPoolsRepository EquipmentRepositoryReturns(

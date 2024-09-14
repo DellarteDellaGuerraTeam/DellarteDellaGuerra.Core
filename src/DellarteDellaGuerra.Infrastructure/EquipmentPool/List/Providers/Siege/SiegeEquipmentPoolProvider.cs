@@ -1,26 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
+using DellarteDellaGuerra.Infrastructure.Caching;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.EquipmentSorters;
 
 namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Siege
 {
-    public class SiegeEquipmentPoolProvider : ISiegeEquipmentPoolProvider
+    public class SiegeEquipmentPoolProvider(ILoggerFactory loggerFactory,
+        ICacheProvider cacheProvider,
+        params IEquipmentPoolsRepository[] equipmentRepositories) : ISiegeEquipmentPoolProvider
     {
-        private readonly ILogger _logger;
-        private readonly IEquipmentPoolsRepository[] _equipmentRepositories;
-
-        public SiegeEquipmentPoolProvider(ILoggerFactory loggerFactory,
-            params IEquipmentPoolsRepository[] equipmentRepositories)
-        {
-            _logger = loggerFactory.CreateLogger<SiegeEquipmentPoolProvider>();
-            _equipmentRepositories = equipmentRepositories;
-        }
+        private readonly ILogger _logger = loggerFactory.CreateLogger<SiegeEquipmentPoolProvider>();
+        private string? _onSessionLaunchedCachedObjectId;
 
         public IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
             GetSiegeEquipmentByCharacterAndPool()
         {
-            return _equipmentRepositories
+            if (_onSessionLaunchedCachedObjectId is not null)
+            {
+                IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>? cachedNpcCharacters =
+                    cacheProvider.GetCachedObject<IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>>(
+                        _onSessionLaunchedCachedObjectId);
+                if (cachedNpcCharacters is not null) return cachedNpcCharacters;
+
+                _logger.Error("The cached equipment pools are null.");
+                return new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>();
+            }
+
+            IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> equipmentPools = equipmentRepositories
                 .SelectMany(repo => repo.GetEquipmentPoolsById())
                 .GroupBy(pools => pools.Key)
                 .ToDictionary(
@@ -41,6 +48,11 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Siege
 
                         return new SiegeEquipmentSorter(equipmentPools).GetEquipmentPools();
                     });
+
+            _onSessionLaunchedCachedObjectId = cacheProvider.CacheObject(equipmentPools);
+            cacheProvider.InvalidateCache(_onSessionLaunchedCachedObjectId, CampaignEvent.OnAfterSessionLaunched);
+
+            return equipmentPools;
         }
     }
 }

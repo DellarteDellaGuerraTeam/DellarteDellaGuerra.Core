@@ -1,5 +1,7 @@
 ﻿using System.Xml.Linq;
 using DellarteDellaGuerra.Domain.Common.Exception;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
+using DellarteDellaGuerra.Infrastructure.Caching;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Models.NpcCharacters;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
 using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Utils;
@@ -10,14 +12,23 @@ namespace DellarteDellaGuerra.Infrastructure.Tests.EquipmentPool.List.Repositori
 
 public class NpcRepositoryRepositoryShould
 {
+    private const string CachedObjectId = "irrelevant_cached_object_id";
+    
     private Mock<IXmlProcessor> _xmlProcessor;
+    private Mock<ICacheProvider> _cacheProvider;
+    private Mock<ILoggerFactory> _loggerFactory;
     private INpcCharacterRepository _npcCharacterRepository;
 
     [SetUp]
     public void Setup()
     {
-        _xmlProcessor = new Mock<IXmlProcessor>();
-        _npcCharacterRepository = new NpcCharacterRepository(_xmlProcessor.Object);
+        _xmlProcessor = new Mock<IXmlProcessor>(MockBehavior.Strict);
+        _cacheProvider = new Mock<ICacheProvider>(MockBehavior.Strict);
+        _loggerFactory = new Mock<ILoggerFactory>(MockBehavior.Strict);
+        _loggerFactory.Setup(factory => factory.CreateLogger<INpcCharacterRepository>())
+            .Returns(new Mock<ILogger>(MockBehavior.Strict).Object);
+        _npcCharacterRepository =
+            new NpcCharacterRepository(_xmlProcessor.Object, _cacheProvider.Object, _loggerFactory.Object);
     }
 
     [Test]
@@ -100,6 +111,30 @@ public class NpcRepositoryRepositoryShould
                 }
             }
         }));
+    }
+
+    [Test]
+    public void GetCachedNpcCharacters()
+    {
+        string xml = "<NPCCharacters/>";
+
+        _xmlProcessor.Setup(processor => processor.GetXmlNodes(NpcCharacterRepository.NpcCharacterRootTag))
+            .Returns(XDocument.Parse(xml));
+        _cacheProvider.Setup(cache => cache.CacheObject(It.IsAny<NpcCharacters>()))
+            .Returns(CachedObjectId);
+        _cacheProvider.Setup(cache => cache.InvalidateCache(CachedObjectId, CampaignEvent.OnAfterSessionLaunched));
+
+        // First call to populate cache
+        var equipmentRosters = _npcCharacterRepository.GetNpcCharacters();
+
+        _cacheProvider.Verify(provider => provider.CacheObject(equipmentRosters), Times.Once);
+        _cacheProvider.Setup(cache => cache.GetCachedObject<NpcCharacters>(CachedObjectId))
+            .Returns(new NpcCharacters());
+
+        NpcCharacters cachedEquipmentRosters = _npcCharacterRepository.GetNpcCharacters();
+
+        _cacheProvider.VerifyAll();
+        Assert.That(cachedEquipmentRosters, Is.EqualTo(equipmentRosters));
     }
 
     [Test]
