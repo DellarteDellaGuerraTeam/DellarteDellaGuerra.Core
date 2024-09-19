@@ -50,6 +50,10 @@ public class EquipmentRosterRepositoryShould
 
         _xmlProcessor.Setup(processor => processor.GetXmlNodes(EquipmentRosterRepository.EquipmentRostersRootTag))
             .Returns(XDocument.Parse(xml));
+        _cacheProvider.Setup(provider => provider.CacheObject(It.IsAny<EquipmentRosters>()))
+            .Returns(CachedObjectId);
+        _cacheProvider.Setup(provider =>
+            provider.InvalidateCache(CachedObjectId, CampaignEvent.OnAfterSessionLaunched));        
 
         EquipmentRosters equipmentRosters = _equipmentRosterRepository.GetEquipmentRosters();
 

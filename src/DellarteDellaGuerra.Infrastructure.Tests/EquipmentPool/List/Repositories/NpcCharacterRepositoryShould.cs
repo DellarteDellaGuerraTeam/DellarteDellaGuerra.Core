@@ -58,6 +58,9 @@ public class NpcRepositoryRepositoryShould
 
         _xmlProcessor.Setup(processor => processor.GetXmlNodes(NpcCharacterRepository.NpcCharacterRootTag))
             .Returns(XDocument.Parse(xml));
+        _cacheProvider.Setup(cache => cache.CacheObject(It.IsAny<NpcCharacters>()))
+            .Returns(CachedObjectId);
+        _cacheProvider.Setup(cache => cache.InvalidateCache(CachedObjectId, CampaignEvent.OnAfterSessionLaunched));
 
         NpcCharacters equipmentRosters = _npcCharacterRepository.GetNpcCharacters();
 
