@@ -12,27 +12,28 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle
     {
         private readonly ILogger _logger;
         private readonly ICacheProvider _cacheProvider;
-        private readonly IEquipmentPoolsRepository[] _equipmentPoolRepositories;
+        private readonly IEquipmentPoolsRepository _equipmentPoolRepository;
         private readonly ISiegeEquipmentPoolProvider _siegeEquipmentPoolProvider;
         private readonly ICivilianEquipmentPoolProvider _civilianEquipmentPoolProvider;
 
         private string? _onSessionLaunchedCachedObjectId;
-        
+
         public BattleEquipmentPoolProvider(
             ILoggerFactory loggerFactory,
             ICacheProvider cacheProvider,
             ISiegeEquipmentPoolProvider siegeEquipmentPoolProvider,
             ICivilianEquipmentPoolProvider civilianEquipmentPoolProvider,
-            params IEquipmentPoolsRepository[] equipmentPoolRepositories)
+            IEquipmentPoolsRepository equipmentPoolRepository)
         {
             _logger = loggerFactory.CreateLogger<BattleEquipmentPoolProvider>();
             _cacheProvider = cacheProvider;
-            _equipmentPoolRepositories = equipmentPoolRepositories;
+            _equipmentPoolRepository = equipmentPoolRepository;
             _siegeEquipmentPoolProvider = siegeEquipmentPoolProvider;
             _civilianEquipmentPoolProvider = civilianEquipmentPoolProvider;
         }
 
-        public IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> GetBattleEquipmentByCharacterAndPool()
+        public IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
+            GetBattleEquipmentByCharacterAndPool()
         {
             if (_onSessionLaunchedCachedObjectId is not null)
             {
@@ -45,30 +46,16 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle
                 _logger.Error("The cached equipment pools are null.");
                 return new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>();
             }
-            
+
             var siegeEquipmentPoolsByCharacter = _siegeEquipmentPoolProvider.GetSiegeEquipmentByCharacterAndPool();
             var civilianEquipmentPoolsByCharacter =
                 _civilianEquipmentPoolProvider.GetCivilianEquipmentByCharacterAndPool();
-            var equipmentPoolsByCharacter = _equipmentPoolRepositories.SelectMany(repo => repo.GetEquipmentPoolsById())
+            var equipmentPoolsByCharacter = _equipmentPoolRepository.GetEquipmentPoolsById()
                 .GroupBy(equipmentPool => equipmentPool.Key)
                 .ToDictionary(
                     group => group.Key,
-                    group =>
-                    {
-                        IList<Domain.EquipmentPool.Model.EquipmentPool> equipmentPools;
-                        if (group.Count() > 1)
-                        {
-                            equipmentPools = group.First().Value;
-                            _logger.Warn(
-                                $"'{group.Key}' is defined in multiple xml files. Only the first equipment list will be used.");
-                        }
-                        else
-                        {
-                            equipmentPools = group.SelectMany(pool => pool.Value).ToList();
-                        }
-
-                        return equipmentPools;
-                    });
+                    group => (IList<Domain.EquipmentPool.Model.EquipmentPool>)group.SelectMany(pool => pool.Value)
+                        .ToList());
 
             var equipmentPoolsByCharacterWithoutSiege =
                 FilterOutMatchingEquipment(equipmentPoolsByCharacter, siegeEquipmentPoolsByCharacter);
@@ -118,7 +105,8 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle
                 }).Where(equipmentPool => !equipmentPool.IsEmpty()).ToList();
         }
 
-        private Domain.EquipmentPool.Model.EquipmentPool FilterOutMatchingEquipment(Domain.EquipmentPool.Model.EquipmentPool equipmentPoolReference,
+        private Domain.EquipmentPool.Model.EquipmentPool FilterOutMatchingEquipment(
+            Domain.EquipmentPool.Model.EquipmentPool equipmentPoolReference,
             Domain.EquipmentPool.Model.EquipmentPool equipmentPool)
         {
             var equipmentToRemove = equipmentPool.GetEquipmentLoadouts();

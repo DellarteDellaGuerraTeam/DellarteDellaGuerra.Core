@@ -144,8 +144,6 @@ namespace DellarteDellaGuerra.Infrastructure
                 new NpcCharacterMapper(equipmentRosterRepository, equipmentPoolRoster, _loggerFactory);
             var characterEquipmentPoolRepository =
                 new NpcCharacterEquipmentPoolsProvider(npcCharacterRepository, equipmentPoolMapper);
-            // var equipmentRosterEquipmentPoolRepository =
-            //     new EquipmentRosterEquipmentPoolsProvider(equipmentRosterRepository);
             var civilianEquipmentRepository =
                 new CivilianEquipmentPoolProvider(_loggerFactory, _cacheProvider, characterEquipmentPoolRepository);
             var siegeEquipmentRepository =

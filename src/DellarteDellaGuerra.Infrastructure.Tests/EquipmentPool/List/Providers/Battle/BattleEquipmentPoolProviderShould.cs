@@ -30,7 +30,7 @@ public class BattleEquipmentPoolProviderShould
     }
 
     [Test]
-    public void GetEquipmentPoolsFromSingleRepository()
+    public void GetEquipmentPools()
     {
         var equipmentRepository = EquipmentRepositoryReturns(
             new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
@@ -79,115 +79,6 @@ public class BattleEquipmentPoolProviderShould
                     }
                 }
             }));
-    }
-
-    [Test]
-    public void GetEquipmentPoolsFromMultipleRepositories()
-    {
-        var leftEquipmentRepository = EquipmentRepositoryReturns(
-            new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
-            {
-                {
-                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
-                    {
-                        CreateEquipmentPool(new[] { "Equipment1", "Equipment2" }, 0),
-                        CreateEquipmentPool(new[] { "Equipment3", "Equipment4" }, 1)
-                    }
-                }
-            });
-        var rightEquipmentRepository = EquipmentRepositoryReturns(
-            new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
-            {
-                {
-                    "Character2", new List<Domain.EquipmentPool.Model.EquipmentPool>
-                    {
-                        CreateEquipmentPool(new[] { "Equipment5", "Equipment6" }, 0),
-                        CreateEquipmentPool(new[] { "Equipment3", "Equipment7" }, 1)
-                    }
-                }
-            });
-        var siegeEquipmentRepository =
-            SiegeEquipmentRepositoryReturns(new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>());
-        var civilianEquipmentRepository =
-            CivilianEquipmentRepositoryReturns(
-                new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>());
-        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object,
-            siegeEquipmentRepository,
-            civilianEquipmentRepository, leftEquipmentRepository, rightEquipmentRepository);
-
-        var characterBattleEquipment = battleEquipmentRepository.GetBattleEquipmentByCharacterAndPool();
-
-        Assert.That(characterBattleEquipment, Is.EqualTo(
-            new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
-            {
-                {
-                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
-                    {
-                        CreateEquipmentPool(new[] { "Equipment1", "Equipment2" }, 0),
-                        CreateEquipmentPool(new[] { "Equipment3", "Equipment4" }, 1)
-                    }
-                },
-                {
-                    "Character2", new List<Domain.EquipmentPool.Model.EquipmentPool>
-                    {
-                        CreateEquipmentPool(new[] { "Equipment5", "Equipment6" }, 0),
-                        CreateEquipmentPool(new[] { "Equipment3", "Equipment7" }, 1)
-                    }
-                }
-            }));
-    }
-
-    [Test]
-    public void GetEquipmentPoolsFromFirstRepositoryIfConflict()
-    {
-        var leftEquipmentRepository = EquipmentRepositoryReturns(
-            new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
-            {
-                {
-                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
-                    {
-                        CreateEquipmentPool(new[] { "Equipment1", "Equipment2" }, 0),
-                        CreateEquipmentPool(new[] { "Equipment3", "Equipment4" }, 1)
-                    }
-                }
-            });
-        var rightEquipmentRepository = EquipmentRepositoryReturns(
-            new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
-            {
-                {
-                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
-                    {
-                        CreateEquipmentPool(new[] { "Equipment5", "Equipment6" }, 0),
-                        CreateEquipmentPool(new[] { "Equipment3", "Equipment7" }, 1)
-                    }
-                }
-            });
-        var siegeEquipmentRepository =
-            SiegeEquipmentRepositoryReturns(new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>());
-        var civilianEquipmentRepository =
-            CivilianEquipmentRepositoryReturns(
-                new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>());
-        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object,
-            siegeEquipmentRepository,
-            civilianEquipmentRepository, leftEquipmentRepository, rightEquipmentRepository);
-
-        var characterBattleEquipment = battleEquipmentRepository.GetBattleEquipmentByCharacterAndPool();
-
-        Assert.That(characterBattleEquipment, Is.EqualTo(
-            new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
-            {
-                {
-                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
-                    {
-                        CreateEquipmentPool(new[] { "Equipment1", "Equipment2" }, 0),
-                        CreateEquipmentPool(new[] { "Equipment3", "Equipment4" }, 1)
-                    }
-                }
-            }));
-        _logger.Verify(
-            logger => logger.Warn(
-                "'Character1' is defined in multiple xml files. Only the first equipment list will be used.", null),
-            Times.Once);
     }
 
     [Test]
