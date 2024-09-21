@@ -14,6 +14,7 @@ public class EquipmentSetMapper : IEquipmentSetMapper
 
         return new EquipmentRoster
         {
+            IsBattle = equipmentSet.IsBattle,
             IsCivilian = equipmentSet.IsCivilian,
             IsSiege = equipmentSet.IsSiege,
             Pool = equipmentSet.Pool,

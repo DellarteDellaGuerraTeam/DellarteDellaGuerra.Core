@@ -13,6 +13,7 @@ public record EquipmentRoster : IPoolFlagGetter
 
     public EquipmentRoster(EquipmentRoster equipmentRoster)
     {
+        IsBattle = equipmentRoster.IsBattle;
         IsCivilian = equipmentRoster.IsCivilian;
         IsSiege = equipmentRoster.IsSiege;
         Pool = equipmentRoster.Pool;
@@ -22,6 +23,9 @@ public record EquipmentRoster : IPoolFlagGetter
     [XmlElement(ElementName = "equipment")]
     public List<Equipment> Equipment { get; init; } = new();
 
+    [XmlAttribute(AttributeName = "battle")]
+    public string? IsBattle { get; init; }
+    
     [XmlAttribute(AttributeName = "civilian")]
     public string? IsCivilian { get; init; }
 

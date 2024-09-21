@@ -22,9 +22,9 @@ public class NpcCharacterMapperShould
     [SetUp]
     public void SetUp()
     {
-        _equipmentRosterRepository = new Mock<IEquipmentRosterRepository>();
-        _equipmentRosterMapper = new Mock<IEquipmentSetMapper>();
-        _loggerFactory = new Mock<ILoggerFactory>();
+        _equipmentRosterRepository = new Mock<IEquipmentRosterRepository>(MockBehavior.Strict);
+        _equipmentRosterMapper = new Mock<IEquipmentSetMapper>(MockBehavior.Strict);
+        _loggerFactory = new Mock<ILoggerFactory>(MockBehavior.Strict);
         _loggerFactory.Setup(factory => factory.CreateLogger<NpcCharacterMapper>())
             .Returns(new Mock<ILogger>().Object);
         _npcCharacterMapper =
@@ -71,6 +71,10 @@ public class NpcCharacterMapperShould
                 }
             }
         };
+        _equipmentRosterRepository.Setup(repo => repo.GetEquipmentRosters()).Returns(new EquipmentRosters
+        {
+            EquipmentRoster = new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.EquipmentRoster>()
+        });
 
         IList<EquipmentRoster> equipmentPools = _npcCharacterMapper.MapToEquipmentRosters(npcCharacter);
 
@@ -78,7 +82,7 @@ public class NpcCharacterMapperShould
     }
 
     [Test]
-    public void MapsEquipmentSets()
+    public void MapsBattleEquipmentSetsToBattleEquipmentOnly()
     {
         // Arrange
         NpcCharacter npcCharacter = new NpcCharacter
@@ -318,13 +322,124 @@ public class NpcCharacterMapperShould
         IList<EquipmentRoster> equipmentRosters = _npcCharacterMapper.MapToEquipmentRosters(npcCharacter);
 
         // Assert
-        // Assert
         Assert.That(equipmentRosters, Is.EqualTo(new List<EquipmentRoster>
         {
             mappedEquipmentRosters[0],
             mappedEquipmentRosters[1],
             mappedEquipmentRosters[0],
             mappedEquipmentRosters[1]
+        }));
+    }
+
+    [Test]
+    public void MapsAllEquipmentSetsWhenBattleAndCivilianAndSiegeFlagsAreSet()
+    {
+        // Arrange
+        NpcCharacter npcCharacter = new NpcCharacter
+        {
+            Id = "npc1",
+            Equipments = new Equipments
+            {
+                EquipmentSet = new List<EquipmentSet>
+                {
+                    new()
+                    {
+                        IsBattle = "true",
+                        IsCivilian = "true",
+                        IsSiege = "true",
+                        Id = "equipmentSet1"
+                    }
+                }
+            }
+        };
+
+        List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.EquipmentSet> equipmentSets =
+            new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.EquipmentSet>
+            {
+                new()
+                {
+                    IsBattle = "true",
+                    Equipment =
+                        new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.Equipment>
+                        {
+                            new() { Id = "item1" }
+                        }
+                },
+                new()
+                {
+                    IsCivilian = "true",
+                    Equipment =
+                        new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.Equipment>
+                        {
+                            new() { Id = "item1" }
+                        }
+                },
+                new()
+                {
+                    IsSiege = "true",
+                    Equipment =
+                        new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.Equipment>
+                        {
+                            new() { Id = "item2" }
+                        }
+                },
+                new()
+                {
+                    Equipment =
+                        new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.Equipment>
+                        {
+                            new() { Id = "item1" }
+                        }
+                },
+                new()
+                {
+                    IsBattle = "true",
+                    IsCivilian = "true",
+                    IsSiege = "true",
+                    Equipment =
+                        new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.Equipment>
+                        {
+                            new() { Id = "item2" }
+                        }
+                }
+            };
+
+        _equipmentRosterRepository.Setup(repo => repo.GetEquipmentRosters()).Returns(new EquipmentRosters
+        {
+            EquipmentRoster = new List<Infrastructure.EquipmentPool.List.Models.EquipmentRosters.EquipmentRoster>
+            {
+                new()
+                {
+                    Id = "equipmentSet1",
+                    EquipmentSet = equipmentSets
+                }
+            }
+        });
+
+        List<EquipmentRoster> mappedEquipmentRosters = new List<EquipmentRoster>
+            { new() { Pool = "0" } };
+        _equipmentRosterMapper.Setup(mapper => mapper.MapToEquipmentRoster(equipmentSets[0]))
+            .Returns(mappedEquipmentRosters[0]);
+        _equipmentRosterMapper.Setup(mapper => mapper.MapToEquipmentRoster(equipmentSets[1]))
+            .Returns(mappedEquipmentRosters[0]);
+        _equipmentRosterMapper.Setup(mapper => mapper.MapToEquipmentRoster(equipmentSets[2]))
+            .Returns(mappedEquipmentRosters[0]);
+        _equipmentRosterMapper.Setup(mapper => mapper.MapToEquipmentRoster(equipmentSets[3]))
+            .Returns(mappedEquipmentRosters[0]);
+        _equipmentRosterMapper.Setup(mapper => mapper.MapToEquipmentRoster(equipmentSets[4]))
+            .Returns(mappedEquipmentRosters[0]);
+
+        // Act
+        IList<EquipmentRoster> equipmentRosters = _npcCharacterMapper.MapToEquipmentRosters(npcCharacter);
+
+        // Assert
+        Assert.That(equipmentRosters, Is.EqualTo(new List<EquipmentRoster>
+        {
+            mappedEquipmentRosters[0],
+            mappedEquipmentRosters[0],
+            mappedEquipmentRosters[0],
+            mappedEquipmentRosters[0],
+            mappedEquipmentRosters[0]
         }));
     }
     

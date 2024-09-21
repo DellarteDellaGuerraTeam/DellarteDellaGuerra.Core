@@ -19,6 +19,9 @@ public record EquipmentSet : IPoolFlagGetter
 
     [XmlAttribute(AttributeName = "id")] public string? Id { get; init; }
 
+    [XmlAttribute(AttributeName = "battle")]
+    public string? IsBattle { get; init; }
+    
     [XmlAttribute(AttributeName = "civilian")]
     public string? IsCivilian { get; init; }
 

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Xml.XPath;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.EquipmentPool.Model;
 using DellarteDellaGuerra.Infrastructure.Caching;
@@ -50,6 +52,11 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle
             var siegeEquipmentPoolsByCharacter = _siegeEquipmentPoolProvider.GetSiegeEquipmentByCharacterAndPool();
             var civilianEquipmentPoolsByCharacter =
                 _civilianEquipmentPoolProvider.GetCivilianEquipmentByCharacterAndPool();
+
+            siegeEquipmentPoolsByCharacter = FilterOutBattleTaggedEquipment(siegeEquipmentPoolsByCharacter);
+            civilianEquipmentPoolsByCharacter = FilterOutBattleTaggedEquipment(civilianEquipmentPoolsByCharacter);
+            
+
             var equipmentPoolsByCharacter = _equipmentPoolRepository.GetEquipmentPoolsById()
                 .GroupBy(equipmentPool => equipmentPool.Key)
                 .ToDictionary(
@@ -118,6 +125,32 @@ namespace DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle
             var poolId = equipmentPoolReference.GetPoolId();
 
             return new Domain.EquipmentPool.Model.EquipmentPool(equipmentPoolReferenceFiltered, poolId);
+        }
+
+        private IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> FilterOutBattleTaggedEquipment(
+            IDictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>> equipmentPools)
+        {
+            return equipmentPools
+                .ToDictionary(equipmentPool => equipmentPool.Key,
+                    equipmentPool => equipmentPool.Value.Select(FilterOutBattleTaggedEquipment)
+                        .ToList() as IList<Domain.EquipmentPool.Model.EquipmentPool>);
+        }
+
+        private Domain.EquipmentPool.Model.EquipmentPool FilterOutBattleTaggedEquipment(
+            Domain.EquipmentPool.Model.EquipmentPool equipmentPool)
+        {
+            IList<Equipment> equipmentWithoutBattleEquipment = equipmentPool.GetEquipmentLoadouts()
+                .Where(equipment => !IsEquipmentBattleTagged(equipment))
+                .ToList();
+
+            return new Domain.EquipmentPool.Model.EquipmentPool(equipmentWithoutBattleEquipment,
+                equipmentPool.GetPoolId());
+        }
+
+        private bool IsEquipmentBattleTagged(Equipment equipment)
+        {
+            return equipment.GetEquipmentNode().XPathEvaluate("string(@battle)").ToString()
+                .Equals(bool.TrueString, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

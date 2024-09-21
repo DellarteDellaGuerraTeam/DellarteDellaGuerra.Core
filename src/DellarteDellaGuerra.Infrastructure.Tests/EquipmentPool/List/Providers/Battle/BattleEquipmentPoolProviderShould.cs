@@ -146,7 +146,177 @@ public class BattleEquipmentPoolProviderShould
     }
 
     [Test]
+    public void GetCivilianCharacterEquipmentTaggedForBattle()
+    {
+        var equipmentRepository = EquipmentRepositoryReturns(
+            new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
+            {
+                {
+                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
+                    {
+                        new(new List<Equipment>
+                        {
+                            CreateEquipmentWithBattleTag("CivilianEquipment1")
+                        }, 0)
+                    }
+                }
+            });
+        var siegeEquipmentRepository =
+            SiegeEquipmentRepositoryReturns(new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>());
+        var civilianEquipmentRepository =
+            CivilianEquipmentRepositoryReturns(new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
+            {
+                {
+                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
+                    {
+                        new(new List<Equipment>
+                        {
+                            CreateEquipmentWithBattleTag("CivilianEquipment1")
+                        }, 0)
+                    }
+                }
+            });
+        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object,
+            siegeEquipmentRepository,
+            civilianEquipmentRepository, equipmentRepository);
+
+        var characterBattleEquipment = battleEquipmentRepository.GetBattleEquipmentByCharacterAndPool();
+
+        Assert.That(characterBattleEquipment, Is.EqualTo(
+            new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
+            {
+                {
+                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
+                    {
+                        new(new List<Equipment>
+                        {
+                            CreateEquipmentWithBattleTag("CivilianEquipment1")
+                        }, 0)
+                    }
+                }
+            }));
+    }
+
+    [Test]
     public void NotGetSiegeCharacterEquipment()
+    {
+        var equipmentRepository = EquipmentRepositoryReturns(
+            new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
+            {
+                {
+                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
+                    {
+                        new(new List<Equipment>
+                        {
+                            CreateEquipmentWithBattleTag("SiegeEquipment1")
+                        }, 0)
+                    }
+                }
+            });
+        var siegeEquipmentRepository =
+            SiegeEquipmentRepositoryReturns(new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
+            {
+                {
+                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
+                    {
+                        new(new List<Equipment>
+                        {
+                            CreateEquipmentWithBattleTag("SiegeEquipment1")
+                        }, 0)
+                    }
+                }
+            });
+        var civilianEquipmentRepository =
+            CivilianEquipmentRepositoryReturns(
+                new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>());
+        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object,
+            siegeEquipmentRepository,
+            civilianEquipmentRepository, equipmentRepository);
+
+        var characterBattleEquipment = battleEquipmentRepository.GetBattleEquipmentByCharacterAndPool();
+
+        Assert.That(characterBattleEquipment, Is.EqualTo(
+            new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
+            {
+                {
+                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
+                    {
+                        new(new List<Equipment>
+                        {
+                            CreateEquipmentWithBattleTag("SiegeEquipment1")
+                        }, 0)
+                    }
+                }
+            })
+        );
+    }
+
+    [Test]
+    public void GetCharacterEquipmentTaggedForBattleOnce()
+    {
+        var equipmentRepository = EquipmentRepositoryReturns(
+            new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
+            {
+                {
+                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
+                    {
+                        new(new List<Equipment>
+                        {
+                            CreateEquipmentWithBattleTag("BattleEquipment1")
+                        }, 0)
+                    }
+                }
+            });
+        var siegeEquipmentRepository =
+            SiegeEquipmentRepositoryReturns(new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
+            {
+                {
+                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
+                    {
+                        new(new List<Equipment>
+                        {
+                            CreateEquipmentWithBattleTag("BattleEquipment1")
+                        }, 0)
+                    }
+                }
+            });
+        var civilianEquipmentRepository =
+            CivilianEquipmentRepositoryReturns(new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
+            {
+                {
+                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
+                    {
+                        new(new List<Equipment>
+                        {
+                            CreateEquipmentWithBattleTag("BattleEquipment1")
+                        }, 0)
+                    }
+                }
+            });
+        var battleEquipmentRepository = new BattleEquipmentPoolProvider(_loggerFactory.Object, _cacheProvider.Object,
+            siegeEquipmentRepository,
+            civilianEquipmentRepository, equipmentRepository);
+
+        var characterBattleEquipment = battleEquipmentRepository.GetBattleEquipmentByCharacterAndPool();
+
+        Assert.That(characterBattleEquipment, Is.EqualTo(
+            new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
+            {
+                {
+                    "Character1", new List<Domain.EquipmentPool.Model.EquipmentPool>
+                    {
+                        new(new List<Equipment>
+                        {
+                            CreateEquipmentWithBattleTag("BattleEquipment1")
+                        }, 0)
+                    }
+                }
+            })
+        );
+    }
+
+    [Test]
+    public void GetSiegeCharacterEquipmentTaggedForBattle()
     {
         var equipmentRepository = EquipmentRepositoryReturns(
             new Dictionary<string, IList<Domain.EquipmentPool.Model.EquipmentPool>>
@@ -270,11 +440,11 @@ public class BattleEquipmentPoolProviderShould
 
     private Domain.EquipmentPool.Model.EquipmentPool CreateEquipmentPool(string[] equipmentIds, int poolId)
     {
-        var equipment = equipmentIds.Select(equipmentId => CreateEquipment(equipmentId)).ToList();
+        var equipment = equipmentIds.Select(equipmentId => CreateUniqueEquipment(equipmentId)).ToList();
         return new Domain.EquipmentPool.Model.EquipmentPool(equipment, poolId);
     }
 
-    private Equipment CreateEquipment(string id)
+    private Equipment CreateUniqueEquipment(string id)
     {
         var xml = $"<EquipmentRoster id=\"{id}\">\n" +
                   "<equipment slot=\"Item0\" id=\"Item.ddg_polearm_longspear2\"/>\n" +
@@ -283,6 +453,23 @@ public class BattleEquipmentPoolProviderShould
                   "<equipment slot=\"Head\" id=\"Item.war_hat2\"/>\n" +
                   "</EquipmentRoster>";
 
+        return CreateEquipment(xml);
+    }
+
+    private Equipment CreateEquipmentWithBattleTag(string id)
+    {
+        var xml = $"<EquipmentRoster id=\"{id}\" battle=\"true\">\n" +
+                  "<equipment slot=\"Item0\" id=\"Item.ddg_polearm_longspear2\"/>\n" +
+                  "<equipment slot=\"Body\" id=\"Item.jack_sleeveless_with_splints2\"/>\n" +
+                  "<equipment slot=\"Leg\" id=\"Item.hosen_with_boots_c2\"/>\n" +
+                  "<equipment slot=\"Head\" id=\"Item.war_hat2\"/>\n" +
+                  "</EquipmentRoster>";
+
+        return CreateEquipment(xml);
+    }
+
+    private Equipment CreateEquipment(string xml)
+    {
         return new Equipment(XDocument.Parse(xml).Root!);
     }
 }

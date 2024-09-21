@@ -41,8 +41,12 @@ public class NpcCharacterMapper : INpcCharacterMapper
             else
                 equipmentRoster.EquipmentSet
                     .Where(equipmentSet =>
-                        IsSingleFlagTrue(equipmentSet.IsCivilian, equipmentSet.IsSiege) ==
-                        IsSingleFlagTrue(characterEquipmentSet.IsCivilian, characterEquipmentSet.IsSiege) ||
+                        AreAllStringsEqual(equipmentSet.IsCivilian, characterEquipmentSet.IsCivilian,
+                            bool.TrueString) ||
+                        AreAllStringsEqual(equipmentSet.IsSiege, characterEquipmentSet.IsSiege, bool.TrueString) ||
+                        (AreAllStringsEqual(characterEquipmentSet.IsBattle, bool.TrueString) &&
+                         (equipmentSet.IsBattle is null ||
+                          AreAllStringsEqual(equipmentSet.IsBattle, bool.TrueString))) ||
                         (AreAllFlagsFalse(equipmentSet.IsCivilian, equipmentSet.IsSiege) &&
                          AreAllFlagsFalse(characterEquipmentSet.IsCivilian, characterEquipmentSet.IsSiege)))
                     .Select(_equipmentSetMapper.MapToEquipmentRoster)
@@ -86,15 +90,14 @@ public class NpcCharacterMapper : INpcCharacterMapper
         return overriddenEquipment;
     }
 
-    private static bool IsSingleFlagTrue(string? isCivilian, string? isSiege)
+    private static bool AreAllStringsEqual(params string?[] strings)
     {
-        return bool.TrueString.Equals(isCivilian, StringComparison.OrdinalIgnoreCase) ^
-               bool.TrueString.Equals(isSiege, StringComparison.OrdinalIgnoreCase);
+        return strings.All(str =>
+            str is not null && str.Equals(strings[0], StringComparison.OrdinalIgnoreCase));
     }
 
-    private static bool AreAllFlagsFalse(string? isCivilian, string? isSiege)
+    private static bool AreAllFlagsFalse(params string?[] flags)
     {
-        return !bool.TrueString.Equals(isCivilian, StringComparison.OrdinalIgnoreCase) &&
-               !bool.TrueString.Equals(isSiege, StringComparison.OrdinalIgnoreCase);
+        return flags.All(flag => !bool.TrueString.Equals(flag, StringComparison.OrdinalIgnoreCase));
     }
 }

@@ -10,6 +10,9 @@ public record EquipmentSet : IPoolFlagGetter
     [XmlElement(ElementName = "Equipment")]
     public List<Equipment> Equipment { get; init; } = new();
 
+    [XmlAttribute(AttributeName = "battle")]
+    public string? IsBattle { get; init; }
+    
     [XmlAttribute(AttributeName = "civilian")]
     public string? IsCivilian { get; init; }
 
