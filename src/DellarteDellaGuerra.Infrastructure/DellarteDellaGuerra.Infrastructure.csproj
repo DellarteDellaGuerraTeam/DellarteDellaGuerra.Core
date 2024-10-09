@@ -28,7 +28,7 @@
         <PackageReference Include="Bannerlord.Lib.Harmony" Version="$(HarmonyVersion)" IncludeAssets="compile" />
 
         <PackageReference Include="SafeFluentXPath.Implementation" Version="1.0.0" />
-        <PackageReference Include="NLog" Version="5.2.8" />
+        <PackageReference Include="NLog" Version="5.3.4"/>
 
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All" />
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All" />
