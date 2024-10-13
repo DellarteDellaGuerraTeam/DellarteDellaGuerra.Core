@@ -1,7 +1,0 @@
-<Equipments>
-    <EquipmentSet pool="2" siege="true" id="vlandia_troop_siege_template_t4"/>
-    <!-- this was created for testing purposes, it does not exist in game -->
-    <EquipmentSet pool="2" siege="false" id="vlandia_troop_siege_template_t5"/>
-    <!-- this was created for testing purposes, it does not exist in game -->
-    <EquipmentSet pool="2" id="vlandia_troop_siege_template_t6"/>
-</Equipments>

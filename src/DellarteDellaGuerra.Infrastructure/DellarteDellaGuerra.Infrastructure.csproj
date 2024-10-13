@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <Version>1.2.0</Version>
@@ -37,6 +37,8 @@
 
         <PackageReference Include="SafeFluentXPath.Implementation" Version="1.0.0" />
         <PackageReference Include="NLog" Version="5.3.4"/>
+
+        <PackageReference Include="Bannerlord.ExpandedTemplate.API" Version="1.0.0"/>
 
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All" />
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All" />

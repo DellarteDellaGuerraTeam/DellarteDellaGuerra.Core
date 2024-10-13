@@ -1,36 +1,23 @@
 ﻿using System.Reflection;
 using System.Xml;
+using Bannerlord.ExpandedTemplate.API;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
-using DellarteDellaGuerra.Domain.EquipmentPool;
-using DellarteDellaGuerra.Domain.EquipmentPool.Util;
-using DellarteDellaGuerra.Infrastructure.Caching;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.Get;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Mappers;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Battle;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Civilian;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Providers.Siege;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Repositories;
-using DellarteDellaGuerra.Infrastructure.EquipmentPool.List.Utils;
+using DellarteDellaGuerra.Infrastructure.ExpandedTemplateApi.Logging;
 using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
-using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPools.Mappers;
-using DellarteDellaGuerra.SetSpawnEquipment.EquipmentPools.Providers;
-using DellarteDellaGuerra.SetSpawnEquipment.MissionLogic;
 using DellarteDellaGuerra.Utils;
 using NLog;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.ObjectSystem;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
 
 namespace DellarteDellaGuerra.Infrastructure
@@ -42,27 +29,19 @@ namespace DellarteDellaGuerra.Infrastructure
         private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler;
         private readonly DadgConfigWatcher _dadgConfigWatcher;
         private readonly HarmonyPatcher _harmonyPatcher;
-        private readonly ICacheProvider _cacheProvider;
         private DisplayShaderNumber _displayShaderNumber;
 
-        private ForceCivilianEquipmentSetter _forceCivilianEquipmentSetter;
-        private MissionSpawnEquipmentPoolSetter _missionSpawnEquipmentPoolSetter;
-        
         public SubModule()
         {
             _loggerFactory = new LoggerFactory(new LoggerConfigPathProvider());
             _campaignBehaviourDisabler = new CampaignBehaviourDisabler();
             _dadgConfigWatcher = new DadgConfigWatcher(_loggerFactory);
             _harmonyPatcher = new HarmonyPatcher(_loggerFactory);
-            _cacheProvider = new CacheCampaignBehaviour();
             _logger = _loggerFactory.CreateLogger<SubModule>();
-        }
 
-        public override void OnBeforeMissionBehaviorInitialize(Mission mission)
-        {
-            base.OnBeforeMissionBehaviorInitialize(mission);
-
-            AddEquipmentSpawnMissionBehaviour(mission);
+            new BannerlordExpandedTemplateApi()
+                .UseLoggerFactory(new ExpandedTemplateLoggerFactory(_loggerFactory))
+                .Bind();
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
@@ -84,18 +63,14 @@ namespace DellarteDellaGuerra.Infrastructure
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
-            _cacheProvider.InvalidateCache();
-
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
-            HandleEquipmentSpawnDependencies();
             HandleDisplayCompilingShadersDependencies();
 
             CompilingShaderNotifier.Init(_displayShaderNumber);
             game.AddGameHandler<CompilingShaderNotifier>();
             
             campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
-            campaignGameStarter.AddBehavior(_cacheProvider as CampaignBehaviorBase);
         }
 
         public override void OnGameInitializationFinished(Game game)
@@ -131,54 +106,6 @@ namespace DellarteDellaGuerra.Infrastructure
                 _logger.Error($"Failed to load {battleScenesFilePath}: {e}");
             }
         }
-
-        #region GetEquipmentSpawn
-
-        private void HandleEquipmentSpawnDependencies()
-        {
-            var xmlProcessor = new MergedModulesXmlProcessor(_loggerFactory, _cacheProvider);
-            var npcCharacterRepository = new NpcCharacterRepository(xmlProcessor, _cacheProvider, _loggerFactory);
-            var equipmentPoolRoster = new EquipmentSetMapper();
-            var equipmentRosterRepository = new EquipmentRosterRepository(xmlProcessor, _cacheProvider, _loggerFactory);
-            var equipmentPoolMapper =
-                new NpcCharacterMapper(equipmentRosterRepository, equipmentPoolRoster, _loggerFactory);
-            var characterEquipmentPoolRepository =
-                new NpcCharacterEquipmentPoolsProvider(npcCharacterRepository, equipmentPoolMapper);
-            var civilianEquipmentRepository =
-                new CivilianEquipmentPoolProvider(_loggerFactory, _cacheProvider, characterEquipmentPoolRepository);
-            var siegeEquipmentRepository =
-                new SiegeEquipmentPoolProvider(_loggerFactory, _cacheProvider, characterEquipmentPoolRepository);
-            var battleEquipmentRepository =
-                new BattleEquipmentPoolProvider(_loggerFactory, _cacheProvider, siegeEquipmentRepository,
-                    civilianEquipmentRepository,
-                    characterEquipmentPoolRepository);
-            var troopBattleEquipmentProvider =
-                new TroopBattleEquipmentProvider(_loggerFactory, battleEquipmentRepository, _cacheProvider);
-            var troopSiegeEquipmentProvider =
-                new TroopSiegeEquipmentProvider(_loggerFactory, siegeEquipmentRepository, _cacheProvider);
-            var troopCivilianEquipmentProvider =
-                new TroopCivilianEquipmentProvider(_loggerFactory, civilianEquipmentRepository, _cacheProvider);
-            var encounterTypeProvider = new EncounterTypeProvider();
-
-            var random = new Random();
-            var equipmentPicker = new EquipmentPoolPoolPicker(random);
-
-            var equipmentMapper =
-                new EquipmentPoolsMapper(MBObjectManager.Instance, _loggerFactory);
-            var getEquipmentPool = new GetEquipmentPool(encounterTypeProvider, troopBattleEquipmentProvider,
-                troopSiegeEquipmentProvider, troopCivilianEquipmentProvider, equipmentPicker, _loggerFactory);
-
-            _forceCivilianEquipmentSetter = new ForceCivilianEquipmentSetter();
-            _missionSpawnEquipmentPoolSetter =
-                new MissionSpawnEquipmentPoolSetter(getEquipmentPool, equipmentMapper, _loggerFactory);
-        }
-
-        private void AddEquipmentSpawnMissionBehaviour(Mission mission)
-        {
-            mission.AddMissionBehavior(_forceCivilianEquipmentSetter);
-            mission.AddMissionBehavior(_missionSpawnEquipmentPoolSetter);
-        }
-        #endregion
 
         #region DisplayCompilingShaders
         private void HandleDisplayCompilingShadersDependencies()

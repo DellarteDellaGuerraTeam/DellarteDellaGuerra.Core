@@ -43,11 +43,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{10714220-ACE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Domain", "DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj", "{59DCCF2D-7980-41DD-8BB5-16185CFDBE7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Domain.Tests", "DellarteDellaGuerra.Domain.Tests\DellarteDellaGuerra.Domain.Tests.csproj", "{47FF07B2-A1AB-4152-8A76-C786487189F2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Infrastructure", "DellarteDellaGuerra.Infrastructure\DellarteDellaGuerra.Infrastructure.csproj", "{423C424E-22F0-464D-97AB-69E0E00D5F51}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Infrastructure.Tests", "DellarteDellaGuerra.Infrastructure.Tests\DellarteDellaGuerra.Infrastructure.Tests.csproj", "{3FA3639C-31CF-45D6-8AE0-12C99A663281}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{DC0E0D39-ABB7-4F0C-BC60-0C7F22013D30}"
 EndProject
@@ -76,18 +72,10 @@ Global
 		{59DCCF2D-7980-41DD-8BB5-16185CFDBE7D}.Debug|x64.Build.0 = Debug|Any CPU
 		{59DCCF2D-7980-41DD-8BB5-16185CFDBE7D}.Release|x64.ActiveCfg = Release|Any CPU
 		{59DCCF2D-7980-41DD-8BB5-16185CFDBE7D}.Release|x64.Build.0 = Release|Any CPU
-		{47FF07B2-A1AB-4152-8A76-C786487189F2}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{47FF07B2-A1AB-4152-8A76-C786487189F2}.Debug|x64.Build.0 = Debug|Any CPU
-		{47FF07B2-A1AB-4152-8A76-C786487189F2}.Release|x64.ActiveCfg = Release|Any CPU
-		{47FF07B2-A1AB-4152-8A76-C786487189F2}.Release|x64.Build.0 = Release|Any CPU
 		{423C424E-22F0-464D-97AB-69E0E00D5F51}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{423C424E-22F0-464D-97AB-69E0E00D5F51}.Debug|x64.Build.0 = Debug|Any CPU
 		{423C424E-22F0-464D-97AB-69E0E00D5F51}.Release|x64.ActiveCfg = Release|Any CPU
 		{423C424E-22F0-464D-97AB-69E0E00D5F51}.Release|x64.Build.0 = Release|Any CPU
-		{3FA3639C-31CF-45D6-8AE0-12C99A663281}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3FA3639C-31CF-45D6-8AE0-12C99A663281}.Debug|x64.Build.0 = Debug|Any CPU
-		{3FA3639C-31CF-45D6-8AE0-12C99A663281}.Release|x64.ActiveCfg = Release|Any CPU
-		{3FA3639C-31CF-45D6-8AE0-12C99A663281}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
