@@ -96,7 +96,7 @@
     </XmlNode>
 -->
     <XmlNode>
-      <XmlName id="NPCCharacters" path="dadg_pre_joust_characters"/>
+        <XmlName id="NpcCharacters" path="dadg_pre_joust_characters"/>
       <IncludedGameTypes>
         <GameType value="Campaign"/>
         <GameType value="CampaignStoryMode"/>
@@ -104,7 +104,7 @@
       </IncludedGameTypes>
     </XmlNode>
     <XmlNode>
-      <XmlName id="NPCCharacters" path="dadg_joust_characters"/>
+        <XmlName id="NpcCharacters" path="dadg_joust_characters"/>
       <IncludedGameTypes>
         <GameType value="Campaign"/>
         <GameType value="CampaignStoryMode"/>
