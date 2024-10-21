@@ -38,7 +38,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{10714220-ACE7-40E5-9DC2-ACE17923B206}"
 	ProjectSection(SolutionItems) = preProject
 		..\doc\poc.integration.md = ..\doc\poc.integration.md
-		..\doc\equipment-randomisation.md = ..\doc\equipment-randomisation.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Domain", "DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj", "{59DCCF2D-7980-41DD-8BB5-16185CFDBE7D}"
