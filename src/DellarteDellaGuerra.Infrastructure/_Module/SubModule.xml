@@ -28,9 +28,9 @@
   </DependedModuleMetadatas>
   <SubModules>
     <SubModule>
-      <Name value="$moduleid$" />
-      <DLLName value="$moduleid$.Infrastructure.dll" />
-      <SubModuleClassType value="$moduleid$.Infrastructure.SubModule" />
+      <Name value="DellarteDellaGuerra"/>
+      <DLLName value="DellarteDellaGuerra.Infrastructure.dll"/>
+      <SubModuleClassType value="DellarteDellaGuerra.Infrastructure.SubModule"/>
       <Tags />
     </SubModule>
   </SubModules>

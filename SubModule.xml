@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- This is an auto-generated SubModule.xml file -->
 <Module>
-  <Id value="DellarteDellaGuerra" />
-  <Name value="Dell'Arte Della Guerra" />
+  <Id value="DellarteDellaGuerra.Core" />
+  <Name value="Dell'Arte Della Guerra Core" />
   <Version value="e1.2.0" />
   <DefaultModule value="false" />
   <ModuleCategory value="Singleplayer"/>
@@ -28,139 +28,11 @@
   </DependedModuleMetadatas>
   <SubModules>
     <SubModule>
-      <Name value="DellarteDellaGuerra" />
-      <DLLName value="DellarteDellaGuerra.Infrastructure.dll" />
-      <SubModuleClassType value="DellarteDellaGuerra.Infrastructure.SubModule" />
+      <Name value="DellarteDellaGuerra"/>
+      <DLLName value="DellarteDellaGuerra.Infrastructure.dll"/>
+      <SubModuleClassType value="DellarteDellaGuerra.Infrastructure.SubModule"/>
       <Tags />
     </SubModule>
   </SubModules>
-  <Xmls>
-    <!-- 
-    <XmlNode>
-        <XmlName id="BodyProperties" path="DDG_BodyProperties"/>
-        <IncludedGameTypes>
-            <GameType value="Campaign"/>
-            <GameType value="CampaignStoryMode"/>
-            <GameType value="CustomGame"/>
-        </IncludedGameTypes>
-    </XmlNode>
-        <XmlNode>
-        <XmlName id="NPCCharacters" path="DDG_BattleTemplates"/>
-        <IncludedGameTypes>
-            <GameType value="Campaign"/>
-            <GameType value="CampaignStoryMode"/>
-            <GameType value="CustomGame"/>
-        </IncludedGameTypes>
-    </XmlNode>
-        <XmlNode>
-        <XmlName id="EquipmentRosters" path="DDG_EquipmentSets"/>
-        <IncludedGameTypes>
-            <GameType value="Campaign"/>
-            <GameType value="CampaignStoryMode"/>
-            <GameType value="CustomGame"/>
-        </IncludedGameTypes>
-    </XmlNode>
-    <XmlNode>
-        <XmlName id="partyTemplates" path="dadg_pre_partyTemplates"/>
-        <IncludedGameTypes>
-            <GameType value="Campaign"/>
-            <GameType value="CampaignStoryMode"/>
-            <GameType value="CustomGame"/>
-        </IncludedGameTypes>
-    </XmlNode>
-    <XmlNode>
-        <XmlName id="partyTemplates" path="dadg_partyTemplates"/>
-        <IncludedGameTypes>
-            <GameType value="Campaign"/>
-            <GameType value="CampaignStoryMode"/>
-            <GameType value="CustomGame"/>
-        </IncludedGameTypes>
-    </XmlNode>
-    <XmlNode>
-        <XmlName id="NPCCharacters" path="dadg_troops"/>
-        <IncludedGameTypes>
-            <GameType value="Campaign"/>
-            <GameType value="CampaignStoryMode"/>
-            <GameType value="CustomGame"/>
-        </IncludedGameTypes>
-    </XmlNode>
--->
-    <!-- 
-        <XmlNode>
-        <XmlName id="CraftingTemplates" path="DDG_pre_CraftingTemplates"/>
-        <IncludedGameTypes>
-            <GameType value="Campaign"/>
-            <GameType value="CampaignStoryMode"/>
-                            <GameType value="CustomGame"/>
-        </IncludedGameTypes>
-    </XmlNode>
--->
-    <XmlNode>
-      <XmlName id="NPCCharacters" path="dadg_pre_joust_characters"/>
-      <IncludedGameTypes>
-        <GameType value="Campaign"/>
-        <GameType value="CampaignStoryMode"/>
-        <GameType value="CustomGame"/>
-      </IncludedGameTypes>
-    </XmlNode>
-    <XmlNode>
-      <XmlName id="NPCCharacters" path="dadg_joust_characters"/>
-      <IncludedGameTypes>
-        <GameType value="Campaign"/>
-        <GameType value="CampaignStoryMode"/>
-        <GameType value="CustomGame"/>
-      </IncludedGameTypes>
-    </XmlNode>
-    <XmlNode>
-      <XmlName id="GameText" path="dadg_module_strings"/>
-    </XmlNode>
-    <XmlNode>
-      <XmlName id="CraftingPieces" path="DDG_CraftingPieces"/>
-      <IncludedGameTypes>
-        <GameType value="Campaign"/>
-        <GameType value="CampaignStoryMode"/>
-        <GameType value="CustomGame"/>
-      </IncludedGameTypes>
-    </XmlNode>
-    <XmlNode>
-      <XmlName id="Items" path="DDG_Weapons"/>
-      <IncludedGameTypes>
-        <GameType value="Campaign"/>
-        <GameType value="CampaignStoryMode"/>
-        <GameType value="CustomGame"/>
-      </IncludedGameTypes>
-    </XmlNode>
-    <XmlNode>
-      <XmlName id="CraftingTemplates" path="dadg_pre_crafting_templates"/>
-      <IncludedGameTypes>
-        <GameType value="Campaign"/>
-        <GameType value="CampaignStoryMode"/>
-        <GameType value="CustomGame"/>
-      </IncludedGameTypes>
-    </XmlNode>
-    <XmlNode>
-      <XmlName id="CraftingTemplates" path="dadg_crafting_templates"/>
-      <IncludedGameTypes>
-        <GameType value="Campaign"/>
-        <GameType value="CampaignStoryMode"/>
-        <GameType value="CustomGame"/>
-      </IncludedGameTypes>
-    </XmlNode>
-    <XmlNode>
-      <XmlName id="WeaponDescriptions" path="dadg_weapon_descriptions"/>
-      <IncludedGameTypes>
-        <GameType value="Campaign"/>
-        <GameType value="CampaignStoryMode"/>
-        <GameType value="CustomGame"/>
-      </IncludedGameTypes>
-    </XmlNode>
-    <XmlNode>
-      <XmlName id="Items" path="items"/>
-      <IncludedGameTypes>
-        <GameType value="Campaign"/>
-        <GameType value="CampaignStoryMode"/>
-        <GameType value="CustomGame"/>
-      </IncludedGameTypes>
-    </XmlNode>
-  </Xmls>
+  <Xmls/>
 </Module>

@@ -9,8 +9,8 @@
         <Nullable>enable</Nullable>
         <BuildForWindows>true</BuildForWindows>
         <BuildForWindowsStore>true</BuildForWindowsStore>
-        <ModuleId>DellarteDellaGuerra</ModuleId>
-        <ModuleName>Dell'Arte Della Guerra</ModuleName>
+        <ModuleId>DellarteDellaGuerra.Core</ModuleId>
+        <ModuleName>Dell'Arte Della Guerra Core</ModuleName>
     </PropertyGroup>
 
     <!-- Project properties -->
