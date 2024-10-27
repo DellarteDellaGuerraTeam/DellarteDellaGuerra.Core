@@ -26,12 +26,12 @@ All English clans and kingdoms have a custom banner. We use POC to set custom ba
 
 Custom banners can be created with the [online Banner Editor](https://bannerlord.party/banner).
 
-![Heraldry](https://github.com/DellarteDellaGuerraTeam/DellarteDellaGuerraMap/assets/32904771/463f7959-c06d-4a7d-9587-256fe30048d5)
+![Heraldry](https://github.com/user-attachments/assets/c9345b7f-17b3-4470-9cfa-2d981b634249)
 
 ### Randomised Colour Clothing
 
 POC enables Bannerlord armour pieces to have random colours. It allows to have many variations of an armour piece. It also allows to have many civilian clothes.
 
-![Battle](https://github.com/DellarteDellaGuerraTeam/DellarteDellaGuerraMap/assets/32904771/aa2bdce5-c72f-42ce-a245-af50ae2e4e77)
+![Battle](https://github.com/user-attachments/assets/70c23828-1e22-4b35-9c92-7cb2ba347998)
 
-![Town](https://github.com/DellarteDellaGuerraTeam/DellarteDellaGuerraMap/assets/32904771/9850b611-3d88-4934-be68-cd7d9b88622e)
+![Town](https://github.com/user-attachments/assets/a916d246-df76-4388-81b2-78f48e07758d)
