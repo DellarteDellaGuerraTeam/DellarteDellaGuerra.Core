@@ -14,7 +14,7 @@ The highly customisable mod uses a unique configuration file named `config.json`
 
 This causes third party mods needing to fully integrate the mod in its module folder to rely on an external POC instance. It also does not support the Steam Workshop.
 
-So in order to kill two birds with one stone, we implemented a [Harmony patch](../src/DellarteDellaGuerra/Patches/PocConfigReaderPatch.cs) addressing both issues.
+So in order to kill two birds with one stone, we implemented a [Harmony patch](../src/DellarteDellaGuerra.Infrastructure/Poc/Patches/PocConfigReaderOverriderPatch.cs) addressing both issues.
 
 It detects whether POC is integrated in DADG or is in an external module and overrides the configuration path to a custom location. For now, the POC configuration is expected to be in DellarteDellaGuerra config folder and named `poc.config.json`.
 
