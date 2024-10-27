@@ -12,21 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{CB20C6C8
 		build\common.props = build\common.props
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ModuleData", "ModuleData", "{F3FF0EA7-9E28-4D27-9FA8-70754A123DF7}"
-	ProjectSection(SolutionItems) = preProject
-		..\ModuleData\cloth_bodies.xml = ..\ModuleData\cloth_bodies.xml
-		..\ModuleData\dadg_battle_scenes.xml = ..\ModuleData\dadg_battle_scenes.xml
-		..\ModuleData\dadg_crafting_templates.xml = ..\ModuleData\dadg_crafting_templates.xml
-		..\ModuleData\dadg_joust_characters.xml = ..\ModuleData\dadg_joust_characters.xml
-		..\ModuleData\dadg_module_strings.xml = ..\ModuleData\dadg_module_strings.xml
-		..\ModuleData\dadg_pre_crafting_templates.xslt = ..\ModuleData\dadg_pre_crafting_templates.xslt
-		..\ModuleData\dadg_pre_joust_characters.xslt = ..\ModuleData\dadg_pre_joust_characters.xslt
-		..\ModuleData\dadg_weapon_descriptions.xml = ..\ModuleData\dadg_weapon_descriptions.xml
-		..\ModuleData\DDG_CraftingPieces.xml = ..\ModuleData\DDG_CraftingPieces.xml
-		..\ModuleData\DDG_Weapons.xml = ..\ModuleData\DDG_Weapons.xml
-		..\ModuleData\items.xml = ..\ModuleData\items.xml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{F1AF53B1-6B28-4A2D-A967-B7BE6EC15C84}"
 	ProjectSection(SolutionItems) = preProject
 		technical-config\nlog.dev.config = technical-config\nlog.dev.config
@@ -81,7 +66,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CB20C6C8-2857-4B1E-9C00-265893C094E3} = {12CCA2B5-A874-47B3-BB43-799275014D7B}
-		{F3FF0EA7-9E28-4D27-9FA8-70754A123DF7} = {12CCA2B5-A874-47B3-BB43-799275014D7B}
 		{F1AF53B1-6B28-4A2D-A967-B7BE6EC15C84} = {12CCA2B5-A874-47B3-BB43-799275014D7B}
 		{10714220-ACE7-40E5-9DC2-ACE17923B206} = {12CCA2B5-A874-47B3-BB43-799275014D7B}
 		{DC0E0D39-ABB7-4F0C-BC60-0C7F22013D30} = {12CCA2B5-A874-47B3-BB43-799275014D7B}
