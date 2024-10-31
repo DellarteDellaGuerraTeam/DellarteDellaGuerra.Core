@@ -54,10 +54,11 @@ namespace DellarteDellaGuerra.Infrastructure.Logging
             {
                 return LogManager.Setup().LoadConfigurationFromFile(_configProvider.Config);   
             }
-            var modulePath = ResourceLocator.GetModuleFolder();
-            if (modulePath != null)
+
+            var logFolderPath = ResourceLocator.GetLogFolderPath();
+            if (logFolderPath != null)
             {
-                var defaultConfig = GetDefaultConfiguration(Path.Combine(modulePath, "log"));
+                var defaultConfig = GetDefaultConfiguration(logFolderPath);
                 LogManager.Setup().LoadConfiguration(defaultConfig);
             }
             // log where Bannerlord is executed from
