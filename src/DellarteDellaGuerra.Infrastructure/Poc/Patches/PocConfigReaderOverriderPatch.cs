@@ -76,6 +76,8 @@ namespace DellarteDellaGuerra.Infrastructure.Poc.Patches
                 string? configFolderPath = ResourceLocator.GetConfigurationFolderPath();
                 if (configFolderPath == null)
                 {
+                    Logger.Error(
+                        "Poc config could not be applied because the configuration folder could not be found.");
                     continue;
                 }
                 instruction.operand = Path.Combine(configFolderPath, "poc.config.json");
