@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using TaleWorlds.ModuleManager;
 
@@ -14,16 +13,16 @@ namespace DellarteDellaGuerra.Infrastructure.Utils
     {
         /**
          * <summary>
-         * Gets the path to the mod's folder.
-         * Its existence is checked.
+         *     Gets the path to the log folder.
+         *     Its existence is checked.
          * </summary>
          * <returns>
-         * The first found with a valid submodule id or null if all are invalid.
+         *     The first found among all of the mod's modules or null if not found.
          * </returns>
          */
-        public static string? GetModuleFolder()
+        public static string? GetLogFolderPath()
         {
-            return GetResourceFromModModules("");
+            return GetResourceFromModModules("log");
         }
 
         /**
@@ -89,7 +88,8 @@ namespace DellarteDellaGuerra.Infrastructure.Utils
 
         private static string? GetResourceFromModModules(string pathRelativeToModFolder)
         {
-            return Enum.GetNames(typeof(ModuleId))
+            return ModuleHelper.GetModules().Select(module => module.Id).Where(moduleName =>
+                    moduleName.StartsWith(ModuleId.DellarteDellaGuerra.ToString()))
                 .Select(moduleId => Path.Combine(ModuleHelper.GetModuleFullPath(moduleId), pathRelativeToModFolder))
                 .FirstOrDefault(path => File.Exists(path) || Directory.Exists(path));
         }
