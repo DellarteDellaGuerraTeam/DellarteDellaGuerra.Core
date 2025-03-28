@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Xml;
 using Bannerlord.ExpandedTemplate.API;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
@@ -6,6 +6,9 @@ using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
+using DellarteDellaGuerra.Firearms;
+using DellarteDellaGuerra.Firearm;
+using DellarteDellaGuerra.Firearm.Patches;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.ExpandedTemplateApi.Logging;
@@ -82,6 +85,17 @@ namespace DellarteDellaGuerra.Infrastructure
             LoadDadgBattleScenes();
         }
 
+        public override void OnMissionBehaviorInitialize(Mission mission)
+        {
+            base.OnMissionBehaviorInitialize(mission);
+            mission.AddMissionBehavior(new FirearmReloadMissionLogic(_loggerFactory));
+        }
+
+        public override void RegisterSubModuleObjects(bool isSavedCmapaign)
+        {
+            InitSkills();
+        }
+
         private void SetCampaignStartingDate()
         {
             CampaignTime startTime = CampaignTime.Years(1471) + CampaignTime.Weeks(4) + CampaignTime.Days(1);
@@ -117,5 +131,13 @@ namespace DellarteDellaGuerra.Infrastructure
                 compilingShaderDisplayer);
         }
         #endregion
+
+        private static void InitSkills()
+        {
+            var firearmSkill = new FirearmSkill();
+            firearmSkill.Initialise();
+
+            AddFirearmSkillAsRelevantSkillPatch.SetFirearmSkill(firearmSkill);
+        }
     }
 }
