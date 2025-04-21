@@ -1,4 +1,5 @@
-﻿using Force.DeepCloner;
+﻿using DellarteDellaGuerra.Firearm;
+using Force.DeepCloner;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -12,9 +13,14 @@ namespace DellarteDellaGuerra.Firearms
 
         private const float StartedPouringPowderAnimationThreshold = 0.1f;
 
+        private FirearmReloadStatus _firearmReloadStatus = FirearmReloadStatus.None; 
+        
         private bool _isReloading;
         private GameEntity _emptyVisualFirearm;
         private GameEntity _visualFirearm;
+        private readonly float _initialHandSwitchProgressEnd = 0.5f;
+
+        private float _deltaTimeTick;
 
         public FirearmReloadAnimationComponent(Agent agent) : base(agent)
         {
@@ -22,8 +28,14 @@ namespace DellarteDellaGuerra.Firearms
 
         public override void OnTickAsAI(float dt)
         {
+            _deltaTimeTick += dt;
+
+            if (_deltaTimeTick < 1f) return;
+            
             if (!Agent.IsHuman) return;
 
+            if (!IsUsingMusket(Agent)) return;
+            
             if (!IsReloadingAnimationActive())
             {
                 if (!_isReloading) return;
@@ -43,13 +55,17 @@ namespace DellarteDellaGuerra.Firearms
                 return;
             }
 
-            if (GetReloadingAnimationProgress() < 0.055f)
-                UpdateTemporaryWeaponVisuals(dt);
-            if (GetReloadingAnimationProgress() >= 0.055f)
+            if (GetReloadingAnimationProgress() < _initialHandSwitchProgressEnd)
             {
-                RemoveTemporaryWeaponVisuals();
+                _firearmReloadStatus = FirearmReloadStatus.OffhandToMainHandSwitch;
+                UpdateTemporaryWeaponVisuals(dt);
+            }
+
+            if (GetReloadingAnimationProgress() >= _initialHandSwitchProgressEnd)
+            {
+                _firearmReloadStatus = FirearmReloadStatus.BlackPowderChargeLoading;
                 AttachToBone(Agent, Agent.HandIndex.MainHand,
-                    _visualFirearm,
+                    _emptyVisualFirearm,
                     MatrixFrame.Identity);
             }
         }
@@ -176,6 +192,23 @@ namespace DellarteDellaGuerra.Firearms
                     ? (sbyte)HumanBone.HandL
                     : (sbyte)HumanBone.HandR,
                 ref frame);
+        }
+
+
+        /// <summary>
+        ///     Checks if the agent is currently using a musket weapon.
+        /// </summary>
+        /// <param name="agent">The agent to check.</param>
+        /// <returns>True if the agent is using a musket weapon; otherwise, false.</returns>
+        public bool IsUsingMusket(Agent agent)
+        {
+            var wieldedWeaponIndex = agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
+            if (wieldedWeaponIndex < EquipmentIndex.WeaponItemBeginSlot ||
+                wieldedWeaponIndex > EquipmentIndex.NumAllWeaponSlots)
+                return false;
+
+            return agent.Equipment[wieldedWeaponIndex]
+                .CurrentUsageItem?.WeaponClass == WeaponClass.Musket;
         }
     }
 }
