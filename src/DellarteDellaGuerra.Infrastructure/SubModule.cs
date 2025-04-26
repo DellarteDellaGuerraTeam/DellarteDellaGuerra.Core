@@ -27,6 +27,7 @@ using NLog;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using TOR_Core.Api;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
 
 namespace DellarteDellaGuerra.Infrastructure
@@ -54,6 +55,7 @@ namespace DellarteDellaGuerra.Infrastructure
                 .UseLoggerFactory(new ExpandedTemplateLoggerFactory(_loggerFactory))
                 .Bind();
 
+            CannonSystemInitialiser.Initialise();
             InitialisePocIntegration();
             InitialiseSteamIntegration();
         }
