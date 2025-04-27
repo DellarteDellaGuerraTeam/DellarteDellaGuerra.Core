@@ -88,6 +88,7 @@ namespace DellarteDellaGuerra.Infrastructure
         {
             base.OnMissionBehaviorInitialize(mission);
             // mission.AddMissionBehavior(new FirearmReloadMissionLogic());
+            mission.AddMissionBehavior(new FirearmSmokeMissionLogic(_loggerFactory));
         }
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)
