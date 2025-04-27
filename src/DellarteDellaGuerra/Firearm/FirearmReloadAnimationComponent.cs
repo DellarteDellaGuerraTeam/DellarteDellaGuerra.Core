@@ -11,14 +11,12 @@ namespace DellarteDellaGuerra.Firearms
     {
         private const string ReloadAnimation = "act_reload_firearm";
 
-        private const float StartedPouringPowderAnimationThreshold = 0.1f;
-
         private FirearmReloadStatus _firearmReloadStatus = FirearmReloadStatus.None; 
         
         private bool _isReloading;
         private GameEntity _emptyVisualFirearm;
         private GameEntity _visualFirearm;
-        private readonly float _initialHandSwitchProgressEnd = 0.5f;
+        private readonly float _initialHandSwitchProgressEnd = 0.18f;
 
         private float _deltaTimeTick;
 
@@ -58,7 +56,6 @@ namespace DellarteDellaGuerra.Firearms
             if (GetReloadingAnimationProgress() < _initialHandSwitchProgressEnd)
             {
                 _firearmReloadStatus = FirearmReloadStatus.OffhandToMainHandSwitch;
-                UpdateTemporaryWeaponVisuals(dt);
             }
 
             if (GetReloadingAnimationProgress() >= _initialHandSwitchProgressEnd)
@@ -68,6 +65,8 @@ namespace DellarteDellaGuerra.Firearms
                     _emptyVisualFirearm,
                     MatrixFrame.Identity);
             }
+
+            UpdateTemporaryWeaponVisuals(dt);
         }
 
         private void ResetOriginalWeaponVisualForIdleStance()
@@ -114,27 +113,31 @@ namespace DellarteDellaGuerra.Firearms
             return weapon.GetWeaponData(false).WeaponFrame;
         }
 
-        private static MatrixFrame GetWeaponFrameForPowderPouring(Agent agent, MatrixFrame frame)
+        private static MatrixFrame GetWeaponFrameForIdleStance(Agent agent, MatrixFrame frame)
         {
             frame.rotation.RotateAboutUp(MathF.PI);
             frame.rotation.RotateAboutSide(1f);
+
+            frame.Elevate(0.02f);
+
+            frame.rotation.RotateAboutUp(-0.46f);
+            frame.rotation.RotateAboutForward(-0.26f);
+
+            frame.Strafe(0.19f);
+
             return frame;
         }
 
-        private MatrixFrame GetWeaponFrameForIdleStance(Agent agent, MatrixFrame frame)
+        private MatrixFrame GetWeaponFrameForPowderPouring(Agent agent, MatrixFrame frame)
         {
-            MatrixFrame idleStanceFirearmFrame = GetWeaponFrameForPowderPouring(agent, frame);
+            MatrixFrame weaponFrameForPowderPouring = GetWeaponFrameForIdleStance(agent, frame);
 
-            idleStanceFirearmFrame.origin.x += 0.00f;
-            idleStanceFirearmFrame.origin.y -= 0.03f;
-            idleStanceFirearmFrame.origin.z += 0.06f;
+            weaponFrameForPowderPouring.rotation.RotateAboutUp(0.2f);
+            weaponFrameForPowderPouring.rotation.RotateAboutForward(0.1f);
+            weaponFrameForPowderPouring.Advance(0.05f);
+            weaponFrameForPowderPouring.Elevate(-0.03f);
 
-            idleStanceFirearmFrame.rotation.RotateAboutUp(-0.45f);
-            idleStanceFirearmFrame.rotation.RotateAboutForward(-0.38f);
-
-            idleStanceFirearmFrame.Strafe(0.07f);
-
-            return idleStanceFirearmFrame;
+            return weaponFrameForPowderPouring;
         }
 
         private static MatrixFrame LerpMatrixFrame(MatrixFrame from, MatrixFrame to, float t)
@@ -147,7 +150,7 @@ namespace DellarteDellaGuerra.Firearms
         private MatrixFrame GetWeaponFrameTransitionFromIdleToPowderPouringStart(Agent agent, float reloadingProgress,
             MatrixFrame frame, float dt)
         {
-            float percentage = reloadingProgress / StartedPouringPowderAnimationThreshold;
+            float percentage = reloadingProgress / _initialHandSwitchProgressEnd + 0.05f;
             percentage = MathF.Clamp(percentage, 0f, 1f);
 
             return LerpMatrixFrame(GetWeaponFrameForIdleStance(agent, frame),
