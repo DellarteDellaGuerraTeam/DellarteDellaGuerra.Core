@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using DellarteDellaGuerra.Firearm.Reload;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
@@ -7,13 +10,14 @@ namespace DellarteDellaGuerra.Firearms
 {
     public class FirearmReloadMissionLogic : MissionLogic
     {
-        private readonly Dictionary<int, FirearmReloadAnimationComponent> _components = new();
+        private readonly Dictionary<int, ReloadComponent> _reloadComponentByAgent = new();
 
         public override void OnAgentBuild(Agent agent, Banner banner)
         {
             base.OnAgentBuild(agent, banner);
             if (agent.IsHuman)
-                _components.Add(agent.GetHashCode(), new FirearmReloadAnimationComponent(agent));
+                _reloadComponentByAgent.Add(agent.GetHashCode(),
+                    new ReloadComponent(InitialiseReloadPhases(agent), agent));
 
             agent.OnAgentWieldedItemChange += () =>
             {
@@ -39,10 +43,22 @@ namespace DellarteDellaGuerra.Firearms
             };
         }
 
+        private List<IReloadPhase> InitialiseReloadPhases(Agent agent)
+        {
+            var reloadPhaseTypes = Assembly.GetExecutingAssembly()
+                .ExportedTypes
+                .Where(type => typeof(IReloadPhase).IsAssignableFrom(type) &&
+                               type.GetConstructor(new[] { typeof(Agent) }) != null);
+
+            return reloadPhaseTypes
+                .Select(type => (IReloadPhase)Activator.CreateInstance(type, agent))
+                .ToList();
+        }
+        
         public override void OnMissionTick(float dt)
         {
             base.OnMissionTick(dt);
-            _components.Values.ToList().ForEach(component => component.OnTickAsAI(dt));
+            _reloadComponentByAgent.Values.ToList().ForEach(component => component.OnTick(dt));
         }
     }
 }
