@@ -8,7 +8,7 @@ namespace DellarteDellaGuerra.Firearm
 {
     public class FirearmSmokeMissionLogic : MissionLogic
     {
-        private static readonly string FirearmSmokeParticleId = "psys_firearm_panflash";
+        private static readonly string FirearmSmokeParticleId = "psys_firearm_muzzleflash";
 
         private readonly ILogger _logger;
 
