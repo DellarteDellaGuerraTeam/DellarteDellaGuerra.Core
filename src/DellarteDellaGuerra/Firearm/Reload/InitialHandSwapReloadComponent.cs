@@ -7,7 +7,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
     public class InitialHandSwapReloadComponent : IReloadPhase
     {
         private const float InitialHandSwitchProgressStart = 0f;
-        private const float InitialHandSwitchProgressEnd = 0.18f;
+        private const float InitialHandSwitchProgressEnd = 0.07f;
 
         private readonly WeaponReloadPhaseComponent _reloadPhase;
 
@@ -45,27 +45,45 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         private static MatrixFrame GetWeaponFrameForIdleStance(MatrixFrame frame)
         {
+            // frame.rotation.RotateAboutUp(MathF.PI);
+            // frame.rotation.RotateAboutSide(0.9f);
+            //
+            // frame.Elevate(0.02f);
+            //
+            // frame.rotation.RotateAboutUp(-0.47f);
+            // frame.rotation.RotateAboutForward(-0.25f);
+            //
+            // frame.Strafe(0.2f);
+
             frame.rotation.RotateAboutUp(MathF.PI);
-            frame.rotation.RotateAboutSide(1f);
-
+            frame.rotation.RotateAboutSide(0.9f);
+            //
             frame.Elevate(0.02f);
-
-            frame.rotation.RotateAboutUp(-0.46f);
-            frame.rotation.RotateAboutForward(-0.26f);
-
-            frame.Strafe(0.19f);
+            // frame.Advance(-0.005f);
+            //
+            frame.rotation.RotateAboutUp(-0.47f);
+            frame.rotation.RotateAboutForward(-0.25f);
+            //
+            frame.Strafe(0.2f);
 
             return frame;
         }
 
-        private static MatrixFrame GetWeaponFrameForPowderPouring(MatrixFrame frame)
+        private MatrixFrame GetWeaponFrameForPowderPouring(MatrixFrame frame)
         {
             MatrixFrame weaponFrameForPowderPouring = GetWeaponFrameForIdleStance(frame);
 
-            weaponFrameForPowderPouring.rotation.RotateAboutUp(0.2f);
-            weaponFrameForPowderPouring.rotation.RotateAboutForward(0.1f);
-            weaponFrameForPowderPouring.Advance(0.05f);
-            weaponFrameForPowderPouring.Elevate(-0.03f);
+            // weaponFrameForPowderPouring.rotation.RotateAboutUp(0.4f);
+            // weaponFrameForPowderPouring.rotation.RotateAboutForward(0.1f);
+            // weaponFrameForPowderPouring.Advance(0.05f);
+            // weaponFrameForPowderPouring.Elevate(-0.03f);
+
+            weaponFrameForPowderPouring.rotation.RotateAboutSide(1.1f);
+            weaponFrameForPowderPouring.rotation.RotateAboutForward(0.25f);
+            // weaponFrameForPowderPouring.Advance(0.08f);
+            weaponFrameForPowderPouring.Elevate(-0.08f);
+            weaponFrameForPowderPouring.Strafe(0.05f);
+            // // weaponFrameForPowderPouring.rotation.RotateAboutUp(0.2f);
 
             return weaponFrameForPowderPouring;
         }
@@ -77,14 +95,32 @@ namespace DellarteDellaGuerra.Firearm.Reload
             return new MatrixFrame(rot, pos);
         }
 
-        private static MatrixFrame GetWeaponFrameTransitionFromIdleToPowderPouringStart(float reloadingProgress,
+        private MatrixFrame GetWeaponFrameTransitionFromIdleToPowderPouringStart(float reloadingProgress,
             MatrixFrame frame)
         {
-            float percentage = reloadingProgress / InitialHandSwitchProgressEnd + 0.05f;
+            float percentage = reloadingProgress / 0.06f;
             percentage = MathF.Clamp(percentage, 0f, 1f);
 
-            return LerpMatrixFrame(GetWeaponFrameForIdleStance(frame),
+            if (_progress <= 0.06f)
+                return LerpMatrixFrame(GetWeaponFrameForIdleStance(frame),
                 GetWeaponFrameForPowderPouring(frame), percentage);
+
+            var newFrame = GetWeaponFrameForPowderPouring(frame);
+            // newFrame.rotation.RotateAboutUp(0.25f);
+            // newFrame.rotation.RotateAboutForward(.14f);
+            // newFrame.rotation.RotateAboutSide(-.15f);
+            // newFrame.Advance(0.12f);
+            // newFrame.Elevate(-0.03f);
+            // newFrame.Strafe(0.03f);
+            newFrame.rotation.RotateAboutUp(0.25f);
+            newFrame.rotation.RotateAboutForward(.14f);
+            newFrame.rotation.RotateAboutSide(-.15f);
+            newFrame.Advance(0.12f);
+            newFrame.Elevate(-0.03f);
+            newFrame.Strafe(0.03f);
+
+            return LerpMatrixFrame(GetWeaponFrameForPowderPouring(frame),
+                newFrame, (reloadingProgress - 0.06f) / .01f);
         }
 
         private MatrixFrame TransformWeaponFrame(MatrixFrame weaponFrame)

@@ -8,11 +8,15 @@ namespace DellarteDellaGuerra.Firearm.Reload
     {
         private readonly List<IReloadPhase> _phases;
         private readonly Agent _agent;
-        private readonly Dictionary<IReloadPhase, bool> _phaseStates = new();
+        private readonly Dictionary<IReloadPhase, bool> _activePhaseStates = new();
 
         private float _tickAccum;
 
-        private const string ReloadAnim = "act_reload_firearm";
+        private const string ReloadAnimationName = "reload_firearm";
+        private const string ReloadContinueAnimationName = "firearm_reload_continue";
+
+        private const string ReloadAnimationId = "act_reload_firearm";
+        private const string ReloadContinueAnimationId = "act_reload_firearm_continue";
 
         public ReloadComponent(List<IReloadPhase> phases, Agent agent)
         {
@@ -20,7 +24,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
             _agent = agent;
 
             foreach (var phase in _phases)
-                _phaseStates[phase] = false;
+                _activePhaseStates[phase] = false;
         }
 
         public void OnTick(float dt)
@@ -36,10 +40,10 @@ namespace DellarteDellaGuerra.Firearm.Reload
             {
                 if (!IsReloadingActive() || progress > phase.ReloadingProgressEnd)
                 {
-                    if (_phaseStates[phase])
+                    if (_activePhaseStates[phase])
                     {
                         phase.OnReloadEnd();
-                        _phaseStates[phase] = false;
+                        _activePhaseStates[phase] = false;
                     }
 
                     continue;
@@ -47,10 +51,10 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
                 if (progress >= phase.ReloadingProgressStart)
                 {
-                    if (!_phaseStates[phase])
+                    if (!_activePhaseStates[phase])
                     {
                         phase.OnReloadStart();
-                        _phaseStates[phase] = true;
+                        _activePhaseStates[phase] = true;
                         return;
                     }
 
@@ -62,14 +66,32 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         private bool IsReloadingActive()
         {
-            return _agent.GetCurrentAction(1)?.Name == ReloadAnim;
+            return _agent.GetCurrentAction(1)?.Name == ReloadAnimationId ||
+                   _agent.GetCurrentAction(1)?.Name == ReloadContinueAnimationId;
         }
 
         private float GetReloadingProgress()
         {
-            return IsReloadingActive() ? _agent.GetCurrentActionProgress(1) : 0f;
+            float totalDuration = GetBaseReloadAnimationDuration() + GetContinuedReloadAnimationDuration();
+
+            if (_agent.GetCurrentAction(1)?.Name == ReloadAnimationId)
+                return _agent.GetCurrentActionProgress(1) * GetBaseReloadAnimationDuration() / totalDuration;
+            if (_agent.GetCurrentAction(1)?.Name == ReloadContinueAnimationId)
+                return (GetBaseReloadAnimationDuration() +
+                        _agent.GetCurrentActionProgress(1) * GetContinuedReloadAnimationDuration()) / totalDuration;
+            return 0f;
         }
 
+        private static float GetBaseReloadAnimationDuration()
+        {
+            return MBAnimation.GetAnimationDuration(ReloadAnimationName);
+        }
+
+        private static float GetContinuedReloadAnimationDuration()
+        {
+            return MBAnimation.GetAnimationDuration(ReloadContinueAnimationName);
+        }
+        
         private static bool IsUsingMusket(Agent agent)
         {
             var index = agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);

@@ -8,6 +8,7 @@ using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Patches;
+using DellarteDellaGuerra.Firearms;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.ExpandedTemplateApi.Logging;
@@ -87,7 +88,7 @@ namespace DellarteDellaGuerra.Infrastructure
         public override void OnMissionBehaviorInitialize(Mission mission)
         {
             base.OnMissionBehaviorInitialize(mission);
-            // mission.AddMissionBehavior(new FirearmReloadMissionLogic());
+            mission.AddMissionBehavior(new FirearmReloadMissionLogic());
             mission.AddMissionBehavior(new FirearmSmokeMissionLogic(_loggerFactory));
         }
 
