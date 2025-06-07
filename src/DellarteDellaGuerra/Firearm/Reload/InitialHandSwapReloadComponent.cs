@@ -7,7 +7,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
     public class InitialHandSwapReloadComponent : IReloadPhase
     {
         private const float InitialHandSwitchProgressStart = 0f;
-        private const float InitialHandSwitchProgressEnd = 0.07f;
+        private const float InitialHandSwitchProgressEnd = 0.074f;
 
         private readonly WeaponReloadPhaseComponent _reloadPhase;
 
@@ -59,12 +59,12 @@ namespace DellarteDellaGuerra.Firearm.Reload
             frame.rotation.RotateAboutSide(0.9f);
             //
             frame.Elevate(0.02f);
-            // frame.Advance(-0.005f);
+            frame.Advance(0.005f);
             //
-            frame.rotation.RotateAboutUp(-0.47f);
-            frame.rotation.RotateAboutForward(-0.25f);
+            frame.rotation.RotateAboutUp(-0.53f);
+            frame.rotation.RotateAboutForward(-0.15f);
             //
-            frame.Strafe(0.2f);
+            frame.Strafe(0.192f);
 
             return frame;
         }
@@ -78,12 +78,13 @@ namespace DellarteDellaGuerra.Firearm.Reload
             // weaponFrameForPowderPouring.Advance(0.05f);
             // weaponFrameForPowderPouring.Elevate(-0.03f);
 
-            weaponFrameForPowderPouring.rotation.RotateAboutSide(1.1f);
-            weaponFrameForPowderPouring.rotation.RotateAboutForward(0.25f);
-            // weaponFrameForPowderPouring.Advance(0.08f);
-            weaponFrameForPowderPouring.Elevate(-0.08f);
+            weaponFrameForPowderPouring.rotation.RotateAboutSide(1f);
+            weaponFrameForPowderPouring.rotation.RotateAboutForward(0.1f);
+            weaponFrameForPowderPouring.Elevate(-0.03f);
+            // weaponFrameForPowderPouring.Advance(0.06f);
+            // weaponFrameForPowderPouring.Elevate(-0.08f);
             weaponFrameForPowderPouring.Strafe(0.05f);
-            // // weaponFrameForPowderPouring.rotation.RotateAboutUp(0.2f);
+            // weaponFrameForPowderPouring.rotation.RotateAboutUp(0.2f);
 
             return weaponFrameForPowderPouring;
         }
@@ -98,10 +99,11 @@ namespace DellarteDellaGuerra.Firearm.Reload
         private MatrixFrame GetWeaponFrameTransitionFromIdleToPowderPouringStart(float reloadingProgress,
             MatrixFrame frame)
         {
-            float percentage = reloadingProgress / 0.06f;
+            float firstProgressEndStep = 0.05f;
+            float percentage = reloadingProgress / firstProgressEndStep;
             percentage = MathF.Clamp(percentage, 0f, 1f);
 
-            if (_progress <= 0.06f)
+            if (_progress <= firstProgressEndStep)
                 return LerpMatrixFrame(GetWeaponFrameForIdleStance(frame),
                 GetWeaponFrameForPowderPouring(frame), percentage);
 
@@ -112,15 +114,27 @@ namespace DellarteDellaGuerra.Firearm.Reload
             // newFrame.Advance(0.12f);
             // newFrame.Elevate(-0.03f);
             // newFrame.Strafe(0.03f);
-            newFrame.rotation.RotateAboutUp(0.25f);
-            newFrame.rotation.RotateAboutForward(.14f);
-            newFrame.rotation.RotateAboutSide(-.15f);
-            newFrame.Advance(0.12f);
+
+            // newFrame.rotation.RotateAboutUp(0.15f);
+            // newFrame.rotation.RotateAboutForward(0.1f);
+            // newFrame.Elevate(-0.08f);
+            // newFrame.Strafe(0.05f);
+            // newFrame.rotation.RotateAboutSide(-.15f);
+            // newFrame.Advance(0.1f);
+            // newFrame.Strafe(0.1f);
+            // newFrame.Strafe(0.1f);
+
+            // newFrame.rotation.RotateAboutForward(0.1f);
+            newFrame.rotation.RotateAboutUp(0.2f);
+            newFrame.Advance(0.07f);
+
+            newFrame.rotation.RotateAboutForward(0.1f);
             newFrame.Elevate(-0.03f);
-            newFrame.Strafe(0.03f);
+
+            // newFrame.Strafe(0.01f);
 
             return LerpMatrixFrame(GetWeaponFrameForPowderPouring(frame),
-                newFrame, (reloadingProgress - 0.06f) / .01f);
+                newFrame, (reloadingProgress - firstProgressEndStep) / .01f);
         }
 
         private MatrixFrame TransformWeaponFrame(MatrixFrame weaponFrame)

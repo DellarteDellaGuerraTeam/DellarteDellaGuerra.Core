@@ -7,8 +7,10 @@ namespace DellarteDellaGuerra.Firearm.Reload
 {
     public class BlackPowderReloadComponent : IReloadPhase
     {
-        private const float ProgressStart = 0.07f;
+        private const float ProgressStart = 0.074f;
         private const float ProgressEnd = 0.8f;
+
+        private float _progress;
 
         private readonly WeaponReloadPhaseComponent _reloadPhase;
 
@@ -31,6 +33,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
         public void OnReloadProgress(float progress)
         {
             _reloadPhase.OnReloadProgress(progress);
+            _progress = progress;
         }
 
         public void OnReloadEnd()
@@ -45,10 +48,41 @@ namespace DellarteDellaGuerra.Firearm.Reload
         {
             var newWeaponFrame = weaponFrame.DeepClone();
             newWeaponFrame.rotation.RotateAboutSide(MathF.PI + MathF.PI / 4f);
-            newWeaponFrame.rotation.RotateAboutForward(-0.43f);
-            newWeaponFrame.Strafe(0.6f);
+            newWeaponFrame.rotation.RotateAboutForward(-0.4f);
+            // newWeaponFrame.rotation.RotateAboutUp(0.1f);
+            newWeaponFrame.Strafe(0.57f);
             newWeaponFrame.Elevate(-0.1f);
+
+            if (_progress >= ProgressStart)
+            {
+                var frame = newWeaponFrame.DeepClone();
+                frame.Elevate(-0.06f);
+                frame.rotation.RotateAboutForward(0.1f);
+
+                frame.Advance(-0.1f);
+                frame.rotation.RotateAboutUp(-0.2f);
+
+                float lerpDuration = 0.1f;
+
+                if (_progress <= ProgressStart + lerpDuration)
+                {
+                    float lerpProgress = (_progress - ProgressStart) / lerpDuration;
+                    newWeaponFrame = LerpMatrixFrame(newWeaponFrame, frame, lerpProgress);
+                }
+                else
+                {
+                    newWeaponFrame = frame; // Maintain the final transformed state
+                }
+            }
+
             return newWeaponFrame;
+        }
+
+        private static MatrixFrame LerpMatrixFrame(MatrixFrame from, MatrixFrame to, float t)
+        {
+            Vec3 pos = Vec3.Lerp(from.origin, to.origin, t);
+            Mat3 rot = Mat3.Lerp(from.rotation, to.rotation, t);
+            return new MatrixFrame(rot, pos);
         }
     }
 }
