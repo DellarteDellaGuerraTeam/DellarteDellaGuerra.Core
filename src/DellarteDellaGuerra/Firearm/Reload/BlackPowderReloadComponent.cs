@@ -1,4 +1,5 @@
-﻿using Force.DeepCloner;
+﻿using System;
+using Force.DeepCloner;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -49,33 +50,44 @@ namespace DellarteDellaGuerra.Firearm.Reload
             var newWeaponFrame = weaponFrame.DeepClone();
             newWeaponFrame.rotation.RotateAboutSide(MathF.PI + MathF.PI / 4f);
             newWeaponFrame.rotation.RotateAboutForward(-0.4f);
-            // newWeaponFrame.rotation.RotateAboutUp(0.1f);
-            newWeaponFrame.Strafe(0.57f);
+            newWeaponFrame.rotation.RotateAboutUp(0.08f);
+            newWeaponFrame.Strafe(0.62f);
             newWeaponFrame.Elevate(-0.1f);
 
-            if (_progress >= ProgressStart)
+            var frame = AdjustFrameForProgress(ProgressStart, ProgressStart + 0.08f, newWeaponFrame, f =>
             {
-                var frame = newWeaponFrame.DeepClone();
-                frame.Elevate(-0.06f);
-                frame.rotation.RotateAboutForward(0.1f);
+                f.Elevate(-0.05f);
+                f.rotation.RotateAboutForward(0.1f);
 
-                frame.Advance(-0.1f);
-                frame.rotation.RotateAboutUp(-0.2f);
+                f.Advance(-0.2f);
+                f.rotation.RotateAboutUp(-0.35f);
+                f.Strafe(-0.02f);
+                return f;
+            });
+            frame = AdjustFrameForProgress(ProgressStart + 0.08f, ProgressStart + 0.08f, frame, f => f.Strafe(-0.0145f));
+            return frame;
+        }
 
-                float lerpDuration = 0.1f;
+        private MatrixFrame AdjustFrameForProgress(
+            float progressStart,
+            float progressEnd,
+            MatrixFrame weaponFrame,
+            Func<MatrixFrame, MatrixFrame> transformer)
+        {
+            if (_progress >= progressStart)
+            {
+                float lerpProgress = (_progress - progressStart) / (progressEnd - progressStart);
 
-                if (_progress <= ProgressStart + lerpDuration)
+                var transformedFrame = transformer.Invoke(weaponFrame.DeepClone());
+                if (_progress >= progressEnd)
                 {
-                    float lerpProgress = (_progress - ProgressStart) / lerpDuration;
-                    newWeaponFrame = LerpMatrixFrame(newWeaponFrame, frame, lerpProgress);
+                    return transformedFrame;
                 }
-                else
-                {
-                    newWeaponFrame = frame; // Maintain the final transformed state
-                }
+
+                return LerpMatrixFrame(weaponFrame, transformedFrame, lerpProgress);
             }
 
-            return newWeaponFrame;
+            return weaponFrame;
         }
 
         private static MatrixFrame LerpMatrixFrame(MatrixFrame from, MatrixFrame to, float t)

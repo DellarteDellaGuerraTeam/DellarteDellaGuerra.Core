@@ -80,10 +80,10 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
             weaponFrameForPowderPouring.rotation.RotateAboutSide(1f);
             weaponFrameForPowderPouring.rotation.RotateAboutForward(0.1f);
-            weaponFrameForPowderPouring.Elevate(-0.03f);
+            weaponFrameForPowderPouring.Advance(0.01f);
             // weaponFrameForPowderPouring.Advance(0.06f);
-            // weaponFrameForPowderPouring.Elevate(-0.08f);
-            weaponFrameForPowderPouring.Strafe(0.05f);
+            weaponFrameForPowderPouring.Elevate(-0.04f);
+            weaponFrameForPowderPouring.Strafe(0.1f);
             // weaponFrameForPowderPouring.rotation.RotateAboutUp(0.2f);
 
             return weaponFrameForPowderPouring;
