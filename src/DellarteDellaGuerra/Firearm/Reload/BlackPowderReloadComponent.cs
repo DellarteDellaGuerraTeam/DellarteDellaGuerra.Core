@@ -9,7 +9,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
     public class BlackPowderReloadComponent : IReloadPhase
     {
         private const float ProgressStart = 0.074f;
-        private const float ProgressEnd = 0.8f;
+        private const float ProgressEnd = 0.422f;
 
         private float _progress;
 
@@ -50,21 +50,39 @@ namespace DellarteDellaGuerra.Firearm.Reload
             var newWeaponFrame = weaponFrame.DeepClone();
             newWeaponFrame.rotation.RotateAboutSide(MathF.PI + MathF.PI / 4f);
             newWeaponFrame.rotation.RotateAboutForward(-0.4f);
-            newWeaponFrame.rotation.RotateAboutUp(0.08f);
+            newWeaponFrame.rotation.RotateAboutUp(0.1f);
             newWeaponFrame.Strafe(0.62f);
             newWeaponFrame.Elevate(-0.1f);
 
-            var frame = AdjustFrameForProgress(ProgressStart, ProgressStart + 0.08f, newWeaponFrame, f =>
+            var frame = AdjustFrameForProgress(ProgressStart, ProgressStart + 0.02f, newWeaponFrame, f =>
+            {
+                f.rotation.RotateAboutUp(-0.13f);
+                f.Advance(-0.085f);
+                return f;
+            });
+
+            frame = AdjustFrameForProgress(ProgressStart + 0.06f, ProgressStart + 0.08f, frame, f =>
             {
                 f.Elevate(-0.05f);
                 f.rotation.RotateAboutForward(0.1f);
 
-                f.Advance(-0.2f);
-                f.rotation.RotateAboutUp(-0.35f);
-                f.Strafe(-0.02f);
+                f.Advance(-0.05f);
+                f.rotation.RotateAboutUp(-0.1f);
+                f.Strafe(0.02f);
                 return f;
             });
-            frame = AdjustFrameForProgress(ProgressStart + 0.08f, ProgressStart + 0.08f, frame, f => f.Strafe(-0.0145f));
+
+            frame = AdjustFrameForProgress(ProgressEnd - 0.015f, ProgressEnd, frame, f =>
+            {
+                // f.Advance(0.05f);
+
+                f.rotation.RotateAboutForward(-0.05f);
+
+                f.rotation.RotateAboutUp(0.1f);
+                f.Strafe(-0.1f);
+                return f;
+            });
+            
             return frame;
         }
 
@@ -77,12 +95,9 @@ namespace DellarteDellaGuerra.Firearm.Reload
             if (_progress >= progressStart)
             {
                 float lerpProgress = (_progress - progressStart) / (progressEnd - progressStart);
+                lerpProgress = Math.Min(1f, lerpProgress);
 
                 var transformedFrame = transformer.Invoke(weaponFrame.DeepClone());
-                if (_progress >= progressEnd)
-                {
-                    return transformedFrame;
-                }
 
                 return LerpMatrixFrame(weaponFrame, transformedFrame, lerpProgress);
             }
