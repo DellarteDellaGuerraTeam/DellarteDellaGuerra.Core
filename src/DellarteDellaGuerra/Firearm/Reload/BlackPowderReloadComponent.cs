@@ -72,16 +72,32 @@ namespace DellarteDellaGuerra.Firearm.Reload
                 return f;
             });
 
-            frame = AdjustFrameForProgress(ProgressEnd - 0.015f, ProgressEnd, frame, f =>
+            frame = AdjustFrameForProgress(ProgressEnd - 0.02f, ProgressEnd, frame, f =>
             {
                 // f.Advance(0.05f);
 
                 f.rotation.RotateAboutForward(-0.05f);
 
-                f.rotation.RotateAboutUp(0.1f);
-                f.Strafe(-0.1f);
+                f.rotation.RotateAboutUp(0.05f);
+                f.Strafe(-0.2f);
                 return f;
             });
+
+            // frame = AdjustFrameForProgress(ProgressEnd - 0.020f, ProgressEnd - 0.01f, frame, f =>
+            // {
+            //     // f.Advance(0.05f);
+            //
+            //     f.Strafe(-0.05f);
+            //     return f;
+            // });
+            //
+            // frame = AdjustFrameForProgress(ProgressEnd - 0.01f, ProgressEnd, frame, f =>
+            // {
+            //     // f.Advance(0.05f);
+            //
+            //     f.Strafe(0.05f);
+            //     return f;
+            // });
             
             return frame;
         }
