@@ -7,7 +7,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
 {
     public class RammingReloadComponent : IReloadPhase
     {
-        private const float ProgressStart = 0.422f;
+        private const float ProgressStart = 0.4225f;
         private const float ProgressEnd = 1f;
 
         private float _progress;

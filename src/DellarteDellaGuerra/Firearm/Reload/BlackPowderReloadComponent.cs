@@ -9,7 +9,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
     public class BlackPowderReloadComponent : IReloadPhase
     {
         private const float ProgressStart = 0.074f;
-        private const float ProgressEnd = 0.422f;
+        private const float ProgressEnd = 0.4225f;
 
         private float _progress;
 
@@ -72,32 +72,14 @@ namespace DellarteDellaGuerra.Firearm.Reload
                 return f;
             });
 
-            frame = AdjustFrameForProgress(ProgressEnd - 0.02f, ProgressEnd, frame, f =>
+            frame = AdjustFrameForProgress(ProgressEnd - 0.02f, ProgressEnd - 0.00f, frame, f =>
             {
-                // f.Advance(0.05f);
-
-                f.rotation.RotateAboutForward(-0.05f);
-
-                f.rotation.RotateAboutUp(0.05f);
+                f.Advance(-0.1f);
+                f.Elevate(-0.2f);
+                f.rotation.RotateAboutForward(0.18f);
                 f.Strafe(-0.2f);
                 return f;
             });
-
-            // frame = AdjustFrameForProgress(ProgressEnd - 0.020f, ProgressEnd - 0.01f, frame, f =>
-            // {
-            //     // f.Advance(0.05f);
-            //
-            //     f.Strafe(-0.05f);
-            //     return f;
-            // });
-            //
-            // frame = AdjustFrameForProgress(ProgressEnd - 0.01f, ProgressEnd, frame, f =>
-            // {
-            //     // f.Advance(0.05f);
-            //
-            //     f.Strafe(0.05f);
-            //     return f;
-            // });
             
             return frame;
         }
