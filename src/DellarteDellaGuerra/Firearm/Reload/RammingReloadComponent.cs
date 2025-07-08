@@ -7,7 +7,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
 {
     public class RammingReloadComponent : IReloadPhase
     {
-        private const float ProgressStart = 0.4225f;
+        private const float ProgressStart = 0.416f;
         private const float ProgressEnd = 1f;
 
         private float _progress;
@@ -47,7 +47,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
         private MatrixFrame TransformWeaponFrame(MatrixFrame weaponFrame)
         {
             var newWeaponFrame = weaponFrame.DeepClone();
-            newWeaponFrame.rotation.RotateAboutSide(MathF.PI / 2);
+            newWeaponFrame.rotation.RotateAboutSide(MathF.PI / 2 + 0.2f);
             newWeaponFrame.rotation.RotateAboutForward(MathF.PI);
 
             newWeaponFrame.rotation.RotateAboutUp(-0.2f);
@@ -57,14 +57,6 @@ namespace DellarteDellaGuerra.Firearm.Reload
             newWeaponFrame.Elevate(-0.01f);
 
             newWeaponFrame.Strafe(0.5f);
-
-            // newWeaponFrame.rotation.RotateAboutUp(0.5f);
-            // newWeaponFrame.rotation.RotateAboutSide(0.5f);
-            // newWeaponFrame.rotation.RotateAboutForward(0.5f);
-
-            // newWeaponFrame.rotation.RotateAboutUp(0.1f);
-            // newWeaponFrame.Strafe(0.62f);
-            // newWeaponFrame.Elevate(-0.1f);
 
             return newWeaponFrame;
         }
