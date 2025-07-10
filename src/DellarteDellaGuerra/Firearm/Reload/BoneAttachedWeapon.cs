@@ -45,6 +45,23 @@ namespace DellarteDellaGuerra.Firearm.Reload
             _isInitialised = true;
         }
 
+        public void Initialise(MissionWeapon missionWeapon)
+        {
+            if (_isInitialised) return;
+
+            var weapon = missionWeapon;
+            var baseFrame = GetOriginalWeaponFrame(weapon);
+
+            _attachedVisual = CreateVisualEntity(weapon, baseFrame);
+            _mirrorVisual = CreateVisualEntity(weapon, baseFrame);
+
+            AttachToBone(_attachedVisual, baseFrame);
+            HideWieldedWeapon();
+            HideWeaponVisual(_attachedVisual);
+
+            _isInitialised = true;
+        }
+        
         public void OnTick(float dt)
         {
             if (!_isInitialised || _isRemoved) return;
