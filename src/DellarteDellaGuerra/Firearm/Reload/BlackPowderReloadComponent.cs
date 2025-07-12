@@ -1,4 +1,5 @@
 ﻿using System;
+using DellarteDellaGuerra.Firearm.Reload.DellarteDellaGuerra.Firearm.Reload;
 using Force.DeepCloner;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -18,7 +19,8 @@ namespace DellarteDellaGuerra.Firearm.Reload
         public BlackPowderReloadComponent(Agent agent)
         {
             _reloadPhase = new WeaponReloadPhaseComponent(() =>
-                new BoneAttachedWeapon(agent, Agent.HandIndex.MainHand, HumanBone.HandR, TransformWeaponFrame));
+                new BoneAttachedItem(agent, HumanBone.HandR, TransformWeaponFrame, agent.WieldedWeapon.Item,
+                    ProgressStart));
         }
 
         public void OnTick(float dt)
@@ -26,9 +28,9 @@ namespace DellarteDellaGuerra.Firearm.Reload
             _reloadPhase.OnTick(dt);
         }
 
-        public void OnReloadStart()
+        public void OnReloadPhaseStart()
         {
-            _reloadPhase.OnReloadStart();
+            _reloadPhase.OnReloadPhaseStart();
         }
 
         public void OnReloadProgress(float progress)
@@ -37,13 +39,13 @@ namespace DellarteDellaGuerra.Firearm.Reload
             _progress = progress;
         }
 
-        public void OnReloadEnd()
+        public void OnReloadPhaseEnd()
         {
-            _reloadPhase.OnReloadEnd();
+            _reloadPhase.OnReloadPhaseEnd();
         }
 
-        public float ReloadingProgressStart => ProgressStart;
-        public float ReloadingProgressEnd => ProgressEnd;
+        public float PhaseProgressStart => ProgressStart;
+        public float PhaseProgressEnd => ProgressEnd;
 
         private MatrixFrame TransformWeaponFrame(MatrixFrame weaponFrame)
         {

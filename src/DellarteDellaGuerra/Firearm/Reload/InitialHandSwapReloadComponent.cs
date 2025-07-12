@@ -1,4 +1,5 @@
-﻿using TaleWorlds.Core;
+﻿using DellarteDellaGuerra.Firearm.Reload.DellarteDellaGuerra.Firearm.Reload;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
@@ -16,7 +17,8 @@ namespace DellarteDellaGuerra.Firearm.Reload
         public InitialHandSwapReloadComponent(Agent agent)
         {
             _reloadPhase = new WeaponReloadPhaseComponent(() =>
-                new BoneAttachedWeapon(agent, Agent.HandIndex.MainHand, HumanBone.HandL, TransformWeaponFrame));
+                new BoneAttachedItem(agent, HumanBone.HandL, TransformWeaponFrame, agent.WieldedWeapon.Item,
+                    InitialHandSwitchProgressStart));
         }
 
         public void OnTick(float dt)
@@ -24,9 +26,9 @@ namespace DellarteDellaGuerra.Firearm.Reload
             _reloadPhase.OnTick(dt);
         }
 
-        public void OnReloadStart()
+        public void OnReloadPhaseStart()
         {
-            _reloadPhase.OnReloadStart();
+            _reloadPhase.OnReloadPhaseStart();
         }
 
         public void OnReloadProgress(float progress)
@@ -35,13 +37,13 @@ namespace DellarteDellaGuerra.Firearm.Reload
             _reloadPhase.OnReloadProgress(progress);
         }
 
-        public void OnReloadEnd()
+        public void OnReloadPhaseEnd()
         {
-            _reloadPhase.OnReloadEnd();
+            _reloadPhase.OnReloadPhaseEnd();
         }
 
-        public float ReloadingProgressStart => InitialHandSwitchProgressStart;
-        public float ReloadingProgressEnd => InitialHandSwitchProgressEnd;
+        public float PhaseProgressStart => InitialHandSwitchProgressStart;
+        public float PhaseProgressEnd => InitialHandSwitchProgressEnd;
 
         private static MatrixFrame GetWeaponFrameForIdleStance(MatrixFrame frame)
         {

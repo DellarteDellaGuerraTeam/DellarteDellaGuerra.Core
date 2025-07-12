@@ -2,11 +2,11 @@
 
 namespace DellarteDellaGuerra.Firearm.Reload
 {
-    public class ReloadStopComponent : IReloadPhase
+    public class ReloadStartComponent : IReloadPhase
     {
         private readonly Agent _agent;
 
-        public ReloadStopComponent(Agent agent)
+        public ReloadStartComponent(Agent agent)
         {
             _agent = agent;
         }
@@ -17,6 +17,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         public void OnReloadPhaseStart()
         {
+            HideWieldedWeapon();
         }
 
         public void OnReloadProgress(float progress)
@@ -25,19 +26,16 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         public void OnReloadPhaseEnd()
         {
-            WieldOriginalWeapon();
         }
 
         public float PhaseProgressStart => 0;
         public float PhaseProgressEnd => 1;
 
-        private void WieldOriginalWeapon()
+        private void HideWieldedWeapon()
         {
-            var firearmEquipmentIndex = _agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
-            var firearmWeapon = _agent.Equipment[firearmEquipmentIndex];
-
-            _agent.EquipWeaponWithNewEntity(firearmEquipmentIndex, ref firearmWeapon);
-            _agent.TryToWieldWeaponInSlot(firearmEquipmentIndex, Agent.WeaponWieldActionType.Instant, false);
+            var wieldedWeapon =
+                _agent.GetWeaponEntityFromEquipmentSlot(_agent.GetWieldedItemIndex(Agent.HandIndex.MainHand));
+            wieldedWeapon.GetMetaMesh(0)?.ClearMeshes();
         }
     }
 }

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
+using DellarteDellaGuerra.Firearm.Reload.DellarteDellaGuerra.Firearm.Reload;
 using Force.DeepCloner;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.Core;
@@ -11,42 +14,45 @@ namespace DellarteDellaGuerra.Firearm.Reload
     {
         private const float ProgressStart = 0.416f;
         private const float ProgressEnd = 1f;
-
+        private const float RamrodMinimumProgress = 0.45f;
+        
         private float _progress;
 
-        private readonly Agent _agent;
-
         private readonly WeaponReloadPhaseComponent _reloadPhase;
-        private BoneAttachedWeapon _ramrod;
+        private const string RamrodItemId = "arquebusramrod";
 
-        public RammingReloadComponent(Agent agent)
+        public RammingReloadComponent(Agent agent, ILoggerFactory loggerFactory)
         {
-            _reloadPhase = new WeaponReloadPhaseComponent(() =>
-                new BoneAttachedWeapon(agent, Agent.HandIndex.MainHand, HumanBone.HandL, TransformFirearmFrame));
-            _agent = agent;
+            var weaponCreators = new List<Func<BoneAttachedItem>>
+            {
+                () =>
+                    new BoneAttachedItem(agent, HumanBone.HandL, TransformFirearmFrame, agent.WieldedWeapon.Item,
+                        ProgressStart)
+            };
+
+            ItemObject ramrodItem = Items.All.Find(item => item.StringId.StartsWith(RamrodItemId));
+            if (ramrodItem is null)
+            {
+                loggerFactory.CreateLogger<RammingReloadComponent>()
+                    .Error($"Could not find item '{RamrodItemId}'. Ramrod will not appear during reload");
+            }
+            else
+            {
+                weaponCreators.Add(() => new BoneAttachedItem(agent, HumanBone.ItemR,
+                    TransformRamrodFrame, ramrodItem, RamrodMinimumProgress));
+            }
+
+            _reloadPhase = new WeaponReloadPhaseComponent(weaponCreators.ToArray());
         }
 
         public void OnTick(float dt)
         {
             _reloadPhase.OnTick(dt);
-
-            if (_progress > 0.45f)
-            {
-                ItemObject ramrodItem = Items.All.Find(item => item.StringId.StartsWith("arquebusramrod"));
-                if (ramrodItem is not null && _ramrod == null)
-                {
-                    _ramrod = new BoneAttachedWeapon(_agent, Agent.HandIndex.MainHand, HumanBone.ItemR,
-                        TransformRamrodFrame);
-                    _ramrod.Initialise(new MissionWeapon(ramrodItem, null, null));
-                }
-            }
-
-            _ramrod?.OnTick(dt);
         }
 
-        public void OnReloadStart()
+        public void OnReloadPhaseStart()
         {
-            _reloadPhase.OnReloadStart();
+            _reloadPhase.OnReloadPhaseStart();
         }
 
         public void OnReloadProgress(float progress)
@@ -55,15 +61,13 @@ namespace DellarteDellaGuerra.Firearm.Reload
             _progress = progress;
         }
 
-        public void OnReloadEnd()
+        public void OnReloadPhaseEnd()
         {
-            _reloadPhase.OnReloadEnd();
-            _ramrod.Remove();
-            _ramrod = null;
+            _reloadPhase.OnReloadPhaseEnd();
         }
 
-        public float ReloadingProgressStart => ProgressStart;
-        public float ReloadingProgressEnd => ProgressEnd;
+        public float PhaseProgressStart => ProgressStart;
+        public float PhaseProgressEnd => ProgressEnd;
 
         private MatrixFrame TransformFirearmFrame(MatrixFrame weaponFrame)
         {

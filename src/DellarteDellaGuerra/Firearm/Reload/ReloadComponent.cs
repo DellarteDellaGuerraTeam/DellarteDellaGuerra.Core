@@ -25,6 +25,29 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
             foreach (var phase in _phases)
                 _activePhaseStates[phase] = false;
+
+            agent.OnAgentWieldedItemChange += () =>
+            {
+                var wieldedWeaponIndex = agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
+
+                if (wieldedWeaponIndex < EquipmentIndex.WeaponItemBeginSlot ||
+                    wieldedWeaponIndex > EquipmentIndex.NumAllWeaponSlots) return;
+
+                if (agent.Equipment[wieldedWeaponIndex]
+                        .CurrentUsageItem?.WeaponClass
+                        .Equals(WeaponClass.Musket) ??
+                    false) return;
+
+                for (EquipmentIndex index = EquipmentIndex.WeaponItemBeginSlot;
+                     index < EquipmentIndex.NumAllWeaponSlots;
+                     index++)
+                    if (agent.Equipment[index].CurrentUsageItem?.WeaponClass.Equals(WeaponClass.Musket) ?? false)
+                    {
+                        var weapon = agent.Equipment[index];
+                        agent.RemoveEquippedWeapon(index);
+                        agent.EquipWeaponWithNewEntity(index, ref weapon);
+                    }
+            };
         }
 
         public void OnTick(float dt)
@@ -35,31 +58,35 @@ namespace DellarteDellaGuerra.Firearm.Reload
             if (!_agent.IsHuman || !IsUsingMusket(_agent)) return;
 
             float progress = GetReloadingProgress();
+            var isReloadingActive = IsReloadingActive();
 
+            // During the transition between two phases (eg. both phases share the same end/start progress value),
+            // The weapon of both phases will be visible for a tick.
+            // The weapon of the previous transition will be removed on the next tick.
+            // This makes the transition more seamless.
             foreach (var phase in _phases)
             {
-                if (!IsReloadingActive() || progress > phase.ReloadingProgressEnd)
-                {
-                    if (_activePhaseStates[phase])
-                    {
-                        phase.OnReloadEnd();
-                        _activePhaseStates[phase] = false;
-                    }
-
-                    continue;
-                }
-
-                if (progress >= phase.ReloadingProgressStart)
+                if (isReloadingActive && progress >= phase.PhaseProgressStart && progress <= phase.PhaseProgressEnd)
                 {
                     if (!_activePhaseStates[phase])
                     {
-                        phase.OnReloadStart();
+                        phase.OnReloadProgress(progress);
+                        phase.OnReloadPhaseStart();
                         _activePhaseStates[phase] = true;
                         return;
                     }
 
                     phase.OnReloadProgress(progress);
                     phase.OnTick(dt);
+                }
+            }
+
+            foreach (var phase in _phases)
+            {
+                if (_activePhaseStates[phase] && (!isReloadingActive || progress > phase.PhaseProgressEnd))
+                {
+                    phase.OnReloadPhaseEnd();
+                    _activePhaseStates[phase] = false;
                 }
             }
         }

@@ -1,38 +1,49 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DellarteDellaGuerra.Firearm.Reload.DellarteDellaGuerra.Firearm.Reload;
+using TaleWorlds.Core;
 
 namespace DellarteDellaGuerra.Firearm.Reload
 {
     public class WeaponReloadPhaseComponent : IReloadPhase
     {
-        private readonly Func<BoneAttachedWeapon>? _createVisual;
-        private BoneAttachedWeapon? _visualWeapon;
+        private readonly List<Func<BoneAttachedItem>> _weaponVisualCreators;
+        private List<BoneAttachedItem> _visualWeapons = new();
+        private float _progress;
 
-        public WeaponReloadPhaseComponent(Func<BoneAttachedWeapon>? createVisual = null)
+        public WeaponReloadPhaseComponent(params Func<BoneAttachedItem>[] createVisual)
         {
-            _createVisual = createVisual;
+            _weaponVisualCreators = createVisual.ToList();
         }
 
-        public void OnReloadStart()
+        public void OnReloadPhaseStart()
         {
-            _visualWeapon = _createVisual?.Invoke();
-            _visualWeapon?.Initialise();
         }
 
         public void OnReloadProgress(float progress)
         {
+            _progress = progress;
+
+            if (_visualWeapons.IsEmpty())
+                _visualWeapons = _weaponVisualCreators.Select(weaponVisualCreator => weaponVisualCreator.Invoke())
+                    .ToList();
+
+            _visualWeapons.ForEach(visualWeapon => visualWeapon.InitialiseAtProgress(_progress));
         }
 
-        public void OnReloadEnd()
+        public void OnReloadPhaseEnd()
         {
-            _visualWeapon?.Remove();
+            _visualWeapons.ForEach(visualWeapon => visualWeapon.Remove());
+            _visualWeapons.RemoveAll(_ => true);
         }
 
         public void OnTick(float dt)
         {
-            _visualWeapon?.OnTick(dt);
+            _visualWeapons.ForEach(visualWeapon => visualWeapon.OnTick(dt));
         }
 
-        public float ReloadingProgressStart => 0f;
-        public float ReloadingProgressEnd => 1f;
+        public float PhaseProgressStart => 0f;
+        public float PhaseProgressEnd => 1f;
     }
 }

@@ -1,11 +1,12 @@
-﻿using DellarteDellaGuerra.Firearm.Reload;
-
-public interface IReloadPhase : ITickable
+﻿namespace DellarteDellaGuerra.Firearm.Reload
 {
-    void OnReloadStart();
-    void OnReloadProgress(float progress);
-    void OnReloadEnd();
+    public interface IReloadPhase : ITickable
+    {
+        void OnReloadPhaseStart();
+        void OnReloadProgress(float progress);
+        void OnReloadPhaseEnd();
 
-    float ReloadingProgressStart { get; }
-    float ReloadingProgressEnd { get; }
+        float PhaseProgressStart { get; }
+        float PhaseProgressEnd { get; }
+    }
 }

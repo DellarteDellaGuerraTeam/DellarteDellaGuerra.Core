@@ -1,16 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Firearm.Reload;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
-namespace DellarteDellaGuerra.Firearms
+namespace DellarteDellaGuerra.Firearm
 {
     public class FirearmReloadMissionLogic : MissionLogic
     {
         private readonly Dictionary<int, ReloadComponent> _reloadComponentByAgent = new();
+        private readonly ILoggerFactory _loggerFactory;
+
+        public FirearmReloadMissionLogic(ILoggerFactory loggerFactory)
+        {
+            _loggerFactory = loggerFactory;
+        }
 
         public override void OnAgentBuild(Agent agent, Banner banner)
         {
@@ -18,41 +23,19 @@ namespace DellarteDellaGuerra.Firearms
             if (agent.IsHuman)
                 _reloadComponentByAgent.Add(agent.GetHashCode(),
                     new ReloadComponent(InitialiseReloadPhases(agent), agent));
-
-            agent.OnAgentWieldedItemChange += () =>
-            {
-                var wieldedWeaponIndex = agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
-
-                if (wieldedWeaponIndex < EquipmentIndex.WeaponItemBeginSlot ||
-                    wieldedWeaponIndex > EquipmentIndex.NumAllWeaponSlots) return;
-
-                if (agent.Equipment[wieldedWeaponIndex]
-                        .CurrentUsageItem?.WeaponClass
-                        .Equals(WeaponClass.Musket) ??
-                    false) return;
-
-                for (EquipmentIndex index = EquipmentIndex.WeaponItemBeginSlot;
-                     index < EquipmentIndex.NumAllWeaponSlots;
-                     index++)
-                    if (agent.Equipment[index].CurrentUsageItem?.WeaponClass.Equals(WeaponClass.Musket) ?? false)
-                    {
-                        var weapon = agent.Equipment[index];
-                        agent.RemoveEquippedWeapon(index);
-                        agent.EquipWeaponWithNewEntity(index, ref weapon);
-                    }
-            };
         }
 
         private List<IReloadPhase> InitialiseReloadPhases(Agent agent)
         {
-            var reloadPhaseTypes = Assembly.GetExecutingAssembly()
-                .ExportedTypes
-                .Where(type => typeof(IReloadPhase).IsAssignableFrom(type) &&
-                               type.GetConstructor(new[] { typeof(Agent) }) != null);
-
-            return reloadPhaseTypes
-                .Select(type => (IReloadPhase)Activator.CreateInstance(type, agent))
-                .ToList();
+            var reloadPhases = new List<IReloadPhase>
+            {
+                new ReloadStartComponent(agent),
+                new InitialHandSwapReloadComponent(agent),
+                new BlackPowderReloadComponent(agent),
+                new RammingReloadComponent(agent, _loggerFactory),
+                new ReloadStopComponent(agent)
+            };
+            return reloadPhases;
         }
         
         public override void OnMissionTick(float dt)
