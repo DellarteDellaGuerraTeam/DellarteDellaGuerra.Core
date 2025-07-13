@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
@@ -43,6 +44,9 @@ namespace DellarteDellaGuerra.Firearm.Reload
                      index++)
                     if (agent.Equipment[index].CurrentUsageItem?.WeaponClass.Equals(WeaponClass.Musket) ?? false)
                     {
+                        _phases.Where(phase => _activePhaseStates[phase]).ToList()
+                            .ForEach(activePhase => activePhase.OnReloadPhaseEnd());
+
                         var weapon = agent.Equipment[index];
                         agent.RemoveEquippedWeapon(index);
                         agent.EquipWeaponWithNewEntity(index, ref weapon);

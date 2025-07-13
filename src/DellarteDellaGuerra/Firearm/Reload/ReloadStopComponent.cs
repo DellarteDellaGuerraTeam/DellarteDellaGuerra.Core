@@ -1,4 +1,5 @@
-﻿using TaleWorlds.MountAndBlade;
+﻿using TaleWorlds.Core;
+using TaleWorlds.MountAndBlade;
 
 namespace DellarteDellaGuerra.Firearm.Reload
 {
@@ -35,6 +36,8 @@ namespace DellarteDellaGuerra.Firearm.Reload
         {
             var firearmEquipmentIndex = _agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
             var firearmWeapon = _agent.Equipment[firearmEquipmentIndex];
+
+            if (firearmWeapon.CurrentUsageItem?.WeaponClass != WeaponClass.Musket) return;
 
             _agent.EquipWeaponWithNewEntity(firearmEquipmentIndex, ref firearmWeapon);
             _agent.TryToWieldWeaponInSlot(firearmEquipmentIndex, Agent.WeaponWieldActionType.Instant, false);
