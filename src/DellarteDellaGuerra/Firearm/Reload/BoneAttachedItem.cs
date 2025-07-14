@@ -16,6 +16,9 @@ namespace DellarteDellaGuerra.Firearm.Reload
             private readonly ItemObject _itemObject;
             private readonly float _minimumProgress;
 
+            private MetaMesh _attachedMetaMesh;
+            private MetaMesh _mirrorMetaMesh;
+
             private GameEntity _attachedVisual;
             private GameEntity _mirrorVisual;
 
@@ -45,7 +48,11 @@ namespace DellarteDellaGuerra.Firearm.Reload
                 _mirrorVisual = CreateVisualEntity(weapon, baseFrame);
 
                 AttachToBone(weapon, _attachedVisual, baseFrame);
-                HideWeaponVisual(_attachedVisual);
+
+                _attachedMetaMesh = _attachedVisual.GetMetaMesh(0);
+                _mirrorMetaMesh = _mirrorVisual.GetMetaMesh(0);
+
+                HideWeaponVisual(_attachedMetaMesh);
 
                 _isInitialised = true;
             }
@@ -83,13 +90,13 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
             private MatrixFrame GetAttachedFrame()
             {
-                return _attachedVisual.GetMetaMesh(0).Frame;
+                return _attachedMetaMesh.Frame;
             }
 
             private void UpdateVisualFrame(MatrixFrame newFrame)
             {
                 _mirrorVisual.SetGlobalFrame(_attachedVisual.GetGlobalFrame());
-                _mirrorVisual.GetMetaMesh(0).Frame = newFrame;
+                _mirrorMetaMesh.Frame = newFrame;
             }
 
             private void AttachToBone(MissionWeapon weapon, GameEntity entity, MatrixFrame frame)
@@ -97,9 +104,9 @@ namespace DellarteDellaGuerra.Firearm.Reload
                 _agent.AttachWeaponToBone(weapon, entity, (sbyte)_targetBone, ref frame);
             }
 
-            private static void HideWeaponVisual(GameEntity weaponEntity)
+            private static void HideWeaponVisual(MetaMesh metaMesh)
             {
-                weaponEntity.GetMetaMesh(0)?.ClearMeshes();
+                metaMesh?.ClearMeshes();
             }
         }
     }

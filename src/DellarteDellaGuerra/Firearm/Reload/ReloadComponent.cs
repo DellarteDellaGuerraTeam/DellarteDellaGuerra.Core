@@ -11,6 +11,11 @@ namespace DellarteDellaGuerra.Firearm.Reload
         private readonly Agent _agent;
         private readonly Dictionary<IReloadPhase, bool> _activePhaseStates = new();
 
+        private readonly float _baseAnimationDuration = GetBaseReloadAnimationDuration();
+        private readonly float _continuedAnimationDuration = GetContinuedReloadAnimationDuration();
+
+        private readonly float _totalDuration;
+
         private float _tickAccum;
 
         private const string ReloadAnimationName = "reload_firearm";
@@ -23,6 +28,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
         {
             _phases = phases;
             _agent = agent;
+            _totalDuration = _baseAnimationDuration + _continuedAnimationDuration;
 
             foreach (var phase in _phases)
                 _activePhaseStates[phase] = false;
@@ -103,13 +109,12 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         private float GetReloadingProgress()
         {
-            float totalDuration = GetBaseReloadAnimationDuration() + GetContinuedReloadAnimationDuration();
-
-            if (_agent.GetCurrentAction(1)?.Name == ReloadAnimationId)
-                return _agent.GetCurrentActionProgress(1) * GetBaseReloadAnimationDuration() / totalDuration;
-            if (_agent.GetCurrentAction(1)?.Name == ReloadContinueAnimationId)
-                return (GetBaseReloadAnimationDuration() +
-                        _agent.GetCurrentActionProgress(1) * GetContinuedReloadAnimationDuration()) / totalDuration;
+            var currentActionName = _agent.GetCurrentAction(1)?.Name;
+            if (currentActionName == ReloadAnimationId)
+                return _agent.GetCurrentActionProgress(1) * _baseAnimationDuration / _totalDuration;
+            if (currentActionName == ReloadContinueAnimationId)
+                return (_baseAnimationDuration +
+                        _agent.GetCurrentActionProgress(1) * _continuedAnimationDuration) / _totalDuration;
             return 0f;
         }
 
