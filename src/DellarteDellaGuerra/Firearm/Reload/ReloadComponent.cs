@@ -21,9 +21,6 @@ namespace DellarteDellaGuerra.Firearm.Reload
         private const string ReloadAnimationName = "reload_firearm";
         private const string ReloadContinueAnimationName = "firearm_reload_continue";
 
-        private const string ReloadAnimationId = "act_reload_firearm";
-        private const string ReloadContinueAnimationId = "act_reload_firearm_continue";
-
         public ReloadComponent(List<IReloadPhase> phases, Agent agent)
         {
             _phases = phases;
@@ -67,8 +64,8 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
             if (!_agent.IsHuman || !IsUsingMusket(_agent)) return;
 
-            float progress = GetReloadingProgress();
-            var isReloadingActive = IsReloadingActive();
+            float progress = GetReloadingProgress(_agent);
+            var isReloadingActive = IsReloadingActive(_agent);
 
             // During the transition between two phases (eg. both phases share the same end/start progress value),
             // The weapon of both phases will be visible for a tick.
@@ -101,18 +98,17 @@ namespace DellarteDellaGuerra.Firearm.Reload
             }
         }
 
-        private bool IsReloadingActive()
+        private bool IsReloadingActive(Agent agent)
         {
-            return _agent.GetCurrentAction(1)?.Name == ReloadAnimationId ||
-                   _agent.GetCurrentAction(1)?.Name == ReloadContinueAnimationId;
+            return agent.GetCurrentActionType(1) == Agent.ActionCodeType.Reload;
         }
 
-        private float GetReloadingProgress()
+        private float GetReloadingProgress(Agent agent)
         {
-            var currentActionName = _agent.GetCurrentAction(1)?.Name;
-            if (currentActionName == ReloadAnimationId)
+            var currentActionStage = agent.GetCurrentActionStage(1);
+            if (currentActionStage == Agent.ActionStage.ReloadMidPhase)
                 return _agent.GetCurrentActionProgress(1) * _baseAnimationDuration / _totalDuration;
-            if (currentActionName == ReloadContinueAnimationId)
+            if (currentActionStage == Agent.ActionStage.ReloadLastPhase)
                 return (_baseAnimationDuration +
                         _agent.GetCurrentActionProgress(1) * _continuedAnimationDuration) / _totalDuration;
             return 0f;
