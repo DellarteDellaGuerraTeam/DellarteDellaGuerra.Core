@@ -60,7 +60,8 @@ namespace DellarteDellaGuerra.Firearm.Reload
         public void OnTick(float dt)
         {
             _tickAccum += dt;
-            if (_tickAccum < 1f) return;
+            if (_tickAccum < 0.02f) return;
+            _tickAccum = 0;
 
             if (!_agent.IsHuman || !IsUsingMusket(_agent)) return;
 

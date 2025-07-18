@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Firearm.Reload;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace DellarteDellaGuerra.Firearm
@@ -11,12 +10,23 @@ namespace DellarteDellaGuerra.Firearm
     public class FirearmReloadMissionLogic : MissionLogic
     {
         private readonly Dictionary<int, ReloadComponent> _reloadComponentByAgent = new();
+        private readonly Dictionary<int, int> _agentSkipTickCounter = new();
+        private readonly List<Agent> _activeHumanAgents = new();
+
         private readonly ILoggerFactory _loggerFactory;
-        private int _currentAgentIndex;
+        private readonly ILogger _logger;
+
+        private readonly float _viewAngle = 110f;
+        private readonly float _cosViewAngleThreshold;
+
+        private int _globalTickCounter;
+        private const int VisibilityCheckInterval = 5; // every N ticks
 
         public FirearmReloadMissionLogic(ILoggerFactory loggerFactory)
         {
             _loggerFactory = loggerFactory;
+            _logger = loggerFactory.CreateLogger<FirearmReloadMissionLogic>();
+            _cosViewAngleThreshold = MathF.Cos(_viewAngle * 0.5f * (MathF.PI / 180f));
         }
 
         public override void OnAgentBuild(Agent agent, Banner banner)
@@ -24,14 +34,16 @@ namespace DellarteDellaGuerra.Firearm
             base.OnAgentBuild(agent, banner);
             if (agent.IsHuman)
             {
-                _reloadComponentByAgent.Add(agent.GetHashCode(),
-                    new ReloadComponent(InitialiseReloadPhases(agent), agent));
+                int id = agent.Index;
+                _reloadComponentByAgent[id] = new ReloadComponent(InitialiseReloadPhases(agent), agent);
+                _agentSkipTickCounter[id] = 0;
+                _activeHumanAgents.Add(agent);
             }
         }
 
         private List<IReloadPhase> InitialiseReloadPhases(Agent agent)
         {
-            var reloadPhases = new List<IReloadPhase>
+            return new List<IReloadPhase>
             {
                 new ReloadStartComponent(agent),
                 new InitialHandSwapReloadComponent(agent),
@@ -39,26 +51,88 @@ namespace DellarteDellaGuerra.Firearm
                 new RammingReloadComponent(agent, _loggerFactory),
                 new ReloadStopComponent(agent)
             };
-            return reloadPhases;
         }
 
         public override void OnMissionTick(float dt)
         {
             base.OnMissionTick(dt);
-            var components = _reloadComponentByAgent.Values.ToList();
+            if (Mission.Current == null)
+                return;
 
-            // Determine how many agents to process on this tick
-            int endIndex = Math.Min(_currentAgentIndex + GetMaxAgentsPerTick(), components.Count);
+            _globalTickCounter++;
 
-            for (int i = _currentAgentIndex; i < endIndex; i++) components[i].OnTick(dt);
+            bool recalculateVisibility = _globalTickCounter % VisibilityCheckInterval == 0;
 
-            // Update the index for the next tick
-            _currentAgentIndex = endIndex < components.Count ? endIndex : 0;
+            var cameraFrame = Mission.Current.GetCameraFrame();
+            Vec3 camPos = cameraFrame.origin;
+            Vec3 camForward = -cameraFrame.rotation.u.NormalizedCopy();
+
+            foreach (var agent in _activeHumanAgents)
+            {
+                if (ShouldSkipAgent(agent))
+                    continue;
+
+                int id = agent.Index;
+
+                if (recalculateVisibility && !IsAgentVisible(camPos, camForward, agent))
+                {
+                    ResetSkipCounter(id);
+                    continue;
+                }
+
+                float distance = (agent.Position - camPos).LengthSquared;
+                int skipTicks = GetSkipTicksForDistanceSquared(distance);
+
+                if (ShouldSkipTick(id, skipTicks))
+                    continue;
+
+                ResetSkipCounter(id);
+                ApplyReloading(agent, dt);
+            }
         }
 
-        private int GetMaxAgentsPerTick()
+        private bool ShouldSkipAgent(Agent agent)
         {
-            return 1000;
+            return agent == Agent.Main || !agent.IsHuman || !agent.IsActive() || agent.Health <= 0;
+        }
+
+        private void ResetSkipCounter(int agentId)
+        {
+            _agentSkipTickCounter[agentId] = 0;
+        }
+
+        private bool ShouldSkipTick(int agentId, int skipTicks)
+        {
+            if (_agentSkipTickCounter[agentId] < skipTicks)
+            {
+                _agentSkipTickCounter[agentId]++;
+                return true;
+            }
+
+            return false;
+        }
+
+        private int GetSkipTicksForDistanceSquared(float distanceSq)
+        {
+            if (distanceSq < 100f) return 0; // <10m
+            if (distanceSq < 900f) return 1; // <30m
+            if (distanceSq < 2500f) return 2; // <50m
+            if (distanceSq < 4900f) return 3; // <70m
+            if (distanceSq < 8100f) return 4; // <90m
+            return 5;
+        }
+
+        private bool IsAgentVisible(Vec3 cameraPos, Vec3 cameraForward, Agent agent)
+        {
+            Vec3 toAgent = agent.Position - cameraPos;
+            float dot = Vec3.DotProduct(toAgent.NormalizedCopy(), cameraForward);
+            dot = MathF.Clamp(dot, -1f, 1f);
+            return dot >= _cosViewAngleThreshold;
+        }
+
+        private void ApplyReloading(Agent agent, float dt)
+        {
+            _reloadComponentByAgent[agent.Index].OnTick(dt);
         }
     }
 }
