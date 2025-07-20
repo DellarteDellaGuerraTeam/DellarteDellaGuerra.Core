@@ -31,23 +31,25 @@ namespace DellarteDellaGuerra.Firearm
             base.OnAgentBuild(agent, banner);
             if (agent.IsHuman)
             {
+                ItemObject? fireItemObject = FindFirstFirearm(agent);
+                if (fireItemObject is null) return;
+
                 int id = agent.Index;
-                _reloadComponentByAgent[id] = new ReloadComponent(InitialiseReloadPhases(agent), agent,
+                _reloadComponentByAgent[id] = new ReloadComponent(InitialiseReloadPhases(agent, fireItemObject), agent,
                     _weaponEntityRepository);
+                _reloadComponentByAgent[id].OnAgentBuild();
                 _agentSkipTickCounter[id] = 0;
                 _activeHumanAgents.Add(agent);
             }
         }
 
-        private List<IReloadPhase> InitialiseReloadPhases(Agent agent)
+        private List<IReloadPhase> InitialiseReloadPhases(Agent agent, ItemObject firearmItem)
         {
             return new List<IReloadPhase>
             {
-                // new ReloadStartComponent(agent, _weaponEntityRepository),
-                new InitialHandSwapReloadComponent(agent),
-                new BlackPowderReloadComponent(agent),
-                new RammingReloadComponent(agent, _loggerFactory),
-                // new ReloadStopComponent(agent, _weaponEntityRepository)
+                new InitialHandSwapReloadComponent(agent, firearmItem),
+                new BlackPowderReloadComponent(agent, firearmItem),
+                new RammingReloadComponent(agent, firearmItem, _loggerFactory)
             };
         }
 
@@ -127,6 +129,18 @@ namespace DellarteDellaGuerra.Firearm
         private void ApplyReloading(Agent agent, float dt)
         {
             _reloadComponentByAgent[agent.Index].OnTick(dt);
+        }
+
+        private ItemObject? FindFirstFirearm(Agent agent)
+        {
+            ItemObject? firearmItem = null;
+            for (EquipmentIndex index = EquipmentIndex.WeaponItemBeginSlot;
+                 index < EquipmentIndex.NumAllWeaponSlots;
+                 index++)
+                if (agent.Equipment[index].CurrentUsageItem?.WeaponClass.Equals(WeaponClass.Musket) ?? false)
+                    firearmItem = agent.Equipment[index].Item;
+
+            return firearmItem;
         }
     }
 }

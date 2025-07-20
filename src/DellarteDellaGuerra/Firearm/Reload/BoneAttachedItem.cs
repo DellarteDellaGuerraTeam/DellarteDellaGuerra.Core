@@ -8,19 +8,21 @@ namespace DellarteDellaGuerra.Firearm.Reload
 {
     namespace DellarteDellaGuerra.Firearm.Reload
     {
-        public class BoneAttachedItem : ITickable
+        public class BoneAttachedItem : ITickable, IOnAgentBuild
         {
             private readonly Agent _agent;
             private readonly Func<MatrixFrame, MatrixFrame> _weaponFrameTransformer;
             private readonly float _minimumProgress;
 
-            private readonly MetaMesh _attachedMetaMesh;
-            private readonly MetaMesh _mirrorMetaMesh;
+            private MetaMesh _attachedMetaMesh;
+            private MetaMesh _mirrorMetaMesh;
 
-            private readonly GameEntity _attachedVisual;
-            private readonly GameEntity _mirrorVisual;
+            private GameEntity _attachedVisual;
+            private GameEntity _mirrorVisual;
 
             private bool _isInitialised;
+            private readonly ItemObject _itemObject;
+            private readonly HumanBone _targetBone;
 
             public BoneAttachedItem(Agent agent, HumanBone targetBone,
                 Func<MatrixFrame, MatrixFrame> weaponFrameTransformer, ItemObject itemObject, float minimumProgress)
@@ -28,13 +30,8 @@ namespace DellarteDellaGuerra.Firearm.Reload
                 _agent = agent;
                 _weaponFrameTransformer = weaponFrameTransformer;
                 _minimumProgress = minimumProgress;
-                _mirrorVisual = CreateWeaponEntity(itemObject);
-                _mirrorMetaMesh = _mirrorVisual.GetMetaMesh(0);
-                _attachedVisual = CreateWeaponEntity(itemObject);
-                _attachedMetaMesh = _attachedVisual.GetMetaMesh(0);
-
-                InitialiseBoneAttachedEntity(_attachedVisual, itemObject, targetBone);
-                InitialiseMirrorEntity(_mirrorVisual);
+                _itemObject = itemObject;
+                _targetBone = targetBone;
             }
 
             public void InitialiseAtProgress(float progress)
@@ -61,11 +58,22 @@ namespace DellarteDellaGuerra.Firearm.Reload
                 _isInitialised = false;
             }
 
+            public void OnAgentBuild()
+            {
+                _attachedVisual = CreateWeaponEntity(_itemObject);
+                _attachedMetaMesh = _attachedVisual.GetMetaMesh(0);
+                _mirrorVisual = CreateWeaponEntity(_itemObject);
+                _mirrorMetaMesh = _mirrorVisual.GetMetaMesh(0);
+
+                InitialiseBoneAttachedEntity(_attachedVisual, _itemObject, _targetBone);
+                InitialiseMirrorEntity(_mirrorVisual);
+            }
+
             private void InitialiseBoneAttachedEntity(GameEntity attachedEntity, ItemObject itemObject,
                 HumanBone humanBone)
             {
-                AttachEntityToBone(attachedEntity, itemObject, humanBone);
                 attachedEntity.GetMetaMesh(0).ClearMeshes();
+                AttachEntityToBone(attachedEntity, itemObject, humanBone);
             }
 
             private void InitialiseMirrorEntity(GameEntity entity)
@@ -115,8 +123,6 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
             private void SetEntityVisibility(GameEntity entity, bool isVisible)
             {
-                // var script = entity.GetScriptComponents<SpawnedItemEntity>().ToList().First();
-                // script.IsVisible = isVisible;
                 entity.SetVisibilityExcludeParents(isVisible);
                 entity.UpdateVisibilityMask();
             }

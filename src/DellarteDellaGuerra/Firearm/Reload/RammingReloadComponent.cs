@@ -15,23 +15,24 @@ namespace DellarteDellaGuerra.Firearm.Reload
         private const float ProgressStart = 0.416f;
         private const float ProgressEnd = 1f;
         private const float RamrodMinimumProgress = 0.45f;
+        private const string RamrodItemId = "arquebusramrod";
 
+        private readonly ItemObject _ramrodItem = Items.All.Find(item => item.StringId.StartsWith(RamrodItemId));
+        
         private float _progress;
 
         private readonly WeaponReloadPhaseComponent _reloadPhase;
-        private const string RamrodItemId = "arquebusramrod";
 
-        public RammingReloadComponent(Agent agent, ILoggerFactory loggerFactory)
+        public RammingReloadComponent(Agent agent, ItemObject firearmItem, ILoggerFactory loggerFactory)
         {
             var weaponCreators = new List<Func<BoneAttachedItem>>
             {
                 () => new BoneAttachedItem(agent, HumanBone.HandL, TransformFirearmFrame,
-                    agent.WieldedWeapon.Item,
+                    firearmItem,
                     ProgressStart)
             };
 
-            ItemObject ramrodItem = Items.All.Find(item => item.StringId.StartsWith(RamrodItemId));
-            if (ramrodItem is null)
+            if (_ramrodItem is null)
             {
                 loggerFactory.CreateLogger<RammingReloadComponent>()
                     .Error($"Could not find item '{RamrodItemId}'. Ramrod will not appear during reload");
@@ -39,7 +40,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
             else
             {
                 weaponCreators.Add(() => new BoneAttachedItem(agent, HumanBone.ItemR,
-                    TransformRamrodFrame, ramrodItem, RamrodMinimumProgress));
+                    TransformRamrodFrame, _ramrodItem, RamrodMinimumProgress));
             }
 
             _reloadPhase = new WeaponReloadPhaseComponent(weaponCreators.ToArray());
@@ -66,6 +67,11 @@ namespace DellarteDellaGuerra.Firearm.Reload
             _reloadPhase.OnReloadPhaseEnd();
         }
 
+        public void OnAgentBuild()
+        {
+            _reloadPhase.OnAgentBuild();
+        }
+        
         public float PhaseProgressStart => ProgressStart;
         public float PhaseProgressEnd => ProgressEnd;
 

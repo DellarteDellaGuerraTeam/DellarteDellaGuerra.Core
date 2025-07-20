@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DellarteDellaGuerra.Firearm.Reload.DellarteDellaGuerra.Firearm.Reload;
-using TaleWorlds.Core;
 
 namespace DellarteDellaGuerra.Firearm.Reload
 {
@@ -22,10 +21,6 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         public void OnReloadProgress(float progress)
         {
-            if (_visualWeapons.IsEmpty())
-                _visualWeapons = _weaponVisualCreators.Select(weaponVisualCreator => weaponVisualCreator.Invoke())
-                    .ToList();
-
             _visualWeapons.ForEach(visualWeapon => visualWeapon.InitialiseAtProgress(progress));
         }
 
@@ -39,6 +34,13 @@ namespace DellarteDellaGuerra.Firearm.Reload
             _visualWeapons.ForEach(visualWeapon => visualWeapon.OnTick(dt));
         }
 
+        public void OnAgentBuild()
+        {
+            _visualWeapons = _weaponVisualCreators.Select(weaponVisualCreator => weaponVisualCreator.Invoke())
+                .ToList();
+            _visualWeapons.ForEach(visualWeapon => visualWeapon.OnAgentBuild());
+        }
+        
         public float PhaseProgressStart => 0f;
         public float PhaseProgressEnd => 1f;
     }

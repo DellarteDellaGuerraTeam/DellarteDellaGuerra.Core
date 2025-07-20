@@ -16,11 +16,11 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         private readonly WeaponReloadPhaseComponent _reloadPhase;
 
-        public BlackPowderReloadComponent(Agent agent)
+        public BlackPowderReloadComponent(Agent agent, ItemObject firearmItem)
         {
             _reloadPhase = new WeaponReloadPhaseComponent(() => new BoneAttachedItem(agent,
                 HumanBone.HandR,
-                TransformWeaponFrame, agent.WieldedWeapon.Item,
+                TransformWeaponFrame, firearmItem,
                 ProgressStart));
         }
 
@@ -45,6 +45,11 @@ namespace DellarteDellaGuerra.Firearm.Reload
             _reloadPhase.OnReloadPhaseEnd();
         }
 
+        public void OnAgentBuild()
+        {
+            _reloadPhase.OnAgentBuild();
+        }
+        
         public float PhaseProgressStart => ProgressStart;
         public float PhaseProgressEnd => ProgressEnd;
 

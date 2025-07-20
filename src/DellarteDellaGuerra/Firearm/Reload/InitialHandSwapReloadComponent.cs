@@ -14,11 +14,11 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         private float _progress;
 
-        public InitialHandSwapReloadComponent(Agent agent)
+        public InitialHandSwapReloadComponent(Agent agent, ItemObject firearmItem)
         {
             _reloadPhase = new WeaponReloadPhaseComponent(() => new BoneAttachedItem(agent,
                 HumanBone.HandL,
-                TransformWeaponFrame, agent.WieldedWeapon.Item, InitialHandSwitchProgressStart));
+                TransformWeaponFrame, firearmItem, InitialHandSwitchProgressStart));
         }
 
         public void OnTick(float dt)
@@ -42,9 +42,14 @@ namespace DellarteDellaGuerra.Firearm.Reload
             _reloadPhase.OnReloadPhaseEnd();
         }
 
+        public void OnAgentBuild()
+        {
+            _reloadPhase.OnAgentBuild();
+        }
+        
         public float PhaseProgressStart => InitialHandSwitchProgressStart;
         public float PhaseProgressEnd => InitialHandSwitchProgressEnd;
-
+        
         private static MatrixFrame GetWeaponFrameForIdleStance(MatrixFrame frame)
         {
             // frame.rotation.RotateAboutUp(MathF.PI);

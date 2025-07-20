@@ -7,7 +7,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace DellarteDellaGuerra.Firearm.Reload
 {
-    public class ReloadComponent : ITickable
+    public class ReloadComponent : ITickable, IOnAgentBuild
     {
         private readonly IWeaponEntityRepository _weaponEntityRepository;
         private readonly List<IReloadPhase> _phases;
@@ -53,7 +53,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
         {
             if (!_agent.IsHuman) return;
 
-            if (!IsUsingMusket(_agent)) return;
+            if (!IsUsingMusket(_agent) && _activePhaseStates.All(activePhaseState => !activePhaseState.Value)) return;
             
             float progress = GetReloadingProgress(_agent);
             var isMusketReloadingActive = progress > 0f;
@@ -136,18 +136,16 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         private void HideWieldedWeapon()
         {
-            var equipmentIndex = _agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
-            var firearmWeaponEntity =
-                _agent.GetWeaponEntityFromEquipmentSlot(equipmentIndex);
-            firearmWeaponEntity.GetMetaMesh(0).ClearMeshes();
+            var equipmentIndex = GetFirearmEquipmentIndex();
 
-            GameEntity? gameEntity = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
+            _agent.GetWeaponEntityFromEquipmentSlot(equipmentIndex).GetMetaMesh(0).ClearMeshes();
 
-            var missionWeapon = new MissionWeapon(_agent.WieldedWeapon.Item, null, null);
+            var missionWeapon = new MissionWeapon(_agent.Equipment[equipmentIndex].Item, null, null);
             var newWeaponEntity = Mission.Current.SpawnWeaponWithNewEntity(ref missionWeapon,
                 Mission.WeaponSpawnFlags.None,
-                firearmWeaponEntity.GetMetaMesh(0).Frame);
+                MatrixFrame.Identity);
 
+            GameEntity? gameEntity = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
             _weaponEntityRepository.SaveWeaponEntity(newWeaponEntity, _agent.Index.ToString());
 
             gameEntity?.Remove(0);
@@ -155,15 +153,38 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         private void WieldOriginalWeapon()
         {
-            var firearmEquipmentIndex = _agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
-            var firearmWeapon = _agent.WieldedWeapon;
+            WieldOriginalWeapon(GetFirearmEquipmentIndex());
+        }
+
+        private EquipmentIndex GetFirearmEquipmentIndex()
+        {
+            EquipmentIndex equipmentIndex = EquipmentIndex.None;
+            for (EquipmentIndex index = EquipmentIndex.WeaponItemBeginSlot;
+                 index < EquipmentIndex.NumAllWeaponSlots;
+                 index++)
+                if (_agent.Equipment[index].CurrentUsageItem?.WeaponClass.Equals(WeaponClass.Musket) ?? false)
+                    equipmentIndex = index;
+
+            return equipmentIndex;
+        }
+
+        private void WieldOriginalWeapon(EquipmentIndex equipmentIndex)
+        {
+            var firearmWeapon = _agent.Equipment[equipmentIndex];
 
             GameEntity? weaponEntity = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
 
             var frame = MatrixFrame.Identity;
-            _agent.AttachWeaponToWeapon(firearmEquipmentIndex,
+            _agent.AttachWeaponToWeapon(equipmentIndex,
                 new MissionWeapon(firearmWeapon.Item, null, null),
                 weaponEntity, ref frame);
+        }
+
+        public void OnAgentBuild()
+        {
+            _phases.ForEach(phase => phase.OnAgentBuild());
+            HideWieldedWeapon();
+            WieldOriginalWeapon();
         }
     }
 }
