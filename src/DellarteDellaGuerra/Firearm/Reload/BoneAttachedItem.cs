@@ -11,81 +11,83 @@ namespace DellarteDellaGuerra.Firearm.Reload
         public class BoneAttachedItem : ITickable
         {
             private readonly Agent _agent;
-            private readonly HumanBone _targetBone;
             private readonly Func<MatrixFrame, MatrixFrame> _weaponFrameTransformer;
-            private readonly ItemObject _itemObject;
             private readonly float _minimumProgress;
 
-            private MetaMesh _attachedMetaMesh;
-            private MetaMesh _mirrorMetaMesh;
+            private readonly MetaMesh _attachedMetaMesh;
+            private readonly MetaMesh _mirrorMetaMesh;
 
-            private GameEntity _attachedVisual;
-            private GameEntity _mirrorVisual;
+            private readonly GameEntity _attachedVisual;
+            private readonly GameEntity _mirrorVisual;
 
             private bool _isInitialised;
-            private bool _isRemoved;
 
             public BoneAttachedItem(Agent agent, HumanBone targetBone,
                 Func<MatrixFrame, MatrixFrame> weaponFrameTransformer, ItemObject itemObject, float minimumProgress)
             {
                 _agent = agent;
-                _targetBone = targetBone;
                 _weaponFrameTransformer = weaponFrameTransformer;
-                _itemObject = itemObject;
                 _minimumProgress = minimumProgress;
+                _mirrorVisual = CreateWeaponEntity(itemObject);
+                _mirrorMetaMesh = _mirrorVisual.GetMetaMesh(0);
+                _attachedVisual = CreateWeaponEntity(itemObject);
+                _attachedMetaMesh = _attachedVisual.GetMetaMesh(0);
+
+                InitialiseBoneAttachedEntity(_attachedVisual, itemObject, targetBone);
+                InitialiseMirrorEntity(_mirrorVisual);
             }
 
             public void InitialiseAtProgress(float progress)
             {
                 if (_minimumProgress > progress) return;
-
                 if (_isInitialised) return;
-
-                var weapon = CreateCustomWeapon();
-                var baseFrame = GetOriginalWeaponFrame(weapon);
-
-                _attachedVisual = CreateVisualEntity(weapon, baseFrame);
-                _mirrorVisual = CreateVisualEntity(weapon, baseFrame);
-
-                AttachToBone(weapon, _attachedVisual, baseFrame);
-
-                _attachedMetaMesh = _attachedVisual.GetMetaMesh(0);
-                _mirrorMetaMesh = _mirrorVisual.GetMetaMesh(0);
-
-                HideWeaponVisual(_attachedMetaMesh);
-
                 _isInitialised = true;
             }
 
             public void OnTick(float dt)
             {
-                if (!_isInitialised || _isRemoved) return;
-
-                UpdateVisualFrame(_weaponFrameTransformer.Invoke(GetAttachedFrame()));
+                if (_isInitialised)
+                {
+                    UpdateVisualFrame(_weaponFrameTransformer.Invoke(GetAttachedFrame()));
+                    if (!_mirrorVisual.GetVisibilityExcludeParents())
+                        SetEntityVisibility(_mirrorVisual, true);
+                }
             }
 
             public void Remove()
             {
-                if (!_isInitialised || _isRemoved) return;
+                SetEntityVisibility(_mirrorVisual, false);
 
-                _attachedVisual.Remove(0);
-                _mirrorVisual.Remove(0);
-                _isRemoved = true;
+                _isInitialised = false;
             }
 
-            private MissionWeapon CreateCustomWeapon()
+            private void InitialiseBoneAttachedEntity(GameEntity attachedEntity, ItemObject itemObject,
+                HumanBone humanBone)
             {
-                return new MissionWeapon(_itemObject, null, null);
+                AttachEntityToBone(attachedEntity, itemObject, humanBone);
+                attachedEntity.GetMetaMesh(0).ClearMeshes();
+            }
+
+            private void InitialiseMirrorEntity(GameEntity entity)
+            {
+                SetEntityVisibility(entity, false);
+            }
+
+            private void AttachEntityToBone(GameEntity attachedEntity, ItemObject itemObject, HumanBone humanBone)
+            {
+                var weapon = CreateCustomWeapon(itemObject);
+                var baseFrame = GetOriginalWeaponFrame(weapon);
+                AttachToBone(weapon, attachedEntity, baseFrame, humanBone);
+            }
+
+            private MissionWeapon CreateCustomWeapon(ItemObject itemObject)
+            {
+                return new MissionWeapon(itemObject, null, null);
             }
 
             private static MatrixFrame GetOriginalWeaponFrame(MissionWeapon weapon)
             {
                 return weapon.GetWeaponData(false).WeaponFrame;
-            }
-
-            private static GameEntity CreateVisualEntity(MissionWeapon weapon, MatrixFrame frame)
-            {
-                return Mission.Current.SpawnWeaponWithNewEntity(ref weapon, Mission.WeaponSpawnFlags.None, frame);
             }
 
             private MatrixFrame GetAttachedFrame()
@@ -99,14 +101,24 @@ namespace DellarteDellaGuerra.Firearm.Reload
                 _mirrorMetaMesh.Frame = newFrame;
             }
 
-            private void AttachToBone(MissionWeapon weapon, GameEntity entity, MatrixFrame frame)
+            private void AttachToBone(MissionWeapon weapon, GameEntity entity, MatrixFrame frame, HumanBone humanBone)
             {
-                _agent.AttachWeaponToBone(weapon, entity, (sbyte)_targetBone, ref frame);
+                _agent.AttachWeaponToBone(weapon, entity, (sbyte)humanBone, ref frame);
             }
 
-            private static void HideWeaponVisual(MetaMesh metaMesh)
+            private GameEntity CreateWeaponEntity(ItemObject itemObject)
             {
-                metaMesh?.ClearMeshes();
+                var missionWeapon = new MissionWeapon(itemObject, null, null);
+                return Mission.Current.SpawnWeaponWithNewEntity(ref missionWeapon,
+                    Mission.WeaponSpawnFlags.None, MatrixFrame.Identity);
+            }
+
+            private void SetEntityVisibility(GameEntity entity, bool isVisible)
+            {
+                // var script = entity.GetScriptComponents<SpawnedItemEntity>().ToList().First();
+                // script.IsVisible = isVisible;
+                entity.SetVisibilityExcludeParents(isVisible);
+                entity.UpdateVisibilityMask();
             }
         }
     }

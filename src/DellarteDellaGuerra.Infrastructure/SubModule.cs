@@ -8,6 +8,7 @@ using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Patches;
+using DellarteDellaGuerra.Firearm.Reload;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.ExpandedTemplateApi.Logging;
@@ -20,6 +21,7 @@ using NLog;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using Debug = TaleWorlds.Library.Debug;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
 
 namespace DellarteDellaGuerra.Infrastructure
@@ -54,6 +56,7 @@ namespace DellarteDellaGuerra.Infrastructure
         // load the harmony patches once as soon as possible before reaching the main menu 
         protected override void OnSubModuleLoad()
         {
+            Debug.DebugManager = new MbDebugLogger(_loggerFactory.CreateLogger<SubModule>());
             _harmonyPatcher.PatchAll();
         }
 
@@ -87,7 +90,8 @@ namespace DellarteDellaGuerra.Infrastructure
         public override void OnMissionBehaviorInitialize(Mission mission)
         {
             base.OnMissionBehaviorInitialize(mission);
-            mission.AddMissionBehavior(new FirearmReloadMissionLogic(_loggerFactory));
+            mission.AddMissionBehavior(new FirearmReloadMissionLogic(_loggerFactory,
+                new InMemoryWeaponEntityRepository()));
             mission.AddMissionBehavior(new FirearmSmokeMissionLogic(_loggerFactory));
         }
 

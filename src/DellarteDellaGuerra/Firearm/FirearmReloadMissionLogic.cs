@@ -14,18 +14,15 @@ namespace DellarteDellaGuerra.Firearm
         private readonly List<Agent> _activeHumanAgents = new();
 
         private readonly ILoggerFactory _loggerFactory;
-        private readonly ILogger _logger;
+        private readonly IWeaponEntityRepository _weaponEntityRepository;
 
         private readonly float _viewAngle = 110f;
         private readonly float _cosViewAngleThreshold;
 
-        private int _globalTickCounter;
-        private const int VisibilityCheckInterval = 5; // every N ticks
-
-        public FirearmReloadMissionLogic(ILoggerFactory loggerFactory)
+        public FirearmReloadMissionLogic(ILoggerFactory loggerFactory, IWeaponEntityRepository weaponEntityRepository)
         {
             _loggerFactory = loggerFactory;
-            _logger = loggerFactory.CreateLogger<FirearmReloadMissionLogic>();
+            _weaponEntityRepository = weaponEntityRepository;
             _cosViewAngleThreshold = MathF.Cos(_viewAngle * 0.5f * (MathF.PI / 180f));
         }
 
@@ -35,7 +32,8 @@ namespace DellarteDellaGuerra.Firearm
             if (agent.IsHuman)
             {
                 int id = agent.Index;
-                _reloadComponentByAgent[id] = new ReloadComponent(InitialiseReloadPhases(agent), agent);
+                _reloadComponentByAgent[id] = new ReloadComponent(InitialiseReloadPhases(agent), agent,
+                    _weaponEntityRepository);
                 _agentSkipTickCounter[id] = 0;
                 _activeHumanAgents.Add(agent);
             }
@@ -45,11 +43,11 @@ namespace DellarteDellaGuerra.Firearm
         {
             return new List<IReloadPhase>
             {
-                new ReloadStartComponent(agent),
+                // new ReloadStartComponent(agent, _weaponEntityRepository),
                 new InitialHandSwapReloadComponent(agent),
                 new BlackPowderReloadComponent(agent),
                 new RammingReloadComponent(agent, _loggerFactory),
-                new ReloadStopComponent(agent)
+                // new ReloadStopComponent(agent, _weaponEntityRepository)
             };
         }
 
@@ -58,10 +56,6 @@ namespace DellarteDellaGuerra.Firearm
             base.OnMissionTick(dt);
             if (Mission.Current == null)
                 return;
-
-            _globalTickCounter++;
-
-            bool recalculateVisibility = _globalTickCounter % VisibilityCheckInterval == 0;
 
             var cameraFrame = Mission.Current.GetCameraFrame();
             Vec3 camPos = cameraFrame.origin;
@@ -74,7 +68,7 @@ namespace DellarteDellaGuerra.Firearm
 
                 int id = agent.Index;
 
-                if (recalculateVisibility && !IsAgentVisible(camPos, camForward, agent))
+                if (!IsAgentVisible(camPos, camForward, agent))
                 {
                     ResetSkipCounter(id);
                     continue;
@@ -93,7 +87,7 @@ namespace DellarteDellaGuerra.Firearm
 
         private bool ShouldSkipAgent(Agent agent)
         {
-            return agent == Agent.Main || !agent.IsHuman || !agent.IsActive() || agent.Health <= 0;
+            return !agent.IsHuman || !agent.IsActive() || agent.Health <= 0;
         }
 
         private void ResetSkipCounter(int agentId)

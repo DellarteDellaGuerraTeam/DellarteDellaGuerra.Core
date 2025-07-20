@@ -10,7 +10,6 @@ namespace DellarteDellaGuerra.Firearm.Reload
     {
         private readonly List<Func<BoneAttachedItem>> _weaponVisualCreators;
         private List<BoneAttachedItem> _visualWeapons = new();
-        private float _progress;
 
         public WeaponReloadPhaseComponent(params Func<BoneAttachedItem>[] createVisual)
         {
@@ -23,19 +22,16 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         public void OnReloadProgress(float progress)
         {
-            _progress = progress;
-
             if (_visualWeapons.IsEmpty())
                 _visualWeapons = _weaponVisualCreators.Select(weaponVisualCreator => weaponVisualCreator.Invoke())
                     .ToList();
 
-            _visualWeapons.ForEach(visualWeapon => visualWeapon.InitialiseAtProgress(_progress));
+            _visualWeapons.ForEach(visualWeapon => visualWeapon.InitialiseAtProgress(progress));
         }
 
         public void OnReloadPhaseEnd()
         {
             _visualWeapons.ForEach(visualWeapon => visualWeapon.Remove());
-            _visualWeapons.RemoveAll(_ => true);
         }
 
         public void OnTick(float dt)

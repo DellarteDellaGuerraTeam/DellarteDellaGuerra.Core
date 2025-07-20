@@ -16,9 +16,9 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         public InitialHandSwapReloadComponent(Agent agent)
         {
-            _reloadPhase = new WeaponReloadPhaseComponent(() =>
-                new BoneAttachedItem(agent, HumanBone.HandL, TransformWeaponFrame, agent.WieldedWeapon.Item,
-                    InitialHandSwitchProgressStart));
+            _reloadPhase = new WeaponReloadPhaseComponent(() => new BoneAttachedItem(agent,
+                HumanBone.HandL,
+                TransformWeaponFrame, agent.WieldedWeapon.Item, InitialHandSwitchProgressStart));
         }
 
         public void OnTick(float dt)

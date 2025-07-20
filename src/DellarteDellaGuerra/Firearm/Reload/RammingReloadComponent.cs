@@ -15,7 +15,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
         private const float ProgressStart = 0.416f;
         private const float ProgressEnd = 1f;
         private const float RamrodMinimumProgress = 0.45f;
-        
+
         private float _progress;
 
         private readonly WeaponReloadPhaseComponent _reloadPhase;
@@ -25,9 +25,9 @@ namespace DellarteDellaGuerra.Firearm.Reload
         {
             var weaponCreators = new List<Func<BoneAttachedItem>>
             {
-                () =>
-                    new BoneAttachedItem(agent, HumanBone.HandL, TransformFirearmFrame, agent.WieldedWeapon.Item,
-                        ProgressStart)
+                () => new BoneAttachedItem(agent, HumanBone.HandL, TransformFirearmFrame,
+                    agent.WieldedWeapon.Item,
+                    ProgressStart)
             };
 
             ItemObject ramrodItem = Items.All.Find(item => item.StringId.StartsWith(RamrodItemId));

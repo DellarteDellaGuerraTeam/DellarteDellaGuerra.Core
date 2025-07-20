@@ -18,9 +18,10 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         public BlackPowderReloadComponent(Agent agent)
         {
-            _reloadPhase = new WeaponReloadPhaseComponent(() =>
-                new BoneAttachedItem(agent, HumanBone.HandR, TransformWeaponFrame, agent.WieldedWeapon.Item,
-                    ProgressStart));
+            _reloadPhase = new WeaponReloadPhaseComponent(() => new BoneAttachedItem(agent,
+                HumanBone.HandR,
+                TransformWeaponFrame, agent.WieldedWeapon.Item,
+                ProgressStart));
         }
 
         public void OnTick(float dt)
