@@ -55,6 +55,8 @@ namespace DellarteDellaGuerra.Firearm
 
         public override void OnMissionTick(float dt)
         {
+            Mission.Current.MissionObjects.RemoveAll(o => o is null);
+
             base.OnMissionTick(dt);
             if (Mission.Current == null)
                 return;
