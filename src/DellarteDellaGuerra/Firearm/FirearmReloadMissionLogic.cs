@@ -11,7 +11,6 @@ namespace DellarteDellaGuerra.Firearm
     {
         private readonly Dictionary<int, ReloadComponent> _reloadComponentByAgent = new();
         private readonly Dictionary<int, int> _agentSkipTickCounter = new();
-        private readonly List<Agent> _activeHumanAgents = new();
 
         private readonly ILoggerFactory _loggerFactory;
         private readonly IWeaponEntityRepository _weaponEntityRepository;
@@ -32,24 +31,38 @@ namespace DellarteDellaGuerra.Firearm
             base.OnAgentBuild(agent, banner);
             if (agent.IsHuman)
             {
-                ItemObject? fireItemObject = FindFirstFirearm(agent);
-                if (fireItemObject is null) return;
-
-                int id = agent.Index;
-                _reloadComponentByAgent[id] = new ReloadComponent(InitialiseReloadPhases(agent, fireItemObject), agent,
-                    _weaponEntityRepository);
-                _reloadComponentByAgent[id].OnAgentBuild();
-                _agentSkipTickCounter[id] = 0;
-                _activeHumanAgents.Add(agent);
+                agent.OnAgentWieldedItemChange += () => InitialiseAgentReloadingComponent(agent);
+                InitialiseAgentReloadingComponent(agent);
             }
+        }
+
+        private void InitialiseAgentReloadingComponent(Agent agent)
+        {
+            if (_reloadComponentByAgent.ContainsKey(agent.Index)) return;
+
+            ItemObject? fireItemObject = FindFirstFirearm(agent);
+            if (fireItemObject is null) return;
+
+            int id = agent.Index;
+            _reloadComponentByAgent[id] = new ReloadComponent(InitialiseReloadPhases(agent, fireItemObject), agent,
+                _weaponEntityRepository);
+            _reloadComponentByAgent[id].OnAgentBuild();
+            _agentSkipTickCounter[id] = 0;
+        }
+
+        private void RemoveAgentReloadingComponent(Agent agent)
+        {
+            if (!_reloadComponentByAgent.ContainsKey(agent.Index)) return;
+            _reloadComponentByAgent[agent.Index].OnAgentRemoved();
+            _reloadComponentByAgent.Remove(agent.Index);
+            _agentSkipTickCounter.Remove(agent.Index);
         }
 
         public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState,
             KillingBlow blow)
         {
             base.OnAgentRemoved(affectedAgent, affectorAgent, agentState, blow);
-            if (_reloadComponentByAgent.ContainsKey(affectedAgent.Index))
-                _reloadComponentByAgent[affectedAgent.Index].OnAgentRemoved();
+            RemoveAgentReloadingComponent(affectedAgent);
         }
 
         private List<IReloadPhase> InitialiseReloadPhases(Agent agent, ItemObject firearmItem)
@@ -72,7 +85,7 @@ namespace DellarteDellaGuerra.Firearm
             Vec3 camPos = cameraFrame.origin;
             Vec3 camForward = -cameraFrame.rotation.u.NormalizedCopy();
 
-            foreach (var agent in _activeHumanAgents)
+            foreach (var agent in Mission.Current.Agents)
             {
                 if (ShouldSkipAgent(agent))
                     continue;
@@ -98,7 +111,8 @@ namespace DellarteDellaGuerra.Firearm
 
         private bool ShouldSkipAgent(Agent agent)
         {
-            return !agent.IsHuman || !agent.IsActive() || agent.Health <= 0;
+            return !agent.IsHuman || !agent.IsActive() || agent.Health <= 0 ||
+                   !_reloadComponentByAgent.ContainsKey(agent.Index);
         }
 
         private void ResetSkipCounter(int agentId)

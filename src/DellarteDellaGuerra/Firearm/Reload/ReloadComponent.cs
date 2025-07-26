@@ -6,7 +6,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace DellarteDellaGuerra.Firearm.Reload
 {
-    public class ReloadComponent : ITickable, IOnAgentBuild, IOnFirearmDropped, IOnAgentRemoved
+    public class ReloadComponent : ITickable, IOnAgentBuild, IOnAgentRemoved, IOnFirearmDropped
     {
         private readonly IWeaponEntityRepository _weaponEntityRepository;
         private readonly List<IReloadPhase> _phases;
