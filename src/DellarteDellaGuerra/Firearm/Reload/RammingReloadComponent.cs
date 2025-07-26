@@ -156,5 +156,10 @@ namespace DellarteDellaGuerra.Firearm.Reload
             Mat3 rot = Mat3.Lerp(from.rotation, to.rotation, t);
             return new MatrixFrame(rot, pos);
         }
+
+        public void OnAgentRemoved()
+        {
+            _reloadPhase.OnAgentRemoved();
+        }
     }
 }

@@ -1,22 +1,25 @@
 ﻿using System.Collections.Generic;
-using TaleWorlds.Engine;
 
 namespace DellarteDellaGuerra.Firearm.Reload
 {
     public class InMemoryWeaponEntityRepository : IWeaponEntityRepository
     {
-        private readonly Dictionary<string, MetaMesh> _weaponEntityByAgent = new();
+        private readonly Dictionary<string, WeaponEntity> _weaponEntityByAgent = new();
 
-        public void SaveWeaponEntity(MetaMesh entity, string id)
+        public void SaveWeaponEntity(WeaponEntity entity, string id)
         {
             _weaponEntityByAgent[id] = entity;
         }
 
-        public MetaMesh GetWeaponEntity(string id)
+        public WeaponEntity? GetWeaponEntity(string id)
         {
-            if (!_weaponEntityByAgent.ContainsKey(id))
-                return null;
-            return _weaponEntityByAgent[id];
+            _weaponEntityByAgent.TryGetValue(id, out var weaponEntity);
+            return weaponEntity;
+        }
+
+        public void Remove(string id)
+        {
+            _weaponEntityByAgent.Remove(id);
         }
     }
 }

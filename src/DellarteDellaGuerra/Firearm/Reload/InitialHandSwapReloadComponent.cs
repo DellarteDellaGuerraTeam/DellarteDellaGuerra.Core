@@ -148,5 +148,10 @@ namespace DellarteDellaGuerra.Firearm.Reload
         {
             return GetWeaponFrameTransitionFromIdleToPowderPouringStart(_progress, weaponFrame);
         }
+
+        public void OnAgentRemoved()
+        {
+            _reloadPhase.OnAgentRemoved();
+        }
     }
 }

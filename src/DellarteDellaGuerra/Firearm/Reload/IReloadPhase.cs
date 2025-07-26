@@ -1,6 +1,6 @@
 ﻿namespace DellarteDellaGuerra.Firearm.Reload
 {
-    public interface IReloadPhase : ITickable, IOnAgentBuild
+    public interface IReloadPhase : ITickable, IOnAgentBuild, IOnAgentRemoved
     {
         void OnReloadPhaseStart();
         void OnReloadProgress(float progress);

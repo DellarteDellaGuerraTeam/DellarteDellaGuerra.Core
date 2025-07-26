@@ -40,6 +40,12 @@ namespace DellarteDellaGuerra.Firearm.Reload
                 .ToList();
             _visualWeapons.ForEach(visualWeapon => visualWeapon.OnAgentBuild());
         }
+
+        public void OnAgentRemoved()
+        {
+            _visualWeapons.ForEach(visualWeapon => visualWeapon.Dispose());
+            _visualWeapons.RemoveAll(_ => true);
+        }
         
         public float PhaseProgressStart => 0f;
         public float PhaseProgressEnd => 1f;

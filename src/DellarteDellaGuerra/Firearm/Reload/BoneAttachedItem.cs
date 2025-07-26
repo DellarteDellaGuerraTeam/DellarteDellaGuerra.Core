@@ -23,6 +23,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
             private bool _isInitialised;
             private readonly ItemObject _itemObject;
             private readonly HumanBone _targetBone;
+            private bool _isDisposed;
 
             public BoneAttachedItem(Agent agent, HumanBone targetBone,
                 Func<MatrixFrame, MatrixFrame> weaponFrameTransformer, ItemObject itemObject, float minimumProgress)
@@ -36,26 +37,33 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
             public void InitialiseAtProgress(float progress)
             {
-                if (_minimumProgress > progress) return;
-                if (_isInitialised) return;
+                if (_isDisposed || _minimumProgress > progress || _isInitialised) return;
                 _isInitialised = true;
             }
 
             public void OnTick(float dt)
             {
-                if (_isInitialised)
-                {
-                    UpdateVisualFrame(_weaponFrameTransformer.Invoke(GetAttachedFrame()));
-                    if (!_mirrorVisual.GetVisibilityExcludeParents())
-                        SetEntityVisibility(_mirrorVisual, true);
-                }
+                if (!_isInitialised || _isDisposed) return;
+
+                UpdateVisualFrame(_weaponFrameTransformer.Invoke(GetAttachedFrame()));
+                if (!_mirrorVisual.GetVisibilityExcludeParents())
+                    SetEntityVisibility(_mirrorVisual, true);
             }
 
             public void Remove()
             {
+                if (_isDisposed) return;
+                
                 SetEntityVisibility(_mirrorVisual, false);
 
                 _isInitialised = false;
+            }
+
+            public void Dispose()
+            {
+                _attachedVisual.Remove(0);
+                _mirrorVisual.Remove(0);
+                _isDisposed = true;
             }
 
             public void OnAgentBuild()

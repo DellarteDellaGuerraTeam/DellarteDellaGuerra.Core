@@ -6,7 +6,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace DellarteDellaGuerra.Firearm.Reload
 {
-    public class ReloadComponent : ITickable, IOnAgentBuild
+    public class ReloadComponent : ITickable, IOnAgentBuild, IOnFirearmDropped, IOnAgentRemoved
     {
         private readonly IWeaponEntityRepository _weaponEntityRepository;
         private readonly List<IReloadPhase> _phases;
@@ -33,21 +33,6 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
             foreach (var phase in _phases)
                 _activePhaseStates[phase] = false;
-
-            agent.OnAgentWieldedItemChange += () =>
-            {
-                // var wieldedWeaponIndex = agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
-                //
-                // if (wieldedWeaponIndex < EquipmentIndex.WeaponItemBeginSlot ||
-                //     wieldedWeaponIndex > EquipmentIndex.NumAllWeaponSlots) return;
-                //
-                // if (agent.Equipment[wieldedWeaponIndex]
-                //         .CurrentUsageItem?.WeaponClass
-                //         .Equals(WeaponClass.Musket) ??
-                //     false) return;
-            
-                return;
-            };
         }
 
         public void OnTick(float dt)
@@ -109,6 +94,26 @@ namespace DellarteDellaGuerra.Firearm.Reload
             }
         }
 
+        public void OnAgentBuild()
+        {
+            _phases.ForEach(phase => phase.OnAgentBuild());
+        }
+
+        public void OnAgentRemoved()
+        {
+            _phases.ForEach(phase => phase.OnAgentRemoved());
+        }
+
+        public void OnFirearmDropped(SpawnedItemEntity spawnedItemEntity)
+        {
+            WeaponEntity? weaponEntity = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
+            if (weaponEntity?.GameEntity == spawnedItemEntity.GameEntity)
+            {
+                ResetFirearmMetaMeshToWeaponEntity();
+                _weaponEntityRepository.Remove(_agent.Index.ToString());
+            }
+        }
+
         private float GetReloadingProgress(Agent agent)
         {
             var currentActionStage = agent.GetCurrentActionStage(1);
@@ -139,18 +144,15 @@ namespace DellarteDellaGuerra.Firearm.Reload
         {
             var equipmentIndex = GetFirearmEquipmentIndex();
             var originalWeaponEntity = _agent.GetWeaponEntityFromEquipmentSlot(equipmentIndex);
-            MetaMesh? metaMesh = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
+            WeaponEntity? weaponEntity = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
 
-            if (metaMesh is null)
-                _weaponEntityRepository.SaveWeaponEntity(originalWeaponEntity.GetMetaMesh(0), _agent.Index.ToString());
+            if (weaponEntity is null)
+                _weaponEntityRepository.SaveWeaponEntity(
+                    new WeaponEntity(originalWeaponEntity,
+                        originalWeaponEntity.GetMetaMesh(0)), _agent.Index.ToString());
             originalWeaponEntity.RemoveMultiMesh(originalWeaponEntity.GetMetaMesh(0));
             _emptyGameEntity = GameEntity.CreateEmpty(Mission.Current.Scene);
             _agent.AgentVisuals.AddChildEntity(_emptyGameEntity);
-        }
-
-        private void WieldOriginalWeapon()
-        {
-            WieldOriginalWeapon(GetFirearmEquipmentIndex());
         }
 
         private EquipmentIndex GetFirearmEquipmentIndex()
@@ -165,17 +167,19 @@ namespace DellarteDellaGuerra.Firearm.Reload
             return equipmentIndex;
         }
 
-        private void WieldOriginalWeapon(EquipmentIndex equipmentIndex)
+        private void WieldOriginalWeapon()
         {
-            MetaMesh metaMesh = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
-            var originalWeaponEntity = _agent.GetWeaponEntityFromEquipmentSlot(equipmentIndex);
-            originalWeaponEntity.AddMultiMesh(metaMesh);
+            ResetFirearmMetaMeshToWeaponEntity();
             _agent.AgentVisuals.RemoveChildEntity(_emptyGameEntity, 14);
         }
 
-        public void OnAgentBuild()
+        private void ResetFirearmMetaMeshToWeaponEntity()
         {
-            _phases.ForEach(phase => phase.OnAgentBuild());
+            WeaponEntity? weaponEntity = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
+
+            if (weaponEntity is null) return;
+
+            weaponEntity.GameEntity.AddMultiMesh(weaponEntity.MetaMesh);
         }
     }
 }

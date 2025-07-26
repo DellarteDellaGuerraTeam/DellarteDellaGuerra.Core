@@ -24,6 +24,7 @@ namespace DellarteDellaGuerra.Firearm
             _loggerFactory = loggerFactory;
             _weaponEntityRepository = weaponEntityRepository;
             _cosViewAngleThreshold = MathF.Cos(_viewAngle * 0.5f * (MathF.PI / 180f));
+            Mission.Current.OnItemDrop += OnFirearmDropped;
         }
 
         public override void OnAgentBuild(Agent agent, Banner banner)
@@ -43,6 +44,14 @@ namespace DellarteDellaGuerra.Firearm
             }
         }
 
+        public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState,
+            KillingBlow blow)
+        {
+            base.OnAgentRemoved(affectedAgent, affectorAgent, agentState, blow);
+            if (_reloadComponentByAgent.ContainsKey(affectedAgent.Index))
+                _reloadComponentByAgent[affectedAgent.Index].OnAgentRemoved();
+        }
+
         private List<IReloadPhase> InitialiseReloadPhases(Agent agent, ItemObject firearmItem)
         {
             return new List<IReloadPhase>
@@ -55,8 +64,6 @@ namespace DellarteDellaGuerra.Firearm
 
         public override void OnMissionTick(float dt)
         {
-            Mission.Current.MissionObjects.RemoveAll(o => o is null);
-
             base.OnMissionTick(dt);
             if (Mission.Current == null)
                 return;
@@ -143,6 +150,13 @@ namespace DellarteDellaGuerra.Firearm
                     firearmItem = agent.Equipment[index].Item;
 
             return firearmItem;
+        }
+
+        private void OnFirearmDropped(Agent agent, SpawnedItemEntity spawnedItemEntity)
+        {
+            if (spawnedItemEntity.WeaponCopy.CurrentUsageItem?.WeaponClass == WeaponClass.Musket &&
+                _reloadComponentByAgent.ContainsKey(agent.Index))
+                _reloadComponentByAgent[agent.Index].OnFirearmDropped(spawnedItemEntity);
         }
     }
 }
