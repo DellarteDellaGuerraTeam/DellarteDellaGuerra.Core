@@ -2,7 +2,6 @@
 using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
-using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
 namespace DellarteDellaGuerra.Firearm.Reload
@@ -13,6 +12,8 @@ namespace DellarteDellaGuerra.Firearm.Reload
         private readonly List<IReloadPhase> _phases;
         private readonly Agent _agent;
         private readonly Dictionary<IReloadPhase, bool> _activePhaseStates = new();
+
+        private GameEntity _emptyGameEntity;
 
         private readonly float _baseAnimationDuration = GetBaseReloadAnimationDuration();
         private readonly float _continuedAnimationDuration = GetContinuedReloadAnimationDuration();
@@ -33,20 +34,20 @@ namespace DellarteDellaGuerra.Firearm.Reload
             foreach (var phase in _phases)
                 _activePhaseStates[phase] = false;
 
-            // agent.OnAgentWieldedItemChange += () =>
-            // {
-            //     var wieldedWeaponIndex = agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
-            //
-            //     if (wieldedWeaponIndex < EquipmentIndex.WeaponItemBeginSlot ||
-            //         wieldedWeaponIndex > EquipmentIndex.NumAllWeaponSlots) return;
-            //
-            //     if (agent.Equipment[wieldedWeaponIndex]
-            //             .CurrentUsageItem?.WeaponClass
-            //             .Equals(WeaponClass.Musket) ??
-            //         false) return;
-            //
-            //     
-            // };
+            agent.OnAgentWieldedItemChange += () =>
+            {
+                // var wieldedWeaponIndex = agent.GetWieldedItemIndex(Agent.HandIndex.MainHand);
+                //
+                // if (wieldedWeaponIndex < EquipmentIndex.WeaponItemBeginSlot ||
+                //     wieldedWeaponIndex > EquipmentIndex.NumAllWeaponSlots) return;
+                //
+                // if (agent.Equipment[wieldedWeaponIndex]
+                //         .CurrentUsageItem?.WeaponClass
+                //         .Equals(WeaponClass.Musket) ??
+                //     false) return;
+            
+                return;
+            };
         }
 
         public void OnTick(float dt)
@@ -137,18 +138,14 @@ namespace DellarteDellaGuerra.Firearm.Reload
         private void HideWieldedWeapon()
         {
             var equipmentIndex = GetFirearmEquipmentIndex();
+            var originalWeaponEntity = _agent.GetWeaponEntityFromEquipmentSlot(equipmentIndex);
+            MetaMesh? metaMesh = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
 
-            _agent.GetWeaponEntityFromEquipmentSlot(equipmentIndex).GetMetaMesh(0).ClearMeshes();
-
-            var missionWeapon = new MissionWeapon(_agent.Equipment[equipmentIndex].Item, null, null);
-            var newWeaponEntity = Mission.Current.SpawnWeaponWithNewEntity(ref missionWeapon,
-                Mission.WeaponSpawnFlags.None,
-                MatrixFrame.Identity);
-
-            GameEntity? gameEntity = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
-            _weaponEntityRepository.SaveWeaponEntity(newWeaponEntity, _agent.Index.ToString());
-
-            gameEntity?.Remove(0);
+            if (metaMesh is null)
+                _weaponEntityRepository.SaveWeaponEntity(originalWeaponEntity.GetMetaMesh(0), _agent.Index.ToString());
+            originalWeaponEntity.RemoveMultiMesh(originalWeaponEntity.GetMetaMesh(0));
+            _emptyGameEntity = GameEntity.CreateEmpty(Mission.Current.Scene);
+            _agent.AgentVisuals.AddChildEntity(_emptyGameEntity);
         }
 
         private void WieldOriginalWeapon()
@@ -170,21 +167,15 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
         private void WieldOriginalWeapon(EquipmentIndex equipmentIndex)
         {
-            var firearmWeapon = _agent.Equipment[equipmentIndex];
-
-            GameEntity? weaponEntity = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
-
-            var frame = MatrixFrame.Identity;
-            _agent.AttachWeaponToWeapon(equipmentIndex,
-                new MissionWeapon(firearmWeapon.Item, null, null),
-                weaponEntity, ref frame);
+            MetaMesh metaMesh = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
+            var originalWeaponEntity = _agent.GetWeaponEntityFromEquipmentSlot(equipmentIndex);
+            originalWeaponEntity.AddMultiMesh(metaMesh);
+            _agent.AgentVisuals.RemoveChildEntity(_emptyGameEntity, 14);
         }
 
         public void OnAgentBuild()
         {
             _phases.ForEach(phase => phase.OnAgentBuild());
-            HideWieldedWeapon();
-            WieldOriginalWeapon();
         }
     }
 }

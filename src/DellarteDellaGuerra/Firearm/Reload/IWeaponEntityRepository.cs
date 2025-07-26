@@ -4,8 +4,8 @@ namespace DellarteDellaGuerra.Firearm.Reload
 {
     public interface IWeaponEntityRepository
     {
-        void SaveWeaponEntity(GameEntity entity, string id);
+        void SaveWeaponEntity(MetaMesh entity, string id);
 
-        GameEntity? GetWeaponEntity(string id);
+        MetaMesh? GetWeaponEntity(string id);
     }
 }

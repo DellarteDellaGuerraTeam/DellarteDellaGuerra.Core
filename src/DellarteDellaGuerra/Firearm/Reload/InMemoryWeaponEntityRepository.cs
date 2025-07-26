@@ -5,14 +5,14 @@ namespace DellarteDellaGuerra.Firearm.Reload
 {
     public class InMemoryWeaponEntityRepository : IWeaponEntityRepository
     {
-        private readonly Dictionary<string, GameEntity> _weaponEntityByAgent = new();
+        private readonly Dictionary<string, MetaMesh> _weaponEntityByAgent = new();
 
-        public void SaveWeaponEntity(GameEntity entity, string id)
+        public void SaveWeaponEntity(MetaMesh entity, string id)
         {
             _weaponEntityByAgent[id] = entity;
         }
 
-        public GameEntity GetWeaponEntity(string id)
+        public MetaMesh GetWeaponEntity(string id)
         {
             if (!_weaponEntityByAgent.ContainsKey(id))
                 return null;
