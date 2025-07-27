@@ -41,7 +41,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
             _visualWeapons.ForEach(visualWeapon => visualWeapon.OnAgentBuild());
         }
 
-        public void OnAgentRemoved()
+        public void Dispose()
         {
             _visualWeapons.ForEach(visualWeapon => visualWeapon.Dispose());
             _visualWeapons.RemoveAll(_ => true);

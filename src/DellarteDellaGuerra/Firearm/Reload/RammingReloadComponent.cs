@@ -157,9 +157,9 @@ namespace DellarteDellaGuerra.Firearm.Reload
             return new MatrixFrame(rot, pos);
         }
 
-        public void OnAgentRemoved()
+        public void Dispose()
         {
-            _reloadPhase.OnAgentRemoved();
+            _reloadPhase.Dispose();
         }
     }
 }

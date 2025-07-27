@@ -24,6 +24,7 @@ namespace DellarteDellaGuerra.Firearm
             _weaponEntityRepository = weaponEntityRepository;
             _cosViewAngleThreshold = MathF.Cos(_viewAngle * 0.5f * (MathF.PI / 180f));
             Mission.Current.OnItemDrop += OnFirearmDropped;
+            GameStateManager.Current.RegisterListener(new InventoryScreenListener(OnInventoryScreenOpened));
         }
 
         public override void OnAgentBuild(Agent agent, Banner banner)
@@ -53,7 +54,7 @@ namespace DellarteDellaGuerra.Firearm
         private void RemoveAgentReloadingComponent(Agent agent)
         {
             if (!_reloadComponentByAgent.ContainsKey(agent.Index)) return;
-            _reloadComponentByAgent[agent.Index].OnAgentRemoved();
+            _reloadComponentByAgent[agent.Index].Dispose();
             _reloadComponentByAgent.Remove(agent.Index);
             _agentSkipTickCounter.Remove(agent.Index);
         }
@@ -171,6 +172,11 @@ namespace DellarteDellaGuerra.Firearm
             if (spawnedItemEntity.WeaponCopy.CurrentUsageItem?.WeaponClass == WeaponClass.Musket &&
                 _reloadComponentByAgent.ContainsKey(agent.Index))
                 _reloadComponentByAgent[agent.Index].OnFirearmDropped(spawnedItemEntity);
+        }
+
+        private void OnInventoryScreenOpened()
+        {
+            RemoveAgentReloadingComponent(Agent.Main);
         }
     }
 }
