@@ -56,7 +56,6 @@ namespace DellarteDellaGuerra.Infrastructure
         // load the harmony patches once as soon as possible before reaching the main menu 
         protected override void OnSubModuleLoad()
         {
-            Debug.DebugManager = new MbDebugLogger(_loggerFactory.CreateLogger<SubModule>());
             _harmonyPatcher.PatchAll();
         }
 
