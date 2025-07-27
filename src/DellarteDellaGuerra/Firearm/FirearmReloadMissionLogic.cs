@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Firearm.Reload;
 using TaleWorlds.Core;
@@ -24,6 +25,7 @@ namespace DellarteDellaGuerra.Firearm
             _weaponEntityRepository = weaponEntityRepository;
             _cosViewAngleThreshold = MathF.Cos(_viewAngle * 0.5f * (MathF.PI / 180f));
             Mission.Current.OnItemDrop += OnFirearmDropped;
+
             GameStateManager.Current.RegisterListener(new InventoryScreenListener(OnInventoryScreenOpened));
         }
 
@@ -46,7 +48,7 @@ namespace DellarteDellaGuerra.Firearm
 
             int id = agent.Index;
             _reloadComponentByAgent[id] = new ReloadComponent(InitialiseReloadPhases(agent, fireItemObject), agent,
-                _weaponEntityRepository);
+                new ReloadComponentEntityUtil(agent, _weaponEntityRepository));
             _reloadComponentByAgent[id].OnAgentBuild();
             _agentSkipTickCounter[id] = 0;
         }
@@ -108,6 +110,13 @@ namespace DellarteDellaGuerra.Firearm
                 ResetSkipCounter(id);
                 ApplyReloading(agent, dt);
             }
+        }
+
+        protected override void OnEndMission()
+        {
+            base.OnEndMission();
+            GameStateManager.Current.UnregisterListener(
+                GameStateManager.Current.Listeners.First(listener => listener is InventoryScreenListener));
         }
 
         private bool ShouldSkipAgent(Agent agent)
@@ -176,7 +185,8 @@ namespace DellarteDellaGuerra.Firearm
 
         private void OnInventoryScreenOpened()
         {
-            RemoveAgentReloadingComponent(Agent.Main);
+            if (!Mission.Current.MissionEnded)
+                RemoveAgentReloadingComponent(Agent.Main);
         }
     }
 }

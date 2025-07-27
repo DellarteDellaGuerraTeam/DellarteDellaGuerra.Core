@@ -2,19 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using TaleWorlds.Core;
-using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 
 namespace DellarteDellaGuerra.Firearm.Reload
 {
     public class ReloadComponent : ITickable, IOnAgentBuild, IDisposable
     {
-        private readonly IWeaponEntityRepository _weaponEntityRepository;
         private readonly List<IReloadPhase> _phases;
         private readonly Agent _agent;
         private readonly Dictionary<IReloadPhase, bool> _activePhaseStates = new();
-
-        private GameEntity? _emptyGameEntity;
 
         private readonly float _baseAnimationDuration = GetBaseReloadAnimationDuration();
         private readonly float _continuedAnimationDuration = GetContinuedReloadAnimationDuration();
@@ -24,18 +20,21 @@ namespace DellarteDellaGuerra.Firearm.Reload
         private const string ReloadAnimationName = "reload_firearm";
         private const string ReloadContinueAnimationName = "firearm_reload_continue";
 
+        private readonly ReloadComponentEntityUtil _reloadComponentEntityUtil;
+
         public ReloadComponent(List<IReloadPhase> phases, Agent agent,
-            IWeaponEntityRepository weaponEntityRepository)
+            ReloadComponentEntityUtil reloadComponentEntityUtil)
         {
             _phases = phases;
             _agent = agent;
-            _weaponEntityRepository = weaponEntityRepository;
+            _reloadComponentEntityUtil = reloadComponentEntityUtil;
             _totalDuration = _baseAnimationDuration + _continuedAnimationDuration;
 
             foreach (var phase in _phases)
                 _activePhaseStates[phase] = false;
+            
+            
 
-            weaponEntityRepository.Remove(agent.Index.ToString());
         }
 
         public void OnTick(float dt)
@@ -57,13 +56,14 @@ namespace DellarteDellaGuerra.Firearm.Reload
                             phase.OnReloadPhaseEnd();
                             _activePhaseStates[phase] = false;
                         });
-                    WieldOriginalWeapon();
+                    _reloadComponentEntityUtil.WieldOriginalWeapon();
                 }
 
                 return;
             }
 
-            if (_activePhaseStates.All(phaseState => !phaseState.Value)) HideWieldedWeapon();
+            if (_activePhaseStates.All(phaseState => !phaseState.Value))
+                _reloadComponentEntityUtil.HideWieldedWeapon();
 
             // During the transition between two phases (eg. both phases share the same end/start progress value),
             // The weapon of both phases will be visible for a tick.
@@ -102,19 +102,14 @@ namespace DellarteDellaGuerra.Firearm.Reload
             _phases.ForEach(phase => phase.OnAgentBuild());
         }
 
+        public void OnFirearmDropped(SpawnedItemEntity spawnedItemEntity)
+        {
+            _reloadComponentEntityUtil.OnFirearmDropped(spawnedItemEntity);
+        }
+        
         public void Dispose()
         {
             _phases.ForEach(phase => phase.Dispose());
-        }
-
-        public void OnFirearmDropped(SpawnedItemEntity spawnedItemEntity)
-        {
-            WeaponEntity? weaponEntity = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
-            if (weaponEntity?.GameEntity == spawnedItemEntity.GameEntity)
-            {
-                ResetFirearmMetaMeshToWeaponEntity();
-                _weaponEntityRepository.Remove(_agent.Index.ToString());
-            }
         }
 
         private float GetReloadingProgress(Agent agent)
@@ -141,62 +136,6 @@ namespace DellarteDellaGuerra.Firearm.Reload
         private static bool IsUsingMusket(Agent agent)
         {
             return agent.WieldedWeapon.CurrentUsageItem?.WeaponClass == WeaponClass.Musket;
-        }
-
-        private void HideWieldedWeapon()
-        {
-            var equipmentIndex = GetFirearmEquipmentIndex();
-            var originalWeaponEntity = _agent.GetWeaponEntityFromEquipmentSlot(equipmentIndex);
-            WeaponEntity? weaponEntity = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
-
-            if (weaponEntity is null)
-                _weaponEntityRepository.SaveWeaponEntity(
-                    new WeaponEntity(originalWeaponEntity,
-                        originalWeaponEntity.GetMetaMesh(0)), _agent.Index.ToString());
-
-            originalWeaponEntity.RemoveMultiMesh(originalWeaponEntity.GetMetaMesh(0));
-            RefreshAgentVisuals(_agent);
-        }
-
-        private EquipmentIndex GetFirearmEquipmentIndex()
-        {
-            EquipmentIndex equipmentIndex = EquipmentIndex.None;
-            for (EquipmentIndex index = EquipmentIndex.WeaponItemBeginSlot;
-                 index < EquipmentIndex.NumAllWeaponSlots;
-                 index++)
-                if (_agent.Equipment[index].CurrentUsageItem?.WeaponClass.Equals(WeaponClass.Musket) ?? false)
-                    equipmentIndex = index;
-
-            return equipmentIndex;
-        }
-
-        private void WieldOriginalWeapon()
-        {
-            ResetFirearmMetaMeshToWeaponEntity();
-            RefreshAgentVisuals(_agent);
-        }
-
-        private void RefreshAgentVisuals(Agent agent)
-        {
-            if (_emptyGameEntity is null)
-            {
-                _emptyGameEntity = GameEntity.CreateEmpty(Mission.Current.Scene);
-                agent.AgentVisuals.AddChildEntity(_emptyGameEntity);
-            }
-            else
-            {
-                agent.AgentVisuals.RemoveChildEntity(_emptyGameEntity, 14);
-                _emptyGameEntity = null;
-            }
-        }
-        
-        private void ResetFirearmMetaMeshToWeaponEntity()
-        {
-            WeaponEntity? weaponEntity = _weaponEntityRepository.GetWeaponEntity(_agent.Index.ToString());
-
-            if (weaponEntity is null || weaponEntity.GameEntity.GetMetaMesh(0) is not null) return;
-
-            weaponEntity.GameEntity.AddMultiMesh(weaponEntity.MetaMesh);
         }
     }
 }
