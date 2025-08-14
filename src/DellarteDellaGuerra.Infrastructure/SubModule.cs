@@ -6,6 +6,7 @@ using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
+using DellarteDellaGuerra.Domain.Tournament;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Patches;
 using DellarteDellaGuerra.Firearm.Reload;
@@ -18,6 +19,9 @@ using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
+using DellarteDellaGuerra.Tournament.Api;
+using DellarteDellaGuerra.Tournament.Spi;
+using DellarteDellaGuerra.Tournament.Spi.Mapper;
 using DellarteDellaGuerra.Utils;
 using NLog;
 using TaleWorlds.CampaignSystem;
@@ -34,7 +38,9 @@ namespace DellarteDellaGuerra.Infrastructure
         private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler;
         private readonly DadgConfigWatcher _dadgConfigWatcher;
         private readonly HarmonyPatcher _harmonyPatcher;
+
         private DisplayShaderNumber _displayShaderNumber;
+        private DadgTournamentModel _dadgTournamentModel;
 
         public SubModule()
         {
@@ -73,8 +79,10 @@ namespace DellarteDellaGuerra.Infrastructure
         {
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
-            HandleDisplayCompilingShadersDependencies();
+            HandleTournamentModelDependencies();
+            campaignGameStarter.AddModel(_dadgTournamentModel);
 
+            HandleDisplayCompilingShadersDependencies();
             CompilingShaderNotifier.Init(_displayShaderNumber);
             game.AddGameHandler<CompilingShaderNotifier>();
             
@@ -154,6 +162,19 @@ namespace DellarteDellaGuerra.Infrastructure
         {
             new FixSettlementFilePathPatch(_harmonyPatcher, _loggerFactory);
             new FixSettlementDistanceCacheFilePathPatch(_harmonyPatcher, _loggerFactory);
+        }
+
+        #endregion
+        
+        #region Tournament
+
+        private void HandleTournamentModelDependencies()
+        {
+            var itemRepository = new ItemRepository(new ItemTierMapper(_loggerFactory));
+            var getTournamentRewardUseCase = new GetTournamentRewardUseCase(itemRepository, new TroopRepository(),
+                new TownRepository(),
+                new RandomProvider(), new HighestTownProsperityProvider());
+            _dadgTournamentModel = new DadgTournamentModel(getTournamentRewardUseCase);
         }
 
         #endregion
