@@ -25,6 +25,7 @@ using DellarteDellaGuerra.Tournament.Spi.Mapper;
 using DellarteDellaGuerra.Utils;
 using NLog;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TOR_Core.Api;
@@ -84,11 +85,14 @@ namespace DellarteDellaGuerra.Infrastructure
             HandleTournamentModelDependencies();
             campaignGameStarter.AddModel(_dadgTournamentModel);
 
+            campaignGameStarter.AddModel(new DadgSiegeEventModel(new DefaultSiegeEventModel()));
+            
             HandleDisplayCompilingShadersDependencies();
             CompilingShaderNotifier.Init(_displayShaderNumber);
             game.AddGameHandler<CompilingShaderNotifier>();
             
             campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
+            campaignGameStarter.AddBehavior(new CannonCampaignBehaviour());
         }
 
         public override void OnGameInitializationFinished(Game game)
