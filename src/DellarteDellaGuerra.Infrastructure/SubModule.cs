@@ -92,7 +92,6 @@ namespace DellarteDellaGuerra.Infrastructure
             game.AddGameHandler<CompilingShaderNotifier>();
             
             campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
-            campaignGameStarter.AddBehavior(new CannonCampaignBehaviour());
         }
 
         public override void OnGameInitializationFinished(Game game)
@@ -104,12 +103,13 @@ namespace DellarteDellaGuerra.Infrastructure
             LoadDadgBattleScenes();
         }
 
-        public override void OnMissionBehaviorInitialize(Mission mission)
+        public override void OnBeforeMissionBehaviorInitialize(Mission mission)
         {
-            base.OnMissionBehaviorInitialize(mission);
+            base.OnBeforeMissionBehaviorInitialize(mission);
             mission.AddMissionBehavior(new FirearmReloadMissionLogic(_loggerFactory,
                 new InMemoryWeaponEntityRepository()));
             mission.AddMissionBehavior(new FirearmSmokeMissionLogic(_loggerFactory));
+            mission.AddMissionBehavior(new CannonMissionBehaviour());
         }
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)
