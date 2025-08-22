@@ -199,13 +199,15 @@ namespace DellarteDellaGuerra.Infrastructure
 
         private void InitialiseCannonFeature()
         {
-            var repo = new SiegeEngineIconRepository();
+            var repo = new DeploymentSiegeEngineIconRepository();
             var usecase = new SiegeEngineIconRegistrationUseCase(_onSubModuleLoadEventPubSub,
                 new SiegeIconBrushExtender(_loggerFactory, UIResourceManager.BrushFactory,
-                    UIResourceManager.SpriteData), repo);
+                    UIResourceManager.SpriteData), new DeploymentSiegeEngineIconRepository());
             usecase.RegisterSiegeEngineIcons();
 
             _harmonyPatcher.AddPatch(new OrderSiegeMachineItemButtonWidgetManualPatch(_loggerFactory, _harmony, repo));
+            // _harmonyPatcher.AddPatch(new MapSiegePOIBrushWidgetManualPatch(_loggerFactory, _harmony,
+            //     new MapSiegeEngineIconRepository(), UIResourceManager.SpriteData));
 
             CannonSystemInitialiser.Initialise();
         }

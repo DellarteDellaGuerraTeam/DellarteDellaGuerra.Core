@@ -11,12 +11,12 @@ namespace DellarteDellaGuerra.Cannon.UI;
 
 public class OrderSiegeMachineItemButtonWidgetManualPatch : IPatch
 {
-    private static ISiegeEngineIconRepository _iconRepository;
+    private static IDeploymentSiegeEngineIconRepository _iconRepository;
     private readonly Harmony _harmony;
     private readonly ILogger _logger;
 
     public OrderSiegeMachineItemButtonWidgetManualPatch(ILoggerFactory loggerFactory, Harmony harmony,
-        ISiegeEngineIconRepository iconRepository)
+        IDeploymentSiegeEngineIconRepository iconRepository)
     {
         _logger = loggerFactory.CreateLogger<OrderSiegeMachineItemButtonWidgetManualPatch>();
         _harmony = harmony;
@@ -62,7 +62,7 @@ public class OrderSiegeMachineItemButtonWidgetManualPatch : IPatch
 
     private MethodInfo? ResolvePatchMethod()
     {
-        return typeof(OrderSiegeMachineItemButtonWidgetManualPatch).GetMethod("TryPatchWidget", AccessTools.all);
+        return typeof(OrderSiegeMachineItemButtonWidgetManualPatch).GetMethod("SetSprite", AccessTools.all);
     }
 
     private MethodInfo? ResolveOriginalMethod()

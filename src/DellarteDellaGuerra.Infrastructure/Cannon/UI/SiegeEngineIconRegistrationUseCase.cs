@@ -6,12 +6,12 @@ public class SiegeEngineIconRegistrationUseCase
 {
     private readonly IOnSubModuleLoadEventSubscriber _subModuleEventSubscriber;
     private readonly SiegeIconBrushExtender _brushExtender;
-    private readonly ISiegeEngineIconRepository _iconRepository;
+    private readonly IDeploymentSiegeEngineIconRepository _iconRepository;
 
     public SiegeEngineIconRegistrationUseCase(
         IOnSubModuleLoadEventSubscriber subModuleEventSubscriber,
         SiegeIconBrushExtender brushExtender,
-        ISiegeEngineIconRepository iconRepository)
+        IDeploymentSiegeEngineIconRepository iconRepository)
     {
         _subModuleEventSubscriber = subModuleEventSubscriber;
         _brushExtender = brushExtender;

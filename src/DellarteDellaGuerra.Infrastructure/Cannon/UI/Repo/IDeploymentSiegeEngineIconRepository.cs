@@ -3,7 +3,7 @@ using DellarteDellaGuerra.Cannon.UI.Model;
 
 namespace DellarteDellaGuerra.Cannon.UI;
 
-public interface ISiegeEngineIconRepository
+public interface IDeploymentSiegeEngineIconRepository
 {
-    ISet<SiegeEngineIcon> SiegeEngineIcons { get; }
+    ISet<DeploymentSiegeEngineIcon> SiegeEngineIcons { get; }
 }
