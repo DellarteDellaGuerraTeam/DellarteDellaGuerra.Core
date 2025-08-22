@@ -11,16 +11,22 @@ namespace DellarteDellaGuerra.Infrastructure.Patches
     public class HarmonyPatcher : IPatcher
     {
         private readonly ILogger _logger;
-        private readonly Harmony _harmony = new ("com.dellartedellaguerra.harmony");
+        private readonly Harmony _harmony;
 
         private readonly List<IPatch> _manualPatches;
-        
-        public HarmonyPatcher(ILoggerFactory loggerFactory)
+
+        public HarmonyPatcher(ILoggerFactory loggerFactory, Harmony harmony)
         {
+            _harmony = harmony;
             _logger = loggerFactory.CreateLogger<HarmonyPatcher>();
             _manualPatches = new List<IPatch>();
         }
 
+        public void AddPatch(IPatch patch)
+        {
+            _manualPatches.Add(patch);
+        }
+        
         public void PatchAll()
         {
             try
