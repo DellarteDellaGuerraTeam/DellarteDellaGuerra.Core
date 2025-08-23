@@ -88,9 +88,9 @@ namespace DellarteDellaGuerra.Infrastructure.Utils
 
         private static string? GetResourceFromModModules(string pathRelativeToModFolder)
         {
-            return ModuleHelper.GetModules().Select(module => module.Id).Where(moduleName =>
-                    moduleName.StartsWith(ModuleId.DellarteDellaGuerra.ToString()))
-                .Select(moduleId => Path.Combine(ModuleHelper.GetModuleFullPath(moduleId), pathRelativeToModFolder))
+            return ModuleHelper.GetSortedModules(ModuleHelper.GetModules().Select(module => module.Id).ToArray())
+                .Where(module => ModuleIdHelper.GetModuleIds().Contains(module.Id))
+                .Select(module => Path.Combine(ModuleHelper.GetModuleFullPath(module.Id), pathRelativeToModFolder))
                 .FirstOrDefault(path => File.Exists(path) || Directory.Exists(path));
         }
     }

@@ -7,6 +7,7 @@ using System.Reflection.Emit;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
+using DellarteDellaGuerra.Patches;
 using HarmonyLib;
 
 namespace DellarteDellaGuerra.Infrastructure.Poc.Patches
@@ -24,31 +25,18 @@ namespace DellarteDellaGuerra.Infrastructure.Poc.Patches
     public class PocConfigReaderOverriderPatch : IPatch
     {
         private static ILogger Logger;
-        private readonly Harmony _harmony;
 
-        public PocConfigReaderOverriderPatch(Harmony harmony, ILoggerFactory loggerFactory)
+        public PocConfigReaderOverriderPatch(IPatcher patcher, ILoggerFactory loggerFactory)
         {
             Logger = loggerFactory.CreateLogger<PocConfigReaderOverriderPatch>();
-            _harmony = harmony;
+            patcher.AddPatch(this);
         }
 
-        /**
-         * <summary>
-         * Patches the PocColorMod assembly to read the config file from the DellarteDellaGuerra config folder.
-         * If the PocColorMod assembly is not loaded, then this method does nothing.
-         * </summary>
-         */
-        public void Patch()
-        {
-            MethodInfo? originalMethod = ResolveOriginalMethod();
-            MethodInfo? patchMethod = ResolvePatchMethod();
-            if (originalMethod == null || patchMethod == null)
-            {
-                Logger.Warn($"{nameof(PocConfigReaderOverriderPatch)} failed to resolve the original method or the patch method");
-                return;
-            }
-            _harmony.Patch(originalMethod, transpiler: new HarmonyMethod(patchMethod));
-        }
+        public MethodInfo? TargetMethod => ResolveOriginalMethod();
+        public MethodInfo? PatchMethod => ResolvePatchMethod();
+        public PatchType PatchType => PatchType.Transpiler;
+        
+
 
         private MethodInfo? ResolveOriginalMethod()
         {
@@ -62,6 +50,12 @@ namespace DellarteDellaGuerra.Infrastructure.Poc.Patches
             return typeof(PocConfigReaderOverriderPatch).GetMethod(nameof(Transpiler), BindingFlags.Static | BindingFlags.NonPublic);
         }
 
+        /**
+         * <summary>
+         *     Patches the PocColorMod assembly to read the config file from the DellarteDellaGuerra config folder.
+         *     If the PocColorMod assembly is not loaded, then this method does nothing.
+         * </summary>
+         */
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> codeInstructions)
         {
             var instructions = codeInstructions.ToList();

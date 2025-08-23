@@ -6,6 +6,8 @@ using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
+using DellarteDellaGuerra.Domain.ProjectileBounceBack;
+using DellarteDellaGuerra.Domain.ProjectileBounceBack.Model.Mappers;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Patches;
 using DellarteDellaGuerra.Firearm.Reload;
@@ -14,14 +16,18 @@ using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.ExpandedTemplateApi.Logging;
 using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.Patches;
+using DellarteDellaGuerra.Infrastructure.Poc.Patches;
+using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
+using DellarteDellaGuerra.ProjectileBounceBack.Spi;
+using DellarteDellaGuerra.ProjectileBounceBack.Spi.Mapper;
+using DellarteDellaGuerra.RBM;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
 using DellarteDellaGuerra.Utils;
 using NLog;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
-using Debug = TaleWorlds.Library.Debug;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
 
 namespace DellarteDellaGuerra.Infrastructure
@@ -46,6 +52,10 @@ namespace DellarteDellaGuerra.Infrastructure
             new BannerlordExpandedTemplateApi()
                 .UseLoggerFactory(new ExpandedTemplateLoggerFactory(_loggerFactory))
                 .Bind();
+
+            InitialiseProjectileBounceBack();
+            InitialisePocIntegration();
+            InitialiseSteamIntegration();
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
@@ -135,6 +145,45 @@ namespace DellarteDellaGuerra.Infrastructure
         }
         #endregion
 
+        #region ProjectileBounceBack
+
+        private void InitialiseProjectileBounceBack()
+        {
+            var bodyArmourPieceMapper = new BodyArmourPieceMapper();
+            var armourMaterialTypeMapper = new ArmourMaterialTypeMapper();
+            var boneBodyPartMapper = new BoneBodyPartMapper();
+            var damageTypeMapper = new DamageTypeMapper();
+            var agentMapper = new AgentMapper();
+
+            var usecase = new ShouldProjectileBounceBackUseCase(new MaximumBounceDamageConfigProvider(),
+                new GetArmourPieceMaterial(bodyArmourPieceMapper, armourMaterialTypeMapper, _loggerFactory));
+
+            new NoBloodOnBounceBackPatch(_harmonyPatcher, usecase, boneBodyPartMapper, damageTypeMapper, agentMapper);
+            new ProjectileBounceBackLogicPatch(_harmonyPatcher, usecase, boneBodyPartMapper, damageTypeMapper,
+                agentMapper);
+        }
+
+        #endregion
+
+        #region POCIntegration
+
+        private void InitialisePocIntegration()
+        {
+            new PocConfigReaderOverriderPatch(_harmonyPatcher, _loggerFactory);
+        }
+
+        #endregion
+
+        #region SteamIntegration
+
+        private void InitialiseSteamIntegration()
+        {
+            new FixSettlementFilePathPatch(_harmonyPatcher, _loggerFactory);
+            new FixSettlementDistanceCacheFilePathPatch(_harmonyPatcher, _loggerFactory);
+        }
+
+        #endregion
+        
         private static void InitSkills()
         {
             var firearmSkill = new FirearmSkill();
