@@ -158,8 +158,10 @@ namespace DellarteDellaGuerra.Infrastructure
             var usecase = new ShouldProjectileBounceBackUseCase(new MaximumBounceDamageConfigProvider(),
                 new GetArmourPieceMaterial(bodyArmourPieceMapper, armourMaterialTypeMapper, _loggerFactory));
 
-            new NoBloodOnBounceBackPatch(_harmonyPatcher, usecase, boneBodyPartMapper, damageTypeMapper, agentMapper);
-            new ProjectileBounceBackLogicPatch(_harmonyPatcher, usecase, boneBodyPartMapper, damageTypeMapper,
+            // new NoBloodOnBounceBackPatch(_harmonyPatcher, usecase, boneBodyPartMapper, damageTypeMapper, agentMapper);
+            // new ProjectileBounceBackLogicPatch(_harmonyPatcher, usecase, boneBodyPartMapper, damageTypeMapper,
+            //     agentMapper);
+            new ProjectileBounceBackLogicPatch2(_harmonyPatcher, usecase, boneBodyPartMapper, damageTypeMapper,
                 agentMapper);
         }
 

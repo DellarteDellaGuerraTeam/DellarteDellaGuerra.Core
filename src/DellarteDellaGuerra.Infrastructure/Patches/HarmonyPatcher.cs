@@ -49,30 +49,38 @@ namespace DellarteDellaGuerra.Infrastructure.Patches
                     return;
                 }
 
-                switch (patch.PatchType)
+                try
                 {
-                    case PatchType.Transpiler:
-                        _harmony.Patch(
-                            patch.TargetMethod,
-                            transpiler: new HarmonyMethod(patch.PatchMethod)
-                        );
-                        break;
-                    case PatchType.Prefix:
-                        _harmony.Patch(
-                            patch.TargetMethod,
-                            new HarmonyMethod(patch.PatchMethod)
-                        );
-                        break;
-                    case PatchType.Postfix:
-                        _harmony.Patch(
-                            patch.TargetMethod,
-                            postfix: new HarmonyMethod(patch.PatchMethod)
-                        );
-                        break;
-                    default:
-                        _logger.Warn($"Unknown Patch type for {patch.GetType()}");
-                        break;
+                    switch (patch.PatchType)
+                    {
+                        case PatchType.Transpiler:
+                            _harmony.Patch(
+                                patch.TargetMethod,
+                                transpiler: new HarmonyMethod(patch.PatchMethod)
+                            );
+                            break;
+                        case PatchType.Prefix:
+                            _harmony.Patch(
+                                patch.TargetMethod,
+                                new HarmonyMethod(patch.PatchMethod)
+                            );
+                            break;
+                        case PatchType.Postfix:
+                            _harmony.Patch(
+                                patch.TargetMethod,
+                                postfix: new HarmonyMethod(patch.PatchMethod)
+                            );
+                            break;
+                        default:
+                            _logger.Warn($"Unknown Patch type for {patch.GetType()}");
+                            break;
+                    }
                 }
+                catch (Exception e)
+                {
+                    _logger.Error($"Failed to patch {patch.GetType()}", e);
+                }
+                
             });
         }
 

@@ -77,7 +77,7 @@ namespace DellarteDellaGuerra.RBM
 
             return _shouldProjectileBounceBackUseCase.ShouldProjectileBounceBack(
                 collisionData.InflictedDamage, agent,
-                boneBodyPart, damageType, collisionData.IsAlternativeAttack, hasWeapon);
+                boneBodyPart, damageType, collisionData.IsAlternativeAttack);
         }
     }
 }

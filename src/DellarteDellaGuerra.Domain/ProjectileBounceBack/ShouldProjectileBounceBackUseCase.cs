@@ -37,9 +37,9 @@ namespace DellarteDellaGuerra.Domain.ProjectileBounceBack
         }
 
         public bool ShouldProjectileBounceBack(int inflictedDamage, Agent defender,
-            BoneBodyPart hitBodyPart, DamageType damageType, bool isAlternativeAttack, bool hasWeapon)
+            BoneBodyPart hitBodyPart, DamageType damageType, bool isAlternativeAttack)
         {
-            if (hasWeapon && defender.IsHuman && !isAlternativeAttack) return false;
+            if (!defender.IsHuman) return false;
 
             ArmorMaterialType mateirialTypeofHitBodyPart = GetMaterialTypeofHitBodyPart(defender, hitBodyPart);
             var config = _maximumBounceDamageConfigProvider.GetMaximumBounceDamageConfigProvider();

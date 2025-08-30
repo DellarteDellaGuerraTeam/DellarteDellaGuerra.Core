@@ -6,19 +6,25 @@ using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Patches;
 using HarmonyLib;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using Agent = TaleWorlds.MountAndBlade.Agent;
 
 namespace DellarteDellaGuerra.RBM
 {
-    public class ProjectileBounceBackLogicPatch : IPatch
+    public class ProjectileBounceBackLogicPatch2 : IPatch
     {
+        private static readonly FieldInfo MissileBlockedWithWeaponField =
+            typeof(AttackCollisionData).GetField("_missileBlockedWithWeapon",
+                BindingFlags.NonPublic | BindingFlags.Instance);
+
         private static BoneBodyPartMapper _boneBodyPartMapper;
         private static DamageTypeMapper _damageTypeMapper;
         private static AgentMapper _agentMapper;
         private static ShouldProjectileBounceBackUseCase _shouldProjectileBounceBackUseCase;
 
-        public ProjectileBounceBackLogicPatch(IPatcher patcher,
+        public ProjectileBounceBackLogicPatch2(IPatcher patcher,
             ShouldProjectileBounceBackUseCase shouldProjectileBounceBackUseCase,
             BoneBodyPartMapper boneBodyPartMapper,
             DamageTypeMapper damageTypeMapper,
@@ -31,21 +37,37 @@ namespace DellarteDellaGuerra.RBM
             patcher.AddPatch(this);
         }
 
-        public MethodInfo? TargetMethod => typeof(Mission).GetMethod("HandleMissileCollisionReaction", AccessTools.all);
+        public MethodInfo? TargetMethod => typeof(Mission).GetMethod("MissileHitCallback", AccessTools.all);
 
         public MethodInfo? PatchMethod =>
-            typeof(ProjectileBounceBackLogicPatch).GetMethod("DecideWeaponCollisionReactionMOD",
+            typeof(ProjectileBounceBackLogicPatch2).GetMethod("Prefix",
                 AccessTools.all);
 
-        public PatchType PatchType => PatchType.Postfix;
+        public PatchType PatchType => PatchType.Prefix;
 
-        private static void DecideWeaponCollisionReactionMOD(in AttackCollisionData collisionData, Agent defender,
-            out MeleeCollisionReaction colReaction)
+        private static bool Prefix(
+            ref bool __result,
+            ref int extraHitParticleIndex,
+            ref AttackCollisionData collisionData,
+            Vec3 missileStartingPosition,
+            Vec3 missilePosition,
+            Vec3 missileAngularVelocity,
+            Vec3 movementVelocity,
+            MatrixFrame attachGlobalFrame,
+            MatrixFrame affectedShieldGlobalFrame,
+            int numDamagedAgents,
+            Agent attacker,
+            Agent victim,
+            GameEntity hitEntity)
         {
-            if (ShouldProjectileBounceBack(defender, collisionData))
-                colReaction = MeleeCollisionReaction.Bounced;
-            else
-                colReaction = MeleeCollisionReaction.Stuck;
+            if (victim != null && ShouldProjectileBounceBack(victim, collisionData))
+            {
+                extraHitParticleIndex = -1;
+                var tr = __makeref(collisionData);
+                MissileBlockedWithWeaponField.SetValueDirect(tr, true);
+            }
+
+            return true;
         }
 
         private static bool ShouldProjectileBounceBack(Agent defender, AttackCollisionData collisionData)
