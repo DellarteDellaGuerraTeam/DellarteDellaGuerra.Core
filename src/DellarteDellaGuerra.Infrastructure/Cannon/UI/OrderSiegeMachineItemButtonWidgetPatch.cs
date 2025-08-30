@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Patches;
 using HarmonyLib;
@@ -10,33 +9,18 @@ using TaleWorlds.MountAndBlade.GauntletUI.Widgets.Order;
 
 namespace DellarteDellaGuerra.Cannon.UI;
 
-public class OrderSiegeMachineItemButtonWidgetManualPatch : IPatch
+public class OrderSiegeMachineItemButtonWidgetPatch : IPatch
 {
     private static IDeploymentSiegeEngineIconRepository _iconRepository;
-    private readonly Harmony _harmony;
-    private readonly ILogger _logger;
 
-    public OrderSiegeMachineItemButtonWidgetManualPatch(ILoggerFactory loggerFactory, Harmony harmony,
-        IDeploymentSiegeEngineIconRepository iconRepository)
+    public OrderSiegeMachineItemButtonWidgetPatch(IDeploymentSiegeEngineIconRepository iconRepository)
     {
-        _logger = loggerFactory.CreateLogger<OrderSiegeMachineItemButtonWidgetManualPatch>();
-        _harmony = harmony;
         _iconRepository = iconRepository;
     }
 
-    public void Patch()
-    {
-        MethodInfo? originalMethod = ResolveOriginalMethod();
-        MethodInfo? patchMethod = ResolvePatchMethod();
-        if (originalMethod == null || patchMethod == null)
-        {
-            _logger.Warn(
-                $"{nameof(OrderSiegeMachineItemButtonWidgetManualPatch)} failed to resolve the original method or the patch method");
-            return;
-        }
-
-        _harmony.Patch(originalMethod, postfix: new HarmonyMethod(patchMethod));
-    }
+    public MethodInfo? TargetMethod => ResolveOriginalMethod();
+    public MethodInfo? PatchMethod => ResolvePatchMethod();
+    public PatchType PatchType => PatchType.Postfix;
 
     private static void TryPatchWidget(OrderSiegeMachineItemButtonWidget __instance)
     {
@@ -63,15 +47,11 @@ public class OrderSiegeMachineItemButtonWidgetManualPatch : IPatch
 
     private MethodInfo? ResolvePatchMethod()
     {
-        return typeof(OrderSiegeMachineItemButtonWidgetManualPatch).GetMethod("SetSprite", AccessTools.all);
+        return typeof(OrderSiegeMachineItemButtonWidgetPatch).GetMethod("TryPatchWidget", AccessTools.all);
     }
 
     private MethodInfo? ResolveOriginalMethod()
     {
         return typeof(OrderSiegeMachineItemButtonWidget).GetMethod("UpdateMachineIcon", AccessTools.all);
     }
-
-    public MethodInfo? TargetMethod => ResolveOriginalMethod();
-    public MethodInfo? PatchMethod => ResolvePatchMethod();
-    public PatchType PatchType => PatchType.Postfix;
 }

@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
-using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Patches;
-using HarmonyLib;
 using TaleWorlds.MountAndBlade.GauntletUI.Widgets.Map.Siege;
 using TaleWorlds.TwoDimension;
 
@@ -13,35 +11,19 @@ public class MapSiegePOIBrushWidgetManualPatch : IPatch
 {
     private static IMapSiegeEngineIconRepository _iconRepository;
     private static SpriteData _spriteData;
-    private readonly Harmony _harmony;
-    private readonly ILogger _logger;
 
     public MapSiegePOIBrushWidgetManualPatch(
-        ILoggerFactory loggerFactory,
-        Harmony harmony,
         IMapSiegeEngineIconRepository iconRepository,
         SpriteData spriteData
     )
     {
         _spriteData = spriteData;
-        _logger = loggerFactory.CreateLogger<MapSiegePOIBrushWidgetManualPatch>();
-        _harmony = harmony;
         _iconRepository = iconRepository;
     }
 
-    public void Patch()
-    {
-        MethodInfo? originalMethod = ResolveOriginalMethod();
-        MethodInfo? patchMethod = ResolvePatchMethod();
-        if (originalMethod == null || patchMethod == null)
-        {
-            _logger.Warn(
-                $"{nameof(MapSiegePOIBrushWidgetManualPatch)} failed to resolve the original method or the patch method");
-            return;
-        }
-
-        _harmony.Patch(originalMethod, postfix: new HarmonyMethod(patchMethod));
-    }
+    public MethodInfo? TargetMethod => ResolveOriginalMethod();
+    public MethodInfo? PatchMethod => ResolvePatchMethod();
+    public PatchType PatchType => PatchType.Postfix;
 
     public static void SetSprite(MapSiegePOIBrushWidget __instance, int machineType)
     {
@@ -68,8 +50,4 @@ public class MapSiegePOIBrushWidgetManualPatch : IPatch
             BindingFlags.NonPublic | BindingFlags.Instance
         );
     }
-
-    public MethodInfo? TargetMethod => ResolveOriginalMethod();
-    public MethodInfo? PatchMethod => ResolvePatchMethod();
-    public PatchType PatchType => PatchType.Postfix;
 }

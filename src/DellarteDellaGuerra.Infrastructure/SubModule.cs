@@ -26,7 +26,6 @@ using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Spi;
 using DellarteDellaGuerra.Tournament.Spi.Mapper;
 using DellarteDellaGuerra.Utils;
-using HarmonyLib;
 using NLog;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
@@ -47,7 +46,6 @@ namespace DellarteDellaGuerra.Infrastructure
         private readonly HarmonyPatcher _harmonyPatcher;
 
         private DisplayShaderNumber _displayShaderNumber;
-        private readonly Harmony _harmony = new("com.dellartedellaguerra.harmony");
         private readonly OnSubModuleLoadEventPubSub _onSubModuleLoadEventPubSub;
         private DadgTournamentModel _dadgTournamentModel;
 
@@ -56,8 +54,7 @@ namespace DellarteDellaGuerra.Infrastructure
             _loggerFactory = new LoggerFactory(new LoggerConfigPathProvider());
             _campaignBehaviourDisabler = new CampaignBehaviourDisabler();
             _dadgConfigWatcher = new DadgConfigWatcher(_loggerFactory);
-            _harmony = new Harmony("com.dellartedellaguerra.harmony");
-            _harmonyPatcher = new HarmonyPatcher(_loggerFactory, _harmony);
+            _harmonyPatcher = new HarmonyPatcher(_loggerFactory);
             _logger = _loggerFactory.CreateLogger<SubModule>();
             _onSubModuleLoadEventPubSub = new OnSubModuleLoadEventPubSub();
 
@@ -205,9 +202,9 @@ namespace DellarteDellaGuerra.Infrastructure
                     UIResourceManager.SpriteData), new DeploymentSiegeEngineIconRepository());
             usecase.RegisterSiegeEngineIcons();
 
-            _harmonyPatcher.AddPatch(new OrderSiegeMachineItemButtonWidgetManualPatch(_loggerFactory, _harmony, repo));
-            _harmonyPatcher.AddPatch(new MapSiegePOIBrushWidgetManualPatch(_loggerFactory, _harmony,
-                new MapSiegeEngineIconRepository(), UIResourceManager.SpriteData));
+            _harmonyPatcher.AddPatch(new OrderSiegeMachineItemButtonWidgetPatch(repo));
+            _harmonyPatcher.AddPatch(new MapSiegePOIBrushWidgetManualPatch(new MapSiegeEngineIconRepository(),
+                UIResourceManager.SpriteData));
 
             CannonSystemInitialiser.Initialise();
         }
