@@ -3,6 +3,7 @@ using System.Reflection;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
+using DellarteDellaGuerra.Patches;
 using HarmonyLib;
 using SandBox;
 
@@ -10,7 +11,7 @@ namespace DellarteDellaGuerra.Infrastructure.Steam.Patches
 {
     /**
      * <summary>
-     * This script patches the SettlementPositionScript class to override the settlements file path and the settlements distance cache file path.
+     * This script patches the SettlementPositionScript class to override the settlement file path.
      * </summary>
      * <remarks>
      * This is necessary because the overriden paths point to wrong targets when using Steam Workshop.
@@ -19,38 +20,19 @@ namespace DellarteDellaGuerra.Infrastructure.Steam.Patches
     public class FixSettlementFilePathPatch : IPatch
     {
         private static ILogger Logger;
-        private readonly Harmony _harmony;
 
-        private readonly MethodInfo? _settlementsXmlPathMethod =
+        public MethodInfo? TargetMethod =>
             AccessTools.PropertyGetter(typeof(SettlementPositionScript), "SettlementsXmlPath");
 
-        private readonly MethodInfo? _settlementsDistanceCacheFilePathMethod =
-            AccessTools.PropertyGetter(typeof(SettlementPositionScript), "SettlementsDistanceCacheFilePath");
-
-        private readonly MethodInfo _getSettlementsXmlPathPostfix =
+        public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(FixSettlementFilePathPatch), nameof(OverrideSettlementsXmlPath));
 
-        private readonly MethodInfo _getSettlementsDistanceCacheFilePathPostfix =
-            AccessTools.Method(typeof(FixSettlementFilePathPatch),
-                nameof(OverrideSettlementsDistanceCacheFilePath));
+        public PatchType PatchType => PatchType.Postfix;
 
-        public FixSettlementFilePathPatch(Harmony harmony, ILoggerFactory loggerFactory)
+        public FixSettlementFilePathPatch(IPatcher patcher, ILoggerFactory loggerFactory)
         {
             Logger = loggerFactory.CreateLogger<FixSettlementFilePathPatch>();
-            _harmony = harmony;
-        }
-
-        public void Patch()
-        {
-            if (_settlementsXmlPathMethod is null || _settlementsDistanceCacheFilePathMethod is null)
-            {
-                Logger.Warn($"{nameof(FixSettlementFilePathPatch)} failed to resolve the original methods");
-                return;
-            }
-
-            _harmony.Patch(_settlementsXmlPathMethod, postfix: new HarmonyMethod(_getSettlementsXmlPathPostfix));
-            _harmony.Patch(_settlementsDistanceCacheFilePathMethod,
-                postfix: new HarmonyMethod(_getSettlementsDistanceCacheFilePathPostfix));
+            patcher.AddPatch(this);
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -60,19 +42,6 @@ namespace DellarteDellaGuerra.Infrastructure.Steam.Patches
             if (path == null)
             {
                 Logger.Error("Could not find the settlement file");
-                return;
-            }
-
-            __result = path;
-        }
-
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        private static void OverrideSettlementsDistanceCacheFilePath(ref string __result)
-        {
-            string? path = ResourceLocator.GetSettlementDistanceCacheFilePath();
-            if (path == null)
-            {
-                Logger.Error("Could not find the settlement distance cache file");
                 return;
             }
 

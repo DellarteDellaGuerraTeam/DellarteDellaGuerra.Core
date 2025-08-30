@@ -1,5 +1,4 @@
-﻿using System.IO;
-using DellarteDellaGuerra.Infrastructure.Utils;
+﻿using DellarteDellaGuerra.Infrastructure.Utils;
 
 namespace DellarteDellaGuerra.Infrastructure.Configuration.Providers
 {
@@ -26,8 +25,7 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Providers
 
         private static string? GetConfigFilePath()
         {
-            string? configFolderPath = ResourceLocator.GetConfigurationFolderPath();
-            return configFolderPath != null ? Path.Combine(configFolderPath, LogConfigFileName) : null;
+            return ResourceLocator.GetConfigurationFilePath(LogConfigFileName);
         }
     }
 }

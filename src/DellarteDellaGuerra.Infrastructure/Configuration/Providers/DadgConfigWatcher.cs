@@ -75,8 +75,7 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Providers
         private void LoadConfig()
         {
             // Config file exists as a change was detected 
-            string configFolderPath = ResourceLocator.GetConfigurationFolderPath()!;
-            var configPath = Path.Combine(configFolderPath, ConfigFileName);
+            string configPath = ResourceLocator.GetConfigurationFilePath(ConfigFileName)!;
             var serialiser = new XmlSerializer(typeof(DadgConfig));
 
             try

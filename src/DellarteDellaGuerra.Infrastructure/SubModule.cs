@@ -14,6 +14,8 @@ using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.ExpandedTemplateApi.Logging;
 using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.Patches;
+using DellarteDellaGuerra.Infrastructure.Poc.Patches;
+using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
 using DellarteDellaGuerra.Utils;
@@ -21,7 +23,6 @@ using NLog;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
-using Debug = TaleWorlds.Library.Debug;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
 
 namespace DellarteDellaGuerra.Infrastructure
@@ -46,6 +47,9 @@ namespace DellarteDellaGuerra.Infrastructure
             new BannerlordExpandedTemplateApi()
                 .UseLoggerFactory(new ExpandedTemplateLoggerFactory(_loggerFactory))
                 .Bind();
+
+            InitialisePocIntegration();
+            InitialiseSteamIntegration();
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
@@ -135,6 +139,25 @@ namespace DellarteDellaGuerra.Infrastructure
         }
         #endregion
 
+        #region POCIntegration
+
+        private void InitialisePocIntegration()
+        {
+            new PocConfigReaderOverriderPatch(_harmonyPatcher, _loggerFactory);
+        }
+
+        #endregion
+
+        #region SteamIntegration
+
+        private void InitialiseSteamIntegration()
+        {
+            new FixSettlementFilePathPatch(_harmonyPatcher, _loggerFactory);
+            new FixSettlementDistanceCacheFilePathPatch(_harmonyPatcher, _loggerFactory);
+        }
+
+        #endregion
+        
         private static void InitSkills()
         {
             var firearmSkill = new FirearmSkill();
