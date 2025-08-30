@@ -11,6 +11,8 @@ namespace DellarteDellaGuerra.Infrastructure.Utils
      */
     public static class ResourceLocator
     {
+        private static readonly string ConfigFolderName = "config";
+
         /**
          * <summary>
          *     Gets the path to the log folder.
@@ -27,16 +29,29 @@ namespace DellarteDellaGuerra.Infrastructure.Utils
 
         /**
          * <summary>
-         * Gets the path to the configuration folder.
-         * Its existence is checked.
+         *     Gets the path to the configuration folder.
+         *     Its existence is checked.
          * </summary>
          * <returns>
-         * The first found among all of the mod's modules or null if not found.
+         *     The first found among all the mod's modules or null if not found.
          * </returns>
          */
         public static string? GetConfigurationFolderPath()
         {
-            return GetResourceFromModModules("config");
+            return GetResourceFromModModules(ConfigFolderName);
+        }
+        
+        /**
+         * <summary>
+         * Gets the path to the configuration file.
+         * </summary>
+         * <returns>
+         * The first found among all the mod's modules or null if not found.
+         * </returns>
+         */
+        public static string? GetConfigurationFilePath(string configFileName)
+        {
+            return GetResourceFromModModules(Path.Combine(ConfigFolderName, configFileName));
         }
 
         /**
@@ -88,9 +103,9 @@ namespace DellarteDellaGuerra.Infrastructure.Utils
 
         private static string? GetResourceFromModModules(string pathRelativeToModFolder)
         {
-            return ModuleHelper.GetModules().Select(module => module.Id).Where(moduleName =>
-                    moduleName.StartsWith(ModuleId.DellarteDellaGuerra.ToString()))
-                .Select(moduleId => Path.Combine(ModuleHelper.GetModuleFullPath(moduleId), pathRelativeToModFolder))
+            return ModuleHelper.GetSortedModules(ModuleHelper.GetModules().Select(module => module.Id).ToArray())
+                .Where(module => ModuleIdHelper.GetModuleIds().Contains(module.Id))
+                .Select(module => Path.Combine(ModuleHelper.GetModuleFullPath(module.Id), pathRelativeToModFolder))
                 .FirstOrDefault(path => File.Exists(path) || Directory.Exists(path));
         }
     }
