@@ -87,7 +87,7 @@ namespace DellarteDellaGuerra.Infrastructure.Patches
         private void PatchAllAutoPatches()
         {
             AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => ModuleIdHelper.GetModuleIds().Contains(assembly.GetName().Name))
+                .Where(assembly => assembly.GetName().Name.Contains(ModuleIdHelper.GetModuleIdPrefix()))
                 .ToList()
                 .ForEach(assembly => _harmony.PatchAll(assembly));
         }
