@@ -65,7 +65,7 @@ namespace DellarteDellaGuerra.Infrastructure
                 .UseLoggerFactory(new ExpandedTemplateLoggerFactory(_loggerFactory))
                 .Bind();
 
-            CannonSystemInitialiser.Initialise();
+            InitialiseCannonFeature();
             InitialisePocIntegration();
             InitialiseSteamIntegration();
         }
@@ -206,8 +206,8 @@ namespace DellarteDellaGuerra.Infrastructure
             usecase.RegisterSiegeEngineIcons();
 
             _harmonyPatcher.AddPatch(new OrderSiegeMachineItemButtonWidgetManualPatch(_loggerFactory, _harmony, repo));
-            // _harmonyPatcher.AddPatch(new MapSiegePOIBrushWidgetManualPatch(_loggerFactory, _harmony,
-            //     new MapSiegeEngineIconRepository(), UIResourceManager.SpriteData));
+            _harmonyPatcher.AddPatch(new MapSiegePOIBrushWidgetManualPatch(_loggerFactory, _harmony,
+                new MapSiegeEngineIconRepository(), UIResourceManager.SpriteData));
 
             CannonSystemInitialiser.Initialise();
         }

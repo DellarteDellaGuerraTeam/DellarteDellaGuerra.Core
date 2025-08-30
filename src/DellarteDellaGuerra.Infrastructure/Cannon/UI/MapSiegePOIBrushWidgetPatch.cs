@@ -2,6 +2,7 @@
 using System.Reflection;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Infrastructure.Patches;
+using DellarteDellaGuerra.Patches;
 using HarmonyLib;
 using TaleWorlds.MountAndBlade.GauntletUI.Widgets.Map.Siege;
 using TaleWorlds.TwoDimension;
@@ -67,4 +68,8 @@ public class MapSiegePOIBrushWidgetManualPatch : IPatch
             BindingFlags.NonPublic | BindingFlags.Instance
         );
     }
+
+    public MethodInfo? TargetMethod => ResolveOriginalMethod();
+    public MethodInfo? PatchMethod => ResolvePatchMethod();
+    public PatchType PatchType => PatchType.Postfix;
 }

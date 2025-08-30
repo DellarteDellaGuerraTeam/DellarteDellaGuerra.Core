@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Infrastructure.Patches;
+using DellarteDellaGuerra.Patches;
 using HarmonyLib;
 using TaleWorlds.GauntletUI.BaseTypes;
 using TaleWorlds.MountAndBlade.GauntletUI.Widgets.Order;
@@ -69,4 +70,8 @@ public class OrderSiegeMachineItemButtonWidgetManualPatch : IPatch
     {
         return typeof(OrderSiegeMachineItemButtonWidget).GetMethod("UpdateMachineIcon", AccessTools.all);
     }
+
+    public MethodInfo? TargetMethod => ResolveOriginalMethod();
+    public MethodInfo? PatchMethod => ResolvePatchMethod();
+    public PatchType PatchType => PatchType.Postfix;
 }

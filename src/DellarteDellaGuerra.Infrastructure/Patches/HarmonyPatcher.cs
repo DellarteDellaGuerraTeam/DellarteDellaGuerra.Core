@@ -39,11 +39,6 @@ namespace DellarteDellaGuerra.Infrastructure.Patches
             }
         }
 
-        public void AddPatch(IPatch patch)
-        {
-            _manualPatches.Add(patch);
-        }
-
         private void PatchAllManualPatches()
         {
             _manualPatches.ForEach(patch =>
