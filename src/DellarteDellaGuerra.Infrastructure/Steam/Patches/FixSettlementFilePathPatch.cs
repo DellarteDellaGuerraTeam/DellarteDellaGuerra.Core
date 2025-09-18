@@ -4,7 +4,7 @@ using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
-using SandBox;
+using SandBox.View.Map;
 
 namespace DellarteDellaGuerra.Infrastructure.Steam.Patches
 {

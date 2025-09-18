@@ -36,11 +36,38 @@
 
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
         <ProjectReference Include="..\DellarteDellaGuerra\DellarteDellaGuerra.csproj" />
+
+<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All" />-->
+<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All" />-->
+<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All" />-->
+
     </ItemGroup>
 
+    <ItemGroup>
+        <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll">
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="$(GameFolder)\Modules\SandBox\bin\Win64_Shipping_Client\SandBox*.dll">
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="$(GameFolder)\Modules\Native\bin\Win64_Shipping_Client\*.dll">
+            <Private>false</Private>
+        </Reference>
+    </ItemGroup>
+    
     <ItemGroup>
       <Compile Remove="Cannon\PartyVisualTickSettlementVisualPatch.cs" />
     </ItemGroup>
 
 
+    <Target Name="Copy Win64 client files to wEditor" AfterTargets="Build">
+        <Message Importance="high" Text="Copying files from Win64_Shipping_Client to Win64_Shipping_wEditor..." />
+        <ItemGroup>
+            <ClientFiles Include="$(MSBuildThisFileDirectory)..\..\bin\Win64_Shipping_Client\**\*" />
+        </ItemGroup>
+        <Copy
+                SourceFiles="@(ClientFiles)"
+                DestinationFolder="$(MSBuildThisFileDirectory)..\..\bin\Win64_Shipping_wEditor\%(RecursiveDir)"
+                SkipUnchangedFiles="true" />
+    </Target>
 </Project>
