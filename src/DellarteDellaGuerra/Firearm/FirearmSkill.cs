@@ -21,7 +21,10 @@ namespace DellarteDellaGuerra.Firearm
                 .Initialize(new TextObject("Firearm"),
                     new TextObject(
                         "Mastery of fighting with any firearm weapons."),
-                    SkillObject.SkillTypeEnum.Personal).SetAttribute(DefaultCharacterAttributes.Vigor);
+                    new[]
+                    {
+                        DefaultCharacterAttributes.Vigor
+                    });
         }
 
         public SkillObject? GetNativeFirearmSkill()

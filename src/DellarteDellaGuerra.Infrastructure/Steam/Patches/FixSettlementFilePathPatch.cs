@@ -5,7 +5,7 @@ using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.Patches;
 using HarmonyLib;
-using SandBox;
+using SandBox.View.Map;
 
 namespace DellarteDellaGuerra.Infrastructure.Steam.Patches
 {
