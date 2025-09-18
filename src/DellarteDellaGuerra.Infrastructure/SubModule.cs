@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Xml;
 using Bannerlord.ExpandedTemplate.API;
+using DellarteDellaGuerra.CharacterCreation;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
@@ -17,6 +18,7 @@ using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
+using DellarteDellaGuerra.MainMenu;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
 using DellarteDellaGuerra.Utils;
 using NLog;
@@ -24,6 +26,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
+using Module = TaleWorlds.MountAndBlade.Module;
 
 namespace DellarteDellaGuerra.Infrastructure
 {
@@ -34,6 +37,7 @@ namespace DellarteDellaGuerra.Infrastructure
         private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler;
         private readonly DadgConfigWatcher _dadgConfigWatcher;
         private readonly HarmonyPatcher _harmonyPatcher;
+        private readonly BannerlordExpandedTemplateApi _bannerlordExpandedTemplateApi;
         private DisplayShaderNumber _displayShaderNumber;
 
         public SubModule()
@@ -43,10 +47,8 @@ namespace DellarteDellaGuerra.Infrastructure
             _dadgConfigWatcher = new DadgConfigWatcher(_loggerFactory);
             _harmonyPatcher = new HarmonyPatcher(_loggerFactory);
             _logger = _loggerFactory.CreateLogger<SubModule>();
-
-            new BannerlordExpandedTemplateApi()
-                .UseLoggerFactory(new ExpandedTemplateLoggerFactory(_loggerFactory))
-                .Bind();
+            _bannerlordExpandedTemplateApi = new BannerlordExpandedTemplateApi()
+                .UseLoggerFactory(new ExpandedTemplateLoggerFactory(_loggerFactory));
 
             InitialisePocIntegration();
             InitialiseSteamIntegration();
@@ -55,6 +57,11 @@ namespace DellarteDellaGuerra.Infrastructure
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             InfoPrinter.Display("DADG loaded");
+
+            new DadgCampaignStartButtonAdder().AddDadgCampaignStartButton(
+                Module
+                    .CurrentModule);
+
         }
 
         // load the harmony patches once as soon as possible before reaching the main menu 
@@ -77,8 +84,16 @@ namespace DellarteDellaGuerra.Infrastructure
 
             CompilingShaderNotifier.Init(_displayShaderNumber);
             game.AddGameHandler<CompilingShaderNotifier>();
-            
+
+            _bannerlordExpandedTemplateApi.InitializeGameStarter(game, starterObject);
+
+            campaignGameStarter.AddBehavior(new DadgCharacterCreationCampaignBehavior());
             campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
+        }
+
+        public override void OnBeforeMissionBehaviorInitialize(Mission mission)
+        {
+            _bannerlordExpandedTemplateApi.OnBeforeMissionBehaviorInitialize(mission);
         }
 
         public override void OnGameInitializationFinished(Game game)

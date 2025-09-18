@@ -32,7 +32,7 @@ namespace DellarteDellaGuerra.Firearm.Reload
 
             if (weaponEntity is null)
                 _weaponEntityRepository.SaveWeaponEntity(
-                    new WeaponEntity(originalWeaponEntity,
+                    new WeaponEntity(GameEntity.CreateFromWeakEntity(originalWeaponEntity),
                         originalWeaponEntity.GetMetaMesh(0)), _agent.Index.ToString());
 
             originalWeaponEntity.RemoveMultiMesh(originalWeaponEntity.GetMetaMesh(0));

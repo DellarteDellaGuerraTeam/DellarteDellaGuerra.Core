@@ -52,10 +52,11 @@ namespace DellarteDellaGuerra.Patches
         [HarmonyPatch(typeof(MobileParty), "RecoverPositionsForNavMeshUpdate")]
         public static bool WorldMapNavMeshDebugPatch(ref MobileParty __instance)
         {
-            if (Settlement.All.Count > 0 && (!__instance.Position2D.IsNonZero() || !PartyBase.IsPositionOkForTraveling(__instance.Position2D)))
+            if (Settlement.All.Count > 0 && (!__instance.Position.IsNonZero() ||
+                                             !__instance.Position.IsValid()))
             {
                 //teleport party to a valid navmesh position.
-                __instance.Position2D = Settlement.All[0].GatePosition;
+                __instance.Position = Settlement.All[0].GatePosition;
             }
             return true;
         }
