@@ -38,7 +38,7 @@
         <PackageReference Include="SafeFluentXPath.Implementation" Version="1.0.0" />
         <PackageReference Include="NLog" Version="5.3.4"/>
 
-        <!--        <PackageReference Include="Bannerlord.ExpandedTemplate.API" Version="1.1.5"/>-->
+        <!--        <PackageReference Include="Bannerlord.ExpandedTemplate.API" Version="1.1.6"/>-->
         <Reference Include="Bannerlord.ExpandedTemplate.API">
             <HintPath>D:/SteamLibrary/steamapps/common/Mount &amp; Blade II Bannerlord/Modules/Bannerlord.ExpandedTemplate/Bannerlord.ExpandedTemplate.API/bin/Debug/netstandard2.0/Bannerlord.ExpandedTemplate.API.dll</HintPath>
         </Reference>
