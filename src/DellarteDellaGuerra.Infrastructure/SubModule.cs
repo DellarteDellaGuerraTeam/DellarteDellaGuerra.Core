@@ -41,7 +41,6 @@ namespace DellarteDellaGuerra.Infrastructure
         private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler;
         private readonly DadgConfigWatcher _dadgConfigWatcher;
         private readonly HarmonyPatcher _harmonyPatcher;
-        private readonly BannerlordExpandedTemplateApi _bannerlordExpandedTemplateApi;
         private DisplayShaderNumber _displayShaderNumber;
         private DadgTournamentModel _dadgTournamentModel;
 
@@ -52,9 +51,11 @@ namespace DellarteDellaGuerra.Infrastructure
             _dadgConfigWatcher = new DadgConfigWatcher(_loggerFactory);
             _harmonyPatcher = new HarmonyPatcher(_loggerFactory);
             _logger = _loggerFactory.CreateLogger<SubModule>();
-            _bannerlordExpandedTemplateApi = new BannerlordExpandedTemplateApi()
-                .UseLoggerFactory(new ExpandedTemplateLoggerFactory(_loggerFactory));
 
+            new BannerlordExpandedTemplateApi()
+                .UseLoggerFactory(new ExpandedTemplateLoggerFactory(_loggerFactory))
+                .Bind();      
+            
             InitialisePocIntegration();
             InitialiseSteamIntegration();
         }
@@ -92,15 +93,8 @@ namespace DellarteDellaGuerra.Infrastructure
             CompilingShaderNotifier.Init(_displayShaderNumber);
             game.AddGameHandler<CompilingShaderNotifier>();
 
-            _bannerlordExpandedTemplateApi.InitializeGameStarter(game, starterObject);
-
             campaignGameStarter.AddBehavior(new DadgCharacterCreationCampaignBehavior());
             campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
-        }
-
-        public override void OnBeforeMissionBehaviorInitialize(Mission mission)
-        {
-            _bannerlordExpandedTemplateApi.OnBeforeMissionBehaviorInitialize(mission);
         }
 
         public override void OnGameInitializationFinished(Game game)
