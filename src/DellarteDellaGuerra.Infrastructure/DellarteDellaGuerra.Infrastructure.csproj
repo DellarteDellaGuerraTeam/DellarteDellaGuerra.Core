@@ -60,4 +60,14 @@
         <Copy SourceFiles="@(LogConfigFile)" DestinationFiles="$(MSBuildThisFileDirectory)..\..\config\nlog.config" />
     </Target>
 
+    <Target Name="Copy Win64 client files to wEditor" AfterTargets="Build">
+        <Message Importance="high" Text="Copying files from Win64_Shipping_Client to Win64_Shipping_wEditor..." />
+        <ItemGroup>
+            <ClientFiles Include="$(MSBuildThisFileDirectory)..\..\bin\Win64_Shipping_Client\**\*" />
+        </ItemGroup>
+        <Copy
+                SourceFiles="@(ClientFiles)"
+                DestinationFolder="$(MSBuildThisFileDirectory)..\..\bin\Win64_Shipping_wEditor\%(RecursiveDir)"
+                SkipUnchangedFiles="true" />
+    </Target>
 </Project>
