@@ -36,6 +36,7 @@ namespace DellarteDellaGuerra.CharacterCreation
 
         public void OnCharacterCreationFinalize(CharacterCreationManager characterCreationManager)
         {
+            // TODO: remove this, the starting point is configurable in the xml.
             MobileParty.MainParty.Position = new CampaignVec2(new Vec2(750f, 300f), true);
             GameState? gameState = GameStateManager.Current?.ActiveState;
             if (gameState is MapState mapState)
