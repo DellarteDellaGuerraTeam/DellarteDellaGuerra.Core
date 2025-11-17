@@ -26,8 +26,6 @@ namespace DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours
             campaignBehaviorManager.RemoveBehavior<BackstoryCampaignBehavior>();
             // This adds new children on campaign start.
             campaignBehaviorManager.RemoveBehavior<InitialChildGenerationCampaignBehavior>();
-            // Remove default character creation menu
-            campaignBehaviorManager.RemoveBehavior<CharacterCreationCampaignBehavior>();
         }
     }    
 }
