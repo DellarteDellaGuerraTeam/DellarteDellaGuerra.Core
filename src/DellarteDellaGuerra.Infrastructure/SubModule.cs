@@ -1,7 +1,6 @@
 using System.Reflection;
 using System.Xml;
 using Bannerlord.ExpandedTemplate.API;
-using DellarteDellaGuerra.CharacterCreation;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
@@ -95,7 +94,6 @@ namespace DellarteDellaGuerra.Infrastructure
             CompilingShaderNotifier.Init(_displayShaderNumber);
             game.AddGameHandler<CompilingShaderNotifier>();
 
-            campaignGameStarter.AddBehavior(new DadgCharacterCreationCampaignBehavior());
             campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
         }
 

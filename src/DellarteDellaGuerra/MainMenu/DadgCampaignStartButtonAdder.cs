@@ -22,7 +22,6 @@ namespace DellarteDellaGuerra.MainMenu
         private static void OnClick()
         {
             MBGameManager gameManager = new SandBoxGameManager(() => new Campaign(CampaignGameMode.Campaign));
-
             MBGameManager.StartNewGame(gameManager);
         }
 
