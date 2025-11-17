@@ -19,14 +19,12 @@ using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.MainMenu;
-using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
 using DellarteDellaGuerra.Scene;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Spi;
 using DellarteDellaGuerra.Tournament.Spi.Mapper;
 using DellarteDellaGuerra.Utils;
 using NLog;
-using SandBox.View.Missions;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
@@ -91,8 +89,6 @@ namespace DellarteDellaGuerra.Infrastructure
             HandleDisplayCompilingShadersDependencies();
             CompilingShaderNotifier.Init(_displayShaderNumber);
             game.AddGameHandler<CompilingShaderNotifier>();
-
-            campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
         }
 
         public override void OnGameInitializationFinished(Game game)
