@@ -65,10 +65,8 @@ namespace DellarteDellaGuerra.Infrastructure
         {
             InfoPrinter.Display("DADG loaded");
 
-            new DadgCampaignStartButtonAdder().AddDadgCampaignStartButton(
-                Module
-                    .CurrentModule);
-
+            new VanillaCampaignButtonsRemover().RemoveVanillaCampaignOptions(Module.CurrentModule);
+            new DadgCampaignStartButtonAdder().AddDadgCampaignStartButton(Module.CurrentModule);
         }
 
         // load the harmony patches once as soon as possible before reaching the main menu 
