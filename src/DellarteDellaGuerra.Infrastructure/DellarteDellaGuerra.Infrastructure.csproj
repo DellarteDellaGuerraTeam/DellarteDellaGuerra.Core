@@ -7,6 +7,20 @@
         <Platforms>x64</Platforms>
         <LangVersion>12.0</LangVersion>
         <Nullable>enable</Nullable>
+        <BuildForWindows>true</BuildForWindows>
+        <BuildForWindowsStore>true</BuildForWindowsStore>
+        <ModuleId>DellarteDellaGuerra.Core</ModuleId>
+        <ModuleName>Dell'Arte Della Guerra Core</ModuleName>
+    </PropertyGroup>
+
+    <!-- Project properties -->
+    <PropertyGroup>
+        <Env Condition="'$(Configuration)'=='Release'">prod</Env>
+        <Env Condition="'$(Configuration)'=='Debug'">dev</Env>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <HarmonyVersion>2.3.0</HarmonyVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,49 +30,35 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Bannerlord.BuildResources" Version="1.1.0.104" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+        <PackageReference Include="Lib.Harmony" Version="$(HarmonyVersion)" IncludeAssets="compile" />
+
         <PackageReference Include="IsExternalInit" Version="1.0.3" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
+
         <PackageReference Include="SafeFluentXPath.Implementation" Version="1.0.0" />
         <PackageReference Include="NLog" Version="5.3.4"/>
 
-        <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All"/>
-        <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>
-        <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All"/>
-        <PackageReference Include="Harmony.DependencyInjection" Version="0.2.0"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.0"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0"/>
-        <ProjectReference Include="..\submodules\ExpandedTemplate\Bannerlord.ExpandedTemplate.API\Bannerlord.ExpandedTemplate.API.csproj" />
-        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.API\Bannerlord.Cannons.API.csproj" />
-        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons\Bannerlord.Cannons.csproj" />
-        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.Application\Bannerlord.Cannons.Application.csproj" />
-        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.Domain\Bannerlord.Cannons.Domain.csproj" />
-        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.Infrastructure\Bannerlord.Cannons.Infrastructure.csproj" />
+        <!--        <PackageReference Include="Bannerlord.ExpandedTemplate.API" Version="1.1.5"/>-->
+        <Reference Include="Bannerlord.ExpandedTemplate.API">
+            <HintPath>D:/SteamLibrary/steamapps/common/Mount &amp; Blade II Bannerlord/Modules/Bannerlord.ExpandedTemplate/Bannerlord.ExpandedTemplate.API/bin/Debug/netstandard2.0/Bannerlord.ExpandedTemplate.API.dll</HintPath>
+        </Reference>
+
+        <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All" />
+        <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All" />
+        <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All" />
 
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
         <ProjectReference Include="..\DellarteDellaGuerra\DellarteDellaGuerra.csproj" />
-
-<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All" />-->
-<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All" />-->
-<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All" />-->
-
     </ItemGroup>
 
-    <ItemGroup>
-        <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll">
-            <Private>false</Private>
-        </Reference>
-        <Reference Include="$(GameFolder)\Modules\SandBox\bin\Win64_Shipping_Client\SandBox*.dll">
-            <Private>false</Private>
-        </Reference>
-        <Reference Include="$(GameFolder)\Modules\Native\bin\Win64_Shipping_Client\*.dll">
-            <Private>false</Private>
-        </Reference>
-    </ItemGroup>
-    
-    <ItemGroup>
-      <Compile Remove="Cannon\PartyVisualTickSettlementVisualPatch.cs" />
-    </ItemGroup>
-
+    <Target Name="Copy technical config files to bin folder" BeforeTargets="BeforeBuild">
+        <Message Importance="high" Text="Copy config files to bin folder" />
+        <ItemGroup>
+            <ConfigFolderOutput Include="$(MSBuildThisFileDirectory)..\..\config\" />
+            <LogConfigFile Include="$(MSBuildThisFileDirectory)..\technical-config\nlog.$(Env).config" />
+        </ItemGroup>
+        <Copy SourceFiles="@(LogConfigFile)" DestinationFiles="$(MSBuildThisFileDirectory)..\..\config\nlog.config" />
+    </Target>
 
     <Target Name="Copy Win64 client files to wEditor" AfterTargets="Build">
         <Message Importance="high" Text="Copying files from Win64_Shipping_Client to Win64_Shipping_wEditor..." />
