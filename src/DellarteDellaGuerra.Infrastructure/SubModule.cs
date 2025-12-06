@@ -27,6 +27,7 @@ using DellarteDellaGuerra.Utils;
 using NLog;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
 using Module = TaleWorlds.MountAndBlade.Module;
@@ -70,6 +71,9 @@ namespace DellarteDellaGuerra.Infrastructure
         // load the harmony patches once as soon as possible before reaching the main menu 
         protected override void OnSubModuleLoad()
         {
+#if DEBUG
+            Debug.DebugManager = new DadgDebugManager(_loggerFactory);
+#endif
             _harmonyPatcher.PatchAll();
         }
 
