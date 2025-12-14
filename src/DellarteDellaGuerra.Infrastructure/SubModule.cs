@@ -197,9 +197,18 @@ namespace DellarteDellaGuerra.Infrastructure
         private void InitialiseCannonFeature()
         {
             var repo = new DeploymentSiegeEngineIconRepository();
+
+            var brushStyleExtender = new BrushStyleExtender(_loggerFactory,
+                UIResourceManager.BrushFactory,
+                UIResourceManager.SpriteData);
+            var campaignMapSiegeEngineDeploymentIconEnricher =
+                new CampaignMapSiegeEngineDeploymentIconEnricher(brushStyleExtender);
+            var siegeEngineDeploymentIconEnricher =
+                new SiegeEngineDeploymentIconEnricher(brushStyleExtender);
+            
             var usecase = new SiegeEngineIconRegistrationUseCase(_onSubModuleLoadEventPubSub,
-                new SiegeIconBrushExtender(_loggerFactory, UIResourceManager.BrushFactory,
-                    UIResourceManager.SpriteData), new DeploymentSiegeEngineIconRepository());
+                siegeEngineDeploymentIconEnricher, campaignMapSiegeEngineDeploymentIconEnricher,
+                new DeploymentSiegeEngineIconRepository());
             usecase.RegisterSiegeEngineIcons();
 
             _harmonyPatcher.AddPatch(new OrderSiegeMachineItemButtonWidgetPatch(repo));

@@ -5,16 +5,19 @@ namespace DellarteDellaGuerra.Cannon.UI;
 public class SiegeEngineIconRegistrationUseCase
 {
     private readonly IOnSubModuleLoadEventSubscriber _subModuleEventSubscriber;
-    private readonly SiegeIconBrushExtender _brushExtender;
+    private readonly SiegeEngineDeploymentIconEnricher _siegeEngineDeploymentIconEnricher;
     private readonly IDeploymentSiegeEngineIconRepository _iconRepository;
+    private readonly CampaignMapSiegeEngineDeploymentIconEnricher _campaignMapSiegeEngineDeploymentIconEnricher;
 
     public SiegeEngineIconRegistrationUseCase(
         IOnSubModuleLoadEventSubscriber subModuleEventSubscriber,
-        SiegeIconBrushExtender brushExtender,
+        SiegeEngineDeploymentIconEnricher siegeEngineDeploymentIconEnricher,
+        CampaignMapSiegeEngineDeploymentIconEnricher campaignMapSiegeEngineDeploymentIconEnricher,
         IDeploymentSiegeEngineIconRepository iconRepository)
     {
         _subModuleEventSubscriber = subModuleEventSubscriber;
-        _brushExtender = brushExtender;
+        _siegeEngineDeploymentIconEnricher = siegeEngineDeploymentIconEnricher;
+        _campaignMapSiegeEngineDeploymentIconEnricher = campaignMapSiegeEngineDeploymentIconEnricher;
         _iconRepository = iconRepository;
     }
 
@@ -26,6 +29,10 @@ public class SiegeEngineIconRegistrationUseCase
     private void OnSubModuleLoaded()
     {
         foreach (var icon in _iconRepository.SiegeEngineIcons)
-            _brushExtender.AddSiegeEngineDeploymentIcon(icon.Name, icon.SpriteId);
+        {
+            _siegeEngineDeploymentIconEnricher.AddSiegeEngineDeploymentIcon(icon.Name, icon.SpriteId);
+            _campaignMapSiegeEngineDeploymentIconEnricher.AddCampaignMapSiegeEngineDeploymentIcon(icon.Name,
+                icon.SpriteId);
+        }
     }
 }
