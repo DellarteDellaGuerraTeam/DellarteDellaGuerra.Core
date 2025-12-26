@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Bannerlord.ExpandedTemplate.API;
@@ -12,6 +13,8 @@ using DellarteDellaGuerra.Domain.Tournament;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Patches;
 using DellarteDellaGuerra.Firearm.Reload;
+using DellarteDellaGuerra.Infrastructure.Cannon;
+using DellarteDellaGuerra.Infrastructure.Cannon.UI.Repo;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.Events;
@@ -116,7 +119,7 @@ namespace DellarteDellaGuerra.Infrastructure
             mission.AddMissionBehavior(new FirearmReloadMissionLogic(_loggerFactory,
                 new InMemoryWeaponEntityRepository()));
             mission.AddMissionBehavior(new FirearmSmokeMissionLogic(_loggerFactory));
-            mission.AddMissionBehavior(new CannonMissionBehaviour());
+            mission.AddMissionBehavior(new CannonTeamMissionLogic());
         }
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)
@@ -211,10 +214,15 @@ namespace DellarteDellaGuerra.Infrastructure
                 new DeploymentSiegeEngineIconRepository());
             usecase.RegisterSiegeEngineIcons();
 
+            var mapSiegeEngineIconRepository = new MapSiegeEngineIconRepository();
             _harmonyPatcher.AddPatch(new OrderSiegeMachineItemButtonWidgetPatch(repo));
-            _harmonyPatcher.AddPatch(new MapSiegePOIBrushWidgetManualPatch(new MapSiegeEngineIconRepository(),
+            _harmonyPatcher.AddPatch(new MapSiegePOIBrushWidgetManualPatch(mapSiegeEngineIconRepository,
                 UIResourceManager.SpriteData));
+            _harmonyPatcher.AddPatch(new MapSiegePOIVMPatch(mapSiegeEngineIconRepository));
 
+            var campaignMapSiegePrefabEntityCachePatches = new CampaignMapSiegePrefabEntityCachePatches(new PrefabSiegeEngineRepository());
+            campaignMapSiegePrefabEntityCachePatches.GetPatches().ToList().ForEach(patch => _harmonyPatcher.AddPatch(patch));
+            
             CannonSystemInitialiser.Initialise();
         }
 

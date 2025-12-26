@@ -11,6 +11,8 @@
         <BuildForWindowsStore>true</BuildForWindowsStore>
         <ModuleId>DellarteDellaGuerra.Core</ModuleId>
         <ModuleName>Dell'Arte Della Guerra Core</ModuleName>
+
+        <GameFolder>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord-v1.2</GameFolder>
     </PropertyGroup>
 
     <!-- Project properties -->
@@ -32,6 +34,7 @@
     <ItemGroup>
         <PackageReference Include="Bannerlord.BuildResources" Version="1.1.0.104" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
         <PackageReference Include="Bannerlord.Lib.Harmony" Version="$(HarmonyVersion)" IncludeAssets="compile" />
+        <PackageReference Include="Bannerlord.ReferenceAssemblies.SandBox" Version="1.2.11.45697"/>
 
         <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.12.0" IncludeAssets="compile"/>
 
@@ -58,6 +61,16 @@
 
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
         <ProjectReference Include="..\DellarteDellaGuerra\DellarteDellaGuerra.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Cannon\PartyVisualTickSettlementVisualPatch.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Cannon\Infra\" />
+      <Folder Include="Cannon\Mission\Siege\" />
+      <Folder Include="Cannon\Util\" />
     </ItemGroup>
 
     <Target Name="Copy technical config files to bin folder" BeforeTargets="BeforeBuild">

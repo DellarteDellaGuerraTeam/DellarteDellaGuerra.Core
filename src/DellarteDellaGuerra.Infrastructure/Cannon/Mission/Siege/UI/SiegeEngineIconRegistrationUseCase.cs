@@ -1,4 +1,5 @@
-﻿using DellarteDellaGuerra.Infrastructure.Events;
+﻿using DellarteDellaGuerra.Infrastructure.Cannon.UI.Repo;
+using DellarteDellaGuerra.Infrastructure.Events;
 
 namespace DellarteDellaGuerra.Cannon.UI;
 

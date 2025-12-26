@@ -4,7 +4,7 @@ using TaleWorlds.MountAndBlade;
 
 namespace DellarteDellaGuerra.Cannon;
 
-public class CannonMissionBehaviour : MissionLogic
+public class CannonTeamMissionLogic : MissionLogic
 {
     public override void OnAddTeam(TaleWorlds.MountAndBlade.Team team)
     {

@@ -8,7 +8,7 @@ using TaleWorlds.CampaignSystem.Siege;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
 
-namespace DellarteDellaGuerra.Cannon
+namespace DellarteDellaGuerra.Infrastructure.Cannon
 {
     public class DadgSiegeEventModel : SiegeEventModel
     {
@@ -45,27 +45,39 @@ namespace DellarteDellaGuerra.Cannon
         public override string GetSiegeEngineMapPrefabName(SiegeEngineType siegeEngineType, int wallLevel,
             BattleSideEnum side)
         {
+            if (siegeEngineType.StringId == "falconet") return "dadg_falconet_mapicon";
+            
             return _defaultSiegeEventModel.GetSiegeEngineMapPrefabName(siegeEngineType, wallLevel, side);
         }
 
         public override string GetSiegeEngineMapProjectilePrefabName(SiegeEngineType siegeEngineType)
         {
+            if (siegeEngineType.StringId == "falconet") return "cannonball_mapicon_projectile";
+            
             return _defaultSiegeEventModel.GetSiegeEngineMapProjectilePrefabName(siegeEngineType);
         }
 
         public override string GetSiegeEngineMapReloadAnimationName(SiegeEngineType siegeEngineType,
             BattleSideEnum side)
         {
+            if (siegeEngineType.StringId == "falconet") return "ballista_a_mapicon_reload";
+            
             return _defaultSiegeEventModel.GetSiegeEngineMapReloadAnimationName(siegeEngineType, side);
         }
 
         public override string GetSiegeEngineMapFireAnimationName(SiegeEngineType siegeEngineType, BattleSideEnum side)
         {
+            if (siegeEngineType.StringId == "falconet") return "ballista_a_mapicon_fire";
+            
             return _defaultSiegeEventModel.GetSiegeEngineMapFireAnimationName(siegeEngineType, side);
         }
 
         public override sbyte GetSiegeEngineMapProjectileBoneIndex(SiegeEngineType siegeEngineType, BattleSideEnum side)
         {
+            if (siegeEngineType.StringId == "falconet")
+                return _defaultSiegeEventModel.GetSiegeEngineMapProjectileBoneIndex(DefaultSiegeEngineTypes.Trebuchet,
+                    side); // Expect trebuchet mapicon skeleton, TODO: refactor it into a better API
+            
             return _defaultSiegeEventModel.GetSiegeEngineMapProjectileBoneIndex(siegeEngineType, side);
         }
 
