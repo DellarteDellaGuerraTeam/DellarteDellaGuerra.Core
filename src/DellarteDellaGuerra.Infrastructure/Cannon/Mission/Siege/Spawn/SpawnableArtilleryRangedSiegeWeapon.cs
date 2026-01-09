@@ -1,5 +1,5 @@
-﻿using TaleWorlds.MountAndBlade.Objects.Siege;
-using TOR_Core.BattleMechanics.Artillery;
+﻿using Bannerlord.Cannons.BattleMechanics.Artillery;
+using TaleWorlds.MountAndBlade.Objects.Siege;
 
 namespace DellarteDellaGuerra.Cannon
 {

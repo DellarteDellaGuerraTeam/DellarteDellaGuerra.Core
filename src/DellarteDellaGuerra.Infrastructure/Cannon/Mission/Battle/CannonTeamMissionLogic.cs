@@ -9,16 +9,25 @@ public class CannonTeamMissionLogic : MissionLogic
     public override void OnAddTeam(TaleWorlds.MountAndBlade.Team team)
     {
         base.OnAddTeam(team);
-        Mission.Current.ActiveMissionObjects
-            .Select(missionObject => missionObject.GameEntity.GetFirstScriptOfTypeInFamily<Falconet>())
-            .Where(script => script is not null && script.Side.Equals(BattleSideEnum.Attacker) && team.IsAttacker)
-            .ToList()
-            .ForEach(script => script.Team = team);
 
         Mission.Current.ActiveMissionObjects
-            .Select(missionObject => missionObject.GameEntity.GetFirstScriptOfTypeInFamily<Falconet>())
-            .Where(script => script is not null && script.Side.Equals(BattleSideEnum.Defender) && team.IsDefender)
+            .OfType<Falconet>()
+            .Where(script => script.Side.Equals(BattleSideEnum.Attacker) && team.IsAttacker)
             .ToList()
-            .ForEach(script => script.Team = team);
+            .ForEach(script =>
+            {
+                script.Team = team;
+                script.SetForcedUse(true);
+            });
+        
+        Mission.Current.ActiveMissionObjects
+            .OfType<Falconet>()
+            .Where(script => script.Side.Equals(BattleSideEnum.Defender) && team.IsDefender)
+            .ToList()
+            .ForEach(script =>
+            {
+                script.Team = team;
+                script.SetForcedUse(true);
+            });
     }
 }

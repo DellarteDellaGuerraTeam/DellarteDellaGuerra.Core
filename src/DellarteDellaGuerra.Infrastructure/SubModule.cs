@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Xml;
+using Bannerlord.Cannons.Api;
 using Bannerlord.ExpandedTemplate.API;
 using DellarteDellaGuerra.Cannon;
 using DellarteDellaGuerra.Cannon.UI;
@@ -35,7 +36,6 @@ using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.MountAndBlade;
-using TOR_Core.Api;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
 
 namespace DellarteDellaGuerra.Infrastructure
