@@ -75,12 +75,19 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Providers
         private void LoadConfig()
         {
             // Config file exists as a change was detected 
-            string configPath = ResourceLocator.GetConfigurationFilePath(ConfigFileName)!;
+            string? configFilePath = ResourceLocator.GetConfigurationFilePath(ConfigFileName)!;
+
+            if (configFilePath is null)
+            {
+                _logger.Warn($"Could not find config file {configFilePath}");
+                return;
+            }
+            
             var serialiser = new XmlSerializer(typeof(DadgConfig));
 
             try
             {
-                using var writer = new FileStream(configPath, FileMode.Open);
+                using var writer = new FileStream(configFilePath, FileMode.Open);
                 _config = (DadgConfig) serialiser.Deserialize(writer);
             }
             catch (InvalidOperationException e)
