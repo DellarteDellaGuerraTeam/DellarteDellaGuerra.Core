@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TaleWorlds.ModuleManager;
 
@@ -103,10 +104,17 @@ namespace DellarteDellaGuerra.Infrastructure.Utils
 
         private static string? GetResourceFromModModules(string pathRelativeToModFolder)
         {
-            return ModuleHelper.GetSortedModules(ModuleHelper.GetModules().Select(module => module.Id).ToArray())
-                .Where(module => ModuleIdHelper.GetModuleIds().Contains(module.Id))
-                .Select(module => Path.Combine(ModuleHelper.GetModuleFullPath(module.Id), pathRelativeToModFolder))
+            return GetModModuleIds()
+                .Select(moduleId => Path.Combine(ModuleHelper.GetModuleFullPath(moduleId), pathRelativeToModFolder))
                 .FirstOrDefault(path => File.Exists(path) || Directory.Exists(path));
+        }
+
+        private static List<string> GetModModuleIds()
+        {
+            var moduleIds = ModuleHelper.GetModules().Select(module => module.Id);
+
+            return ModuleHelper.GetSortedModules(moduleIds.ToArray()).Select(module => module.Id)
+                .Where(moduleId => moduleId.Contains(ModuleIdHelper.GetModuleIdPrefix())).ToList();
         }
     }
 }

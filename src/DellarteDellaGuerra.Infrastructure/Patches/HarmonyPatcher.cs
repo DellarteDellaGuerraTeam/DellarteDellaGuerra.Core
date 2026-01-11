@@ -11,16 +11,21 @@ namespace DellarteDellaGuerra.Infrastructure.Patches
     public class HarmonyPatcher : IPatcher
     {
         private readonly ILogger _logger;
-        private readonly Harmony _harmony = new ("com.dellartedellaguerra.harmony");
 
+        private readonly Harmony _harmony = new("com.dellartedellaguerra.harmony");
         private readonly List<IPatch> _manualPatches;
-        
+
         public HarmonyPatcher(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<HarmonyPatcher>();
             _manualPatches = new List<IPatch>();
         }
 
+        public void AddPatch(IPatch patch)
+        {
+            _manualPatches.Add(patch);
+        }
+        
         public void PatchAll()
         {
             try
@@ -31,11 +36,6 @@ namespace DellarteDellaGuerra.Infrastructure.Patches
             {
                 _logger.Error($"Harmony patches failed: {e}");
             }
-        }
-
-        public void AddPatch(IPatch patch)
-        {
-            _manualPatches.Add(patch);
         }
 
         private void PatchAllManualPatches()
@@ -87,7 +87,7 @@ namespace DellarteDellaGuerra.Infrastructure.Patches
         private void PatchAllAutoPatches()
         {
             AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => ModuleIdHelper.GetModuleIds().Contains(assembly.GetName().Name))
+                .Where(assembly => assembly.GetName().Name.Contains(ModuleIdHelper.GetModuleIdPrefix()))
                 .ToList()
                 .ForEach(assembly => _harmony.PatchAll(assembly));
         }

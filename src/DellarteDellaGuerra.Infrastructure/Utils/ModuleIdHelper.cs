@@ -1,17 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace DellarteDellaGuerra.Infrastructure.Utils;
+﻿namespace DellarteDellaGuerra.Infrastructure.Utils;
 
 public class ModuleIdHelper
 {
-    public static ISet<string> GetModuleIds()
+    public static string GetModuleIdPrefix()
     {
-        return new HashSet<string>
-        {
-            "DellarteDellaGuerra.Core",
-            "DellarteDellaGuerra",
-            "DellarteDellaGuerraMap",
-            "DellarteDellaGuerraScenes"
-        };
+        return "DellarteDellaGuerra";
     }
 }
