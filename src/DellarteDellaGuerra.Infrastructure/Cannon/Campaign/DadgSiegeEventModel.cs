@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using DellarteDellaGuerra.Domain.SiegeEngines;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
-using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -12,11 +12,13 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon
 {
     public class DadgSiegeEventModel : SiegeEventModel
     {
-        private readonly DefaultSiegeEventModel _defaultSiegeEventModel;
+        private readonly SiegeEventModel _defaultSiegeEventModel;
+        private readonly GetDefaultSiegeEngine defaultSiegeEngine;
 
-        public DadgSiegeEventModel(DefaultSiegeEventModel defaultSiegeEventModel)
+        public DadgSiegeEventModel(SiegeEventModel defaultSiegeEventModel, GetDefaultSiegeEngine defaultSiegeEngine)
         {
             _defaultSiegeEventModel = defaultSiegeEventModel;
+            this.defaultSiegeEngine = defaultSiegeEngine;
         }
 
         public override int GetSiegeEngineDestructionCasualties(SiegeEvent siegeEvent, BattleSideEnum side,
@@ -107,7 +109,7 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon
             var siegeEngineTypes =
                 new List<SiegeEngineType>(_defaultSiegeEventModel.GetAvailableAttackerRangedSiegeEngines(party));
 
-            var falconetSiegeEngineType = MBObjectManager.Instance.GetObject<SiegeEngineType>("falconet");
+            var falconetSiegeEngineType = GetDefaultSiegeEngineType();
             if (falconetSiegeEngineType is null) return siegeEngineTypes;
 
             siegeEngineTypes.Add(falconetSiegeEngineType);
@@ -119,7 +121,7 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon
             var siegeEngineTypes =
                 new List<SiegeEngineType>(_defaultSiegeEventModel.GetAvailableDefenderSiegeEngines(party));
 
-            var falconetSiegeEngineType = MBObjectManager.Instance.GetObject<SiegeEngineType>("falconet");
+            var falconetSiegeEngineType = GetDefaultSiegeEngineType();
             if (falconetSiegeEngineType is null) return siegeEngineTypes;
 
             siegeEngineTypes.Add(falconetSiegeEngineType);
@@ -133,7 +135,8 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon
 
         public override IEnumerable<SiegeEngineType> GetAvailableAttackerTowerSiegeEngines(PartyBase party)
         {
-            return _defaultSiegeEventModel.GetAvailableAttackerTowerSiegeEngines(party);
+            return new List<SiegeEngineType>();
+            // return _defaultSiegeEventModel.GetAvailableAttackerTowerSiegeEngines(party);
         }
 
         public override IEnumerable<SiegeEngineType> GetPrebuiltSiegeEnginesOfSettlement(Settlement settlement)
@@ -168,6 +171,11 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon
         public override FlattenedTroopRoster GetPriorityTroopsForSallyOutAmbush()
         {
             return _defaultSiegeEventModel.GetPriorityTroopsForSallyOutAmbush();
+        }
+
+        private SiegeEngineType? GetDefaultSiegeEngineType()
+        {
+            return MBObjectManager.Instance.GetObject<SiegeEngineType>(defaultSiegeEngine.GetSiegeEngine().Id);
         }
     }
 }

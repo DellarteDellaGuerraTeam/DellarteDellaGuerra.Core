@@ -10,6 +10,7 @@ using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
+using DellarteDellaGuerra.Domain.SiegeEngines;
 using DellarteDellaGuerra.Domain.Tournament;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Patches;
@@ -23,6 +24,7 @@ using DellarteDellaGuerra.Infrastructure.ExpandedTemplateApi.Logging;
 using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
+using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
@@ -32,10 +34,12 @@ using DellarteDellaGuerra.Tournament.Spi.Mapper;
 using DellarteDellaGuerra.Utils;
 using NLog;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.ObjectSystem;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
 
 namespace DellarteDellaGuerra.Infrastructure
@@ -50,7 +54,6 @@ namespace DellarteDellaGuerra.Infrastructure
 
         private DisplayShaderNumber _displayShaderNumber;
         private readonly OnSubModuleLoadEventPubSub _onSubModuleLoadEventPubSub;
-        private DadgTournamentModel _dadgTournamentModel;
 
         public SubModule()
         {
@@ -92,11 +95,9 @@ namespace DellarteDellaGuerra.Infrastructure
         {
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
-            HandleTournamentModelDependencies();
-            campaignGameStarter.AddModel(_dadgTournamentModel);
+            HandleTournamentModelDependencies(campaignGameStarter);
+            InitialiseSiegeEngineLogic(campaignGameStarter);
 
-            campaignGameStarter.AddModel(new DadgSiegeEventModel(new DefaultSiegeEventModel()));
-            
             HandleDisplayCompilingShadersDependencies();
             CompilingShaderNotifier.Init(_displayShaderNumber);
             game.AddGameHandler<CompilingShaderNotifier>();
@@ -107,7 +108,6 @@ namespace DellarteDellaGuerra.Infrastructure
         public override void OnGameInitializationFinished(Game game)
         {
             if (game.GameType is not Campaign) return;
-        
             _campaignBehaviourDisabler.Disable(Campaign.Current.CampaignBehaviorManager);
             SetCampaignStartingDate();
             LoadDadgBattleScenes();
@@ -184,13 +184,13 @@ namespace DellarteDellaGuerra.Infrastructure
         
         #region Tournament
 
-        private void HandleTournamentModelDependencies()
+        private void HandleTournamentModelDependencies(CampaignGameStarter campaignGameStarter)
         {
             var itemRepository = new ItemRepository(new ItemTierMapper(_loggerFactory));
             var getTournamentRewardUseCase = new GetTournamentRewardUseCase(itemRepository, new TroopRepository(),
                 new TownRepository(),
                 new RandomProvider(), new HighestTownProsperityProvider());
-            _dadgTournamentModel = new DadgTournamentModel(getTournamentRewardUseCase);
+            campaignGameStarter.AddModel(new DadgTournamentModel(getTournamentRewardUseCase));
         }
 
         #endregion
@@ -224,6 +224,23 @@ namespace DellarteDellaGuerra.Infrastructure
             campaignMapSiegePrefabEntityCachePatches.GetPatches().ToList().ForEach(patch => _harmonyPatcher.AddPatch(patch));
             
             CannonSystemInitialiser.Initialise();
+        }
+
+        /// Must be called after the cannon initialisation since the logic requires cannons
+        public void InitialiseSiegeEngineLogic(CampaignGameStarter campaignGameStarter)
+        {
+            var getDefaultSiegeEngine = new GetDefaultSiegeEngine();
+            
+            campaignGameStarter.AddModel(new DadgSiegeStrategyActionModel(
+                campaignGameStarter.Models.OfType<DefaultSiegeStrategyActionModel>().Last(), MBObjectManager.Instance,
+                _loggerFactory, getDefaultSiegeEngine));
+            campaignGameStarter.AddModel(
+                new DadgSiegeEngineAvailabilityModel(campaignGameStarter.Models.OfType<SiegeEventModel>().Last(),
+                    _loggerFactory, getDefaultSiegeEngine));
+
+            campaignGameStarter.AddModel(
+                new DadgSiegeEventModel(campaignGameStarter.Models.OfType<SiegeEventModel>().Last(),
+                    getDefaultSiegeEngine));
         }
 
         #endregion
