@@ -1,4 +1,4 @@
-﻿using DellarteDellaGuerra.Domain.Tournament.Model;
+﻿using DellarteDellaGuerra.Domain.Tournament.Reward.Model;
 using TaleWorlds.SaveSystem;
 
 namespace DellarteDellaGuerra.Tournament.Api

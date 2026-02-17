@@ -11,7 +11,7 @@ using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.SiegeEngines;
-using DellarteDellaGuerra.Domain.Tournament;
+using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Patches;
 using DellarteDellaGuerra.Firearm.Reload;
@@ -29,8 +29,8 @@ using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
 using DellarteDellaGuerra.Tournament.Api;
-using DellarteDellaGuerra.Tournament.Spi;
-using DellarteDellaGuerra.Tournament.Spi.Mapper;
+using DellarteDellaGuerra.Tournament.Reward.Spi;
+using DellarteDellaGuerra.Tournament.Reward.Spi.Mapper;
 using DellarteDellaGuerra.Utils;
 using NLog;
 using TaleWorlds.CampaignSystem;
@@ -187,7 +187,7 @@ namespace DellarteDellaGuerra.Infrastructure
         private void HandleTournamentModelDependencies(CampaignGameStarter campaignGameStarter)
         {
             var itemRepository = new ItemRepository(new ItemTierMapper(_loggerFactory));
-            var getTournamentRewardUseCase = new GetTournamentRewardUseCase(itemRepository, new TroopRepository(),
+var getTournamentRewardUseCase = new GetTournamentRewardUseCase(itemRepository, new TroopRepository(),
                 new TownRepository(),
                 new RandomProvider(), new HighestTownProsperityProvider());
             campaignGameStarter.AddModel(new DadgTournamentModel(getTournamentRewardUseCase));

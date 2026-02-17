@@ -1,4 +1,4 @@
-﻿namespace DellarteDellaGuerra.Domain.Tournament.Model
+﻿namespace DellarteDellaGuerra.Domain.Tournament.Reward.Model
 {
     public enum ItemTier
     {

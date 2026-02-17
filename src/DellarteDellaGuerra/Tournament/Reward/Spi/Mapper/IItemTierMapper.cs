@@ -1,7 +1,7 @@
-﻿using DellarteDellaGuerra.Domain.Tournament.Model;
+﻿using DellarteDellaGuerra.Domain.Tournament.Reward.Model;
 using TaleWorlds.Core;
 
-namespace DellarteDellaGuerra.Tournament.Spi.Mapper
+namespace DellarteDellaGuerra.Tournament.Reward.Spi.Mapper
 {
     public interface IItemTierMapper
     {

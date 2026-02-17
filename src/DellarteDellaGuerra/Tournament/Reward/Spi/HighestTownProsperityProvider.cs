@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using DellarteDellaGuerra.Domain.Tournament.Port;
+using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using TaleWorlds.CampaignSystem.Settlements;
 
-namespace DellarteDellaGuerra.Tournament.Spi
+namespace DellarteDellaGuerra.Tournament.Reward.Spi
 {
     public class HighestTownProsperityProvider : IHighestTownProsperityProvider
     {

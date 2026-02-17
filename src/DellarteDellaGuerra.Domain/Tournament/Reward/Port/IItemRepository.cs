@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using DellarteDellaGuerra.Domain.Tournament.Model;
+using DellarteDellaGuerra.Domain.Tournament.Reward.Model;
 
-namespace DellarteDellaGuerra.Domain.Tournament.Port
+namespace DellarteDellaGuerra.Domain.Tournament.Reward.Port
 {
     public interface IItemRepository
     {

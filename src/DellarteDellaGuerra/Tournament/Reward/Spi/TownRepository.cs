@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using DellarteDellaGuerra.Domain.Tournament.Port;
+using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using TaleWorlds.CampaignSystem.Settlements;
-using Town = DellarteDellaGuerra.Domain.Tournament.Model.Town;
+using Town = DellarteDellaGuerra.Domain.Tournament.Reward.Model.Town;
 
-namespace DellarteDellaGuerra.Tournament.Spi
+namespace DellarteDellaGuerra.Tournament.Reward.Spi
 {
     public class TownRepository : ITownRepository
     {

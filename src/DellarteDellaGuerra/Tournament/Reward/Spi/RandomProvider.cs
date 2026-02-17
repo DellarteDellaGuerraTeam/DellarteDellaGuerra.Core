@@ -1,7 +1,7 @@
-﻿using DellarteDellaGuerra.Domain.Tournament.Port;
+﻿using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using TaleWorlds.Core;
 
-namespace DellarteDellaGuerra.Tournament.Spi
+namespace DellarteDellaGuerra.Tournament.Reward.Spi
 {
     public class RandomProvider : IRandomProvider
     {
