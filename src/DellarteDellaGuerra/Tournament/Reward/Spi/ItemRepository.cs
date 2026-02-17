@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DellarteDellaGuerra.Domain.Tournament.Model;
-using DellarteDellaGuerra.Domain.Tournament.Port;
-using DellarteDellaGuerra.Tournament.Spi.Mapper;
+using DellarteDellaGuerra.Domain.Tournament.Reward.Model;
+using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
+using DellarteDellaGuerra.Tournament.Reward.Spi.Mapper;
 using TaleWorlds.CampaignSystem.Extensions;
 
-namespace DellarteDellaGuerra.Tournament.Spi
+namespace DellarteDellaGuerra.Tournament.Reward.Spi
 {
     public class ItemRepository : IItemRepository
     {

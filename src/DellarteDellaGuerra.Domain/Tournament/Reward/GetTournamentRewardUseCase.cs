@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DellarteDellaGuerra.Domain.Tournament.Model;
-using DellarteDellaGuerra.Domain.Tournament.Port;
+using DellarteDellaGuerra.Domain.Tournament.Reward.Model;
+using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 
-namespace DellarteDellaGuerra.Domain.Tournament
+namespace DellarteDellaGuerra.Domain.Tournament.Reward
 {
     public class GetTournamentRewardUseCase : IGetTournamentRewardUseCase
     {

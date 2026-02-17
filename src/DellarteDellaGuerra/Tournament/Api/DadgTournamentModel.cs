@@ -1,4 +1,5 @@
 ﻿using DellarteDellaGuerra.Domain.Tournament;
+using DellarteDellaGuerra.Domain.Tournament.Reward;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.TournamentGames;

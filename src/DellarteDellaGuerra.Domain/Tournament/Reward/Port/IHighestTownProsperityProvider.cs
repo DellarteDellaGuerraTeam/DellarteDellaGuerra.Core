@@ -1,4 +1,4 @@
-﻿namespace DellarteDellaGuerra.Domain.Tournament.Port
+﻿namespace DellarteDellaGuerra.Domain.Tournament.Reward.Port
 {
     public interface IHighestTownProsperityProvider
     {

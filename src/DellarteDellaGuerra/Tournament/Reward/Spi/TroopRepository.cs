@@ -1,9 +1,9 @@
-﻿using DellarteDellaGuerra.Domain.Tournament.Model;
-using DellarteDellaGuerra.Domain.Tournament.Port;
+﻿using DellarteDellaGuerra.Domain.Tournament.Reward.Model;
+using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.ObjectSystem;
 
-namespace DellarteDellaGuerra.Tournament.Spi
+namespace DellarteDellaGuerra.Tournament.Reward.Spi
 {
     public class TroopRepository : ITroopRepository
     {
