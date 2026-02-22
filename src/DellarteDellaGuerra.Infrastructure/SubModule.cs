@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
@@ -37,6 +39,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
+using TaleWorlds.DotNet;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
@@ -78,11 +81,33 @@ namespace DellarteDellaGuerra.Infrastructure
             InfoPrinter.Display("DADG loaded");
         }
 
-        // load the harmony patches once as soon as possible before reaching the main menu 
+        // load the harmony patches once as soon as possible before reaching the main menu
         protected override void OnSubModuleLoad()
         {
             _onSubModuleLoadEventPubSub.Publish();
             _harmonyPatcher.PatchAll();
+
+            Managed.AddTypes(GetDadgReferencedAssemblyTypes());
+        }
+
+        private Dictionary<string, Type> GetDadgReferencedAssemblyTypes()
+        {
+            return Assembly
+                .GetExecutingAssembly()
+                .GetReferencedAssemblies()
+                .Where(a => a.Name.StartsWith(ModuleIdHelper.GetModuleIdPrefix()))
+                .Select(Assembly.Load)
+                .SelectMany(assembly => assembly.GetTypes())
+                .Where(type =>
+                    type.IsClass &&
+                    !type.IsAbstract &&
+                    !type.IsGenericTypeDefinition &&
+                    type.GetConstructor(Type.EmptyTypes) != null)
+                .GroupBy(t => t.Name)
+                .ToDictionary(
+                    grouping => grouping.Key,
+                    grouping => grouping.Last()
+                );
         }
 
         protected override void OnSubModuleUnloaded()
