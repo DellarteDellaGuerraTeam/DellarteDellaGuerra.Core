@@ -12,7 +12,7 @@ namespace DellarteDellaGuerra.Infrastructure.Patches
     {
         private readonly ILogger _logger;
 
-        private readonly Harmony _harmony = new("com.dellartedellaguerra.harmony");
+        private readonly HarmonyLib.Harmony _harmony = new("com.dellartedellaguerra.harmony");
         private readonly List<IPatch> _manualPatches;
 
         public HarmonyPatcher(ILoggerFactory loggerFactory)
