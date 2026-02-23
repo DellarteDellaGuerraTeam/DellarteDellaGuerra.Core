@@ -1,7 +1,8 @@
-﻿using DellarteDellaGuerra.Infrastructure.Cannon.UI.Repo;
+﻿using DellarteDellaGuerra.Infrastructure.Cannon.Campaign.UI;
+using DellarteDellaGuerra.Infrastructure.Cannon.Infra.Repo;
 using DellarteDellaGuerra.Infrastructure.Events;
 
-namespace DellarteDellaGuerra.Cannon.UI;
+namespace DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.UI;
 
 public class SiegeEngineIconRegistrationUseCase
 {

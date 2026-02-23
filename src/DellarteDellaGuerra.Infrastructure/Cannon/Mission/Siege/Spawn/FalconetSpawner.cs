@@ -3,7 +3,7 @@ using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Objects.Siege;
 
-namespace DellarteDellaGuerra.Cannon
+namespace DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.Spawn
 {
     public enum Team
     {

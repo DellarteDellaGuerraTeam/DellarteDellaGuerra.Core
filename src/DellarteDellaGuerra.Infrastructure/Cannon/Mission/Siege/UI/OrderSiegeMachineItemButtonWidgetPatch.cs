@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using DellarteDellaGuerra.Infrastructure.Cannon.UI.Repo;
+using DellarteDellaGuerra.Infrastructure.Cannon.Infra.Repo;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Patches;
 using HarmonyLib;
 using TaleWorlds.GauntletUI.BaseTypes;
 using TaleWorlds.MountAndBlade.GauntletUI.Widgets.Order;
 
-namespace DellarteDellaGuerra.Cannon.UI;
+namespace DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.UI;
 
 public class OrderSiegeMachineItemButtonWidgetPatch : IPatch
 {

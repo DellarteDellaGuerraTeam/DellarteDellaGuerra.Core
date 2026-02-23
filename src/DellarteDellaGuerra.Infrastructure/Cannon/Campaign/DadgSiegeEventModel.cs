@@ -8,7 +8,7 @@ using TaleWorlds.CampaignSystem.Siege;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
 
-namespace DellarteDellaGuerra.Infrastructure.Cannon
+namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign
 {
     public class DadgSiegeEventModel : SiegeEventModel
     {

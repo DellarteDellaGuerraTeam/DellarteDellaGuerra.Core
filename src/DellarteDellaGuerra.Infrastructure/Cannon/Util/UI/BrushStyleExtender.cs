@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
+using DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.UI;
 using TaleWorlds.GauntletUI;
 using TaleWorlds.TwoDimension;
 
-namespace DellarteDellaGuerra.Cannon.UI;
+namespace DellarteDellaGuerra.Infrastructure.Cannon.Util.UI;
 
 public class BrushStyleExtender
 {

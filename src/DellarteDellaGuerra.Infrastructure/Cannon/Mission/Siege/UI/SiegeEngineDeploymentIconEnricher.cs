@@ -1,4 +1,6 @@
-﻿namespace DellarteDellaGuerra.Cannon.UI;
+﻿using DellarteDellaGuerra.Infrastructure.Cannon.Util.UI;
+
+namespace DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.UI;
 
 public class SiegeEngineDeploymentIconEnricher
 {
