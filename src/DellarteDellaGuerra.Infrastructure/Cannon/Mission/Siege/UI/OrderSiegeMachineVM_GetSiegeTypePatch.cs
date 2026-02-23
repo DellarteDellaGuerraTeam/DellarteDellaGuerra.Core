@@ -1,10 +1,11 @@
 ﻿using System;
+using DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.Spawn;
 using HarmonyLib;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade.ViewModelCollection.Order;
 using TaleWorlds.ObjectSystem;
 
-namespace DellarteDellaGuerra.Cannon
+namespace DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.UI
 {
     [HarmonyPatch(typeof(OrderSiegeMachineVM))]
     public static class OrderSiegeMachineVM_GetSiegeTypePatch

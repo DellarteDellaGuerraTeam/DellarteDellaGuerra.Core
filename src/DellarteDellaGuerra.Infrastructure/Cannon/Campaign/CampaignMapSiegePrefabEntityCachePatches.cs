@@ -1,17 +1,16 @@
 using System.Collections.Generic;
 using System.Reflection;
-using DellarteDellaGuerra.Infrastructure.Cannon.UI.Repo;
+using DellarteDellaGuerra.Infrastructure.Cannon.Infra.Repo;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Patches;
 using HarmonyLib;
 using SandBox;
-using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 
-namespace DellarteDellaGuerra.Infrastructure.Cannon;
+namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign;
 
 public class CampaignMapSiegePrefabEntityCachePatches
 {
@@ -52,7 +51,7 @@ public class CampaignMapSiegePrefabEntityCachePatches
 
         foreach (var prefabSiegeEngine in _prefabSiegeEngineRepository.GetPrefabSiegeEngines())
         {
-            var gameEntity = GameEntity.Instantiate(((MapScene)Campaign.Current.MapSceneWrapper).Scene,
+            var gameEntity = GameEntity.Instantiate(((MapScene)TaleWorlds.CampaignSystem.Campaign.Current.MapSceneWrapper).Scene,
                 prefabSiegeEngine.SiegeEngineMapPrefabName, true);
             var launchFrame = gameEntity.GetChild(0)
                 .GetFirstChildEntityWithTag("projectile_position")

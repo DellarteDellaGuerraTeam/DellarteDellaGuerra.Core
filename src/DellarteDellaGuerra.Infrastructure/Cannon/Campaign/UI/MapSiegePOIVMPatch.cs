@@ -1,12 +1,13 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using DellarteDellaGuerra.Cannon.UI;
+using DellarteDellaGuerra.Infrastructure.Cannon.Infra.Repo;
+using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Patches;
 using HarmonyLib;
 using SandBox.ViewModelCollection.MapSiege;
 
-namespace DellarteDellaGuerra.Infrastructure.Patches;
+namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign.UI;
 
 public class MapSiegePOIVMPatch : IPatch
 {

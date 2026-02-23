@@ -1,7 +1,7 @@
 ﻿using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
 
-namespace DellarteDellaGuerra.Cannon
+namespace DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.Spawn
 {
     public class Falconet : SpawnableArtilleryRangedSiegeWeapon
     {

@@ -4,7 +4,7 @@ using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade.Missions;
 using TaleWorlds.ObjectSystem;
 
-namespace DellarteDellaGuerra.Cannon
+namespace DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.Spawn
 {
     [HarmonyPatch(typeof(MissionSiegeWeaponsController), "GetSiegeWeaponBaseType")]
     public static class MissionSiegeWeaponsControllerPatch

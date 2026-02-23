@@ -1,8 +1,9 @@
 ﻿using System.Linq;
+using DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.Spawn;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
-namespace DellarteDellaGuerra.Cannon;
+namespace DellarteDellaGuerra.Infrastructure.Cannon.Mission.Battle;
 
 public class CannonTeamMissionLogic : MissionLogic
 {
@@ -10,7 +11,7 @@ public class CannonTeamMissionLogic : MissionLogic
     {
         base.OnAddTeam(team);
 
-        Mission.Current.ActiveMissionObjects
+        TaleWorlds.MountAndBlade.Mission.Current.ActiveMissionObjects
             .OfType<Falconet>()
             .Where(script => script.Side.Equals(BattleSideEnum.Attacker) && team.IsAttacker)
             .ToList()
@@ -20,7 +21,7 @@ public class CannonTeamMissionLogic : MissionLogic
                 script.SetForcedUse(true);
             });
         
-        Mission.Current.ActiveMissionObjects
+        TaleWorlds.MountAndBlade.Mission.Current.ActiveMissionObjects
             .OfType<Falconet>()
             .Where(script => script.Side.Equals(BattleSideEnum.Defender) && team.IsDefender)
             .ToList()

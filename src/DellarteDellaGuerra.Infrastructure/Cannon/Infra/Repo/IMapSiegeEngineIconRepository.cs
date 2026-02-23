@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using DellarteDellaGuerra.Cannon.UI.Model;
-using DellarteDellaGuerra.Infrastructure.Cannon.UI.Model;
+using DellarteDellaGuerra.Infrastructure.Cannon.Infra.Model;
 
-namespace DellarteDellaGuerra.Cannon.UI;
+namespace DellarteDellaGuerra.Infrastructure.Cannon.Infra.Repo;
 
 public interface IMapSiegeEngineIconRepository
 {
