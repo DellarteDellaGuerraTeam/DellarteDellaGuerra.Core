@@ -15,7 +15,6 @@ using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Patches;
 using DellarteDellaGuerra.Firearm.Reload;
-using DellarteDellaGuerra.Infrastructure.Cannon;
 using DellarteDellaGuerra.Infrastructure.Cannon.Campaign;
 using DellarteDellaGuerra.Infrastructure.Cannon.Campaign.UI;
 using DellarteDellaGuerra.Infrastructure.Cannon.Infra.Repo;
@@ -227,7 +226,16 @@ var getTournamentRewardUseCase = new GetTournamentRewardUseCase(itemRepository, 
 
         private void InitialiseCannonFeature()
         {
-            var repo = new DeploymentSiegeEngineIconRepository();
+            // Create cannon registry and providers
+            var cannonRegistry = new CannonRegistry();
+            var prefabProvider = new CannonPrefabProvider(cannonRegistry);
+            var iconProvider = new CannonIconProvider(cannonRegistry);
+            var availabilityProvider = new CannonAvailabilityProvider(cannonRegistry);
+
+            // Register Falconet cannon type
+            cannonRegistry.RegisterCannonType(new FalconetType(), new FalconetFactory());
+
+            var repo = new DeploymentSiegeEngineIconRepository(iconProvider);
 
             var brushStyleExtender = new BrushStyleExtender(_loggerFactory,
                 UIResourceManager.BrushFactory,
@@ -239,7 +247,7 @@ var getTournamentRewardUseCase = new GetTournamentRewardUseCase(itemRepository, 
             
             var usecase = new SiegeEngineIconRegistrationUseCase(_onSubModuleLoadEventPubSub,
                 siegeEngineDeploymentIconEnricher, campaignMapSiegeEngineDeploymentIconEnricher,
-                new DeploymentSiegeEngineIconRepository());
+                new DeploymentSiegeEngineIconRepository(iconProvider));
             usecase.RegisterSiegeEngineIcons();
 
             var mapSiegeEngineIconRepository = new MapSiegeEngineIconRepository();
@@ -266,9 +274,18 @@ var getTournamentRewardUseCase = new GetTournamentRewardUseCase(itemRepository, 
                 new DadgSiegeEngineAvailabilityModel(campaignGameStarter.Models.OfType<SiegeEventModel>().Last(),
                     _loggerFactory, getDefaultSiegeEngine));
 
+            // Create cannon registry and providers
+            var cannonRegistry = new CannonRegistry();
+            var prefabProvider = new CannonPrefabProvider(cannonRegistry);
+            var iconProvider = new CannonIconProvider(cannonRegistry);
+            var availabilityProvider = new CannonAvailabilityProvider(cannonRegistry);
+
+            // Register Falconet cannon type
+            cannonRegistry.RegisterCannonType(new FalconetType(), new FalconetFactory());
+            
             campaignGameStarter.AddModel(
                 new DadgSiegeEventModel(campaignGameStarter.Models.OfType<SiegeEventModel>().Last(),
-                    getDefaultSiegeEngine));
+                    prefabProvider, iconProvider, availabilityProvider));
         }
 
         #endregion

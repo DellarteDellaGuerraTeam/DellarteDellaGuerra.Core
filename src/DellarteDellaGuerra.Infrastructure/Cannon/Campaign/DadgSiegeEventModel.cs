@@ -1,24 +1,32 @@
 ﻿using System.Collections.Generic;
-using DellarteDellaGuerra.Domain.SiegeEngines;
+using System.Linq;
+using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.Siege;
 using TaleWorlds.Core;
-using TaleWorlds.ObjectSystem;
 
 namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign
 {
     public class DadgSiegeEventModel : SiegeEventModel
     {
         private readonly SiegeEventModel _defaultSiegeEventModel;
-        private readonly GetDefaultSiegeEngine defaultSiegeEngine;
+        private readonly CannonPrefabProvider _prefabProvider;
+        private readonly CannonIconProvider _iconProvider;
+        private readonly CannonAvailabilityProvider _availabilityProvider;
 
-        public DadgSiegeEventModel(SiegeEventModel defaultSiegeEventModel, GetDefaultSiegeEngine defaultSiegeEngine)
+        public DadgSiegeEventModel(
+            SiegeEventModel defaultSiegeEventModel,
+            CannonPrefabProvider prefabProvider,
+            CannonIconProvider iconProvider,
+            CannonAvailabilityProvider availabilityProvider)
         {
             _defaultSiegeEventModel = defaultSiegeEventModel;
-            this.defaultSiegeEngine = defaultSiegeEngine;
+            _prefabProvider = prefabProvider;
+            _iconProvider = iconProvider;
+            _availabilityProvider = availabilityProvider;
         }
 
         public override int GetSiegeEngineDestructionCasualties(SiegeEvent siegeEvent, BattleSideEnum side,
@@ -47,40 +55,35 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign
         public override string GetSiegeEngineMapPrefabName(SiegeEngineType siegeEngineType, int wallLevel,
             BattleSideEnum side)
         {
-            if (siegeEngineType.StringId == "falconet") return "dadg_falconet_mapicon";
-            
-            return _defaultSiegeEventModel.GetSiegeEngineMapPrefabName(siegeEngineType, wallLevel, side);
+            var prefabName = _prefabProvider.GetMapPrefabName(siegeEngineType.StringId, wallLevel, side);
+            return prefabName ?? _defaultSiegeEventModel.GetSiegeEngineMapPrefabName(siegeEngineType, wallLevel, side);
         }
 
         public override string GetSiegeEngineMapProjectilePrefabName(SiegeEngineType siegeEngineType)
         {
-            if (siegeEngineType.StringId == "falconet") return "cannonball_mapicon_projectile";
-            
-            return _defaultSiegeEventModel.GetSiegeEngineMapProjectilePrefabName(siegeEngineType);
+            var projectilePrefab = _prefabProvider.GetProjectilePrefabName(siegeEngineType.StringId);
+            return projectilePrefab ?? _defaultSiegeEventModel.GetSiegeEngineMapProjectilePrefabName(siegeEngineType);
         }
 
         public override string GetSiegeEngineMapReloadAnimationName(SiegeEngineType siegeEngineType,
             BattleSideEnum side)
         {
-            if (siegeEngineType.StringId == "falconet") return "ballista_a_mapicon_reload";
-            
-            return _defaultSiegeEventModel.GetSiegeEngineMapReloadAnimationName(siegeEngineType, side);
+            var reloadPrefab = _prefabProvider.GetReloadPrefabName(siegeEngineType.StringId);
+            return reloadPrefab ?? _defaultSiegeEventModel.GetSiegeEngineMapReloadAnimationName(siegeEngineType, side);
         }
 
         public override string GetSiegeEngineMapFireAnimationName(SiegeEngineType siegeEngineType, BattleSideEnum side)
         {
-            if (siegeEngineType.StringId == "falconet") return "ballista_a_mapicon_fire";
-            
-            return _defaultSiegeEventModel.GetSiegeEngineMapFireAnimationName(siegeEngineType, side);
+            var firePrefab = _prefabProvider.GetFirePrefabName(siegeEngineType.StringId);
+            return firePrefab ?? _defaultSiegeEventModel.GetSiegeEngineMapFireAnimationName(siegeEngineType, side);
         }
 
         public override sbyte GetSiegeEngineMapProjectileBoneIndex(SiegeEngineType siegeEngineType, BattleSideEnum side)
         {
-            if (siegeEngineType.StringId == "falconet")
-                return _defaultSiegeEventModel.GetSiegeEngineMapProjectileBoneIndex(DefaultSiegeEngineTypes.Trebuchet,
-                    side); // Expect trebuchet mapicon skeleton, TODO: refactor it into a better API
-            
-            return _defaultSiegeEventModel.GetSiegeEngineMapProjectileBoneIndex(siegeEngineType, side);
+            var boneIndex = _prefabProvider.GetProjectileBoneIndex(siegeEngineType.StringId);
+            return boneIndex >= 0
+                ? (sbyte)boneIndex
+                : _defaultSiegeEventModel.GetSiegeEngineMapProjectileBoneIndex(siegeEngineType, side);
         }
 
         public override float GetSiegeStrategyScore(SiegeEvent siege, BattleSideEnum side, SiegeStrategy strategy)
@@ -106,26 +109,16 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign
 
         public override IEnumerable<SiegeEngineType> GetAvailableAttackerRangedSiegeEngines(PartyBase party)
         {
-            var siegeEngineTypes =
-                new List<SiegeEngineType>(_defaultSiegeEventModel.GetAvailableAttackerRangedSiegeEngines(party));
-
-            var falconetSiegeEngineType = GetDefaultSiegeEngineType();
-            if (falconetSiegeEngineType is null) return siegeEngineTypes;
-
-            siegeEngineTypes.Add(falconetSiegeEngineType);
-            return siegeEngineTypes;
+            var baseEngines = _defaultSiegeEventModel.GetAvailableAttackerRangedSiegeEngines(party);
+            var cannonEngines = _availabilityProvider.GetAvailableCannonTypes(party, BattleSideEnum.Attacker);
+            return baseEngines.ToList().Concat(cannonEngines);
         }
 
         public override IEnumerable<SiegeEngineType> GetAvailableDefenderSiegeEngines(PartyBase party)
         {
-            var siegeEngineTypes =
-                new List<SiegeEngineType>(_defaultSiegeEventModel.GetAvailableDefenderSiegeEngines(party));
-
-            var falconetSiegeEngineType = GetDefaultSiegeEngineType();
-            if (falconetSiegeEngineType is null) return siegeEngineTypes;
-
-            siegeEngineTypes.Add(falconetSiegeEngineType);
-            return siegeEngineTypes;
+            var baseEngines = _defaultSiegeEventModel.GetAvailableDefenderSiegeEngines(party);
+            var cannonEngines = _availabilityProvider.GetAvailableCannonTypes(party, BattleSideEnum.Defender);
+            return baseEngines.Concat(cannonEngines);
         }
 
         public override IEnumerable<SiegeEngineType> GetAvailableAttackerRamSiegeEngines(PartyBase party)
@@ -171,11 +164,6 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign
         public override FlattenedTroopRoster GetPriorityTroopsForSallyOutAmbush()
         {
             return _defaultSiegeEventModel.GetPriorityTroopsForSallyOutAmbush();
-        }
-
-        private SiegeEngineType? GetDefaultSiegeEngineType()
-        {
-            return MBObjectManager.Instance.GetObject<SiegeEngineType>(defaultSiegeEngine.GetSiegeEngine().Id);
         }
     }
 }

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CannonConfig>
+  <CannonTypes>
+    <CannonType>
+      <Id>falconet</Id>
+      <DisplayName>Falconet</DisplayName>
+      <SpriteId>falconet</SpriteId>
+      <MapPrefabName>dadg_falconet_mapicon</MapPrefabName>
+      <ProjectilePrefab>cannonball_mapicon_projectile</ProjectilePrefab>
+      <ReloadPrefab>ballista_a_mapicon_reload</ReloadPrefab>
+      <FirePrefab>ballista_a_mapicon_fire</FirePrefab>
+      <MachineType>8</MachineType>
+      <ProjectileBoneIndex>0</ProjectileBoneIndex>
+    </CannonType>
+    <CannonType>
+      <Id>culverin</Id>
+      <DisplayName>Culverin</DisplayName>
+      <SpriteId>culverin</SpriteId>
+      <MapPrefabName>dadg_culverin_mapicon</MapPrefabName>
+      <ProjectilePrefab>cannonball_large_mapicon_projectile</ProjectilePrefab>
+      <ReloadPrefab>ballista_b_mapicon_reload</ReloadPrefab>
+      <FirePrefab>ballista_b_mapicon_fire</FirePrefab>
+      <MachineType>9</MachineType>
+      <ProjectileBoneIndex>1</ProjectileBoneIndex>
+    </CannonType>
+  </CannonTypes>
+</CannonConfig>
