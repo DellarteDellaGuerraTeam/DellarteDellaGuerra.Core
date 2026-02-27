@@ -29,6 +29,7 @@ using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
+using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
@@ -59,6 +60,9 @@ namespace DellarteDellaGuerra.Infrastructure
 
         private DisplayShaderNumber _displayShaderNumber;
         private readonly OnSubModuleLoadEventPubSub _onSubModuleLoadEventPubSub;
+
+        private ICannonPrefabProvider _cannonPrefabProvider;
+        private ICannonAvailabilityProvider _cannonAvailabilityProvider;
 
         public SubModule()
         {
@@ -128,7 +132,7 @@ namespace DellarteDellaGuerra.Infrastructure
             HandleDisplayCompilingShadersDependencies();
             CompilingShaderNotifier.Init(_displayShaderNumber);
             game.AddGameHandler<CompilingShaderNotifier>();
-            
+
             campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
         }
 
@@ -172,7 +176,7 @@ namespace DellarteDellaGuerra.Infrastructure
             try
             {
                 // Overrides sandbox battle scenes
-                GameSceneDataManager.Instance?.LoadSPBattleScenes(battleScenesFilePath);   
+                GameSceneDataManager.Instance?.LoadSPBattleScenes(battleScenesFilePath);
             } catch (XmlException e)
             {
                 _logger.Error($"Failed to load {battleScenesFilePath}: {e}");
@@ -208,7 +212,7 @@ namespace DellarteDellaGuerra.Infrastructure
         }
 
         #endregion
-        
+
         #region Tournament
 
         private void HandleTournamentModelDependencies(CampaignGameStarter campaignGameStarter)
@@ -221,75 +225,66 @@ var getTournamentRewardUseCase = new GetTournamentRewardUseCase(itemRepository, 
         }
 
         #endregion
-        
+
         #region Cannons
 
         private void InitialiseCannonFeature()
         {
-            // Create cannon registry and providers
+            // Single shared registry — all cannon subsystems use this instance
             var cannonRegistry = new CannonRegistry();
-            var prefabProvider = new CannonPrefabProvider(cannonRegistry);
+
+            // Load cannon types from config (falls back to default Falconet if missing)
+            var configuration = new XmlCannonConfiguration(
+                ResourceLocator.GetConfigurationFilePath("cannons.xml") ?? string.Empty);
+            foreach (var properties in configuration.LoadCannonProperties())
+                cannonRegistry.RegisterCannonType(new ConfigurableCannonType(properties), new GenericCannonFactory(properties.Id));
+
+            _cannonPrefabProvider = new CannonPrefabProvider(cannonRegistry);
             var iconProvider = new CannonIconProvider(cannonRegistry);
-            var availabilityProvider = new CannonAvailabilityProvider(cannonRegistry);
+            _cannonAvailabilityProvider = new CannonAvailabilityProvider(cannonRegistry);
 
-            // Register Falconet cannon type
-            cannonRegistry.RegisterCannonType(new FalconetType(), new FalconetFactory());
-
-            var repo = new DeploymentSiegeEngineIconRepository(iconProvider);
+            var deploymentIconRepo = new DeploymentSiegeEngineIconRepository(iconProvider);
+            var mapIconRepo = new MapSiegeEngineIconRepository(cannonRegistry);
+            var prefabRepo = new PrefabSiegeEngineRepository(cannonRegistry);
 
             var brushStyleExtender = new BrushStyleExtender(_loggerFactory,
                 UIResourceManager.BrushFactory,
                 UIResourceManager.SpriteData);
-            var campaignMapSiegeEngineDeploymentIconEnricher =
-                new CampaignMapSiegeEngineDeploymentIconEnricher(brushStyleExtender);
-            var siegeEngineDeploymentIconEnricher =
-                new SiegeEngineDeploymentIconEnricher(brushStyleExtender);
-            
-            var usecase = new SiegeEngineIconRegistrationUseCase(_onSubModuleLoadEventPubSub,
-                siegeEngineDeploymentIconEnricher, campaignMapSiegeEngineDeploymentIconEnricher,
-                new DeploymentSiegeEngineIconRepository(iconProvider));
-            usecase.RegisterSiegeEngineIcons();
+            var campaignMapEnricher = new CampaignMapSiegeEngineDeploymentIconEnricher(brushStyleExtender);
+            var deploymentEnricher = new SiegeEngineDeploymentIconEnricher(brushStyleExtender);
 
-            var mapSiegeEngineIconRepository = new MapSiegeEngineIconRepository();
-            _harmonyPatcher.AddPatch(new OrderSiegeMachineItemButtonWidgetPatch(repo));
-            _harmonyPatcher.AddPatch(new MapSiegePOIBrushWidgetManualPatch(mapSiegeEngineIconRepository,
-                UIResourceManager.SpriteData));
-            _harmonyPatcher.AddPatch(new MapSiegePOIVMPatch(mapSiegeEngineIconRepository));
+            var iconUseCase = new SiegeEngineIconRegistrationUseCase(_onSubModuleLoadEventPubSub,
+                deploymentEnricher, campaignMapEnricher, deploymentIconRepo);
+            iconUseCase.RegisterSiegeEngineIcons();
 
-            var campaignMapSiegePrefabEntityCachePatches = new CampaignMapSiegePrefabEntityCachePatches(new PrefabSiegeEngineRepository());
-            campaignMapSiegePrefabEntityCachePatches.GetPatches().ToList().ForEach(patch => _harmonyPatcher.AddPatch(patch));
-            
+            _harmonyPatcher.AddPatch(new OrderSiegeMachineItemButtonWidgetPatch(deploymentIconRepo));
+            _harmonyPatcher.AddPatch(new MapSiegePOIBrushWidgetManualPatch(mapIconRepo, UIResourceManager.SpriteData));
+            _harmonyPatcher.AddPatch(new MapSiegePOIVMPatch(mapIconRepo));
+
+            var prefabCachePatches = new CampaignMapSiegePrefabEntityCachePatches(prefabRepo);
+            prefabCachePatches.GetPatches().ToList().ForEach(patch => _harmonyPatcher.AddPatch(patch));
+
+            OrderSiegeMachineVM_GetSiegeTypePatch.SetRegistry(cannonRegistry);
+
             CannonSystemInitialiser.Initialise();
         }
 
-        /// Must be called after the cannon initialisation since the logic requires cannons
+        /// Must be called after cannon initialisation since the logic requires cannons
         public void InitialiseSiegeEngineLogic(CampaignGameStarter campaignGameStarter)
         {
             var getDefaultSiegeEngine = new GetDefaultSiegeEngine();
-            
+
             campaignGameStarter.AddModel(new DadgSiegeStrategyActionModel(
-                campaignGameStarter.Models.OfType<DefaultSiegeStrategyActionModel>().Last(), MBObjectManager.Instance,
-                _loggerFactory, getDefaultSiegeEngine));
-            campaignGameStarter.AddModel(
-                new DadgSiegeEngineAvailabilityModel(campaignGameStarter.Models.OfType<SiegeEventModel>().Last(),
-                    _loggerFactory, getDefaultSiegeEngine));
+                campaignGameStarter.Models.OfType<DefaultSiegeStrategyActionModel>().Last(),
+                MBObjectManager.Instance, _loggerFactory, getDefaultSiegeEngine));
 
-            // Create cannon registry and providers
-            var cannonRegistry = new CannonRegistry();
-            var prefabProvider = new CannonPrefabProvider(cannonRegistry);
-            var iconProvider = new CannonIconProvider(cannonRegistry);
-            var availabilityProvider = new CannonAvailabilityProvider(cannonRegistry);
-
-            // Register Falconet cannon type
-            cannonRegistry.RegisterCannonType(new FalconetType(), new FalconetFactory());
-            
-            campaignGameStarter.AddModel(
-                new DadgSiegeEventModel(campaignGameStarter.Models.OfType<SiegeEventModel>().Last(),
-                    prefabProvider, iconProvider, availabilityProvider));
+            campaignGameStarter.AddModel(new DadgSiegeEventModel(
+                campaignGameStarter.Models.OfType<SiegeEventModel>().Last(),
+                _cannonPrefabProvider, _cannonAvailabilityProvider, _loggerFactory));
         }
 
         #endregion
-        
+
         private static void InitSkills()
         {
             var firearmSkill = new FirearmSkill();

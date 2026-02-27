@@ -1,44 +1,29 @@
-using DellarteDellaGuerra.Domain.SiegeEngines;
+using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 using TaleWorlds.Core;
 
 namespace DellarteDellaGuerra.Infrastructure.SiegeEngines;
 
-public class CannonPrefabProvider
+public class CannonPrefabProvider : ICannonPrefabProvider
 {
-    private readonly CannonRegistry _cannonRegistry;
+    private readonly ICannonRegistry _cannonRegistry;
 
-    public CannonPrefabProvider(CannonRegistry cannonRegistry)
+    public CannonPrefabProvider(ICannonRegistry cannonRegistry)
     {
         _cannonRegistry = cannonRegistry;
     }
 
-    public string GetMapPrefabName(string cannonId, int wallLevel, BattleSideEnum side)
-    {
-        var cannonType = _cannonRegistry.GetCannonType(cannonId);
-        return cannonType?.MapPrefabName;
-    }
+    public string GetMapPrefabName(string cannonId, int wallLevel, BattleSideEnum side) =>
+        _cannonRegistry.GetCannonType(cannonId)?.MapPrefabName;
 
-    public string GetProjectilePrefabName(string cannonId)
-    {
-        var cannonType = _cannonRegistry.GetCannonType(cannonId);
-        return cannonType?.ProjectilePrefab;
-    }
+    public string GetProjectilePrefabName(string cannonId) =>
+        _cannonRegistry.GetCannonType(cannonId)?.ProjectilePrefab;
 
-    public string GetReloadPrefabName(string cannonId)
-    {
-        var cannonType = _cannonRegistry.GetCannonType(cannonId);
-        return cannonType?.ReloadPrefab;
-    }
+    public string GetReloadPrefabName(string cannonId) =>
+        _cannonRegistry.GetCannonType(cannonId)?.ReloadPrefab;
 
-    public string GetFirePrefabName(string cannonId)
-    {
-        var cannonType = _cannonRegistry.GetCannonType(cannonId);
-        return cannonType?.FirePrefab;
-    }
+    public string GetFirePrefabName(string cannonId) =>
+        _cannonRegistry.GetCannonType(cannonId)?.FirePrefab;
 
-    public int GetProjectileBoneIndex(string cannonId)
-    {
-        var cannonType = _cannonRegistry.GetCannonType(cannonId);
-        return cannonType?.ProjectileBoneIndex ?? -1;
-    }
+    public int GetProjectileBoneIndex(string cannonId) =>
+        _cannonRegistry.GetCannonType(cannonId)?.ProjectileBoneIndex ?? -1;
 }

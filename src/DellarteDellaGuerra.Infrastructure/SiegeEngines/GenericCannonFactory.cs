@@ -1,4 +1,5 @@
-﻿using DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.Spawn;
+using System;
+using DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.Spawn;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 using TaleWorlds.MountAndBlade;
 
@@ -13,12 +14,10 @@ public class GenericCannonFactory : ICannonFactory
         _cannonId = cannonId;
     }
 
-    public SpawnableArtilleryRangedSiegeWeapon CreateCannon()
-    {
-        // For now, return a basic Falconet for all types
-        // This can be extended to create different cannon types based on _cannonId
-        return new Falconet();
-    }
+    // All XML-configured cannons share the Falconet script type until dedicated classes are added
+    public Type CannonScriptType => typeof(Falconet);
+
+    public SpawnableArtilleryRangedSiegeWeapon CreateCannon() => new Falconet();
 
     public void ConfigureSpawner(SpawnerEntityMissionHelper helper)
     {

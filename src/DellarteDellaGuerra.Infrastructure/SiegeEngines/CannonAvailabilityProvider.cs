@@ -1,29 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
-using DellarteDellaGuerra.Domain.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 
 namespace DellarteDellaGuerra.Infrastructure.SiegeEngines;
 
-public class CannonAvailabilityProvider
+public class CannonAvailabilityProvider : ICannonAvailabilityProvider
 {
-    private readonly CannonRegistry _cannonRegistry;
+    private readonly ICannonRegistry _cannonRegistry;
 
-    public CannonAvailabilityProvider(CannonRegistry cannonRegistry)
+    public CannonAvailabilityProvider(ICannonRegistry cannonRegistry)
     {
         _cannonRegistry = cannonRegistry;
     }
 
-    public IEnumerable<SiegeEngineType> GetAvailableCannonTypes(PartyBase party, BattleSideEnum side)
-    {
-        return _cannonRegistry.GetAllCannonTypes()
-            .Select(ct =>
-            {
-                if (ct is ICannonType bannerlordCannonType) return bannerlordCannonType.GetSiegeEngineType();
-                return null;
-            })
+    public IEnumerable<SiegeEngineType> GetAvailableCannonTypes(PartyBase party, BattleSideEnum side) =>
+        _cannonRegistry.GetAllCannonTypes()
+            .Select(ct => ct.GetSiegeEngineType())
             .Where(se => se != null);
-    }
 }

@@ -1,4 +1,4 @@
-﻿using DellarteDellaGuerra.Domain.SiegeEngines.Model;
+using DellarteDellaGuerra.Domain.SiegeEngines.Model;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
 using ICannonType = DellarteDellaGuerra.Infrastructure.SiegeEngines.Port.ICannonType;
@@ -24,8 +24,6 @@ public class ConfigurableCannonType : ICannonType
     public int MachineType => _properties.MachineType;
     public int ProjectileBoneIndex => _properties.ProjectileBoneIndex;
 
-    public SiegeEngineType GetSiegeEngineType()
-    {
-        return MBObjectManager.Instance.GetObject<SiegeEngineType>(Id);
-    }
+    public SiegeEngineType GetSiegeEngineType() =>
+        MBObjectManager.Instance.GetObject<SiegeEngineType>(Id);
 }

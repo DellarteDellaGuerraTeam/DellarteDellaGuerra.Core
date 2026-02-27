@@ -1,10 +1,10 @@
+using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
-using ICannonType = DellarteDellaGuerra.Infrastructure.SiegeEngines.Port.ICannonType;
 
 namespace DellarteDellaGuerra.Infrastructure.SiegeEngines;
 
-public class FalconetType : ICannonType, Domain.SiegeEngines.Model.ICannonType
+public class FalconetType : ICannonType
 {
     public string Id => "falconet";
     public string DisplayName => "Falconet";
@@ -16,8 +16,6 @@ public class FalconetType : ICannonType, Domain.SiegeEngines.Model.ICannonType
     public int MachineType => 8;
     public int ProjectileBoneIndex => 0;
 
-    public SiegeEngineType GetSiegeEngineType()
-    {
-        return MBObjectManager.Instance.GetObject<SiegeEngineType>(Id);
-    }
+    public SiegeEngineType GetSiegeEngineType() =>
+        MBObjectManager.Instance.GetObject<SiegeEngineType>(Id);
 }

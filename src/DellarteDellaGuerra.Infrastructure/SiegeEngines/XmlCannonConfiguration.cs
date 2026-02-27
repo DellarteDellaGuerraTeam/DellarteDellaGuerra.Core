@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using DellarteDellaGuerra.Domain.SiegeEngines.Model;
+using DellarteDellaGuerra.Domain.SiegeEngines.Port;
 
 namespace DellarteDellaGuerra.Infrastructure.SiegeEngines;
 
-public class XmlCannonConfiguration
+public class XmlCannonConfiguration : ICannonConfiguration
 {
     private readonly string _configPath;
 
@@ -41,9 +43,8 @@ public class XmlCannonConfiguration
         }
     }
 
-    private CannonProperties CreateCannonProperties(XElement element)
-    {
-        return new CannonProperties(
+    private static CannonProperties CreateCannonProperties(XElement element) =>
+        new(
             element.Element("Id")?.Value ?? "falconet",
             element.Element("DisplayName")?.Value ?? "Falconet",
             element.Element("SpriteId")?.Value ?? "falconet",
@@ -54,5 +55,4 @@ public class XmlCannonConfiguration
             int.TryParse(element.Element("MachineType")?.Value, out var machineType) ? machineType : 8,
             int.TryParse(element.Element("ProjectileBoneIndex")?.Value, out var boneIndex) ? boneIndex : 0
         );
-    }
 }
