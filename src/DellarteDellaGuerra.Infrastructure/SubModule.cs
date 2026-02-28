@@ -233,9 +233,7 @@ var getTournamentRewardUseCase = new GetTournamentRewardUseCase(itemRepository, 
             // Single shared registry — all cannon subsystems use this instance
             var cannonRegistry = new CannonRegistry();
 
-            // Load cannon types from config (falls back to default Falconet if missing)
-            var configuration = new XmlCannonConfiguration(
-                ResourceLocator.GetConfigurationFilePath("cannons.xml") ?? string.Empty);
+            var configuration = new XmlCannonConfigurationReader();
             foreach (var properties in configuration.LoadCannonProperties())
                 cannonRegistry.RegisterCannonType(new ConfigurableCannonType(properties), new GenericCannonFactory(properties.Id));
 

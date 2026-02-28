@@ -3,44 +3,18 @@ using System.Linq;
 using System.Xml.Linq;
 using DellarteDellaGuerra.Domain.SiegeEngines.Model;
 using DellarteDellaGuerra.Domain.SiegeEngines.Port;
+using DellarteDellaGuerra.Infrastructure.Utils;
 
 namespace DellarteDellaGuerra.Infrastructure.SiegeEngines;
 
-public class XmlCannonConfiguration : ICannonConfiguration
+public class XmlCannonConfigurationReader : ICannonConfigurationReader
 {
-    private readonly string _configPath;
-
-    public XmlCannonConfiguration(string configPath)
-    {
-        _configPath = configPath;
-    }
-
     public IEnumerable<CannonProperties> LoadCannonProperties()
     {
-        try
-        {
-            var doc = XDocument.Load(_configPath);
-            return doc.Descendants("CannonType")
-                .Select(CreateCannonProperties);
-        }
-        catch
-        {
-            // If config file doesn't exist or is invalid, return default Falconet
-            return new List<CannonProperties>
-            {
-                new(
-                    "falconet",
-                    "Falconet",
-                    "falconet",
-                    "dadg_falconet_mapicon",
-                    "cannonball_mapicon_projectile",
-                    "ballista_a_mapicon_reload",
-                    "ballista_a_mapicon_fire",
-                    8,
-                    0
-                )
-            };
-        }
+        string configPath = ResourceLocator.GetConfigurationFilePath("cannons.xml") ?? string.Empty;
+
+        return XDocument.Load(configPath).Descendants("CannonType")
+            .Select(CreateCannonProperties);
     }
 
     private static CannonProperties CreateCannonProperties(XElement element) =>
