@@ -248,8 +248,9 @@ var getTournamentRewardUseCase = new GetTournamentRewardUseCase(itemRepository, 
                 UIResourceManager.SpriteData));
             _harmonyPatcher.AddPatch(new MapSiegePOIVMPatch(mapSiegeEngineIconRepository));
 
-            var campaignMapSiegePrefabEntityCachePatches = new CampaignMapSiegePrefabEntityCachePatches(new PrefabSiegeEngineRepository());
-            campaignMapSiegePrefabEntityCachePatches.GetPatches().ToList().ForEach(patch => _harmonyPatcher.AddPatch(patch));
+            _harmonyPatcher.AddPatch(new CampaignMapSiegePrefabEntityCacheOnInitPatch(new PrefabSiegeEngineRepository()));
+            _harmonyPatcher.AddPatch(new CampaignMapSiegePrefabEntityCacheGetLaunchFramePatch());
+            _harmonyPatcher.AddPatch(new CampaignMapSiegePrefabEntityCacheGetScalePatch());
             
             CannonSystemInitialiser.Initialise();
         }
