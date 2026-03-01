@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 using DellarteDellaGuerra.Infrastructure.Cannon.Infra.Repo;
-using DellarteDellaGuerra.Infrastructure.Patches;
-using DellarteDellaGuerra.Patches;
+using Harmony.DependencyInjection.Patches;
 using TaleWorlds.MountAndBlade.GauntletUI.Widgets.Map.Siege;
 using TaleWorlds.TwoDimension;
 

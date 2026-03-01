@@ -4,9 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
-using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
-using DellarteDellaGuerra.Patches;
+using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 
 namespace DellarteDellaGuerra.Infrastructure.Poc.Patches
@@ -25,10 +24,9 @@ namespace DellarteDellaGuerra.Infrastructure.Poc.Patches
     {
         private static ILogger Logger;
 
-        public PocConfigReaderOverriderPatch(IPatcher patcher, ILoggerFactory loggerFactory)
+        public PocConfigReaderOverriderPatch(ILoggerFactory loggerFactory)
         {
             Logger = loggerFactory.CreateLogger<PocConfigReaderOverriderPatch>();
-            patcher.AddPatch(this);
         }
 
         public MethodInfo? TargetMethod => ResolveOriginalMethod();

@@ -1,13 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using DellarteDellaGuerra.Infrastructure.Patches;
-using DellarteDellaGuerra.Patches;
+using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using SandBox;
 using TaleWorlds.Core;
-using TaleWorlds.Engine;
 using TaleWorlds.Library;
-using TaleWorlds.MountAndBlade;
 
 namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign;
 

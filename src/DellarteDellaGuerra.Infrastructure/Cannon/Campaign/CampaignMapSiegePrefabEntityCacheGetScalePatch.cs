@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using DellarteDellaGuerra.Infrastructure.Patches;
-using DellarteDellaGuerra.Patches;
+using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using SandBox;
 using TaleWorlds.Core;
