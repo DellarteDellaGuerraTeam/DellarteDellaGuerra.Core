@@ -11,7 +11,6 @@ using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.SiegeEngines;
 using DellarteDellaGuerra.Firearm;
-using DellarteDellaGuerra.Firearm.Patches;
 using DellarteDellaGuerra.Infrastructure.Cannon.Campaign;
 using DellarteDellaGuerra.Infrastructure.Cannon.Mission.Battle;
 using DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.UI;
@@ -70,12 +69,6 @@ namespace DellarteDellaGuerra.Infrastructure
             _serviceProvider.GetRequiredService<OnSubModuleLoadEventPubSub>().Publish();
 
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
-
-            var harmony = new HarmonyLib.Harmony("com.dellartedellaguerra.harmony.auto");
-            AppDomain.CurrentDomain.GetAssemblies()
-                .Where(a => a.GetName().Name.StartsWith(ModuleIdHelper.GetModuleIdPrefix()))
-                .ToList()
-                .ForEach(harmony.PatchAll);
 
             Managed.AddTypes(GetDadgReferencedAssemblyTypes());
         }
@@ -149,7 +142,7 @@ namespace DellarteDellaGuerra.Infrastructure
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)
         {
-            InitSkills();
+            _serviceProvider.GetRequiredService<FirearmSkill>().Initialise();
         }
 
         private void SetCampaignStartingDate()
@@ -177,12 +170,5 @@ namespace DellarteDellaGuerra.Infrastructure
             }
         }
 
-        private static void InitSkills()
-        {
-            var firearmSkill = new FirearmSkill();
-            firearmSkill.Initialise();
-
-            AddFirearmSkillAsRelevantSkillPatch.SetFirearmSkill(firearmSkill);
-        }
     }
 }

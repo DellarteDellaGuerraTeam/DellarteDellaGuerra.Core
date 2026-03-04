@@ -12,11 +12,15 @@ using DellarteDellaGuerra.Infrastructure.Cannon.Campaign;
 using DellarteDellaGuerra.Infrastructure.Cannon.Campaign.UI;
 using DellarteDellaGuerra.Infrastructure.Cannon.Infra.Repo;
 using DellarteDellaGuerra.Infrastructure.Cannon.Mission.Battle;
+using DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.Spawn;
 using DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.UI;
 using DellarteDellaGuerra.Infrastructure.Cannon.Util.UI;
+using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.Events;
+using DellarteDellaGuerra.Infrastructure.Firearm.Patches;
+using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Tournament.Api;
@@ -55,6 +59,7 @@ public class DadgServiceContainer
         services.AddSingleton<IOnSubModuleLoadEventSubscriber>(sp =>
             sp.GetRequiredService<OnSubModuleLoadEventPubSub>());
         services.AddSingleton<CampaignBehaviourDisabler>();
+        services.AddSingleton<FirearmSkill>();
     }
 
     private static void RegisterCannonServices(IServiceCollection services)
@@ -103,6 +108,17 @@ public class DadgServiceContainer
 
     private static void RegisterPatches(IServiceCollection services)
     {
+        // General
+        services.AddSingleton<IPatch, GeneralPatches>();
+        // Character creation
+        services.AddSingleton<IPatch, MainMenuOptionPatches>();
+        services.AddSingleton<IPatch, DisableSortingBehaviourInCultureMenuPatch>();
+        // Firearm
+        services.AddSingleton<IPatch, AddFirearmSkillAsRelevantSkillPatch>();
+        services.AddSingleton<IPatch, GetHolsterImageForBuIletsInInventoryPatch>();
+        // Cannon mission
+        services.AddSingleton<IPatch, MissionSiegeWeaponsControllerPatch>();
+        services.AddSingleton<IPatch, OrderSiegeMachineVM_GetSiegeTypePatch>();
         // Steam
         services.AddSingleton<IPatch, FixSettlementFilePathPatch>();
         services.AddSingleton<IPatch, FixSettlementDistanceCacheFilePathPatch>();
