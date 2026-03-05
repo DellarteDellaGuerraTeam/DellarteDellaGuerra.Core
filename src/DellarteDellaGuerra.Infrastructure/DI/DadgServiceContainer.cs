@@ -19,6 +19,7 @@ using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.Events;
+using DellarteDellaGuerra.Infrastructure.Firearm;
 using DellarteDellaGuerra.Infrastructure.Firearm.Patches;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
@@ -29,6 +30,7 @@ using DellarteDellaGuerra.Tournament.Reward.Spi.Mapper;
 using Harmony.DependencyInjection;
 using Harmony.DependencyInjection.Patches;
 using Microsoft.Extensions.DependencyInjection;
+using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
 using ILoggerFactory = DellarteDellaGuerra.Domain.Common.Logging.Port.ILoggerFactory;
 using LoggerFactory = DellarteDellaGuerra.Infrastructure.Logging.LoggerFactory;
@@ -55,11 +57,17 @@ public class DadgServiceContainer
     {
         services.AddSingleton<ILoggerFactory>(_ => new LoggerFactory(new LoggerConfigPathProvider()));
         services.AddSingleton<DadgConfigWatcher>();
-        services.AddSingleton<OnSubModuleLoadEventPubSub>();
-        services.AddSingleton<IOnSubModuleLoadEventSubscriber>(sp =>
-            sp.GetRequiredService<OnSubModuleLoadEventPubSub>());
+        RegisterEvent<SubModuleLoadEvent>(services);
         services.AddSingleton<CampaignBehaviourDisabler>();
-        services.AddSingleton<FirearmSkill>();
+        services.AddSingleton<FirearmSkillProvider>();
+        services.AddSingleton<IMBObjectProvider<SkillObject>>(sp => sp.GetRequiredService<FirearmSkillProvider>());
+    }
+
+    private static void RegisterEvent<TEvent>(IServiceCollection services)
+    {
+        services.AddSingleton<EventBus<TEvent>>();
+        services.AddSingleton<IEventPublisher<TEvent>>(sp => sp.GetRequiredService<EventBus<TEvent>>());
+        services.AddSingleton<IEventSubscriber<TEvent>>(sp => sp.GetRequiredService<EventBus<TEvent>>());
     }
 
     private static void RegisterCannonServices(IServiceCollection services)

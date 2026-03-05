@@ -53,8 +53,7 @@ namespace DellarteDellaGuerra.Infrastructure
                 .UseLoggerFactory(new ExpandedTemplateLoggerFactory(loggerFactory))
                 .Bind();
 
-            _serviceProvider.GetRequiredService<SiegeEngineIconRegistrationUseCase>()
-                .RegisterSiegeEngineIcons();
+            _serviceProvider.GetRequiredService<SiegeEngineIconRegistrationUseCase>();
 
             CannonSystemInitialiser.Initialise();
         }
@@ -66,7 +65,8 @@ namespace DellarteDellaGuerra.Infrastructure
 
         protected override void OnSubModuleLoad()
         {
-            _serviceProvider.GetRequiredService<OnSubModuleLoadEventPubSub>().Publish();
+            _serviceProvider.GetRequiredService<IEventPublisher<SubModuleLoadEvent>>()
+                .Publish(new SubModuleLoadEvent());
 
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
 
@@ -142,7 +142,8 @@ namespace DellarteDellaGuerra.Infrastructure
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)
         {
-            _serviceProvider.GetRequiredService<FirearmSkill>().Initialise();
+            foreach (var provider in _serviceProvider.GetServices<IMBObjectProvider<SkillObject>>())
+                MBObjectManager.Instance.RegisterPresumedObject(provider.GetMbObject());
         }
 
         private void SetCampaignStartingDate()
