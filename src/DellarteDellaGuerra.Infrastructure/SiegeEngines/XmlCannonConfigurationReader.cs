@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.SiegeEngines.Model;
 using DellarteDellaGuerra.Domain.SiegeEngines.Port;
 using DellarteDellaGuerra.Infrastructure.Utils;
@@ -9,9 +10,22 @@ namespace DellarteDellaGuerra.Infrastructure.SiegeEngines;
 
 public class XmlCannonConfigurationReader : ICannonConfigurationReader
 {
+    private readonly ILogger _logger;
+
+    public XmlCannonConfigurationReader(ILoggerFactory loggerFactory)
+    {
+        _logger = loggerFactory.CreateLogger<XmlCannonConfigurationReader>();
+    }
+
     public IEnumerable<CannonProperties> LoadCannonProperties()
     {
-        string configPath = ResourceLocator.GetConfigurationFilePath("cannons.xml") ?? string.Empty;
+        string? configPath = ResourceLocator.GetCannonXmlFilePath();
+
+        if (configPath is null)
+        {
+            _logger.Error($"Could not find any xml for cannons.");
+            return new List<CannonProperties>();
+        }
 
         return XDocument.Load(configPath).Descendants("CannonType")
             .Select(CreateCannonProperties);

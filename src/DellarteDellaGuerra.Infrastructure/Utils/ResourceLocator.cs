@@ -71,6 +71,20 @@ namespace DellarteDellaGuerra.Infrastructure.Utils
 
         /**
          * <summary>
+         * Gets the path to the cannons.xml file in the ModuleData/CustomXml folder.
+         * Its existence is checked.
+         * </summary>
+         * <returns>
+         * The first found among all of the mod's modules or null if not found.
+         * </returns>
+         */
+        public static string? GetCannonXmlFilePath()
+        {
+            return GetCustomXmlFile("cannons.xml");
+        }
+
+        /**
+         * <summary>
          * Gets the path to the settlements_distance_cache.bin file in the ModuleData folder.
          * Its existence is checked.
          * </summary>
@@ -95,6 +109,11 @@ namespace DellarteDellaGuerra.Infrastructure.Utils
         public static string? GetBattleScenesFilePath()
         {
             return GetModuleDataFile("dadg_battle_scenes.xml");
+        }
+        
+        private static string? GetCustomXmlFile(string filename)
+        {
+            return GetModuleDataFile(Path.Combine("CustomXml", filename));
         }
         
         private static string? GetModuleDataFile(string filename)
