@@ -1,4 +1,4 @@
-﻿using DellarteDellaGuerra.Infrastructure.Cannon.Campaign.UI;
+using DellarteDellaGuerra.Infrastructure.Cannon.Campaign.UI;
 using DellarteDellaGuerra.Infrastructure.Cannon.Infra.Repo;
 using DellarteDellaGuerra.Infrastructure.Events;
 
@@ -6,29 +6,23 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.UI;
 
 public class SiegeEngineIconRegistrationUseCase
 {
-    private readonly IOnSubModuleLoadEventSubscriber _subModuleEventSubscriber;
     private readonly SiegeEngineDeploymentIconEnricher _siegeEngineDeploymentIconEnricher;
     private readonly IDeploymentSiegeEngineIconRepository _iconRepository;
     private readonly CampaignMapSiegeEngineDeploymentIconEnricher _campaignMapSiegeEngineDeploymentIconEnricher;
 
     public SiegeEngineIconRegistrationUseCase(
-        IOnSubModuleLoadEventSubscriber subModuleEventSubscriber,
+        IEventSubscriber<SubModuleLoadEvent> subModuleEventSubscriber,
         SiegeEngineDeploymentIconEnricher siegeEngineDeploymentIconEnricher,
         CampaignMapSiegeEngineDeploymentIconEnricher campaignMapSiegeEngineDeploymentIconEnricher,
         IDeploymentSiegeEngineIconRepository iconRepository)
     {
-        _subModuleEventSubscriber = subModuleEventSubscriber;
         _siegeEngineDeploymentIconEnricher = siegeEngineDeploymentIconEnricher;
         _campaignMapSiegeEngineDeploymentIconEnricher = campaignMapSiegeEngineDeploymentIconEnricher;
         _iconRepository = iconRepository;
+        subModuleEventSubscriber.Subscribe(OnSubModuleLoaded);
     }
 
-    public void RegisterSiegeEngineIcons()
-    {
-        _subModuleEventSubscriber.Subscribe(OnSubModuleLoaded);
-    }
-
-    private void OnSubModuleLoaded()
+    private void OnSubModuleLoaded(SubModuleLoadEvent _)
     {
         foreach (var icon in _iconRepository.SiegeEngineIcons)
         {

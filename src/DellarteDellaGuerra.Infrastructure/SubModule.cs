@@ -7,43 +7,31 @@ using Bannerlord.Cannons.Api;
 using Bannerlord.ExpandedTemplate.API;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders;
-using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.SiegeEngines;
-using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Firearm;
-using DellarteDellaGuerra.Firearm.Patches;
-using DellarteDellaGuerra.Firearm.Reload;
 using DellarteDellaGuerra.Infrastructure.Cannon.Campaign;
-using DellarteDellaGuerra.Infrastructure.Cannon.Campaign.UI;
-using DellarteDellaGuerra.Infrastructure.Cannon.Infra.Repo;
 using DellarteDellaGuerra.Infrastructure.Cannon.Mission.Battle;
 using DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.UI;
-using DellarteDellaGuerra.Infrastructure.Cannon.Util.UI;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
-using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
+using DellarteDellaGuerra.Infrastructure.DI;
 using DellarteDellaGuerra.Infrastructure.Events;
 using DellarteDellaGuerra.Infrastructure.ExpandedTemplateApi.Logging;
-using DellarteDellaGuerra.Infrastructure.Logging;
-using DellarteDellaGuerra.Infrastructure.Patches;
-using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
-using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
 using DellarteDellaGuerra.Tournament.Api;
-using DellarteDellaGuerra.Tournament.Reward.Spi;
-using DellarteDellaGuerra.Tournament.Reward.Spi.Mapper;
 using DellarteDellaGuerra.Utils;
+using Harmony.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
 using TaleWorlds.DotNet;
-using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
@@ -53,33 +41,22 @@ namespace DellarteDellaGuerra.Infrastructure
     public class SubModule : MBSubModuleBase
     {
         private readonly ILogger _logger;
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly CampaignBehaviourDisabler _campaignBehaviourDisabler;
-        private readonly DadgConfigWatcher _dadgConfigWatcher;
-        private readonly HarmonyPatcher _harmonyPatcher;
-
-        private DisplayShaderNumber _displayShaderNumber;
-        private readonly OnSubModuleLoadEventPubSub _onSubModuleLoadEventPubSub;
-
-        private ICannonPrefabProvider _cannonPrefabProvider;
-        private ICannonAvailabilityProvider _cannonAvailabilityProvider;
+        private IServiceProvider _serviceProvider;
 
         public SubModule()
         {
-            _loggerFactory = new LoggerFactory(new LoggerConfigPathProvider());
-            _campaignBehaviourDisabler = new CampaignBehaviourDisabler();
-            _dadgConfigWatcher = new DadgConfigWatcher(_loggerFactory);
-            _harmonyPatcher = new HarmonyPatcher(_loggerFactory);
-            _logger = _loggerFactory.CreateLogger<SubModule>();
-            _onSubModuleLoadEventPubSub = new OnSubModuleLoadEventPubSub();
+            _serviceProvider = new DadgServiceContainer().Build();
+
+            var loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
+            _logger = loggerFactory.CreateLogger<SubModule>();
 
             new BannerlordExpandedTemplateApi()
-                .UseLoggerFactory(new ExpandedTemplateLoggerFactory(_loggerFactory))
+                .UseLoggerFactory(new ExpandedTemplateLoggerFactory(loggerFactory))
                 .Bind();
 
-            InitialiseCannonFeature();
-            InitialisePocIntegration();
-            InitialiseSteamIntegration();
+            _serviceProvider.GetRequiredService<SiegeEngineIconRegistrationUseCase>();
+
+            CannonSystemInitialiser.Initialise();
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
@@ -87,11 +64,12 @@ namespace DellarteDellaGuerra.Infrastructure
             InfoPrinter.Display("DADG loaded");
         }
 
-        // load the harmony patches once as soon as possible before reaching the main menu
         protected override void OnSubModuleLoad()
         {
-            _onSubModuleLoadEventPubSub.Publish();
-            _harmonyPatcher.PatchAll();
+            _serviceProvider.GetRequiredService<IEventPublisher<SubModuleLoadEvent>>()
+                .Publish(new SubModuleLoadEvent());
+
+            _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
 
             Managed.AddTypes(GetDadgReferencedAssemblyTypes());
         }
@@ -119,18 +97,27 @@ namespace DellarteDellaGuerra.Infrastructure
         protected override void OnSubModuleUnloaded()
         {
             LogManager.Shutdown();
-            _dadgConfigWatcher.Destroy();
+            _serviceProvider.GetRequiredService<DadgConfigWatcher>().Destroy();
         }
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
-            HandleTournamentModelDependencies(campaignGameStarter);
-            InitialiseSiegeEngineLogic(campaignGameStarter);
+            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
 
-            HandleDisplayCompilingShadersDependencies();
-            CompilingShaderNotifier.Init(_displayShaderNumber);
+            var loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
+            var getDefaultSiegeEngine = _serviceProvider.GetRequiredService<GetDefaultSiegeEngine>();
+            campaignGameStarter.AddModel(new DadgSiegeStrategyActionModel(
+                campaignGameStarter.Models.OfType<DefaultSiegeStrategyActionModel>().Last(),
+                MBObjectManager.Instance, loggerFactory, getDefaultSiegeEngine));
+            campaignGameStarter.AddModel(new DadgSiegeEventModel(
+                campaignGameStarter.Models.OfType<SiegeEventModel>().Last(),
+                _serviceProvider.GetRequiredService<ICannonPrefabProvider>(),
+                _serviceProvider.GetRequiredService<ICannonAvailabilityProvider>(),
+                loggerFactory));
+
+            CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();
 
             campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
@@ -139,7 +126,8 @@ namespace DellarteDellaGuerra.Infrastructure
         public override void OnGameInitializationFinished(Game game)
         {
             if (game.GameType is not Campaign) return;
-            _campaignBehaviourDisabler.Disable(Campaign.Current.CampaignBehaviorManager);
+            _serviceProvider.GetRequiredService<CampaignBehaviourDisabler>()
+                .Disable(Campaign.Current.CampaignBehaviorManager);
             SetCampaignStartingDate();
             LoadDadgBattleScenes();
         }
@@ -147,15 +135,15 @@ namespace DellarteDellaGuerra.Infrastructure
         public override void OnBeforeMissionBehaviorInitialize(Mission mission)
         {
             base.OnBeforeMissionBehaviorInitialize(mission);
-            mission.AddMissionBehavior(new FirearmReloadMissionLogic(_loggerFactory,
-                new InMemoryWeaponEntityRepository()));
-            mission.AddMissionBehavior(new FirearmSmokeMissionLogic(_loggerFactory));
-            mission.AddMissionBehavior(new CannonTeamMissionLogic());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmReloadMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmSmokeMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<CannonTeamMissionLogic>());
         }
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)
         {
-            InitSkills();
+            foreach (var provider in _serviceProvider.GetServices<IMBObjectProvider<SkillObject>>())
+                MBObjectManager.Instance.RegisterPresumedObject(provider.GetMbObject());
         }
 
         private void SetCampaignStartingDate()
@@ -181,114 +169,6 @@ namespace DellarteDellaGuerra.Infrastructure
             {
                 _logger.Error($"Failed to load {battleScenesFilePath}: {e}");
             }
-        }
-
-        #region DisplayCompilingShaders
-        private void HandleDisplayCompilingShadersDependencies()
-        {
-            var compilingShaderDisplayer = new CompilingShaderDisplayer();
-            var compilingShaderNotifierConfig = new CompilingShaderNotifierConfig(_dadgConfigWatcher);
-            var compilingShaderNumberProvider = new CompilingShaderNumberProvider();
-            _displayShaderNumber = new DisplayShaderNumber(compilingShaderNotifierConfig, compilingShaderNumberProvider,
-                compilingShaderDisplayer);
-        }
-        #endregion
-
-        #region POCIntegration
-
-        private void InitialisePocIntegration()
-        {
-            new PocConfigReaderOverriderPatch(_harmonyPatcher, _loggerFactory);
-        }
-
-        #endregion
-
-        #region SteamIntegration
-
-        private void InitialiseSteamIntegration()
-        {
-            new FixSettlementFilePathPatch(_harmonyPatcher, _loggerFactory);
-            new FixSettlementDistanceCacheFilePathPatch(_harmonyPatcher, _loggerFactory);
-        }
-
-        #endregion
-
-        #region Tournament
-
-        private void HandleTournamentModelDependencies(CampaignGameStarter campaignGameStarter)
-        {
-            var itemRepository = new ItemRepository(new ItemTierMapper(_loggerFactory));
-var getTournamentRewardUseCase = new GetTournamentRewardUseCase(itemRepository, new TroopRepository(),
-                new TownRepository(),
-                new RandomProvider(), new HighestTownProsperityProvider());
-            campaignGameStarter.AddModel(new DadgTournamentModel(getTournamentRewardUseCase));
-        }
-
-        #endregion
-
-        #region Cannons
-
-        private void InitialiseCannonFeature()
-        {
-            // Single shared registry — all cannon subsystems use this instance
-            var cannonRegistry = new CannonRegistry();
-
-            var configuration = new XmlCannonConfigurationReader();
-            foreach (var properties in configuration.LoadCannonProperties())
-                cannonRegistry.RegisterCannonType(new ConfigurableCannonType(properties), new GenericCannonFactory(properties.Id));
-
-            _cannonPrefabProvider = new CannonPrefabProvider(cannonRegistry);
-            var iconProvider = new CannonIconProvider(cannonRegistry);
-            _cannonAvailabilityProvider = new CannonAvailabilityProvider(cannonRegistry);
-
-            var deploymentIconRepo = new DeploymentSiegeEngineIconRepository(iconProvider);
-            var mapIconRepo = new MapSiegeEngineIconRepository(cannonRegistry);
-            var prefabRepo = new PrefabSiegeEngineRepository(cannonRegistry);
-
-            var brushStyleExtender = new BrushStyleExtender(_loggerFactory,
-                UIResourceManager.BrushFactory,
-                UIResourceManager.SpriteData);
-            var campaignMapEnricher = new CampaignMapSiegeEngineDeploymentIconEnricher(brushStyleExtender);
-            var deploymentEnricher = new SiegeEngineDeploymentIconEnricher(brushStyleExtender);
-
-            var iconUseCase = new SiegeEngineIconRegistrationUseCase(_onSubModuleLoadEventPubSub,
-                deploymentEnricher, campaignMapEnricher, deploymentIconRepo);
-            iconUseCase.RegisterSiegeEngineIcons();
-
-            _harmonyPatcher.AddPatch(new OrderSiegeMachineItemButtonWidgetPatch(deploymentIconRepo));
-            _harmonyPatcher.AddPatch(new MapSiegePOIBrushWidgetManualPatch(mapIconRepo, UIResourceManager.SpriteData));
-            _harmonyPatcher.AddPatch(new MapSiegePOIVMPatch(mapIconRepo));
-
-            var prefabCachePatches = new CampaignMapSiegePrefabEntityCachePatches(prefabRepo);
-            prefabCachePatches.GetPatches().ToList().ForEach(patch => _harmonyPatcher.AddPatch(patch));
-
-            OrderSiegeMachineVM_GetSiegeTypePatch.SetRegistry(cannonRegistry);
-
-            CannonSystemInitialiser.Initialise();
-        }
-
-        /// Must be called after cannon initialisation since the logic requires cannons
-        public void InitialiseSiegeEngineLogic(CampaignGameStarter campaignGameStarter)
-        {
-            var getDefaultSiegeEngine = new GetDefaultSiegeEngine();
-
-            campaignGameStarter.AddModel(new DadgSiegeStrategyActionModel(
-                campaignGameStarter.Models.OfType<DefaultSiegeStrategyActionModel>().Last(),
-                MBObjectManager.Instance, _loggerFactory, getDefaultSiegeEngine));
-
-            campaignGameStarter.AddModel(new DadgSiegeEventModel(
-                campaignGameStarter.Models.OfType<SiegeEventModel>().Last(),
-                _cannonPrefabProvider, _cannonAvailabilityProvider, _loggerFactory));
-        }
-
-        #endregion
-
-        private static void InitSkills()
-        {
-            var firearmSkill = new FirearmSkill();
-            firearmSkill.Initialise();
-
-            AddFirearmSkillAsRelevantSkillPatch.SetFirearmSkill(firearmSkill);
         }
     }
 }
