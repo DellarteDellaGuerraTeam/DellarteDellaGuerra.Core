@@ -16,17 +16,17 @@ public class XmlCannonConfigurationReader : ICannonConfigurationReader
         _logger = loggerFactory.CreateLogger<XmlCannonConfigurationReader>();
     }
 
-    public IEnumerable<Domain.SiegeEngines.Model.CannonProperties> LoadCannonProperties()
+    public IEnumerable<Domain.SiegeEngines.Model.Cannon> LoadCannonProperties()
     {
         string? configPath = ResourceLocator.GetCannonXmlFilePath();
 
         if (configPath is null)
         {
             _logger.Error($"Could not find any xml for cannons.");
-            return new List<Domain.SiegeEngines.Model.CannonProperties>();
+            return new List<Domain.SiegeEngines.Model.Cannon>();
         }
 
-        var cannonProperties = XDocument.Load(configPath).Descendants("CannonType")
+        var cannonProperties = XDocument.Load(configPath).Descendants("Cannon")
             .Select(CreateCannonProperties).ToList();
 
         foreach (var cannon in cannonProperties) _logger.Debug($"Loaded '{cannon.Id}' cannon");
@@ -34,20 +34,20 @@ public class XmlCannonConfigurationReader : ICannonConfigurationReader
         return cannonProperties;
     }
 
-    private static Domain.SiegeEngines.Model.CannonProperties CreateCannonProperties(XElement element)
+    private static Domain.SiegeEngines.Model.Cannon CreateCannonProperties(XElement element)
     {
-        return new Domain.SiegeEngines.Model.CannonProperties(
+        return new Domain.SiegeEngines.Model.Cannon(
             element.Element("Id")?.Value ?? "falconet",
             element.Element("DisplayName")?.Value ?? "Falconet",
             element.Element("SiegeDeploymentSelectionIconSpriteId")?.Value ?? string.Empty,
             element.Element("MapSiegeMarkerSpriteId")?.Value ?? string.Empty,
             element.Element("CampaignMapSelectionIconSpriteId")?.Value ?? string.Empty,
-            element.Element("MapPrefabName")?.Value ?? "dadg_falconet_mapicon",
-            element.Element("ProjectilePrefab")?.Value ?? "cannonball_mapicon_projectile",
-            element.Element("ReloadPrefab")?.Value ?? "ballista_a_mapicon_reload",
-            element.Element("FirePrefab")?.Value ?? "ballista_a_mapicon_fire",
+            element.Element("CampaignMapPrefabName")?.Value ?? "dadg_falconet_mapicon",
+            element.Element("CampaignMapProjectilePrefabName")?.Value ?? "cannonball_mapicon_projectile",
+            element.Element("CampaignMapReloadAnimationName")?.Value ?? "ballista_a_mapicon_reload",
+            element.Element("CampaignMapFireAnimationName")?.Value ?? "ballista_a_mapicon_fire",
             int.TryParse(element.Element("MachineType")?.Value, out var machineType) ? machineType : 8,
-            int.TryParse(element.Element("ProjectileBoneIndex")?.Value, out var boneIndex) ? boneIndex : 0
+            int.TryParse(element.Element("CampaignMapProjectileBoneIndex")?.Value, out var boneIndex) ? boneIndex : 0
         );
     }
 }

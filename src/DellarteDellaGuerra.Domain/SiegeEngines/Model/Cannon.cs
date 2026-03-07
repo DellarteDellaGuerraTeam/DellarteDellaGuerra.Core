@@ -1,6 +1,6 @@
 namespace DellarteDellaGuerra.Domain.SiegeEngines.Model
 {
-    public record CannonProperties(
+    public record Cannon(
         string Id,
         string DisplayName,
         string SiegeDeploymentSelectionIconSpriteId,

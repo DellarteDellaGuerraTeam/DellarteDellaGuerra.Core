@@ -2,13 +2,13 @@
 
 namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
 {
-    public class CannonPropertiesTests
+    public class CannonTests
     {
         [Fact]
         public void TestCannonPropertiesCreation()
         {
             // Arrange & Act
-            var properties = new CannonProperties(
+            var properties = new Cannon(
                 "test_cannon",
                 "Test Cannon",
                 "Order\\SiegeIcons\\test_sprite",
@@ -40,17 +40,17 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
         public void TestCannonPropertiesEquality()
         {
             // Arrange
-            var properties1 = new CannonProperties(
+            var properties1 = new Cannon(
                 "test_cannon", "Test",
                 "Order\\SiegeIcons\\sprite", "SPGeneral\\MapSiege\\sprite", "SPGeneral\\Siege\\sprite",
                 "prefab", "proj", "reload", "fire", 1, 0
             );
-            var properties2 = new CannonProperties(
+            var properties2 = new Cannon(
                 "test_cannon", "Test",
                 "Order\\SiegeIcons\\sprite", "SPGeneral\\MapSiege\\sprite", "SPGeneral\\Siege\\sprite",
                 "prefab", "proj", "reload", "fire", 1, 0
             );
-            var properties3 = new CannonProperties(
+            var properties3 = new Cannon(
                 "other_cannon", "Test",
                 "Order\\SiegeIcons\\sprite", "SPGeneral\\MapSiege\\sprite", "SPGeneral\\Siege\\sprite",
                 "prefab", "proj", "reload", "fire", 1, 0
@@ -65,7 +65,7 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
         public void TestCannonPropertiesDeconstruction()
         {
             // Arrange
-            var properties = new CannonProperties(
+            var properties = new Cannon(
                 "test_cannon",
                 "Test Cannon",
                 "Order\\SiegeIcons\\test_sprite",
@@ -102,9 +102,9 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
         public void TestCannonPropertiesToString()
         {
             // Arrange
-            var properties = new CannonProperties(
+            var properties = new Cannon(
                 "test_cannon",
-                "Test CannonProperties",
+                "Test Cannon",
                 "Order\\SiegeIcons\\test_sprite",
                 "SPGeneral\\MapSiege\\test_sprite",
                 "SPGeneral\\Siege\\test_sprite",
@@ -121,7 +121,7 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
 
             // Assert
             Assert.Contains("test_cannon", toStringResult);
-            Assert.Contains("Test CannonProperties", toStringResult);
+            Assert.Contains("Test Cannon", toStringResult);
             Assert.Contains("Order\\SiegeIcons\\test_sprite", toStringResult);
         }
     }

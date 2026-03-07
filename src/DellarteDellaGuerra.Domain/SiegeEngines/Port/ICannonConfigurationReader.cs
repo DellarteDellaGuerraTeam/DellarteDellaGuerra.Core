@@ -5,6 +5,6 @@ namespace DellarteDellaGuerra.Domain.SiegeEngines.Port
 {
     public interface ICannonConfigurationReader
     {
-        IEnumerable<CannonProperties> LoadCannonProperties();
+        IEnumerable<Cannon> LoadCannonProperties();
     }
 }
