@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
-using DellarteDellaGuerra.Domain.SiegeEngines.Model;
 using DellarteDellaGuerra.Domain.SiegeEngines.Port;
 using DellarteDellaGuerra.Infrastructure.Utils;
 
@@ -17,14 +16,14 @@ public class XmlCannonConfigurationReader : ICannonConfigurationReader
         _logger = loggerFactory.CreateLogger<XmlCannonConfigurationReader>();
     }
 
-    public IEnumerable<CannonProperties> LoadCannonProperties()
+    public IEnumerable<Domain.SiegeEngines.Model.CannonProperties> LoadCannonProperties()
     {
         string? configPath = ResourceLocator.GetCannonXmlFilePath();
 
         if (configPath is null)
         {
             _logger.Error($"Could not find any xml for cannons.");
-            return new List<CannonProperties>();
+            return new List<Domain.SiegeEngines.Model.CannonProperties>();
         }
 
         var cannonProperties = XDocument.Load(configPath).Descendants("CannonType")
@@ -35,8 +34,9 @@ public class XmlCannonConfigurationReader : ICannonConfigurationReader
         return cannonProperties;
     }
 
-    private static CannonProperties CreateCannonProperties(XElement element) =>
-        new(
+    private static Domain.SiegeEngines.Model.CannonProperties CreateCannonProperties(XElement element)
+    {
+        return new Domain.SiegeEngines.Model.CannonProperties(
             element.Element("Id")?.Value ?? "falconet",
             element.Element("DisplayName")?.Value ?? "Falconet",
             element.Element("SiegeDeploymentSelectionIconSpriteId")?.Value ?? string.Empty,
@@ -49,4 +49,5 @@ public class XmlCannonConfigurationReader : ICannonConfigurationReader
             int.TryParse(element.Element("MachineType")?.Value, out var machineType) ? machineType : 8,
             int.TryParse(element.Element("ProjectileBoneIndex")?.Value, out var boneIndex) ? boneIndex : 0
         );
+    }
 }

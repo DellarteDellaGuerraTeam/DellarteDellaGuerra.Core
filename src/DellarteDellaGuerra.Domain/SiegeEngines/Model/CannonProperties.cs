@@ -6,11 +6,11 @@ namespace DellarteDellaGuerra.Domain.SiegeEngines.Model
         string SiegeDeploymentSelectionIconSpriteId,
         string MapSiegeMarkerSpriteId,
         string CampaignMapSelectionIconSpriteId,
-        string MapPrefabName,
-        string ProjectilePrefab,
-        string ReloadPrefab,
-        string FirePrefab,
+        string CampaignMapPrefabName,
+        string CampaignMapProjectilePrefabName,
+        string CampaignMapReloadAnimationName,
+        string CampaignMapFireAnimationName,
         int MachineType,
-        int ProjectileBoneIndex
+        int CampaignMapProjectileBoneIndex
     );
 }

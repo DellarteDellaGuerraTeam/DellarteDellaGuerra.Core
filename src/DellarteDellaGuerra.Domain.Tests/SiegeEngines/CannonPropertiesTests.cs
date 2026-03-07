@@ -1,5 +1,4 @@
-using DellarteDellaGuerra.Domain.SiegeEngines.Model;
-using Xunit;
+﻿using DellarteDellaGuerra.Domain.SiegeEngines.Model;
 
 namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
 {
@@ -29,12 +28,12 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
             Assert.Equal("Order\\SiegeIcons\\test_sprite", properties.SiegeDeploymentSelectionIconSpriteId);
             Assert.Equal("SPGeneral\\MapSiege\\test_sprite", properties.MapSiegeMarkerSpriteId);
             Assert.Equal("SPGeneral\\Siege\\test_sprite", properties.CampaignMapSelectionIconSpriteId);
-            Assert.Equal("test_prefab", properties.MapPrefabName);
-            Assert.Equal("test_projectile", properties.ProjectilePrefab);
-            Assert.Equal("test_reload", properties.ReloadPrefab);
-            Assert.Equal("test_fire", properties.FirePrefab);
+            Assert.Equal("test_prefab", properties.CampaignMapPrefabName);
+            Assert.Equal("test_projectile", properties.CampaignMapProjectilePrefabName);
+            Assert.Equal("test_reload", properties.CampaignMapReloadAnimationName);
+            Assert.Equal("test_fire", properties.CampaignMapFireAnimationName);
             Assert.Equal(1, properties.MachineType);
-            Assert.Equal(0, properties.ProjectileBoneIndex);
+            Assert.Equal(0, properties.CampaignMapProjectileBoneIndex);
         }
 
         [Fact]
@@ -82,7 +81,8 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
 
             // Act
             var (id, displayName, siegeDeploymentSelectionIconSpriteId, mapSiegeMarkerSpriteId, campaignMapSelectionIconSpriteId,
-                mapPrefabName, projectilePrefab, reloadPrefab, firePrefab, machineType, projectileBoneIndex) = properties;
+                campaignMapPrefabName, campaignMapProjectilePrefabName, campaignMapReloadAnimationName,
+                campaignMapFireAnimationName, machineType, campaignMapProjectileBoneIndex) = properties;
 
             // Assert
             Assert.Equal("test_cannon", id);
@@ -90,12 +90,12 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
             Assert.Equal("Order\\SiegeIcons\\test_sprite", siegeDeploymentSelectionIconSpriteId);
             Assert.Equal("SPGeneral\\MapSiege\\test_sprite", mapSiegeMarkerSpriteId);
             Assert.Equal("SPGeneral\\Siege\\test_sprite", campaignMapSelectionIconSpriteId);
-            Assert.Equal("test_prefab", mapPrefabName);
-            Assert.Equal("test_projectile", projectilePrefab);
-            Assert.Equal("test_reload", reloadPrefab);
-            Assert.Equal("test_fire", firePrefab);
+            Assert.Equal("test_prefab", campaignMapPrefabName);
+            Assert.Equal("test_projectile", campaignMapProjectilePrefabName);
+            Assert.Equal("test_reload", campaignMapReloadAnimationName);
+            Assert.Equal("test_fire", campaignMapFireAnimationName);
             Assert.Equal(1, machineType);
-            Assert.Equal(0, projectileBoneIndex);
+            Assert.Equal(0, campaignMapProjectileBoneIndex);
         }
 
         [Fact]
@@ -104,7 +104,7 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
             // Arrange
             var properties = new CannonProperties(
                 "test_cannon",
-                "Test Cannon",
+                "Test CannonProperties",
                 "Order\\SiegeIcons\\test_sprite",
                 "SPGeneral\\MapSiege\\test_sprite",
                 "SPGeneral\\Siege\\test_sprite",
@@ -121,7 +121,7 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
 
             // Assert
             Assert.Contains("test_cannon", toStringResult);
-            Assert.Contains("Test Cannon", toStringResult);
+            Assert.Contains("Test CannonProperties", toStringResult);
             Assert.Contains("Order\\SiegeIcons\\test_sprite", toStringResult);
         }
     }

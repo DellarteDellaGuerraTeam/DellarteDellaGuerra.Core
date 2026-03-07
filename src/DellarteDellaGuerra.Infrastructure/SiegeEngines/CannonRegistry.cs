@@ -7,19 +7,21 @@ namespace DellarteDellaGuerra.Infrastructure.SiegeEngines;
 
 public class CannonRegistry : ICannonRegistry
 {
-    private readonly List<ICannonType> _cannonTypes = new();
+    private readonly List<Domain.SiegeEngines.Model.CannonProperties> _cannonTypes = new();
     private readonly Dictionary<string, ICannonFactory> _factories = new();
 
-    public void RegisterCannonType(ICannonType cannonType, ICannonFactory factory)
+    public void RegisterCannonType(Domain.SiegeEngines.Model.CannonProperties cannonProperties, ICannonFactory factory)
     {
-        _cannonTypes.Add(cannonType);
-        _factories[cannonType.Id] = factory;
+        _cannonTypes.Add(cannonProperties);
+        _factories[cannonProperties.Id] = factory;
     }
 
-    public ICannonType GetCannonType(string id) =>
-        _cannonTypes.FirstOrDefault(ct => ct.Id == id);
+    public Domain.SiegeEngines.Model.CannonProperties GetCannonType(string id)
+    {
+        return _cannonTypes.FirstOrDefault(ct => ct.Id == id);
+    }
 
-    public ICannonType GetCannonTypeByScriptType(Type scriptType)
+    public Domain.SiegeEngines.Model.CannonProperties GetCannonTypeByScriptType(Type scriptType)
     {
         var cannonId = _factories.FirstOrDefault(kvp => kvp.Value.CannonScriptType == scriptType).Key;
         return cannonId != null ? GetCannonType(cannonId) : null;
@@ -28,5 +30,8 @@ public class CannonRegistry : ICannonRegistry
     public ICannonFactory GetFactory(string id) =>
         _factories.TryGetValue(id, out var factory) ? factory : null;
 
-    public IEnumerable<ICannonType> GetAllCannonTypes() => _cannonTypes;
+    public IEnumerable<Domain.SiegeEngines.Model.CannonProperties> GetAllCannonTypes()
+    {
+        return _cannonTypes;
+    }
 }

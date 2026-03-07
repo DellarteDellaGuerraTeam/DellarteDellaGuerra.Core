@@ -60,32 +60,32 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign
         public override string GetSiegeEngineMapPrefabName(SiegeEngineType siegeEngineType, int wallLevel,
             BattleSideEnum side)
         {
-            var prefabName = _prefabProvider.GetMapPrefabName(siegeEngineType.StringId, wallLevel, side);
+            var prefabName = _prefabProvider.GetCampaignMapPrefabName(siegeEngineType.StringId, wallLevel, side);
             return prefabName ?? _defaultSiegeEventModel.GetSiegeEngineMapPrefabName(siegeEngineType, wallLevel, side);
         }
 
         public override string GetSiegeEngineMapProjectilePrefabName(SiegeEngineType siegeEngineType)
         {
-            var projectilePrefab = _prefabProvider.GetProjectilePrefabName(siegeEngineType.StringId);
+            var projectilePrefab = _prefabProvider.GetCampaignMapProjectilePrefabName(siegeEngineType.StringId);
             return projectilePrefab ?? _defaultSiegeEventModel.GetSiegeEngineMapProjectilePrefabName(siegeEngineType);
         }
 
         public override string GetSiegeEngineMapReloadAnimationName(SiegeEngineType siegeEngineType,
             BattleSideEnum side)
         {
-            var reloadPrefab = _prefabProvider.GetReloadPrefabName(siegeEngineType.StringId);
+            var reloadPrefab = _prefabProvider.GetCampaignMapReloadAnimationName(siegeEngineType.StringId);
             return reloadPrefab ?? _defaultSiegeEventModel.GetSiegeEngineMapReloadAnimationName(siegeEngineType, side);
         }
 
         public override string GetSiegeEngineMapFireAnimationName(SiegeEngineType siegeEngineType, BattleSideEnum side)
         {
-            var firePrefab = _prefabProvider.GetFirePrefabName(siegeEngineType.StringId);
+            var firePrefab = _prefabProvider.GetCampaignMapFireAnimationName(siegeEngineType.StringId);
             return firePrefab ?? _defaultSiegeEventModel.GetSiegeEngineMapFireAnimationName(siegeEngineType, side);
         }
 
         public override sbyte GetSiegeEngineMapProjectileBoneIndex(SiegeEngineType siegeEngineType, BattleSideEnum side)
         {
-            var boneIndex = _prefabProvider.GetProjectileBoneIndex(siegeEngineType.StringId);
+            var boneIndex = _prefabProvider.GetCampaignMapProjectileBoneIndex(siegeEngineType.StringId);
             return boneIndex >= 0
                 ? (sbyte)boneIndex
                 : _defaultSiegeEventModel.GetSiegeEngineMapProjectileBoneIndex(siegeEngineType, side);

@@ -5,9 +5,9 @@ namespace DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 
 public interface ICannonRegistry
 {
-    void RegisterCannonType(ICannonType cannonType, ICannonFactory factory);
-    ICannonType GetCannonType(string id);
-    ICannonType GetCannonTypeByScriptType(Type scriptType);
+    void RegisterCannonType(Domain.SiegeEngines.Model.CannonProperties cannonProperties, ICannonFactory factory);
+    Domain.SiegeEngines.Model.CannonProperties GetCannonType(string id);
+    Domain.SiegeEngines.Model.CannonProperties GetCannonTypeByScriptType(Type scriptType);
     ICannonFactory GetFactory(string id);
-    IEnumerable<ICannonType> GetAllCannonTypes();
+    IEnumerable<Domain.SiegeEngines.Model.CannonProperties> GetAllCannonTypes();
 }

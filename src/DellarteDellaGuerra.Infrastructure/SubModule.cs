@@ -114,7 +114,8 @@ namespace DellarteDellaGuerra.Infrastructure
             campaignGameStarter.AddModel(new DadgSiegeEventModel(
                 campaignGameStarter.Models.OfType<SiegeEventModel>().Last(),
                 _serviceProvider.GetRequiredService<ICannonPrefabProvider>(),
-                _serviceProvider.GetRequiredService<ICannonAvailabilityProvider>(),
+                new CannonAvailabilityProvider(_serviceProvider.GetService<ICannonRegistry>(),
+                    MBObjectManager.Instance),
                 loggerFactory));
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());

@@ -17,5 +17,5 @@ public class PrefabSiegeEngineRepository : IPrefabSiegeEngineRepository
     public ISet<SiegeEngineMapPrefab> GetPrefabSiegeEngines() =>
         new HashSet<SiegeEngineMapPrefab>(
             _cannonRegistry.GetAllCannonTypes()
-                .Select(ct => new SiegeEngineMapPrefab(ct.Id, ct.MapPrefabName)));
+                .Select(ct => new SiegeEngineMapPrefab(ct.Id, ct.CampaignMapPrefabName)));
 }
