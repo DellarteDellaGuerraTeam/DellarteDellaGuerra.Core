@@ -27,8 +27,12 @@ public class XmlCannonConfigurationReader : ICannonConfigurationReader
             return new List<CannonProperties>();
         }
 
-        return XDocument.Load(configPath).Descendants("CannonType")
-            .Select(CreateCannonProperties);
+        var cannonProperties = XDocument.Load(configPath).Descendants("CannonType")
+            .Select(CreateCannonProperties).ToList();
+
+        foreach (var cannon in cannonProperties) _logger.Debug($"Loaded '{cannon.Id}' cannon");
+
+        return cannonProperties;
     }
 
     private static CannonProperties CreateCannonProperties(XElement element) =>

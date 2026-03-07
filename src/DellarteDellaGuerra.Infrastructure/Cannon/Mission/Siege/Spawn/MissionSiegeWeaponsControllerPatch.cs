@@ -1,15 +1,22 @@
-﻿using System;
+using System;
 using System.Reflection;
+using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade.Missions;
-using TaleWorlds.ObjectSystem;
 
 namespace DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.Spawn;
 
 public class MissionSiegeWeaponsControllerPatch : IPatch
 {
+    private static ICannonRegistry _cannonRegistry;
+
+    public MissionSiegeWeaponsControllerPatch(ICannonRegistry cannonRegistry)
+    {
+        _cannonRegistry = cannonRegistry;
+    }
+
     public MethodInfo? TargetMethod =>
         AccessTools.Method(typeof(MissionSiegeWeaponsController), "GetSiegeWeaponBaseType");
 
@@ -20,7 +27,7 @@ public class MissionSiegeWeaponsControllerPatch : IPatch
 
     private static void Postfix(SiegeEngineType siegeWeaponType, ref Type __result)
     {
-        if (siegeWeaponType == MBObjectManager.Instance.GetObject<SiegeEngineType>("falconet"))
-            __result = typeof(Falconet);
+        if (_cannonRegistry?.GetCannonType(siegeWeaponType.StringId) != null)
+            __result = typeof(GenericCannon);
     }
 }

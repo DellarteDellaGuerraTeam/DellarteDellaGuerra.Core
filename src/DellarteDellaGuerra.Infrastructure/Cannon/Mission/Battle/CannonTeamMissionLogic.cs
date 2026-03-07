@@ -12,7 +12,7 @@ public class CannonTeamMissionLogic : MissionLogic
         base.OnAddTeam(team);
 
         TaleWorlds.MountAndBlade.Mission.Current.ActiveMissionObjects
-            .OfType<Falconet>()
+            .OfType<GenericCannon>()
             .Where(script => script.Side.Equals(BattleSideEnum.Attacker) && team.IsAttacker)
             .ToList()
             .ForEach(script =>
@@ -20,9 +20,9 @@ public class CannonTeamMissionLogic : MissionLogic
                 script.Team = team;
                 script.SetForcedUse(true);
             });
-        
+
         TaleWorlds.MountAndBlade.Mission.Current.ActiveMissionObjects
-            .OfType<Falconet>()
+            .OfType<GenericCannon>()
             .Where(script => script.Side.Equals(BattleSideEnum.Defender) && team.IsDefender)
             .ToList()
             .ForEach(script =>

@@ -14,14 +14,13 @@ public class GenericCannonFactory : ICannonFactory
         _cannonId = cannonId;
     }
 
-    // All XML-configured cannons share the Falconet script type until dedicated classes are added
-    public Type CannonScriptType => typeof(Falconet);
+    public Type CannonScriptType => typeof(GenericCannon);
 
-    public SpawnableArtilleryRangedSiegeWeapon CreateCannon() => new Falconet();
+    public SpawnableArtilleryRangedSiegeWeapon CreateCannon() => new GenericCannon();
 
     public void ConfigureSpawner(SpawnerEntityMissionHelper helper)
     {
-        var cannon = helper.SpawnedEntity.GetFirstScriptInFamilyDescending<Falconet>();
+        var cannon = helper.SpawnedEntity.GetFirstScriptInFamilyDescending<GenericCannon>();
         // Configuration logic
     }
 }
