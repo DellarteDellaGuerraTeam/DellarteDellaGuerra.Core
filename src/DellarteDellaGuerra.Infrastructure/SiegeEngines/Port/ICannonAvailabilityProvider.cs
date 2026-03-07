@@ -6,5 +6,5 @@ namespace DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 
 public interface ICannonAvailabilityProvider
 {
-    IEnumerable<SiegeEngineType> GetAvailableCannonTypes(PartyBase party, BattleSideEnum side);
+    IEnumerable<SiegeEngineType> GetAvailableCannons(PartyBase party, BattleSideEnum side);
 }

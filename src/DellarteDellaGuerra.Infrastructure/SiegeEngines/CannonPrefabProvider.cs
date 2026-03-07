@@ -14,26 +14,26 @@ public class CannonPrefabProvider : ICannonPrefabProvider
 
     public string GetCampaignMapPrefabName(string cannonId, int wallLevel, BattleSideEnum side)
     {
-        return _cannonRegistry.GetCannonType(cannonId)?.CampaignMapPrefabName;
+        return _cannonRegistry.GetCannon(cannonId)?.CampaignMapPrefabName;
     }
 
     public string GetCampaignMapProjectilePrefabName(string cannonId)
     {
-        return _cannonRegistry.GetCannonType(cannonId)?.CampaignMapProjectilePrefabName;
+        return _cannonRegistry.GetCannon(cannonId)?.CampaignMapProjectilePrefabName;
     }
 
     public string GetCampaignMapReloadAnimationName(string cannonId)
     {
-        return _cannonRegistry.GetCannonType(cannonId)?.CampaignMapReloadAnimationName;
+        return _cannonRegistry.GetCannon(cannonId)?.CampaignMapReloadAnimationName;
     }
 
     public string GetCampaignMapFireAnimationName(string cannonId)
     {
-        return _cannonRegistry.GetCannonType(cannonId)?.CampaignMapFireAnimationName;
+        return _cannonRegistry.GetCannon(cannonId)?.CampaignMapFireAnimationName;
     }
 
     public int GetCampaignMapProjectileBoneIndex(string cannonId)
     {
-        return _cannonRegistry.GetCannonType(cannonId)?.CampaignMapProjectileBoneIndex ?? -1;
+        return _cannonRegistry.GetCannon(cannonId)?.CampaignMapProjectileBoneIndex ?? -1;
     }
 }

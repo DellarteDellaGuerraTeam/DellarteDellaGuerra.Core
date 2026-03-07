@@ -16,7 +16,7 @@ public class XmlCannonConfigurationReader : ICannonConfigurationReader
         _logger = loggerFactory.CreateLogger<XmlCannonConfigurationReader>();
     }
 
-    public IEnumerable<Domain.SiegeEngines.Model.Cannon> LoadCannonProperties()
+    public IEnumerable<Domain.SiegeEngines.Model.Cannon> LoadCannons()
     {
         string? configPath = ResourceLocator.GetCannonXmlFilePath();
 
@@ -26,15 +26,15 @@ public class XmlCannonConfigurationReader : ICannonConfigurationReader
             return new List<Domain.SiegeEngines.Model.Cannon>();
         }
 
-        var cannonProperties = XDocument.Load(configPath).Descendants("Cannon")
-            .Select(CreateCannonProperties).ToList();
+        var cannons = XDocument.Load(configPath).Descendants("Cannon")
+            .Select(CreateCannons).ToList();
 
-        foreach (var cannon in cannonProperties) _logger.Debug($"Loaded '{cannon.Id}' cannon");
+        foreach (var cannon in cannons) _logger.Debug($"Loaded '{cannon.Id}' cannon");
 
-        return cannonProperties;
+        return cannons;
     }
 
-    private static Domain.SiegeEngines.Model.Cannon CreateCannonProperties(XElement element)
+    private static Domain.SiegeEngines.Model.Cannon CreateCannons(XElement element)
     {
         return new Domain.SiegeEngines.Model.Cannon(
             element.Element("Id")?.Value ?? "falconet",

@@ -28,8 +28,8 @@ public class OrderSiegeMachineVM_GetSiegeTypePatch : IPatch
 
     private static void Postfix(Type t, BattleSideEnum side, ref SiegeEngineType __result)
     {
-        var cannonType = _cannonRegistry?.GetCannonTypeByScriptType(t);
-        if (cannonType != null)
-            __result = MBObjectManager.Instance.GetObject<SiegeEngineType>(cannonType.Id);
+        var cannon = _cannonRegistry?.GetCannonByScript(t);
+        if (cannon != null)
+            __result = MBObjectManager.Instance.GetObject<SiegeEngineType>(cannon.Id);
     }
 }

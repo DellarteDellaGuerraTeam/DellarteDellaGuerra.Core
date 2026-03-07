@@ -108,7 +108,7 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign
         {
             var baseEngines = _defaultSiegeEventModel.GetAvailableAttackerRangedSiegeEngines(party)
                 .Where(e => !GetUnwantedSiegeEngines().Contains(e));
-            var cannonEngines = _availabilityProvider.GetAvailableCannonTypes(party, BattleSideEnum.Attacker);
+            var cannonEngines = _availabilityProvider.GetAvailableCannons(party, BattleSideEnum.Attacker);
             return baseEngines.Concat(cannonEngines);
         }
 
@@ -116,7 +116,7 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign
         {
             var baseEngines = _defaultSiegeEventModel.GetAvailableDefenderSiegeEngines(party)
                 .Where(e => !GetUnwantedSiegeEngines().Contains(e));
-            var cannonEngines = _availabilityProvider.GetAvailableCannonTypes(party, BattleSideEnum.Defender);
+            var cannonEngines = _availabilityProvider.GetAvailableCannons(party, BattleSideEnum.Defender);
             return baseEngines.Concat(cannonEngines);
         }
 
@@ -129,7 +129,7 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign
         public override IEnumerable<SiegeEngineType> GetPrebuiltSiegeEnginesOfSettlement(Settlement settlement)
         {
             var defaultCannon = _availabilityProvider
-                .GetAvailableCannonTypes(null, BattleSideEnum.Defender)
+                .GetAvailableCannons(null, BattleSideEnum.Defender)
                 .FirstOrDefault();
 
             if (defaultCannon is null)
@@ -146,7 +146,7 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign
         public override IEnumerable<SiegeEngineType> GetPrebuiltSiegeEnginesOfSiegeCamp(BesiegerCamp camp)
         {
             var defaultCannon = _availabilityProvider
-                .GetAvailableCannonTypes(camp.LeaderParty.Party, BattleSideEnum.Attacker)
+                .GetAvailableCannons(camp.LeaderParty.Party, BattleSideEnum.Attacker)
                 .FirstOrDefault();
 
             if (defaultCannon is null)

@@ -15,7 +15,7 @@ public class CannonIconProvider : ICannonIconProvider
     }
 
     public IEnumerable<DeploymentSiegeEngineIcon> GetSiegeEngineIcons() =>
-        _cannonRegistry.GetAllCannonTypes()
+        _cannonRegistry.GetAllCannons()
             .Select(c => new DeploymentSiegeEngineIcon(
                 c.DisplayName,
                 c.SiegeDeploymentSelectionIconSpriteId,

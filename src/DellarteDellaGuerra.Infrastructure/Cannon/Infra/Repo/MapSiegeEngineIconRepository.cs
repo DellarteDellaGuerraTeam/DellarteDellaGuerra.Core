@@ -16,6 +16,6 @@ public class MapSiegeEngineIconRepository : IMapSiegeEngineIconRepository
 
     public ISet<MapSiegeEngineIcon> MapSiegeEngineIcons =>
         new HashSet<MapSiegeEngineIcon>(
-            _cannonRegistry.GetAllCannonTypes()
+            _cannonRegistry.GetAllCannons()
                 .Select(ct => new MapSiegeEngineIcon(ct.MachineType, ct.Id, ct.MapSiegeMarkerSpriteId)));
 }

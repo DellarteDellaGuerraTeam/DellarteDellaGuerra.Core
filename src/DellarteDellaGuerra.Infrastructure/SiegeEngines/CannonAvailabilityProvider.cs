@@ -18,8 +18,8 @@ public class CannonAvailabilityProvider : ICannonAvailabilityProvider
         _mbObjectManager = mbObjectManager;
     }
 
-    public IEnumerable<SiegeEngineType> GetAvailableCannonTypes(PartyBase party, BattleSideEnum side) =>
-        _cannonRegistry.GetAllCannonTypes()
+    public IEnumerable<SiegeEngineType> GetAvailableCannons(PartyBase party, BattleSideEnum side) =>
+        _cannonRegistry.GetAllCannons()
             .Select(cannon => _mbObjectManager.GetObject<SiegeEngineType>(cannon.Id))
             .Where(se => se != null);
 }

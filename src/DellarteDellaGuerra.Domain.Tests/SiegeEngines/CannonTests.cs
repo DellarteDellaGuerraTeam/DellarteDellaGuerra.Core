@@ -5,7 +5,7 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
     public class CannonTests
     {
         [Fact]
-        public void TestCannonPropertiesCreation()
+        public void TestCannonsCreation()
         {
             // Arrange & Act
             var properties = new Cannon(
@@ -37,7 +37,7 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
         }
 
         [Fact]
-        public void TestCannonPropertiesEquality()
+        public void TestCannonsEquality()
         {
             // Arrange
             var properties1 = new Cannon(
@@ -62,7 +62,7 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
         }
 
         [Fact]
-        public void TestCannonPropertiesDeconstruction()
+        public void TestCannonsDeconstruction()
         {
             // Arrange
             var properties = new Cannon(
@@ -99,7 +99,7 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
         }
 
         [Fact]
-        public void TestCannonPropertiesToString()
+        public void TestCannonsToString()
         {
             // Arrange
             var properties = new Cannon(
