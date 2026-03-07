@@ -5,7 +5,6 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon.Campaign.UI;
 public class CampaignMapSiegeEngineDeploymentIconEnricher
 {
     private const string SiegeEngineDeploymentIconBrushName = "CustomBattle.Siege.MachineIcon";
-    private const string SiegeEngineDeploymentIconSpritePrefix = "SPGeneral\\Siege";
 
     private readonly BrushStyleExtender _brushStyleExtender;
 
@@ -14,9 +13,9 @@ public class CampaignMapSiegeEngineDeploymentIconEnricher
         _brushStyleExtender = brushStyleExtender;
     }
 
-    public void AddCampaignMapSiegeEngineDeploymentIcon(string siegeEngineName, string siegeEngineId)
+    public void AddCampaignMapSiegeEngineDeploymentIcon(string siegeEngineName, string siegeDeploymentIconSpritePath)
     {
-        _brushStyleExtender.AddBrushStyle(siegeEngineName, siegeEngineId,
-            SiegeEngineDeploymentIconBrushName, SiegeEngineDeploymentIconSpritePrefix);
+        _brushStyleExtender.AddBrushStyle(siegeEngineName, siegeDeploymentIconSpritePath,
+            SiegeEngineDeploymentIconBrushName);
     }
 }

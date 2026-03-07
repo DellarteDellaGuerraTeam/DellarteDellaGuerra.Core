@@ -5,7 +5,6 @@ namespace DellarteDellaGuerra.Infrastructure.Cannon.Mission.Siege.UI;
 public class SiegeEngineDeploymentIconEnricher
 {
     private const string SiegeEngineDeploymentIconBrushName = "Order.Siege.Deployment.MachineIcon";
-    private const string SiegeEngineDeploymentIconSpritePrefix = "Order\\SiegeIcons";
 
     private readonly BrushStyleExtender _brushStyleExtender;
 
@@ -14,10 +13,9 @@ public class SiegeEngineDeploymentIconEnricher
         _brushStyleExtender = brushStyleExtender;
     }
 
-
-    public void AddSiegeEngineDeploymentIcon(string siegeEngineName, string siegeEngineId)
+    public void AddSiegeEngineDeploymentIcon(string siegeEngineName, string siegeOrderIconSpritePath)
     {
-        _brushStyleExtender.AddBrushStyle(siegeEngineName, siegeEngineId,
-            SiegeEngineDeploymentIconBrushName, SiegeEngineDeploymentIconSpritePrefix);
+        _brushStyleExtender.AddBrushStyle(siegeEngineName, siegeOrderIconSpritePath,
+            SiegeEngineDeploymentIconBrushName);
     }
 }

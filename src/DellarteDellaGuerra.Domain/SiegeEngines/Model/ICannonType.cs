@@ -4,7 +4,9 @@ namespace DellarteDellaGuerra.Domain.SiegeEngines.Model
     {
         string Id { get; }
         string DisplayName { get; }
-        string SpriteId { get; }
+        string SiegeDeploymentSelectionIconSpriteId { get; }
+        string MapSiegeMarkerSpriteId { get; }
+        string CampaignMapSelectionIconSpriteId { get; }
         string MapPrefabName { get; }
         string ProjectilePrefab { get; }
         string ReloadPrefab { get; }

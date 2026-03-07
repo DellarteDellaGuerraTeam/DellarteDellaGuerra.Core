@@ -32,7 +32,7 @@ public class MapSiegePOIBrushWidgetManualPatch : IPatch
         if (cannonIcon is null) return;
 
         __instance.MachineTypeIconWidget.Sprite =
-            _spriteData.GetSprite($"SPGeneral\\MapSiege\\{cannonIcon.SpriteId}");
+            _spriteData.GetSprite(cannonIcon.MapSiegeMarkerSpriteId);
     }
 
     private MethodInfo? ResolvePatchMethod()

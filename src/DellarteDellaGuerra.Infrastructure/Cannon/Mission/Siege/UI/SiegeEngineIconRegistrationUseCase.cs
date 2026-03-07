@@ -26,9 +26,9 @@ public class SiegeEngineIconRegistrationUseCase
     {
         foreach (var icon in _iconRepository.SiegeEngineIcons)
         {
-            _siegeEngineDeploymentIconEnricher.AddSiegeEngineDeploymentIcon(icon.Name, icon.SpriteId);
+            _siegeEngineDeploymentIconEnricher.AddSiegeEngineDeploymentIcon(icon.Name, icon.SiegeDeploymentSelectionIconSpriteId);
             _campaignMapSiegeEngineDeploymentIconEnricher.AddCampaignMapSiegeEngineDeploymentIcon(icon.Name,
-                icon.SpriteId);
+                icon.CampaignMapSelectionIconSpriteId);
         }
     }
 }

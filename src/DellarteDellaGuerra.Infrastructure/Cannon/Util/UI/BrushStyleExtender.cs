@@ -21,10 +21,9 @@ public class BrushStyleExtender
         _spriteData = spriteData;
     }
 
-    public void AddBrushStyle(string siegeEngineName, string siegeEngineId, string brushName, string spriteNamePrefix)
+    public void AddBrushStyle(string siegeEngineName, string fullSpriteName, string brushName)
     {
         Brush brush = _brushFactory.GetBrush(brushName);
-
 
         if (brush is null)
         {
@@ -32,12 +31,11 @@ public class BrushStyleExtender
             return;
         }
 
-        string spriteName = GetCompleteSpriteName(spriteNamePrefix, siegeEngineId);
-        Sprite sprite = _spriteData.GetSprite(spriteName);
+        Sprite sprite = _spriteData.GetSprite(fullSpriteName);
 
         if (sprite is null)
         {
-            _logger.Error($"Could not find any Sprite with name {spriteName}. Icon will not show up.");
+            _logger.Error($"Could not find any Sprite with name {fullSpriteName}. Icon will not show up.");
             return;
         }
 
@@ -49,10 +47,5 @@ public class BrushStyleExtender
             Name = siegeEngineName,
             DefaultStyle = brush.DefaultStyle
         });
-    }
-
-    private string GetCompleteSpriteName(string spriteNamePrefix, string spriteId)
-    {
-        return $"{spriteNamePrefix}\\{spriteId}";
     }
 }

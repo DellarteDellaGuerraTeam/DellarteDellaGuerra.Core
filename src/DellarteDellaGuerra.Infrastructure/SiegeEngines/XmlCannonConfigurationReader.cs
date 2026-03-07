@@ -39,7 +39,9 @@ public class XmlCannonConfigurationReader : ICannonConfigurationReader
         new(
             element.Element("Id")?.Value ?? "falconet",
             element.Element("DisplayName")?.Value ?? "Falconet",
-            element.Element("SpriteId")?.Value ?? "falconet",
+            element.Element("SiegeDeploymentSelectionIconSpriteId")?.Value ?? string.Empty,
+            element.Element("MapSiegeMarkerSpriteId")?.Value ?? string.Empty,
+            element.Element("CampaignMapSelectionIconSpriteId")?.Value ?? string.Empty,
             element.Element("MapPrefabName")?.Value ?? "dadg_falconet_mapicon",
             element.Element("ProjectilePrefab")?.Value ?? "cannonball_mapicon_projectile",
             element.Element("ReloadPrefab")?.Value ?? "ballista_a_mapicon_reload",

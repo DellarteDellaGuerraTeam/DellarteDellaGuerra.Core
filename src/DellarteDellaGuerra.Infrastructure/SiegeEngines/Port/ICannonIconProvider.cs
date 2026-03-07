@@ -6,5 +6,4 @@ namespace DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 public interface ICannonIconProvider
 {
     IEnumerable<DeploymentSiegeEngineIcon> GetSiegeEngineIcons();
-    string GetSpriteId(string cannonId);
 }

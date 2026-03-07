@@ -20,7 +20,7 @@ public class MapSiegePOIVMPatch : IPatch
     private static int? GetCustomMachineId(string stringId)
     {
         return _iconRepository.MapSiegeEngineIcons.FirstOrDefault(siegeEngineIcon =>
-            siegeEngineIcon.SpriteId.Equals(stringId, StringComparison.InvariantCultureIgnoreCase))?.MachineType;
+            siegeEngineIcon.CannonId.Equals(stringId, StringComparison.InvariantCultureIgnoreCase))?.MachineType;
     }
 
     public MethodInfo? TargetMethod => ResolveOriginalMethod();
