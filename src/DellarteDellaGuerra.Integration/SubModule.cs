@@ -72,7 +72,18 @@ namespace DellarteDellaGuerra.Integration
 
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
 
-            Managed.AddTypes(GetDadgReferencedAssemblyTypes());
+            var types = GetDadgReferencedAssemblyTypes();
+            foreach (var kvp in GetDynamicCannonTypes())
+                types[kvp.Key] = kvp.Value;
+            Managed.AddTypes(types);
+        }
+
+        private Dictionary<string, Type> GetDynamicCannonTypes()
+        {
+            var registry = _serviceProvider.GetRequiredService<ICannonRegistry>();
+            return registry.GetAllCannons()
+                .Select(c => registry.GetFactory(c.Id).CannonScriptType)
+                .ToDictionary(t => t.Name, t => t);
         }
 
         private Dictionary<string, Type> GetDadgReferencedAssemblyTypes()

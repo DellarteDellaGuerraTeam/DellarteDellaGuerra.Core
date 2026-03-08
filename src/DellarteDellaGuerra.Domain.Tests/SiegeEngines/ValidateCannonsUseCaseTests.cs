@@ -211,5 +211,33 @@ namespace DellarteDellaGuerra.Domain.Tests.SiegeEngines
             Assert.Equal("Cannon 'cannon_a' is invalid: CampaignMapProjectileBoneIndex must be >= 0 (got -1). Cannon will be skipped.", loggerFactory.Logger.WarnMessages[0]);
         }
 
+        [Fact]
+        public void GetValidCannons_InvalidIdFormat_FiltersOutAndLogs()
+        {
+            var loggerFactory = new FakeLoggerFactory();
+            var useCase = new ValidateCannonsUseCase(loggerFactory);
+            var cannon = ValidCannon() with { Id = "my-cannon" };
+
+            var result = useCase.GetValidCannons(new[] { cannon }).ToList();
+
+            Assert.Empty(result);
+            Assert.Equal(
+                "Cannon 'my-cannon' is invalid: Id must start with a letter and contain only letters, digits, or underscores. Cannon will be skipped.",
+                loggerFactory.Logger.WarnMessages[0]);
+        }
+
+        [Fact]
+        public void GetValidCannons_IdStartingWithDigit_FiltersOutAndLogs()
+        {
+            var loggerFactory = new FakeLoggerFactory();
+            var useCase = new ValidateCannonsUseCase(loggerFactory);
+            var cannon = ValidCannon() with { Id = "1st_cannon" };
+
+            var result = useCase.GetValidCannons(new[] { cannon }).ToList();
+
+            Assert.Empty(result);
+            Assert.Single(loggerFactory.Logger.WarnMessages);
+        }
+
     }
 }

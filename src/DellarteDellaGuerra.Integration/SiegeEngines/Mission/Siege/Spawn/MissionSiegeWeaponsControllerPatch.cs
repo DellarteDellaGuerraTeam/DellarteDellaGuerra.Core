@@ -27,7 +27,8 @@ public class MissionSiegeWeaponsControllerPatch : IPatch
 
     private static void Postfix(SiegeEngineType siegeWeaponType, ref Type __result)
     {
-        if (_cannonRegistry?.GetCannon(siegeWeaponType.StringId) != null)
-            __result = typeof(GenericCannon);
+        var factory = _cannonRegistry?.GetFactory(siegeWeaponType.StringId);
+        if (factory != null)
+            __result = factory.CannonScriptType;
     }
 }

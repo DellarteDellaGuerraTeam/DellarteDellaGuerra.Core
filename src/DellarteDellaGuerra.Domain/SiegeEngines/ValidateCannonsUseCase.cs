@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.SiegeEngines.Model;
 
@@ -24,6 +25,12 @@ namespace DellarteDellaGuerra.Domain.SiegeEngines
             if (string.IsNullOrWhiteSpace(cannon.Id))
             {
                 _logger.Warn("Cannon is invalid: Id is null or empty. Cannon will be skipped.");
+                return false;
+            }
+
+            if (!Regex.IsMatch(cannon.Id, @"^[a-zA-Z][a-zA-Z0-9_]*$"))
+            {
+                _logger.Warn($"Cannon '{cannon.Id}' is invalid: Id must start with a letter and contain only letters, digits, or underscores. Cannon will be skipped.");
                 return false;
             }
 

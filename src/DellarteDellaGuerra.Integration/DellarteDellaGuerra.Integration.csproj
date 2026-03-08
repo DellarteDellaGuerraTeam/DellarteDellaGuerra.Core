@@ -11,6 +11,8 @@
         <BuildForWindowsStore>true</BuildForWindowsStore>
         <ModuleId>DellarteDellaGuerra.Core</ModuleId>
         <ModuleName>Dell'Arte Della Guerra Core</ModuleName>
+
+        <GameFolder>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord-v1.2</GameFolder>
     </PropertyGroup>
 
     <ItemGroup>

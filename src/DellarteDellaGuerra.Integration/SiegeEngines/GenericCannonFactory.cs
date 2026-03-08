@@ -9,15 +9,17 @@ namespace DellarteDellaGuerra.Integration.SiegeEngines;
 public class GenericCannonFactory : ICannonFactory
 {
     private readonly string _cannonId;
+    private readonly Type _scriptType;
 
-    public GenericCannonFactory(string cannonId)
+    public GenericCannonFactory(string cannonId, Type scriptType)
     {
         _cannonId = cannonId;
+        _scriptType = scriptType;
     }
 
-    public Type CannonScriptType => typeof(GenericCannon);
+    public Type CannonScriptType => _scriptType;
 
-    public SpawnableArtilleryRangedSiegeWeapon CreateCannon() => new GenericCannon();
+    public SpawnableArtilleryRangedSiegeWeapon CreateCannon() => (GenericCannon)Activator.CreateInstance(_scriptType)!;
 
     public void ConfigureSpawner(SpawnerEntityMissionHelper helper)
     {

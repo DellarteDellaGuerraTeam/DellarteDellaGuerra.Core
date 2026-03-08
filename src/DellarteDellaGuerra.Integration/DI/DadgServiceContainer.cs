@@ -83,7 +83,10 @@ public class DadgServiceContainer
             var configuration = new XmlCannonConfigurationReader(sp.GetRequiredService<ILoggerFactory>());
             var validateCannons = sp.GetRequiredService<ValidateCannonsUseCase>();
             foreach (var cannon in validateCannons.GetValidCannons(configuration.LoadCannons()))
-                registry.RegisterCannon(cannon, new GenericCannonFactory(cannon.Id));
+            {
+                var dynamicType = CannonTypeEmitter.EmitCannonType(cannon.Id);
+                registry.RegisterCannon(cannon, new GenericCannonFactory(cannon.Id, dynamicType));
+            }
             return registry;
         });
         services.AddSingleton<ICannonIconProvider, CannonIconProvider>();
