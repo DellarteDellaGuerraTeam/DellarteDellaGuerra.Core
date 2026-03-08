@@ -76,12 +76,14 @@ public class DadgServiceContainer
 
     private static void RegisterCannonServices(IServiceCollection services)
     {
+        services.AddSingleton<ValidateCannonsUseCase>();
         services.AddSingleton<ICannonRegistry>(sp =>
         {
             var registry = new CannonRegistry();
             var configuration = new XmlCannonConfigurationReader(sp.GetRequiredService<ILoggerFactory>());
-            foreach (var properties in configuration.LoadCannons())
-                registry.RegisterCannon(properties, new GenericCannonFactory(properties.Id));
+            var validateCannons = sp.GetRequiredService<ValidateCannonsUseCase>();
+            foreach (var cannon in validateCannons.GetValidCannons(configuration.LoadCannons()))
+                registry.RegisterCannon(cannon, new GenericCannonFactory(cannon.Id));
             return registry;
         });
         services.AddSingleton<ICannonIconProvider, CannonIconProvider>();
