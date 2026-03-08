@@ -9,12 +9,6 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <!-- Project properties -->
-    <PropertyGroup>
-        <Env Condition="'$(Configuration)'=='Release'">prod</Env>
-        <Env Condition="'$(Configuration)'=='Debug'">dev</Env>
-    </PropertyGroup>
-
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
             <_Parameter1>DellarteDellaGuerra.Infrastructure.Tests</_Parameter1>
@@ -50,15 +44,5 @@
     <ItemGroup>
       <Compile Remove="Cannon\PartyVisualTickSettlementVisualPatch.cs" />
     </ItemGroup>
-
-
-    <Target Name="Copy technical config files to bin folder" BeforeTargets="BeforeBuild">
-        <Message Importance="high" Text="Copy config files to bin folder" />
-        <ItemGroup>
-            <ConfigFolderOutput Include="$(MSBuildThisFileDirectory)..\..\config\" />
-            <LogConfigFile Include="$(MSBuildThisFileDirectory)..\technical-config\nlog.$(Env).config" />
-        </ItemGroup>
-        <Copy SourceFiles="@(LogConfigFile)" DestinationFiles="$(MSBuildThisFileDirectory)..\..\config\nlog.config" />
-    </Target>
 
 </Project>
