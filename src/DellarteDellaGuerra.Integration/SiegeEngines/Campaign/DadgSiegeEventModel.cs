@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
+using DellarteDellaGuerra.Integration.SiegeEngines;
+using DellarteDellaGuerra.Integration.SiegeEngines.Port;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
@@ -14,13 +16,13 @@ namespace DellarteDellaGuerra.Integration.SiegeEngines.Campaign
     {
         private readonly ILogger _logger;
         private readonly SiegeEventModel _defaultSiegeEventModel;
-        private readonly CannonPrefabProvider _prefabProvider;
-        private readonly CannonAvailabilityProvider _availabilityProvider;
+        private readonly ICannonPrefabProvider _prefabProvider;
+        private readonly ICannonAvailabilityProvider _availabilityProvider;
 
         public DadgSiegeEventModel(
             SiegeEventModel defaultSiegeEventModel,
-            CannonPrefabProvider prefabProvider,
-            CannonAvailabilityProvider availabilityProvider,
+            ICannonPrefabProvider prefabProvider,
+            ICannonAvailabilityProvider availabilityProvider,
             ILoggerFactory loggerFactory)
         {
             _defaultSiegeEventModel = defaultSiegeEventModel;
