@@ -7,6 +7,10 @@
         <Platforms>x64</Platforms>
         <LangVersion>12.0</LangVersion>
         <Nullable>enable</Nullable>
+        <BuildForWindows>true</BuildForWindows>
+        <BuildForWindowsStore>true</BuildForWindowsStore>
+        <ModuleId>DellarteDellaGuerra.Core</ModuleId>
+        <ModuleName>Dell'Arte Della Guerra Core</ModuleName>
     </PropertyGroup>
 
     <ItemGroup>
