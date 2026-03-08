@@ -37,17 +37,17 @@ public class XmlCannonConfigurationReader : ICannonConfigurationReader
     private static Domain.SiegeEngines.Model.Cannon CreateCannons(XElement element)
     {
         return new Domain.SiegeEngines.Model.Cannon(
-            element.Element("Id")?.Value ?? "falconet",
-            element.Element("DisplayName")?.Value ?? "Falconet",
-            element.Element("SiegeDeploymentSelectionIconSpriteId")?.Value ?? string.Empty,
-            element.Element("MapSiegeMarkerSpriteId")?.Value ?? string.Empty,
-            element.Element("CampaignMapSelectionIconSpriteId")?.Value ?? string.Empty,
-            element.Element("CampaignMapPrefabName")?.Value ?? "dadg_falconet_mapicon",
-            element.Element("CampaignMapProjectilePrefabName")?.Value ?? "cannonball_mapicon_projectile",
-            element.Element("CampaignMapReloadAnimationName")?.Value ?? "ballista_a_mapicon_reload",
-            element.Element("CampaignMapFireAnimationName")?.Value ?? "ballista_a_mapicon_fire",
-            int.TryParse(element.Element("MachineType")?.Value, out var machineType) ? machineType : 8,
-            int.TryParse(element.Element("CampaignMapProjectileBoneIndex")?.Value, out var boneIndex) ? boneIndex : 0
+            element.Element("Id")?.Value,
+            element.Element("DisplayName")?.Value,
+            element.Element("SiegeDeploymentSelectionIconSpriteId")?.Value,
+            element.Element("MapSiegeMarkerSpriteId")?.Value,
+            element.Element("CampaignMapSelectionIconSpriteId")?.Value,
+            element.Element("CampaignMapPrefabName")?.Value,
+            element.Element("CampaignMapProjectilePrefabName")?.Value,
+            element.Element("CampaignMapReloadAnimationName")?.Value,
+            element.Element("CampaignMapFireAnimationName")?.Value,
+            int.TryParse(element.Element("MachineType")?.Value, out var machineType) ? machineType : -1,
+            int.TryParse(element.Element("CampaignMapProjectileBoneIndex")?.Value, out var boneIndex) ? boneIndex : -1
         );
     }
 }
