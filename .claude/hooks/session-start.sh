@@ -1,15 +1,15 @@
-#!/bin/bash
-set -euo pipefail
+#!/bin/sh
+set -eu
 
 DOTNET_INSTALL_DIR="${HOME}/.dotnet"
 export DOTNET_ROOT="${DOTNET_INSTALL_DIR}"
 export PATH="${DOTNET_INSTALL_DIR}:${DOTNET_INSTALL_DIR}/tools:${PATH}"
 
 # ── 1. Install .NET SDK if missing ─────────────────────────────────────────
-if ! command -v dotnet &>/dev/null || [ ! -f "${DOTNET_INSTALL_DIR}/dotnet" ]; then
+if ! command -v dotnet >/dev/null 2>&1 || [ ! -f "${DOTNET_INSTALL_DIR}/dotnet" ]; then
   echo "Installing .NET SDK..."
   curl -fsSL https://dot.net/v1/dotnet-install.sh \
-    | bash -s -- --channel 10.0 --install-dir "${DOTNET_INSTALL_DIR}"
+    | sh -s -- --channel 10.0 --install-dir "${DOTNET_INSTALL_DIR}"
   echo ".NET SDK installed."
 else
   echo ".NET SDK already present: $(dotnet --version)"
@@ -92,14 +92,16 @@ else
   MCP_PID=$!
   echo "BannerlordSearch.Mcp.Server starting (PID: ${MCP_PID}), log: ${MCP_LOG}"
 
-  # Wait for server to become ready (up to 15s)
-  for i in $(seq 1 30); do
+  # Wait for server to become ready (up to 30s)
+  i=1
+  while [ "$i" -le 30 ]; do
     if curl -sf "http://localhost:5000" >/dev/null 2>&1 || \
        curl -sf "http://localhost:5000/mcp" >/dev/null 2>&1; then
       echo "MCP server is ready."
       break
     fi
     sleep 1
+    i=$((i + 1))
   done
 fi
 
