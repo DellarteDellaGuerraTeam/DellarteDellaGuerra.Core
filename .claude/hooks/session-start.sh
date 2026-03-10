@@ -9,7 +9,7 @@ export PATH="${DOTNET_INSTALL_DIR}:${DOTNET_INSTALL_DIR}/tools:${PATH}"
 if ! command -v dotnet &>/dev/null || [ ! -f "${DOTNET_INSTALL_DIR}/dotnet" ]; then
   echo "Installing .NET SDK..."
   curl -fsSL https://dot.net/v1/dotnet-install.sh \
-    | bash -s -- --channel 9.0 --install-dir "${DOTNET_INSTALL_DIR}"
+    | bash -s -- --channel 10.0 --install-dir "${DOTNET_INSTALL_DIR}"
   echo ".NET SDK installed."
 else
   echo ".NET SDK already present: $(dotnet --version)"
@@ -31,7 +31,7 @@ if [ ! -d "${SOURCE_PKG_DIR}" ]; then
   cat > "${TEMP_DIR}/tmp.csproj" << 'CSPROJ'
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BannerlordSearch.Source" Version="1.3.1" />
