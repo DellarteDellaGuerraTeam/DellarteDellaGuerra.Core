@@ -1,11 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-# Only run in remote (web) sessions
-if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
-  exit 0
-fi
-
 DOTNET_INSTALL_DIR="${HOME}/.dotnet"
 export DOTNET_ROOT="${DOTNET_INSTALL_DIR}"
 export PATH="${DOTNET_INSTALL_DIR}:${DOTNET_INSTALL_DIR}/tools:${PATH}"
