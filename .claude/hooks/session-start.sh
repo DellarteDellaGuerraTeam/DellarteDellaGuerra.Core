@@ -75,27 +75,32 @@ else
 fi
 
 # ── 5. Start MCP server on http://localhost:5000 (streamable HTTP) ─────────
-pkill -f "BannerlordSearch.Mcp.Server" 2>/dev/null || true
-sleep 1
-
 MCP_LOG="/tmp/bannerlord-mcp-server.log"
 
-nohup dotnet tool run BannerlordSearch.Mcp.Server -- \
-  --transport streamable-http \
-  --urls "http://localhost:5000" \
-  > "${MCP_LOG}" 2>&1 &
-
-MCP_PID=$!
-echo "BannerlordSearch.Mcp.Server starting (PID: ${MCP_PID}), log: ${MCP_LOG}"
-
-# Wait for server to become ready (up to 15s)
-for i in $(seq 1 15); do
-  if curl -sf "http://localhost:5000" >/dev/null 2>&1 || \
-     curl -sf "http://localhost:5000/mcp" >/dev/null 2>&1; then
-    echo "MCP server is ready."
-    break
-  fi
+if curl -sf "http://localhost:5000" >/dev/null 2>&1 || \
+   curl -sf "http://localhost:5000/mcp" >/dev/null 2>&1; then
+  echo "BannerlordSearch.Mcp.Server already running on http://localhost:5000, skipping start."
+else
+  pkill -f "BannerlordSearch.Mcp.Server" 2>/dev/null || true
   sleep 1
-done
+
+  nohup dotnet tool run BannerlordSearch.Mcp.Server -- \
+    --transport streamable-http \
+    --urls "http://localhost:5000" \
+    > "${MCP_LOG}" 2>&1 &
+
+  MCP_PID=$!
+  echo "BannerlordSearch.Mcp.Server starting (PID: ${MCP_PID}), log: ${MCP_LOG}"
+
+  # Wait for server to become ready (up to 15s)
+  for i in $(seq 1 15); do
+    if curl -sf "http://localhost:5000" >/dev/null 2>&1 || \
+       curl -sf "http://localhost:5000/mcp" >/dev/null 2>&1; then
+      echo "MCP server is ready."
+      break
+    fi
+    sleep 1
+  done
+fi
 
 echo "Session start hook completed."
