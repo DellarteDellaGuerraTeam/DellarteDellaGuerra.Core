@@ -90,7 +90,7 @@ if [ -z "${TOOL_CMD}" ]; then
 fi
 echo "Resolved MCP server command: ${TOOL_CMD}"
 
-if curl -sf "http://localhost:5000" >/dev/null 2>&1; then
+if curl -s "http://localhost:5000" >/dev/null 2>&1; then
   echo "BannerlordSearch.Mcp.Server already running on http://localhost:5000, skipping start."
 else
   pkill -f "BannerlordSearch.Mcp.Server" 2>/dev/null || true
@@ -104,10 +104,12 @@ else
   MCP_PID=$!
   echo "BannerlordSearch.Mcp.Server starting (PID: ${MCP_PID}), log: ${MCP_LOG}"
 
-  # Wait for server to become ready (up to 60s)
+  # Wait for server to become ready (up to 60s).
+  # Use curl without -f so that 4xx responses (e.g. 400 "session id required")
+  # are still treated as "server is up".
   ready=0
   for i in $(seq 1 60); do
-    if curl -sf "http://localhost:5000" >/dev/null 2>&1; then
+    if curl -s "http://localhost:5000" >/dev/null 2>&1; then
       echo "MCP server is ready."
       ready=1
       break
