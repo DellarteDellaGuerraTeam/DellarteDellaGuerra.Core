@@ -81,13 +81,22 @@ fi
 # ── 5. Start MCP server on http://localhost:5000 (streamable HTTP) ────────────
 MCP_LOG="/tmp/bannerlord-mcp-server.log"
 
-if curl -sf "http://localhost:5000" >/dev/null 2>&1; then
+# Resolve the actual command name registered by the global tool
+# (dotnet tool run is for local manifest tools only; global tools are called directly)
+TOOL_CMD=$(dotnet tool list -g 2>/dev/null | grep -i "BannerlordSearch.Mcp.Server" | awk '{print $NF}')
+if [ -z "${TOOL_CMD}" ]; then
+  echo "ERROR: BannerlordSearch.Mcp.Server not found in global tools. Install may have failed." >&2
+  exit 1
+fi
+echo "Resolved MCP server command: ${TOOL_CMD}"
+
+if curl -s "http://localhost:5000" >/dev/null 2>&1; then
   echo "BannerlordSearch.Mcp.Server already running on http://localhost:5000, skipping start."
 else
   pkill -f "BannerlordSearch.Mcp.Server" 2>/dev/null || true
   sleep 1
 
-  nohup dotnet tool run BannerlordSearch.Mcp.Server -- \
+  nohup "${TOOL_CMD}" \
     --transport streamable-http \
     --urls "http://localhost:5000" \
     > "${MCP_LOG}" 2>&1 &
@@ -95,10 +104,12 @@ else
   MCP_PID=$!
   echo "BannerlordSearch.Mcp.Server starting (PID: ${MCP_PID}), log: ${MCP_LOG}"
 
-  # Wait for server to become ready (up to 60s)
+  # Wait for server to become ready (up to 60s).
+  # Use curl without -f so that 4xx responses (e.g. 400 "session id required")
+  # are still treated as "server is up".
   ready=0
   for i in $(seq 1 60); do
-    if curl -sf "http://localhost:5000" >/dev/null 2>&1; then
+    if curl -s "http://localhost:5000" >/dev/null 2>&1; then
       echo "MCP server is ready."
       ready=1
       break
