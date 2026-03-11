@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "bannerlord-search": {
-      "type": "streamable-http",
+      "type": "http",
       "url": "http://localhost:5000"
     }
   }
