@@ -83,8 +83,7 @@ if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
   # ── 5. Start MCP server on http://localhost:5000 (streamable HTTP) ────────
   MCP_LOG="/tmp/bannerlord-mcp-server.log"
 
-  if curl -sf "http://localhost:5000" >/dev/null 2>&1 || \
-     curl -sf "http://localhost:5000/mcp" >/dev/null 2>&1; then
+  if curl -sf "http://localhost:5000" >/dev/null 2>&1; then
     echo "BannerlordSearch.Mcp.Server already running on http://localhost:5000, skipping start."
   else
     pkill -f "BannerlordSearch.Mcp.Server" 2>/dev/null || true
@@ -101,8 +100,7 @@ if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
     # Wait for server to become ready (up to 30s)
     ready=0
     for i in $(seq 1 30); do
-      if curl -sf "http://localhost:5000" >/dev/null 2>&1 || \
-         curl -sf "http://localhost:5000/mcp" >/dev/null 2>&1; then
+      if curl -sf "http://localhost:5000" >/dev/null 2>&1; then
         echo "MCP server is ready."
         ready=1
         break
