@@ -69,49 +69,46 @@ else
   echo "WARNING: Could not locate BannerlordSearch.Source contentFiles in NuGet cache."
 fi
 
-# ── 4 & 5. MCP server — only needed inside Claude Code sessions ─────────────
-if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
-  # ── 4. Install BannerlordSearch.Mcp.Server global tool (idempotent) ──────
-  if ! dotnet tool list -g 2>/dev/null | grep -qi "BannerlordSearch.Mcp.Server"; then
-    echo "Installing BannerlordSearch.Mcp.Server..."
-    dotnet tool install --global BannerlordSearch.Mcp.Server
-    echo "BannerlordSearch.Mcp.Server installed."
-  else
-    echo "BannerlordSearch.Mcp.Server already installed."
-  fi
+# ── 4. Install BannerlordSearch.Mcp.Server global tool (idempotent) ──────────
+if ! dotnet tool list -g 2>/dev/null | grep -qi "BannerlordSearch.Mcp.Server"; then
+  echo "Installing BannerlordSearch.Mcp.Server..."
+  dotnet tool install --global BannerlordSearch.Mcp.Server
+  echo "BannerlordSearch.Mcp.Server installed."
+else
+  echo "BannerlordSearch.Mcp.Server already installed."
+fi
 
-  # ── 5. Start MCP server on http://localhost:5000 (streamable HTTP) ────────
-  MCP_LOG="/tmp/bannerlord-mcp-server.log"
+# ── 5. Start MCP server on http://localhost:5000 (streamable HTTP) ────────────
+MCP_LOG="/tmp/bannerlord-mcp-server.log"
 
-  if curl -sf "http://localhost:5000" >/dev/null 2>&1; then
-    echo "BannerlordSearch.Mcp.Server already running on http://localhost:5000, skipping start."
-  else
-    pkill -f "BannerlordSearch.Mcp.Server" 2>/dev/null || true
-    sleep 1
+if curl -sf "http://localhost:5000" >/dev/null 2>&1; then
+  echo "BannerlordSearch.Mcp.Server already running on http://localhost:5000, skipping start."
+else
+  pkill -f "BannerlordSearch.Mcp.Server" 2>/dev/null || true
+  sleep 1
 
-    nohup dotnet tool run BannerlordSearch.Mcp.Server -- \
-      --transport streamable-http \
-      --urls "http://localhost:5000" \
-      > "${MCP_LOG}" 2>&1 &
+  nohup dotnet tool run BannerlordSearch.Mcp.Server -- \
+    --transport streamable-http \
+    --urls "http://localhost:5000" \
+    > "${MCP_LOG}" 2>&1 &
 
-    MCP_PID=$!
-    echo "BannerlordSearch.Mcp.Server starting (PID: ${MCP_PID}), log: ${MCP_LOG}"
+  MCP_PID=$!
+  echo "BannerlordSearch.Mcp.Server starting (PID: ${MCP_PID}), log: ${MCP_LOG}"
 
-    # Wait for server to become ready (up to 30s)
-    ready=0
-    for i in $(seq 1 30); do
-      if curl -sf "http://localhost:5000" >/dev/null 2>&1; then
-        echo "MCP server is ready."
-        ready=1
-        break
-      fi
-      sleep 1
-    done
-
-    if [ "${ready}" -eq 0 ]; then
-      echo "ERROR: MCP server did not become ready within 30 seconds. Check ${MCP_LOG}." >&2
-      exit 1
+  # Wait for server to become ready (up to 30s)
+  ready=0
+  for i in $(seq 1 30); do
+    if curl -sf "http://localhost:5000" >/dev/null 2>&1; then
+      echo "MCP server is ready."
+      ready=1
+      break
     fi
+    sleep 1
+  done
+
+  if [ "${ready}" -eq 0 ]; then
+    echo "ERROR: MCP server did not become ready within 30 seconds. Check ${MCP_LOG}." >&2
+    exit 1
   fi
 fi
 
