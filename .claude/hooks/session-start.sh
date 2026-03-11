@@ -95,9 +95,9 @@ else
   MCP_PID=$!
   echo "BannerlordSearch.Mcp.Server starting (PID: ${MCP_PID}), log: ${MCP_LOG}"
 
-  # Wait for server to become ready (up to 30s)
+  # Wait for server to become ready (up to 60s)
   ready=0
-  for i in $(seq 1 30); do
+  for i in $(seq 1 60); do
     if curl -sf "http://localhost:5000" >/dev/null 2>&1; then
       echo "MCP server is ready."
       ready=1
@@ -107,7 +107,7 @@ else
   done
 
   if [ "${ready}" -eq 0 ]; then
-    echo "ERROR: MCP server did not become ready within 30 seconds. Check ${MCP_LOG}." >&2
+    echo "ERROR: MCP server did not become ready within 60 seconds. Check ${MCP_LOG}." >&2
     exit 1
   fi
 fi
