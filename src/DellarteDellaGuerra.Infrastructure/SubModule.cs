@@ -149,7 +149,7 @@ namespace DellarteDellaGuerra.Infrastructure
         private void SetCampaignStartingDate()
         {
             CampaignTime startTime = CampaignTime.Years(1471) + CampaignTime.Weeks(4) + CampaignTime.Days(1);
-            typeof(CampaignData).GetField("CampaignStartTime",BindingFlags.Static|BindingFlags.Public)?.SetValue(null,startTime);
+            typeof(CampaignData).GetField("CampaignStartTime", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)?.SetValue(null, startTime);
         }
 
         private void LoadDadgBattleScenes()
