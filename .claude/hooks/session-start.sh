@@ -15,9 +15,11 @@ else
   echo ".NET SDK already present: $(dotnet --version)"
 fi
 
-# Persist dotnet on PATH for the session
-echo "export DOTNET_ROOT=${DOTNET_INSTALL_DIR}" >> "${CLAUDE_ENV_FILE}"
-echo "export PATH=${DOTNET_INSTALL_DIR}:${DOTNET_INSTALL_DIR}/tools:\${PATH}" >> "${CLAUDE_ENV_FILE}"
+# Persist dotnet on PATH for the session (only when running inside Claude Code)
+if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
+  echo "export DOTNET_ROOT=${DOTNET_INSTALL_DIR}" >> "${CLAUDE_ENV_FILE}"
+  echo "export PATH=${DOTNET_INSTALL_DIR}:${DOTNET_INSTALL_DIR}/tools:\${PATH}" >> "${CLAUDE_ENV_FILE}"
+fi
 
 # ── 2. Restore BannerlordSearch.Source v1.3.1 into NuGet global cache ──────
 NUGET_CACHE="${HOME}/.nuget/packages"
@@ -59,7 +61,9 @@ fi
 
 if [ -n "${SOURCE_CONTENTFILES}" ]; then
   echo "BANNERLORD_SOURCE_PATH=${SOURCE_CONTENTFILES}"
-  echo "export BANNERLORD_SOURCE_PATH=${SOURCE_CONTENTFILES}" >> "${CLAUDE_ENV_FILE}"
+  if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
+    echo "export BANNERLORD_SOURCE_PATH=${SOURCE_CONTENTFILES}" >> "${CLAUDE_ENV_FILE}"
+  fi
   export BANNERLORD_SOURCE_PATH="${SOURCE_CONTENTFILES}"
 else
   echo "WARNING: Could not locate BannerlordSearch.Source contentFiles in NuGet cache."
