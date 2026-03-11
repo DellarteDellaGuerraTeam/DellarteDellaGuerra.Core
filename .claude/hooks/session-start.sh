@@ -9,7 +9,7 @@ export PATH="${DOTNET_INSTALL_DIR}:${DOTNET_INSTALL_DIR}/tools:${PATH}"
 if ! command -v dotnet >/dev/null 2>&1 || [ ! -f "${DOTNET_INSTALL_DIR}/dotnet" ]; then
   echo "Installing .NET SDK..."
   curl -fsSL https://dot.net/v1/dotnet-install.sh \
-    | sh -s -- --channel 10.0 --install-dir "${DOTNET_INSTALL_DIR}"
+    | bash -s -- --channel 10.0 --install-dir "${DOTNET_INSTALL_DIR}"
   echo ".NET SDK installed."
 else
   echo ".NET SDK already present: $(dotnet --version)"
