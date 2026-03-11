@@ -1,5 +1,11 @@
 {
   "enableAllProjectMcpServers": true,
+  "permissions": {
+    "allow": [
+      "mcp__bannerlord-search__get_bannerlord_class_definition",
+      "mcp__bannerlord-search__search_bannerlord_code"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
