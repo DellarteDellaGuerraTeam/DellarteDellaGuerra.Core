@@ -44,4 +44,4 @@ jobs:
         uses: anthropics/claude-code-action@beta
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          allowed_tools: "mcp__bannerlord-search__search_bannerlord_code"
+          allowed_tools: "mcp__bannerlord-search__*"
