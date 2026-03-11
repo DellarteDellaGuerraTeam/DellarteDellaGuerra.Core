@@ -50,13 +50,13 @@ fi
 # ── 3. Locate contentFiles and export BANNERLORD_SOURCE_PATH ───────────────
 SOURCE_CONTENTFILES=$(find "${NUGET_CACHE}" \
   -ipath "*bannerlordSearch.source/1.3.1/contentfiles*" \
-  -type d | head -1)
+  -type d -print -quit)
 
 if [ -z "${SOURCE_CONTENTFILES}" ]; then
   # Broader fallback search
   SOURCE_CONTENTFILES=$(find "${NUGET_CACHE}" \
     -ipath "*bannerlord*source*1.3.1*contentfiles*" \
-    -type d | head -1)
+    -type d -print -quit)
 fi
 
 if [ -n "${SOURCE_CONTENTFILES}" ]; then
