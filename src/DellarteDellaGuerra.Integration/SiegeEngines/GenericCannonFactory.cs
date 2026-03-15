@@ -13,8 +13,8 @@ public class GenericCannonFactory : ICannonFactory
 
     public GenericCannonFactory(string cannonId, Type scriptType)
     {
-        ArgumentNullException.ThrowIfNull(cannonId);
-        ArgumentNullException.ThrowIfNull(scriptType);
+        if (cannonId == null) throw new ArgumentNullException(nameof(cannonId));
+        if (scriptType == null) throw new ArgumentNullException(nameof(scriptType));
         
         if (!scriptType.IsSubclassOf(typeof(GenericCannon)))
         {
