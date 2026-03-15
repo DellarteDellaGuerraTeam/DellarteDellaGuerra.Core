@@ -1,12 +1,7 @@
-using System;
-using System.Linq;
-using DellarteDellaGuerra.Domain.SiegeEngines.Model;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
-using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn;
-using Xunit;
 
-namespace DellarteDellaGuerra.Integration.Tests.SiegeEngines;
+namespace DellarteDellaGuerra.Infrastructure.Tests.SiegeEngines;
 
 public class CannonRegistryTests
 {
@@ -16,7 +11,7 @@ public class CannonRegistryTests
         // Arrange
         var registry = new CannonRegistry();
         var cannon = CreateTestCannon("test_cannon");
-        var factory = new FakeCannonFactory(typeof(TestGenericCannon));
+        var factory = new FakeCannonFactory(typeof(string));
 
         // Act
         registry.RegisterCannon(cannon, factory);
@@ -49,13 +44,13 @@ public class CannonRegistryTests
     {
         // Arrange
         var registry = new CannonRegistry();
+        var type = typeof(string);
         var cannon = CreateTestCannon("test_cannon");
-        var scriptType = typeof(TestGenericCannon);
-        var factory = new FakeCannonFactory(scriptType);
+        var factory = new FakeCannonFactory(type);
         registry.RegisterCannon(cannon, factory);
 
         // Act
-        var result = registry.GetCannonByScript(scriptType);
+        var result = registry.GetCannonByScript(type);
 
         // Assert
         Assert.NotNull(result);
@@ -93,10 +88,12 @@ public class CannonRegistryTests
     {
         // Arrange
         var registry = new CannonRegistry();
+        var type1 = typeof(string);
+        var type2 = typeof(int);
         var cannon1 = CreateTestCannon("cannon1");
         var cannon2 = CreateTestCannon("cannon2");
-        var factory1 = new FakeCannonFactory(typeof(TestGenericCannon));
-        var factory2 = new FakeCannonFactory(typeof(TestGenericCannon));
+        var factory1 = new FakeCannonFactory(type1);
+        var factory2 = new FakeCannonFactory(type2);
         
         registry.RegisterCannon(cannon1, factory1);
         registry.RegisterCannon(cannon2, factory2);
@@ -110,9 +107,9 @@ public class CannonRegistryTests
         Assert.Contains(allCannons, c => c.Id == "cannon2");
     }
 
-    private static Cannon CreateTestCannon(string id)
+    private static Domain.SiegeEngines.Model.Cannon CreateTestCannon(string id)
     {
-        return new Cannon(
+        return new Domain.SiegeEngines.Model.Cannon(
             id,
             "Test Cannon",
             "test_sprite",
@@ -127,28 +124,13 @@ public class CannonRegistryTests
         );
     }
 
-    private class TestGenericCannon : GenericCannon
-    {
-        // Test class that inherits from GenericCannon
-    }
-
     private class FakeCannonFactory : ICannonFactory
     {
+        public FakeCannonFactory(Type type)
+        {
+            CannonScriptType = type;
+        }
+
         public Type CannonScriptType { get; }
-
-        public FakeCannonFactory(Type cannonScriptType)
-        {
-            CannonScriptType = cannonScriptType;
-        }
-
-        public Infrastructure.SiegeEngines.SpawnableArtilleryRangedSiegeWeapon CreateCannon()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ConfigureSpawner(TaleWorlds.MountAndBlade.SpawnerEntityMissionHelper helper)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

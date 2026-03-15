@@ -1,10 +1,6 @@
-using System;
-using System.IO;
-using System.Linq;
 using System.Xml.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
-using Xunit;
 
 namespace DellarteDellaGuerra.Integration.Tests.SiegeEngines;
 

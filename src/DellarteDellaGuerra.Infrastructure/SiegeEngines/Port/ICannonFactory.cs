@@ -6,6 +6,4 @@ namespace DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 public interface ICannonFactory
 {
     Type CannonScriptType { get; }
-    SpawnableArtilleryRangedSiegeWeapon CreateCannon();
-    void ConfigureSpawner(TaleWorlds.MountAndBlade.SpawnerEntityMissionHelper helper);
 }

@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+    <TalewordsSources Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds*.dll"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -28,5 +29,9 @@
     <ProjectReference Include="..\DellarteDellaGuerra.Infrastructure\DellarteDellaGuerra.Infrastructure.csproj" />
     <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
   </ItemGroup>
+
+  <Target Name="Copy TaleWorlds binaries to local cache" AfterTargets="Build">
+    <Copy SourceFiles="@(TalewordsSources)" DestinationFolder="$(outputPath)"/>
+  </Target>
 
 </Project>

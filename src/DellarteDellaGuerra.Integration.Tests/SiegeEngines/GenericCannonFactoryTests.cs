@@ -1,7 +1,6 @@
-using System;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn;
-using Xunit;
+using TaleWorlds.Engine;
 
 namespace DellarteDellaGuerra.Integration.Tests.SiegeEngines;
 
@@ -86,6 +85,10 @@ public class GenericCannonFactoryTests
 
     private class TestGenericCannon : GenericCannon
     {
+        public override string GetDescriptionText(GameEntity gameEntity = null)
+        {
+            return string.Empty;
+        }
         // Test class that inherits from GenericCannon
     }
 
@@ -94,6 +97,11 @@ public class GenericCannonFactoryTests
         public CannonWithoutParameterlessConstructor(string requiredParam)
         {
             // Constructor that requires parameters
+        }
+
+        public override string GetDescriptionText(GameEntity gameEntity = null)
+        {
+            return string.Empty;
         }
     }
 }
