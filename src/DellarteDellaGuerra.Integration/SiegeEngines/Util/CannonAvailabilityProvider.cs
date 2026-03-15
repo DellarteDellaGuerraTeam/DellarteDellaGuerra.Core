@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
-using DellarteDellaGuerra.Integration.SiegeEngines.Port;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
 
-namespace DellarteDellaGuerra.Integration.SiegeEngines;
+namespace DellarteDellaGuerra.Integration.SiegeEngines.Util;
 
 public class CannonAvailabilityProvider : ICannonAvailabilityProvider
 {

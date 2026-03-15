@@ -21,13 +21,8 @@
         <PackageReference Include="NLog" Version="5.3.4"/>
 
         <PackageReference Include="Bannerlord.ExpandedTemplate.API" Version="1.3.0"/>
-        <PackageReference Include="Bannerlord.Cannons" Version="0.3.0"/>
         <PackageReference Include="Harmony.DependencyInjection" Version="0.2.0"/>
 
-        <!--        <Reference Include="Bannerlord.Cannons">-->
-        <!--            <HintPath>$(GameFolder)\Modules\Bannerlord.Cannons\Bannerlord.Cannons\bin\x64\Debug\netstandard2.0\Bannerlord.Cannons.dll</HintPath>-->
-        <!--            <Private>true</Private>-->
-        <!--        </Reference>-->
         <!--        <Reference Include="Bannerlord.ExpandedTemplate.API">-->
         <!--            <HintPath>$(GameFolder)\Modules\Bannerlord.ExpandedTemplate\Bannerlord.ExpandedTemplate.API\bin\Debug\netstandard2.0\Bannerlord.ExpandedTemplate.API.dll</HintPath>-->
         <!--            <Private>true</Private>-->

@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
-    <TalewordsSources Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds*.dll"/>
+    <TalewordsSources Include="$(MSBuildThisFileDirectory)..\..\..\..\bin\Win64_Shipping_Client\TaleWorlds*.dll"/>
   </ItemGroup>
 
   <ItemGroup>

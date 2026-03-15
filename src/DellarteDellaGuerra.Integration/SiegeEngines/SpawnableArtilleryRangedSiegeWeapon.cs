@@ -1,7 +1,7 @@
 using Bannerlord.Cannons.BattleMechanics.Artillery;
 using TaleWorlds.MountAndBlade.Objects.Siege;
 
-namespace DellarteDellaGuerra.Infrastructure.SiegeEngines
+namespace DellarteDellaGuerra.Integration.SiegeEngines
 {
     public class SpawnableArtilleryRangedSiegeWeapon : ArtilleryRangedSiegeWeapon, ISpawnable
     {

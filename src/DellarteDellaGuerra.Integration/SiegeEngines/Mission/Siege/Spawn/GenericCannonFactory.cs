@@ -1,10 +1,8 @@
 using System;
-using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
-using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn;
 using TaleWorlds.MountAndBlade;
 
-namespace DellarteDellaGuerra.Integration.SiegeEngines;
+namespace DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn;
 
 public class GenericCannonFactory : ICannonFactory
 {

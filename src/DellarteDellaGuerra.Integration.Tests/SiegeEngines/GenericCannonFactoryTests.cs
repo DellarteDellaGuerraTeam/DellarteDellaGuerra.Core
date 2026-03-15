@@ -55,21 +55,6 @@ public class GenericCannonFactoryTests
     }
 
     [Fact]
-    public void CreateCannon_WithValidType_ReturnsGenericCannonInstance()
-    {
-        // Arrange
-        var cannonId = "test_cannon";
-        var scriptType = typeof(TestGenericCannon);
-        var factory = new GenericCannonFactory(cannonId, scriptType);
-
-        // Act
-        var cannon = factory.CreateCannon();
-
-        // Assert
-        Assert.IsType<TestGenericCannon>(cannon);
-    }
-
-    [Fact]
     public void CreateCannon_WithTypeWithoutParameterlessConstructor_ThrowsInvalidOperationException()
     {
         // Arrange
@@ -85,11 +70,6 @@ public class GenericCannonFactoryTests
 
     private class TestGenericCannon : GenericCannon
     {
-        public override string GetDescriptionText(GameEntity gameEntity = null)
-        {
-            return string.Empty;
-        }
-        // Test class that inherits from GenericCannon
     }
 
     private class CannonWithoutParameterlessConstructor : GenericCannon

@@ -1,8 +1,7 @@
 using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
-using DellarteDellaGuerra.Integration.SiegeEngines.Port;
 using TaleWorlds.Core;
 
-namespace DellarteDellaGuerra.Integration.SiegeEngines;
+namespace DellarteDellaGuerra.Integration.SiegeEngines.Util;
 
 public class CannonPrefabProvider : ICannonPrefabProvider
 {

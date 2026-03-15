@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
-using DellarteDellaGuerra.Integration.SiegeEngines;
-using DellarteDellaGuerra.Integration.SiegeEngines.Port;
+using DellarteDellaGuerra.Integration.SiegeEngines.Util;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
