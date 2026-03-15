@@ -47,7 +47,7 @@ jobs:
       - name: Start MCP server
         run: bash .claude/hooks/session-start.sh
       - name: Run Claude Code
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@beta
         with:
-          anthropic_api_key: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          claude_args: "--allowedTools 'mcp__bannerlord-search__*,Bash(dotnet:*)'"
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          allowed_tools: "mcp__bannerlord-search__*,Bash(dotnet:*)"
