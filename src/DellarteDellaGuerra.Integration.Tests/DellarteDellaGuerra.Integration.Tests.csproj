@@ -31,6 +31,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DellarteDellaGuerra.Integration\DellarteDellaGuerra.Integration.csproj" />
+    <ProjectReference Include="..\DellarteDellaGuerra.Infrastructure\DellarteDellaGuerra.Infrastructure.csproj" />
+    <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
   </ItemGroup>
 
 </Project>

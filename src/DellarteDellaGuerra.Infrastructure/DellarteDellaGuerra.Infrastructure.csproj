@@ -45,4 +45,8 @@
       <Compile Remove="Cannon\PartyVisualTickSettlementVisualPatch.cs" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Include="SiegeEngines\cannons.xsd" />
+    </ItemGroup>
+
 </Project>

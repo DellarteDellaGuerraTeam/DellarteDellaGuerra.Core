@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using TaleWorlds.ModuleManager;
 
 namespace DellarteDellaGuerra.Infrastructure.Utils
@@ -81,6 +82,26 @@ namespace DellarteDellaGuerra.Infrastructure.Utils
         public static string? GetCannonXmlFilePath()
         {
             return GetCustomXmlFile("cannons.xml");
+        }
+
+        /**
+         * <summary>
+         * Gets the path to the cannons.xml file in the ModuleData/CustomXml folder with logging.
+         * Its existence is checked.
+         * </summary>
+         * <param name="logger">The logger to use for missing file warnings</param>
+         * <returns>
+         * The first found among all of the mod's modules or null if not found.
+         * </returns>
+         */
+        public static string? GetCannonXmlFilePath(ILogger? logger)
+        {
+            var path = GetCustomXmlFile("cannons.xml");
+            if (path == null && logger != null)
+            {
+                logger.Warn("cannons.xml file not found in any module's ModuleData/CustomXml folder");
+            }
+            return path;
         }
 
         /**

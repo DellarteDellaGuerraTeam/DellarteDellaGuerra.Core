@@ -16,18 +16,18 @@ public class CannonRegistry : ICannonRegistry
         _factories[cannon.Id] = factory;
     }
 
-    public Domain.SiegeEngines.Model.Cannon GetCannon(string id)
+    public Domain.SiegeEngines.Model.Cannon? GetCannon(string id)
     {
         return _cannons.FirstOrDefault(ct => ct.Id == id);
     }
 
-    public Domain.SiegeEngines.Model.Cannon GetCannonByScript(Type scriptType)
+    public Domain.SiegeEngines.Model.Cannon? GetCannonByScript(Type scriptType)
     {
         var cannonId = _factories.FirstOrDefault(kvp => kvp.Value.CannonScriptType == scriptType).Key;
         return cannonId != null ? GetCannon(cannonId) : null;
     }
 
-    public ICannonFactory GetFactory(string id) =>
+    public ICannonFactory? GetFactory(string id) =>
         _factories.TryGetValue(id, out var factory) ? factory : null;
 
     public IEnumerable<Domain.SiegeEngines.Model.Cannon> GetAllCannons()
