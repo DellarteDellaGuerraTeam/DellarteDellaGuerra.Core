@@ -142,19 +142,33 @@ public class XmlCannonConfigurationReaderTests : IDisposable
     {
         var doc = XDocument.Parse(xml);
         return doc.Descendants("Cannon")
-            .Select(element => new Domain.SiegeEngines.Model.Cannon(
-                element.Element("Id")?.Value ?? throw new InvalidOperationException("Cannon Id is required"),
-                element.Element("DisplayName")?.Value ?? throw new InvalidOperationException($"DisplayName is required"),
-                element.Element("SiegeDeploymentSelectionIconSpriteId")?.Value ?? throw new InvalidOperationException($"SiegeDeploymentSelectionIconSpriteId is required"),
-                element.Element("MapSiegeMarkerSpriteId")?.Value ?? throw new InvalidOperationException($"MapSiegeMarkerSpriteId is required"),
-                element.Element("CampaignMapSelectionIconSpriteId")?.Value ?? throw new InvalidOperationException($"CampaignMapSelectionIconSpriteId is required"),
-                element.Element("CampaignMapPrefabName")?.Value ?? throw new InvalidOperationException($"CampaignMapPrefabName is required"),
-                element.Element("CampaignMapProjectilePrefabName")?.Value ?? throw new InvalidOperationException($"CampaignMapProjectilePrefabName is required"),
-                element.Element("CampaignMapReloadAnimationName")?.Value ?? throw new InvalidOperationException($"CampaignMapReloadAnimationName is required"),
-                element.Element("CampaignMapFireAnimationName")?.Value ?? throw new InvalidOperationException($"CampaignMapFireAnimationName is required"),
-                int.TryParse(element.Element("MachineType")?.Value, out var machineType) ? machineType : throw new InvalidOperationException($"Invalid MachineType '{element.Element("MachineType")?.Value}'"),
-                int.TryParse(element.Element("CampaignMapProjectileBoneIndex")?.Value, out var boneIndex) ? boneIndex : throw new InvalidOperationException($"Invalid CampaignMapProjectileBoneIndex '{element.Element("CampaignMapProjectileBoneIndex")?.Value}'")
-            ));
+            .Select(element =>
+            {
+                var id = element.Element("Id")?.Value ?? throw new InvalidOperationException("Cannon Id is required");
+
+                var machineTypeStr = element.Element("MachineType")?.Value;
+                if (!int.TryParse(machineTypeStr, out var machineType))
+                    throw new InvalidOperationException($"Invalid MachineType '{machineTypeStr}' for cannon '{id}'");
+
+                var boneIndexStr = element.Element("CampaignMapProjectileBoneIndex")?.Value;
+                if (!int.TryParse(boneIndexStr, out var boneIndex))
+                    throw new InvalidOperationException($"Invalid CampaignMapProjectileBoneIndex '{boneIndexStr}' for cannon '{id}'");
+
+                return new Domain.SiegeEngines.Model.Cannon(
+                    id,
+                    element.Element("DisplayName")?.Value ?? throw new InvalidOperationException($"DisplayName is required"),
+                    element.Element("SiegeDeploymentSelectionIconSpriteId")?.Value ?? throw new InvalidOperationException($"SiegeDeploymentSelectionIconSpriteId is required"),
+                    element.Element("MapSiegeMarkerSpriteId")?.Value ?? throw new InvalidOperationException($"MapSiegeMarkerSpriteId is required"),
+                    element.Element("CampaignMapSelectionIconSpriteId")?.Value ?? throw new InvalidOperationException($"CampaignMapSelectionIconSpriteId is required"),
+                    element.Element("CampaignMapPrefabName")?.Value ?? throw new InvalidOperationException($"CampaignMapPrefabName is required"),
+                    element.Element("CampaignMapProjectilePrefabName")?.Value ?? throw new InvalidOperationException($"CampaignMapProjectilePrefabName is required"),
+                    element.Element("CampaignMapReloadAnimationName")?.Value ?? throw new InvalidOperationException($"CampaignMapReloadAnimationName is required"),
+                    element.Element("CampaignMapFireAnimationName")?.Value ?? throw new InvalidOperationException($"CampaignMapFireAnimationName is required"),
+                    machineType,
+                    boneIndex
+                );
+            })
+            .ToList();
     }
 
     public void Dispose()
