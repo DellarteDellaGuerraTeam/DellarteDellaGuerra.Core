@@ -44,7 +44,7 @@ public class GenericCannonFactory : ICannonFactory
         }
     }
 
-    public void ConfigureSpawner(SpawnerEntityMissionHelper helper)
+    public void ConfigureSpawner(TaleWorlds.MountAndBlade.SpawnerEntityMissionHelper helper)
     {
         var cannon = helper.SpawnedEntity.GetFirstScriptInFamilyDescending<GenericCannon>();
         // Configuration logic

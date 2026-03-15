@@ -11,6 +11,8 @@ public class GenericCannonSpawner : SpawnerBase
 {
     [EditorVisibleScriptComponentVariable(true)]
     public Team Team = Team.Attacker;
+    
+    private SpawnerEntityMissionHelper? _spawnerMissionHelper;
 
     protected override void OnPreInit()
     {

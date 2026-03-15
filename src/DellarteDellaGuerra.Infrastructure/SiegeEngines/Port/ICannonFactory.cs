@@ -7,5 +7,5 @@ public interface ICannonFactory
 {
     Type CannonScriptType { get; }
     SpawnableArtilleryRangedSiegeWeapon CreateCannon();
-    void ConfigureSpawner(SpawnerEntityMissionHelper helper);
+    void ConfigureSpawner(TaleWorlds.MountAndBlade.SpawnerEntityMissionHelper helper);
 }
