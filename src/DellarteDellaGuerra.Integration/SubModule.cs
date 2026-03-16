@@ -73,7 +73,7 @@ namespace DellarteDellaGuerra.Integration
 
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
 
-            var types = GetDadgReferencedAssemblyTypes();
+            var types = new Dictionary<string, Type>();
             foreach (var kvp in GetDynamicCannonTypes())
                 types[kvp.Key] = kvp.Value;
             Managed.AddTypes(types);
@@ -85,26 +85,6 @@ namespace DellarteDellaGuerra.Integration
             return registry.GetAllCannons()
                 .Select(c => registry.GetFactory(c.Id).CannonScriptType)
                 .ToDictionary(t => t.Name, t => t);
-        }
-
-        private Dictionary<string, Type> GetDadgReferencedAssemblyTypes()
-        {
-            return Assembly
-                .GetExecutingAssembly()
-                .GetReferencedAssemblies()
-                .Where(a => a.Name.StartsWith(ModuleIdHelper.GetModuleIdPrefix()))
-                .Select(Assembly.Load)
-                .SelectMany(assembly => assembly.GetTypes())
-                .Where(type =>
-                    type.IsClass &&
-                    !type.IsAbstract &&
-                    !type.IsGenericTypeDefinition &&
-                    type.GetConstructor(Type.EmptyTypes) != null)
-                .GroupBy(t => t.Name)
-                .ToDictionary(
-                    grouping => grouping.Key,
-                    grouping => grouping.Last()
-                );
         }
 
         protected override void OnSubModuleUnloaded()
