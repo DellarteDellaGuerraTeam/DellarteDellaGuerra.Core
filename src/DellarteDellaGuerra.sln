@@ -39,6 +39,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Domain.Tests", "DellarteDellaGuerra.Domain.Tests\DellarteDellaGuerra.Domain.Tests.csproj", "{CE2969F6-44EB-4908-B2F1-FF882A6EFBE4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Integration", "DellarteDellaGuerra.Integration\DellarteDellaGuerra.Integration.csproj", "{6F9D88D7-21D9-46A4-9A67-F4D3D66AE826}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Integration.Tests", "DellarteDellaGuerra.Integration.Tests\DellarteDellaGuerra.Integration.Tests.csproj", "{A3B2C1D0-E4F5-4A6B-8C7D-9E0F1A2B3C4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Infrastructure.Tests", "DellarteDellaGuerra.Infrastructure.Tests\DellarteDellaGuerra.Infrastructure.Tests.csproj", "{D5160A6C-7EA8-413E-BEBB-D98EACC7AA77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -64,6 +70,25 @@ Global
 		{423C424E-22F0-464D-97AB-69E0E00D5F51}.Debug|x64.Build.0 = Debug|x64
 		{423C424E-22F0-464D-97AB-69E0E00D5F51}.Release|x64.ActiveCfg = Release|x64
 		{423C424E-22F0-464D-97AB-69E0E00D5F51}.Release|x64.Build.0 = Release|x64
+		
+		{CE2969F6-44EB-4908-B2F1-FF882A6EFBE4}.Debug|x64.ActiveCfg = Debug|x64
+								{CE2969F6-44EB-4908-B2F1-FF882A6EFBE4}.Debug|x64.Build.0 = Debug|x64
+								{CE2969F6-44EB-4908-B2F1-FF882A6EFBE4}.Release|x64.ActiveCfg = Release|x64
+								{CE2969F6-44EB-4908-B2F1-FF882A6EFBE4}.Release|x64.Build.0 = Release|x64
+		
+		{6F9D88D7-21D9-46A4-9A67-F4D3D66AE826}.Debug|x64.ActiveCfg = Debug|x64
+		{6F9D88D7-21D9-46A4-9A67-F4D3D66AE826}.Debug|x64.Build.0 = Debug|x64
+		{6F9D88D7-21D9-46A4-9A67-F4D3D66AE826}.Release|x64.ActiveCfg = Release|x64
+		{6F9D88D7-21D9-46A4-9A67-F4D3D66AE826}.Release|x64.Build.0 = Release|x64
+
+		{A3B2C1D0-E4F5-4A6B-8C7D-9E0F1A2B3C4D}.Debug|x64.ActiveCfg = Debug|x64
+		{A3B2C1D0-E4F5-4A6B-8C7D-9E0F1A2B3C4D}.Debug|x64.Build.0 = Debug|x64
+		{A3B2C1D0-E4F5-4A6B-8C7D-9E0F1A2B3C4D}.Release|x64.ActiveCfg = Release|x64
+		{A3B2C1D0-E4F5-4A6B-8C7D-9E0F1A2B3C4D}.Release|x64.Build.0 = Release|x64
+		{D5160A6C-7EA8-413E-BEBB-D98EACC7AA77}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D5160A6C-7EA8-413E-BEBB-D98EACC7AA77}.Debug|x64.Build.0 = Debug|Any CPU
+		{D5160A6C-7EA8-413E-BEBB-D98EACC7AA77}.Release|x64.ActiveCfg = Release|Any CPU
+		{D5160A6C-7EA8-413E-BEBB-D98EACC7AA77}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
