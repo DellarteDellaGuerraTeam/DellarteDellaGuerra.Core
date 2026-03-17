@@ -1,3 +1,4 @@
+using DellarteDellaGuerra.Infrastructure.MbObjects;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 

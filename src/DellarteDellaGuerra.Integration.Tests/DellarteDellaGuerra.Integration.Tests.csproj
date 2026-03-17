@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All"/>
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <TalewordsSources Include="$(MSBuildThisFileDirectory)..\..\..\..\bin\Win64_Shipping_Client\TaleWorlds*.dll"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DellarteDellaGuerra.Integration\DellarteDellaGuerra.Integration.csproj" />
+    <ProjectReference Include="..\DellarteDellaGuerra.Infrastructure\DellarteDellaGuerra.Infrastructure.csproj" />
+    <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
+  </ItemGroup>
+
+  <Target Name="Copy TaleWorlds binaries to local cache" AfterTargets="Build">
+    <Copy SourceFiles="@(TalewordsSources)" DestinationFolder="$(outputPath)"/>
+  </Target>
+
+</Project>
