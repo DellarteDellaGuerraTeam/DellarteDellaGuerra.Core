@@ -17,6 +17,7 @@ using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.UI;
 using DellarteDellaGuerra.Integration.SiegeEngines.Util.UI;
 using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
+using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.Events;
@@ -136,6 +137,8 @@ public class DadgServiceContainer
 
     private static void RegisterPatches(IServiceCollection services)
     {
+        // Music
+        services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
         // General
         services.AddSingleton<IPatch, GeneralPatches>();
         // Character creation
