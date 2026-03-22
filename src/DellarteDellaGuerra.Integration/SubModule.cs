@@ -23,7 +23,6 @@ using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Battle;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.UI;
 using DellarteDellaGuerra.Integration.SiegeEngines.Util;
-using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Utils;
 using Harmony.DependencyInjection;
@@ -113,8 +112,6 @@ namespace DellarteDellaGuerra.Integration
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();
-
-            campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
         }
 
         public override void OnGameInitializationFinished(Game game)
