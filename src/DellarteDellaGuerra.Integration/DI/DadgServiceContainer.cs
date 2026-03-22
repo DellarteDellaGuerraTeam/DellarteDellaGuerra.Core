@@ -136,7 +136,6 @@ public class DadgServiceContainer
     private static void RegisterPatches(IServiceCollection services)
     {
         // Character creation
-        services.AddSingleton<IPatch, MainMenuOptionPatches>();
         services.AddSingleton<IPatch, DisableSortingBehaviourInCultureMenuPatch>();
         // Firearm
         services.AddSingleton<IPatch, AddFirearmSkillAsRelevantSkillPatch>();
