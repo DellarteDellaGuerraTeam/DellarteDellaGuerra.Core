@@ -13,12 +13,10 @@ public class FirearmSkillProvider : IMBObjectProvider<SkillObject>
         if (_skillObject is null)
         {
             _skillObject = new SkillObject("Firearm");
-            _skillObject
-                .Initialize(
-                    new TextObject("Firearm"),
-                    new TextObject("Mastery of fighting with any firearm weapons."),
-                    SkillObject.SkillTypeEnum.Personal)
-                .SetAttribute(DefaultCharacterAttributes.Vigor);
+            _skillObject.Initialize(
+                new TextObject("Firearm"),
+                new TextObject("Mastery of fighting with any firearm weapons."),
+                new[] { DefaultCharacterAttributes.Vigor });
         }
 
         return _skillObject;
