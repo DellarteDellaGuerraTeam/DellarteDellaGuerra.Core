@@ -224,7 +224,7 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
                 foreach (var agent in _currentTournamentAgents)
                 {
                     var action = agent.GetCurrentAction(0);
-                    if (action.Name.Contains("act_dismount_"))
+                    if (action.GetName().Contains("act_dismount_"))
                     {
                         var progress = agent.GetCurrentActionProgress(0);
                         if (progress >= 0.95f)
@@ -254,20 +254,25 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
 
             if (CurrentState == JoustFightState.MountedCombat)
                 foreach (var agent in _currentTournamentAgents)
-                    if (!agent.IsMainAgent)
+                    if (agent != Agent.Main)
                     {
                         agent.SetAgentFlags(agent.GetAgentFlags() | AgentFlag.MoveForwardOnly);
                         agent.SetScriptedFlags(Agent.AIScriptedFrameFlags.NeverSlowDown);
 
-                        for (var equipmentIndex = EquipmentIndex.Weapon0;
-                             equipmentIndex < EquipmentIndex.NumPrimaryWeaponSlots;
-                             equipmentIndex++)
-                            if (agent.Equipment[equipmentIndex].CurrentUsageItem?.WeaponClass ==
-                                WeaponClass.TwoHandedPolearm)
+                        if (agent.WieldedWeapon.IsEmpty)
+                        {
+                            for (var equipmentIndex = EquipmentIndex.Weapon0;
+                                 equipmentIndex < EquipmentIndex.NumPrimaryWeaponSlots;
+                                 equipmentIndex++)
                             {
-                                agent.TryToWieldWeaponInSlot(equipmentIndex, Agent.WeaponWieldActionType.Instant, true);
-                                break;
+                                if (agent.Equipment[equipmentIndex].CurrentUsageItem?.WeaponClass ==
+                                    WeaponClass.TwoHandedPolearm)
+                                {
+                                    agent.TryToWieldWeaponInSlot(equipmentIndex, Agent.WeaponWieldActionType.Instant, true);
+                                    break;
+                                }
                             }
+                        }
                     }
         }
 
@@ -398,8 +403,8 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
             var agentBuildData2 = agentBuildData.InitialDirection(vec)
                 .Equipment(_equipmentMapper.ToNative(_getJoustEquipmentUtil.GetJoustEquipment(_equipmentMapper.ToDomain(participant.MatchEquipment))))
                 .ClothingColor1(team.Color).Banner(null).Controller(character.IsPlayerCharacter
-                    ? Agent.ControllerType.Player
-                    : Agent.ControllerType.AI);
+                    ? AgentControllerType.Player
+                    : AgentControllerType.AI);
             Agent agent = Mission.SpawnAgent(agentBuildData2);
 
             DisableNonTwoHandedPolearmsOnHorseback(agent);
@@ -514,7 +519,7 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
                 CurrentState = JoustFightState.Transition;
                 foreach (var agent in _currentTournamentAgents)
                 {
-                    if (agent.GetWieldedItemIndex(Agent.HandIndex.MainHand) == EquipmentIndex.Weapon0 &&
+                    if (agent.GetPrimaryWieldedItemIndex() == EquipmentIndex.Weapon0 &&
                         !agent.WieldedWeapon.IsEmpty &&
                         agent.WieldedWeapon.Item != null &&
                         agent.WieldedWeapon.Item.StringId.Contains("lance"))
@@ -561,7 +566,7 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
                 SkillLevelingManager.OnCombatHit(affectorCharacter, affectedCharacter, null, null, lastSpeedBonus,
                     lastShotDifficulty, lastAttackerWeapon, hitpointRatio, CombatXpModel.MissionTypeEnum.Tournament,
                     affectorAgent.MountAgent != null, affectorAgent.Team == affectedAgent.Team, false, damageAmount,
-                    affectedAgent.Health < 1f, false, isHorseCharge);
+                    affectedAgent.Health < 1f, false, isHorseCharge, false);
             }
         }
 

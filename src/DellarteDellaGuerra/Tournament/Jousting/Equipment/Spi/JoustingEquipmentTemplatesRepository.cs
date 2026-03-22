@@ -25,7 +25,7 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Equipment.Spi
 			if (characterObject is null) return new List<IReadOnlyList<EquipmentSlot>>();
 			
 			var result = new List<IReadOnlyList<EquipmentSlot>>();
-			foreach (var equipment in characterObject.AllEquipments)
+			foreach (var equipment in characterObject.BattleEquipments)
 			{
 				var equipmentSlots = new List<EquipmentSlot>();
 				
