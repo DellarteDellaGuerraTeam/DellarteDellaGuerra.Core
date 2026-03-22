@@ -18,7 +18,6 @@ using DellarteDellaGuerra.Infrastructure.Firearm;
 using DellarteDellaGuerra.Infrastructure.Firearm.Patches;
 using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
-using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Integration.Initialisation;
@@ -112,8 +111,6 @@ public class DadgServiceContainer
     {
         // Music
         services.AddSingleton<IPatch, CampaignMusicHandlerTickPatch>();
-        // General
-        services.AddSingleton<IPatch, GeneralPatches>();
         // Character creation
         services.AddSingleton<IPatch, MainMenuOptionPatches>();
         services.AddSingleton<IPatch, DisableSortingBehaviourInCultureMenuPatch>();
