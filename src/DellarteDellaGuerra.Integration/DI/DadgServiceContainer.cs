@@ -23,7 +23,6 @@ using DellarteDellaGuerra.Infrastructure.Events;
 using DellarteDellaGuerra.Infrastructure.Firearm;
 using DellarteDellaGuerra.Infrastructure.Firearm.Patches;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
-using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
@@ -136,8 +135,6 @@ public class DadgServiceContainer
 
     private static void RegisterPatches(IServiceCollection services)
     {
-        // General
-        services.AddSingleton<IPatch, GeneralPatches>();
         // Character creation
         services.AddSingleton<IPatch, MainMenuOptionPatches>();
         services.AddSingleton<IPatch, DisableSortingBehaviourInCultureMenuPatch>();
