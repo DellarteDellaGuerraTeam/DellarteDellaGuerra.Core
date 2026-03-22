@@ -111,7 +111,6 @@ public class DadgServiceContainer
     private static void RegisterPatches(IServiceCollection services)
     {
         // Music
-        services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
         services.AddSingleton<IPatch, CampaignMusicHandlerTickPatch>();
         // General
         services.AddSingleton<IPatch, GeneralPatches>();
