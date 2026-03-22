@@ -20,7 +20,6 @@ using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
-using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Campaign;
@@ -99,7 +98,6 @@ namespace DellarteDellaGuerra.Integration
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();
 
-            campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
             campaignGameStarter.AddBehavior(new JoustTournamentCampaignBehavior(joustRequirementsProvider));
         }
 
