@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
-using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
-using DellarteDellaGuerra.Patches;
+using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using SandBox.View.Map;
 
@@ -30,10 +29,9 @@ public class FixSettlementDistanceCacheFilePathPatch : IPatch
 
     public PatchType PatchType => PatchType.Postfix;
 
-    public FixSettlementDistanceCacheFilePathPatch(IPatcher patcher, ILoggerFactory loggerFactory)
+    public FixSettlementDistanceCacheFilePathPatch(ILoggerFactory loggerFactory)
     {
-        Logger = loggerFactory.CreateLogger<FixSettlementFilePathPatch>();
-        patcher.AddPatch(this);
+        Logger = loggerFactory.CreateLogger<FixSettlementDistanceCacheFilePathPatch>();
     }
 
 
