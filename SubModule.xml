@@ -29,8 +29,8 @@
   <SubModules>
     <SubModule>
       <Name value="DellarteDellaGuerra"/>
-      <DLLName value="DellarteDellaGuerra.Infrastructure.dll"/>
-      <SubModuleClassType value="DellarteDellaGuerra.Infrastructure.SubModule"/>
+      <DLLName value="DellarteDellaGuerra.Integration.dll"/>
+      <SubModuleClassType value="DellarteDellaGuerra.Integration.SubModule"/>
       <Tags />
     </SubModule>
   </SubModules>

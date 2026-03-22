@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using DellarteDellaGuerra.Domain.Tournament;
-using DellarteDellaGuerra.Domain.Tournament.Model;
+using DellarteDellaGuerra.Domain.Tournament.Reward;
+using DellarteDellaGuerra.Domain.Tournament.Reward.Model;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.TournamentGames;
 using TaleWorlds.Core;

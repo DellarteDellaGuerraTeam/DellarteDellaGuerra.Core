@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
-using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Utils;
-using DellarteDellaGuerra.Patches;
+using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using SandBox.View.Map;
 
@@ -29,10 +28,9 @@ namespace DellarteDellaGuerra.Infrastructure.Steam.Patches
 
         public PatchType PatchType => PatchType.Postfix;
 
-        public FixSettlementFilePathPatch(IPatcher patcher, ILoggerFactory loggerFactory)
+        public FixSettlementFilePathPatch(ILoggerFactory loggerFactory)
         {
             Logger = loggerFactory.CreateLogger<FixSettlementFilePathPatch>();
-            patcher.AddPatch(this);
         }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
