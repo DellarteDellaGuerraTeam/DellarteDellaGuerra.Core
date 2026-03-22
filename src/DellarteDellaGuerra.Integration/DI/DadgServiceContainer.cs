@@ -112,7 +112,6 @@ public class DadgServiceContainer
         // Music
         services.AddSingleton<IPatch, CampaignMusicHandlerTickPatch>();
         // Character creation
-        services.AddSingleton<IPatch, MainMenuOptionPatches>();
         services.AddSingleton<IPatch, DisableSortingBehaviourInCultureMenuPatch>();
         // Firearm
         services.AddSingleton<IPatch, AddFirearmSkillAsRelevantSkillPatch>();
