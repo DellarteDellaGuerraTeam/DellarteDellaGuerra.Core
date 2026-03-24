@@ -1,7 +1,7 @@
 ﻿using System;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 
-namespace DellarteDellaGuerra.Infrastructure.ExpandedTemplateApi.Logging;
+namespace DellarteDellaGuerra.Integration.ExpandedTemplateApi.Logging;
 
 public class ExpandedTemplateLogger(ILogger logger) : Bannerlord.ExpandedTemplate.API.Logging.ILogger
 {
