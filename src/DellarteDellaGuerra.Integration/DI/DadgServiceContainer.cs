@@ -27,6 +27,7 @@ using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
+using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.SiegeEngines.Util;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Reward.Spi;
@@ -146,6 +147,8 @@ public class DadgServiceContainer
         // Steam
         services.AddSingleton<IPatch, FixSettlementFilePathPatch>();
         services.AddSingleton<IPatch, FixSettlementDistanceCacheFilePathPatch>();
+        // Music
+        services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
         // POC
         services.AddSingleton<IPatch, PocConfigReaderOverriderPatch>();
         // Cannon UI
