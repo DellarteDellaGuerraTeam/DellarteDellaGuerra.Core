@@ -1,7 +1,7 @@
 using System;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
-using DellarteDellaGuerra.Infrastructure;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders.Ports;
 using DellarteDellaGuerra.Domain.SiegeEngines;
@@ -9,37 +9,37 @@ using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Reload;
-using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
-using DellarteDellaGuerra.Integration.SiegeEngines.Campaign.UI;
 using DellarteDellaGuerra.Infrastructure.Cannon.Infra.Repo;
-using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Battle;
-using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn;
-using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.UI;
-using DellarteDellaGuerra.Integration.SiegeEngines.Util.UI;
 using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
-using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.Events;
 using DellarteDellaGuerra.Infrastructure.Firearm;
 using DellarteDellaGuerra.Infrastructure.Firearm.Patches;
+using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
+using DellarteDellaGuerra.Integration.Music.Patches;
+using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
+using DellarteDellaGuerra.Integration.SiegeEngines.Campaign.UI;
+using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Battle;
+using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn;
+using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.UI;
 using DellarteDellaGuerra.Integration.SiegeEngines.Util;
+using DellarteDellaGuerra.Integration.SiegeEngines.Util.UI;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Reward.Spi;
 using DellarteDellaGuerra.Tournament.Reward.Spi.Mapper;
 using Harmony.DependencyInjection;
 using Harmony.DependencyInjection.Patches;
 using Microsoft.Extensions.DependencyInjection;
+using NLog.Extensions.Logging;
 using TaleWorlds.Core;
 using TaleWorlds.Engine.GauntletUI;
-using ILoggerFactory = DellarteDellaGuerra.Domain.Common.Logging.Port.ILoggerFactory;
-using LoggerFactory = DellarteDellaGuerra.Infrastructure.Logging.LoggerFactory;
 
 namespace DellarteDellaGuerra.Integration.DI;
 
@@ -48,20 +48,22 @@ public class DadgServiceContainer
     public IServiceProvider Build()
     {
         var services = new ServiceCollection();
+        services.AddLogging(b => { b.AddNLog(new LoggerConfigPathProvider().Config); });
         RegisterCoreServices(services);
         RegisterCannonServices(services);
         RegisterTournamentServices(services);
         RegisterDisplayServices(services);
         RegisterMissionServices(services);
         RegisterPatches(services);
-        services.AddLogging();
         services.AddHarmonyPatching();
         return services.BuildServiceProvider();
     }
 
     private static void RegisterCoreServices(IServiceCollection services)
     {
-        services.AddSingleton<ILoggerFactory>(_ => new LoggerFactory(new LoggerConfigPathProvider()));
+        services.AddSingleton<ILoggerFactory>(sp =>
+            new LoggerFactory(
+                sp.GetRequiredService<Microsoft.Extensions.Logging.ILoggerFactory>()));
         services.AddSingleton<DadgConfigWatcher>();
         RegisterEvent<SubModuleLoadEvent>(services);
         services.AddSingleton<CampaignBehaviourDisabler>();
