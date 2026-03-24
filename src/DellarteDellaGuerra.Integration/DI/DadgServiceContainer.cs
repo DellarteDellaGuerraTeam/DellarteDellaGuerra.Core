@@ -1,5 +1,6 @@
 using System;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
+using DellarteDellaGuerra.MainMenu;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
@@ -21,6 +22,7 @@ using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Integration.Initialisation;
+using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
@@ -63,6 +65,8 @@ public class DadgServiceContainer
         RegisterEvent<SubModuleLoadEvent>(services);
         services.AddSingleton<DadgScriptComponentRegistrar>();
         services.AddSingleton<CampaignBehaviourDisabler>();
+        services.AddSingleton<DadgCampaignStartButtonAdder>();
+        services.AddSingleton<VanillaCampaignButtonsRemover>();
         services.AddSingleton<FirearmSkillProvider>();
         services.AddSingleton<IMBObjectProvider<SkillObject>>(sp => sp.GetRequiredService<FirearmSkillProvider>());
     }
@@ -110,6 +114,7 @@ public class DadgServiceContainer
     private static void RegisterPatches(IServiceCollection services)
     {
         // Music
+        services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
         services.AddSingleton<IPatch, CampaignMusicHandlerTickPatch>();
         // Character creation
         services.AddSingleton<IPatch, DisableSortingBehaviourInCultureMenuPatch>();
@@ -119,6 +124,8 @@ public class DadgServiceContainer
         // Steam
         services.AddSingleton<IPatch, FixSettlementFilePathPatch>();
         services.AddSingleton<IPatch, FixSettlementDistanceCacheFilePathPatch>();
+        // Music
+        services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
         // POC
         services.AddSingleton<IPatch, PocConfigReaderOverriderPatch>();
         // Siege engines
