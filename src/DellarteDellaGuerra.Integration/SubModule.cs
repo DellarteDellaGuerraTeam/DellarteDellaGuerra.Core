@@ -16,6 +16,8 @@ using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.Integration.DI;
+using DellarteDellaGuerra.Integration.Music.Patches;
+using HarmonyLib;
 using DellarteDellaGuerra.Integration.ExpandedTemplateApi.Logging;
 using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.SiegeEngines;
@@ -45,6 +47,13 @@ namespace DellarteDellaGuerra.Integration
 
         public SubModule()
         {
+            // Applied before DI is built: this patch must intercept PsaiCore.LoadSoundtrackFromProjectFile
+            // which fires during game startup before OnSubModuleLoad. Applying it here ensures it is
+            // in place regardless of when the DI container is constructed.
+            var earlyHarmony = new HarmonyLib.Harmony("com.dadg.early");
+            var musicPatch = new MBMusicManagerInitializePatch();
+            earlyHarmony.Patch(musicPatch.TargetMethod, prefix: new HarmonyMethod(musicPatch.PatchMethod));
+
             _serviceProvider = new DadgServiceContainer().Build();
 
             var loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
