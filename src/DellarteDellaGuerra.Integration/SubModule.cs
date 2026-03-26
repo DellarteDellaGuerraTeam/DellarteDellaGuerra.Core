@@ -55,16 +55,13 @@ namespace DellarteDellaGuerra.Integration
             var musicPatch = new MBMusicManagerInitializePatch();
             earlyHarmony.Patch(musicPatch.TargetMethod, prefix: new HarmonyMethod(musicPatch.PatchMethod));
 
-            _serviceProvider = new DadgServiceContainer().Build();
 
-            var loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
+            var loggerFactory = new LoggingContainer().Build().GetRequiredService<ILoggerFactory>();
             _logger = loggerFactory.CreateLogger<SubModule>();
 
             new BannerlordExpandedTemplateApi()
                 .UseLoggerFactory(new ExpandedTemplateLoggerFactory(loggerFactory))
                 .Bind();
-
-            _serviceProvider.GetRequiredService<SiegeEngineIconRegistrationUseCase>();
 
             CannonSystemInitialiser.Initialise();
         }
@@ -76,6 +73,9 @@ namespace DellarteDellaGuerra.Integration
 
         protected override void OnSubModuleLoad()
         {
+            _serviceProvider = new DadgServiceContainer().Build();
+            _serviceProvider.GetRequiredService<SiegeEngineIconRegistrationUseCase>();
+            
             _serviceProvider.GetRequiredService<IEventPublisher<SubModuleLoadEvent>>()
                 .Publish(new SubModuleLoadEvent());
 
