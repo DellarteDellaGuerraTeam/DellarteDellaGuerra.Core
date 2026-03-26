@@ -11,7 +11,6 @@ using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Heraldry;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.Events;
-using DellarteDellaGuerra.Infrastructure.ExpandedTemplateApi.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Utils;
@@ -54,9 +53,8 @@ namespace DellarteDellaGuerra.Integration
             var musicPatch = new MBMusicManagerInitializePatch();
             earlyHarmony.Patch(musicPatch.TargetMethod, prefix: new HarmonyMethod(musicPatch.PatchMethod));
 
-            _serviceProvider = new DadgServiceContainer().Build();
 
-            var loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
+            var loggerFactory = new LoggingContainer().Build().GetRequiredService<ILoggerFactory>();
             _logger = loggerFactory.CreateLogger<SubModule>();
 
             new BannerlordExpandedTemplateApi()
