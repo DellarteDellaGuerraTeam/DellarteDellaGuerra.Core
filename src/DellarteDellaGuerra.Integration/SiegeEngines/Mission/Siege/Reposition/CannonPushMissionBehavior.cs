@@ -1,8 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
+using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 
 namespace DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Reposition;
@@ -24,6 +27,7 @@ namespace DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Reposition;
 public class CannonPushMissionBehavior : MissionLogic
 {
     private const string RepositionTargetTag = "cannon_reposition_target";
+    private const InputKey ManualRepositionKey = InputKey.J;
 
     /// <summary>Maximum distance at which a reposition target is activated for a nearby cannon.</summary>
     private const float ActivationRange = 15f;
@@ -36,6 +40,9 @@ public class CannonPushMissionBehavior : MissionLogic
 
     private readonly List<StandingPoint> _targets = new();
     private readonly List<GenericCannon> _cannons = new();
+    private readonly Dictionary<GenericCannon, StandingPoint> _manualTargetsByCannon = new();
+    private readonly Dictionary<GenericCannon, StandingPoint> _lastSelectedTargetByCannon = new();
+    private GenericCannon? _hintedCannon;
 
     // ── Lifecycle ────────────────────────────────────────────────────────────
 
@@ -69,9 +76,18 @@ public class CannonPushMissionBehavior : MissionLogic
         if (_targets.Count == 0)
             return;
 
+        HandlePlayerManualRepositionInput();
+        UpdatePlayerManualReposition(dt);
+
+        HashSet<StandingPoint> manuallySelectedTargets = new HashSet<StandingPoint>(_manualTargetsByCannon.Values);
+        HashSet<GenericCannon> manuallyMovingCannons = new HashSet<GenericCannon>(_manualTargetsByCannon.Keys);
+
         foreach (var target in _targets)
         {
-            GenericCannon? nearest = FindNearestIdleCannon(target);
+            if (manuallySelectedTargets.Contains(target))
+                continue;
+
+            GenericCannon? nearest = FindNearestIdleCannon(target, manuallyMovingCannons);
 
             if (nearest == null)
             {
@@ -106,7 +122,143 @@ public class CannonPushMissionBehavior : MissionLogic
 
     // ── Helpers ──────────────────────────────────────────────────────────────
 
-    private GenericCannon? FindNearestIdleCannon(StandingPoint target)
+    private void HandlePlayerManualRepositionInput()
+    {
+        Agent? mainAgent = Mission.MainAgent;
+        if (mainAgent == null || !mainAgent.IsActive())
+        {
+            _hintedCannon = null;
+            return;
+        }
+
+        GenericCannon? playerCannon = _cannons.FirstOrDefault(c => c.PilotAgent == mainAgent);
+        if (playerCannon == null)
+        {
+            _hintedCannon = null;
+            return;
+        }
+
+        if (_hintedCannon != playerCannon)
+        {
+            _hintedCannon = playerCannon;
+            MBInformationManager.AddQuickInformation(
+                new TextObject("{=dadg_cannon_reposition_hint}Press J while operating an idle cannon to choose a reposition point."));
+        }
+
+        if (!Input.IsKeyPressed(ManualRepositionKey))
+            return;
+
+        if (playerCannon.State != RangedSiegeWeapon.WeaponState.Idle)
+        {
+            MBInformationManager.AddQuickInformation(
+                new TextObject("{=dadg_cannon_reposition_not_idle}Cannon must be idle before repositioning."));
+            return;
+        }
+
+        List<StandingPoint> candidates = GetManualRepositionCandidates(playerCannon);
+        if (candidates.Count == 0)
+        {
+            MBInformationManager.AddQuickInformation(
+                new TextObject("{=dadg_cannon_reposition_none}No reposition point is available nearby."));
+            return;
+        }
+
+        StandingPoint selected = GetNextManualTarget(playerCannon, candidates);
+        _manualTargetsByCannon[playerCannon] = selected;
+        selected.SetIsDeactivatedSynched(false);
+
+        int selectedIndex = candidates.IndexOf(selected) + 1;
+        TextObject selectedMessage =
+            new TextObject("{=dadg_cannon_reposition_selected}Selected reposition point {INDEX}/{COUNT}.");
+        selectedMessage.SetTextVariable("INDEX", selectedIndex);
+        selectedMessage.SetTextVariable("COUNT", candidates.Count);
+        MBInformationManager.AddQuickInformation(selectedMessage);
+    }
+
+    private void UpdatePlayerManualReposition(float dt)
+    {
+        if (_manualTargetsByCannon.Count == 0)
+            return;
+
+        Agent? mainAgent = Mission.MainAgent;
+        foreach (var kvp in _manualTargetsByCannon.ToList())
+        {
+            GenericCannon cannon = kvp.Key;
+            StandingPoint target = kvp.Value;
+
+            if (cannon.IsDestroyed || cannon.IsDeactivated || cannon.PilotAgent != mainAgent)
+            {
+                _manualTargetsByCannon.Remove(cannon);
+                continue;
+            }
+
+            if (target.IsDeactivated)
+                target.SetIsDeactivatedSynched(false);
+
+            if (MoveCannonTowardsTarget(cannon, target, dt))
+            {
+                _manualTargetsByCannon.Remove(cannon);
+                EvictAndDeactivate(target);
+                if (cannon.PilotAgent == mainAgent)
+                    MBInformationManager.AddQuickInformation(
+                        new TextObject("{=dadg_cannon_reposition_arrived}Cannon reposition complete."));
+            }
+        }
+    }
+
+    private List<StandingPoint> GetManualRepositionCandidates(GenericCannon cannon)
+    {
+        Vec3 cannonPos = GetCannonRootPos(cannon);
+        float maxDistSq = ActivationRange * ActivationRange;
+
+        return _targets
+            .Where(t => !_manualTargetsByCannon.Values.Contains(t))
+            .Where(t =>
+            {
+                Vec3 targetPos = t.GameEntity.GetGlobalFrame().origin;
+                float distSq = (targetPos.x - cannonPos.x) * (targetPos.x - cannonPos.x)
+                               + (targetPos.y - cannonPos.y) * (targetPos.y - cannonPos.y);
+                return distSq <= maxDistSq;
+            })
+            .OrderBy(t =>
+            {
+                Vec3 targetPos = t.GameEntity.GetGlobalFrame().origin;
+                float dx = targetPos.x - cannonPos.x;
+                float dy = targetPos.y - cannonPos.y;
+                return dx * dx + dy * dy;
+            })
+            .ToList();
+    }
+
+    private StandingPoint GetNextManualTarget(GenericCannon cannon, List<StandingPoint> candidates)
+    {
+        int currentIndex = -1;
+        if (_lastSelectedTargetByCannon.TryGetValue(cannon, out StandingPoint? lastTarget))
+            currentIndex = candidates.IndexOf(lastTarget);
+
+        int nextIndex = (currentIndex + 1) % candidates.Count;
+        StandingPoint next = candidates[nextIndex];
+        _lastSelectedTargetByCannon[cannon] = next;
+        return next;
+    }
+
+    private static bool MoveCannonTowardsTarget(GenericCannon cannon, StandingPoint target, float dt)
+    {
+        Vec3 targetPos = target.GameEntity.GetGlobalFrame().origin;
+        Vec3 cannonRootPos = GetCannonRootPos(cannon);
+        float dxSq = (targetPos.x - cannonRootPos.x) * (targetPos.x - cannonRootPos.x)
+                     + (targetPos.y - cannonRootPos.y) * (targetPos.y - cannonRootPos.y);
+
+        if (dxSq <= ArrivalThreshold * ArrivalThreshold)
+            return true;
+
+        Vec3 diff = new Vec3(targetPos.x - cannonRootPos.x, targetPos.y - cannonRootPos.y);
+        Vec3 dir = diff.NormalizedCopy();
+        TranslateCannonRoot(cannon, dir, dt);
+        return false;
+    }
+
+    private GenericCannon? FindNearestIdleCannon(StandingPoint target, HashSet<GenericCannon> excludedCannons)
     {
         Vec3 targetPos = target.GameEntity.GetGlobalFrame().origin;
         float bestDistSq = ActivationRange * ActivationRange;
@@ -114,6 +266,8 @@ public class CannonPushMissionBehavior : MissionLogic
 
         foreach (var cannon in _cannons)
         {
+            if (excludedCannons.Contains(cannon))
+                continue;
             if (cannon.IsDestroyed || cannon.IsDeactivated)
                 continue;
             if (cannon.State != RangedSiegeWeapon.WeaponState.Idle || cannon.PilotAgent != null)
