@@ -22,6 +22,7 @@ using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Battle;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn;
+using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Reposition;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.UI;
 using DellarteDellaGuerra.Integration.SiegeEngines.Util;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
@@ -142,6 +143,7 @@ namespace DellarteDellaGuerra.Integration
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmReloadMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmSmokeMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<CannonTeamMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<CannonPushMissionBehavior>());
         }
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)
