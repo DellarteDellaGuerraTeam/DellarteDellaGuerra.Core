@@ -27,6 +27,7 @@ using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign.UI;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Battle;
+using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Reposition;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.UI;
 using DellarteDellaGuerra.Integration.SiegeEngines.Util;
@@ -135,6 +136,7 @@ public class DadgServiceContainer
         services.AddTransient<FirearmReloadMissionLogic>();
         services.AddTransient<FirearmSmokeMissionLogic>();
         services.AddTransient<CannonTeamMissionLogic>();
+        services.AddTransient<CannonPushMissionBehavior>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
