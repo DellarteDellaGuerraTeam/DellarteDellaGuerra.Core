@@ -106,6 +106,7 @@ namespace DellarteDellaGuerra.Integration
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmReloadMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmSmokeMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<RemoveSiegeTowerSpawnersMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FieldBattleCannonPlacementMissionBehavior>());
         }
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)

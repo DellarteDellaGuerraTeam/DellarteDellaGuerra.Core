@@ -9,6 +9,7 @@ using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Reload;
 using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
+using DellarteDellaGuerra.Infrastructure.Configuration.Models;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DI;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
@@ -22,6 +23,7 @@ using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
+using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Battle.Placement;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Reward.Spi;
@@ -57,6 +59,7 @@ public class DadgServiceContainer
             new LoggerFactory(
                 sp.GetRequiredService<Microsoft.Extensions.Logging.ILoggerFactory>()));
         services.AddSingleton<DadgConfigWatcher>();
+        services.AddSingleton<IConfigurationProvider<DadgConfig>>(sp => sp.GetRequiredService<DadgConfigWatcher>());
         RegisterEvent<SubModuleLoadEvent>(services);
         services.AddSingleton<CampaignBehaviourDisabler>();
         services.AddSingleton<FirearmSkillProvider>();
@@ -97,6 +100,8 @@ public class DadgServiceContainer
         services.AddTransient<FirearmReloadMissionLogic>();
         services.AddTransient<FirearmSmokeMissionLogic>();
         services.AddTransient<RemoveSiegeTowerSpawnersMissionLogic>();
+        services.AddSingleton<IFieldBattleCannonPlacementSettingsProvider, FieldBattleCannonPlacementSettingsProvider>();
+        services.AddTransient<FieldBattleCannonPlacementMissionBehavior>();
     }
 
     private static void RegisterPatches(IServiceCollection services)

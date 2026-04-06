@@ -1,3 +1,5 @@
 <DadgConfiguration>
   <EnableShaderCompilationNotifications>true</EnableShaderCompilationNotifications>
+  <EnableFieldBattleCannonPlacement>true</EnableFieldBattleCannonPlacement>
+  <FieldBattleCannonPlacementLimit>2</FieldBattleCannonPlacementLimit>
 </DadgConfiguration>
