@@ -21,6 +21,7 @@ using DellarteDellaGuerra.Integration.DI;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Battle;
+using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.UI;
 using DellarteDellaGuerra.Integration.SiegeEngines.Util;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
@@ -44,6 +45,9 @@ namespace DellarteDellaGuerra.Integration
     {
         private readonly ILogger _logger;
         private IServiceProvider _serviceProvider;
+        private Dictionary<string, Type> _dynamicCannonTypes = new();
+        private bool _dynamicCannonTypesRegistered;
+        private bool _managedTypesNotReadyLogged;
 
         public SubModule()
         {
@@ -73,18 +77,24 @@ namespace DellarteDellaGuerra.Integration
 
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
 
-            var types = new Dictionary<string, Type>();
-            foreach (var kvp in GetDynamicCannonTypes())
-                types[kvp.Key] = kvp.Value;
-            Managed.AddTypes(types);
+            _dynamicCannonTypes = GetDynamicCannonTypes();
+            Managed.AddTypes(_dynamicCannonTypes);
         }
 
         private Dictionary<string, Type> GetDynamicCannonTypes()
         {
             var registry = _serviceProvider.GetRequiredService<ICannonRegistry>();
-            return registry.GetAllCannons()
-                .Select(c => registry.GetFactory(c.Id).CannonScriptType)
-                .ToDictionary(t => t.Name, t => t);
+            var types = registry.GetAllCannons()
+                .Select(c => registry.GetFactory(c.Id)?.CannonScriptType)
+                .Where(t => t != null)
+                .Cast<Type>()
+                .GroupBy(t => t.Name)
+                .ToDictionary(g => g.Key, g => g.First());
+
+            var spawnerType = SpawnerTypeEmitter.EmitSpawnerType();
+            types[spawnerType.Name] = spawnerType;
+
+            return types;
         }
 
         protected override void OnSubModuleUnloaded()
