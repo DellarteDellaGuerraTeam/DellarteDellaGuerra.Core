@@ -5,6 +5,11 @@
       "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_Client\\TaleWorlds.MountAndBlade.Launcher.exe",
       "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_Client"
     },
+    "Editor.Launcher": {
+      "commandName": "Executable",
+      "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_wEditor\\TaleWorlds.MountAndBlade.Launcher.exe",
+      "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_wEditor"
+    },
     "Launcher.BLSE": {
       "commandName": "Executable",
       "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_Client\\Bannerlord.BLSE.Launcher.exe",
