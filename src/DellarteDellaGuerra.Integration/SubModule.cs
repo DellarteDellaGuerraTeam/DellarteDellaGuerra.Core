@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
-using Bannerlord.Cannons.Api;
 using Bannerlord.ExpandedTemplate.API;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders;
@@ -15,15 +13,10 @@ using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.Events;
 using DellarteDellaGuerra.Infrastructure.ExpandedTemplateApi.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
-using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.Integration.DI;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
-using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Battle;
-using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn;
-using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.UI;
-using DellarteDellaGuerra.Integration.SiegeEngines.Util;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Utils;
@@ -34,7 +27,6 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
-using TaleWorlds.DotNet;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
@@ -45,9 +37,6 @@ namespace DellarteDellaGuerra.Integration
     {
         private readonly ILogger _logger;
         private IServiceProvider _serviceProvider;
-        private Dictionary<string, Type> _dynamicCannonTypes = new();
-        private bool _dynamicCannonTypesRegistered;
-        private bool _managedTypesNotReadyLogged;
 
         public SubModule()
         {
@@ -59,10 +48,6 @@ namespace DellarteDellaGuerra.Integration
             new BannerlordExpandedTemplateApi()
                 .UseLoggerFactory(new ExpandedTemplateLoggerFactory(loggerFactory))
                 .Bind();
-
-            _serviceProvider.GetRequiredService<SiegeEngineIconRegistrationUseCase>();
-
-            CannonSystemInitialiser.Initialise();
         }
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
@@ -76,25 +61,6 @@ namespace DellarteDellaGuerra.Integration
                 .Publish(new SubModuleLoadEvent());
 
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
-
-            _dynamicCannonTypes = GetDynamicCannonTypes();
-            Managed.AddTypes(_dynamicCannonTypes);
-        }
-
-        private Dictionary<string, Type> GetDynamicCannonTypes()
-        {
-            var registry = _serviceProvider.GetRequiredService<ICannonRegistry>();
-            var types = registry.GetAllCannons()
-                .Select(c => registry.GetFactory(c.Id)?.CannonScriptType)
-                .Where(t => t != null)
-                .Cast<Type>()
-                .GroupBy(t => t.Name)
-                .ToDictionary(g => g.Key, g => g.First());
-
-            var spawnerType = SpawnerTypeEmitter.EmitSpawnerType();
-            types[spawnerType.Name] = spawnerType;
-
-            return types;
         }
 
         protected override void OnSubModuleUnloaded()
@@ -115,11 +81,7 @@ namespace DellarteDellaGuerra.Integration
                 campaignGameStarter.Models.OfType<DefaultSiegeStrategyActionModel>().Last(),
                 MBObjectManager.Instance, loggerFactory, getDefaultSiegeEngine));
             campaignGameStarter.AddModel(new DadgSiegeEventModel(
-                campaignGameStarter.Models.OfType<SiegeEventModel>().Last(),
-                _serviceProvider.GetRequiredService<CannonPrefabProvider>(),
-                new CannonAvailabilityProvider(_serviceProvider.GetService<ICannonRegistry>(),
-                    MBObjectManager.Instance),
-                loggerFactory));
+                campaignGameStarter.Models.OfType<SiegeEventModel>().Last()));
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();
@@ -141,7 +103,6 @@ namespace DellarteDellaGuerra.Integration
             base.OnBeforeMissionBehaviorInitialize(mission);
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmReloadMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmSmokeMissionLogic>());
-            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<CannonTeamMissionLogic>());
         }
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)
