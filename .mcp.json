@@ -3,6 +3,17 @@
     "bannerlord-search": {
       "type": "http",
       "url": "http://localhost:5000"
+    },
+    "blender": {
+      "type": "stdio",
+      "command": "powershell.exe",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-NoProfile",
+        "-File",
+        "D:\\AI\\blender-mcp\\blender-mcp-bridge.ps1"
+      ]
     }
   }
 }
