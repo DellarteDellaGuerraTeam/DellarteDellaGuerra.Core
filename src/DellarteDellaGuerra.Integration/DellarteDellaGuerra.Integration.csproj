@@ -20,16 +20,40 @@
         <PackageReference Include="NLog" Version="5.3.4"/>
         <PackageReference Include="NLog.Extensions.Logging" Version="5.3.14"/>
 
-        <PackageReference Include="Bannerlord.Cannons" Version="0.4.1"/>
+        
+<!--        <PackageReference Include="Bannerlord.Cannons" Version="0.4.1"/>-->
+        <Reference Include="Bannerlord.Cannons">
+            <HintPath>D:/SteamLibrary/steamapps/common/Mount &amp; Blade II Bannerlord-v1.2/Modules/Bannerlord.Cannons/bin/Win64_Shipping_Client/Bannerlord.Cannons.dll</HintPath>
+        </Reference>        
         <PackageReference Include="Harmony.DependencyInjection" Version="0.2.0"/>
 
-        <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All"/>
-        <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>
-        <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All"/>
+<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All"/>-->
+<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>-->
+<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All"/>-->
 
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj"/>
         <ProjectReference Include="..\DellarteDellaGuerra.Infrastructure\DellarteDellaGuerra.Infrastructure.csproj"/>
         <ProjectReference Include="..\DellarteDellaGuerra\DellarteDellaGuerra.csproj"/>
+
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0" />
+
+        <!--        <PackageReference Include="Bannerlord.ExpandedTemplate.API" Version="1.3.1"/>-->
+        <Reference Include="Bannerlord.ExpandedTemplate.API">
+            <HintPath>D:/SteamLibrary/steamapps/common/Mount &amp; Blade II Bannerlord-v1.2/Modules/Bannerlord.ExpandedTemplate/Bannerlord.ExpandedTemplate.API/bin/Debug/netstandard2.0/Bannerlord.ExpandedTemplate.API.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll">
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="$(GameFolder)\Modules\SandBox\bin\Win64_Shipping_Client\SandBox*.dll">
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="$(GameFolder)\Modules\Native\bin\Win64_Shipping_Client\*.dll">
+            <Private>false</Private>
+        </Reference>
     </ItemGroup>
 
     <!-- Project properties -->

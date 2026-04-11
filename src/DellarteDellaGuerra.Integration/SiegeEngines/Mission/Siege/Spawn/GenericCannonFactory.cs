@@ -23,7 +23,7 @@ public class GenericCannonFactory : ICannonFactory
         _scriptType = scriptType;
     }
 
-    public Type CannonScriptType => _scriptType;
+    public System.Type CannonScriptType => _scriptType;
 
     public SpawnableArtilleryRangedSiegeWeapon CreateCannon()
     {
