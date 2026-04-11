@@ -29,19 +29,21 @@ public class DadgSiegeStrategyActionModel : SiegeStrategyActionModel
 
     private void OverrideSiegeEngineStrategies()
     {
-        SiegeEngineType defaultSiegeEngineType =
-            _mbObjectManager.GetObject<SiegeEngineType>(_defaultSiegeEngine.GetSiegeEngine().Id);
+        SiegeEngineType defaultAttackerSiegeEngineType =
+            _mbObjectManager.GetObject<SiegeEngineType>(_defaultSiegeEngine.GetAttackerSiegeEngine().Id);
+        
+        SiegeEngineType defaultDefenderSiegeEngineType = _mbObjectManager.GetObject<SiegeEngineType>(_defaultSiegeEngine.GetDefenderSiegeEngine().Id);
 
         // attacker
         SetPrivateField("_prepareAssaultEngineList", new List<(SiegeEngineType, int)>
         {
             (DefaultSiegeEngineTypes.Ram, 1),
-            (defaultSiegeEngineType, 4)
+            (defaultAttackerSiegeEngineType, 4)
         });
         SetPrivateField("_breachWallsEngineList", new List<(SiegeEngineType, int)>
         {
             (DefaultSiegeEngineTypes.Ram, 1),
-            (defaultSiegeEngineType, 4)
+            (defaultAttackerSiegeEngineType, 4)
         });
         SetPrivateField("_wearOutDefendersEngineList", new List<(SiegeEngineType, int)>
         {
@@ -52,11 +54,11 @@ public class DadgSiegeStrategyActionModel : SiegeStrategyActionModel
         // defender
         SetPrivateField("_prepareAgainstAssaultEngineList", new List<(SiegeEngineType, int)>
         {
-            (defaultSiegeEngineType, 4)
+            (defaultDefenderSiegeEngineType, 4)
         });
         SetPrivateField("_counterBombardmentEngineList", new List<(SiegeEngineType, int)>
         {
-            (defaultSiegeEngineType, 4)
+            (defaultDefenderSiegeEngineType, 4)
         });
     }
 

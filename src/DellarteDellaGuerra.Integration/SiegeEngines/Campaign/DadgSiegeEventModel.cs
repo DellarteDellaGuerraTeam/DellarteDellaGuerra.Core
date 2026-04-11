@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using DellarteDellaGuerra.Domain.Common.Logging.Port;
-using DellarteDellaGuerra.Integration.SiegeEngines.Util;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
@@ -13,21 +11,11 @@ namespace DellarteDellaGuerra.Integration.SiegeEngines.Campaign
 {
     public class DadgSiegeEventModel : SiegeEventModel
     {
-        private readonly ILogger _logger;
-        private readonly SiegeEventModel _defaultSiegeEventModel;
-        private readonly ICannonPrefabProvider _prefabProvider;
-        private readonly ICannonAvailabilityProvider _availabilityProvider;
+        private readonly SiegeEventModel _previous;
 
-        public DadgSiegeEventModel(
-            SiegeEventModel defaultSiegeEventModel,
-            ICannonPrefabProvider prefabProvider,
-            ICannonAvailabilityProvider availabilityProvider,
-            ILoggerFactory loggerFactory)
+        public DadgSiegeEventModel(SiegeEventModel previous)
         {
-            _defaultSiegeEventModel = defaultSiegeEventModel;
-            _prefabProvider = prefabProvider;
-            _availabilityProvider = availabilityProvider;
-            _logger = loggerFactory.CreateLogger<DadgSiegeEventModel>();
+            _previous = previous;
         }
 
         private static IEnumerable<SiegeEngineType> GetUnwantedSiegeEngines() =>
@@ -45,134 +33,104 @@ namespace DellarteDellaGuerra.Integration.SiegeEngines.Campaign
 
         public override int GetSiegeEngineDestructionCasualties(SiegeEvent siegeEvent, BattleSideEnum side,
             SiegeEngineType destroyedSiegeEngine) =>
-            _defaultSiegeEventModel.GetSiegeEngineDestructionCasualties(siegeEvent, side, destroyedSiegeEngine);
+            _previous.GetSiegeEngineDestructionCasualties(siegeEvent, side, destroyedSiegeEngine);
 
         public override float GetCasualtyChance(MobileParty siegeParty, SiegeEvent siegeEvent, BattleSideEnum side) =>
-            _defaultSiegeEventModel.GetCasualtyChance(siegeParty, siegeEvent, side);
+            _previous.GetCasualtyChance(siegeParty, siegeEvent, side);
 
         public override int GetColleteralDamageCasualties(SiegeEngineType attackerSiegeEngine, MobileParty party) =>
-            _defaultSiegeEventModel.GetColleteralDamageCasualties(attackerSiegeEngine, party);
+            _previous.GetColleteralDamageCasualties(attackerSiegeEngine, party);
 
         public override float GetSiegeEngineHitChance(SiegeEngineType siegeEngineType, BattleSideEnum battleSide,
             SiegeBombardTargets target, Town town) =>
-            _defaultSiegeEventModel.GetSiegeEngineHitChance(siegeEngineType, battleSide, target, town);
+            _previous.GetSiegeEngineHitChance(siegeEngineType, battleSide, target, town);
 
         public override string GetSiegeEngineMapPrefabName(SiegeEngineType siegeEngineType, int wallLevel,
-            BattleSideEnum side)
-        {
-            var prefabName = _prefabProvider.GetCampaignMapPrefabName(siegeEngineType.StringId, wallLevel, side);
-            return prefabName ?? _defaultSiegeEventModel.GetSiegeEngineMapPrefabName(siegeEngineType, wallLevel, side);
-        }
+            BattleSideEnum side) =>
+            _previous.GetSiegeEngineMapPrefabName(siegeEngineType, wallLevel, side);
 
-        public override string GetSiegeEngineMapProjectilePrefabName(SiegeEngineType siegeEngineType)
-        {
-            var projectilePrefab = _prefabProvider.GetCampaignMapProjectilePrefabName(siegeEngineType.StringId);
-            return projectilePrefab ?? _defaultSiegeEventModel.GetSiegeEngineMapProjectilePrefabName(siegeEngineType);
-        }
+        public override string GetSiegeEngineMapProjectilePrefabName(SiegeEngineType siegeEngineType) =>
+            _previous.GetSiegeEngineMapProjectilePrefabName(siegeEngineType);
 
         public override string GetSiegeEngineMapReloadAnimationName(SiegeEngineType siegeEngineType,
-            BattleSideEnum side)
-        {
-            var reloadPrefab = _prefabProvider.GetCampaignMapReloadAnimationName(siegeEngineType.StringId);
-            return reloadPrefab ?? _defaultSiegeEventModel.GetSiegeEngineMapReloadAnimationName(siegeEngineType, side);
-        }
+            BattleSideEnum side) =>
+            _previous.GetSiegeEngineMapReloadAnimationName(siegeEngineType, side);
 
-        public override string GetSiegeEngineMapFireAnimationName(SiegeEngineType siegeEngineType, BattleSideEnum side)
-        {
-            var firePrefab = _prefabProvider.GetCampaignMapFireAnimationName(siegeEngineType.StringId);
-            return firePrefab ?? _defaultSiegeEventModel.GetSiegeEngineMapFireAnimationName(siegeEngineType, side);
-        }
+        public override string GetSiegeEngineMapFireAnimationName(SiegeEngineType siegeEngineType, BattleSideEnum side) =>
+            _previous.GetSiegeEngineMapFireAnimationName(siegeEngineType, side);
 
-        public override sbyte GetSiegeEngineMapProjectileBoneIndex(SiegeEngineType siegeEngineType, BattleSideEnum side)
-        {
-            var boneIndex = _prefabProvider.GetCampaignMapProjectileBoneIndex(siegeEngineType.StringId);
-            return boneIndex >= 0
-                ? (sbyte)boneIndex
-                : _defaultSiegeEventModel.GetSiegeEngineMapProjectileBoneIndex(siegeEngineType, side);
-        }
+        public override sbyte GetSiegeEngineMapProjectileBoneIndex(SiegeEngineType siegeEngineType, BattleSideEnum side) =>
+            _previous.GetSiegeEngineMapProjectileBoneIndex(siegeEngineType, side);
 
         public override float GetSiegeStrategyScore(SiegeEvent siege, BattleSideEnum side, SiegeStrategy strategy) =>
-            _defaultSiegeEventModel.GetSiegeStrategyScore(siege, side, strategy);
+            _previous.GetSiegeStrategyScore(siege, side, strategy);
 
         public override float GetConstructionProgressPerHour(SiegeEngineType type, SiegeEvent siegeEvent,
             ISiegeEventSide side) =>
-            _defaultSiegeEventModel.GetConstructionProgressPerHour(type, siegeEvent, side);
+            _previous.GetConstructionProgressPerHour(type, siegeEvent, side);
 
         public override MobileParty GetEffectiveSiegePartyForSide(SiegeEvent siegeEvent, BattleSideEnum side) =>
-            _defaultSiegeEventModel.GetEffectiveSiegePartyForSide(siegeEvent, side);
+            _previous.GetEffectiveSiegePartyForSide(siegeEvent, side);
 
         public override float GetAvailableManDayPower(ISiegeEventSide side) =>
-            _defaultSiegeEventModel.GetAvailableManDayPower(side);
+            _previous.GetAvailableManDayPower(side);
 
-        public override IEnumerable<SiegeEngineType> GetAvailableAttackerRangedSiegeEngines(PartyBase party)
-        {
-            var baseEngines = _defaultSiegeEventModel.GetAvailableAttackerRangedSiegeEngines(party)
+        // Filter out native siege engines; cannons are already included by CannonSiegeEventModel (_previous)
+        public override IEnumerable<SiegeEngineType> GetAvailableAttackerRangedSiegeEngines(PartyBase party) =>
+            _previous.GetAvailableAttackerRangedSiegeEngines(party)
                 .Where(e => !GetUnwantedSiegeEngines().Contains(e));
-            var cannonEngines = _availabilityProvider.GetAvailableCannons(party, BattleSideEnum.Attacker);
-            return baseEngines.Concat(cannonEngines);
-        }
 
-        public override IEnumerable<SiegeEngineType> GetAvailableDefenderSiegeEngines(PartyBase party)
-        {
-            var baseEngines = _defaultSiegeEventModel.GetAvailableDefenderSiegeEngines(party)
+        public override IEnumerable<SiegeEngineType> GetAvailableDefenderSiegeEngines(PartyBase party) =>
+            _previous.GetAvailableDefenderSiegeEngines(party)
                 .Where(e => !GetUnwantedSiegeEngines().Contains(e));
-            var cannonEngines = _availabilityProvider.GetAvailableCannons(party, BattleSideEnum.Defender);
-            return baseEngines.Concat(cannonEngines);
-        }
 
         public override IEnumerable<SiegeEngineType> GetAvailableAttackerRamSiegeEngines(PartyBase party) =>
-            _defaultSiegeEventModel.GetAvailableAttackerRamSiegeEngines(party);
+            _previous.GetAvailableAttackerRamSiegeEngines(party);
 
+        // DADG: no siege towers
         public override IEnumerable<SiegeEngineType> GetAvailableAttackerTowerSiegeEngines(PartyBase party) =>
             new List<SiegeEngineType>();
 
+        // Replace prebuilt native engines with the first available cannon from _previous
         public override IEnumerable<SiegeEngineType> GetPrebuiltSiegeEnginesOfSettlement(Settlement settlement)
         {
-            var defaultCannon = _availabilityProvider
-                .GetAvailableCannons(null, BattleSideEnum.Defender)
+            var defaultCannon = _previous.GetAvailableDefenderSiegeEngines(null)
                 .FirstOrDefault();
 
             if (defaultCannon is null)
-            {
-                _logger.Warn("No pre-built defender alternative could be found to forbidden native siege engines");
-                return _defaultSiegeEventModel.GetPrebuiltSiegeEnginesOfSettlement(settlement)
+                return _previous.GetPrebuiltSiegeEnginesOfSettlement(settlement)
                     .Where(e => !GetUnwantedSiegeEngines().Contains(e));
-            }
 
-            return _defaultSiegeEventModel.GetPrebuiltSiegeEnginesOfSettlement(settlement)
+            return _previous.GetPrebuiltSiegeEnginesOfSettlement(settlement)
                 .Select(e => GetUnwantedSiegeEngines().Contains(e) ? defaultCannon : e);
         }
 
         public override IEnumerable<SiegeEngineType> GetPrebuiltSiegeEnginesOfSiegeCamp(BesiegerCamp camp)
         {
-            var defaultCannon = _availabilityProvider
-                .GetAvailableCannons(camp.LeaderParty.Party, BattleSideEnum.Attacker)
+            var defaultCannon = _previous.GetAvailableAttackerRangedSiegeEngines(camp.LeaderParty.Party)
                 .FirstOrDefault();
 
             if (defaultCannon is null)
-            {
-                _logger.Warn("No pre-built attacker alternative could be found to forbidden native siege engines");
-                return _defaultSiegeEventModel.GetPrebuiltSiegeEnginesOfSiegeCamp(camp)
+                return _previous.GetPrebuiltSiegeEnginesOfSiegeCamp(camp)
                     .Where(e => !GetUnwantedSiegeEngines().Contains(e));
-            }
 
-            return _defaultSiegeEventModel.GetPrebuiltSiegeEnginesOfSiegeCamp(camp)
+            return _previous.GetPrebuiltSiegeEnginesOfSiegeCamp(camp)
                 .Select(e => GetUnwantedSiegeEngines().Contains(e) ? defaultCannon : e);
         }
 
         public override float GetSiegeEngineHitPoints(SiegeEvent siegeEvent, SiegeEngineType siegeEngine,
             BattleSideEnum battleSide) =>
-            _defaultSiegeEventModel.GetSiegeEngineHitPoints(siegeEvent, siegeEngine, battleSide);
+            _previous.GetSiegeEngineHitPoints(siegeEvent, siegeEngine, battleSide);
 
         public override int GetRangedSiegeEngineReloadTime(SiegeEvent siegeEvent, BattleSideEnum side,
             SiegeEngineType siegeEngine) =>
-            _defaultSiegeEventModel.GetRangedSiegeEngineReloadTime(siegeEvent, side, siegeEngine);
+            _previous.GetRangedSiegeEngineReloadTime(siegeEvent, side, siegeEngine);
 
         public override float GetSiegeEngineDamage(SiegeEvent siegeEvent, BattleSideEnum battleSide,
             SiegeEngineType siegeEngine, SiegeBombardTargets target) =>
-            _defaultSiegeEventModel.GetSiegeEngineDamage(siegeEvent, battleSide, siegeEngine, target);
+            _previous.GetSiegeEngineDamage(siegeEvent, battleSide, siegeEngine, target);
 
         public override FlattenedTroopRoster GetPriorityTroopsForSallyOutAmbush() =>
-            _defaultSiegeEventModel.GetPriorityTroopsForSallyOutAmbush();
+            _previous.GetPriorityTroopsForSallyOutAmbush();
     }
 }

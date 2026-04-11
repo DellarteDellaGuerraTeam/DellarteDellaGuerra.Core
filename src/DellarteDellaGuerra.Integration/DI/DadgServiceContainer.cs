@@ -9,7 +9,6 @@ using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Reload;
-using DellarteDellaGuerra.Infrastructure.Cannon.Infra.Repo;
 using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
@@ -20,17 +19,8 @@ using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
-using DellarteDellaGuerra.Infrastructure.SiegeEngines;
-using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Integration.Music.Patches;
-using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
-using DellarteDellaGuerra.Integration.SiegeEngines.Campaign.UI;
-using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Battle;
-using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn;
-using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.UI;
-using DellarteDellaGuerra.Integration.SiegeEngines.Util;
-using DellarteDellaGuerra.Integration.SiegeEngines.Util.UI;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Reward.Spi;
 using DellarteDellaGuerra.Tournament.Reward.Spi.Mapper;
@@ -39,7 +29,6 @@ using Harmony.DependencyInjection.Patches;
 using Microsoft.Extensions.DependencyInjection;
 using NLog.Extensions.Logging;
 using TaleWorlds.Core;
-using TaleWorlds.Engine.GauntletUI;
 
 namespace DellarteDellaGuerra.Integration.DI;
 
@@ -50,7 +39,6 @@ public class DadgServiceContainer
         var services = new ServiceCollection();
         services.AddLogging(b => { b.AddNLog(new LoggerConfigPathProvider().Config); });
         RegisterCoreServices(services);
-        RegisterCannonServices(services);
         RegisterTournamentServices(services);
         RegisterDisplayServices(services);
         RegisterMissionServices(services);
@@ -69,6 +57,7 @@ public class DadgServiceContainer
         services.AddSingleton<CampaignBehaviourDisabler>();
         services.AddSingleton<FirearmSkillProvider>();
         services.AddSingleton<IMBObjectProvider<SkillObject>>(sp => sp.GetRequiredService<FirearmSkillProvider>());
+        services.AddSingleton<GetDefaultSiegeEngine>();
     }
 
     private static void RegisterEvent<TEvent>(IServiceCollection services)
@@ -76,36 +65,6 @@ public class DadgServiceContainer
         services.AddSingleton<EventBus<TEvent>>();
         services.AddSingleton<IEventPublisher<TEvent>>(sp => sp.GetRequiredService<EventBus<TEvent>>());
         services.AddSingleton<IEventSubscriber<TEvent>>(sp => sp.GetRequiredService<EventBus<TEvent>>());
-    }
-
-    private static void RegisterCannonServices(IServiceCollection services)
-    {
-        services.AddSingleton<ValidateCannonsUseCase>();
-        services.AddSingleton<ICannonRegistry>(sp =>
-        {
-            var registry = new CannonRegistry();
-            var configuration = new XmlCannonConfigurationReader(sp.GetRequiredService<ILoggerFactory>());
-            var validateCannons = sp.GetRequiredService<ValidateCannonsUseCase>();
-            foreach (var cannon in validateCannons.GetValidCannons(configuration.LoadCannons()))
-            {
-                var dynamicType = CannonTypeEmitter.EmitCannonType(cannon.Id);
-                registry.RegisterCannon(cannon, new GenericCannonFactory(cannon.Id, dynamicType));
-            }
-            return registry;
-        });
-        services.AddSingleton<ICannonIconProvider, CannonIconProvider>();
-        services.AddSingleton<CannonPrefabProvider>();
-        services.AddSingleton<IDeploymentSiegeEngineIconRepository, DeploymentSiegeEngineIconRepository>();
-        services.AddSingleton<IMapSiegeEngineIconRepository, MapSiegeEngineIconRepository>();
-        services.AddSingleton<IPrefabSiegeEngineRepository, PrefabSiegeEngineRepository>();
-        services.AddSingleton<BrushStyleExtender>(sp => new BrushStyleExtender(
-            sp.GetRequiredService<ILoggerFactory>(),
-            UIResourceManager.BrushFactory,
-            UIResourceManager.SpriteData));
-        services.AddSingleton<SiegeEngineDeploymentIconEnricher>();
-        services.AddSingleton<CampaignMapSiegeEngineDeploymentIconEnricher>();
-        services.AddSingleton<SiegeEngineIconRegistrationUseCase>();
-        services.AddSingleton<GetDefaultSiegeEngine>();
     }
 
     private static void RegisterTournamentServices(IServiceCollection services)
@@ -134,7 +93,6 @@ public class DadgServiceContainer
         services.AddTransient<IWeaponEntityRepository, InMemoryWeaponEntityRepository>();
         services.AddTransient<FirearmReloadMissionLogic>();
         services.AddTransient<FirearmSmokeMissionLogic>();
-        services.AddTransient<CannonTeamMissionLogic>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
@@ -149,23 +107,10 @@ public class DadgServiceContainer
         // Firearm
         services.AddSingleton<IPatch, AddFirearmSkillAsRelevantSkillPatch>();
         services.AddSingleton<IPatch, GetHolsterImageForBuIletsInInventoryPatch>();
-        // Cannon mission
-        services.AddSingleton<IPatch, MissionSiegeWeaponsControllerPatch>();
-        services.AddSingleton<IPatch, OrderSiegeMachineVM_GetSiegeTypePatch>();
         // Steam
         services.AddSingleton<IPatch, FixSettlementFilePathPatch>();
         services.AddSingleton<IPatch, FixSettlementDistanceCacheFilePathPatch>();
         // POC
         services.AddSingleton<IPatch, PocConfigReaderOverriderPatch>();
-        // Cannon UI
-        services.AddSingleton<IPatch, OrderSiegeMachineItemButtonWidgetPatch>();
-        services.AddSingleton<IPatch>(sp => new MapSiegePOIBrushWidgetManualPatch(
-            sp.GetRequiredService<IMapSiegeEngineIconRepository>(),
-            UIResourceManager.SpriteData));
-        services.AddSingleton<IPatch, MapSiegePOIVMPatch>();
-        // Campaign siege prefab cache
-        services.AddSingleton<IPatch, CampaignMapSiegePrefabEntityCacheOnInitPatch>();
-        services.AddSingleton<IPatch, CampaignMapSiegePrefabEntityCacheGetLaunchFramePatch>();
-        services.AddSingleton<IPatch, CampaignMapSiegePrefabEntityCacheGetScalePatch>();
     }
 }
