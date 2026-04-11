@@ -50,7 +50,6 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
 
         private List<TournamentParticipant> _aliveParticipants;
         private List<TournamentTeam> _aliveTeams;
-        private MissionCameraFadeView _cameraView;
         private bool _cheerStarted;
         private BasicMissionTimer _cheerTimer;
         private BasicMissionTimer _dismountNotificationTimer;
@@ -199,7 +198,6 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
             _team1MountedSpawn = Mission.Scene.FindEntityWithTag("team1_mounted_spawn");
             _team0FootSpawn = Mission.Scene.FindEntityWithTag("team0_foot_spawn");
             _team1FootSpawn = Mission.Scene.FindEntityWithTag("team1_foot_spawn");
-            _cameraView = Mission.GetMissionBehavior<MissionCameraFadeView>();
         }
 
         public override void OnMissionTick(float dt)
@@ -319,21 +317,17 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
         public void RestartMatch()
         {
             if (!IsMatchEnded() && _endTimer == null)
-                if (_cameraView != null)
-                {
-                    _cameraView.BeginFadeOutAndIn(0.1f, 0.1f, 0.5f);
-                    foreach (var agent in _currentTournamentAgents)
-                        if (agent.Team.TeamIndex == 0)
-                        {
-                            agent.TeleportToPosition(_team0MountedSpawn.GlobalPosition);
-                            agent.LookDirection = _team0MountedSpawn.GetFrame().rotation.f;
-                        }
-                        else if (agent.Team.TeamIndex == 1)
-                        {
-                            agent.TeleportToPosition(_team1MountedSpawn.GlobalPosition);
-                            agent.LookDirection = _team1MountedSpawn.GetFrame().rotation.f;
-                        }
-                }
+                foreach (var agent in _currentTournamentAgents)
+                    if (agent.Team.TeamIndex == 0)
+                    {
+                        agent.TeleportToPosition(_team0MountedSpawn.GlobalPosition);
+                        agent.LookDirection = _team0MountedSpawn.GetFrame().rotation.f;
+                    }
+                    else if (agent.Team.TeamIndex == 1)
+                    {
+                        agent.TeleportToPosition(_team1MountedSpawn.GlobalPosition);
+                        agent.LookDirection = _team1MountedSpawn.GetFrame().rotation.f;
+                    }
         }
 
         protected override void OnEndMission()

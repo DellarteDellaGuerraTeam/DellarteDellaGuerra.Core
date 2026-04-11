@@ -19,6 +19,16 @@ using TaleWorlds.MountAndBlade.View;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.ObjectSystem;
 
+using System.Collections.Generic;
+using SandBox.View.Missions.Sound.Components;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
+using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.View;
+using TaleWorlds.MountAndBlade.View.MissionViews;
+using TaleWorlds.MountAndBlade.View.MissionViews.Singleplayer;
+
+
 namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions
 {
     [MissionManager]
@@ -90,7 +100,7 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions
                     new MissionItemContourControllerView(),
                     new MissionCampaignBattleSpectatorView(),
                     ViewCreator.CreatePhotoModeView(),
-                    new MissionCameraFadeView()
+                    new ArenaPreloadView()
                 }.ToArray();
             }
         }
