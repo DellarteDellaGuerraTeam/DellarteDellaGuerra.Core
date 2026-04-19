@@ -7,12 +7,12 @@ using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
-using DellarteDellaGuerra.Domain.SiegeEngines;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.Events;
 using DellarteDellaGuerra.Infrastructure.ExpandedTemplateApi.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
+using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.Integration.DI;
 using DellarteDellaGuerra.Integration.SiegeEngines;
@@ -76,11 +76,12 @@ namespace DellarteDellaGuerra.Integration
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
 
             var loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
-            var getDefaultSiegeEngine = _serviceProvider.GetRequiredService<GetDefaultSiegeEngine>();
             campaignGameStarter.AddModel(new DadgSiegeStrategyActionModel(
-                campaignGameStarter.Models.OfType<DefaultSiegeStrategyActionModel>().Last(),
-                MBObjectManager.Instance, loggerFactory, getDefaultSiegeEngine));
-            campaignGameStarter.AddModel(new DadgSiegeEventModel(
+                _serviceProvider.GetService<ICannonRepository>(),
+                loggerFactory, MBObjectManager.Instance,
+                campaignGameStarter.Models.OfType<DefaultSiegeStrategyActionModel>().Last()));
+            campaignGameStarter.AddModel(ActivatorUtilities.CreateInstance<DadgSiegeEventModel>(
+                _serviceProvider,
                 campaignGameStarter.Models.OfType<SiegeEventModel>().Last()));
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());

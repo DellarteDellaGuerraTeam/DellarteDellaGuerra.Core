@@ -1,10 +1,10 @@
 using System;
+using Bannerlord.Cannons.Api;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders.Ports;
-using DellarteDellaGuerra.Domain.SiegeEngines;
 using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using DellarteDellaGuerra.Firearm;
@@ -19,6 +19,7 @@ using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
+using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Tournament.Api;
@@ -40,6 +41,7 @@ public class DadgServiceContainer
         services.AddLogging(b => { b.AddNLog(new LoggerConfigPathProvider().Config); });
         RegisterCoreServices(services);
         RegisterTournamentServices(services);
+        RegisterSiegeEngineServices(services);
         RegisterDisplayServices(services);
         RegisterMissionServices(services);
         RegisterPatches(services);
@@ -57,7 +59,6 @@ public class DadgServiceContainer
         services.AddSingleton<CampaignBehaviourDisabler>();
         services.AddSingleton<FirearmSkillProvider>();
         services.AddSingleton<IMBObjectProvider<SkillObject>>(sp => sp.GetRequiredService<FirearmSkillProvider>());
-        services.AddSingleton<GetDefaultSiegeEngine>();
     }
 
     private static void RegisterEvent<TEvent>(IServiceCollection services)
@@ -86,6 +87,12 @@ public class DadgServiceContainer
         services.AddSingleton<ICompilingShaderNotifierConfig>(sp =>
             new CompilingShaderNotifierConfig(sp.GetRequiredService<DadgConfigWatcher>()));
         services.AddSingleton<DisplayShaderNumber>();
+    }
+
+    private static void RegisterSiegeEngineServices(IServiceCollection services)
+    {
+        services.AddSingleton<ICannonApi, CannonApi>();
+        services.AddSingleton<ICannonRepository, CannonRepository>();
     }
 
     private static void RegisterMissionServices(IServiceCollection services)
