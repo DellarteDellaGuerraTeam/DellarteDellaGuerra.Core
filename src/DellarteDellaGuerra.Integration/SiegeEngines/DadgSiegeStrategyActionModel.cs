@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
-using DellarteDellaGuerra.Domain.SiegeEngines;
+using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Siege;
@@ -15,35 +16,41 @@ public class DadgSiegeStrategyActionModel : SiegeStrategyActionModel
     private readonly DefaultSiegeStrategyActionModel _baseSiegeStrategyActionModel;
     private readonly MBObjectManager _mbObjectManager;
     private readonly ILogger _logger;
-    private readonly GetDefaultSiegeEngine _defaultSiegeEngine;
+    private readonly ICannonRepository _cannonRepository;
     private bool _isInitialized;
 
-    public DadgSiegeStrategyActionModel(DefaultSiegeStrategyActionModel baseSiegeStrategyActionModel,
-        MBObjectManager mbObjectManager, ILoggerFactory loggerFactory, GetDefaultSiegeEngine defaultSiegeEngine)
+    public DadgSiegeStrategyActionModel(ICannonRepository cannonRepository, ILoggerFactory loggerFactory,
+        MBObjectManager mbObjectManager, DefaultSiegeStrategyActionModel baseSiegeStrategyActionModel)
     {
-        _baseSiegeStrategyActionModel = baseSiegeStrategyActionModel;
-        _mbObjectManager = mbObjectManager;
-        _defaultSiegeEngine = defaultSiegeEngine;
+        _cannonRepository = cannonRepository;
         _logger = loggerFactory.CreateLogger<DadgSiegeStrategyActionModel>();
+        _mbObjectManager = mbObjectManager;
+        _baseSiegeStrategyActionModel = baseSiegeStrategyActionModel;
     }
 
     private void OverrideSiegeEngineStrategies()
     {
-        SiegeEngineType defaultAttackerSiegeEngineType =
-            _mbObjectManager.GetObject<SiegeEngineType>(_defaultSiegeEngine.GetAttackerSiegeEngine().Id);
-        
-        SiegeEngineType defaultDefenderSiegeEngineType = _mbObjectManager.GetObject<SiegeEngineType>(_defaultSiegeEngine.GetDefenderSiegeEngine().Id);
+        var attackerCannon = _cannonRepository.GetAllCannons().FirstOrDefault(cannon => cannon.IsAttackerSiegeWeapon);
+
+        SiegeEngineType defaultAttackerSiegeEngineType = null;
+        if (attackerCannon is not null)
+            defaultAttackerSiegeEngineType = _mbObjectManager.GetObject<SiegeEngineType>(attackerCannon.Id);
+
+        if (attackerCannon is null || defaultAttackerSiegeEngineType is null)
+            _logger.Warn("No attacker cannon configured. Attackers will use Trebuchets instead");
 
         // attacker
         SetPrivateField("_prepareAssaultEngineList", new List<(SiegeEngineType, int)>
         {
             (DefaultSiegeEngineTypes.Ram, 1),
-            (defaultAttackerSiegeEngineType, 4)
+            (defaultAttackerSiegeEngineType is null ? DefaultSiegeEngineTypes.Trebuchet : defaultAttackerSiegeEngineType,
+                4)
         });
         SetPrivateField("_breachWallsEngineList", new List<(SiegeEngineType, int)>
         {
             (DefaultSiegeEngineTypes.Ram, 1),
-            (defaultAttackerSiegeEngineType, 4)
+            (defaultAttackerSiegeEngineType is null ? DefaultSiegeEngineTypes.Trebuchet : defaultAttackerSiegeEngineType,
+                4)
         });
         SetPrivateField("_wearOutDefendersEngineList", new List<(SiegeEngineType, int)>
         {
@@ -51,12 +58,25 @@ public class DadgSiegeStrategyActionModel : SiegeStrategyActionModel
             (DefaultSiegeEngineTypes.Trebuchet, 4)
         });
 
+        var defenderCannon = _cannonRepository.GetAllCannons().FirstOrDefault(cannon => cannon.IsDefensiveSiegeWeapon);
+
+        SiegeEngineType defaultDefenderSiegeEngineType = null;
+        if (defenderCannon is not null)
+            defaultDefenderSiegeEngineType = _mbObjectManager.GetObject<SiegeEngineType>(defenderCannon.Id);
+
+        if (defenderCannon is null || defaultDefenderSiegeEngineType is null)
+            _logger.Warn("No defender cannon configured. Defenders won't have any siege weapons");
+
         // defender
-        SetPrivateField("_prepareAgainstAssaultEngineList", new List<(SiegeEngineType, int)>
+        SetPrivateField("_prepareAgainstAssaultEngineList", defaultDefenderSiegeEngineType is null
+            ? new List<(SiegeEngineType, int)>()
+            : new List<(SiegeEngineType, int)>
         {
             (defaultDefenderSiegeEngineType, 4)
         });
-        SetPrivateField("_counterBombardmentEngineList", new List<(SiegeEngineType, int)>
+        SetPrivateField("_counterBombardmentEngineList", defaultDefenderSiegeEngineType is null
+            ? new List<(SiegeEngineType, int)>()
+            : new List<(SiegeEngineType, int)>
         {
             (defaultDefenderSiegeEngineType, 4)
         });
