@@ -29,8 +29,8 @@
         <!--        </Reference>-->
 
         <!--        <PackageReference Include="Bannerlord.Cannons" Version="0.4.1"/>-->
-        <Reference Include="Bannerlord.Cannons">
-            <HintPath>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord-v1.2\Modules\Bannerlord.Cannons\Bannerlord.Cannons\obj\x64\Debug\netstandard2.0\Bannerlord.Cannons.dll</HintPath>
+        <Reference Include="Bannerlord.Cannons.API">
+            <HintPath>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord-v1.2\Modules\Bannerlord.Cannons\Bannerlord.Cannons.API\obj\Debug\netstandard2.0\Bannerlord.Cannons.API.dll</HintPath>
         </Reference>
 
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
