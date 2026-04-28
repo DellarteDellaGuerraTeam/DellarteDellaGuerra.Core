@@ -46,7 +46,11 @@ public class DadgServiceContainer
         RegisterMissionServices(services);
         RegisterPatches(services);
         services.AddHarmonyPatching();
-        return services.BuildServiceProvider();
+        var provider = services.BuildServiceProvider();
+        // Eagerly initialize so LoggerFactoryProvider.Set is called before
+        // Bannerlord.Cannons SubModule's OnSubModuleLoad reads it
+        provider.GetRequiredService<ICannonApi>();
+        return provider;
     }
 
     private static void RegisterCoreServices(IServiceCollection services)
@@ -91,7 +95,8 @@ public class DadgServiceContainer
 
     private static void RegisterSiegeEngineServices(IServiceCollection services)
     {
-        services.AddSingleton<ICannonApi, CannonApi>();
+        services.AddSingleton(sp =>
+            CannonApiFactory.Create(sp.GetService<Microsoft.Extensions.Logging.ILoggerFactory>()));
         services.AddSingleton<ICannonRepository, CannonRepository>();
     }
 
