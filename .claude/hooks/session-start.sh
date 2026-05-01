@@ -21,12 +21,12 @@ if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
   echo "export PATH=${DOTNET_INSTALL_DIR}:${DOTNET_INSTALL_DIR}/tools:\${PATH}" >> "${CLAUDE_ENV_FILE}"
 fi
 
-# ── 2. Restore BannerlordSearch.Source v1.3.1 into NuGet global cache ──────
+# ── 2. Restore BannerlordSearch.Source v1.2.12 into NuGet global cache ─────
 NUGET_CACHE="${HOME}/.nuget/packages"
-SOURCE_PKG_DIR="${NUGET_CACHE}/bannerlordSearch.source/1.3.1"
+SOURCE_PKG_DIR="${NUGET_CACHE}/bannerlordSearch.source/1.2.12"
 
 if [ ! -d "${SOURCE_PKG_DIR}" ]; then
-  echo "Restoring BannerlordSearch.Source v1.3.1..."
+  echo "Restoring BannerlordSearch.Source v1.2.12..."
   TEMP_DIR=$(mktemp -d)
   trap "rm -rf ${TEMP_DIR}" EXIT
 
@@ -36,7 +36,7 @@ if [ ! -d "${SOURCE_PKG_DIR}" ]; then
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BannerlordSearch.Source" Version="1.3.1" />
+    <PackageReference Include="BannerlordSearch.Source" Version="1.2.12" />
   </ItemGroup>
 </Project>
 CSPROJ
@@ -49,13 +49,13 @@ fi
 
 # ── 3. Locate contentFiles and export BANNERLORD_SOURCE_PATH ───────────────
 SOURCE_CONTENTFILES=$(find "${NUGET_CACHE}" \
-  -ipath "*bannerlordSearch.source/1.3.1/contentfiles*" \
+  -ipath "*bannerlordSearch.source/1.2.12/contentfiles*" \
   -type d -print -quit)
 
 if [ -z "${SOURCE_CONTENTFILES}" ]; then
   # Broader fallback search
   SOURCE_CONTENTFILES=$(find "${NUGET_CACHE}" \
-    -ipath "*bannerlord*source*1.3.1*contentfiles*" \
+    -ipath "*bannerlord*source*1.2.12*contentfiles*" \
     -type d -print -quit)
 fi
 
