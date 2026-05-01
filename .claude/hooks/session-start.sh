@@ -22,7 +22,13 @@ if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
 fi
 
 # ── 2. Restore BannerlordSearch.Source into NuGet global cache ─────────────
-BANNERLORD_SOURCE_VERSION="1.2.12"
+BANNERLORD_SOURCE_VERSION=$(dotnet msbuild "${CLAUDE_PROJECT_DIR}/src/DellarteDellaGuerra/DellarteDellaGuerra.csproj" \
+  -getProperty:GameVersion -nologo 2>/dev/null | tr -d '[:space:]')
+if [ -z "${BANNERLORD_SOURCE_VERSION}" ]; then
+  echo "ERROR: Could not resolve GameVersion from MSBuild." >&2
+  exit 1
+fi
+echo "Resolved Bannerlord source version: ${BANNERLORD_SOURCE_VERSION}"
 NUGET_CACHE="${HOME}/.nuget/packages"
 SOURCE_PKG_DIR="${NUGET_CACHE}/bannerlordSearch.source/${BANNERLORD_SOURCE_VERSION}"
 
