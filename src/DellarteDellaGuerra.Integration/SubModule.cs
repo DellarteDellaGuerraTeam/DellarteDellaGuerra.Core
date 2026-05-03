@@ -17,6 +17,7 @@ using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.Integration.DI;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
+using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Utils;
@@ -104,6 +105,7 @@ namespace DellarteDellaGuerra.Integration
             base.OnBeforeMissionBehaviorInitialize(mission);
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmReloadMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmSmokeMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<RemoveSiegeTowerSpawnersMissionLogic>());
         }
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)

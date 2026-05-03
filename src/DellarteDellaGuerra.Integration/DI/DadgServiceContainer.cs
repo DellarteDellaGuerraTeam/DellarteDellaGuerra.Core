@@ -22,6 +22,7 @@ using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Integration.Music.Patches;
+using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Reward.Spi;
 using DellarteDellaGuerra.Tournament.Reward.Spi.Mapper;
@@ -105,6 +106,7 @@ public class DadgServiceContainer
         services.AddTransient<IWeaponEntityRepository, InMemoryWeaponEntityRepository>();
         services.AddTransient<FirearmReloadMissionLogic>();
         services.AddTransient<FirearmSmokeMissionLogic>();
+        services.AddTransient<RemoveSiegeTowerSpawnersMissionLogic>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
