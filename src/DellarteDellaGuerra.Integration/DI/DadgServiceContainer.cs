@@ -97,6 +97,7 @@ public class DadgServiceContainer
         services.AddTransient<FirearmReloadMissionLogic>();
         services.AddTransient<FirearmSmokeMissionLogic>();
         services.AddTransient<RemoveSiegeTowerSpawnersMissionLogic>();
+        services.AddTransient<LiveWallBreachingMissionLogic>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
