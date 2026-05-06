@@ -120,6 +120,7 @@ namespace DellarteDellaGuerra.Integration
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<RemoveSiegeTowerSpawnersMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<BannerSurcoatMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<TournamentRecapBannerMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<LiveWallBreachingMissionLogic>());
         }
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)

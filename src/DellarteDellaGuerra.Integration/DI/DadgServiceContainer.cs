@@ -106,6 +106,7 @@ public class DadgServiceContainer
         services.AddTransient<RemoveSiegeTowerSpawnersMissionLogic>();
         services.AddTransient<BannerSurcoatMissionLogic>();
         services.AddTransient<TournamentRecapBannerMissionLogic>();
+        services.AddTransient<LiveWallBreachingMissionLogic>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
