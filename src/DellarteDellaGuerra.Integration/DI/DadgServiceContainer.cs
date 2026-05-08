@@ -23,6 +23,7 @@ using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
+using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Reward.Spi;
 using DellarteDellaGuerra.Tournament.Reward.Spi.Mapper;
@@ -126,5 +127,7 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, FixSettlementDistanceCacheFilePathPatch>();
         // POC
         services.AddSingleton<IPatch, PocConfigReaderOverriderPatch>();
+        // Siege engines
+        services.AddSingleton<IPatch, CannonballTrailCleanupPatch>();
     }
 }
