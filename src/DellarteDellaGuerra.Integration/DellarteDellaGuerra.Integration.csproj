@@ -25,16 +25,9 @@
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All"/>
 
-        <Reference Include="Bannerlord.Cannons">
-            <HintPath>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord-v1.2\Modules\Bannerlord.Cannons\Bannerlord.Cannons\obj\x64\Debug\netstandard2.0\Bannerlord.Cannons.dll</HintPath>
-        </Reference>
-
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj"/>
         <ProjectReference Include="..\DellarteDellaGuerra.Infrastructure\DellarteDellaGuerra.Infrastructure.csproj"/>
         <ProjectReference Include="..\DellarteDellaGuerra\DellarteDellaGuerra.csproj"/>
-        <Reference Include="Bannerlord.Cannons.API">
-            <HintPath>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord-v1.2\Modules\Bannerlord.Cannons\Bannerlord.Cannons.API\obj\Debug\netstandard2.0\Bannerlord.Cannons.API.dll</HintPath>
-        </Reference>
     </ItemGroup>
 
     <!-- Project properties -->
@@ -42,16 +35,6 @@
         <Env Condition="'$(Configuration)'=='Release'">prod</Env>
         <Env Condition="'$(Configuration)'=='Debug'">dev</Env>
     </PropertyGroup>
-
-    <Target Name="CopyBannerlordCannonsBinariesToOutput" AfterTargets="CopyBinariesWindows"
-            Condition="$(BuildForWindows) == 'true' AND $(ModuleId) != '' AND Exists($(GameFolder))">
-        <ItemGroup>
-            <BannerlordCannonsBinaries Include="$(MSBuildThisFileDirectory)..\..\..\..\Modules\Bannerlord.Cannons\Bannerlord.Cannons\bin\x64\$(Configuration)\netstandard2.0\*.dll"/>
-            <BannerlordCannonsAPIBinary Include="$(MSBuildThisFileDirectory)..\..\..\..\Modules\Bannerlord.Cannons\Bannerlord.Cannons.API\bin\$(Configuration)\netstandard2.0\Bannerlord.Cannons.API.dll"/>
-        </ItemGroup>
-        <Copy SourceFiles="@(BannerlordCannonsBinaries)" DestinationFolder="$(GameFolder)/Modules/$(ModuleId)/bin/Win64_Shipping_Client" OverwriteReadOnlyFiles="true"/>
-        <Copy SourceFiles="@(BannerlordCannonsAPIBinary)" DestinationFolder="$(GameFolder)/Modules/$(ModuleId)/bin/Win64_Shipping_Client" OverwriteReadOnlyFiles="true"/>
-    </Target>
 
     <Target Name="Copy technical config files to bin folder" BeforeTargets="BeforeBuild">
         <Message Importance="high" Text="Copy config files to bin folder"/>

@@ -1,5 +1,4 @@
 using System;
-using Bannerlord.Cannons.Api;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
@@ -11,6 +10,7 @@ using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Reload;
 using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
+using DellarteDellaGuerra.Infrastructure.DI;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.Events;
 using DellarteDellaGuerra.Infrastructure.Firearm;
@@ -19,7 +19,6 @@ using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
-using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
@@ -42,17 +41,14 @@ public class DadgServiceContainer
         var services = new ServiceCollection();
         services.AddLogging(b => { b.AddNLog(new LoggerConfigPathProvider().Config); });
         RegisterCoreServices(services);
+        services.AddDadgInfrastructure();
         RegisterTournamentServices(services);
-        RegisterSiegeEngineServices(services);
         RegisterDisplayServices(services);
         RegisterMissionServices(services);
         RegisterPatches(services);
         services.AddHarmonyPatching();
         var provider = services.BuildServiceProvider();
-        // Eagerly initialize so LoggerFactoryProvider.Set is called before
-        // Bannerlord.Cannons SubModule's OnSubModuleLoad reads it
-        provider.GetRequiredService<ICannonApi>();
-        return provider;
+        return provider.InitializeDadgInfrastructure();
     }
 
     private static void RegisterCoreServices(IServiceCollection services)
@@ -93,13 +89,6 @@ public class DadgServiceContainer
         services.AddSingleton<ICompilingShaderNotifierConfig>(sp =>
             new CompilingShaderNotifierConfig(sp.GetRequiredService<DadgConfigWatcher>()));
         services.AddSingleton<DisplayShaderNumber>();
-    }
-
-    private static void RegisterSiegeEngineServices(IServiceCollection services)
-    {
-        services.AddSingleton(sp =>
-            CannonApiFactory.Create(sp.GetService<Microsoft.Extensions.Logging.ILoggerFactory>()));
-        services.AddSingleton<ICannonRepository, CannonRepository>();
     }
 
     private static void RegisterMissionServices(IServiceCollection services)
