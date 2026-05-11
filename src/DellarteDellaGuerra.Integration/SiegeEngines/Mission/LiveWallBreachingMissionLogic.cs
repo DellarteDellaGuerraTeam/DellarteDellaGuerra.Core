@@ -107,11 +107,14 @@ public class LiveWallBreachingMissionLogic : MissionLogic
 
         wallSegment.OnChooseUsedWallSegment(isBroken: true);
         UpdateCampaignWallState(wallSection.CampaignWallIndex);
+        var disabledLadderCount = DisableLaddersTargetingBreachedWall(wallSegment);
         RefreshSiegeLanes();
+        ReapplyAttackerSiegeAi();
 
         _logger.Info(
             $"Breached live siege wall. WallSide={wallSegment.DefenseSide}, " +
-            $"CampaignWallIndex={wallSection.CampaignWallIndex?.ToString() ?? "n/a"}.");
+            $"CampaignWallIndex={wallSection.CampaignWallIndex?.ToString() ?? "n/a"}, " +
+            $"DisabledLadders={disabledLadderCount}.");
     }
 
     private static void UpdateCampaignWallState(int? campaignWallIndex)
@@ -134,6 +137,59 @@ public class LiveWallBreachingMissionLogic : MissionLogic
             siegeLane.RefreshLane();
             siegeLane.DetermineLaneState();
             siegeLane.DetermineOrigins();
+        }
+    }
+
+    private int DisableLaddersTargetingBreachedWall(WallSegment breachedWall)
+    {
+        var affectedLadders = Mission.ActiveMissionObjects
+            .FindAllWithType<SiegeLadder>()
+            .Where(ladder => !ladder.IsDisabled && IsLadderTargetingWall(ladder, breachedWall))
+            .ToList();
+
+        foreach (var ladder in affectedLadders)
+        {
+            StopFormationsUsingMachine(ladder);
+            ladder.Disable();
+            ladder.SetAbilityOfFaces(false);
+            ladder.SetDisabledSynched();
+        }
+
+        return affectedLadders.Count;
+    }
+
+    private static bool IsLadderTargetingWall(SiegeLadder ladder, WallSegment breachedWall)
+    {
+        var targetWallEntity = ladder.TargetCastlePosition?.GameEntity;
+        return targetWallEntity != null && ResolveBreachableWall(targetWallEntity) == breachedWall;
+    }
+
+    private void StopFormationsUsingMachine(UsableMachine machine)
+    {
+        foreach (var team in GetAttackerTeams())
+        {
+            foreach (var formation in team.FormationsIncludingSpecialAndEmpty)
+            {
+                if (formation.Detachments.Contains(machine))
+                {
+                    formation.StopUsingMachine(machine);
+                }
+            }
+        }
+    }
+
+    private IEnumerable<Team> GetAttackerTeams()
+    {
+        if (Mission.AttackerTeam != null) yield return Mission.AttackerTeam;
+        if (Mission.AttackerAllyTeam != null) yield return Mission.AttackerAllyTeam;
+    }
+
+    private void ReapplyAttackerSiegeAi()
+    {
+        foreach (var team in GetAttackerTeams())
+        {
+            team.ResetTactic();
+            team.QuerySystem.Expire();
         }
     }
 
