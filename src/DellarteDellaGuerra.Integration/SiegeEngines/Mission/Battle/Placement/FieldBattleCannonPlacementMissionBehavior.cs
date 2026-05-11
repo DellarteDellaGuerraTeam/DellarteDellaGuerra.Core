@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bannerlord.Cannons.Infrastructure.Registry;
+using Bannerlord.Cannons.Integration.Mission.Spawn;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
-using DellarteDellaGuerra.Infrastructure.SiegeEngines.Port;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
@@ -12,6 +13,7 @@ using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Objects.Siege;
 using TaleWorlds.MountAndBlade.View.MissionViews;
 using TaleWorlds.MountAndBlade.View.MissionViews.Order;
+using Team = TaleWorlds.MountAndBlade.Team;
 
 namespace DellarteDellaGuerra.Integration.SiegeEngines.Mission.Battle.Placement;
 
@@ -306,7 +308,7 @@ public class FieldBattleCannonPlacementMissionBehavior : MissionView
         }
 
         GameEntity root = missionObject.GameEntity.Root ?? missionObject.GameEntity;
-        var cannon = FindScriptOfTypeRecursive<DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn.GenericCannon>(root);
+        var cannon = FindScriptOfTypeRecursive<GenericCannon>(root);
         if (cannon == null)
         {
             _logger.Warn($"Spawned prefab '{cannonPrefab}' does not include a GenericCannon script.");
@@ -420,7 +422,7 @@ public class FieldBattleCannonPlacementMissionBehavior : MissionView
 
     private bool IsInsidePlayerDeploymentBoundaries(in WorldPosition targetWorldPosition)
     {
-        TaleWorlds.MountAndBlade.Team playerTeam = Mission.PlayerTeam;
+        Team playerTeam = Mission.PlayerTeam;
         if (playerTeam == null)
             return false;
 
@@ -516,13 +518,13 @@ public class FieldBattleCannonPlacementMissionBehavior : MissionView
 
     private sealed class PlacedCannon
     {
-        public PlacedCannon(DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn.GenericCannon cannon, GameEntity rootEntity)
+        public PlacedCannon(GenericCannon cannon, GameEntity rootEntity)
         {
             Cannon = cannon;
             RootEntity = rootEntity;
         }
 
-        public DellarteDellaGuerra.Integration.SiegeEngines.Mission.Siege.Spawn.GenericCannon Cannon { get; }
+        public GenericCannon Cannon { get; }
         public GameEntity RootEntity { get; }
     }
 }

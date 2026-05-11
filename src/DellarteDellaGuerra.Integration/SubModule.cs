@@ -18,6 +18,7 @@ using DellarteDellaGuerra.Integration.DI;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
+using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Battle.Placement;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Utils;
