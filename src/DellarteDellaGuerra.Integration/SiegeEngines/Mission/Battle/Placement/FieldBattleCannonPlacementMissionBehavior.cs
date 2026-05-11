@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bannerlord.Cannons.Infrastructure.Registry;
 using Bannerlord.Cannons.Integration.Mission.Spawn;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
+using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
@@ -52,12 +52,12 @@ public class FieldBattleCannonPlacementMissionBehavior : MissionView
 
     public FieldBattleCannonPlacementMissionBehavior(
         IFieldBattleCannonPlacementSettingsProvider settingsProvider,
-        ICannonRegistry cannonRegistry,
+        ICannonRepository cannonRepository,
         ILoggerFactory loggerFactory)
     {
         _settingsProvider = settingsProvider;
         _logger = loggerFactory.CreateLogger<FieldBattleCannonPlacementMissionBehavior>();
-        _availableCannonIds = cannonRegistry.GetAllCannons()
+        _availableCannonIds = cannonRepository.GetAllCannons()
             .Select(c => c.Id)
             .Distinct()
             .ToList();
