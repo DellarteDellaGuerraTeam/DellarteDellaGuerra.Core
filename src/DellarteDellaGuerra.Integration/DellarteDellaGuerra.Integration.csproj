@@ -11,19 +11,14 @@
         <BuildForWindowsStore>true</BuildForWindowsStore>
         <ModuleId>DellarteDellaGuerra.Core</ModuleId>
         <ModuleName>Dell'Arte Della Guerra Core</ModuleName>
-    </PropertyGroup>
 
+        <GameFolder>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\..\..\..'))</GameFolder>
+    </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Bannerlord.BuildResources" Version="1.1.0.104" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
-
         <PackageReference Include="IsExternalInit" Version="1.0.3" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
         <PackageReference Include="NLog" Version="5.3.4"/>
         <PackageReference Include="NLog.Extensions.Logging" Version="5.3.14"/>
-        
-<!--        <PackageReference Include="Bannerlord.Cannons" Version="0.4.1"/>-->
-        <Reference Include="Bannerlord.Cannons">
-            <HintPath>D:/SteamLibrary/steamapps/common/Mount &amp; Blade II Bannerlord-v1.2/Modules/Bannerlord.Cannons/bin/Win64_Shipping_Client/Bannerlord.Cannons.dll</HintPath>
-        </Reference>        
         <PackageReference Include="Harmony.DependencyInjection" Version="0.2.0"/>
 
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All"/>
@@ -56,6 +51,16 @@
             <LogConfigFile Include="$(MSBuildThisFileDirectory)..\technical-config\nlog.$(Env).config"/>
         </ItemGroup>
         <Copy SourceFiles="@(LogConfigFile)" DestinationFiles="$(MSBuildThisFileDirectory)..\..\config\nlog.config"/>
+    </Target>
+
+    <Target Name="Copy module binaries to wEditor" AfterTargets="CopyBinariesWindows"
+            Condition="$(BuildForWindows) == 'true' AND $(ModuleId) != '' AND Exists($(GameFolder))">
+        <CreateDirectory Directory="$(GameFolder)/Modules/$(ModuleId)/bin/Win64_Shipping_wEditor" />
+
+        <CopyFolder FromDirectory="$(TargetDir)"
+                    ToDirectory="$(GameFolder)/Modules/$(ModuleId)/bin/Win64_Shipping_wEditor"
+                    Regex="$(PostBuildCopyToModulesRegex)"
+                    Clean="true" />
     </Target>
 
 </Project>

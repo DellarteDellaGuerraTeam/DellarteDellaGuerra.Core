@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <Target Name="Copy TaleWorlds binaries to local cache" AfterTargets="Build">
-    <Copy SourceFiles="@(TalewordsSources)" DestinationFolder="$(outputPath)"/>
+    <Copy SourceFiles="@(TalewordsSources)" DestinationFolder="$(OutputPath)"/>
   </Target>
 
 </Project>
