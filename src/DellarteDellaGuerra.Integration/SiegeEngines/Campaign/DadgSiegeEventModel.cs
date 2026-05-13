@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
-using DellarteDellaGuerra.Integration.SiegeEngines.Util;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
@@ -15,18 +14,12 @@ namespace DellarteDellaGuerra.Integration.SiegeEngines.Campaign
     {
         private readonly ILogger _logger;
         private readonly SiegeEventModel _defaultSiegeEventModel;
-        private readonly ICannonPrefabProvider _prefabProvider;
-        private readonly ICannonAvailabilityProvider _availabilityProvider;
 
         public DadgSiegeEventModel(
             SiegeEventModel defaultSiegeEventModel,
-            ICannonPrefabProvider prefabProvider,
-            ICannonAvailabilityProvider availabilityProvider,
             ILoggerFactory loggerFactory)
         {
             _defaultSiegeEventModel = defaultSiegeEventModel;
-            _prefabProvider = prefabProvider;
-            _availabilityProvider = availabilityProvider;
             _logger = loggerFactory.CreateLogger<DadgSiegeEventModel>();
         }
 
@@ -60,35 +53,28 @@ namespace DellarteDellaGuerra.Integration.SiegeEngines.Campaign
         public override string GetSiegeEngineMapPrefabName(SiegeEngineType siegeEngineType, int wallLevel,
             BattleSideEnum side)
         {
-            var prefabName = _prefabProvider.GetCampaignMapPrefabName(siegeEngineType.StringId, wallLevel, side);
-            return prefabName ?? _defaultSiegeEventModel.GetSiegeEngineMapPrefabName(siegeEngineType, wallLevel, side);
+            return _defaultSiegeEventModel.GetSiegeEngineMapPrefabName(siegeEngineType, wallLevel, side);
         }
 
         public override string GetSiegeEngineMapProjectilePrefabName(SiegeEngineType siegeEngineType)
         {
-            var projectilePrefab = _prefabProvider.GetCampaignMapProjectilePrefabName(siegeEngineType.StringId);
-            return projectilePrefab ?? _defaultSiegeEventModel.GetSiegeEngineMapProjectilePrefabName(siegeEngineType);
+            return _defaultSiegeEventModel.GetSiegeEngineMapProjectilePrefabName(siegeEngineType);
         }
 
         public override string GetSiegeEngineMapReloadAnimationName(SiegeEngineType siegeEngineType,
             BattleSideEnum side)
         {
-            var reloadPrefab = _prefabProvider.GetCampaignMapReloadAnimationName(siegeEngineType.StringId);
-            return reloadPrefab ?? _defaultSiegeEventModel.GetSiegeEngineMapReloadAnimationName(siegeEngineType, side);
+            return _defaultSiegeEventModel.GetSiegeEngineMapReloadAnimationName(siegeEngineType, side);
         }
 
         public override string GetSiegeEngineMapFireAnimationName(SiegeEngineType siegeEngineType, BattleSideEnum side)
         {
-            var firePrefab = _prefabProvider.GetCampaignMapFireAnimationName(siegeEngineType.StringId);
-            return firePrefab ?? _defaultSiegeEventModel.GetSiegeEngineMapFireAnimationName(siegeEngineType, side);
+            return _defaultSiegeEventModel.GetSiegeEngineMapFireAnimationName(siegeEngineType, side);
         }
 
         public override sbyte GetSiegeEngineMapProjectileBoneIndex(SiegeEngineType siegeEngineType, BattleSideEnum side)
         {
-            var boneIndex = _prefabProvider.GetCampaignMapProjectileBoneIndex(siegeEngineType.StringId);
-            return boneIndex >= 0
-                ? (sbyte)boneIndex
-                : _defaultSiegeEventModel.GetSiegeEngineMapProjectileBoneIndex(siegeEngineType, side);
+            return _defaultSiegeEventModel.GetSiegeEngineMapProjectileBoneIndex(siegeEngineType, side);
         }
 
         public override float GetSiegeStrategyScore(SiegeEvent siege, BattleSideEnum side, SiegeStrategy strategy) =>
@@ -106,18 +92,14 @@ namespace DellarteDellaGuerra.Integration.SiegeEngines.Campaign
 
         public override IEnumerable<SiegeEngineType> GetAvailableAttackerRangedSiegeEngines(PartyBase party)
         {
-            var baseEngines = _defaultSiegeEventModel.GetAvailableAttackerRangedSiegeEngines(party)
+            return _defaultSiegeEventModel.GetAvailableAttackerRangedSiegeEngines(party)
                 .Where(e => !GetUnwantedSiegeEngines().Contains(e));
-            var cannonEngines = _availabilityProvider.GetAvailableCannons(party, BattleSideEnum.Attacker);
-            return baseEngines.Concat(cannonEngines);
         }
 
         public override IEnumerable<SiegeEngineType> GetAvailableDefenderSiegeEngines(PartyBase party)
         {
-            var baseEngines = _defaultSiegeEventModel.GetAvailableDefenderSiegeEngines(party)
+            return _defaultSiegeEventModel.GetAvailableDefenderSiegeEngines(party)
                 .Where(e => !GetUnwantedSiegeEngines().Contains(e));
-            var cannonEngines = _availabilityProvider.GetAvailableCannons(party, BattleSideEnum.Defender);
-            return baseEngines.Concat(cannonEngines);
         }
 
         public override IEnumerable<SiegeEngineType> GetAvailableAttackerRamSiegeEngines(PartyBase party) =>
@@ -128,36 +110,14 @@ namespace DellarteDellaGuerra.Integration.SiegeEngines.Campaign
 
         public override IEnumerable<SiegeEngineType> GetPrebuiltSiegeEnginesOfSettlement(Settlement settlement)
         {
-            var defaultCannon = _availabilityProvider
-                .GetAvailableCannons(null, BattleSideEnum.Defender)
-                .FirstOrDefault();
-
-            if (defaultCannon is null)
-            {
-                _logger.Warn("No pre-built defender alternative could be found to forbidden native siege engines");
-                return _defaultSiegeEventModel.GetPrebuiltSiegeEnginesOfSettlement(settlement)
-                    .Where(e => !GetUnwantedSiegeEngines().Contains(e));
-            }
-
             return _defaultSiegeEventModel.GetPrebuiltSiegeEnginesOfSettlement(settlement)
-                .Select(e => GetUnwantedSiegeEngines().Contains(e) ? defaultCannon : e);
+                    .Where(e => !GetUnwantedSiegeEngines().Contains(e));
         }
 
         public override IEnumerable<SiegeEngineType> GetPrebuiltSiegeEnginesOfSiegeCamp(BesiegerCamp camp)
         {
-            var defaultCannon = _availabilityProvider
-                .GetAvailableCannons(camp.LeaderParty.Party, BattleSideEnum.Attacker)
-                .FirstOrDefault();
-
-            if (defaultCannon is null)
-            {
-                _logger.Warn("No pre-built attacker alternative could be found to forbidden native siege engines");
-                return _defaultSiegeEventModel.GetPrebuiltSiegeEnginesOfSiegeCamp(camp)
-                    .Where(e => !GetUnwantedSiegeEngines().Contains(e));
-            }
-
             return _defaultSiegeEventModel.GetPrebuiltSiegeEnginesOfSiegeCamp(camp)
-                .Select(e => GetUnwantedSiegeEngines().Contains(e) ? defaultCannon : e);
+                .Where(e => !GetUnwantedSiegeEngines().Contains(e));
         }
 
         public override float GetSiegeEngineHitPoints(SiegeEvent siegeEvent, SiegeEngineType siegeEngine,
