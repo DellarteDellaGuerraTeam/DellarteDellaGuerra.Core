@@ -25,6 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DellarteDellaGuerra.Integration\DellarteDellaGuerra.Integration.csproj" />
     <ProjectReference Include="..\DellarteDellaGuerra.Infrastructure\DellarteDellaGuerra.Infrastructure.csproj" />
     <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />

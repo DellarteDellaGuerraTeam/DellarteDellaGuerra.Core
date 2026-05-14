@@ -9,22 +9,22 @@
   <ModuleType value="Community" />
   <!-- Community Dependency Metadata -->
   <DependedModules>
-    <DependedModule Id="Bannerlord.Harmony" DependentVersion="v2.3.0"/>
-    <DependedModule Id="Native" DependentVersion="v1.3.8"/>
-    <DependedModule Id="SandBoxCore" DependentVersion="v1.3.8"/>
-    <DependedModule Id="Sandbox" DependentVersion="v1.3.8"/>
-    <DependedModule Id="CustomBattle" DependentVersion="v1.3.8"/>
-    <DependedModule Id="StoryMode" DependentVersion="v1.3.8"/>
+    <DependedModule Id="Bannerlord.Harmony" DependentVersion="v2.4.2"/>
+    <DependedModule Id="Native" DependentVersion="v1.3.15"/>
+    <DependedModule Id="SandBoxCore" DependentVersion="v1.3.15"/>
+    <DependedModule Id="Sandbox" DependentVersion="v1.3.15"/>
+    <DependedModule Id="CustomBattle" DependentVersion="v1.3.15"/>
+    <DependedModule Id="StoryMode" DependentVersion="v1.3.15"/>
   </DependedModules>
   <!-- Community Dependency Metadata -->
   <!-- https://github.com/BUTR/Bannerlord.BLSE#community-dependency-metadata -->
   <DependedModuleMetadatas>
-    <DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" version="v2.3.0"/>
-    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.3.8.*"/>
-    <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" version="v1.3.8.*"/>
-    <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" version="v1.3.8.*"/>
-    <DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" version="v1.3.8.*"/>
-    <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" version="v1.3.8.*"/>
+    <DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" version="v2.4.2"/>
+    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.3.15.*"/>
+    <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" version="v1.3.15.*"/>
+    <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" version="v1.3.15.*"/>
+    <DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" version="v1.3.15.*"/>
+    <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" version="v1.3.15.*"/>
   </DependedModuleMetadatas>
   <SubModules>
     <SubModule>
