@@ -69,6 +69,7 @@ namespace DellarteDellaGuerra.Integration
 
         protected override void OnSubModuleLoad()
         {
+            _serviceProvider = new DadgServiceContainer().Build();
             _serviceProvider.GetRequiredService<IEventPublisher<SubModuleLoadEvent>>()
                 .Publish(new SubModuleLoadEvent());
 
