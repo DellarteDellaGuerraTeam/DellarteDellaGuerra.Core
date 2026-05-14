@@ -5,6 +5,7 @@ using System.Xml;
 using Bannerlord.ExpandedTemplate.API;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders;
+using DellarteDellaGuerra.MainMenu;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Firearm;
@@ -65,6 +66,9 @@ namespace DellarteDellaGuerra.Integration
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             InfoPrinter.Display("DADG loaded");
+            var currentModule = TaleWorlds.MountAndBlade.Module.CurrentModule;
+            new DadgCampaignStartButtonAdder().AddDadgCampaignStartButton(currentModule);
+            new VanillaCampaignButtonsRemover().RemoveVanillaCampaignOptions(currentModule);
         }
 
         protected override void OnSubModuleLoad()
