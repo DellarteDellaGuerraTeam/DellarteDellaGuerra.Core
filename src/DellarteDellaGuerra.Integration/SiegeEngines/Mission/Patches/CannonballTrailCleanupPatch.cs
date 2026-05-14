@@ -22,7 +22,7 @@ public class CannonballTrailCleanupPatch : IPatch
 
     private static void Postfix(TaleWorlds.MountAndBlade.Mission __instance, int missileIndex)
     {
-        var missile = __instance.Missiles.FirstOrDefault(m => m.Index == missileIndex);
+        var missile = __instance.MissilesList.FirstOrDefault(m => m.Index == missileIndex);
         if (missile?.Weapon.CurrentUsageItem?.TrailParticleName != CannonballTrailParticleName)
             return;
 
