@@ -21,61 +21,78 @@ if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
   echo "export PATH=${DOTNET_INSTALL_DIR}:${DOTNET_INSTALL_DIR}/tools:\${PATH}" >> "${CLAUDE_ENV_FILE}"
 fi
 
-# ── 2. Restore BannerlordSearch.Source into NuGet global cache ─────────────
-BANNERLORD_SOURCE_VERSION=$(dotnet msbuild "${CLAUDE_PROJECT_DIR}/src/DellarteDellaGuerra/DellarteDellaGuerra.csproj" \
+# ── 2. Resolve Bannerlord source versions ──────────────────────────────────
+# Primary version comes from the project's MSBuild GameVersion property
+# (tracks supported-game-versions.txt). -p:GameFolder=_ skips game-folder
+# resolution so a path like "Mount & Blade II Bannerlord" never reaches bash.
+PRIMARY_VERSION=$(dotnet msbuild "${CLAUDE_PROJECT_DIR}/src/DellarteDellaGuerra/DellarteDellaGuerra.csproj" \
   -getProperty:GameVersion -nologo -verbosity:quiet \
   "-p:GameFolder=_" \
   2>/dev/null | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
-if [ -z "${BANNERLORD_SOURCE_VERSION}" ]; then
+if [ -z "${PRIMARY_VERSION}" ]; then
   echo "ERROR: Could not resolve GameVersion from MSBuild." >&2
   exit 1
 fi
-echo "Resolved Bannerlord source version: ${BANNERLORD_SOURCE_VERSION}"
+echo "Primary Bannerlord source version: ${PRIMARY_VERSION}"
+
+# Additional versions — add/remove entries here as needed.
+# Each gets its own MCP server instance on a successive port (5001, 5002, ...).
+ADDITIONAL_VERSIONS=("1.3.0")
+
+# All versions in port order: primary on BASE_PORT, additional on BASE_PORT+1, ...
+ALL_VERSIONS=("${PRIMARY_VERSION}" "${ADDITIONAL_VERSIONS[@]}")
+BASE_PORT=5000
+
+# ── 3. Restore BannerlordSearch.Source for each version ────────────────────
 NUGET_CACHE="${HOME}/.nuget/packages"
-SOURCE_PKG_DIR="${NUGET_CACHE}/bannerlordSearch.source/${BANNERLORD_SOURCE_VERSION}"
+CONTENT_PATHS=()  # parallel array to ALL_VERSIONS
 
-if [ ! -d "${SOURCE_PKG_DIR}" ]; then
-  echo "Restoring BannerlordSearch.Source v${BANNERLORD_SOURCE_VERSION}..."
-  TEMP_DIR=$(mktemp -d)
-  trap "rm -rf ${TEMP_DIR}" EXIT
+for VERSION in "${ALL_VERSIONS[@]}"; do
+  SOURCE_PKG_DIR="${NUGET_CACHE}/bannerlordSearch.source/${VERSION}"
 
-  cat > "${TEMP_DIR}/tmp.csproj" << CSPROJ
+  if [ ! -d "${SOURCE_PKG_DIR}" ]; then
+    echo "Restoring BannerlordSearch.Source v${VERSION}..."
+    TEMP_DIR=$(mktemp -d)
+    cat > "${TEMP_DIR}/tmp.csproj" << CSPROJ
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BannerlordSearch.Source" Version="${BANNERLORD_SOURCE_VERSION}" />
+    <PackageReference Include="BannerlordSearch.Source" Version="${VERSION}" />
   </ItemGroup>
 </Project>
 CSPROJ
-
-  dotnet restore "${TEMP_DIR}/tmp.csproj" 2>&1
-  echo "BannerlordSearch.Source restored."
-else
-  echo "BannerlordSearch.Source already in NuGet cache."
-fi
-
-# ── 3. Locate contentFiles and export BANNERLORD_SOURCE_PATH ───────────────
-SOURCE_CONTENTFILES=$(find "${NUGET_CACHE}" \
-  -ipath "*bannerlordSearch.source/${BANNERLORD_SOURCE_VERSION}/contentfiles*" \
-  -type d -print -quit)
-
-if [ -z "${SOURCE_CONTENTFILES}" ]; then
-  # Broader fallback search
-  SOURCE_CONTENTFILES=$(find "${NUGET_CACHE}" \
-    -ipath "*bannerlord*source*${BANNERLORD_SOURCE_VERSION}*contentfiles*" \
-    -type d -print -quit)
-fi
-
-if [ -n "${SOURCE_CONTENTFILES}" ]; then
-  echo "BANNERLORD_SOURCE_PATH=${SOURCE_CONTENTFILES}"
-  if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
-    echo "export BANNERLORD_SOURCE_PATH=${SOURCE_CONTENTFILES}" >> "${CLAUDE_ENV_FILE}"
+    dotnet restore "${TEMP_DIR}/tmp.csproj" 2>&1 \
+      || echo "WARNING: Could not restore BannerlordSearch.Source v${VERSION}."
+    rm -rf "${TEMP_DIR}"
+  else
+    echo "BannerlordSearch.Source v${VERSION} already in NuGet cache."
   fi
-  export BANNERLORD_SOURCE_PATH="${SOURCE_CONTENTFILES}"
-else
-  echo "WARNING: Could not locate BannerlordSearch.Source contentFiles in NuGet cache."
+
+  CONTENT=$(find "${NUGET_CACHE}" \
+    -ipath "*bannerlordSearch.source/${VERSION}/contentfiles*" \
+    -type d -print -quit 2>/dev/null || true)
+  if [ -z "${CONTENT}" ]; then
+    CONTENT=$(find "${NUGET_CACHE}" \
+      -ipath "*bannerlord*source*${VERSION}*contentfiles*" \
+      -type d -print -quit 2>/dev/null || true)
+  fi
+
+  if [ -n "${CONTENT}" ]; then
+    echo "Found source for v${VERSION}: ${CONTENT}"
+  else
+    echo "WARNING: Could not locate contentFiles for v${VERSION}."
+  fi
+  CONTENT_PATHS+=("${CONTENT:-}")
+done
+
+# Export the primary version's path for session-level use
+if [ -n "${CONTENT_PATHS[0]:-}" ]; then
+  export BANNERLORD_SOURCE_PATH="${CONTENT_PATHS[0]}"
+  if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
+    echo "export BANNERLORD_SOURCE_PATH='${CONTENT_PATHS[0]}'" >> "${CLAUDE_ENV_FILE}"
+  fi
 fi
 
 # ── 4. Install BannerlordSearch.Mcp.Server global tool (idempotent) ──────────
@@ -87,11 +104,7 @@ else
   echo "BannerlordSearch.Mcp.Server already installed."
 fi
 
-# ── 5. Start MCP server on http://localhost:5000 (streamable HTTP) ────────────
-MCP_LOG="/tmp/bannerlord-mcp-server.log"
-
-# Resolve the actual command name registered by the global tool
-# (dotnet tool run is for local manifest tools only; global tools are called directly)
+# ── 5. Start one MCP server instance per version ───────────────────────────
 TOOL_CMD=$(dotnet tool list -g 2>/dev/null | grep -i "BannerlordSearch.Mcp.Server" | awk '{print $NF}')
 if [ -z "${TOOL_CMD}" ]; then
   echo "ERROR: BannerlordSearch.Mcp.Server not found in global tools. Install may have failed." >&2
@@ -99,37 +112,46 @@ if [ -z "${TOOL_CMD}" ]; then
 fi
 echo "Resolved MCP server command: ${TOOL_CMD}"
 
-if curl -s "http://localhost:5000" >/dev/null 2>&1; then
-  echo "BannerlordSearch.Mcp.Server already running on http://localhost:5000, skipping start."
-else
-  pkill -f "BannerlordSearch.Mcp.Server" 2>/dev/null || true
-  sleep 1
+pkill -f "BannerlordSearch.Mcp.Server" 2>/dev/null || true
+sleep 1
 
-  nohup "${TOOL_CMD}" \
-    --transport streamable-http \
-    --urls "http://localhost:5000" \
+STARTED_PORTS=()
+for i in "${!ALL_VERSIONS[@]}"; do
+  VERSION="${ALL_VERSIONS[$i]}"
+  PORT=$((BASE_PORT + i))
+  CONTENT="${CONTENT_PATHS[$i]:-}"
+
+  if [ -z "${CONTENT}" ]; then
+    echo "Skipping MCP server for v${VERSION} — source not found."
+    continue
+  fi
+
+  MCP_LOG="/tmp/bannerlord-mcp-server-${VERSION}.log"
+  env BANNERLORD_SOURCE_PATH="${CONTENT}" \
+    nohup "${TOOL_CMD}" \
+      --transport streamable-http \
+      --urls "http://localhost:${PORT}" \
     > "${MCP_LOG}" 2>&1 &
 
-  MCP_PID=$!
-  echo "BannerlordSearch.Mcp.Server starting (PID: ${MCP_PID}), log: ${MCP_LOG}"
+  echo "BannerlordSearch.Mcp.Server v${VERSION} starting on port ${PORT} (PID: $!), log: ${MCP_LOG}"
+  STARTED_PORTS+=("${PORT}")
+done
 
-  # Wait for server to become ready (up to 60s).
-  # Use curl without -f so that 4xx responses (e.g. 400 "session id required")
-  # are still treated as "server is up".
+# Wait for each started server to become ready (up to 60s).
+# Use curl without -f so 4xx responses (e.g. "session id required") count as ready.
+for PORT in "${STARTED_PORTS[@]}"; do
   ready=0
   for i in $(seq 1 60); do
-    if curl -s "http://localhost:5000" >/dev/null 2>&1; then
-      echo "MCP server is ready."
+    if curl -s "http://localhost:${PORT}" >/dev/null 2>&1; then
+      echo "MCP server on port ${PORT} is ready."
       ready=1
       break
     fi
     sleep 1
   done
-
   if [ "${ready}" -eq 0 ]; then
-    echo "ERROR: MCP server did not become ready within 60 seconds. Check ${MCP_LOG}." >&2
-    exit 1
+    echo "WARNING: MCP server on port ${PORT} did not become ready within 60 seconds." >&2
   fi
-fi
+done
 
 echo "Session start hook completed."
