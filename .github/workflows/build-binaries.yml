@@ -32,7 +32,7 @@ jobs:
 
       - name: Compress Artifact
         run: |
-          7z a -t7z artifact.7z ./artifact/* -mx9
+          zip -r artifact.zip ./artifact/*
 
       - name: Install Bannerlord.ChangelogParser
         run: dotnet tool install -g Bannerlord.ChangelogParser
@@ -101,8 +101,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifact.7z
-          asset_name: latest-${{ steps.get_branch.outputs.branch_name }}-bin.7z
-          asset_content_type: application/x-7z-compressed
+          asset_path: ./artifact.zip
+          asset_name: latest-${{ steps.get_branch.outputs.branch_name }}-bin.zip
+          asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
