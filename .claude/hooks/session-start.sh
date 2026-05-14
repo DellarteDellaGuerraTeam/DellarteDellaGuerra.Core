@@ -1,24 +1,29 @@
 #!/bin/bash
 set -euo pipefail
 
-DOTNET_INSTALL_DIR="${HOME}/.dotnet"
-export DOTNET_ROOT="${DOTNET_INSTALL_DIR}"
-export PATH="${DOTNET_INSTALL_DIR}:${DOTNET_INSTALL_DIR}/tools:${PATH}"
-
 # ── 1. Install .NET SDK if missing ─────────────────────────────────────────
-if ! command -v dotnet >/dev/null 2>&1 || [ ! -f "${DOTNET_INSTALL_DIR}/dotnet" ]; then
-  echo "Installing .NET SDK..."
-  curl -fsSL https://dot.net/v1/dotnet-install.sh \
-    | bash -s -- --channel 10.0 --install-dir "${DOTNET_INSTALL_DIR}"
-  echo ".NET SDK installed."
+if ! command -v dotnet >/dev/null 2>&1; then
+  echo "Installing .NET SDK 10.0 via apt..."
+  apt-get update -qq
+  apt-get install -y dotnet-sdk-10.0
+  echo ".NET SDK installed: $(dotnet --version)"
 else
   echo ".NET SDK already present: $(dotnet --version)"
 fi
 
-# Persist dotnet on PATH for the session (only when running inside Claude Code)
+# Tests target net8.0 — ensure the runtime is available
+if ! dotnet --list-runtimes 2>/dev/null | grep -q "Microsoft.NETCore.App 8\."; then
+  echo "Installing .NET 8 runtime..."
+  apt-get install -y dotnet-runtime-8.0 2>/dev/null || apt-get update -qq && apt-get install -y dotnet-runtime-8.0
+  echo ".NET 8 runtime installed."
+else
+  echo ".NET 8 runtime already present."
+fi
+
+# dotnet global tools live in ~/.dotnet/tools — add to PATH
+export PATH="${HOME}/.dotnet/tools:${PATH}"
 if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
-  echo "export DOTNET_ROOT=${DOTNET_INSTALL_DIR}" >> "${CLAUDE_ENV_FILE}"
-  echo "export PATH=${DOTNET_INSTALL_DIR}:${DOTNET_INSTALL_DIR}/tools:\${PATH}" >> "${CLAUDE_ENV_FILE}"
+  echo "export PATH=${HOME}/.dotnet/tools:\${PATH}" >> "${CLAUDE_ENV_FILE}"
 fi
 
 # ── 2. Resolve Bannerlord source versions ──────────────────────────────────
@@ -37,7 +42,7 @@ echo "Primary Bannerlord source version: ${PRIMARY_VERSION}"
 
 # Additional versions — add/remove entries here as needed.
 # Each gets its own MCP server instance on a successive port (5001, 5002, ...).
-ADDITIONAL_VERSIONS=("1.3.0")
+ADDITIONAL_VERSIONS=("1.3.1")
 
 # All versions in port order: primary on BASE_PORT, additional on BASE_PORT+1, ...
 ALL_VERSIONS=("${PRIMARY_VERSION}" "${ADDITIONAL_VERSIONS[@]}")
