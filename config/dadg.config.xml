@@ -1,3 +1,4 @@
 <DadgConfiguration>
   <EnableShaderCompilationNotifications>true</EnableShaderCompilationNotifications>
+  <EnableAdvancedBannerBuilder>true</EnableAdvancedBannerBuilder>
 </DadgConfiguration>

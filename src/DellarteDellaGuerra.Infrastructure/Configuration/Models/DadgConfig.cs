@@ -17,5 +17,13 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Models
          */
         [XmlElement(ElementName = "EnableShaderCompilationNotifications")]
         public bool EnableShaderCompilationNotifications { get; set; } = true;
+
+        /**
+         * <summary>
+         * Gets or sets a value indicating whether the native banner editor is replaced by the advanced Banner Builder.
+         * </summary>
+         */
+        [XmlElement(ElementName = "EnableAdvancedBannerBuilder")]
+        public bool EnableAdvancedBannerBuilder { get; set; } = true;
     }
 }

@@ -2,6 +2,7 @@ using System;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
+using DellarteDellaGuerra.Domain.CharacterCreation.Ports;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders.Ports;
 using DellarteDellaGuerra.Domain.SiegeEngines;
@@ -11,6 +12,7 @@ using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Reload;
 using DellarteDellaGuerra.Infrastructure.Cannon.Infra.Repo;
 using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
+using DellarteDellaGuerra.Infrastructure.CharacterCreation.Providers;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.Events;
@@ -66,6 +68,8 @@ public class DadgServiceContainer
             new LoggerFactory(
                 sp.GetRequiredService<Microsoft.Extensions.Logging.ILoggerFactory>()));
         services.AddSingleton<DadgConfigWatcher>();
+        services.AddSingleton<IAdvancedBannerBuilderConfig>(sp =>
+            new AdvancedBannerBuilderConfig(sp.GetRequiredService<DadgConfigWatcher>()));
         RegisterEvent<SubModuleLoadEvent>(services);
         services.AddSingleton<CampaignBehaviourDisabler>();
         services.AddSingleton<FirearmSkillProvider>();
@@ -148,6 +152,8 @@ public class DadgServiceContainer
         // Character creation
         services.AddSingleton<IPatch, MainMenuOptionPatches>();
         services.AddSingleton<IPatch, DisableSortingBehaviourInCultureMenuPatch>();
+        services.AddSingleton<IPatch, RedirectBannerEditorStateToBannerBuilderPatch>();
+        services.AddSingleton<IPatch, PersistBannerBuilderResultPatch>();
         // Firearm
         services.AddSingleton<IPatch, AddFirearmSkillAsRelevantSkillPatch>();
         services.AddSingleton<IPatch, GetHolsterImageForBuIletsInInventoryPatch>();
