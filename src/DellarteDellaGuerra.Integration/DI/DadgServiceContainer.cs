@@ -1,5 +1,6 @@
 using System;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
+using DellarteDellaGuerra.MainMenu;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
@@ -59,6 +60,8 @@ public class DadgServiceContainer
         services.AddSingleton<DadgConfigWatcher>();
         RegisterEvent<SubModuleLoadEvent>(services);
         services.AddSingleton<CampaignBehaviourDisabler>();
+        services.AddSingleton<DadgCampaignStartButtonAdder>();
+        services.AddSingleton<VanillaCampaignButtonsRemover>();
         services.AddSingleton<FirearmSkillProvider>();
         services.AddSingleton<IMBObjectProvider<SkillObject>>(sp => sp.GetRequiredService<FirearmSkillProvider>());
     }
