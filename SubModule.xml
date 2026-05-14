@@ -9,28 +9,34 @@
   <ModuleType value="Community" />
   <!-- Community Dependency Metadata -->
   <DependedModules>
-    <DependedModule Id="Bannerlord.Harmony" DependentVersion="v$harmonyversion$"/>
-    <DependedModule Id="Native" DependentVersion="v1.4.0-beta"/>
-    <DependedModule Id="SandBoxCore" DependentVersion="v1.4.0-beta"/>
-    <DependedModule Id="Sandbox" DependentVersion="v1.4.0-beta"/>
-    <DependedModule Id="CustomBattle" DependentVersion="v1.4.0-beta"/>
-    <DependedModule Id="StoryMode" DependentVersion="v1.4.0-beta"/>
+    <DependedModule Id="Bannerlord.Harmony" DependentVersion="v2.4.2"/>
+    <DependedModule Id="Native" DependentVersion="v1.3.15"/>
+    <DependedModule Id="SandBoxCore" DependentVersion="v1.3.15"/>
+    <DependedModule Id="Sandbox" DependentVersion="v1.3.15"/>
+    <DependedModule Id="CustomBattle" DependentVersion="v1.3.15"/>
+    <DependedModule Id="StoryMode" DependentVersion="v1.3.15"/>
   </DependedModules>
   <!-- Community Dependency Metadata -->
   <!-- https://github.com/BUTR/Bannerlord.BLSE#community-dependency-metadata -->
   <DependedModuleMetadatas>
-    <DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" version="v$harmonyversion$"/>
-    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.4.0-beta.*"/>
-    <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" version="v1.4.0-beta.*"/>
-    <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" version="v1.4.0-beta.*"/>
-    <DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" version="v1.4.0-beta.*"/>
-    <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" version="v1.4.0-beta.*"/>
+    <DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" version="v2.4.2"/>
+    <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="v1.3.15.*"/>
+    <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" version="v1.3.15.*"/>
+    <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" version="v1.3.15.*"/>
+    <DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" version="v1.3.15.*"/>
+    <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" version="v1.3.15.*"/>
   </DependedModuleMetadatas>
   <SubModules>
     <SubModule>
       <Name value="DellarteDellaGuerra"/>
-      <DLLName value="DellarteDellaGuerra.Infrastructure.dll"/>
-      <SubModuleClassType value="DellarteDellaGuerra.Infrastructure.SubModule"/>
+      <DLLName value="DellarteDellaGuerra.Integration.dll"/>
+      <SubModuleClassType value="DellarteDellaGuerra.Integration.SubModule"/>
+      <Tags />
+    </SubModule>
+    <SubModule>
+      <Name value="Bannerlord.Cannons"/>
+      <DLLName value="Bannerlord.Cannons.dll"/>
+      <SubModuleClassType value="Bannerlord.Cannons.SubModule"/>
       <Tags />
     </SubModule>
   </SubModules>
