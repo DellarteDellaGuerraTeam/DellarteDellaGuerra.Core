@@ -67,8 +67,8 @@ namespace DellarteDellaGuerra.Integration
         {
             InfoPrinter.Display("DADG loaded");
             var currentModule = TaleWorlds.MountAndBlade.Module.CurrentModule;
-            new DadgCampaignStartButtonAdder().AddDadgCampaignStartButton(currentModule);
-            new VanillaCampaignButtonsRemover().RemoveVanillaCampaignOptions(currentModule);
+            _serviceProvider.GetRequiredService<DadgCampaignStartButtonAdder>().AddDadgCampaignStartButton(currentModule);
+            _serviceProvider.GetRequiredService<VanillaCampaignButtonsRemover>().RemoveVanillaCampaignOptions(currentModule);
         }
 
         protected override void OnSubModuleLoad()
