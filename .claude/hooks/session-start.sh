@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+# Only run in remote (Claude Code on the web) environments
+if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
+  exit 0
+fi
+
 # ── 1. Install .NET SDK if missing ─────────────────────────────────────────
 if ! command -v dotnet >/dev/null 2>&1; then
   echo "Installing .NET SDK 10.0 via apt..."
