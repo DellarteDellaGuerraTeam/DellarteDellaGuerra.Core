@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'SCRIPT=\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh\"; if [ \"$(uname -s)\" = Linux ]; then exec \"$SCRIPT\"; elif command -v wsl.exe >/dev/null 2>&1; then wsl.exe bash \"$SCRIPT\"; fi'"
+            "command": "bash -c 'S=\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh\"; if [ \"$(uname -s)\" = Linux ]; then exec \"$S\"; elif command -v wsl.exe >/dev/null 2>&1; then case \"$S\" in /mnt/[a-zA-Z]/*) W=\"$S\";; *) W=$(wsl.exe wslpath -u \"$S\" 2>/dev/null | tr -d \"\\r\");; esac; [ -n \"$W\" ] && wsl.exe bash \"$W\"; fi'"
           }
         ]
       }
