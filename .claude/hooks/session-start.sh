@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-# Only run in remote (Claude Code on the web) environments
-if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
+# Only run on Linux (remote containers and WSL2); skip on Windows/Git Bash
+if [ "$(uname -s)" != "Linux" ]; then
   exit 0
 fi
 
