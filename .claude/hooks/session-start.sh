@@ -58,7 +58,7 @@ NUGET_CACHE="${HOME}/.nuget/packages"
 CONTENT_PATHS=()  # parallel array to ALL_VERSIONS
 
 for VERSION in "${ALL_VERSIONS[@]}"; do
-  SOURCE_PKG_DIR="${NUGET_CACHE}/bannerlordSearch.source/${VERSION}"
+  SOURCE_PKG_DIR="${NUGET_CACHE}/bannerlordsearch.source/${VERSION}"
 
   if [ ! -d "${SOURCE_PKG_DIR}" ]; then
     echo "Restoring BannerlordSearch.Source v${VERSION}..."
