@@ -9,12 +9,20 @@ if [ "$(uname -s)" != "Linux" ]; then
     echo "Skipping hook: not Linux and WSL2 not available."
     exit 0
   fi
-  WIN_SCRIPT=$(cygpath -w "${BASH_SOURCE[0]}" 2>/dev/null || true)
-  if [ -z "${WIN_SCRIPT}" ]; then
-    echo "Skipping hook: could not convert script path to Windows format."
-    exit 0
+  SCRIPT_PATH="${BASH_SOURCE[0]}"
+  # If CLAUDE_PROJECT_DIR is already a WSL2-style path (/mnt/<drive>/...), the
+  # script path is too — pass it straight to wsl.exe without cygpath conversion.
+  # Otherwise the path is a Git Bash path (/d/...) and needs cygpath → wslpath.
+  if [[ "${SCRIPT_PATH}" =~ ^/mnt/[a-zA-Z]/ ]]; then
+    WSL_SCRIPT="${SCRIPT_PATH}"
+  else
+    WIN_SCRIPT=$(cygpath -w "${SCRIPT_PATH}" 2>/dev/null || true)
+    if [ -z "${WIN_SCRIPT}" ]; then
+      echo "Skipping hook: could not convert script path to Windows format."
+      exit 0
+    fi
+    WSL_SCRIPT=$(wsl.exe wslpath -u "${WIN_SCRIPT}" 2>/dev/null | tr -d '\r' || true)
   fi
-  WSL_SCRIPT=$(wsl.exe wslpath -u "${WIN_SCRIPT}" 2>/dev/null | tr -d '\r' || true)
   if [ -z "${WSL_SCRIPT}" ]; then
     echo "Skipping hook: could not resolve WSL2 path."
     exit 0
