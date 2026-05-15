@@ -21,15 +21,18 @@ if [ "$(uname -s)" != "Linux" ]; then
       echo "Skipping hook: could not convert script path to Windows format."
       exit 0
     fi
-    WSL_SCRIPT=$(wsl.exe wslpath -u "${WIN_SCRIPT}" 2>/dev/null | tr -d '\r' || true)
+    # MSYS_NO_PATHCONV=1 prevents Git Bash from mangling the Windows path
+    # before it reaches wsl.exe (e.g. D:/foo must not become /d/foo).
+    WSL_SCRIPT=$(MSYS_NO_PATHCONV=1 wsl.exe wslpath -u "${WIN_SCRIPT}" 2>/dev/null | tr -d '\r' || true)
   fi
   if [ -z "${WSL_SCRIPT}" ]; then
     echo "Skipping hook: could not resolve WSL2 path."
     exit 0
   fi
   echo "Delegating to WSL2: ${WSL_SCRIPT}"
-  # Run without CLAUDE_ENV_FILE — env exports apply inside WSL2, not Windows.
-  wsl.exe bash "${WSL_SCRIPT}"
+  # MSYS_NO_PATHCONV=1 prevents Git Bash from converting /mnt/d/... to
+  # C:/Program Files/Git/mnt/d/... before the path reaches wsl.exe.
+  MSYS_NO_PATHCONV=1 wsl.exe bash "${WSL_SCRIPT}"
   exit $?
 fi
 
