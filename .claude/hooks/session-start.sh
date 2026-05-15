@@ -1,9 +1,28 @@
 #!/bin/bash
 set -euo pipefail
 
-# Only run on Linux (remote containers and WSL2); skip on Windows/Git Bash
+# On Windows/Git Bash: delegate the full hook to WSL2 and exit.
+# WSL2 automatically forwards bound ports to Windows localhost, so MCP servers
+# started inside WSL2 are reachable by Claude Code on Windows.
 if [ "$(uname -s)" != "Linux" ]; then
-  exit 0
+  if ! command -v wsl.exe >/dev/null 2>&1; then
+    echo "Skipping hook: not Linux and WSL2 not available."
+    exit 0
+  fi
+  WIN_SCRIPT=$(cygpath -w "${BASH_SOURCE[0]}" 2>/dev/null || true)
+  if [ -z "${WIN_SCRIPT}" ]; then
+    echo "Skipping hook: could not convert script path to Windows format."
+    exit 0
+  fi
+  WSL_SCRIPT=$(wsl.exe wslpath -u "${WIN_SCRIPT}" 2>/dev/null | tr -d '\r' || true)
+  if [ -z "${WSL_SCRIPT}" ]; then
+    echo "Skipping hook: could not resolve WSL2 path."
+    exit 0
+  fi
+  echo "Delegating to WSL2: ${WSL_SCRIPT}"
+  # Run without CLAUDE_ENV_FILE — env exports apply inside WSL2, not Windows.
+  wsl.exe bash "${WSL_SCRIPT}"
+  exit $?
 fi
 
 # ── 1. Install .NET SDK if missing ─────────────────────────────────────────
@@ -32,10 +51,13 @@ if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
 fi
 
 # ── 2. Resolve Bannerlord source versions ──────────────────────────────────
+# Derive project root from this script's location (.claude/hooks/ → ../../)
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+
 # Primary version comes from the project's MSBuild GameVersion property
 # (tracks supported-game-versions.txt). -p:GameFolder=_ skips game-folder
 # resolution so a path like "Mount & Blade II Bannerlord" never reaches bash.
-PRIMARY_VERSION=$(dotnet msbuild "${CLAUDE_PROJECT_DIR}/src/DellarteDellaGuerra/DellarteDellaGuerra.csproj" \
+PRIMARY_VERSION=$(dotnet msbuild "${PROJECT_DIR}/src/DellarteDellaGuerra/DellarteDellaGuerra.csproj" \
   -getProperty:GameVersion -nologo -verbosity:quiet \
   "-p:GameFolder=_" \
   2>/dev/null | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
