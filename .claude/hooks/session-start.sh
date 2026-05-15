@@ -10,19 +10,18 @@ if [ "$(uname -s)" != "Linux" ]; then
     exit 0
   fi
   SCRIPT_PATH="${BASH_SOURCE[0]}"
-  # If CLAUDE_PROJECT_DIR is already a WSL2-style path (/mnt/<drive>/...), the
-  # script path is too — pass it straight to wsl.exe without cygpath conversion.
-  # Otherwise the path is a Git Bash path (/d/...) and needs cygpath → wslpath.
+  # Normalise any Windows/Git-Bash path format to a WSL2 /mnt/<drive>/... path.
   if [[ "${SCRIPT_PATH}" =~ ^/mnt/[a-zA-Z]/ ]]; then
-    WSL_SCRIPT="${SCRIPT_PATH}"
+    WSL_SCRIPT="${SCRIPT_PATH}"                          # already WSL2
+  elif [[ "${SCRIPT_PATH}" =~ ^/[a-zA-Z]/ ]]; then
+    # Git Bash style (/d/foo) — convert to /mnt/d/foo without wslpath.
+    DRIVE=$(echo "${SCRIPT_PATH:1:1}" | tr A-Z a-z)
+    WSL_SCRIPT="/mnt/${DRIVE}${SCRIPT_PATH:2}"
   else
-    WIN_SCRIPT=$(cygpath -w "${SCRIPT_PATH}" 2>/dev/null || true)
-    if [ -z "${WIN_SCRIPT}" ]; then
-      echo "Skipping hook: could not convert script path to Windows format."
-      exit 0
-    fi
-    # MSYS_NO_PATHCONV=1 prevents Git Bash from mangling the Windows path
-    # before it reaches wsl.exe (e.g. D:/foo must not become /d/foo).
+    # Windows style (D:/foo or D:\foo) — use wslpath.
+    # MSYS_NO_PATHCONV=1 prevents Git Bash from mangling the argument before
+    # it reaches wsl.exe.
+    WIN_SCRIPT=$(cygpath -w "${SCRIPT_PATH}" 2>/dev/null || echo "${SCRIPT_PATH}")
     WSL_SCRIPT=$(MSYS_NO_PATHCONV=1 wsl.exe wslpath -u "${WIN_SCRIPT}" 2>/dev/null | tr -d '\r' || true)
   fi
   if [ -z "${WSL_SCRIPT}" ]; then
