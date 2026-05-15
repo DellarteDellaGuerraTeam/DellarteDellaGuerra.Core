@@ -2,8 +2,10 @@
   "enableAllProjectMcpServers": true,
   "permissions": {
     "allow": [
-      "mcp__bannerlord-search__get_bannerlord_class_definition",
-      "mcp__bannerlord-search__search_bannerlord_code",
+      "mcp__bannerlord-search-1.2.12__get_bannerlord_class_definition",
+      "mcp__bannerlord-search-1.2.12__search_bannerlord_code",
+      "mcp__bannerlord-search-1.3.1__get_bannerlord_class_definition",
+      "mcp__bannerlord-search-1.3.1__search_bannerlord_code",
       "Bash(dotnet*)"
     ]
   },
@@ -13,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh"
+            "command": "bash -c 'S=\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh\"; if [ \"$(uname -s)\" = Linux ]; then exec \"$S\"; elif command -v wsl.exe >/dev/null 2>&1; then case \"$S\" in /mnt/[a-zA-Z]/*) W=\"$S\";; /[a-zA-Z]/*) DRIVE=$(echo \"${S:1:1}\" | tr A-Z a-z); W=\"/mnt/${DRIVE}${S:2}\";; *) W=$(MSYS_NO_PATHCONV=1 wsl.exe wslpath -u \"$S\" 2>/dev/null | tr -d \"\\r\");; esac; [ -n \"$W\" ] && MSYS_NO_PATHCONV=1 wsl.exe bash \"$W\"; fi'"
           }
         ]
       }
