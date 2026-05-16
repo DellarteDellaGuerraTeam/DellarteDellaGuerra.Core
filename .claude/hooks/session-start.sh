@@ -63,26 +63,31 @@ fi
 # ── 2. Resolve Bannerlord source versions ──────────────────────────────────
 # Derive project root from this script's location (.claude/hooks/ → ../../)
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+MCP_CONFIG="${PROJECT_DIR}/.mcp.json"
 
-# Primary version comes from the project's MSBuild GameVersion property
-# (tracks supported-game-versions.txt). -p:GameFolder=_ skips game-folder
-# resolution so a path like "Mount & Blade II Bannerlord" never reaches bash.
-PRIMARY_VERSION=$(dotnet msbuild "${PROJECT_DIR}/src/DellarteDellaGuerra/DellarteDellaGuerra.csproj" \
-  -getProperty:GameVersion -nologo -verbosity:quiet \
-  "-p:GameFolder=_" \
-  2>/dev/null | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
-if [ -z "${PRIMARY_VERSION}" ]; then
-  echo "ERROR: Could not resolve GameVersion from MSBuild." >&2
+if [ ! -f "${MCP_CONFIG}" ]; then
+  echo "ERROR: Could not find MCP config at ${MCP_CONFIG}." >&2
   exit 1
 fi
-echo "Primary Bannerlord source version: ${PRIMARY_VERSION}"
 
-# Additional versions — add/remove entries here as needed.
-# Each gets its own MCP server instance on a successive port (5001, 5002, ...).
-ADDITIONAL_VERSIONS=("1.3.1")
+# Use .mcp.json as the source of truth. File order determines port order.
+mapfile -t ALL_VERSIONS < <(
+  awk '
+    /"bannerlord-search-[0-9]+\.[0-9]+\.[0-9]+"/ {
+      version = $0
+      sub(/.*"bannerlord-search-/, "", version)
+      sub(/".*/, "", version)
+      print version
+    }
+  ' "${MCP_CONFIG}"
+)
 
-# All versions in port order: primary on BASE_PORT, additional on BASE_PORT+1, ...
-ALL_VERSIONS=("${PRIMARY_VERSION}" "${ADDITIONAL_VERSIONS[@]}")
+if [ "${#ALL_VERSIONS[@]}" -eq 0 ]; then
+  echo "ERROR: No bannerlord-search-* MCP servers found in ${MCP_CONFIG}." >&2
+  exit 1
+fi
+
+echo "Bannerlord source versions from .mcp.json: ${ALL_VERSIONS[*]}"
 BASE_PORT=5000
 
 # ── 3. Restore BannerlordSearch.Source for each version ────────────────────
@@ -129,7 +134,7 @@ CSPROJ
   CONTENT_PATHS+=("${CONTENT:-}")
 done
 
-# Export the primary version's path for session-level use
+# Export the first configured version's path for session-level use
 if [ -n "${CONTENT_PATHS[0]:-}" ]; then
   export BANNERLORD_SOURCE_PATH="${CONTENT_PATHS[0]}"
   if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
