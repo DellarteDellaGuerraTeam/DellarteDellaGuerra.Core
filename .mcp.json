@@ -7,6 +7,10 @@
     "bannerlord-search-1.3.1": {
       "type": "http",
       "url": "http://localhost:5001"
-    }
+    },
+    "music-analysis": {
+      "command": "uvx",
+      "args": ["-n", "mcp_local_music_analysis"]
+    }		
   }
 }
