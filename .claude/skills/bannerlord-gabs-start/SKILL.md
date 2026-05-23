@@ -38,14 +38,13 @@ Rewrite bridge.json (always — GABS may have overwritten it with a random port/
 from a previous managed session) and clear any stale runtime.json in one call:
 
 ```powershell
-$dir = "$env:USERPROFILE\.gabs\bannerlord"
+$dir = Join-Path $HOME ".gabs\bannerlord"
 New-Item -ItemType Directory -Force -Path $dir | Out-Null
-[System.IO.File]::WriteAllText("$dir\bridge.json", '{
-  "port": 4825,
-  "token": "80c93be27f02d35bedbe46493ce7a12f3d9976cc195cce2ece727cfdd0f09f9d",
-  "gameId": "bannerlord"
-}')
-Remove-Item "$dir\runtime.json" -ErrorAction SilentlyContinue
+$bridgePath = Join-Path $dir "bridge.json"
+$runtimePath = Join-Path $dir "runtime.json"
+$content = '{"port": 4825, "token": "80c93be27f02d35bedbe46493ce7a12f3d9976cc195cce2ece727cfdd0f09f9d", "gameId": "bannerlord"}'
+Set-Content -Path $bridgePath -Value $content -NoNewline
+Remove-Item $runtimePath -ErrorAction SilentlyContinue
 Write-Host "GABS files ready"
 ```
 

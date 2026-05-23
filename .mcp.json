@@ -15,6 +15,10 @@
     "jetbrains-debugger": {
       "type": "http",
       "url": "http://127.0.0.1:29202/debugger-mcp/streamable-http"
+    },
+    "music-analysis": {
+      "command": "uvx",
+      "args": ["-n", "mcp_local_music_analysis"]
     }		
   }
 }
