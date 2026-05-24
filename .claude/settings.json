@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'state=$(curl -sfG --max-time 1 --data-urlencode \"path=$CLAUDE_PROJECT_DIR\" http://localhost:7777/state 2>/dev/null) || exit 0; if echo \"$state\" | grep -q \"\\\"isPaused\\\":true\"; then echo \"[JBDebugBridge] Debugger is paused — handle exception before sending game commands:\"; echo \"$state\"; exit 1; fi'"
+            "command": "bash -c 'state=$(curl -sfG --max-time 1 --data-urlencode \"path=$CLAUDE_PROJECT_DIR/src\" http://localhost:7777/state 2>/dev/null) || exit 0; if echo \"$state\" | grep -q \"\\\"isPaused\\\":true\"; then echo \"[JBDebugBridge] Debugger is paused — handle exception before sending game commands:\"; echo \"$state\"; exit 2; fi'"
           }
         ]
       }
