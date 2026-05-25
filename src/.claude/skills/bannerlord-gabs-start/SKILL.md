@@ -65,16 +65,51 @@ with the token written in Step 2. No further configuration needed.
 
 ---
 
-## Step 4 — Connect GABS
+## Step 4 — Wait for GABP bridge (handles Safe Mode + crash detection)
 
-Call `mcp__bannerlord-game-controller__games_connect`:
-- `gameId`: `"bannerlord"`
-- `timeout`: `90`
+**Do not call `games_connect` with timeout > 15** — long timeouts expire the MCP session.
 
-The game takes 60–90 s to load. `games_connect` may return a timeout error even though
-the connection succeeded in the background — GABS keeps retrying after the tool returns.
-Don't treat a timeout as a hard failure. Always follow up with `games_status` to get
-the ground truth.
+Instead, use Monitor (timeout 120 000 ms, not persistent) to wait for `runtime.json`
+(written by the GABP module inside the game when it is ready). The same monitor
+auto-dismisses the "Safe Mode?" dialog that appears after any crash — this dialog keeps
+the process at ~76 MB forever until dismissed:
+
+```bash
+safe_mode_dismissed=false
+until [ -f /mnt/c/Users/Joe/.gabs/bannerlord/runtime.json ]; do
+  title=$(powershell.exe -NonInteractive -Command '(Get-Process -Name "Bannerlord" -ErrorAction SilentlyContinue | Select-Object -First 1).MainWindowTitle' 2>/dev/null | tr -d '\r\n')
+  if [ -z "$title" ]; then echo "DEAD: game process gone"; exit 1; fi
+  if [ "$title" = "Safe Mode" ] && [ "$safe_mode_dismissed" = "false" ]; then
+    powershell.exe -NonInteractive -Command '
+      Add-Type -AssemblyName UIAutomationClient,UIAutomationTypes
+      $p = Get-Process -Name "Bannerlord" -ErrorAction SilentlyContinue | Select-Object -First 1
+      $root = [System.Windows.Automation.AutomationElement]::RootElement
+      $w = $root.FindFirst("Children", (New-Object System.Windows.Automation.PropertyCondition(
+        [System.Windows.Automation.AutomationElement]::ProcessIdProperty, $p.Id)))
+      $b = $w.FindFirst("Descendants", (New-Object System.Windows.Automation.AndCondition(
+        (New-Object System.Windows.Automation.PropertyCondition(
+          [System.Windows.Automation.AutomationElement]::ControlTypeProperty,
+          [System.Windows.Automation.ControlType]::Button)),
+        (New-Object System.Windows.Automation.PropertyCondition(
+          [System.Windows.Automation.AutomationElement]::NameProperty, "No")))))
+      if ($b) { $b.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke() }
+    ' 2>/dev/null
+    echo "SAFE_MODE_DISMISSED"
+    safe_mode_dismissed=true
+  fi
+  sleep 3
+done
+echo "GABP_READY"
+```
+
+**On each event:**
+- **`SAFE_MODE_DISMISSED`** — dialog found and dismissed (always click "No" — runs normally
+  with full modules). Game will now continue loading; keep waiting for `GABP_READY`.
+- **`GABP_READY`** — GABP module is up. Call `games_connect` with `gameId: "bannerlord"`,
+  `timeout: 15`. Follow immediately with `games_status` to confirm.
+- **`DEAD` / monitor timeout (120 s)** — game crashed during loading. Call
+  `mcp__jetbrains-debugger__get_debug_session_status` immediately (50 frames, include
+  variables). Act fast — the window closes when the process exits.
 
 ---
 
@@ -107,9 +142,11 @@ Call `bannerlord.core.check_blockers`. Common blockers after loading:
 - `menu_siege_strategies` — active siege; use `bannerlord.menu.get_current` to see options
 
 **Crash detection**: If GABP disconnects unexpectedly (connection closed error) at any
-point during this skill, immediately call `mcp__jetbrains-debugger__get_stack_trace`
-before the debug session closes. The debugger pauses at the exception and the stack
-trace is only available in that window — don't skip this step or the crash cause is lost.
+point after connecting, immediately call `mcp__jetbrains-debugger__get_debug_session_status`
+(50 frames, include variables). Act fast — the JetBrains session closes when the process
+exits and the trace is gone. If the call returns "Session not found", the session is
+already closed; fall back to Bannerlord crash logs at
+`%AppData%\Mount and Blade II Bannerlord\logs\`.
 
 Report to the user:
 - JetBrains debug session ID
