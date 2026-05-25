@@ -1,103 +1,70 @@
 # AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Behavioral guidelines to reduce common LLM coding mistakes.
 
-## Build & Test Commands
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
-All commands run from `src/`:
+## 1. Think Before Coding
 
-```bash
-# Restore dependencies
-dotnet restore DellarteDellaGuerra.sln
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
 
-# Build (auto-resolves game folder via BANNERLORD_GAME_DIR env var or registry)
-dotnet build DellarteDellaGuerra.sln --configuration Release
+Before implementing:
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
 
-# Override game folder explicitly
-dotnet build DellarteDellaGuerra.sln --configuration Release -p:GameFolder="D:/SteamLibrary/..."
+## 2. Simplicity First
 
-# Run all tests
-dotnet test DellarteDellaGuerra.sln
+**Minimum code that solves the problem. Nothing speculative.**
 
-# Run a single test project
-dotnet test DellarteDellaGuerra.Domain.Tests/
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
 
-# Run a specific test class
-dotnet test --filter "ClassName=GetJoustEquipmentUtilTests"
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+## 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+## 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
 ```
 
-## Architecture
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
-This is a Bannerlord v1.3 mod for the English War of the Roses (1471) following clean/hexagonal architecture with four layers:
+---
 
-```
-Domain              — Pure business logic, zero Bannerlord references (netstandard2.0)
-Infrastructure      — Bannerlord adapters, Harmony patches, events (netstandard2.0)
-DellarteDellaGuerra — Application/feature logic: mission behaviors, UI, models (netstandard2.0)
-Integration         — DI composition root, SubModule entry point (netstandard2.0)
-```
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
 
-**Entry point:** `src/DellarteDellaGuerra.Integration/SubModule.cs`
-**DI setup:** `src/DellarteDellaGuerra.Integration/DI/DadgServiceContainer.cs`
+---
 
-### Two-Stage DI Initialization
-
-The mod uses two DI containers to match Bannerlord's lifecycle:
-
-1. **LoggingContainer** (built in `SubModule` constructor) — NLog only; needed before game starts
-2. **DadgServiceContainer** (built in `OnSubModuleLoad`) — all services and patches
-
-The music patch (`MBMusicManagerInitializePatch`) is applied manually in the constructor before either container is built, because it must intercept game startup before `OnSubModuleLoad` fires.
-
-### Harmony Patches
-
-- All patches implement `IPatch` (from `Harmony.DependencyInjection`)
-- Registered as singletons in `DadgServiceContainer.RegisterPatches()`
-- Applied in bulk via `IHarmonyPatcher.ApplyPatches()` during `OnSubModuleLoad`
-- Named: `[TargetClass][TargetMethod]Patch`
-- Organized into subdirectories by domain concern (e.g., `Firearm/Patches/`, `SiegeEngines/Campaign/`)
-
-### Port & Adapter Pattern
-
-Domain interfaces live in `Domain/[Feature]/Port/` — these are the contracts.
-Infrastructure adapters implement those interfaces and live in `Infrastructure/[Feature]/`.
-Example: `ILogger` (domain port) → `NLogLoggerAdapter` (infrastructure adapter).
-
-### Game Version
-
-The target game version is read from `src/supported-game-versions.txt` (currently `v1.3.15`).
-A compile-time constant is derived from it (e.g., `e1315`) and available as `#if e1315`.
-Override via MSBuild: `-p:OverrideGameVersion=e1.3.15`.
-
-## MCP Tools
-
-A Bannerlord source search MCP server is available for looking up decompiled game code:
-- `mcp__bannerlord-search__search_bannerlord_code` — regex search across decompiled source
-- `mcp__bannerlord-search__get_bannerlord_class_definition` — full class definition lookup
-
-The session-start hook (`.claude/hooks/session-start.sh`) configures and starts this server automatically.
-
-## Related Modules
-
-The mod's C# code (this repo) depends on XML data and assets from sibling Bannerlord modules:
-
-| Module | Path | Contains |
-|--------|------|----------|
-| `DellarteDellaGuerra` | `..\DellarteDellaGuerra` | XML data + most assets (weapons, armour, items) |
-| `DellarteDellaGuerraMap` | `..\DellarteDellaGuerraMap` | Campaign map scene, GUI, XML related to the campaign map |
-| `DellarteDellaGuerraScenes` | `..\DellarteDellaGuerraScenes` | Custom scenes and assets (buildings, prefabs, etc.) |
-
-For reference when looking up vanilla behaviour or game data:
-
-| Module | Path |
-|--------|------|
-| `Native` | `..\Native` |
-| `SandBox` | `..\SandBox` |
-| `SandBoxCore` | `..\SandBoxCore` |
-
-## Key Configuration Files
-
-- `config/dadg.config.xml` — mod configuration (hot-reloaded via `DadgConfigWatcher`)
-- `config/poc.config.json` — POC Colour Randomiser integration config
-- `technical-config/nlog.dev.config` / `nlog.prod.config` — logging config (copied to bin at build time)
-- `src/supported-game-versions.txt` — target game version (first line = target, last line = minimum)
+**Project context:** If your task involves understanding the codebase, read `.claude/knowledge/dadg-project-overview.md`.
