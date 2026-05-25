@@ -29,23 +29,33 @@ Call `mcp__bannerlord-game-controller__games_status` with `gameId: "bannerlord"`
 
 ---
 
-## Step 2 — Prepare the GABS files (PowerShell only)
+## Step 2 — Prepare the GABS files and ensure AssertAutoIgnore is running (PowerShell only)
 
 The Read/Write/Edit tools operate on the Linux side of this environment. These files
 live on Windows where GABS reads them — use the `PowerShell` tool for both.
 
 Rewrite bridge.json (always — GABS may have overwritten it with a random port/token
-from a previous managed session) and clear any stale runtime.json in one call:
+from a previous managed session):
 
 ```powershell
 $dir = Join-Path $HOME ".gabs\bannerlord"
 New-Item -ItemType Directory -Force -Path $dir | Out-Null
 $bridgePath = Join-Path $dir "bridge.json"
-$runtimePath = Join-Path $dir "runtime.json"
 $content = '{"port": 4825, "token": "80c93be27f02d35bedbe46493ce7a12f3d9976cc195cce2ece727cfdd0f09f9d", "gameId": "bannerlord"}'
 Set-Content -Path $bridgePath -Value $content -NoNewline
-Remove-Item $runtimePath -ErrorAction SilentlyContinue
 Write-Host "GABS files ready"
+```
+
+Then ensure AssertAutoIgnore is running (it auto-dismisses Bannerlord popups including Safe Mode):
+
+```powershell
+$exe = "D:\Bannerlord\Tools\AssertAutoIgnore\AssertAutoIgnore\AssertAutoIgnore.exe"
+if (-not (Get-Process -Name "AssertAutoIgnore" -ErrorAction SilentlyContinue)) {
+    Start-Process -FilePath $exe -WindowStyle Hidden
+    Write-Host "AssertAutoIgnore started"
+} else {
+    Write-Host "AssertAutoIgnore already running"
+}
 ```
 
 ---
@@ -65,51 +75,18 @@ with the token written in Step 2. No further configuration needed.
 
 ---
 
-## Step 4 — Wait for GABP bridge (handles Safe Mode + crash detection)
+## Step 4 — Wait for GABP bridge
 
-**Do not call `games_connect` with timeout > 15** — long timeouts expire the MCP session.
+Poll `games_connect` with `gameId: "bannerlord"`, `timeout: 15` every ~15 seconds until
+it succeeds. AssertAutoIgnore (started in Step 2) handles any Safe Mode popups in the
+background — no special handling needed here.
 
-Instead, use Monitor (timeout 120 000 ms, not persistent) to wait for `runtime.json`
-(written by the GABP module inside the game when it is ready). The same monitor
-auto-dismisses the "Safe Mode?" dialog that appears after any crash — this dialog keeps
-the process at ~76 MB forever until dismissed:
-
-```bash
-safe_mode_dismissed=false
-until [ -f /mnt/c/Users/Joe/.gabs/bannerlord/runtime.json ]; do
-  title=$(powershell.exe -NonInteractive -Command '(Get-Process -Name "Bannerlord" -ErrorAction SilentlyContinue | Select-Object -First 1).MainWindowTitle' 2>/dev/null | tr -d '\r\n')
-  if [ -z "$title" ]; then echo "DEAD: game process gone"; exit 1; fi
-  if [ "$title" = "Safe Mode" ] && [ "$safe_mode_dismissed" = "false" ]; then
-    powershell.exe -NonInteractive -Command '
-      Add-Type -AssemblyName UIAutomationClient,UIAutomationTypes
-      $p = Get-Process -Name "Bannerlord" -ErrorAction SilentlyContinue | Select-Object -First 1
-      $root = [System.Windows.Automation.AutomationElement]::RootElement
-      $w = $root.FindFirst("Children", (New-Object System.Windows.Automation.PropertyCondition(
-        [System.Windows.Automation.AutomationElement]::ProcessIdProperty, $p.Id)))
-      $b = $w.FindFirst("Descendants", (New-Object System.Windows.Automation.AndCondition(
-        (New-Object System.Windows.Automation.PropertyCondition(
-          [System.Windows.Automation.AutomationElement]::ControlTypeProperty,
-          [System.Windows.Automation.ControlType]::Button)),
-        (New-Object System.Windows.Automation.PropertyCondition(
-          [System.Windows.Automation.AutomationElement]::NameProperty, "No")))))
-      if ($b) { $b.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke() }
-    ' 2>/dev/null
-    echo "SAFE_MODE_DISMISSED"
-    safe_mode_dismissed=true
-  fi
-  sleep 3
-done
-echo "GABP_READY"
-```
-
-**On each event:**
-- **`SAFE_MODE_DISMISSED`** — dialog found and dismissed (always click "No" — runs normally
-  with full modules). Game will now continue loading; keep waiting for `GABP_READY`.
-- **`GABP_READY`** — GABP module is up. Call `games_connect` with `gameId: "bannerlord"`,
-  `timeout: 15`. Follow immediately with `games_status` to confirm.
-- **`DEAD` / monitor timeout (120 s)** — game crashed during loading. Call
-  `mcp__jetbrains-debugger__get_debug_session_status` immediately (50 frames, include
-  variables). Act fast — the window closes when the process exits.
+- **Connected** → follow immediately with `games_status` to confirm, then go to Step 5.
+- **Timeout / connection refused** → game is still loading. Wait 15 s and retry.
+- **Game process gone** (check via `games_status` returning `stopped`) → game crashed
+  during loading. Call `mcp__jetbrains-debugger__get_debug_session_status` immediately
+  (50 frames, include variables). Act fast — the JetBrains session closes when the
+  process exits.
 
 ---
 
