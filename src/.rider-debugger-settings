@@ -9,6 +9,5 @@ CLRExceptionBreakpoints=System.StackOverflowException,\
                          System.InvalidCastException,\
                          System.ArgumentOutOfRangeException,\
                          System.IndexOutOfRangeException,\
-                         System.InvalidOperationException,\
                          System.NullReferenceException,\
                          System.ArgumentNullException
