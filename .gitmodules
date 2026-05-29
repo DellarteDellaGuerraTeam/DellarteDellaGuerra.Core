@@ -1,0 +1,6 @@
+[submodule "src/submodules/Cannons"]
+	path = src/submodules/Cannons
+	url = https://github.com/JoeFwd/Bannerlord.Cannons.git
+[submodule "src/submodules/ExpandedTemplate"]
+	path = src/submodules/ExpandedTemplate
+	url = https://github.com/JoeFwd/Bannerlord.ExpandedTemplate.git

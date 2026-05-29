@@ -28,6 +28,11 @@
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj"/>
         <ProjectReference Include="..\DellarteDellaGuerra.Infrastructure\DellarteDellaGuerra.Infrastructure.csproj"/>
         <ProjectReference Include="..\DellarteDellaGuerra\DellarteDellaGuerra.csproj"/>
+
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0" />
+
+        <ProjectReference Include="..\submodules\ExpandedTemplate\Bannerlord.ExpandedTemplate.API\Bannerlord.ExpandedTemplate.API.csproj" />
     </ItemGroup>
 
     <!-- Project properties -->
