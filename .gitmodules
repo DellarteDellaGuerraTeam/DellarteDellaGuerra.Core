@@ -1,0 +1,8 @@
+[submodule "src/submodules/Cannons"]
+	path = src/submodules/Cannons
+	url = https://github.com/JoeFwd/Bannerlord.Cannons.git
+	branch = migrate-to-v1.3
+[submodule "src/submodules/ExpandedTemplate"]
+	path = src/submodules/ExpandedTemplate
+	url = https://github.com/JoeFwd/Bannerlord.ExpandedTemplate.git
+	branch = upgrade-to-1.3

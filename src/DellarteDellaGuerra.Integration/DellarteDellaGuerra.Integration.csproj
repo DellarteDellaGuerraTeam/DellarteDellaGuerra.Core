@@ -33,10 +33,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0" />
 
-        <Reference Include="Bannerlord.ExpandedTemplate.API">
-            <HintPath>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord-v1.3\Modules\Bannerlord.ExpandedTemplate\Bannerlord.ExpandedTemplate.API\bin\Debug\netstandard2.0\Bannerlord.ExpandedTemplate.API.dll</HintPath>
-            <Private>true</Private>
-        </Reference>
+        <ProjectReference Include="..\submodules\ExpandedTemplate\Bannerlord.ExpandedTemplate.API\Bannerlord.ExpandedTemplate.API.csproj" />
     </ItemGroup>
 
     <!-- Project properties -->
