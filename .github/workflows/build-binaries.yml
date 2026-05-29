@@ -34,7 +34,7 @@ jobs:
 
       - name: Compress Artifact
         run: |
-          zip -r artifact.zip ./artifact/*
+          (cd artifact && zip -r ../artifact.zip Modules/DellarteDellaGuerra.Core)
 
       - name: Install Bannerlord.ChangelogParser
         run: dotnet tool install -g Bannerlord.ChangelogParser
