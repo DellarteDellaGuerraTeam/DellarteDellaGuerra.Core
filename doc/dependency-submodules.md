@@ -7,6 +7,8 @@
 
 ## Clone
 
+Run all git commands from the **repo root** (where `.gitmodules` lives), not from `src/`.
+
 ```sh
 git clone --recurse-submodules <url>
 # or, if already cloned:
