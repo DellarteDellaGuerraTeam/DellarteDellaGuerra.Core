@@ -10,6 +10,8 @@ SHA — they do not track a branch and will not advance automatically.
 
 ## Clone
 
+Run all git commands from the **repo root** (where `.gitmodules` lives), not from `src/`.
+
 ```sh
 git clone --recurse-submodules <url>
 # or, if already cloned:
