@@ -58,6 +58,7 @@ Ask the user: "Delegate to AI or issue orders?" (default: delegate)
 - `bannerlord.battle.order_fallback` -- fall back
 - `bannerlord.battle.order_follow_me` -- follow player
 - `bannerlord.battle.set_fire_order` -- fire-at-will or hold
+- `bannerlord.battle.order_retreat` -- retreat/flee from the battle (triggers withdrawal toward exit)
 All accept optional formationIndex, but NOTE: in practice orders broadcast to ALL formations regardless of the index. Do not promise per-formation targeting.
 
 ---
@@ -73,6 +74,10 @@ Each poll, report to the user:
 - playerAgent.health if the player is alive
 
 Stop polling when `missionEnded` is true.
+
+**To exit a battle early (retreat/flee):**
+- `bannerlord.battle.order_retreat` -- orders all troops to retreat toward the exit; triggers defeat/withdrawal
+- `bannerlord.mission.leave` -- immediately leaves the mission (same penalty as retreating mid-battle)
 
 **Known quirks observed in live battles:**
 - `playerAgent.position` often appears frozen between polls -- not a bug, just low update cadence. Do not use it as a movement indicator.
