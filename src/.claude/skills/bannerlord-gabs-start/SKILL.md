@@ -5,10 +5,12 @@ description: >
   make it a fully GABS-managed instance so all GABP tools work. Use this skill
   whenever the user wants to start Bannerlord for debugging, says things like
   "launch the debug config", "start dadg debug", "start bannerlord with debugger",
-  "launch dadg standalone", "debug bannerlord", or "start the jetbrains debug config".
+  "launch dadg standalone", "debug bannerlord", "start bannerlord for v1.2",
+  "start bannerlord for v1.3", or "start the jetbrains debug config".
   Also use it when the user wants to both have the debugger attached AND be able to
   control the game via GABS tools. This skill handles the full setup — bridge.json,
   runtime state, JetBrains session, and GABS connection — in one go.
+  Pass "v1.2" or "v1.3" as an argument to target a specific game version (default: v1.3).
 ---
 
 # DellarteDellaGuerra Debug Launch
@@ -16,6 +18,19 @@ description: >
 Launches Bannerlord via the JetBrains "DellarteDellaGuerra.Integration: Standalone"
 debug config and connects GABS to the running instance. By the end the debugger is
 attached and all GABP tools are live.
+
+---
+
+## Version resolution
+
+Determine the target game version from ARGUMENTS (default: v1.3):
+
+| ARGUMENTS contains | `project_path` |
+|--------------------|----------------|
+| `v1.2`             | `D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.2/Modules/DellarteDellaGuerra.Core/src` |
+| `v1.3` or (empty)  | `D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.3/Modules/DellarteDellaGuerra.Core/src` |
+
+Use this `project_path` in Step 3. All other steps are version-independent.
 
 ---
 
@@ -33,6 +48,19 @@ Call `mcp__bannerlord-game-controller__games_status` with `gameId: "bannerlord"`
 
 The Read/Write/Edit tools operate on the Linux side of this environment. These files
 live on Windows where GABS reads them — use the `PowerShell` tool for both.
+
+First, ensure Steam is running — Bannerlord requires Steam and will fail without it:
+
+```powershell
+if (-not (Get-Process -Name "steam" -ErrorAction SilentlyContinue)) {
+    Start-Process "steam://open/main"
+    Write-Host "STEAM_STARTED"
+} else {
+    Write-Host "STEAM_RUNNING"
+}
+```
+
+If the output is `STEAM_STARTED`, wait 10 seconds for Steam to initialise before continuing.
 
 Rewrite bridge.json (always — GABS may have overwritten it with a random port/token
 from a previous managed session):
@@ -64,7 +92,7 @@ if (-not (Get-Process -Name "AssertAutoIgnore" -ErrorAction SilentlyContinue)) {
 
 Call `mcp__jetbrains-debugger__start_debug_session`:
 - `configuration_name`: `"DellarteDellaGuerra.Integration: Standalone"`
-- `project_path`: `"D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.3/Modules/DellarteDellaGuerra.Core/src"`
+- `project_path`: the path resolved in the Version resolution section above
 
 Note the session ID from the response — report it to the user.
 
