@@ -30,7 +30,7 @@ All modules sit under the Bannerlord `Modules/` folder:
 | **Bannerlord.Cannons** | Business / **controlled** | Adds cannons to campaign & missions |
 | **POC (Bannerlord POC mod)** | Optional / external | Banner & heraldry customisation; config overridden to `../config/poc.config.json` via `PocConfigReaderOverriderPatch` |
 
-`ExpandedTemplate` and `Cannons` are our own modules — their source lives at the same Bannerlord modules level as this repo.
+`ExpandedTemplate` and `Cannons` are our own modules, embedded as **git submodules** under `src/submodules/` (see `.gitmodules`). DADG.Infrastructure references their projects directly via `ProjectReference`, so building DADG compiles them and copies their DLLs into `DellarteDellaGuerra.Core/bin/Win64_Shipping_Client/` — that is what the running game loads. To test a change in either, rebuild **DADG** (not just the submodule). See `dadg-module-structure.md` → *Controlled Dependency Modules* for the build/deploy detail.
 
 ## Build & Test Commands
 

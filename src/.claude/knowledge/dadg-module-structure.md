@@ -41,8 +41,33 @@ All custom mission scenes. Key sub-folders:
 
 ## Controlled Dependency Modules
 
-`Bannerlord.ExpandedTemplate` and `Bannerlord.Cannons` are DADG's own dependency modules.  
-Their source repos live alongside the DADG modules in the Bannerlord `Modules/` folder.  
-Trace into them rather than treating them as black-box libraries.
+`Bannerlord.ExpandedTemplate` and `Bannerlord.Cannons` are DADG's own dependency modules,
+embedded as **git submodules** under `src/submodules/` (declared in `.gitmodules`):
+
+| Submodule | Path | Repo @ branch |
+|-----------|------|---------------|
+| Cannons | `src/submodules/Cannons` | `JoeFwd/Bannerlord.Cannons` @ `migrate-to-v1.3` |
+| ExpandedTemplate | `src/submodules/ExpandedTemplate` | `JoeFwd/Bannerlord.ExpandedTemplate` @ `upgrade-to-1.3` |
+
+Trace into them rather than treating them as black-box libraries. Edit their source **in place**
+under `src/submodules/` — not the legacy standalone `Modules/Bannerlord.Cannons/` folder, which is
+orphaned and is **not** the code the game runs.
+
+### How submodule code reaches the game (build/deploy)
+
+`DellarteDellaGuerra.Infrastructure.csproj` references the submodule projects via `ProjectReference`
+(Cannons: API, main, Application, Domain, Infrastructure; ExpandedTemplate: API). So **building DADG**
+compiles the submodules and copies their DLLs into `DellarteDellaGuerra.Core/bin/Win64_Shipping_Client/`
+(plus `Gaming.Desktop.x64_Shipping_Client` and `Win64_Shipping_wEditor`). **That `bin/` is what the
+running game loads** — there is no separate "deploy Cannons" step.
+
+Consequence — to test a submodule change you must **rebuild DADG**, not just the submodule:
+
+- The `x64 / Debug` config feeds `Win64_Shipping_Client`, which the Standalone debug config launches.
+  Confirm the freshly-built `Bannerlord.Cannons.dll` timestamp in
+  `DellarteDellaGuerra.Core/bin/Win64_Shipping_Client/` before trusting a test result.
+- ⚠ Building `Bannerlord.Cannons.csproj` **standalone** has a copy target whose `GameFolder` resolves
+  to `src`, so it deploys to `src/Modules/Bannerlord.Cannons/bin/...` — a dead-end the game never loads.
+  A fresh DLL there does **not** mean the game picked up the change.
 
 The `ExpandedTemplate` API is bound in `SubModule` constructor via `BannerlordExpandedTemplateApi().UseLoggerFactory(...).Bind()`.
