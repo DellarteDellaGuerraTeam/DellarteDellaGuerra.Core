@@ -1,5 +1,4 @@
-﻿using DellarteDellaGuerra.Domain.Tournament.Reward.Model;
-using TaleWorlds.SaveSystem;
+﻿using TaleWorlds.SaveSystem;
 
 namespace DellarteDellaGuerra.Tournament.Api
 {
@@ -12,7 +11,7 @@ namespace DellarteDellaGuerra.Tournament.Api
         protected override void DefineClassTypes()
         {
             AddClassDefinition(typeof(DadgFightingTournament), 1);
-            AddClassDefinition(typeof(TournamentReward), 2);
+            AddClassDefinition(typeof(SaveableTournamentReward), 2);
         }
     }
 }
