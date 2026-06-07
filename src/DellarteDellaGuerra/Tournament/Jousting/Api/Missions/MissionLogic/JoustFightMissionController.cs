@@ -397,7 +397,9 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
 
             var agentBuildData2 = agentBuildData.InitialDirection(vec)
                 .Equipment(_equipmentMapper.ToNative(_getJoustEquipmentUtil.GetJoustEquipment(_equipmentMapper.ToDomain(participant.MatchEquipment))))
-                .ClothingColor1(team.Color).Banner(null).Controller(character.IsPlayerCharacter
+                .ClothingColor1(team.Color)
+                .Banner(character.HeroObject?.Clan?.Banner ?? team.Banner)
+                .Controller(character.IsPlayerCharacter
                     ? Agent.ControllerType.Player
                     : Agent.ControllerType.AI);
             Agent agent = Mission.SpawnAgent(agentBuildData2);

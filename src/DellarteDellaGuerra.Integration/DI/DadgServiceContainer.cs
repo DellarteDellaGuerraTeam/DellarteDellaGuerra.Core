@@ -8,6 +8,7 @@ using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Reload;
+using DellarteDellaGuerra.Heraldry;
 using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DI;
@@ -97,6 +98,8 @@ public class DadgServiceContainer
         services.AddTransient<FirearmReloadMissionLogic>();
         services.AddTransient<FirearmSmokeMissionLogic>();
         services.AddTransient<RemoveSiegeTowerSpawnersMissionLogic>();
+        services.AddTransient<BannerSurcoatMissionLogic>();
+        services.AddTransient<TournamentRecapBannerMissionLogic>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
