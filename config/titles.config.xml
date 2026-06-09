@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  De jure feudal hierarchy for the DADG feudal titles system (War of the Roses, England 1471).
+
+  Schema:
+    <Feudalism>
+      <Kingdom id="..." name="..." [seat="..."] [kingClanId="..."]>
+        <Duchy id="..." name="..." [seat="..."] [holderClanId="..."]>
+          <County id="..." name="..." [seat="..."] [holderClanId="..."]>
+            <Barony id="..." name="..." [seat="..."] [holderClanId="..."]/>
+          </County>
+        </Duchy>
+        <County .../>  (counties may sit directly under the crown)
+      </Kingdom>
+    </Feudalism>
+
+  - "id" is required and must be unique across all titles.
+  - "seat" is the StringId of the settlement that is the title's seat; it must be unique and
+    must match a settlement StringId defined in the game/module data. It is optional for kingdoms.
+  - "kingClanId"/"holderClanId" is the StringId of the clan initially holding the title; optional.
+  - All ids below are PLACEHOLDERS and must be replaced with the actual DADG StringIds.
+-->
+<Feudalism>
+  <Kingdom id="kingdom_england" name="England" seat="town_london" kingClanId="clan_lancaster">
+
+    <Duchy id="duchy_york" name="Duchy of York" seat="town_york" holderClanId="clan_york">
+      <County id="county_richmond" name="County of Richmond" seat="town_richmond" holderClanId="clan_neville">
+        <Barony id="barony_middleham" name="Barony of Middleham" seat="castle_middleham" holderClanId="clan_neville_cadet"/>
+        <Barony id="barony_barnard" name="Barony of Barnard" seat="castle_barnard"/>
+      </County>
+      <County id="county_northumberland" name="County of Northumberland" seat="town_alnwick" holderClanId="clan_percy">
+        <Barony id="barony_bamburgh" name="Barony of Bamburgh" seat="castle_bamburgh" holderClanId="clan_percy_cadet"/>
+      </County>
+    </Duchy>
+
+    <Duchy id="duchy_lancaster" name="Duchy of Lancaster" seat="town_lancaster" holderClanId="clan_lancaster">
+      <County id="county_derby" name="County of Derby" seat="town_derby" holderClanId="clan_stanley">
+        <Barony id="barony_tutbury" name="Barony of Tutbury" seat="castle_tutbury"/>
+      </County>
+      <County id="county_somerset" name="County of Somerset" seat="town_bristol" holderClanId="clan_beaufort">
+        <Barony id="barony_farleigh" name="Barony of Farleigh" seat="castle_farleigh" holderClanId="clan_beaufort_cadet"/>
+        <Barony id="barony_dunster" name="Barony of Dunster" seat="castle_dunster"/>
+      </County>
+    </Duchy>
+
+    <Duchy id="duchy_gloucester" name="Duchy of Gloucester" seat="town_gloucester" holderClanId="clan_york_gloucester">
+      <County id="county_warwick" name="County of Warwick" seat="town_warwick" holderClanId="clan_neville_warwick">
+        <Barony id="barony_kenilworth" name="Barony of Kenilworth" seat="castle_kenilworth"/>
+      </County>
+      <County id="county_hereford" name="County of Hereford" seat="town_hereford" holderClanId="clan_herbert">
+        <Barony id="barony_raglan" name="Barony of Raglan" seat="castle_raglan" holderClanId="clan_herbert_cadet"/>
+        <Barony id="barony_goodrich" name="Barony of Goodrich" seat="castle_goodrich"/>
+      </County>
+    </Duchy>
+
+    <!-- Duke-less counties held directly of the crown -->
+    <County id="county_kent" name="County of Kent" seat="town_canterbury" holderClanId="clan_woodville">
+      <Barony id="barony_dover" name="Barony of Dover" seat="castle_dover"/>
+    </County>
+    <County id="county_norfolk" name="County of Norfolk" seat="town_norwich" holderClanId="clan_howard">
+      <Barony id="barony_framlingham" name="Barony of Framlingham" seat="castle_framlingham" holderClanId="clan_howard_cadet"/>
+    </County>
+
+  </Kingdom>
+</Feudalism>
