@@ -1,3 +1,7 @@
 <DadgConfiguration>
   <EnableShaderCompilationNotifications>true</EnableShaderCompilationNotifications>
+  <JoustingConfig>
+    <MinimumRidingSkill>100</MinimumRidingSkill>
+    <MinimumPolearmSkill>100</MinimumPolearmSkill>
+  </JoustingConfig>
 </DadgConfiguration>

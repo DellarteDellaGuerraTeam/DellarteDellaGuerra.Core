@@ -21,9 +21,12 @@ using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.Patches;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
+using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
+using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
+using DellarteDellaGuerra.Infrastructure.Tournament.Jousting;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Reward.Spi;
 using DellarteDellaGuerra.Tournament.Reward.Spi.Mapper;
@@ -59,6 +62,7 @@ public class DadgServiceContainer
                 sp.GetRequiredService<Microsoft.Extensions.Logging.ILoggerFactory>()));
         services.AddSingleton<DadgConfigWatcher>();
         RegisterEvent<SubModuleLoadEvent>(services);
+        services.AddSingleton<DadgScriptComponentRegistrar>();
         services.AddSingleton<CampaignBehaviourDisabler>();
         services.AddSingleton<FirearmSkillProvider>();
         services.AddSingleton<IMBObjectProvider<SkillObject>>(sp => sp.GetRequiredService<FirearmSkillProvider>());
@@ -80,6 +84,8 @@ public class DadgServiceContainer
         services.AddSingleton<IRandomProvider, RandomProvider>();
         services.AddSingleton<IHighestTownProsperityProvider, HighestTownProsperityProvider>();
         services.AddSingleton<IGetTournamentRewardUseCase, GetTournamentRewardUseCase>();
+        services.AddSingleton<IJoustRequirementsProvider>(sp =>
+            new JoustRequirementsConfig(sp.GetRequiredService<DadgConfigWatcher>()));
         services.AddTransient<DadgTournamentModel>();
     }
 
