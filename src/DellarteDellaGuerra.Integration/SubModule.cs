@@ -16,11 +16,14 @@ using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.Integration.DI;
+using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.RemoveOrphanChildren.MissionBehaviours;
+using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Tournament.Api;
+using DellarteDellaGuerra.Tournament.Jousting.Api.Campaign;
 using DellarteDellaGuerra.Utils;
 using Harmony.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,6 +65,9 @@ namespace DellarteDellaGuerra.Integration
             _serviceProvider.GetRequiredService<IEventPublisher<SubModuleLoadEvent>>()
                 .Publish(new SubModuleLoadEvent());
 
+            _serviceProvider.GetRequiredService<DadgScriptComponentRegistrar>()
+                .RegisterLoadedDadgTypes();
+
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
         }
 
@@ -76,6 +82,10 @@ namespace DellarteDellaGuerra.Integration
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
+            var joustRequirementsProvider = _serviceProvider.GetRequiredService<IJoustRequirementsProvider>();
+            campaignGameStarter.AddModel(new DadgSettlementAccessModel(
+                campaignGameStarter.Models.OfType<SettlementAccessModel>().Last(),
+                joustRequirementsProvider));
 
             var loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
             campaignGameStarter.AddModel(new DadgSiegeStrategyActionModel(
@@ -90,6 +100,7 @@ namespace DellarteDellaGuerra.Integration
             game.AddGameHandler<CompilingShaderNotifier>();
 
             campaignGameStarter.AddBehavior(new NobleOrphanChildrenCampaignBehaviour());
+            campaignGameStarter.AddBehavior(new JoustTournamentCampaignBehavior(joustRequirementsProvider));
         }
 
         public override void OnGameInitializationFinished(Game game)
