@@ -26,6 +26,7 @@ using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.Infrastructure.Titles;
 using DellarteDellaGuerra.Integration.Titles;
 using DellarteDellaGuerra.Titles.Api;
+using DellarteDellaGuerra.Levy.Api;
 using DellarteDellaGuerra.Titles.Api.Campaign;
 using DellarteDellaGuerra.Titles.Api.GameModels;
 using DellarteDellaGuerra.Tournament.Api;
@@ -113,6 +114,7 @@ namespace DellarteDellaGuerra.Integration
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleCampaignBehavior>());
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<InternalConflictCampaignBehavior>());
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleSwapBehavior>());
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<LevyCampaignBehavior>());
 
             // Initialise the static service locator used by KingdomDecision subclasses
             FeudalServices.Initialise(
