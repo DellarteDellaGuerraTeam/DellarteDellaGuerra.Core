@@ -21,6 +21,13 @@ using DellarteDellaGuerra.Integration.ExpandedTemplateApi.Logging;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
+using DellarteDellaGuerra.Domain.Titles.Port;
+using DellarteDellaGuerra.Domain.Titles;
+using DellarteDellaGuerra.Infrastructure.Titles;
+using DellarteDellaGuerra.Integration.Titles;
+using DellarteDellaGuerra.Titles.Api;
+using DellarteDellaGuerra.Titles.Api.Campaign;
+using DellarteDellaGuerra.Titles.Api.GameModels;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Utils;
 using Harmony.DependencyInjection;
@@ -96,6 +103,29 @@ namespace DellarteDellaGuerra.Integration
             campaignGameStarter.AddModel(ActivatorUtilities.CreateInstance<DadgSiegeEventModel>(
                 _serviceProvider,
                 campaignGameStarter.Models.OfType<SiegeEventModel>().Last()));
+
+            // Feudal title models (each replaces the vanilla default)
+            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgDiplomacyModel>());
+            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgClanPoliticsModel>());
+            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgSettlementLoyaltyModel>());
+
+            // Feudal title campaign behaviours
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleCampaignBehavior>());
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<InternalConflictCampaignBehavior>());
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleSwapBehavior>());
+
+            // Initialise the static service locator used by KingdomDecision subclasses
+            FeudalServices.Initialise(
+                _serviceProvider.GetRequiredService<ITitleRepository>(),
+                _serviceProvider.GetRequiredService<IClaimRepository>(),
+                _serviceProvider.GetRequiredService<ITensionRepository>(),
+                _serviceProvider.GetRequiredService<IFeudalStructure>(),
+                _serviceProvider.GetRequiredService<IAssignTitleUseCase>(),
+                _serviceProvider.GetRequiredService<IGetSuzerainUseCase>(),
+                _serviceProvider.GetRequiredService<IEvaluateClaimUseCase>(),
+                _serviceProvider.GetRequiredService<IComputeFeudalSupportUseCase>(),
+                _serviceProvider.GetRequiredService<IComputeInfluenceTierBonusUseCase>(),
+                _serviceProvider.GetRequiredService<IAccumulateTensionUseCase>());
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();

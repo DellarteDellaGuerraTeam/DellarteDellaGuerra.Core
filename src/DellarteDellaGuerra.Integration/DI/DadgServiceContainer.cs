@@ -5,6 +5,8 @@ using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders.Ports;
+using DellarteDellaGuerra.Domain.Titles;
+using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using DellarteDellaGuerra.Firearm;
@@ -20,10 +22,14 @@ using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
+using DellarteDellaGuerra.Infrastructure.Titles;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
+using DellarteDellaGuerra.Integration.Titles;
+using DellarteDellaGuerra.Titles.Api.Campaign;
+using DellarteDellaGuerra.Titles.Api.GameModels;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Reward.Spi;
 using DellarteDellaGuerra.Tournament.Reward.Spi.Mapper;
@@ -43,6 +49,7 @@ public class DadgServiceContainer
         services.AddLogging(b => { b.AddNLog(new LoggerConfigPathProvider().Config); });
         RegisterCoreServices(services);
         services.AddDadgInfrastructure();
+        RegisterTitleServices(services);
         RegisterTournamentServices(services);
         RegisterDisplayServices(services);
         RegisterMissionServices(services);
@@ -100,6 +107,43 @@ public class DadgServiceContainer
         services.AddTransient<FirearmReloadMissionLogic>();
         services.AddTransient<FirearmSmokeMissionLogic>();
         services.AddTransient<RemoveSiegeTowerSpawnersMissionLogic>();
+    }
+
+    private static void RegisterTitleServices(IServiceCollection services)
+    {
+        // Infrastructure: persistent registries and de jure structure
+        services.AddSingleton<FeudalStructureConfigReader>();
+        services.AddSingleton(sp => sp.GetRequiredService<FeudalStructureConfigReader>().CreateStructure());
+        services.AddSingleton<IFeudalStructure>(sp => sp.GetRequiredService<XmlFeudalStructure>());
+        services.AddSingleton<InMemoryTitleRegistry>();
+        services.AddSingleton<ITitleRepository>(sp => sp.GetRequiredService<InMemoryTitleRegistry>());
+        services.AddSingleton<InMemoryClaimRegistry>();
+        services.AddSingleton<IClaimRepository>(sp => sp.GetRequiredService<InMemoryClaimRegistry>());
+        services.AddSingleton<InMemoryTensionRegistry>();
+        services.AddSingleton<ITensionRepository>(sp => sp.GetRequiredService<InMemoryTensionRegistry>());
+        services.AddSingleton<IFeudalStateStore, FeudalStateStoreAdapter>();
+
+        // Domain use cases
+        services.AddSingleton<IAssignTitleUseCase, AssignTitleUseCase>();
+        services.AddSingleton<IGetSuzerainUseCase, GetSuzerainUseCase>();
+        services.AddSingleton<IGetDirectVassalsUseCase, GetDirectVassalsUseCase>();
+        services.AddSingleton<IEvaluateClaimUseCase, EvaluateClaimUseCase>();
+        services.AddSingleton<IComputeFeudalSupportUseCase, ComputeFeudalSupportUseCase>();
+        services.AddSingleton<IComputeInfluenceTierBonusUseCase, ComputeInfluenceTierBonusUseCase>();
+        services.AddSingleton<IAccumulateTensionUseCase, AccumulateTensionUseCase>();
+        services.AddSingleton<IGenerateInheritanceClaimsUseCase, GenerateInheritanceClaimsUseCase>();
+
+        // Campaign behaviours and game models (resolved lazily in SubModule)
+        services.AddSingleton<FeudalTitleCampaignBehavior>(sp => new FeudalTitleCampaignBehavior(
+            sp.GetRequiredService<IAssignTitleUseCase>(),
+            sp.GetRequiredService<IGenerateInheritanceClaimsUseCase>(),
+            sp.GetRequiredService<IFeudalStateStore>(),
+            () => sp.GetRequiredService<XmlFeudalStructure>().BuildInitialTitles()));
+        services.AddSingleton<InternalConflictCampaignBehavior>();
+        services.AddSingleton<FeudalTitleSwapBehavior>();
+        services.AddTransient<DadgDiplomacyModel>();
+        services.AddTransient<DadgClanPoliticsModel>();
+        services.AddTransient<DadgSettlementLoyaltyModel>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
