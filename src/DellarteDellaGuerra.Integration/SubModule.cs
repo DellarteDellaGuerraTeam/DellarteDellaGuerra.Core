@@ -40,8 +40,10 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
+using TaleWorlds.InputSystem;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
+using TaleWorlds.ScreenSystem;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
 
 namespace DellarteDellaGuerra.Integration
@@ -144,6 +146,16 @@ namespace DellarteDellaGuerra.Integration
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();
+        }
+
+        protected override void OnApplicationTick(float dt)
+        {
+            base.OnApplicationTick(dt);
+            // TEMP test hotkey while the feudal UI is under construction: F9 opens the
+            // hierarchy screen. Removed once the encyclopedia button lands.
+            if (Campaign.Current is null || _serviceProvider is null) return;
+            if (Input.IsKeyReleased(InputKey.F9) && ScreenManager.TopScreen is not FeudalHierarchyScreen)
+                ScreenManager.PushScreen(new FeudalHierarchyScreen());
         }
 
         public override void OnGameInitializationFinished(Game game)

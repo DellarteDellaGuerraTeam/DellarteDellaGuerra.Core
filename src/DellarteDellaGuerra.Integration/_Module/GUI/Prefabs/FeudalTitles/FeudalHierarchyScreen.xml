@@ -1,0 +1,75 @@
+<Prefab>
+  <Constants>
+    <Constant Name="Encyclopedia.Canvas.Width" BrushName="Encyclopedia.Canvas" BrushLayer="Default" BrushValueType="Width"/>
+    <Constant Name="Encyclopedia.Canvas.Height" BrushName="Encyclopedia.Canvas" BrushLayer="Default" BrushValueType="Height"/>
+
+    <Constant Name="Feudal.Content.Width" Value="!Encyclopedia.Canvas.Width" Additive="-220"/>
+    <Constant Name="Feudal.Content.Height" Value="!Encyclopedia.Canvas.Height" Additive="-330"/>
+  </Constants>
+
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+      <Children>
+
+        <!--Dim whatever screen is underneath-->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.6"/>
+
+        <!--Encyclopedia-style book canvas-->
+        <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Encyclopedia.Canvas.Width" SuggestedHeight="!Encyclopedia.Canvas.Height" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Encyclopedia.Canvas">
+          <Children>
+
+            <!--Title-->
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="95" Brush="Encyclopedia.SubPage.Title.Text" Text="@TitleText"/>
+
+            <!--Hierarchy rows-->
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Feudal.Content.Width" SuggestedHeight="!Feudal.Content.Height" HorizontalAlignment="Center" MarginTop="180">
+              <Children>
+
+                <ScrollablePanel Id="NodesScrollPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" InnerPanel="NodesRect\NodesList" ClipRect="NodesRect" MouseScrollAxis="Vertical" VerticalScrollbar="..\NodesScrollbar" AutoHideScrollBars="true">
+                  <Children>
+                    <Widget Id="NodesRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" ClipContents="true">
+                      <Children>
+                        <ListPanel Id="NodesList" DataSource="{Nodes}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop" DoNotAcceptEvents="true">
+                          <ItemTemplate>
+
+                            <!--One title row, indented by feudal depth-->
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="4" MarginLeft="@IndentMargin">
+                              <Children>
+                                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="110" VerticalAlignment="Center" Brush="Encyclopedia.Stat.DefinitionText" Text="@RankText" IsHidden="@IsRealm"/>
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="Encyclopedia.Stat.ValueText" Text="@NameText" IsHidden="@IsRealm"/>
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="12" Brush="Encyclopedia.SubPage.Header.Text" Text="@NameText" IsVisible="@IsRealm"/>
+                                <RichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="16" Brush="Encyclopedia.Stat.DefinitionText" Text="@HolderLineText"/>
+                              </Children>
+                            </ListPanel>
+
+                          </ItemTemplate>
+                        </ListPanel>
+                      </Children>
+                    </Widget>
+                  </Children>
+                </ScrollablePanel>
+
+                <ScrollbarWidget Id="NodesScrollbar" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginRight="4" AlignmentAxis="Vertical" HorizontalAlignment="Right" VerticalAlignment="Center" Handle="NodesScrollbarHandle" MinValue="0" MaxValue="100">
+                  <Children>
+                    <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Bed"/>
+                    <BrushWidget Id="NodesScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="8" SuggestedHeight="50" HorizontalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Handle"/>
+                  </Children>
+                </ScrollbarWidget>
+
+              </Children>
+            </Widget>
+
+            <!--Close-->
+            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="250" SuggestedHeight="64" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="60" Brush="Popup.Done.Button.NineGrid" Command.Click="ExecuteClose" UpdateChildrenStates="true">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Popup.Button.Text" Text="@CloseText"/>
+              </Children>
+            </ButtonWidget>
+
+          </Children>
+        </BrushWidget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>
