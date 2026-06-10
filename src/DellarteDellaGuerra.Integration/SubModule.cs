@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Bannerlord.ExpandedTemplate.API;
+using Bannerlord.UIExtenderEx;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.MainMenu;
@@ -52,6 +53,7 @@ namespace DellarteDellaGuerra.Integration
     {
         private readonly ILogger _logger;
         private IServiceProvider _serviceProvider;
+        private UIExtender? _uiExtender;
 
         public SubModule()
         {
@@ -86,6 +88,12 @@ namespace DellarteDellaGuerra.Integration
                 .Publish(new SubModuleLoadEvent());
 
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
+
+            // UIExtenderEx discovers the feudal encyclopedia mixins and prefab
+            // patches in this assembly by attribute
+            _uiExtender = UIExtender.Create("DellarteDellaGuerra.Core");
+            _uiExtender.Register(typeof(SubModule).Assembly);
+            _uiExtender.Enable();
         }
 
         protected override void OnSubModuleUnloaded()

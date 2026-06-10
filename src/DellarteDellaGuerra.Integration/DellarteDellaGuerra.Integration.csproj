@@ -26,6 +26,9 @@
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All"/>
 
+        <!-- Compile-time only: the DLL is provided at runtime by the Bannerlord.UIExtenderEx module -->
+        <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.2" IncludeAssets="compile" PrivateAssets="all"/>
+
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj"/>
         <ProjectReference Include="..\DellarteDellaGuerra.Infrastructure\DellarteDellaGuerra.Infrastructure.csproj"/>
         <ProjectReference Include="..\DellarteDellaGuerra\DellarteDellaGuerra.csproj"/>

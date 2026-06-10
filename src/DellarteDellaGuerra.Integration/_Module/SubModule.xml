@@ -10,6 +10,7 @@
   <!-- Community Dependency Metadata -->
   <DependedModules>
     <DependedModule Id="Bannerlord.Harmony" DependentVersion="v$harmonyversion$"/>
+    <DependedModule Id="Bannerlord.UIExtenderEx" DependentVersion="v2.13.2"/>
     <DependedModule Id="Native" DependentVersion="$gameversion$"/>
     <DependedModule Id="SandBoxCore" DependentVersion="$gameversion$"/>
     <DependedModule Id="Sandbox" DependentVersion="$gameversion$"/>
@@ -20,6 +21,7 @@
   <!-- https://github.com/BUTR/Bannerlord.BLSE#community-dependency-metadata -->
   <DependedModuleMetadatas>
     <DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" version="v$harmonyversion$"/>
+    <DependedModuleMetadata id="Bannerlord.UIExtenderEx" order="LoadBeforeThis" version="v2.13.2"/>
     <DependedModuleMetadata id="Native" order="LoadBeforeThis" version="$gameversion$.*"/>
     <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" version="$gameversion$.*"/>
     <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" version="$gameversion$.*"/>
