@@ -72,4 +72,10 @@ public class FeudalStructureConfigReader
 
         return Array.Empty<FeudalTitleNode>();
     }
+
+    // Creates and populates an XmlFeudalStructure from the configured titles file.
+    public XmlFeudalStructure CreateStructure()
+    {
+        return new XmlFeudalStructure(Load());
+    }
 }
