@@ -5,8 +5,12 @@ using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders.Ports;
+using DellarteDellaGuerra.Domain.Levy;
+using DellarteDellaGuerra.Domain.Levy.Port;
 using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.Domain.Titles.Port;
+using DellarteDellaGuerra.Infrastructure.Levy;
+using DellarteDellaGuerra.Levy.Api;
 using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using DellarteDellaGuerra.Firearm;
@@ -53,6 +57,7 @@ public class DadgServiceContainer
         RegisterTournamentServices(services);
         RegisterDisplayServices(services);
         RegisterMissionServices(services);
+        RegisterLevyServices(services);
         RegisterPatches(services);
         services.AddHarmonyPatching();
         var provider = services.BuildServiceProvider();
@@ -144,6 +149,15 @@ public class DadgServiceContainer
         services.AddTransient<DadgDiplomacyModel>();
         services.AddTransient<DadgClanPoliticsModel>();
         services.AddTransient<DadgSettlementLoyaltyModel>();
+    }
+
+    private static void RegisterLevyServices(IServiceCollection services)
+    {
+        services.AddSingleton<InMemoryLevyRegistry>();
+        services.AddSingleton<ILevyRepository>(sp => sp.GetRequiredService<InMemoryLevyRegistry>());
+        services.AddSingleton<IIssueLevyUseCase, IssueLevyUseCase>();
+        services.AddSingleton<IExpireLeviesUseCase, ExpireLeviesUseCase>();
+        services.AddSingleton<LevyCampaignBehavior>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
