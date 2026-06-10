@@ -21,10 +21,12 @@ using DellarteDellaGuerra.Integration.ExpandedTemplateApi.Logging;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
+using DellarteDellaGuerra.Domain.Levy.Port;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.Infrastructure.Titles;
 using DellarteDellaGuerra.Integration.Titles;
+using DellarteDellaGuerra.Integration.Titles.UI;
 using DellarteDellaGuerra.Titles.Api;
 using DellarteDellaGuerra.Levy.Api;
 using DellarteDellaGuerra.Titles.Api.Campaign;
@@ -128,6 +130,17 @@ namespace DellarteDellaGuerra.Integration
                 _serviceProvider.GetRequiredService<IComputeFeudalSupportUseCase>(),
                 _serviceProvider.GetRequiredService<IComputeInfluenceTierBonusUseCase>(),
                 _serviceProvider.GetRequiredService<IAccumulateTensionUseCase>());
+
+            // Initialise the static service locator used by the feudal UI
+            // (encyclopedia mixins and the hierarchy screen are created by the game's UI
+            // machinery, not by the DI container)
+            FeudalUiServices.Initialise(
+                _serviceProvider.GetRequiredService<ITitleRepository>(),
+                _serviceProvider.GetRequiredService<IFeudalStructure>(),
+                _serviceProvider.GetRequiredService<IGetSuzerainUseCase>(),
+                _serviceProvider.GetRequiredService<IGetDirectVassalsUseCase>(),
+                _serviceProvider.GetRequiredService<IBuildFeudalMapUseCase>(),
+                _serviceProvider.GetRequiredService<ILevyRepository>());
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();

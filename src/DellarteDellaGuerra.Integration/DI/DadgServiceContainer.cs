@@ -137,6 +137,7 @@ public class DadgServiceContainer
         services.AddSingleton<IComputeInfluenceTierBonusUseCase, ComputeInfluenceTierBonusUseCase>();
         services.AddSingleton<IAccumulateTensionUseCase, AccumulateTensionUseCase>();
         services.AddSingleton<IGenerateInheritanceClaimsUseCase, GenerateInheritanceClaimsUseCase>();
+        services.AddSingleton<IBuildFeudalMapUseCase, BuildFeudalMapUseCase>();
 
         // Campaign behaviours and game models (resolved lazily in SubModule)
         services.AddSingleton<FeudalTitleCampaignBehavior>(sp => new FeudalTitleCampaignBehavior(
