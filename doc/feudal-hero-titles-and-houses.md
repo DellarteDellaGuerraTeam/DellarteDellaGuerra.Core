@@ -116,10 +116,11 @@ clans), and house-level UI grouping in the hierarchy screen.
 When a second son holds a major title (county+), an action could spin his line off into a new
 engine clan within the same house — converting an intra-clan titled hero into an
 engine-visible clan exactly when the engine needs one (parties, elections, kingdom politics),
-which is also what history did (Neville of Middleham *was* a cadet spinoff). Precedent for
-runtime clan creation exists (`RebellionsCampaignBehavior` spawns rebel clans; the Diplomacy
-mod creates kingdoms via `KingdomManager.CreateKingdom`), but the exact official API for
-creating a lord clan mid-campaign is **UNVERIFIED** — smoke-test before committing to (c).
+which is also what history did (Neville of Middleham *was* a cadet spinoff).
+**VERIFIED (1.3.15 reflection):** `Clan.CreateClan` is a public static factory (alongside
+`CreateSettlementRebelClan` and `CreateCompanionToLordClan`), and `Hero.Clan` has a public
+setter for moving the cadet hero — the API exists; what still needs an in-game smoke test is
+banner/encyclopedia/AI behaviour of a mid-campaign lord clan.
 
 ## 5. Sequencing
 
