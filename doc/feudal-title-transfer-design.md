@@ -155,6 +155,12 @@ Open questions to settle before building:
   occupant for the seat's own troops, the de jure holder for sworn vassal clans.
 - AI weighting for the attainder decision: kings should attaint enemies-in-exile readily but
   hesitate to attaint powerful loyal houses (the Percy restoration case).
+- **Rebellion (deferred, decision pending):** `ByRebellion` → contested means rebel clans
+  hold seats but never the dignity until a king regularises them — historically right, but
+  rebel clans often start kingdomless, so no claimant election ever runs and the title can
+  sit contested indefinitely. Acceptable as flavour for now; revisit when rebellions matter
+  (options: auto-finalise after N years, finalise when the rebel clan joins/forms a kingdom,
+  or leave as permanent usurper status feeding tension).
 
 ## 6. Recommendation
 
