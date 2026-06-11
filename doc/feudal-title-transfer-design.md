@@ -1,7 +1,8 @@
 # Feudal Title Transfer — Historical Accuracy Analysis & Design Brainstorm
 
 > **Status:** Analysis / design brainstorm. No code changes have been made as a result of this
-> document.
+> document. §7 grounds the design in engine surfaces verified against the 1.3.1 decompiled
+> source (via the bannerlord-search MCP).
 > **Branch:** `claude/banner-lord-mcp-integration-79WN8`
 > **Date:** 2026-06-11
 > **Question that prompted it:** "Historically, the title was a title, right? If one lost its
@@ -161,3 +162,110 @@ Option C first. It introduces the de jure/de facto split (the load-bearing conce
 attainder decision without committing to indefinite-exile bookkeeping, and every later step
 toward Option B (longer grace periods, allegiance drift, restoration mechanics) is additive on
 top of it.
+
+## 7. Engine integration — verified against 1.3.1 decompiled source
+
+Every engine surface Option C needs exists and is already half-wired in the mod. Findings
+below are from the 1.3.1 decompile (bannerlord-search MCP), cross-checked against our code.
+
+### 7.1 The conquest-vs-grant signal already arrives — we discard it
+
+`CampaignEvents.OnSettlementOwnerChangedEvent` delivers
+`ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail`, and
+`FeudalTitleCampaignBehavior.OnSettlementOwnerChanged` already receives it (and ignores it).
+The enum (verified):
+
+| Detail | Meaning | Proposed title effect |
+| --- | --- | --- |
+| `BySiege` | Conquest | **Contested**: set occupant only, de jure holder keeps the dignity |
+| `ByRebellion` | Rebel clan seizes seat | **Contested** — rebels are illegitimate until regularised (free historicity) |
+| `ByKingDecision` | Claimant-election outcome / royal grant | **Full transfer** — this *is* the royal/ducal decision (§5.2) |
+| `ByGift`, `ByBarter` | Consensual conveyance | **Full transfer** (historically would need royal licence; not worth modelling) |
+| `ByLeaveFaction`, `ByClanDestruction`, `Default` | Administrative | **Full transfer** — self-healing fallback, keeps hierarchy matching the map |
+
+The vanilla flow already produces the two-step pattern we want: a siege fires `BySiege`
+(→ contested), the kingdom then runs the claimant election, and *its* outcome fires
+`ByKingDecision` via `ChangeOwnerOfSettlementAction` (→ transfer). When the election awards
+the settlement to the clan that captured it, the dignity follows within ~2 days; when it
+awards it elsewhere, the title correctly tracks the king's choice, not the sword. The
+**grace period of Option C is therefore not even a new clock for same-kingdom conquest** —
+it falls out of the election delay. The explicit grace clock is only needed for
+cross-kingdom occupation (no election happens in the *title's* kingdom).
+
+Domain mapping: keep TaleWorlds types out of the domain — the adapter collapses the enum to
+a domain `SeatTransferKind { Conquest, Grant, Administrative }` passed to
+`AssignTitleUseCase.Execute`.
+
+### 7.2 KingdomDecision lifecycle supports a self-cancelling attainder decision
+
+Verified in `TaleWorlds.CampaignSystem.Election.KingdomDecision` and
+`KingdomDecisionProposalBehavior`:
+
+- **Enqueue:** `Kingdom.AddDecision(decision, ignoreInfluenceCost)`. Vanilla enqueues
+  `SettlementClaimantDecision` from the ruling clan with `ignoreInfluenceCost: true`; our
+  `InternalConflictCampaignBehavior.TryTriggerPetition` already uses the identical pattern
+  (dedup against `kingdom.UnresolvedDecisions`, then `AddDecision`). The attainder proposal
+  is the same code shape with a different trigger (contested-duration / occupant petition
+  instead of tension threshold).
+- **Resolution loop:** `KingdomDecisionProposalBehavior.UpdateKingdomDecisions` iterates
+  `UnresolvedDecisions`; decisions where `ShouldBeCancelled()` returns true are removed
+  (with an `OnKingdomDecisionCancelled` event), the rest run
+  `new KingdomElection(d).StartElectionWithoutPlayer()` once `TriggerTime` passes.
+- **Self-cancellation hooks:** `ShouldBeCancelled()` already cancels when the kingdom dies,
+  the proposer leaves, or `IsAllowed()` fails; `ShouldBeCancelledInternal()` is the virtual
+  for decision-specific rules. `FeudalAttainderDecision.ShouldBeCancelledInternal()` returns
+  true when the title is no longer contested (de jure holder retook the seat, or the
+  occupant changed) — the queue cleans itself, no bookkeeping behavior needed.
+- **Timing:** `TriggerTime = HoursFromNow(HoursToWait)`, `HoursToWait` virtual (default 48).
+  An attainder is parliament assembling, not a council vote — override to something like a
+  week so the dispossessed holder has a window to retake the seat and moot the act.
+- **Player UX is free:** `NeedsPlayerResolution` + the verified `SandBox.View.Map` popup
+  machinery ("Critical Kingdom Decision" → kingdom screen) means a player king rules on
+  attainders with zero UI work from us; `DetermineChooser()` = king is exactly the
+  `FeudalPetitionDecision` fallback path.
+- **`GetFollowUpDecision()`:** consumed only by the kingdom Decisions VM (player resolution
+  flow) to chain a follow-up immediately — vanilla chains
+  `SettlementClaimantPreliminaryDecision` → `SettlementClaimantDecision`. Useful polish to
+  chain election → attainder for the player, but AI kingdoms never call it; the daily-tick
+  proposal path is the mechanism, follow-up is presentation.
+
+### 7.3 Save & state
+
+- `FeudalElectionSaveDefiner` (base id 2_887_350) has ids 1–4 taken; the attainder decision
+  and its two outcomes take 5–7. The `FeudalPetitionDecision` outcome pattern
+  (`GrantClaimOutcome`/`DenyClaimOutcome`, `EmptyImageIdentifier`, `[SaveableField]` string
+  ids) is reusable verbatim: `AttaintOutcome` (transfer dignity to occupant + conquest claim
+  for the attainted) / `UpholdOutcome` (dignity stays; occupant gains tension or a claim).
+- Domain state rides the existing flat-string `TitleStateSerialiser`: `Title` gains
+  `string? OccupantClanId` and a contested-since day stamp. The deserialiser must accept the
+  old field count (pre-split saves → not contested) — same trick as the seed-on-empty path
+  in `FeudalTitleCampaignBehavior.OnGameLoaded`.
+- `record Title(Id, Name, Rank, SeatSettlementId, HolderClanId)` extends mechanically;
+  `AssignmentResult` gains a `Contested` flag so the campaign behavior can notify.
+
+### 7.4 Cross-kingdom rule
+
+`CampaignEvents.MakePeace` delivers
+`(IFaction side1, IFaction side2, MakePeaceAction.MakePeaceDetail detail)` (verified). Rule:
+while the occupant's kingdom differs from the title's kingdom (the crown holder's engine
+kingdom), no attainder is possible — the title sits contested indefinitely, a dignity in
+exile. On `MakePeace`, contested titles whose seats stay with the enemy kingdom finalise:
+transfer + conquest claim (Option C), or remain exile dignities (Option B upgrade, later).
+War-end is the only event needed; no per-tick polling.
+
+### 7.5 Revised smallest first step
+
+1. Domain: `Title.OccupantClanId` + contested stamp; `SeatTransferKind`;
+   `AssignTitleUseCase` branches on it. Tests first (`AssignTitleUseCaseTests` has the
+   harness).
+2. Adapter: `FeudalTitleCampaignBehavior.OnSettlementOwnerChanged` maps the already-received
+   `detail` per §7.1 table. Serialiser round-trip + backward-compat test.
+3. `FeudalAttainderDecision` (save ids 5–7), proposed from
+   `InternalConflictCampaignBehavior`'s daily tick when a same-kingdom title has been
+   contested ≥ N days (covers the rare case where no claimant election ran, e.g. the
+   capturer already owned the seat de facto via `ByLeaveFaction` chains).
+4. `MakePeace` listener finalising cross-kingdom contested titles.
+5. UI: hierarchy screen + encyclopedia mixins show "Occupied by X" when holder ≠ occupant.
+
+Step 1+2 alone already deliver the headline historical fix: a foreign or rebel conqueror no
+longer becomes an English earl by storming a wall.
