@@ -45,7 +45,8 @@ namespace DellarteDellaGuerra.Domain.Titles
                 _feudalStructure.GetRank(titleId) ?? TitleRank.Baron,
                 title?.SeatSettlementId ?? string.Empty,
                 title?.HolderClanId,
-                vassals);
+                vassals,
+                title is { IsContested: true } ? title.OccupantClanId : null);
         }
     }
 }

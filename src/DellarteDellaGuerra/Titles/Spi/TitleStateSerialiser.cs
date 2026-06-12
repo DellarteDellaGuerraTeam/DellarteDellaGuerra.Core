@@ -14,7 +14,9 @@ namespace DellarteDellaGuerra.Titles.Spi
      * <remarks>
      *  Format (fields joined with '|'):
      *  <list type="bullet">
-     *   <item>Title: Id|Name|Rank|SeatSettlementId|HolderClanId ('' sentinel for a vacant title)</item>
+     *   <item>Title: Id|Name|Rank|SeatSettlementId|HolderClanId|OccupantClanId|ContestedSinceDay
+     *    ('' sentinel for a vacant/absent field). Pre-occupant saves carry 5 fields and load
+     *    as uncontested.</item>
      *   <item>Claim: Id|ClaimantClanId|TitleId|Strength|Origin</item>
      *   <item>Tension: ClaimantClanId|TitleId|Amount (invariant culture float)</item>
      *  </list>
@@ -38,7 +40,9 @@ namespace DellarteDellaGuerra.Titles.Spi
                     title.Name,
                     title.Rank.ToString(),
                     title.SeatSettlementId,
-                    title.HolderClanId ?? string.Empty));
+                    title.HolderClanId ?? string.Empty,
+                    title.OccupantClanId ?? string.Empty,
+                    title.ContestedSinceDay?.ToString("R", CultureInfo.InvariantCulture) ?? string.Empty));
             }
 
             return serialised;
@@ -50,15 +54,28 @@ namespace DellarteDellaGuerra.Titles.Spi
             foreach (string line in serialisedTitles)
             {
                 string[] fields = line.Split(Delimiter);
-                if (fields.Length != 5) continue;
+                if (fields.Length != 5 && fields.Length != 7) continue;
                 if (!TryParseEnum(fields[2], out TitleRank rank)) continue;
+
+                float? contestedSinceDay = null;
+                if (fields.Length == 7 && fields[6].Length > 0)
+                {
+                    if (!float.TryParse(fields[6], NumberStyles.Float, CultureInfo.InvariantCulture, out float day))
+                    {
+                        continue;
+                    }
+
+                    contestedSinceDay = day;
+                }
 
                 titles.Add(new Title(
                     fields[0],
                     fields[1],
                     rank,
                     fields[3],
-                    fields[4].Length == 0 ? null : fields[4]));
+                    fields[4].Length == 0 ? null : fields[4],
+                    fields.Length == 7 && fields[5].Length > 0 ? fields[5] : null,
+                    contestedSinceDay));
             }
 
             return titles;
