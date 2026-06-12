@@ -40,10 +40,13 @@ namespace DellarteDellaGuerra.Integration.Titles.UI.Mixins
 
             IsFeudalInfoVisible = titles.Count > 0 || suzerainClan is not null;
             if (titles.Count > 0)
-                FeudalTitlesText = string.Join(", ", titles.Select(title => title.Name));
+                FeudalTitlesText = string.Join(", ", titles.Select(FormatTitleName));
             if (suzerainClan is not null)
                 FeudalSuzerainText = suzerainClan.Name.ToString();
         }
+
+        private static string FormatTitleName(Title title) =>
+            title.Name + FeudalTitleDisplay.OccupiedSuffix(title.IsContested ? title.OccupantClanId : null);
 
         [DataSourceProperty] public bool IsFeudalInfoVisible { get; }
         [DataSourceProperty] public string FeudalSectionText { get; }

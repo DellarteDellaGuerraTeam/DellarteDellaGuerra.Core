@@ -31,7 +31,8 @@ namespace DellarteDellaGuerra.Integration.Titles.UI
         {
             string holder = ResolveHolderName(entry.HolderClanId);
             string? seat = ResolveSeatName(entry.SeatSettlementId);
-            return seat is null ? holder : $"{holder} - {seat}";
+            string line = seat is null ? holder : $"{holder} - {seat}";
+            return line + FeudalTitleDisplay.OccupiedSuffix(entry.OccupantClanId);
         }
 
         private static string ResolveHolderName(string? holderClanId)

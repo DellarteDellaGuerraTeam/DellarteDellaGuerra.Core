@@ -15,6 +15,9 @@ namespace DellarteDellaGuerra.Titles.Api.Election
             AddClassDefinition(typeof(FeudalPetitionDecision), 2);
             AddClassDefinition(typeof(FeudalPetitionDecision.GrantClaimOutcome), 3);
             AddClassDefinition(typeof(FeudalPetitionDecision.DenyClaimOutcome), 4);
+            AddClassDefinition(typeof(FeudalAttainderDecision), 5);
+            AddClassDefinition(typeof(FeudalAttainderDecision.AttaintOutcome), 6);
+            AddClassDefinition(typeof(FeudalAttainderDecision.UpholdOutcome), 7);
         }
     }
 }

@@ -46,6 +46,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
             CampaignEvents.OnSettlementOwnerChangedEvent.AddNonSerializedListener(this, OnSettlementOwnerChanged);
             CampaignEvents.HeroKilledEvent.AddNonSerializedListener(this, OnHeroKilled);
+            CampaignEvents.MakePeace.AddNonSerializedListener(this, OnMakePeace);
         }
 
         public override void SyncData(IDataStore dataStore)
@@ -100,7 +101,54 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             Hero capturerHero,
             ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail detail)
         {
-            _assignTitleUseCase.Execute(settlement.StringId, newOwner?.Clan?.StringId);
+            _assignTitleUseCase.Execute(
+                settlement.StringId,
+                newOwner?.Clan?.StringId,
+                ToSeatTransferKind(detail),
+                (float)CampaignTime.Now.ToDays);
+        }
+
+        // Conquest leaves the dignity with the de jure holder; a king's decision (the claimant
+        // election outcome) or a consensual conveyance moves it; the rest are bookkeeping.
+        private static SeatTransferKind ToSeatTransferKind(
+            ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail detail)
+        {
+            return detail switch
+            {
+                ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail.BySiege => SeatTransferKind.Conquest,
+                ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail.ByRebellion => SeatTransferKind.Conquest,
+                ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail.ByKingDecision => SeatTransferKind.Grant,
+                ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail.ByGift => SeatTransferKind.Grant,
+                ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail.ByBarter => SeatTransferKind.Grant,
+                _ => SeatTransferKind.Administrative
+            };
+        }
+
+        // A peace treaty cedes occupied titles: when the title's kingdom makes peace with the
+        // faction holding the seat, the occupation is regularised as a grant (uti possidetis).
+        private void OnMakePeace(
+            IFaction side1Faction,
+            IFaction side2Faction,
+            MakePeaceAction.MakePeaceDetail detail)
+        {
+            foreach (var title in _stateStore.SnapshotTitles().Where(t => t.IsContested).ToList())
+            {
+                var settlement = TaleWorlds.CampaignSystem.Settlements.Settlement.Find(title.SeatSettlementId);
+                var ownerFaction = settlement?.OwnerClan?.MapFaction;
+                var titleKingdom = FeudalTitleKingdoms.GetTitleKingdom(title.Id);
+                if (ownerFaction is null || titleKingdom is null || ownerFaction == titleKingdom) continue;
+
+                bool peaceCoversTitle =
+                    (side1Faction == titleKingdom && side2Faction == ownerFaction)
+                    || (side2Faction == titleKingdom && side1Faction == ownerFaction);
+                if (!peaceCoversTitle) continue;
+
+                _assignTitleUseCase.Execute(
+                    title.SeatSettlementId,
+                    settlement!.OwnerClan.StringId,
+                    SeatTransferKind.Grant,
+                    (float)CampaignTime.Now.ToDays);
+            }
         }
 
         private void OnHeroKilled(
