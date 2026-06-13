@@ -101,27 +101,30 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             Hero capturerHero,
             ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail detail)
         {
-            _assignTitleUseCase.Execute(
-                settlement.StringId,
-                newOwner?.Clan?.StringId,
-                ToSeatTransferKind(detail),
-                (float)CampaignTime.Now.ToDays);
-        }
+            // ByKingDecision is a legal grant only when it originates from the title's own
+            // kingdom's election. A foreign king reassigning a freshly conquered seat to one
+            // of his clans is still occupation — the dignity does not follow the engine event.
+            var title = FeudalServices.Titles?.GetTitleBySeat(settlement.StringId);
+            var titleKingdom = title is not null ? FeudalTitleKingdoms.GetTitleKingdom(title.Id) : null;
+            bool newOwnerInTitleKingdom = newOwner?.Clan?.Kingdom is not null
+                                          && newOwner.Clan.Kingdom == titleKingdom;
 
-        // Conquest leaves the dignity with the de jure holder; a king's decision (the claimant
-        // election outcome) or a consensual conveyance moves it; the rest are bookkeeping.
-        private static SeatTransferKind ToSeatTransferKind(
-            ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail detail)
-        {
-            return detail switch
+            SeatTransferKind kind = detail switch
             {
                 ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail.BySiege => SeatTransferKind.Conquest,
                 ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail.ByRebellion => SeatTransferKind.Conquest,
-                ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail.ByKingDecision => SeatTransferKind.Grant,
+                ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail.ByKingDecision =>
+                    newOwnerInTitleKingdom ? SeatTransferKind.Grant : SeatTransferKind.Conquest,
                 ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail.ByGift => SeatTransferKind.Grant,
                 ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail.ByBarter => SeatTransferKind.Grant,
                 _ => SeatTransferKind.Administrative
             };
+
+            _assignTitleUseCase.Execute(
+                settlement.StringId,
+                newOwner?.Clan?.StringId,
+                kind,
+                (float)CampaignTime.Now.ToDays);
         }
 
         // A peace treaty cedes occupied titles: when the title's kingdom makes peace with the
