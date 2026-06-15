@@ -390,7 +390,7 @@ kingdom** the entire time.
 
 Following the hexagonal layout in `doc/feudal-titles.md`:
 
-**Domain** (`src/DellarteDellaGuerra.Domain/PrivateWar/`):
+**Domain** (`src/DellarteDellaGuerra.Domain/PrivateWars/`):
 
 ```csharp
 public enum PrivateWarStatus { Active, Mediated, AttackerVictory, DefenderVictory, WhitePeace }

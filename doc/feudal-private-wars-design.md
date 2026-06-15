@@ -516,7 +516,7 @@ read it directly, so there are no faction objects to reconcile or heal.
 
 Follows the hexagonal layout and the `FeudalServices` static-locator pattern already in use.
 
-**Domain** (`src/DellarteDellaGuerra.Domain/PrivateWar/`) — pure, unit-testable:
+**Domain** (`src/DellarteDellaGuerra.Domain/PrivateWars/`) — pure, unit-testable:
 - `PrivateWar` record (one per ordered belligerent pair): `Id`, `AttackerClanId`, `DefenderClanId`,
   `CasusBelliType`, `TitleId`, `MainGoalSettlementId`, `OriginalFiefOwners`, `Score`, `StartDay`,
   `Status`. **No `WarFooting`/temp-kingdom/refcount state** — the clan never leaves its kingdom, so
@@ -777,3 +777,68 @@ private war.
 Model overrides **8 → ~9**; Harmony **~18 → ~17**; ~4 members to re-point on upgrade. The 1.4.x
 refactors moved two of our concerns *toward* clean override seams and deleted one patch, so 1.4.6 is a
 slightly **better** target than 1.3.1, not a worse one.
+
+---
+
+## 18. Amendments — call-to-arms, sides, and scoring v2 (2026-06-15)
+
+> Agreed after the substrate was locked; **supersedes the named parts of §6, §7, §9**. The substrate
+> (§1–§5, §12) is unaffected — these amendments only change *who participates* and *how score is
+> counted*, both of which sit inside the bounded combat layer. The build order lives in the companion
+> `feudal-private-wars-implementation-plan.md`.
+
+**A. Recursive call-to-arms — sides, not pairs (supersedes §9's "unordered pair" framing).**
+A war has two **principals** (claimant ⚔ title-holder) and two **sides**: each principal plus its
+entire (sub)vassal subtree, following the **DADG feudal title hierarchy** (not the Bannerlord kingdom),
+exactly as kingdom call-to-arms works. Membership is **dynamic** — a clan's side is resolved by walking
+**up** its suzerain chain to the **first belligerent principal** (nearest-belligerent-ancestor, so a
+clan attacking its own liege keeps its subtree on its own side). The hostility registry becomes
+side-set-keyed (cached, invalidated on hierarchy change); `AreEnemies(X,Y)` = "opposite sides of some
+active war." Patch count unchanged. Concurrency rule relaxes to **one war per pair of principals (per
+CB)**; vassals may be called into several wars at once. Stay-in-kingdom is *reinforced* by this — you
+would never want to eject whole vassal trees.
+
+**B. Scoring v2 (supersedes §6.1's objective table; §6.2 fatigue retained).**
+Attacker-positive, clamped ±100. **Two kinds of term:** *state-derived* (recomputed each tick from
+current world state) and one *accumulated* (battle flow, persisted on the record).
+
+*State-derived (recomputed each tick):*
+- **Main goal = 50** (flat, regardless of town/castle), **town = 30**, **castle = 10**.
+- Settlements of the **whole side** (principal + sub-vassals) count. Attacker holding a contested
+  defender-side fief adds its weight; defender holding an attacker-side fief subtracts it.
+- **Prisoners = ±5 each.** While a side holds a captive who is a member of the *opposing principal's
+  clan* (the claimant's or the title-holder's own clan), it scores +5 per head in that side's favour;
+  the bonus vanishes on release/escape (it is state, like settlement control, not an event tally).
+
+*Accumulated (the one persisted score term — `PrivateWar.BattleScore`):*
+- **Battle outcomes** add a **normalized** bump per resolved field/siege battle between the two sides:
+  `delta = BATTLE_WEIGHT × clamp(enemyForceDefeated ÷ losingSideTotalStrength, 0, 1)`, signed `+`
+  attacker / `−` defender by who won, accumulated across the war and **capped to ±`BATTLE_SCORE_CAP`**.
+  Normalizing by the *whole losing side's* strength makes one decisive battle worth far more than many
+  skirmishes, and the cap keeps battles a *bump* subordinate to the main goal + fatigue. `BATTLE_WEIGHT`
+  and `BATTLE_SCORE_CAP` are tunable constants (start both at 50 — annihilating a side in one battle
+  caps it). This is the only term that cannot be recomputed from current state, so it lives on the record.
+
+*Forcing function:*
+- **Fatigue retained** (direction = who holds the frozen main goal) → guarantees termination in a
+  stalemate, regardless of the bumps above.
+
+**Village raids do not score** (deferred). `S = clamp(stateTerms + BattleScore + fatigue, −100, +100)`.
+
+**C. Main-goal computation (supersedes §7's "main goal = `Title.SeatSettlementId`").**
+Main goal = the **highest-prosperity** settlement among the **claimed title's de jure settlements
+currently held by the defendant**; if the defendant holds none of them, fall back to the defendant's
+**capital/home settlement**. **Frozen at declaration — never recomputed**, except case E.
+
+**D. Landless-defendant precondition (new).** If the defendant owns no settlement before the war (no
+main goal can be computed), **the CB cannot be pressed**. Usurping a title held by a landless clan is a
+separate future feature.
+
+**E. Multi-attacker interactions (extends §9).** When a clan defends against two attackers who are also
+at war with each other (no score between attackers — no CB):
+- **Different CB:** if attacker-2 (no CB vs the defendant) ends up holding attacker-1's frozen main
+  goal and then **makes peace with the defendant**, attacker-1's main goal is **re-evaluated** by rule
+  C (the only exception to the freeze — the prize is now behind a neutral).
+- **Same CB (same claimed title):** if attacker-2 captures attacker-1's main goal, it converts
+  CK3-style — **attacker-1 makes peace with the defendant and goes to war with attacker-2** (you fight
+  whoever physically holds the title you both claim).
