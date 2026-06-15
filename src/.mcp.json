@@ -8,6 +8,10 @@
       "type": "http",
       "url": "http://localhost:5001"
     },
+    "bannerlord-search-1.4.6": {
+      "type": "http",
+      "url": "http://localhost:5002"
+    },
     "bannerlord-game-controller": {
       "type": "http",
       "url": "http://127.0.0.1:8080/mcp"
