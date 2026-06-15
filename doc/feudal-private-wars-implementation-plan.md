@@ -71,7 +71,7 @@ Domain/PrivateWars/                   (pure, netstandard2.0, zero TaleWorlds)
           RevertInstruction, ResolutionPlan
   ICasusBelli, ClaimCasusBelli
   WarSideResolver                     ← side membership by suzerain walk (call-to-arms)
-  MainGoalSelector                    ← highest-prosperity / capital fallback (frozen goal)
+  MainGoalSelector                    ← highest-prosperity de jure held by defendant (frozen goal)
   PrivateWarScoreCalculator           ← the testable heart (amended §6/§8)
   DeclarePrivateWarUseCase, TickPrivateWarUseCase, ApplyBattleOutcomeUseCase, ResolvePrivateWarUseCase
   Port/  IPrivateWarRepository, IPrivateWarHostility, IFeudalHierarchy
@@ -135,10 +135,10 @@ Walks up the suzerain chain; first principal hit wins; null = uninvolved. `IFeud
 port supplying `GetSuzerain(clanId)` (the registry will back it with the existing feudal structure).
 
 **Main goal (`MainGoalSelector`)** — pure, frozen at declaration:
-`Select(IEnumerable<SettlementInfo> titleDeJureSettlements, defenderClanId, defenderCapitalId?) →
+`Select(IEnumerable<SettlementInfo> titleDeJureSettlements, defenderClanId) →
 settlementId?`. Highest **prosperity** among the claimed title's de jure settlements **held by the
-defendant**; if it holds none, fall back to the defendant's **capital**; if **landless**, return null
-→ CB cannot be pressed. `SettlementInfo = (Id, OwnerClanId, IsTown, Prosperity)`.
+defendant**; if it holds none, return null → CB cannot be pressed.
+`SettlementInfo = (Id, OwnerClanId, IsTown, Prosperity)`.
 
 **Score (`PrivateWarScoreCalculator.Compute(PrivateWarObservations obs, float daysElapsed) → float`)** —
 attacker-positive, clamped ±100 (amended §6.B). State terms are recomputed each tick; `BattleScore`
@@ -195,7 +195,7 @@ multi-attacker re-eval and same-CB collision in later phases), `IPrivateWarHosti
 | Battle: accumulation & sign | attacker win adds `+W·(defeated/totalLosing)`; defender win subtracts; clamps to ±CAP; `totalLosing≤0` no-ops |
 | SideResolver: unrelated subtrees | each clan resolves to its principal's side |
 | SideResolver: attacker is defender's vassal | attacker subtree → Attacker; rest → Defender; uninvolved → null |
-| MainGoalSelector | highest-prosperity de jure held; capital fallback; **landless → null** |
+| MainGoalSelector | highest-prosperity de jure held by defendant; **holds none → null** |
 | Declare: landless defendant | rejected |
 | Declare: duplicate principal pair / same CB | rejected; different opponent allowed |
 | Revert: white peace | full status-quo-ante |
