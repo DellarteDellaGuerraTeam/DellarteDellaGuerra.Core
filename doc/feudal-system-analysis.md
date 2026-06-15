@@ -6,7 +6,7 @@
 > **Scope:** (1) Where the new CK3-style feudal title system clashes with existing Bannerlord
 > and DADG mechanics; (2) feasibility and recommended design for *internal wars within the same
 > faction* (e.g. two Counts fighting while both remain de jure vassals of the same Duke).
-
+[feudal-hero-titles-and-houses.md](feudal-hero-titles-and-houses.md)
 ---
 
 ## Table of Contents
@@ -275,6 +275,13 @@ the expiry pass.
 ---
 
 ## 3. Part B — Intra-Faction Private Wars
+
+> **⚠ SUPERSEDED (2026-06-13).** The recommendation below — design **(b)**, *abstract private war*
+> — is overruled by a later requirement that **all wars be real and represented on the campaign
+> map**. The working design refines dismissed option **(a)** by splintering *both* belligerents into
+> their own one-clan kingdoms (not just one against the parent), which removes (a)'s
+> "escalates to the whole kingdom" objection. See **`feudal-private-wars-design.md`**. Part B is
+> retained for its `MapFaction` analysis and the options trade study, which remain accurate.
 
 > **Goal:** two Count clans, both de jure vassals of the same Duke, fighting each other while **both
 > remain members of the same kingdom** — CK3-style limited private war, with the rest of the kingdom
