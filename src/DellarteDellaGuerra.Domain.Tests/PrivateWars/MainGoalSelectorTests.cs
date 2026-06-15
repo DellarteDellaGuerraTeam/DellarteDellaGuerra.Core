@@ -18,29 +18,18 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
                 new("castle_other", "X", IsTown: false, Prosperity: 9000f) // held by someone else
             };
 
-            Assert.Equal("town_high", _selector.Select(settlements, defenderClanId: "D", defenderCapitalId: "capital"));
+            Assert.Equal("town_high", _selector.Select(settlements, defenderClanId: "D"));
         }
 
         [Fact]
-        public void Select_DefenderHoldsNoneOfTheTitle_FallsBackToCapital()
+        public void Select_DefenderHoldsNoneOfTheTitle_ReturnsNull()
         {
             var settlements = new List<SettlementInfo>
             {
                 new("town_x", "X", IsTown: true, Prosperity: 5000f)
             };
 
-            Assert.Equal("capital", _selector.Select(settlements, defenderClanId: "D", defenderCapitalId: "capital"));
-        }
-
-        [Fact]
-        public void Select_LandlessDefender_ReturnsNull()
-        {
-            var settlements = new List<SettlementInfo>
-            {
-                new("town_x", "X", IsTown: true, Prosperity: 5000f)
-            };
-
-            Assert.Null(_selector.Select(settlements, defenderClanId: "D", defenderCapitalId: null));
+            Assert.Null(_selector.Select(settlements, defenderClanId: "D"));
         }
     }
 }

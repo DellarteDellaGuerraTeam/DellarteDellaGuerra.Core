@@ -827,12 +827,11 @@ current world state) and one *accumulated* (battle flow, persisted on the record
 
 **C. Main-goal computation (supersedes §7's "main goal = `Title.SeatSettlementId`").**
 Main goal = the **highest-prosperity** settlement among the **claimed title's de jure settlements
-currently held by the defendant**; if the defendant holds none of them, fall back to the defendant's
-**capital/home settlement**. **Frozen at declaration — never recomputed**, except case E.
+currently held by the defendant**. **Frozen at declaration — never recomputed**, except case E.
 
-**D. Landless-defendant precondition (new).** If the defendant owns no settlement before the war (no
-main goal can be computed), **the CB cannot be pressed**. Usurping a title held by a landless clan is a
-separate future feature.
+**D. No-main-goal precondition (new).** If the defendant holds **none of the claimed title's de jure
+settlements**, no main goal can be computed and **the CB cannot be pressed**. Usurping a title held by
+a landless (or de-facto-dispossessed) clan is a separate future feature.
 
 **E. Multi-attacker interactions (extends §9).** When a clan defends against two attackers who are also
 at war with each other (no score between attackers — no CB):
