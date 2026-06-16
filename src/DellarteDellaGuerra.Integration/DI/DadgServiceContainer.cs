@@ -7,9 +7,14 @@ using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders.Ports;
 using DellarteDellaGuerra.Domain.Levy;
 using DellarteDellaGuerra.Domain.Levy.Port;
+using DellarteDellaGuerra.Domain.PrivateWars;
+using DellarteDellaGuerra.Domain.PrivateWars.Port;
 using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Infrastructure.Levy;
+using DellarteDellaGuerra.Infrastructure.PrivateWars;
+using DellarteDellaGuerra.Integration.PrivateWars;
+using DellarteDellaGuerra.PrivateWars.Api.Campaign;
 using DellarteDellaGuerra.Levy.Api;
 using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
@@ -58,6 +63,7 @@ public class DadgServiceContainer
         RegisterDisplayServices(services);
         RegisterMissionServices(services);
         RegisterLevyServices(services);
+        RegisterPrivateWarServices(services);
         RegisterPatches(services);
         services.AddHarmonyPatching();
         var provider = services.BuildServiceProvider();
@@ -159,6 +165,26 @@ public class DadgServiceContainer
         services.AddSingleton<IIssueLevyUseCase, IssueLevyUseCase>();
         services.AddSingleton<IExpireLeviesUseCase, ExpireLeviesUseCase>();
         services.AddSingleton<LevyCampaignBehavior>();
+    }
+
+    private static void RegisterPrivateWarServices(IServiceCollection services)
+    {
+        // Infrastructure: the registry doubles as repository and the patch-facing hostility signal
+        services.AddSingleton<WarSideResolver>();
+        services.AddSingleton<PrivateWarScoreCalculator>();
+        services.AddSingleton<IFeudalHierarchy, FeudalHierarchyAdapter>();
+        services.AddSingleton<InMemoryPrivateWarRegistry>();
+        services.AddSingleton<IPrivateWarRepository>(sp => sp.GetRequiredService<InMemoryPrivateWarRegistry>());
+        services.AddSingleton<IPrivateWarHostility>(sp => sp.GetRequiredService<InMemoryPrivateWarRegistry>());
+
+        // Domain use cases
+        services.AddSingleton<IDeclarePrivateWarUseCase, DeclarePrivateWarUseCase>();
+        services.AddSingleton<ITickPrivateWarUseCase, TickPrivateWarUseCase>();
+        services.AddSingleton<IApplyBattleOutcomeUseCase, ApplyBattleOutcomeUseCase>();
+        services.AddSingleton<IResolvePrivateWarUseCase, ResolvePrivateWarUseCase>();
+
+        // Campaign behaviour (persistence lifecycle)
+        services.AddSingleton<PrivateWarCampaignBehavior>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
