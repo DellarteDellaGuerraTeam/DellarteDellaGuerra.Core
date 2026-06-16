@@ -23,8 +23,10 @@ using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Domain.Levy.Port;
+using DellarteDellaGuerra.Domain.PrivateWars.Port;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Domain.Titles;
+using DellarteDellaGuerra.PrivateWars.Api.Campaign;
 using DellarteDellaGuerra.Infrastructure.Titles;
 using DellarteDellaGuerra.Integration.Titles;
 using DellarteDellaGuerra.Integration.Titles.UI;
@@ -125,6 +127,7 @@ namespace DellarteDellaGuerra.Integration
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<InternalConflictCampaignBehavior>());
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleSwapBehavior>());
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<LevyCampaignBehavior>());
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<PrivateWarCampaignBehavior>());
 
             // Initialise the static service locator used by KingdomDecision subclasses
             FeudalServices.Initialise(
@@ -137,7 +140,9 @@ namespace DellarteDellaGuerra.Integration
                 _serviceProvider.GetRequiredService<IEvaluateClaimUseCase>(),
                 _serviceProvider.GetRequiredService<IComputeFeudalSupportUseCase>(),
                 _serviceProvider.GetRequiredService<IComputeInfluenceTierBonusUseCase>(),
-                _serviceProvider.GetRequiredService<IAccumulateTensionUseCase>());
+                _serviceProvider.GetRequiredService<IAccumulateTensionUseCase>(),
+                _serviceProvider.GetRequiredService<IPrivateWarRepository>(),
+                _serviceProvider.GetRequiredService<IPrivateWarHostility>());
 
             // Initialise the static service locator used by the feudal UI
             // (encyclopedia mixins and the hierarchy screen are created by the game's UI
