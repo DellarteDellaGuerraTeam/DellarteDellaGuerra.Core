@@ -211,5 +211,6 @@ public class DadgServiceContainer
         // Private wars (same-kingdom hostility signal)
         services.AddSingleton<IPatch, MobilePartyAiIsEnemyPatch>();
         services.AddSingleton<IPatch, MobilePartyAiStanceScorePatch>();
+        services.AddSingleton<IPatch, StartPartyEncounterBattlePatch>();
     }
 }
