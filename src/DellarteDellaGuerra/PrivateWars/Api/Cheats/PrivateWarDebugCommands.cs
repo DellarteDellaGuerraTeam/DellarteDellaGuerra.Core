@@ -27,10 +27,10 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
                 return "FeudalServices is not initialised - load a campaign first.";
 
             var attacker = FindClan(args[0]);
-            if (attacker is null) return $"No clan with id '{args[0]}'.";
+            if (attacker is null) return $"No clan with id '{args[0]}'.\n" + ListClans();
 
             var defender = FindClan(args[1]);
-            if (defender is null) return $"No clan with id '{args[1]}'.";
+            if (defender is null) return $"No clan with id '{args[1]}'.\n" + ListClans();
 
             if (attacker == defender) return "Attacker and defender must differ.";
 
@@ -44,8 +44,8 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
                 : defender.Settlements.FirstOrDefault(s => s.IsFortification);
             if (goal is null)
                 return args.Count >= 3
-                    ? $"No settlement with id '{args[2]}'."
-                    : $"Defender clan '{defender.StringId}' holds no fortification to use as a goal; pass goalSettlementId explicitly.";
+                    ? $"No settlement with id '{args[2]}'.\n" + ListNearestFortifications(defender)
+                    : $"Defender clan '{defender.StringId}' holds no fortification to use as a goal; pass goalSettlementId explicitly.\n" + ListNearestFortifications(defender);
 
             var fiefSnapshot = defender.Settlements
                 .Where(s => s.OwnerClan != null)
@@ -68,6 +68,37 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
 
         private static Clan? FindClan(string stringId)
             => TaleWorlds.CampaignSystem.Campaign.Current?.Clans.FirstOrDefault(c => c.StringId == stringId);
+
+        private static string ListClans()
+        {
+            var clans = TaleWorlds.CampaignSystem.Campaign.Current?.Clans;
+            if (clans is null) return "";
+
+            var lines = clans
+                .Where(c => !c.IsEliminated)
+                .OrderBy(c => c.StringId)
+                .Select(c => $"  {c.StringId}  ({c.Name}) [{(c.Kingdom != null ? c.Kingdom.Name.ToString() : "no kingdom")}]");
+            return "Available clans:\n" + string.Join("\n", lines);
+        }
+
+        private static string ListNearestFortifications(Clan reference)
+        {
+            var settlements = TaleWorlds.CampaignSystem.Campaign.Current?.Settlements;
+            if (settlements is null) return "";
+
+            var refSettlement = reference.FactionMidSettlement ?? reference.Settlements.FirstOrDefault();
+            var forts = settlements.Where(s => s.IsTown || s.IsCastle);
+            if (refSettlement != null)
+            {
+                var refPos = refSettlement.GetPosition2D;
+                forts = forts.OrderBy(s => s.GetPosition2D.DistanceSquared(refPos));
+            }
+
+            var lines = forts
+                .Take(5)
+                .Select(s => $"  {s.StringId}  ({s.Name}) {(s.IsTown ? "town" : "castle")} - owner {(s.OwnerClan != null ? s.OwnerClan.StringId : "?")}");
+            return $"Nearest towns/castles to {reference.StringId}:\n" + string.Join("\n", lines);
+        }
 
         private sealed class DebugCasusBelli : ICasusBelli
         {
