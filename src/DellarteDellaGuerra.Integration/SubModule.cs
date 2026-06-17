@@ -27,6 +27,7 @@ using DellarteDellaGuerra.Domain.PrivateWars.Port;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.PrivateWars.Api.Campaign;
+using DellarteDellaGuerra.PrivateWars.Api.GameModels;
 using DellarteDellaGuerra.Infrastructure.Titles;
 using DellarteDellaGuerra.Integration.Titles;
 using DellarteDellaGuerra.Integration.Titles.UI;
@@ -121,6 +122,9 @@ namespace DellarteDellaGuerra.Integration
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgDiplomacyModel>());
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgClanPoliticsModel>());
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgSettlementLoyaltyModel>());
+
+            // Private-war siege-retention scoring (drive is explicit; see DadgTargetScoreCalculatingModel)
+            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTargetScoreCalculatingModel>());
 
             // Feudal title campaign behaviours
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleCampaignBehavior>());

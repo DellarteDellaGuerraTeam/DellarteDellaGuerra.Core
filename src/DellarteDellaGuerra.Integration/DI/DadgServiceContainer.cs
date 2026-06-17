@@ -15,6 +15,7 @@ using DellarteDellaGuerra.Infrastructure.Levy;
 using DellarteDellaGuerra.Infrastructure.PrivateWars;
 using DellarteDellaGuerra.Integration.PrivateWars;
 using DellarteDellaGuerra.PrivateWars.Api.Campaign;
+using DellarteDellaGuerra.PrivateWars.Api.GameModels;
 using DellarteDellaGuerra.Levy.Api;
 using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
@@ -185,6 +186,9 @@ public class DadgServiceContainer
 
         // Campaign behaviour (persistence lifecycle)
         services.AddSingleton<PrivateWarCampaignBehavior>();
+
+        // Game models (resolved lazily in SubModule)
+        services.AddTransient<DadgTargetScoreCalculatingModel>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
