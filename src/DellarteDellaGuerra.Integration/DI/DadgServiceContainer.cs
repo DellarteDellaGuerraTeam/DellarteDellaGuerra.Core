@@ -16,6 +16,7 @@ using DellarteDellaGuerra.Infrastructure.PrivateWars;
 using DellarteDellaGuerra.Integration.PrivateWars;
 using DellarteDellaGuerra.PrivateWars.Api.Campaign;
 using DellarteDellaGuerra.PrivateWars.Api.GameModels;
+using DellarteDellaGuerra.Integration.PrivateWars.Patches;
 using DellarteDellaGuerra.Levy.Api;
 using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
@@ -207,5 +208,8 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, PocConfigReaderOverriderPatch>();
         // Siege engines
         services.AddSingleton<IPatch, CannonballTrailCleanupPatch>();
+        // Private wars (same-kingdom hostility signal)
+        services.AddSingleton<IPatch, MobilePartyAiIsEnemyPatch>();
+        services.AddSingleton<IPatch, MobilePartyAiStanceScorePatch>();
     }
 }
