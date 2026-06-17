@@ -14,9 +14,10 @@ namespace DellarteDellaGuerra.PrivateWars.Api.GameModels
     // stock siege planner (AiMilitaryBehavior.FindBestTargetAndItsValueForFaction) only ever
     // enumerates settlements of factions in FactionsAtWarWith, which never contains the attacker's
     // own kingdom, so the goal is never even a candidate (design §15 risk #1 — confirmed against the
-    // 1.3.1 decompile). DADG issues the siege order explicitly instead. This override exists so the
-    // engine does not *abandon* that explicitly-ordered siege on the next AI think: it returns a
-    // positive score when the party's clan is at private war with the target's owner.
+    // 1.3.1 decompile). DADG injects the goal as a scored candidate instead (PrivateWarCampaignBehavior
+    // .OnAiHourlyTick). This override is the retention half: it keeps the engine from *abandoning* that
+    // siege on the next AI think by returning a positive score when the party's clan is at private war
+    // with the target's owner.
     public class DadgTargetScoreCalculatingModel : DefaultTargetScoreCalculatingModel
     {
         // Strong, flat retention score. The consuming planner multiplies this by distance/cohesion/
