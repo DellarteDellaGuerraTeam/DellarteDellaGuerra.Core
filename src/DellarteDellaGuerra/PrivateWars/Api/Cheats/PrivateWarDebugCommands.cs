@@ -66,6 +66,21 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
             return $"Private war declared: {attacker.StringId} vs {defender.StringId}, goal '{goal.StringId}'{note}. Id={war.Id}";
         }
 
+        [CommandLineFunctionality.CommandLineArgumentFunction("list_private_wars", "campaign")]
+        public static string ListPrivateWars(List<string> args)
+        {
+            if (!FeudalServices.IsInitialised || FeudalServices.PrivateWars is null)
+                return "FeudalServices is not initialised - load a campaign first.";
+
+            var wars = FeudalServices.PrivateWars.GetAll();
+            if (wars.Count == 0) return "No private wars.";
+
+            var lines = wars.Select(w =>
+                $"  {w.AttackerPrincipalClanId} vs {w.DefenderPrincipalClanId}  goal={w.MainGoalSettlementId}  " +
+                $"score={w.Score:0.#}  status={w.Status}  (id={w.Id})");
+            return $"Private wars ({wars.Count}):\n" + string.Join("\n", lines);
+        }
+
         private static Clan? FindClan(string stringId)
             => TaleWorlds.CampaignSystem.Campaign.Current?.Clans.FirstOrDefault(c => c.StringId == stringId);
 
