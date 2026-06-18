@@ -213,5 +213,6 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, MobilePartyAiStanceScorePatch>();
         services.AddSingleton<IPatch, StartPartyEncounterBattlePatch>();
         services.AddSingleton<IPatch, CanPartyJoinBattlePatch>();
+        services.AddSingleton<IPatch, PrivateWarPrisonerRetentionPatch>();
     }
 }
