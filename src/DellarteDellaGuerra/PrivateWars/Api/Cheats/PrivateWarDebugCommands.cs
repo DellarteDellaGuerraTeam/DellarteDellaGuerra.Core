@@ -3,6 +3,7 @@ using System.Linq;
 using DellarteDellaGuerra.Domain.PrivateWars;
 using DellarteDellaGuerra.Titles.Api;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Library;
 
@@ -79,6 +80,25 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
                 $"  {w.AttackerPrincipalClanId} vs {w.DefenderPrincipalClanId}  goal={w.MainGoalSettlementId}  " +
                 $"score={w.Score:0.#}  status={w.Status}  (id={w.Id})");
             return $"Private wars ({wars.Count}):\n" + string.Join("\n", lines);
+        }
+
+        [CommandLineFunctionality.CommandLineArgumentFunction("capture_settlement", "campaign")]
+        public static string CaptureSettlement(List<string> args)
+        {
+            if (args.Count < 2)
+                return "Usage: campaign.capture_settlement <settlementId> <newOwnerClanId>";
+
+            var settlement = Settlement.Find(args[0]);
+            if (settlement is null) return $"No settlement with id '{args[0]}'.";
+
+            var clan = FindClan(args[1]);
+            if (clan is null) return $"No clan with id '{args[1]}'.\n" + ListClans();
+
+            var hero = clan.Leader ?? clan.Heroes.FirstOrDefault();
+            if (hero is null) return $"Clan '{clan.StringId}' has no hero to take ownership.";
+
+            ChangeOwnerOfSettlementAction.ApplyByDefault(hero, settlement);
+            return $"'{settlement.StringId}' is now owned by {clan.StringId}.";
         }
 
         private static Clan? FindClan(string stringId)
