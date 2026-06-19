@@ -6,7 +6,6 @@ CLRExceptionBreakpoints=System.StackOverflowException,\
                          System.OutOfMemoryException,\
                          System.DivideByZeroException,\
                          System.ObjectDisposedException,\
-                         System.InvalidCastException,\
                          System.ArgumentOutOfRangeException,\
                          System.IndexOutOfRangeException,\
                          System.NullReferenceException,\
