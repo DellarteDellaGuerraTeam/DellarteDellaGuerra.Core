@@ -101,6 +101,83 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
             return $"'{settlement.StringId}' is now owned by {clan.StringId}.";
         }
 
+        // TEMP: deterministically create a same-kingdom private-war captive. The vanilla
+        // campaign.add_prisoner_to_party cheat refuses non-warring MapFactions, so it cannot
+        // produce a same-kingdom captive; this calls TakePrisonerAction.Apply directly (no war check).
+        [CommandLineFunctionality.CommandLineArgumentFunction("capture_lord", "campaign")]
+        public static string CaptureLord(List<string> args)
+        {
+            if (args.Count < 2)
+                return "Usage: campaign.capture_lord <captiveClanId> <captorClanId>";
+
+            var captiveClan = FindClan(args[0]);
+            if (captiveClan is null) return $"No clan with id '{args[0]}'.\n" + ListClans();
+
+            var captorClan = FindClan(args[1]);
+            if (captorClan is null) return $"No clan with id '{args[1]}'.\n" + ListClans();
+
+            var captive = captiveClan.Heroes.FirstOrDefault(h =>
+                h.IsAlive && h.IsLord && !h.IsPrisoner && h != Hero.MainHero);
+            if (captive is null)
+                return $"Clan '{captiveClan.StringId}' has no free, living lord to capture.";
+
+            var captorParty = captorClan.Leader?.PartyBelongedTo
+                              ?? captorClan.WarPartyComponents.FirstOrDefault()?.MobileParty;
+            if (captorParty is null)
+                return $"Captor clan '{captorClan.StringId}' has no mobile party to hold a prisoner.";
+
+            TakePrisonerAction.Apply(captorParty.Party, captive);
+
+            return $"Captured {captive.StringId} ({captive.Name}) of {captiveClan.StringId} into " +
+                   $"{captorClan.StringId}'s party '{captorParty.StringId}'. IsPrisoner={captive.IsPrisoner}.";
+        }
+
+        // TEMP: report whether a hero is currently held prisoner, and by whom. Used to assert the
+        // prisoner-retention patch before/after a release trigger.
+        [CommandLineFunctionality.CommandLineArgumentFunction("is_prisoner", "campaign")]
+        public static string IsPrisonerCmd(List<string> args)
+        {
+            if (args.Count < 1)
+                return "Usage: campaign.is_prisoner <heroStringId>";
+
+            var hero = Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == args[0]);
+            if (hero is null) return $"No alive hero with id '{args[0]}'.";
+
+            if (!hero.IsPrisoner)
+                return $"{hero.StringId} ({hero.Name}) is NOT a prisoner.";
+
+            var captorParty = hero.PartyBelongedToAsPrisoner;
+            var captorClan = captorParty?.MobileParty?.ActualClan ?? captorParty?.Settlement?.OwnerClan;
+            return $"{hero.StringId} ({hero.Name}) IS a prisoner of " +
+                   $"{(captorClan != null ? captorClan.StringId : "?")}.";
+        }
+
+        // TEMP: fire the real OnMakePeace prisoner sweep over a captor clan's parties. There is no
+        // vanilla make_peace cheat, so this declares (if needed) then immediately makes peace between
+        // the captor's MapFaction and another kingdom - exercising the ReleasedAfterPeace hazard the
+        // prisoner-retention patch guards against.
+        [CommandLineFunctionality.CommandLineArgumentFunction("force_peace", "campaign")]
+        public static string ForcePeace(List<string> args)
+        {
+            if (args.Count < 1)
+                return "Usage: campaign.force_peace <captorClanId>";
+
+            var captorClan = FindClan(args[0]);
+            if (captorClan is null) return $"No clan with id '{args[0]}'.\n" + ListClans();
+
+            var captorFaction = captorClan.MapFaction;
+            var opponent = Kingdom.All.FirstOrDefault(k => k != captorFaction && !k.IsEliminated);
+            if (opponent is null) return "No other kingdom found to make peace with.";
+
+            if (!captorFaction.IsAtWarWith(opponent))
+                DeclareWarAction.ApplyByDefault(captorFaction, opponent);
+
+            MakePeaceAction.Apply(captorFaction, opponent);
+
+            return $"Forced war+peace between {captorFaction.Name} and {opponent.Name} - " +
+                   $"the OnMakePeace prisoner sweep has run over {captorFaction.Name}'s clans.";
+        }
+
         private static Clan? FindClan(string stringId)
             => TaleWorlds.CampaignSystem.Campaign.Current?.Clans.FirstOrDefault(c => c.StringId == stringId);
 
