@@ -8,8 +8,10 @@ using DellarteDellaGuerra.Titles.Api.Campaign;
 using DellarteDellaGuerra.Utils;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Core;
 
 namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
 {
@@ -39,6 +41,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
         private readonly IPrivateWarRepository _privateWars;
         private readonly ITickPrivateWarUseCase _tickPrivateWar;
         private readonly IResolvePrivateWarUseCase _resolvePrivateWar;
+        private readonly IApplyBattleOutcomeUseCase _applyBattleOutcome;
         private readonly WarSideResolver _sideResolver;
         private readonly IFeudalHierarchy _hierarchy;
 
@@ -49,6 +52,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             IPrivateWarRepository privateWars,
             ITickPrivateWarUseCase tickPrivateWar,
             IResolvePrivateWarUseCase resolvePrivateWar,
+            IApplyBattleOutcomeUseCase applyBattleOutcome,
             WarSideResolver sideResolver,
             IFeudalHierarchy hierarchy)
         {
@@ -56,6 +60,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             _privateWars = privateWars;
             _tickPrivateWar = tickPrivateWar;
             _resolvePrivateWar = resolvePrivateWar;
+            _applyBattleOutcome = applyBattleOutcome;
             _sideResolver = sideResolver;
             _hierarchy = hierarchy;
         }
@@ -65,6 +70,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
             CampaignEvents.AiHourlyTickEvent.AddNonSerializedListener(this, OnAiHourlyTick);
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
+            CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
         }
 
         public override void SyncData(IDataStore dataStore)
@@ -122,6 +128,56 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
                 else
                     _privateWars.Update(scored);
             }
+        }
+
+        // When a battle resolves between the two sides of an active private war, bump that war's
+        // accumulated battle score (the sole mutator of BattleScore, design §18.B). The bump is the
+        // share of the losing side's total strength destroyed, signed by the winner. Fires at
+        // WaitingRemoval, before parties are finalized, so the sides' casualties and strength are intact.
+        private void OnMapEventEnded(MapEvent mapEvent)
+        {
+            if (mapEvent is null || mapEvent.WinningSide == BattleSideEnum.None) return;
+
+            foreach (var war in _privateWars.GetAll())
+            {
+                if (war.Status != PrivateWarStatus.Active) continue;
+
+                var attackerBattleSide = ResolveBattleSide(mapEvent.AttackerSide, war);
+                var defenderBattleSide = ResolveBattleSide(mapEvent.DefenderSide, war);
+                if (attackerBattleSide is null || defenderBattleSide is null) continue;
+                if (attackerBattleSide == defenderBattleSide) continue;
+
+                var winnerWarSide = mapEvent.WinningSide == BattleSideEnum.Attacker
+                    ? attackerBattleSide.Value
+                    : defenderBattleSide.Value;
+
+                var losingSide = mapEvent.WinningSide == BattleSideEnum.Attacker
+                    ? mapEvent.DefenderSide
+                    : mapEvent.AttackerSide;
+
+                var outcome = new BattleOutcome(
+                    winnerWarSide,
+                    losingSide.CasualtyStrength,
+                    losingSide.CasualtyStrength + losingSide.RecalculateStrengthOfSide());
+
+                _privateWars.Update(_applyBattleOutcome.Execute(war, outcome));
+            }
+        }
+
+        // Which side of this war a battle side fights on, or null if neither belligerent. A battle side
+        // can hold parties from several clans; resolve from the first whose suzerain chain maps onto the war.
+        private WarSide? ResolveBattleSide(MapEventSide battleSide, PrivateWar war)
+        {
+            foreach (var party in battleSide.Parties)
+            {
+                var clan = party.Party.MobileParty?.ActualClan ?? party.Party.Settlement?.OwnerClan;
+                if (clan is null) continue;
+
+                var side = ResolveSide(clan.StringId, war);
+                if (side is not null) return side;
+            }
+
+            return null;
         }
 
         // Assemble the score inputs from current world state. Side membership is resolved through the
