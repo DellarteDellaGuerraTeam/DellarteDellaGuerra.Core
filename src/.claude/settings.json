@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'state=$(curl -sfG --max-time 1 --data-urlencode \"path=$CLAUDE_PROJECT_DIR\" http://localhost:7777/state 2>/dev/null) || exit 0; if echo \"$state\" | grep -q \"\\\"isPaused\\\":true\"; then echo \"[JBDebugBridge] Debugger is paused — handle exception before sending game commands:\"; echo \"$state\"; exit 2; fi'"
+            "command": "pwsh -NoProfile -Command \"& (Join-Path $env:CLAUDE_PROJECT_DIR '.claude/hooks/jb-pause-guard.ps1')\""
           }
         ]
       }
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'S=\"$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh\"; if [ \"$(uname -s)\" = Linux ]; then exec \"$S\"; elif command -v wsl.exe >/dev/null 2>&1; then case \"$S\" in /mnt/[a-zA-Z]/*) W=\"$S\";; /[a-zA-Z]/*) DRIVE=$(echo \"${S:1:1}\" | tr A-Z a-z); W=\"/mnt/${DRIVE}${S:2}\";; *) W=$(MSYS_NO_PATHCONV=1 wsl.exe wslpath -u \"$S\" 2>/dev/null | tr -d \"\\r\");; esac; [ -n \"$W\" ] && MSYS_NO_PATHCONV=1 wsl.exe bash \"$W\"; fi'"
+            "command": "pwsh -NoProfile -Command \"& (Join-Path $env:CLAUDE_PROJECT_DIR '.claude/hooks/session-start.ps1')\""
           }
         ]
       }
