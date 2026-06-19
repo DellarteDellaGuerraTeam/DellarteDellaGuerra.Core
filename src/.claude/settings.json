@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -NoProfile -Command \"& (Join-Path $env:CLAUDE_PROJECT_DIR '.claude/hooks/jb-pause-guard.ps1')\""
+            "command": "pwsh -NoProfile -File .claude/hooks/jb-pause-guard.ps1"
           }
         ]
       }
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -NoProfile -Command \"& (Join-Path $env:CLAUDE_PROJECT_DIR '.claude/hooks/session-start.ps1')\""
+            "command": "pwsh -NoProfile -File .claude/hooks/session-start.ps1"
           }
         ]
       }

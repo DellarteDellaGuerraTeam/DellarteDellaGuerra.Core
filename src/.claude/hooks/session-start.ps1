@@ -97,26 +97,25 @@ if (-not (Test-Path $mcpConfigPath)) {
             }
         }
 
-        # Clear any prior instances: native Windows ones, plus WSL2-forwarded ones
-        # (the old setup) so the relay releases ports 5000+ for native binding.
-        Get-Process -Name 'BannerlordSearch.Mcp.Server' -ErrorAction SilentlyContinue |
-            Stop-Process -Force -ErrorAction SilentlyContinue
-        if (Get-Command wsl.exe -ErrorAction SilentlyContinue) {
-            try { wsl.exe -e pkill -f BannerlordSearch.Mcp.Server 2>$null } catch {}
-        }
-        Start-Sleep -Seconds 1
-
         # The server is published against ASP.NET Core 10.0.0 (release). This machine
         # may only have a prerelease v10 runtime (e.g. 10.0.0-rc.2); allow the host to
         # roll forward to it, otherwise startup fails with FrameworkMissing.
         $env:DOTNET_ROLL_FORWARD_TO_PRERELEASE = '1'
 
+        # Only (re)start servers whose port isn't already serving. A previous
+        # session's servers persist across Claude Code restarts, so the common case
+        # is "all up" — restarting + waiting on them every session blocks (and times
+        # out) the session start for no reason.
         $basePort     = 5000
         $startedPorts = @()
         for ($i = 0; $i -lt $versions.Count; $i++) {
             $v = $versions[$i]
             if (-not $contentPaths.ContainsKey($v)) { continue }
             $port = $basePort + $i
+            if (Test-PortReady -Port $port) {
+                Write-Host "BannerlordSearch.Mcp.Server v$v already up on port $port — skipping."
+                continue
+            }
             $log  = Join-Path $TempDir "bannerlord-mcp-server-$v.log"
             $env:BANNERLORD_SOURCE_PATH = $contentPaths[$v]
             Start-Process -FilePath $serverExe `
