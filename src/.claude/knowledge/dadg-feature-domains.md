@@ -23,6 +23,19 @@ Inventory of every gameplay feature, where the C# code lives, and key implementa
 - `DellarteDellaGuerra/Tournament/Api/DadgTournamentModel` — overrides native tournament model via `InitializeGameStarter`
 - **Jousting subsystem**: `DellarteDellaGuerra/Tournament/Jousting/` — `JoustTournament`, `JoustTournamentBehaviour`, `JoustFightMissionController`, `JoustingMissionManager`, `JoustLaneEndVolumeBox`; its own save types (`JoustingTournamentSaveableTypeDefiner`)
 
+## Private Wars
+- A **same-kingdom** war between two clans (a feudal feud), driven entirely by DADG since the engine never wages war within a kingdom.
+- **Domain** (`Domain/PrivateWars/`): `DeclarePrivateWarUseCase` opens a war; `TickPrivateWarUseCase` + `PrivateWarScoreCalculator` score it daily; `ResolvePrivateWarUseCase` resolves it at score ±100 (winner keeps the goal fief, other captured fiefs revert); `ApplyBattleOutcomeUseCase` is the sole mutator of `BattleScore` (capped ±50). Models: `PrivateWar` (record), `PrivateWarStatus { Active, Concluded }`, `WarSide`.
+- **Side resolution**: `WarSideResolver` walks a clan UP its suzerain chain to the nearest belligerent principal, so subtree vassals are pulled in dynamically (call-to-arms) and re-resolved on every query — never stored.
+- **Registry** (`Infrastructure/PrivateWars/InMemoryPrivateWarRegistry`): implements both `IPrivateWarRepository` and `IPrivateWarHostility`. `AreEnemies` only considers `Active` wars, so concluding a war immediately lifts the hostility signal.
+- **Campaign wiring** (`DellarteDellaGuerra/PrivateWars/Api/Campaign/PrivateWarCampaignBehavior`): `OnDailyTick` ticks→resolves each war; `OnAiHourlyTick` injects the goal fief as a scored besiege candidate into the engine's behaviour vote (the stock siege planner never enumerates a same-kingdom settlement); `OnMapEventEnded` bumps `BattleScore` when a battle resolves between the two sides.
+- **Prisoner retention** (`Integration/PrivateWars/Patches/PrivateWarPrisonerRetentionPatch`): blocks the vanilla release sweep from freeing a same-kingdom private-war captive while the war is `Active`.
+
+### War lifecycle / state integrity
+- A war is `Active` until it either **resolves on score** (±100, via `ResolvePrivateWarUseCase` — fiefs change hands) or is **auto-concluded** for integrity reasons (below). `Concluded` is terminal — a war is never revived.
+- **Kingdom-change rule** (`OnClanChangedKingdom` in `PrivateWarCampaignBehavior`): a private war is inherently a same-kingdom affair, so when a war **principal** changes kingdom and the two principals no longer share a `MapFaction` (`Clan.MapFaction` is the kingdom, or the clan itself when independent), the war is set to `Concluded`. Only wars where the moved clan is a **principal** are touched (`GetByClan`); a non-principal vassal moving does nothing, and its side is re-resolved dynamically. If both principals still share a faction after the move (e.g. they defect to the same new kingdom together), the war stays `Active`.
+- This conclusion does **not** revert captured fiefs (reverts are reserved for score-threshold resolution) — it is purely a state-integrity close. Its real effect comes from `Status` flipping off `Active`: the AI hostility drive (`AreEnemies`) and the prisoner-retention hold both stop, so the registry can no longer carry a stale cross-kingdom "private" war or hold same-kingdom captives for a war that no longer makes sense.
+
 ## Music (PSAI)
 - PSAI = Phase System Audio Integration, Bannerlord's music engine
 - `Integration/Music/Patches/MBMusicManagerInitializePatch` patches `PsaiCore.LoadSoundtrackFromProjectFile` to load DADG's custom `soundtrack.xml`
