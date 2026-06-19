@@ -78,7 +78,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
 
             var lines = wars.Select(w =>
                 $"  {w.AttackerPrincipalClanId} vs {w.DefenderPrincipalClanId}  goal={w.MainGoalSettlementId}  " +
-                $"score={w.Score:0.#}  status={w.Status}  (id={w.Id})");
+                $"score={w.Score:0.#}  battle={w.BattleScore:0.#}  status={w.Status}  (id={w.Id})");
             return $"Private wars ({wars.Count}):\n" + string.Join("\n", lines);
         }
 
@@ -176,6 +176,38 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
 
             return $"Forced war+peace between {captorFaction.Name} and {opponent.Name} - " +
                    $"the OnMakePeace prisoner sweep has run over {captorFaction.Name}'s clans.";
+        }
+
+        // TEMP: force an immediate field battle between two clans' leader parties via
+        // StartBattleAction.ApplyStartBattle (no war-status check), so the MapEventEnded battle-score
+        // wiring can be exercised deterministically. The engine simulates the AI-vs-AI battle to
+        // conclusion over the next ticks; advance time, then read battle=... in list_private_wars.
+        [CommandLineFunctionality.CommandLineArgumentFunction("force_battle", "campaign")]
+        public static string ForceBattle(List<string> args)
+        {
+            if (args.Count < 2)
+                return "Usage: campaign.force_battle <attackerClanId> <defenderClanId>";
+
+            var attackerClan = FindClan(args[0]);
+            if (attackerClan is null) return $"No clan with id '{args[0]}'.\n" + ListClans();
+
+            var defenderClan = FindClan(args[1]);
+            if (defenderClan is null) return $"No clan with id '{args[1]}'.\n" + ListClans();
+
+            var attackerParty = attackerClan.Leader?.PartyBelongedTo
+                                ?? attackerClan.WarPartyComponents.FirstOrDefault()?.MobileParty;
+            var defenderParty = defenderClan.Leader?.PartyBelongedTo
+                                ?? defenderClan.WarPartyComponents.FirstOrDefault()?.MobileParty;
+            if (attackerParty is null) return $"Attacker clan '{attackerClan.StringId}' has no mobile party.";
+            if (defenderParty is null) return $"Defender clan '{defenderClan.StringId}' has no mobile party.";
+            if (defenderParty.MapEvent != null)
+                return $"Defender party '{defenderParty.StringId}' is already in a map event.";
+
+            StartBattleAction.ApplyStartBattle(attackerParty, defenderParty);
+
+            return $"Started field battle: {attackerParty.StringId} vs {defenderParty.StringId}. " +
+                   $"MapEvent={(defenderParty.MapEvent != null ? "created" : "NOT created")}. " +
+                   "Advance time for the AI simulation to resolve, then read battle=... in list_private_wars.";
         }
 
         private static Clan? FindClan(string stringId)
