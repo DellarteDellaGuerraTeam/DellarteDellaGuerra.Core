@@ -210,6 +210,34 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
                    "Advance time for the AI simulation to resolve, then read battle=... in list_private_wars.";
         }
 
+        // TEMP: move a clan between kingdoms (or out to independence) to exercise the
+        // OnClanChangedKingdom integrity handler. "none"/"leave" makes the clan independent; otherwise
+        // it joins the named kingdom. A private war whose two principals end up in different kingdoms
+        // (no shared MapFaction) auto-concludes.
+        [CommandLineFunctionality.CommandLineArgumentFunction("change_kingdom", "campaign")]
+        public static string ChangeKingdomCmd(List<string> args)
+        {
+            if (args.Count < 2)
+                return "Usage: campaign.change_kingdom <clanId> <kingdomId|none>";
+
+            var clan = FindClan(args[0]);
+            if (clan is null) return $"No clan with id '{args[0]}'.\n" + ListClans();
+
+            if (args[1] is "none" or "leave")
+            {
+                ChangeKingdomAction.ApplyByLeaveKingdom(clan);
+                return $"{clan.StringId} left its kingdom; now MapFaction={clan.MapFaction?.StringId ?? "?"}.";
+            }
+
+            var kingdom = Kingdom.All.FirstOrDefault(k => k.StringId == args[1]);
+            if (kingdom is null)
+                return $"No kingdom with id '{args[1]}'. Kingdoms: " +
+                       string.Join(", ", Kingdom.All.Where(k => !k.IsEliminated).Select(k => k.StringId));
+
+            ChangeKingdomAction.ApplyByJoinToKingdom(clan, kingdom);
+            return $"{clan.StringId} joined {kingdom.StringId}; now MapFaction={clan.MapFaction?.StringId ?? "?"}.";
+        }
+
         private static Clan? FindClan(string stringId)
             => TaleWorlds.CampaignSystem.Campaign.Current?.Clans.FirstOrDefault(c => c.StringId == stringId);
 
