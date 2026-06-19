@@ -71,6 +71,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             CampaignEvents.AiHourlyTickEvent.AddNonSerializedListener(this, OnAiHourlyTick);
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
+            CampaignEvents.OnClanChangedKingdomEvent.AddNonSerializedListener(this, OnClanChangedKingdom);
         }
 
         public override void SyncData(IDataStore dataStore)
@@ -127,6 +128,32 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
                     ResolveWar(scored, outcome);
                 else
                     _privateWars.Update(scored);
+            }
+        }
+
+        // A private war is an intra-kingdom feud: both principals share a MapFaction, and every
+        // mechanism (the AreEnemies hostility signal, the same-kingdom siege drive, prisoner retention,
+        // status-quo resolution) assumes it. When a principal defects so the two principals no longer
+        // share a kingdom, that premise is void and a stale Active record would keep forcing
+        // cross-kingdom hostility; conclude it. Subtree vassals need no handling - WarSideResolver
+        // re-resolves their side from the current suzerain chain on every query.
+        private void OnClanChangedKingdom(
+            Clan clan, Kingdom oldKingdom, Kingdom newKingdom,
+            ChangeKingdomAction.ChangeKingdomActionDetail detail, bool showNotification)
+        {
+            foreach (var war in _privateWars.GetByClan(clan.StringId))
+            {
+                if (war.Status != PrivateWarStatus.Active) continue;
+
+                var attacker = Clan.All.FirstOrDefault(c => c.StringId == war.AttackerPrincipalClanId);
+                var defender = Clan.All.FirstOrDefault(c => c.StringId == war.DefenderPrincipalClanId);
+                if (attacker != null && defender != null && attacker.MapFaction == defender.MapFaction)
+                    continue;
+
+                _privateWars.Update(war with { Status = PrivateWarStatus.Concluded });
+                InfoPrinter.Display(
+                    $"Private war concluded: {war.AttackerPrincipalClanId} vs {war.DefenderPrincipalClanId} - " +
+                    "principals no longer share a kingdom.");
             }
         }
 
