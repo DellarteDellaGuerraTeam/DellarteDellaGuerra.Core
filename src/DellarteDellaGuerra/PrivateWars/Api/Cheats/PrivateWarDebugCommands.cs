@@ -4,7 +4,9 @@ using DellarteDellaGuerra.Domain.PrivateWars;
 using DellarteDellaGuerra.Titles.Api;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Core;
 using TaleWorlds.Library;
 
 namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
@@ -237,6 +239,129 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
             ChangeKingdomAction.ApplyByJoinToKingdom(clan, kingdom);
             return $"{clan.StringId} joined {kingdom.StringId}; now MapFaction={clan.MapFaction?.StringId ?? "?"}.";
         }
+
+        // TEMP: deterministically stage a same-kingdom siege so the capture loop
+        // (IsPreparationComplete -> TryCaptureCompletedSieges) can be verified without waiting on AI
+        // pathing. Teleports the besieger clan's leader party to the goal's gate and orders a besiege;
+        // the engine starts the siege camp on the next tick and the private-war hold-score keeps it
+        // camped. Capture fires on PREPARATION complete (a timer), not assault, so a lone party suffices.
+        // Advance ~1 day, then read list_private_wars / settlement owner to confirm the flip.
+        [CommandLineFunctionality.CommandLineArgumentFunction("force_besiege", "campaign")]
+        public static string ForceBesiege(List<string> args)
+        {
+            if (args.Count < 2)
+                return "Usage: campaign.force_besiege <besiegerClanId> <settlementId>";
+
+            var besiegerClan = FindClan(args[0]);
+            if (besiegerClan is null) return $"No clan with id '{args[0]}'.\n" + ListClans();
+
+            var settlement = Settlement.Find(args[1]);
+            if (settlement is null) return $"No settlement with id '{args[1]}'.";
+            if (!settlement.IsFortification)
+                return $"'{settlement.StringId}' is not a town or castle.";
+
+            var party = besiegerClan.Leader?.PartyBelongedTo
+                        ?? besiegerClan.WarPartyComponents.FirstOrDefault()?.MobileParty;
+            if (party is null) return $"Besieger clan '{besiegerClan.StringId}' has no mobile party.";
+            if (party.MapEvent != null)
+                return $"Besieger party '{party.StringId}' is already in a map event.";
+
+            party.Position = settlement.GatePosition;
+            party.SetMoveBesiegeSettlement(settlement, MobileParty.NavigationType.Default);
+
+            return $"Teleported {party.StringId} ({besiegerClan.StringId}) to {settlement.StringId}'s gate " +
+                   "and ordered a besiege. Advance time ~1 day; capture fires on preparation complete.";
+        }
+
+        // TEMP: jump an active siege's preparation straight to complete so the capture trigger
+        // (TryCaptureCompletedSieges, which fires on IsPreparationComplete) can be observed within one
+        // hourly tick. Preparation construction speed scales with the BESIEGER's man-day power (not the
+        // garrison), so a lone party would otherwise take many in-game days; this isolates the capture
+        // path from vanilla construction speed. Run after force_besiege has formed the camp; advance ~1
+        // hour, then read settlement owner / list_private_wars to confirm the ownership flip.
+        [CommandLineFunctionality.CommandLineArgumentFunction("complete_siege_prep", "campaign")]
+        public static string CompleteSiegePrep(List<string> args)
+        {
+            if (args.Count < 1)
+                return "Usage: campaign.complete_siege_prep <settlementId>";
+
+            var settlement = Settlement.Find(args[0]);
+            if (settlement is null) return $"No settlement with id '{args[0]}'.";
+
+            var siege = settlement.SiegeEvent;
+            if (siege is null) return $"'{settlement.StringId}' is not under siege.";
+
+            var preparations = siege.GetSiegeEventSide(BattleSideEnum.Attacker)?.SiegeEngines?.SiegePreparations;
+            if (preparations is null) return $"'{settlement.StringId}' siege has no attacker preparations to complete.";
+
+            preparations.SetProgress(1f);
+
+            var besieger = siege.BesiegerCamp?.LeaderParty?.ActualClan;
+            return $"Set {settlement.StringId} siege preparation to complete (besieger {besieger?.StringId ?? "?"}). " +
+                   "Advance ~1 hour; the capture trigger fires on the next hourly tick.";
+        }
+
+        // TEMP: directly start a siege event on a settlement using the besieger clan's leader party,
+        // bypassing the vanilla IsAtWarWith gate that blocks same-kingdom sieges. Use after
+        // declaring a private war; follow with complete_siege_prep then advance ~1 hour.
+        [CommandLineFunctionality.CommandLineArgumentFunction("create_siege", "campaign")]
+        public static string CreateSiege(List<string> args)
+        {
+            if (args.Count < 2)
+                return "Usage: campaign.create_siege <besiegerClanId> <settlementId>";
+
+            var besiegerClan = FindClan(args[0]);
+            if (besiegerClan is null) return $"No clan with id '{args[0]}'.\n" + ListClans();
+
+            var settlement = Settlement.Find(args[1]);
+            if (settlement is null) return $"No settlement with id '{args[1]}'.";
+            if (!settlement.IsFortification)
+                return $"'{settlement.StringId}' is not a town or castle.";
+
+            if (settlement.SiegeEvent != null)
+                return $"'{settlement.StringId}' is already under siege by {settlement.SiegeEvent.BesiegerCamp?.LeaderParty?.ActualClan?.StringId ?? "?"}";
+
+            var party = besiegerClan.Leader?.PartyBelongedTo
+                        ?? besiegerClan.WarPartyComponents.FirstOrDefault()?.MobileParty;
+            if (party is null) return $"Besieger clan '{besiegerClan.StringId}' has no mobile party.";
+
+            TaleWorlds.CampaignSystem.Campaign.Current.SiegeEventManager.StartSiegeEvent(settlement, party);
+
+            var besieger = settlement.SiegeEvent?.BesiegerCamp?.LeaderParty?.ActualClan;
+            return $"Created siege event on '{settlement.StringId}' (besieger: {besieger?.StringId ?? "?"}). " +
+                   "Run complete_siege_prep then advance ~1 hour for the capture trigger to fire.";
+        }
+
+        // // TEMP: bulk-add troops to a hero's mobile party so a lone private-war besieger has the force
+        // // to advance siege construction to the assault threshold (the lone-besieger camps-forever
+        // // finding: vanilla construction keys on attacker-vs-(garrison+militia), so a ~47-man party
+        // // stalls). Adds <count> of the party culture's elite basic troop. Used to isolate-verify the
+        // // assault gate (StartSettlementEncounterSiegePatch) without building the full feud-army stack.
+        // [CommandLineFunctionality.CommandLineArgumentFunction("boost_party", "campaign")]
+        // public static string BoostParty(List<string> args)
+        // {
+        //     if (args.Count < 1)
+        //         return "Usage: campaign.boost_party <heroStringId> [count]";
+        //
+        //     var hero = Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == args[0]);
+        //     if (hero is null) return $"No alive hero with id '{args[0]}'.";
+        //
+        //     var party = hero.PartyBelongedTo;
+        //     if (party is null) return $"{hero.StringId} ({hero.Name}) has no mobile party to reinforce.";
+        //
+        //     int count = 200;
+        //     if (args.Count >= 2 && int.TryParse(args[1], out var parsed) && parsed > 0)
+        //         count = parsed;
+        //
+        //     var culture = hero.Culture ?? party.ActualClan?.Culture;
+        //     var troop = culture?.EliteBasicTroop ?? culture?.BasicTroop;
+        //     if (troop is null) return $"Could not resolve a troop type for {hero.StringId}'s culture.";
+        //
+        //     party.MemberRoster.AddToCounts(troop, count);
+        //
+        //     return $"Added {count}x {troop.Name} to {hero.StringId} ({hero.Name})'s party " +
+        //            $"'{party.StringId}'. Party now {party.MemberRoster.TotalManCount} men.";
+        // }
 
         private static Clan? FindClan(string stringId)
             => TaleWorlds.CampaignSystem.Campaign.Current?.Clans.FirstOrDefault(c => c.StringId == stringId);

@@ -190,6 +190,7 @@ public class DadgServiceContainer
 
         // Game models (resolved lazily in SubModule)
         services.AddTransient<DadgTargetScoreCalculatingModel>();
+        services.AddTransient<DadgArmyManagementCalculationModel>();
     }
 
     private static void RegisterPatches(IServiceCollection services)

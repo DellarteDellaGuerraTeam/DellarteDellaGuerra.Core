@@ -49,6 +49,7 @@ namespace DellarteDellaGuerra.Domain.PrivateWars
                 BattleScore: 0f,
                 Score: 0f,
                 StartDay: startDay,
+                GoalLastTakenDay: startDay,
                 Status: PrivateWarStatus.Active);
 
             _repository.Add(war);

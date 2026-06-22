@@ -70,7 +70,8 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             string mainGoal = "settlement_goal",
             float battleScore = 0f,
             IReadOnlyDictionary<string, string>? fiefSnapshot = null,
-            float startDay = 0f) =>
+            float startDay = 0f,
+            float? goalLastTakenDay = null) =>
             new(
                 Id: $"pw_{attacker}_{defender}",
                 AttackerPrincipalClanId: attacker,
@@ -82,6 +83,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
                 BattleScore: battleScore,
                 Score: 0f,
                 StartDay: startDay,
+                GoalLastTakenDay: goalLastTakenDay ?? startDay,
                 Status: PrivateWarStatus.Active);
     }
 }

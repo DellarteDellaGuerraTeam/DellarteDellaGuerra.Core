@@ -44,9 +44,11 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         }
 
         [Fact]
-        public void Execute_DaysElapsedMeasuredFromStartDay()
+        public void Execute_DaysElapsedMeasuredFromGoalLastTakenDay()
         {
-            var war = PrivateWarTestData.War(startDay: 100f);
+            // Fatigue drifts from the day the goal was last taken, not the war's start day, so a
+            // retaken goal restarts the climb from zero.
+            var war = PrivateWarTestData.War(startDay: 0f, goalLastTakenDay: 100f);
             var obs = PrivateWarTestData.NoControl with { AttackerHoldsMainGoal = true };
 
             var result = _useCase.Execute(war, obs, currentDay: 110f); // 50 + 10
