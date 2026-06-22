@@ -11,8 +11,9 @@ namespace DellarteDellaGuerra.PrivateWars.Spi
      *  of <c>SaveableField</c> attributes. Mirrors <c>TitleStateSerialiser</c>.
      * </summary>
      * <remarks>
-     *  Line format (11 fields joined with '|'):
-     *  Id|Attacker|Defender|CasusBelliType|TitleId|MainGoalSettlementId|BattleScore|Score|StartDay|Status|OriginalFiefOwners
+     *  Line format (12 fields joined with '|'):
+     *  Id|Attacker|Defender|CasusBelliType|TitleId|MainGoalSettlementId|BattleScore|Score|StartDay|Status|OriginalFiefOwners|GoalLastTakenDay
+     *  <para>GoalLastTakenDay is appended last so older 11-field saves still load (it defaults to StartDay).</para>
      *  <para>
      *  OriginalFiefOwners is a sub-delimited map: entries separated by ';', settlementId and
      *  ownerClanId separated by ':' (e.g. <c>town_a:clan_1;castle_b:clan_2</c>); empty when no
@@ -45,7 +46,8 @@ namespace DellarteDellaGuerra.PrivateWars.Spi
                     war.Score.ToString("R", CultureInfo.InvariantCulture),
                     war.StartDay.ToString("R", CultureInfo.InvariantCulture),
                     war.Status.ToString(),
-                    SerialiseFiefOwners(war.OriginalFiefOwners)));
+                    SerialiseFiefOwners(war.OriginalFiefOwners),
+                    war.GoalLastTakenDay.ToString("R", CultureInfo.InvariantCulture)));
             }
 
             return serialised;
@@ -57,11 +59,16 @@ namespace DellarteDellaGuerra.PrivateWars.Spi
             foreach (string line in serialisedWars)
             {
                 string[] fields = line.Split(Delimiter);
-                if (fields.Length != 11) continue;
+                if (fields.Length != 11 && fields.Length != 12) continue;
                 if (!TryParseEnum(fields[9], out PrivateWarStatus status)) continue;
                 if (!float.TryParse(fields[6], NumberStyles.Float, CultureInfo.InvariantCulture, out float battleScore)) continue;
                 if (!float.TryParse(fields[7], NumberStyles.Float, CultureInfo.InvariantCulture, out float score)) continue;
                 if (!float.TryParse(fields[8], NumberStyles.Float, CultureInfo.InvariantCulture, out float startDay)) continue;
+
+                // Appended field; older saves omit it, so default the fatigue epoch to the war's start day.
+                float goalLastTakenDay = startDay;
+                if (fields.Length == 12)
+                    float.TryParse(fields[11], NumberStyles.Float, CultureInfo.InvariantCulture, out goalLastTakenDay);
 
                 wars.Add(new PrivateWar(
                     fields[0],
@@ -74,6 +81,7 @@ namespace DellarteDellaGuerra.PrivateWars.Spi
                     battleScore,
                     score,
                     startDay,
+                    goalLastTakenDay,
                     status));
             }
 

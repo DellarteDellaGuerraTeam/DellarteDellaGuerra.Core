@@ -18,7 +18,7 @@ namespace DellarteDellaGuerra.Domain.PrivateWars
 
         public TickResult Execute(PrivateWar war, PrivateWarObservations observations, float currentDay)
         {
-            float daysElapsed = currentDay - war.StartDay;
+            float daysElapsed = currentDay - war.GoalLastTakenDay;
             float score = _calculator.Compute(observations, daysElapsed);
 
             PrivateWarOutcome? outcome =

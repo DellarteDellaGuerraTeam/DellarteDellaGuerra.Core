@@ -34,8 +34,20 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
         // AiPartyThinkBehavior applies the maximum-scoring candidate, so this must beat ordinary /
         // opportunistic attacks (~3-15) yet stay below an active defence of the clan's own fief
         // (~15-30; defence's base factor is 1.28 vs a siege's 0.8) so defending one's title wins.
+        // It also competes with AiArmyMemberBehavior's escort-the-leader score (10 min - 20 max) for an
+        // attached member, so at 12f the besieger stays in a healthy army (escort ~20 wins) and only
+        // quits to prosecute when escorting is weak — keeping the quit a scored decision, not a forced one.
         // Flat tuning value — revisit via AI-vs-AI playtest.
         private const float PrivateWarSiegeSelectionScore = 12f;
+
+        // Once a private-war besieger has established its camp on the goal, this dominant score keeps it
+        // there through the engine's periodic AI re-think until preparations complete and DADG captures
+        // the fief. A same-kingdom siege is not a vanilla war, so without this the besieger flips to
+        // GoToSettlement and abandons the camp before it matures (observed in playtest). It must beat
+        // ordinary wander/escort/opportunistic scores (~3-20). Highest-priority tuning knob — revisit via
+        // AI-vs-AI playtest (notably whether an active defence of the clan's own fief should still
+        // outrank holding the siege; at this value it does not).
+        private const float PrivateWarSiegeHoldScore = 50f;
 
         private readonly IFeudalStateStore _stateStore;
         private readonly IPrivateWarRepository _privateWars;
@@ -69,6 +81,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
         {
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
             CampaignEvents.AiHourlyTickEvent.AddNonSerializedListener(this, OnAiHourlyTick);
+            CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, OnHourlyTick);
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
             CampaignEvents.MapEventEnded.AddNonSerializedListener(this, OnMapEventEnded);
             CampaignEvents.OnClanChangedKingdomEvent.AddNonSerializedListener(this, OnClanChangedKingdom);
@@ -103,10 +116,27 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             var goal = FindPrivateWarGoalFor(mobileParty);
             if (goal is null) return;
 
+            // While en route, use the low selection score so a higher-priority objective (notably
+            // defending the clan's own besieged fief) still wins. Once the party has actually established
+            // the siege on the goal, switch to the dominant hold score so the engine's periodic re-think
+            // does not abandon the camp before preparations complete.
+            float score = mobileParty.BesiegedSettlement == goal
+                ? PrivateWarSiegeHoldScore
+                : PrivateWarSiegeSelectionScore;
+
             var behaviour = new AIBehaviorData(
                 goal, AiBehavior.BesiegeSettlement, MobileParty.NavigationType.Default,
                 willGatherArmy: false, isFromPort: false, isTargetingPort: false);
-            p.AddBehaviorScore((behaviour, PrivateWarSiegeSelectionScore));
+            p.AddBehaviorScore((behaviour, score));
+        }
+
+        // Capture must be immediate: the moment a private-war besieger's siege preparations complete the
+        // fief changes hands, not on the next daily tick. Siege preparations advance on the engine's
+        // hourly cadence, so check every game-hour - this fires the capture within the same hour the
+        // engine itself would consider the siege assault-ready.
+        private void OnHourlyTick()
+        {
+            TryCaptureCompletedSieges();
         }
 
         // Once a day, advance every active war: recompute its signed score from current world state and,
@@ -131,6 +161,68 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             }
         }
 
+        // DADG drives the siege to a transfer of possession - NOT to the end of the war. A same-kingdom
+        // siege has no vanilla path to an assault (the assault/defender logic is gated on
+        // MapFaction.IsAtWarWith, which is false within one kingdom), so once a besieger has completed its
+        // preparations on the goal, capture the fief directly: mirror the engine's own post-assault
+        // sequence (detach the besiegers, clear the routed garrison, transfer ownership by siege).
+        // Possession can change hands repeatedly - the attacker takes the goal, the defender later
+        // reclaims it - and the war itself is resolved only when the score crosses +/-100 on the daily
+        // tick, so the contest has time to swing. The transfer goes to whichever side is besieging, as
+        // long as it is not the side that already holds the goal. RemoveAllSiegeParties only asserts
+        // against a live assault MapEvent, which an AI same-kingdom siege never creates, so it is safe.
+        private void TryCaptureCompletedSieges()
+        {
+            foreach (var war in _privateWars.GetAll().ToList())
+            {
+                if (war.Status != PrivateWarStatus.Active || war.MainGoalSettlementId is null) continue;
+
+                var goal = Settlement.Find(war.MainGoalSettlementId);
+                var camp = goal?.SiegeEvent?.BesiegerCamp;
+                if (goal is null || camp is null || !camp.IsPreparationComplete) continue;
+
+                var besiegerClan = camp.LeaderParty?.ActualClan;
+                var besiegerSide = besiegerClan is null ? null : ResolveSide(besiegerClan.StringId, war);
+                if (besiegerSide is null) continue;
+
+                // Only a transfer between the war's two sides: the besieger must belong to the side that
+                // does not currently hold the goal. This single path drives both the attacker's capture
+                // and the defender's reclaim.
+                var ownerSide = goal.OwnerClan is null ? null : ResolveSide(goal.OwnerClan.StringId, war);
+                if (ownerSide == besiegerSide) continue;
+
+                var capturer = camp.LeaderParty?.LeaderHero ?? besiegerClan?.Leader;
+                if (capturer is null) continue;
+
+                var capturerParty = camp.LeaderParty?.Party;
+                camp.RemoveAllSiegeParties();
+                goal.Party.MemberRoster.Clear();
+                ChangeOwnerOfSettlementAction.ApplyBySiege(capturer, capturer, goal);
+
+                // Classic-war parity: a same-kingdom capture changes neither MapFaction nor stages an assault
+                // MapEvent, so the engine's own post-assault prisoner-taking (MapEvent.LootDefeatedPartyMembers
+                // -> TakePrisonerAction.Apply) never runs and the losing side's lords are left sitting in the
+                // fief they just lost as if it were friendly. Mirror what a real assault does to defeated
+                // defenders: take their leaders prisoner via the same engine action, capturing them for the
+                // besieger. PrivateWarPrisonerRetentionPatch keeps them held despite the shared kingdom.
+                if (capturerParty != null)
+                {
+                    foreach (var inside in goal.Parties.ToList())
+                    {
+                        if (inside.MapEvent != null || inside.ActualClan is null) continue;
+                        if (ResolveSide(inside.ActualClan.StringId, war) != ownerSide) continue;
+                        if (inside.LeaderHero is null) continue;
+
+                        TakePrisonerAction.Apply(capturerParty, inside.LeaderHero);
+                    }
+                }
+
+                // The goal just changed hands, so reset the fatigue epoch: the accumulated drift toward
+                // the previous holder is wiped and the contest restarts its climb toward the new holder.
+                _privateWars.Update(war with { GoalLastTakenDay = (float)CampaignTime.Now.ToDays });
+            }
+        }
+
         // A private war is an intra-kingdom feud: both principals share a MapFaction, and every
         // mechanism (the AreEnemies hostility signal, the same-kingdom siege drive, prisoner retention,
         // status-quo resolution) assumes it. When a principal defects so the two principals no longer
@@ -151,6 +243,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
                     continue;
 
                 _privateWars.Update(war with { Status = PrivateWarStatus.Concluded });
+                ReleaseWarPrisoners(war);
                 InfoPrinter.Display(
                     $"Private war concluded: {war.AttackerPrincipalClanId} vs {war.DefenderPrincipalClanId} - " +
                     "principals no longer share a kingdom.");
@@ -304,6 +397,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             }
 
             _privateWars.Update(war with { Status = PrivateWarStatus.Concluded });
+            ReleaseWarPrisoners(war);
 
             InfoPrinter.Display(
                 $"Private war concluded: {war.AttackerPrincipalClanId} vs {war.DefenderPrincipalClanId} - {outcome}.");
@@ -313,14 +407,44 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
         private WarSide? ResolveSide(string clanId, PrivateWar war)
             => _sideResolver.ResolveSide(clanId, war, _hierarchy.GetSuzerain);
 
-        // The goal this party should besiege, or null if it is not an eligible attacker-principal
-        // party for any active private war. The player drives their own clan, and a party mid-battle
-        // or following an army leader is left to the engine.
+        // Release every captive this war put behind bars now that it has concluded. During the war
+        // PrivateWarPrisonerRetentionPatch deliberately blocks the engine's involuntary auto-release of
+        // a same-kingdom captive (peace sweeps, kingdom changes, our own siege capture) so the prize of
+        // capturing the goal sticks; escape attempts are never blocked. Once the war ends that retention
+        // no longer makes sense - the principals are at peace - so we deliberately free anyone held by the
+        // opposing side. Must run AFTER the status flips to Concluded: AreEnemies is Active-gated, so a
+        // concluded war no longer reports the pair as enemies and the retention patch lets the release
+        // through. ApplyByPeace routes through the unblocked deliberate-release path.
+        private void ReleaseWarPrisoners(PrivateWar war)
+        {
+            foreach (var hero in Hero.AllAliveHeroes.Where(h => h.IsPrisoner).ToList())
+            {
+                if (hero == Hero.MainHero || hero.Clan is null) continue;
+
+                var captorParty = hero.PartyBelongedToAsPrisoner;
+                var captorClan = captorParty?.MobileParty?.ActualClan ?? captorParty?.Settlement?.OwnerClan;
+                if (captorClan is null) continue;
+
+                var prisonerSide = ResolveSide(hero.Clan.StringId, war);
+                var captorSide = ResolveSide(captorClan.StringId, war);
+                if (prisonerSide is null || captorSide is null || prisonerSide == captorSide) continue;
+
+                EndCaptivityAction.ApplyByPeace(hero);
+            }
+        }
+
+        // The goal this party should besiege, or null if it is not an eligible party for any active
+        // private war. The drive is symmetric: a party besieges the goal whenever the ENEMY side
+        // currently holds it - so the attacker marches to take the goal, and once it falls the defender
+        // marches to reclaim it, both through this one path. A side never besieges a fief its own side
+        // already holds. The player drives their own clan, and a party mid-battle is left to the engine.
+        // An attached army member still gets the goal injected so that quitting the army to prosecute (or
+        // defend) the feud is a *scored* AI decision: the besiege candidate competes with
+        // AiArmyMemberBehavior's escort-the-leader score (10-20) in the same vote.
         private Settlement? FindPrivateWarGoalFor(MobileParty mobileParty)
         {
             if (mobileParty is null || !mobileParty.IsActive || mobileParty.IsMainParty) return null;
             if (mobileParty.MapEvent != null) return null;
-            if (mobileParty.Army != null && mobileParty.Army.LeaderParty != mobileParty) return null;
 
             var clan = mobileParty.ActualClan;
             if (clan is null || clan == Clan.PlayerClan) return null;
@@ -328,10 +452,17 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             foreach (var war in _stateStore.SnapshotPrivateWars())
             {
                 if (war.Status != PrivateWarStatus.Active || war.MainGoalSettlementId is null) continue;
-                if (war.AttackerPrincipalClanId != clan.StringId) continue;
+
+                var mySide = ResolveSide(clan.StringId, war);
+                if (mySide is null) continue;
 
                 var goal = Settlement.Find(war.MainGoalSettlementId);
-                if (goal is null || !goal.IsFortification || goal.OwnerClan == clan) continue;
+                if (goal is null || !goal.IsFortification || goal.OwnerClan is null) continue;
+
+                // Besiege only when the opposing side holds the goal (attacker to take, defender to
+                // reclaim); skip when my own side already holds it.
+                var ownerSide = ResolveSide(goal.OwnerClan.StringId, war);
+                if (ownerSide is null || ownerSide == mySide) continue;
                 return goal;
             }
 

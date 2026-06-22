@@ -125,6 +125,8 @@ namespace DellarteDellaGuerra.Integration
 
             // Private-war siege-retention scoring (drive is explicit; see DadgTargetScoreCalculatingModel)
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTargetScoreCalculatingModel>());
+            // Keep a private-war enemy out of the belligerent's army candidate pool (design §4.1)
+            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgArmyManagementCalculationModel>());
 
             // Feudal title campaign behaviours
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleCampaignBehavior>());

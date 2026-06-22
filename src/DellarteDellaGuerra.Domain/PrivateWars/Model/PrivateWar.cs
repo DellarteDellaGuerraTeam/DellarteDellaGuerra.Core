@@ -13,6 +13,10 @@ namespace DellarteDellaGuerra.Domain.PrivateWars.Model
     /// (status quo ante, design §8). BattleScore is the one *accumulated* score term (capped,
     /// attacker-positive); every other score term is recomputed from current world state each
     /// tick. Score is the last persisted total (for save/load and UI).
+    ///
+    /// GoalLastTakenDay is the epoch the fatigue term drifts from: it starts at declaration and
+    /// resets to the current day whenever the main goal changes hands, so retaking the goal wipes
+    /// the accumulated fatigue and the contest restarts its drift toward the new holder.
     /// </summary>
     public record PrivateWar(
         string Id,
@@ -25,5 +29,6 @@ namespace DellarteDellaGuerra.Domain.PrivateWars.Model
         float BattleScore,
         float Score,
         float StartDay,
+        float GoalLastTakenDay,
         PrivateWarStatus Status);
 }
