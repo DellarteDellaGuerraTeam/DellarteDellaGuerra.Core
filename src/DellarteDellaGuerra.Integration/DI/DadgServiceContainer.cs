@@ -191,6 +191,9 @@ public class DadgServiceContainer
         // Game models (resolved lazily in SubModule)
         services.AddTransient<DadgTargetScoreCalculatingModel>();
         services.AddTransient<DadgArmyManagementCalculationModel>();
+        services.AddTransient<DadgSettlementAccessModel>();
+        services.AddTransient<DadgEncounterModel>();
+        services.AddTransient<DadgEncounterGameMenuModel>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
@@ -216,5 +219,18 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, StartSettlementEncounterSiegePatch>();
         services.AddSingleton<IPatch, CanPartyJoinBattlePatch>();
         services.AddSingleton<IPatch, PrivateWarPrisonerRetentionPatch>();
+        services.AddSingleton<IPatch, PlayerCaptivityRetentionPatch>();
+        // Private wars (player-facing encounter menus and side assignment)
+        // NOTE: BesiegeMenuConditionPatch, ContinueSiegeMenuConditionPatch, and
+        // ArmyAttackMenuConditionPatch all target EncounterGameMenuBehavior, whose static
+        // initializer calls GameTexts.FindText. Applying them at OnSubModuleLoad (via
+        // ApplyPatches) forces that cctor to run when GameTexts._gameTextManager is still
+        // null → TypeInitializationException → game crash. They are applied deferred in
+        // SubModule.InitializeGameStarter where GameTexts is guaranteed to be ready.
+        // PlayerEncounterSetupFieldsPatch targets PlayerEncounter (no static GameTexts call)
+        // and is safe to apply early.
+        services.AddSingleton<IPatch, PlayerEncounterSetupFieldsPatch>();
+        services.AddSingleton<IPatch, SallyOutStrengthPatch>();
+        services.AddSingleton<IPatch, SiegeDefenderJoinPatch>();
     }
 }
