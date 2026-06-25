@@ -17,6 +17,7 @@ using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.Integration.DI;
 using DellarteDellaGuerra.Integration.Music.Patches;
+using DellarteDellaGuerra.Integration.PrivateWars.Patches;
 using HarmonyLib;
 using DellarteDellaGuerra.Integration.ExpandedTemplateApi.Logging;
 using DellarteDellaGuerra.Integration.SiegeEngines;
@@ -38,6 +39,7 @@ using DellarteDellaGuerra.Titles.Api.GameModels;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Utils;
 using Harmony.DependencyInjection;
+using Harmony.DependencyInjection.Patches;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using TaleWorlds.CampaignSystem;
@@ -55,6 +57,9 @@ namespace DellarteDellaGuerra.Integration
         private readonly ILogger _logger;
         private IServiceProvider _serviceProvider;
         private UIExtender? _uiExtender;
+        // Guard: EncounterGameMenuBehavior patches applied exactly once, deferred until
+        // InitializeGameStarter where GameTexts._gameTextManager is guaranteed non-null.
+        private static bool _encounterMenuPatchesApplied;
 
         public SubModule()
         {
@@ -105,6 +110,26 @@ namespace DellarteDellaGuerra.Integration
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
+            // Deferred: EncounterGameMenuBehavior patches must not be applied at OnSubModuleLoad
+            // because that type's static initializer calls GameTexts.FindText and GameTexts is not
+            // ready until Game.Initialize() runs (which fires before InitializeGameStarter).
+            // The guard ensures we apply exactly once even across campaign reloads.
+            if (!_encounterMenuPatchesApplied)
+            {
+                _encounterMenuPatchesApplied = true;
+                var menuHarmony = new HarmonyLib.Harmony("com.dadg.private-wars-menus");
+                IPatch[] menuPatches =
+                [
+                    new BesiegeMenuConditionPatch(),
+                    new ContinueSiegeMenuConditionPatch(),
+                    new ArmyAttackMenuConditionPatch(),
+                    new VillageHostileActionConditionPatch(),
+                    new VillageRaidConditionPatch(),
+                ];
+                foreach (var p in menuPatches)
+                    menuHarmony.Patch(p.TargetMethod, postfix: new HarmonyMethod(p.PatchMethod));
+            }
+
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
@@ -127,6 +152,12 @@ namespace DellarteDellaGuerra.Integration
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTargetScoreCalculatingModel>());
             // Keep a private-war enemy out of the belligerent's army candidate pool (design §4.1)
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgArmyManagementCalculationModel>());
+            // Block player entry into a same-kingdom private-war rival's town/castle (design §4.1)
+            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgSettlementAccessModel>());
+            // Re-include garrison/militia/feud-lord defenders in a same-kingdom siege assault (design §4.1, Gate 1)
+            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgEncounterModel>());
+            // Force a same-kingdom private-war field meeting into a real battle (design §4.3 — breaks the friendly-chat loop)
+            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgEncounterGameMenuModel>());
 
             // Feudal title campaign behaviours
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleCampaignBehavior>());

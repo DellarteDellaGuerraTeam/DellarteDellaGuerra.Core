@@ -134,6 +134,36 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
                    $"{captorClan.StringId}'s party '{captorParty.StringId}'. IsPrisoner={captive.IsPrisoner}.";
         }
 
+        // TEMP: make the player (Hero.MainHero) a prisoner of the given captor clan's leader party,
+        // bypassing the vanilla faction-war check. Mirrors capture_lord but targets the main hero.
+        // Used to stage the player-captivity retention patch (PlayerCaptivityRetentionPatch) for
+        // manual testing: declare a private war first, then capture_player the rival clan, advance
+        // time, and confirm the player stays captive. Remove once the player-facing captivity path
+        // is exercised by normal gameplay.
+        [CommandLineFunctionality.CommandLineArgumentFunction("capture_player", "campaign")]
+        public static string CapturePlayer(List<string> args)
+        {
+            if (args.Count < 1)
+                return "Usage: campaign.capture_player <captorClanId>";
+
+            var captorClan = FindClan(args[0]);
+            if (captorClan is null) return $"No clan with id '{args[0]}'.\n" + ListClans();
+
+            var captorParty = captorClan.Leader?.PartyBelongedTo
+                              ?? captorClan.WarPartyComponents.FirstOrDefault()?.MobileParty;
+            if (captorParty is null)
+                return $"Captor clan '{captorClan.StringId}' has no mobile party to hold a prisoner.";
+
+            if (Hero.MainHero.IsPrisoner)
+                return $"Player is already a prisoner of {(Hero.MainHero.PartyBelongedToAsPrisoner?.MobileParty?.ActualClan?.StringId ?? "?")}. " +
+                       "Release first or load a clean save.";
+
+            TakePrisonerAction.Apply(captorParty.Party, Hero.MainHero);
+
+            return $"Player ({Hero.MainHero.StringId}) captured into {captorClan.StringId}'s party " +
+                   $"'{captorParty.StringId}'. IsPrisoner={Hero.MainHero.IsPrisoner}.";
+        }
+
         // TEMP: report whether a hero is currently held prisoner, and by whom. Used to assert the
         // prisoner-retention patch before/after a release trigger.
         [CommandLineFunctionality.CommandLineArgumentFunction("is_prisoner", "campaign")]

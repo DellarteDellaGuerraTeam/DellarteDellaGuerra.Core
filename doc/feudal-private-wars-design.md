@@ -183,6 +183,49 @@ registry and returns the stock answer when the pair is not in a private war.
 | **Strength accumulation / engage initiative** | `MobilePartyAIModel.GetBestInitiativeBehavior` — `public abstract` | **Clean seam but heavy:** the whole method body must be re-implemented; there is no smaller hook. Stock sums force by MapFaction equality (inflating A's perceived strength with C's troops) and routes through the private `IsEnemy`/`CalculateStanceScore` helpers (below). |
 | **Town access** | `SettlementAccessModel.CanMainHeroEnterSettlement` — `public abstract` | **Clean seam but heavy:** `CanMainHeroEnterTown`/`…Castle`/`…KeepInternal` are *private* dispatch helpers (all key on `DiplomacyHelper.IsSameFactionAndNotEliminated`, which is true same-K → `FullAccess`, so the player walks into C's town/castle/keep unchallenged); overriding the public method means re-implementing the town/castle/village dispatch yourself. |
 
+> **Implementation status — defender-population consolidation (runtime-verified, 2026-06-24).**
+> The defender population of a same-kingdom private-war fortification is reached through **three
+> independent, faction-war-gated engine seams** that must all admit the same set or a surface drifts:
+> - `EncounterModel.GetDefenderPartiesOfSettlement` (`DadgEncounterModel` override) — battle candidacy
+>   + siege-overlay *presence*.
+> - `EncounterModel.GetNextDefenderPartyOfSettlement` (`DadgEncounterModel` override) — siege-overlay
+>   defender/attacker *bucketing*. **This was the un-overridden seam:** `EncounterMenuOverlayVM` buckets
+>   via `Settlement.HasInvolvedPartyForEventType`, which loops this method, so the garrison/militia were
+>   present in the involved list yet rendered on the player's (besieger) panel.
+> - `SiegeEvent.CanPartyJoinSide` (`SiegeDefenderJoinPatch` postfix, §4.2) — assault `MapEventSide`
+>   *membership*.
+>
+> All three (plus the `SallyOutStrengthPatch` strength scan, §4.2) now consult one shared rule,
+> `PrivateWarSiegeDefenderPolicy.IsDefender/AreEnemies` (MAIN layer; composes over the domain
+> `FeudalServices.PrivateWarHostility`), so the seams cannot disagree. The rule is **player-agnostic** —
+> it keys on `besiegerClan` vs `settlement.OwnerClan`, never on `MainHero`.
+>
+> Runtime-verified PASS (`privatewartest`):
+> - **Player besieger** (Pontefract Castle, `clan_york`): garrison (137) + militia bucket to the
+>   Defender panel; absent from the Attacker/besieger panel.
+> - **Sally-out** (weak besieger, 1 troop): the garrison sallies (296 vs 1). `SallyOutStrengthPatch`
+>   fires with `AreEnemies=true` (`num3`=324.99 sally side vs `num`=0.797 besieger → `garrisonWouldSally`);
+>   `CanPartyJoinSide(garrison, Defender)=true`; no crash.
+> - **AI vs AI** (`clan_hastings` besieging `clan_howard`'s `Norwich_town`, no player):
+>   `GetDefenderPartiesOfSettlement` admits garrison (502) + militia (407); `CanPartyJoinSide=true`;
+>   `TryCaptureCompletedSieges` transferred Norwich → `clan_hastings`; war stays Active; no crash.
+>   Confirms same-kingdom AI sieges resolve via the **prep-complete capture** path (§10), not an assault
+>   `MapEvent`.
+>
+> **Vanilla sally-out parity (resolved + runtime-verified 2026-06-24).** `IsDefender` now takes
+> `mapEventType` and excludes **militia** from the `SallyOut` defender set, mirroring vanilla
+> `Town.GetDefenderParties` (`!IsMilitia || battleType != SallyOut`) — militia are static wall defenders,
+> not field troops. The garrison and any feud-belligerent lord parties still sally normally.
+> `CanPartyJoinSide` (the wall assault, a `Siege` battle) passes `Siege`, so militia continue to defend
+> the walls there; only the `SallyOut`/strength-scan path drops them. This keeps `num3` in
+> `SallyOutStrengthPatch` aligned with vanilla (no inflated sally-side strength). `BlockadeSallyOutBattle`
+> still includes militia, matching vanilla, which gates only on `SallyOut`. Verified PASS at the live
+> `DadgEncounterModel.GetDefenderPartiesOfSettlement` call site (`privatewartest`, Pontefract):
+> `IsDefender(militia, …, SallyOut)=false`, `IsDefender(garrison, …, SallyOut)=true`,
+> `IsDefender(militia, …, Siege)=true`; no exception.
+>
+> Fixtures for all three scenarios: `doc/features/private-wars-siege-defenders.feature`.
+
 ### 4.2 Harmony patches required — ~12
 
 | What it controls in a private war | Host (kind) | Why no model seam |
@@ -234,6 +277,79 @@ as-is** — they check only "are there enemy troops in this map event" and the s
 > decompiled bodies; the *mechanism* (every check reduces to the MapFaction wall, §2) is certain, but
 > the exact gating member for a few menu options should be confirmed at implementation time. This
 > layer is **phase 4** (§15) — defer until the AI-vs-AI core is proven.
+
+> **Implementation status — phase 4 slice 1 (player initiation, runtime-verified).** The four
+> CRITICAL initiation gates are implemented and playtested: the player can declare a private war and
+> besiege a same-kingdom rival.
+> - `PlayerEncounter.SetupFields` → `PlayerEncounterSetupFieldsPatch` (postfix; flips player
+>   Defender→Attacker when besieging a rival settlement). Registered as a normal `IPatch`.
+> - `game_menu_town_town_besiege_on_condition` → `BesiegeMenuConditionPatch` (verified: "Besiege"
+>   appears + siege starts).
+> - `game_menu_town_besiege_continue_siege_on_condition` → `ContinueSiegeMenuConditionPatch`
+>   (verified: "Continue siege preparations" appears).
+> - `game_menu_army_attack_on_condition` → `ArmyAttackMenuConditionPatch` (implemented; not yet
+>   exercised in a playtest).
+>
+> All four gate on `PrivateWarPatchHelper.AreEnemies(Hero.MainHero.Clan, rivalClan)`. **Critical
+> gotcha:** the three `EncounterGameMenuBehavior` patches must NOT be applied at `OnSubModuleLoad`
+> (the standard `IPatch`/`ApplyPatches` path). Harmony's apply forces that type's static ctor, which
+> calls `GameTexts.FindText` before `GameTexts` is initialized → `TypeInitializationException` →
+> crash on save load. They are applied once in `SubModule.InitializeGameStarter` (after
+> `Game.Initialize`) via a dedicated `Harmony("com.dadg.private-wars-menus")` + a run-once guard.
+>
+> **Implementation status — phase 4 slice 2 (player raid + town access, runtime-verified).**
+> - `VillageHostileActionCampaignBehavior.game_menu_village_hostile_action_on_condition` →
+>   `VillageHostileActionConditionPatch` (postfix; shows "Take a hostile action" on the village menu
+>   when the owner is a registered private-war enemy). Deferred along with the other menu patches.
+> - `VillageHostileActionCampaignBehavior.game_menu_village_hostile_action_raid_village_on_condition`
+>   → `VillageRaidConditionPatch` (postfix; shows "Raid the village" inside the village_hostile_action
+>   submenu). Deferred along with the other menu patches.
+>   **Note:** both methods are in `VillageHostileActionCampaignBehavior`, NOT `EncounterGameMenuBehavior`.
+> - `SettlementAccessModel.CanMainHeroEnterSettlement` → `DadgSettlementAccessModel` (clean model
+>   override; returns `NoAccess/HostileFaction` for the player trying to enter a private-war rival's
+>   town or castle). Registered via `campaignGameStarter.AddModel(...)`.
+>   **Note:** the private dispatch helpers (`CanMainHeroEnterTown`/`…Castle`) check
+>   `DiplomacyHelper.IsSameFactionAndNotEliminated` which is true same-K. The override intercepts
+>   before the dispatch and returns early, so the helpers are never reached for private-war pairs.
+>   Town/castle access blockade is implemented; village access and keep-internal are not (not needed
+>   for raid — the `VillageHostileAction*` patches handle the village hostile-action gate separately).
+>
+> The two village patches gate on `PrivateWarPatchHelper.AreEnemies` (Harmony layer); the access
+> model — being in the MAIN project with no Harmony reference — gates on the equivalent domain service
+> `FeudalServices.PrivateWarHostility.AreEnemies(stringId, stringId)`.
+>
+> Build: 0 C# errors. **Runtime-verified PASS** (privatewartest save): player declared a private war
+> vs same-kingdom `clan_percy`; at Percy's village (Morpeth) both "Take a hostile action" and "Raid
+> the village" appeared/enabled (Postfix confirmed `AreEnemies=true`); at Percy's castle
+> (Dunstanburgh) the menu showed "cannot enter — belongs to the enemy" with no peaceful entry. Clean
+> load, no `TypeInitializationException`, no CLR exceptions. Port hostility
+> (`naval_town_outside_on_init`) remains deferred.
+> End-to-end menu behaviour (village raid buttons, town NoAccess) requires human map navigation to
+> verify.
+>
+> Still deferred: `UpdateVillageHostileActionEncounter` warn-redirect (1.3.1 false-branch is a
+> Release-stripped `Debug.FailedAssert` — harmless, no patch needed per §17 notes), 3rd-party join,
+> `DoMeetingInternal` army-meeting routing, port hostility (`naval_town_outside_on_init` reads
+> `MapFaction.IsAtWarWith` directly — needs a separate deferred patch), and the bespoke "end the
+> feud" conversation (§4.3 last row).
+>
+> **Implementation status — phase 4 slice 3 (player-captivity retention guard, implemented).**
+> - `PlayerCaptivityCampaignBehavior.CheckCaptivityChange` → `PlayerCaptivityRetentionPatch` (prefix;
+>   skips the method body while `AreEnemies(mainHero.Clan, captorClan)` is true, preventing the
+>   `!IsAtWarAgainstFaction && same-MapFaction` branch from routing the player to
+>   `menu_captivity_end_no_more_enemies`). Registered as a normal `IPatch` in `DadgServiceContainer`
+>   (safe to apply at `OnSubModuleLoad` — `PlayerCaptivityCampaignBehavior` has no `GameTexts`
+>   static-initializer trap). When the war concludes `AreEnemies` returns false and vanilla resumes,
+>   releasing the player through the standard "no more enemies" path. Player-initiated escape via menu
+>   consequences (`EndCaptivityAction.ApplyByEscape`) is unaffected. TEMP debug command
+>   `campaign.capture_player <captorClanId>` added to stage the player as prisoner.
+>
+> **Slice 3 (crime→phantom-war guard) — NON-ISSUE (no patch needed).**
+>   `CrimeRatingChangeAction.ApplyInternal` (1.3.1) guards the `DeclareWarAction.ApplyByCrimeRatingChange`
+>   call with `Hero.MainHero.MapFaction != faction` — where `faction` is the `IFaction` (the kingdom)
+>   against which crime was accumulated. For a same-kingdom private war the rival clan's `MapFaction`
+>   IS the player's kingdom, so `faction == Hero.MainHero.MapFaction` → the guard condition is
+>   false → `DeclareWarAction` is never called. No phantom war, no escalation, no patch needed.
 
 ### 4.4 Cosmetic / deferrable
 
@@ -684,7 +800,11 @@ These cannot be settled from decompiled signatures (bodies are stripped) and nee
    `AiMilitaryBehavior.CalculateMilitaryBehaviorForSettlement` Harmony fallback (§4.2).
 3. **Defender-side composition.** Confirm the `EncounterModel.GetDefenderParties…` override lets A's
    own field army (not just the static garrison) defend A's besieged fief, and that it does **not**
-   accidentally pull in uninvolved K parties.
+   accidentally pull in uninvolved K parties. **Verified (2026-06-24):** garrison, militia, and
+   feud-belligerent lord parties admitted across all three defender seams (player *and* AI besieger);
+   neutral same-kingdom parties excluded. Sally-out and AI-vs-AI both PASS. Militia are now excluded from
+   the `SallyOut` set to match vanilla (resolved 2026-06-24); they still defend the walls in an assault.
+   See the §4.1 status note and `doc/features/private-wars-siege-defenders.feature`.
 4. **Patch hot-path cost.** `IsEnemy`/`CalculateStanceScore` and the per-tick model overrides run
    constantly; verify the `AreEnemies` registry lookup is genuinely O(1) and the patches no-op cheaply
    when no private war is active.

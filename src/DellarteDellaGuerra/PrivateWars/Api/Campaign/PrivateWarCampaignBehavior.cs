@@ -181,6 +181,12 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
                 var camp = goal?.SiegeEvent?.BesiegerCamp;
                 if (goal is null || camp is null || !camp.IsPreparationComplete) continue;
 
+                // When the player's own party leads the siege, do not auto-capture: the player must lead
+                // the assault themselves through the normal encounter, so PlayerEncounter.SetupFields runs
+                // and places the player on the attacker side. Auto-capture stays the path for AI besiegers,
+                // which never stage a real assault MapEvent.
+                if (camp.LeaderParty?.IsMainParty == true) continue;
+
                 var besiegerClan = camp.LeaderParty?.ActualClan;
                 var besiegerSide = besiegerClan is null ? null : ResolveSide(besiegerClan.StringId, war);
                 if (besiegerSide is null) continue;
