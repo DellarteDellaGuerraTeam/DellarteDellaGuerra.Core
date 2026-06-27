@@ -59,11 +59,11 @@ if ($AllowedBranches -notcontains $CurrentBranch) {
 #   GameRoot\Modules\DellarteDellaGuerra.Core
 #
 # ZIP contains:
-#   artifact\Modules\DellarteDellaGuerra.Core\...
+#   Modules\DellarteDellaGuerra.Core\...
 #
 # Therefore:
 #   1. Extract ZIP into a temp folder.
-#   2. Copy artifact\* into GameRoot.
+#   2. Copy extracted contents into GameRoot.
 $GameRoot = [System.IO.Path]::GetFullPath((Join-Path $RepoRoot "..\.."))
 
 Write-Host "Game root / installation target: $GameRoot"
@@ -105,18 +105,7 @@ try {
     New-Item -ItemType Directory -Path $ExtractDir -Force -ErrorAction Stop | Out-Null
     Expand-Archive -Path $Archive -DestinationPath $ExtractDir -Force -ErrorAction Stop
 
-    $ArtifactRoot = Join-Path $ExtractDir "artifact"
-
-    if (-not (Test-Path $ArtifactRoot)) {
-        Write-Host "Archive contents found:"
-        Get-ChildItem -Path $ExtractDir -Recurse -ErrorAction SilentlyContinue |
-            Select-Object -First 50 |
-            ForEach-Object {
-                Write-Host $_.FullName
-            }
-
-        throw "Archive does not contain expected top-level folder: artifact"
-    }
+    $ArtifactRoot = $ExtractDir
 
     $ExpectedPath = Join-Path $ArtifactRoot "Modules\DellarteDellaGuerra.Core\bin\Win64_Shipping_Client"
 
@@ -128,7 +117,7 @@ try {
                 Write-Host $_.FullName
             }
 
-        throw "Archive does not contain expected path: artifact\Modules\DellarteDellaGuerra.Core\bin\Win64_Shipping_Client"
+        throw "Archive does not contain expected path: Modules\DellarteDellaGuerra.Core\bin\Win64_Shipping_Client"
     }
 
     $FinalModuleRoot = Join-Path $GameRoot "Modules\DellarteDellaGuerra.Core"
@@ -141,7 +130,7 @@ try {
             Remove-Item -Path $FinalBinRoot -Recurse -Force -ErrorAction Stop
         }
 
-        Write-Host "Copying artifact contents into game root..."
+        Write-Host "Copying archive contents into game root..."
         Copy-Item -Path (Join-Path $ArtifactRoot "*") -Destination $GameRoot -Recurse -Force -ErrorAction Stop
 
         if (-not (Test-Path $FinalDllDir)) {

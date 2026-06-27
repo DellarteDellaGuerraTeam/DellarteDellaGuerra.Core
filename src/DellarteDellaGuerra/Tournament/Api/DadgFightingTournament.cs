@@ -1,7 +1,5 @@
 ﻿using System.Linq;
-using DellarteDellaGuerra.Domain.Tournament;
 using DellarteDellaGuerra.Domain.Tournament.Reward;
-using DellarteDellaGuerra.Domain.Tournament.Reward.Model;
 using TaleWorlds.CampaignSystem.Extensions;
 using TaleWorlds.CampaignSystem.TournamentGames;
 using TaleWorlds.Core;
@@ -13,7 +11,7 @@ namespace DellarteDellaGuerra.Tournament.Api
     public class DadgFightingTournament : FightTournamentGame
     {
         private readonly IGetTournamentRewardUseCase _getTournamentRewardUseCase;
-        [SaveableProperty(1000)] private TournamentReward? TournamentReward { get; set; } 
+        [SaveableField(1000)] private SaveableTournamentReward? _savedReward;
 
         public DadgFightingTournament(Town town, IGetTournamentRewardUseCase getTournamentRewardUseCase) : base(town)
         {
@@ -24,22 +22,22 @@ namespace DellarteDellaGuerra.Tournament.Api
             bool includePlayer,
             int lastRecordedLordCountForTournamentPrize)
         {
-            // GetTournamentPrize is called in the base contructor before the use case is initialised.
+            // GetTournamentPrize is called in the base constructor before the use case is initialised.
             if (_getTournamentRewardUseCase == null) return Items.All.First();
 
-            if (TournamentReward is not null) return GetRewardItem(TournamentReward);
-            
+            if (_savedReward is not null) return GetRewardItem(_savedReward);
+
             var participants = GetParticipantCharacters(Town.Settlement, includePlayer)
                 .Select(participant => participant.StringId).ToList();
 
-            TournamentReward =
-                _getTournamentRewardUseCase.GetTournamentReward(Town.Settlement.StringId, participants);
-            return GetRewardItem(TournamentReward);
+            var reward = _getTournamentRewardUseCase.GetTournamentReward(Town.Settlement.StringId, participants);
+            _savedReward = reward is not null ? new SaveableTournamentReward { ItemId = reward.ItemId } : null;
+            return GetRewardItem(_savedReward);
         }
 
-        private ItemObject GetRewardItem(TournamentReward? reward)
+        private ItemObject GetRewardItem(SaveableTournamentReward? reward)
         {
-            if (reward is null) return Items.All.First();
+            if (reward?.ItemId is null) return Items.All.First();
             return Items.All.Find(item => item.StringId.Equals(reward.ItemId)) ?? Items.All.First();
         }
         
