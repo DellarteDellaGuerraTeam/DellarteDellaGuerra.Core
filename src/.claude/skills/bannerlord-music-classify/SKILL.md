@@ -1,13 +1,11 @@
 ---
 name: bannerlord-music-classify
-description: Analyse an audio file, classify it for Bannerlord's PSAI soundtrack system (Battle, Losing Battle, Campaign, or Dramatic Campaign), update the corresponding segment in soundtrack.xml with computed BPM, beat timing, sample rates, and other metadata, then convert to OGG and deploy. Use this skill whenever the user wants to add a music track to Bannerlord, classify audio for the PSAI soundtrack system, update a soundtrack.xml segment, or says things like "classify this track", "add this music to Bannerlord", "update the soundtrack xml", "what kind of music is this for PSAI", or "register this ogg in the soundtrack".
+description: Convert any audio file to OGG, analyse it with the music-analysis MCP tool, classify it for Bannerlord's PSAI soundtrack system (Battle, Losing Battle, Campaign, or Dramatic Campaign), and update the corresponding segment in soundtrack.xml with computed BPM, beat timing, sample rates, and other metadata. Use this skill whenever the user wants to add a music track to Bannerlord, classify audio for the PSAI soundtrack system, update a soundtrack.xml segment, or says things like "classify this track", "add this music to Bannerlord", "update the soundtrack xml", "what kind of music is this for PSAI", or "register this ogg in the soundtrack".
 ---
 
 # bannerlord-music-classify
 
-Analyse an audio file in its original format, classify it for Bannerlord's PSAI soundtrack system, update `soundtrack.xml`, then convert to OGG and deploy as the very last step.
-
-> **Why OGG conversion is last**: analysing the original file (MP3, WAV, FLAC…) gives the most accurate BPM, beat times, and spectral features. Converting to a lossy OGG first and then analysing the result degrades those measurements. The OGG is purely a deployment artefact and is produced only after all metadata has been committed to the XML.
+Convert any audio file to OGG (Opus), analyse it, classify it for Bannerlord's PSAI soundtrack system, and update the corresponding segment in `soundtrack.xml` with accurate computed values.
 
 ## Usage
 
@@ -15,7 +13,7 @@ Analyse an audio file in its original format, classify it for Bannerlord's PSAI 
 /bannerlord-music-classify --file <path/to/audio.mp3> --soundtrack <path/to/soundtrack.xml>
 ```
 
-- `--file` — absolute path to the source audio file (MP3, WAV, FLAC, OGG, etc.)
+- `--file` — absolute path to the audio file (MP3, WAV, FLAC, OGG, etc.)
 - `--soundtrack` — absolute path to the PSAI `soundtrack.xml`
 
 If either argument is missing, stop and tell the user which argument is missing before proceeding.
@@ -28,9 +26,25 @@ Parse `--file` and `--soundtrack` from the arguments.
 
 ---
 
+### Step 0: Convert to OGG
+
+Regardless of the input format, convert the file to OGG (Opus) using ffmpeg. This ensures Bannerlord can load the audio.
+
+Derive `ogg_path` by replacing the extension of `--file` with `.ogg` (same directory, same basename):
+
+```bash
+ffmpeg -i "<input_file>" -vn -c:a libopus -b:a 128k "<ogg_path>"
+```
+
+- If the input is already `.ogg`, skip the conversion and set `ogg_path = --file`.
+- If ffmpeg fails (not installed, bad file, etc.), stop and show the full error to the user before proceeding.
+- After conversion, use `ogg_path` as the audio file for all subsequent steps.
+
+---
+
 ### Step 1: Analyse the audio
 
-Run `mcp__music-analysis__full_analysis` on the **original** `--file` path (not a converted copy).
+Run `mcp__music-analysis__full_analysis` on `ogg_path`.
 
 This single tool returns all needed data: duration, tempo, beat times, key, spectral features, and MFCCs.
 
@@ -53,33 +67,12 @@ Using the results, evaluate two independent axes.
 | spectral centroid       | `spectral.centroid_hz`             |
 | estimated key           | `harmony.estimated_key`            |
 
-#### Name-based pre-classification (check first)
-
-Before applying the metric rules, inspect the **filename** of `--file` for strong semantic signals:
-
-| If the filename contains (case-insensitive) | Likely classification |
-|---|---|
-| "siege", "assault", "storm" | Battle music (siege) |
-| "battle", "combat", "fight", "skirmish" | Battle music |
-| "retreat", "rout", "fallen", "defeat", "lose" | Losing battle music |
-| "march", "campaign", "travel", "road" | Campaign music |
-| "dark", "dread", "lament", "elegy", "dirge" | Dramatic campaign music |
-
-If the filename gives a clear signal, state the name-based suggestion alongside the metric-based result. If they disagree, **flag the conflict explicitly** and ask the user to confirm before continuing.
-
 #### Energy axis — Action vs Chill
 
 - **Action** if: `bpm > 140` OR (`bpm > 100` AND `rms_energy > 0.12` AND `zero_crossing_rate > 0.03`)
 - **Chill** otherwise
 
-> **Double-tempo warning (orchestral tracks):** librosa's beat tracker frequently locks onto the subdivision rather than the true pulse of composed orchestral music, reporting 2× the felt tempo. This is especially likely when **all three** of the following are true:
-> - Detected BPM is in the range 100–200
-> - The filename or classification suggests a theme, march, lament, or campaign piece (i.e. not frantic combat)
-> - `spectral.centroid_hz < 2500` (orchestral texture, not electronic/percussive)
->
-> When these conditions hold, **always flag the potential double-tempo to the user** and ask them to confirm the felt tempo before continuing. If the user confirms the BPM is doubled, set `confirmed_bpm = round(tempo_bpm / 2)` and use that in place of `bpm` for all beat-length calculations in Step 4 (`beat_length_samples`, `pre_beats`, `post_beats`). The sample-position values (`pre_beat_samples`, `post_beat_samples`, `total_samples`) are derived from timestamps and are never affected by tempo correction.
->
-> **Note on long tracks (> 5 min):** do NOT split the file before analysis. librosa's beat tracker already estimates time-varying tempo at each point in the signal, so splitting introduces cut-point artefacts without any accuracy benefit. Run `full_analysis` on the complete original file.
+> Caution: the tempo estimator frequently detects at double the felt musical tempo for orchestral music. If BPM is unusually high (e.g. > 160) and the track sounds like a measured theme or march rather than frantic combat music, flag this explicitly and ask the user to confirm the true felt tempo before proceeding. If the user confirms the BPM is doubled, use `confirmed_bpm = round(tempo_bpm / 2)` in place of `bpm` for all calculations in Step 4 that involve beat length (`beat_length_samples`, `pre_beats`, `post_beats`). The sample-position values (`pre_beat_samples`, `post_beat_samples`, `total_samples`) are derived from timestamps and are unaffected.
 
 #### Drama axis — Dramatic vs Standard
 
@@ -99,7 +92,7 @@ Score one point for each (max 3):
 | Chill  | Standard | **Campaign music**            |
 | Chill  | Dramatic | **Dramatic campaign music**   |
 
-Present the classification with all supporting metric values, the name-based signal (if any), and any confidence caveats, then **ask the user to confirm or override the classification before continuing to Step 3**.
+Present the classification with all supporting metric values and any confidence caveats, then **ask the user to confirm or override the classification before continuing to Step 3**.
 
 ---
 
@@ -111,17 +104,15 @@ Before computing values, inspect the soundtrack XML to determine what path forma
 pattern: <Path>[^<]+</Path>
 ```
 
-Count results with a subdirectory prefix (e.g. `PC/filename.wav`) vs bare basenames. If the **majority** use a prefix, apply the same prefix to the OGG basename derived from `--file`. If results are mixed, bare, or absent, use the bare basename only.
+Count results with a subdirectory prefix (e.g. `PC/filename.wav`) vs bare basenames. If the **majority** use a prefix, apply the same prefix to the basename of `ogg_path`. If results are mixed, bare, or absent, use the bare basename of `ogg_path` only.
 
-Derive `ogg_basename` = basename of `--file` with the extension replaced by `.ogg`.
-
-Set `audio_filename` = `<prefix>/ogg_basename` (or just `ogg_basename` if no prefix).
+Set `audio_filename` now before proceeding.
 
 ---
 
 ### Step 4: Compute PSAI segment fields
 
-Calculate the following from the analysis results (which were run on the original file):
+Calculate the following from the analysis results:
 
 ```
 sample_rate         = sample_rate_hz                                    (from full_analysis)
@@ -171,7 +162,6 @@ context: 5 lines before
 If no name match is found, fall back to `<ThemeTypeInt>` value. Known values observed in Bannerlord PSAI files:
 - `7` — Main Theme
 - `1` — Dark / tense campaign variant
-- `3` — Battle
 
 If still ambiguous after both passes, list all candidate themes and **ask the user to choose one** before proceeding.
 
@@ -240,24 +230,3 @@ Update all audio fields in the identified segment. The segment contains two copi
 #### 6b — Verify
 
 Grep for `<Name>SEGMENT_NAME</Name>` (the full tag, not just the value) with 40 lines of after-context to re-read the updated block and confirm all changed fields show their new values. Display a final summary table of all changed fields alongside the confirmed music classification.
-
----
-
-### Step 7: Convert to OGG and deploy
-
-Only after the XML has been verified in Step 6b, convert the original file to OGG (Opus) and place it where the soundtrack expects it.
-
-Derive `ogg_dest`:
-- Take the directory of `--soundtrack`
-- Append the path prefix used in `audio_filename` (e.g. `PC/`)
-- Append `ogg_basename`
-
-Use **OGG Vorbis** (not Opus) with the original sample rate. Bannerlord's PSAI reads OGG Vorbis natively. Opus internally forces 48 kHz regardless of `-ar`, so using libopus would silently break all sample-count timing computed from the original file.
-
-```bash
-ffmpeg -y -i "<--file>" -vn -c:a libvorbis -q:a 6 -ar <sample_rate> "<ogg_dest>"
-```
-
-- If `--file` is already a `.ogg` file, copy it to `ogg_dest` unchanged (do not re-encode).
-- If ffmpeg fails, show the full error. The XML edit is already done; the user must resolve the conversion separately.
-- On success, report the final OGG path and file size.
