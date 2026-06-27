@@ -78,7 +78,7 @@ Use the **`bannerlord-gabs-start`** skill (with optional save name argument). Th
 - Ensures `AssertAutoIgnore.exe` is running (auto-dismisses Bannerlord popups)
 - Starts the JetBrains debug session (`DellarteDellaGuerra.Integration: Standalone`)
   - The debug config triggers a build automatically — if the session fails to start, check the Rider build output for compile errors
-- Waits for `runtime.json` via `Bash run_in_background` (handles any load time, fast or slow)
+- Waits for `runtime.json` with a non-blocking PowerShell polling command (handles any load time, fast or slow)
 - Connects GABP and reports blockers
 
 ### 2d. Resume loading-phase exceptions
@@ -128,9 +128,9 @@ _logger.Info($"Defender cache length: {cache.Length}, slotIndex: {slotIndex}");
 _logger.Warn($"Settlement {settlement.Name} has no defender engine slots at wall level {wallLevel}");
 ```
 
-Rebuild (or let the debug config build on launch), then grep the log to observe behaviour:
-```bash
-grep -i "defender cache" "../log/dadg.log" | tail -20
+Rebuild (or let the debug config build on launch), then search the log to observe behaviour:
+```powershell
+Select-String -Path "..\log\dadg.log" -Pattern "defender cache" | Select-Object -Last 20
 ```
 
 Logging is especially useful in mission code where interactive breakpoints are awkward (battles move fast).

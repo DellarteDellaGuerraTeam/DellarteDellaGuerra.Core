@@ -44,10 +44,9 @@ Call `mcp__bannerlord-game-controller__games_status` with `gameId: "bannerlord"`
 
 ---
 
-## Step 2 — Prepare the GABS files and ensure AssertAutoIgnore is running (PowerShell only)
+## Step 2 — Prepare the GABS files and ensure AssertAutoIgnore is running
 
-The Read/Write/Edit tools operate on the Linux side of this environment. These files
-live on Windows where GABS reads them — use the `PowerShell` tool for both.
+These files live on Windows where GABS reads them. Use PowerShell for the setup steps.
 
 First, ensure Steam is running — Bannerlord requires Steam and will fail without it:
 

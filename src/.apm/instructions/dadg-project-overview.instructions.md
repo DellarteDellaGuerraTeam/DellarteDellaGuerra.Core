@@ -31,7 +31,7 @@ DI setup: `DellarteDellaGuerra.Integration/DI/DadgServiceContainer.cs`.
 
 Run commands from `src/`:
 
-```bash
+```powershell
 dotnet restore DellarteDellaGuerra.sln
 dotnet build DellarteDellaGuerra.sln --configuration Release
 dotnet test DellarteDellaGuerra.sln

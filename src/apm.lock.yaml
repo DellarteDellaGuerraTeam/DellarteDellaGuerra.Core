@@ -124,43 +124,43 @@ local_deployed_files:
 - .codex/hooks/dadg-bannerlord-agent-context/.apm/hooks/scripts/jb-pause-guard.ps1
 - .codex/hooks/dadg-bannerlord-agent-context/.apm/hooks/scripts/session-start.ps1
 local_deployed_file_hashes:
-  .agents/skills/bannerlord-debug/SKILL.md: sha256:6b71d6309fdcf3f395dabd1f7300fb040b017f4aeea6127c0d2ce69e59eb3c6f
+  .agents/skills/bannerlord-debug/SKILL.md: sha256:e982349b0c79a4a64bf05c586f4ed81a32b8b75c7ec6a8701ee51536c1e11ea2
   .agents/skills/bannerlord-debug/references/bannerlord-debugging-workflow.md: sha256:67a3010c4e60c73a348554d743969c1d989202e2dc48f7ba61ec68b93a594730
   .agents/skills/bannerlord-debug/references/case-study-settlement-visual-crash.md: sha256:ef687bf79b4aab55318ad8ed55d6b9a7d98de54c16cbf64b457d2904aa4b74da
   .agents/skills/bannerlord-debug/references/dadg-gabs-protocol.md: sha256:8d03a75100c781be26a836b1b4d62bd656578830067e1261cc0b525fcae6432d
   .agents/skills/bannerlord-debug/references/jetbrains-debugger-tips.md: sha256:6a1e4667f23927216ba81e91e1a9271072ef1359a9ec3f3434cedf55e217c409
   .agents/skills/bannerlord-gabs-battle-manager/SKILL.md: sha256:f82f23925272869ba33ed30d5cbe5c378648ab7c8dd6adfd75599ddc019dbd03
-  .agents/skills/bannerlord-gabs-session-reset/SKILL.md: sha256:dabcc98619111b8c1a57b9b79a30976c1eb46f5676bdd1e5628a236e2850fdc0
-  .agents/skills/bannerlord-gabs-start/SKILL.md: sha256:f4626d3ba8fdcd7a03503fc4da356be7fe07740eb16fdcc92bae3e0426f723fc
-  .agents/skills/bannerlord-music-classify/SKILL.md: sha256:43f7e09ad2d3c449834bd9e98a062a736cc5f596a7f8a47e3c93b74d754ba150
-  .agents/skills/bannerlord-sprite-analyze/SKILL.md: sha256:7c0d992f7a419742b084eaf9803559ae532889fd3078105847eb6047b93c8214
-  .agents/skills/bannerlord-sprite-extract/SKILL.md: sha256:4f3ac846c02b95dffed1cd20c63c2eb9897531182eeefcc5a18d986bf3531d0f
-  .agents/skills/bannerlord-sprite-inject/SKILL.md: sha256:631424b7385a94253e929357ed9acbf62826a47735d506e5fd20f2df7089f905
-  .agents/skills/bannerlord-sprite-list/SKILL.md: sha256:bb2fa561a0a5dc0cb13ffabf0580d78f80be8876ca124415018aa6adb80ba800
+  .agents/skills/bannerlord-gabs-session-reset/SKILL.md: sha256:782cbf33e9107f462b3ca80378a689ab339e68de5ecd33e8621dad54b6186722
+  .agents/skills/bannerlord-gabs-start/SKILL.md: sha256:9950547c0378514fbb98c29dad48be090cf9b717214a81dbe19e635038b9f308
+  .agents/skills/bannerlord-music-classify/SKILL.md: sha256:30d543ca37cf9b54fd33aabd9853ca8d27b35174a2f4047191866257a18a1bd0
+  .agents/skills/bannerlord-sprite-analyze/SKILL.md: sha256:74040205c09886ae4d297db4bdd1bd61f994de65b71651f18d6cf756299ed0cc
+  .agents/skills/bannerlord-sprite-extract/SKILL.md: sha256:b0fdc53e789ee5ff17217c47f62dbd15ce3b55a2914bf470a420f7feda9ffcb5
+  .agents/skills/bannerlord-sprite-inject/SKILL.md: sha256:e733e326d62e5149cf09a8ee991badfe8a9fd7d5168c719c17cf3714af3b4c61
+  .agents/skills/bannerlord-sprite-list/SKILL.md: sha256:69f0d123c3364c692f96f13af9568eaad0416b777fa89bcfffc23cb3b34d234a
   .agents/skills/dadg-project-context/SKILL.md: sha256:bf1aee4c23aaa9ea3dae7f4f1132ae7be04f3ab1718810bb86a265a3573d75a9
   .agents/skills/dadg-project-context/references/dadg-feature-domains.md: sha256:74fdb776c63e50d9e893f605040cf7f5ff84936a04331f932fb92be623601f79
   .agents/skills/dadg-project-context/references/dadg-module-structure.md: sha256:7dbe98c2938b5421b18821d04ae85b915c2cd23d91ed72d4333c85e2fb480f3f
-  .agents/skills/dadg-project-context/references/dadg-project-overview.md: sha256:7fc38aaabff6c3bb421a067b299622d0cfe93f2e2e7f26b6b10011dd4fadcf4c
+  .agents/skills/dadg-project-context/references/dadg-project-overview.md: sha256:111ba3cb2454bf39a64f41fb552940cea06e22fdd61e4d5e803f2b96b5ade696
   .claude/hooks/dadg-bannerlord-agent-context/.apm/hooks/scripts/jb-pause-guard.ps1: sha256:6873a5bef29488495d1061caf9ab362ec25138c9b7aee9b09d791a1f27ec8ca4
-  .claude/hooks/dadg-bannerlord-agent-context/.apm/hooks/scripts/session-start.ps1: sha256:ef1d3f6650a88258154ce9aa6f3f19e1f985bd7a192cc2203c739d6cd940ab84
+  .claude/hooks/dadg-bannerlord-agent-context/.apm/hooks/scripts/session-start.ps1: sha256:2a7e9f40c84b79935ded96a6c60e48088b2d6fd9d49bd9e93a42fb5c2c0a75a2
   .claude/rules/dadg-agent-guidelines.md: sha256:4712e4513b02e431f900214ba191aa13bfc54c5707f135cc34c6ec4b879d1748
-  .claude/rules/dadg-project-overview.md: sha256:e21601b3b037c8c3cf025ed4c136ccf71b0008c24f398e374670f7de1f7516c5
-  .claude/skills/bannerlord-debug/SKILL.md: sha256:6b71d6309fdcf3f395dabd1f7300fb040b017f4aeea6127c0d2ce69e59eb3c6f
+  .claude/rules/dadg-project-overview.md: sha256:4dde1c4166c81942f6299d71022799500a94804049d50cc835382de3664f3590
+  .claude/skills/bannerlord-debug/SKILL.md: sha256:e982349b0c79a4a64bf05c586f4ed81a32b8b75c7ec6a8701ee51536c1e11ea2
   .claude/skills/bannerlord-debug/references/bannerlord-debugging-workflow.md: sha256:67a3010c4e60c73a348554d743969c1d989202e2dc48f7ba61ec68b93a594730
   .claude/skills/bannerlord-debug/references/case-study-settlement-visual-crash.md: sha256:ef687bf79b4aab55318ad8ed55d6b9a7d98de54c16cbf64b457d2904aa4b74da
   .claude/skills/bannerlord-debug/references/dadg-gabs-protocol.md: sha256:8d03a75100c781be26a836b1b4d62bd656578830067e1261cc0b525fcae6432d
   .claude/skills/bannerlord-debug/references/jetbrains-debugger-tips.md: sha256:6a1e4667f23927216ba81e91e1a9271072ef1359a9ec3f3434cedf55e217c409
   .claude/skills/bannerlord-gabs-battle-manager/SKILL.md: sha256:f82f23925272869ba33ed30d5cbe5c378648ab7c8dd6adfd75599ddc019dbd03
-  .claude/skills/bannerlord-gabs-session-reset/SKILL.md: sha256:dabcc98619111b8c1a57b9b79a30976c1eb46f5676bdd1e5628a236e2850fdc0
-  .claude/skills/bannerlord-gabs-start/SKILL.md: sha256:f4626d3ba8fdcd7a03503fc4da356be7fe07740eb16fdcc92bae3e0426f723fc
-  .claude/skills/bannerlord-music-classify/SKILL.md: sha256:43f7e09ad2d3c449834bd9e98a062a736cc5f596a7f8a47e3c93b74d754ba150
-  .claude/skills/bannerlord-sprite-analyze/SKILL.md: sha256:7c0d992f7a419742b084eaf9803559ae532889fd3078105847eb6047b93c8214
-  .claude/skills/bannerlord-sprite-extract/SKILL.md: sha256:4f3ac846c02b95dffed1cd20c63c2eb9897531182eeefcc5a18d986bf3531d0f
-  .claude/skills/bannerlord-sprite-inject/SKILL.md: sha256:631424b7385a94253e929357ed9acbf62826a47735d506e5fd20f2df7089f905
-  .claude/skills/bannerlord-sprite-list/SKILL.md: sha256:bb2fa561a0a5dc0cb13ffabf0580d78f80be8876ca124415018aa6adb80ba800
+  .claude/skills/bannerlord-gabs-session-reset/SKILL.md: sha256:782cbf33e9107f462b3ca80378a689ab339e68de5ecd33e8621dad54b6186722
+  .claude/skills/bannerlord-gabs-start/SKILL.md: sha256:9950547c0378514fbb98c29dad48be090cf9b717214a81dbe19e635038b9f308
+  .claude/skills/bannerlord-music-classify/SKILL.md: sha256:30d543ca37cf9b54fd33aabd9853ca8d27b35174a2f4047191866257a18a1bd0
+  .claude/skills/bannerlord-sprite-analyze/SKILL.md: sha256:74040205c09886ae4d297db4bdd1bd61f994de65b71651f18d6cf756299ed0cc
+  .claude/skills/bannerlord-sprite-extract/SKILL.md: sha256:b0fdc53e789ee5ff17217c47f62dbd15ce3b55a2914bf470a420f7feda9ffcb5
+  .claude/skills/bannerlord-sprite-inject/SKILL.md: sha256:e733e326d62e5149cf09a8ee991badfe8a9fd7d5168c719c17cf3714af3b4c61
+  .claude/skills/bannerlord-sprite-list/SKILL.md: sha256:69f0d123c3364c692f96f13af9568eaad0416b777fa89bcfffc23cb3b34d234a
   .claude/skills/dadg-project-context/SKILL.md: sha256:bf1aee4c23aaa9ea3dae7f4f1132ae7be04f3ab1718810bb86a265a3573d75a9
   .claude/skills/dadg-project-context/references/dadg-feature-domains.md: sha256:74fdb776c63e50d9e893f605040cf7f5ff84936a04331f932fb92be623601f79
   .claude/skills/dadg-project-context/references/dadg-module-structure.md: sha256:7dbe98c2938b5421b18821d04ae85b915c2cd23d91ed72d4333c85e2fb480f3f
-  .claude/skills/dadg-project-context/references/dadg-project-overview.md: sha256:7fc38aaabff6c3bb421a067b299622d0cfe93f2e2e7f26b6b10011dd4fadcf4c
+  .claude/skills/dadg-project-context/references/dadg-project-overview.md: sha256:111ba3cb2454bf39a64f41fb552940cea06e22fdd61e4d5e803f2b96b5ade696
   .codex/hooks/dadg-bannerlord-agent-context/.apm/hooks/scripts/jb-pause-guard.ps1: sha256:6873a5bef29488495d1061caf9ab362ec25138c9b7aee9b09d791a1f27ec8ca4
-  .codex/hooks/dadg-bannerlord-agent-context/.apm/hooks/scripts/session-start.ps1: sha256:ef1d3f6650a88258154ce9aa6f3f19e1f985bd7a192cc2203c739d6cd940ab84
+  .codex/hooks/dadg-bannerlord-agent-context/.apm/hooks/scripts/session-start.ps1: sha256:2a7e9f40c84b79935ded96a6c60e48088b2d6fd9d49bd9e93a42fb5c2c0a75a2
