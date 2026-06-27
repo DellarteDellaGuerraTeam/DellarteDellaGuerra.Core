@@ -116,8 +116,6 @@ public class DadgServiceContainer
         // Music
         services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
         services.AddSingleton<IPatch, CampaignMusicHandlerTickPatch>();
-        // General
-        services.AddSingleton<IPatch, GeneralPatches>();
         // Character creation
         services.AddSingleton<IPatch, DisableSortingBehaviourInCultureMenuPatch>();
         // Firearm

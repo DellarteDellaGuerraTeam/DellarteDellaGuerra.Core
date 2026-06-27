@@ -6,6 +6,7 @@ using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.View;
+using TaleWorlds.MountAndBlade.View.Tableaus.Thumbnails;
 
 namespace DellarteDellaGuerra.Heraldry
 {
@@ -73,7 +74,8 @@ namespace DellarteDellaGuerra.Heraldry
             if (meshNameFilters.Count == 0)
                 return;
 
-            clanBanner.GetTableauTextureLarge(bannerTexture =>
+            BannerDebugInfo debugInfo = default;
+            clanBanner.GetTableauTextureLarge(in debugInfo, bannerTexture =>
             {
                 if (bannerTexture == null)
                     return;
