@@ -11,7 +11,20 @@
 
 $ErrorActionPreference = 'Continue'
 
-$ProjectDir = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
+$ProjectDir = $null
+$dir = (Resolve-Path $PSScriptRoot).Path
+while ($dir) {
+    if ((Test-Path (Join-Path $dir 'DellarteDellaGuerra.sln')) -and (Test-Path (Join-Path $dir '.mcp.json'))) {
+        $ProjectDir = $dir
+        break
+    }
+    $parent = Split-Path -Parent $dir
+    if ([string]::IsNullOrEmpty($parent) -or $parent -eq $dir) { break }
+    $dir = $parent
+}
+if (-not $ProjectDir) {
+    $ProjectDir = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
+}
 $TempDir    = $env:TEMP
 $ToolsDir   = Join-Path $HOME '.dotnet\tools'
 

@@ -118,4 +118,4 @@ For searching the mod's own source, prefer **JetBrains MCP tools** — they oper
 
 **Live debugging (GABS):** Use `bannerlord-gabs-start` skill → set breakpoints via `mcp__jetbrains-debugger__set_breakpoint` → drive the game with `mcp__bannerlord-game-controller__games_*` tools. When a breakpoint fires, the next tool call pauses and reports it.
 
-For deeper detail on module folder layout, feature implementations, or GABS protocol internals, read the other files in `.claude/knowledge/`.
+For deeper detail on module folder layout, feature implementations, or GABS protocol internals, read the other files in this `references/` directory.
