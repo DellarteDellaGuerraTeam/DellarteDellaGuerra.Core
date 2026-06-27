@@ -11,16 +11,27 @@ description: >
 
 ---
 
-## 0 — Read ALL knowledge bases before writing a single line of code
+## 0 — Load project context and debug references before changing behavior
 
-**Stop. Read them all first.** Many "obvious" fixes turn out to be wrong or already handled
-once you understand the full picture. This step has saved (and cost) hours.
+**Stop. Read the relevant context first.** Many "obvious" fixes turn out to be
+wrong or already handled once you understand the full picture.
 
-- `.claude/knowledge/dadg-project-overview.md` — architecture, build commands, MCP tools, DI pattern
-- `.claude/knowledge/dadg-feature-domains.md` — every feature domain and where the C# lives
-- `.claude/knowledge/dadg-module-structure.md` — multi-module layout (Core, Map, Scenes, Content)
-- `.claude/knowledge/dadg-gabs-protocol.md` — GABS/GABP bridge details
-- `.claude/knowledge/bannerlord-debugging-workflow.md` — CLR exception strategy (critical)
+For DADG project layout and feature ownership, read the `dadg-project-context`
+skill references:
+
+- `../dadg-project-context/references/dadg-project-overview.md` — architecture, build commands, MCP tools, DI pattern
+- `../dadg-project-context/references/dadg-feature-domains.md` — every feature domain and where the C# lives
+- `../dadg-project-context/references/dadg-module-structure.md` — multi-module layout (Core, Map, Scenes, Content)
+
+For live runtime debugging, read:
+
+- `references/bannerlord-debugging-workflow.md` — CLR exception strategy
+- `references/dadg-gabs-protocol.md` — GABS/GABP bridge details
+- `references/jetbrains-debugger-tips.md` — Rider debugger gotchas
+
+For scene/data-cache style crashes, also read:
+
+- `references/case-study-settlement-visual-crash.md` — example of a scene data bug masquerading as engine/C# failure
 
 DADG is **multi-module**. The bug you're chasing may not be in C# at all — it could be in:
 - XML data (`../DellarteDellaGuerra/ModuleData/`)
@@ -31,7 +42,7 @@ DADG is **multi-module**. The bug you're chasing may not be in C# at all — it 
 
 ## 1 — CLR exception strategy (critical)
 
-See `.claude/knowledge/bannerlord-debugging-workflow.md` for full detail. Summary:
+See `references/bannerlord-debugging-workflow.md` for full detail. Summary:
 
 **During loading** — resume immediately. These are handled engine exceptions (e.g. `MBObjectManager.cs:993` XML parsing). They are noise.
 

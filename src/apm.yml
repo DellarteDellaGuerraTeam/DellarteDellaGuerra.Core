@@ -1,0 +1,60 @@
+name: dadg-bannerlord-agent-context
+version: 0.1.0
+description: Agent instructions, skills, hooks, and MCP dependencies for DellarteDellaGuerra Bannerlord development.
+type: hybrid
+targets:
+  - claude
+  - codex
+includes:
+  - .apm/instructions/
+  - .apm/skills/
+  - .apm/hooks/
+dependencies:
+  mcp:
+    - name: bannerlord-search-1_2_12
+      registry: false
+      transport: stdio
+      command: python
+      args:
+        - .apm/mcp/mcp-http-stdio-bridge.py
+        - --url
+        - http://localhost:5000
+    - name: bannerlord-search-1_3_1
+      registry: false
+      transport: stdio
+      command: python
+      args:
+        - .apm/mcp/mcp-http-stdio-bridge.py
+        - --url
+        - http://localhost:5001
+    - name: bannerlord-search-1_4_6
+      registry: false
+      transport: stdio
+      command: python
+      args:
+        - .apm/mcp/mcp-http-stdio-bridge.py
+        - --url
+        - http://localhost:5002
+    - name: bannerlord-game-controller
+      registry: false
+      transport: stdio
+      command: python
+      args:
+        - .apm/mcp/mcp-http-stdio-bridge.py
+        - --url
+        - http://localhost:8080/mcp
+    - name: jetbrains-debugger
+      registry: false
+      transport: stdio
+      command: python
+      args:
+        - .apm/mcp/mcp-http-stdio-bridge.py
+        - --url
+        - http://localhost:29202/debugger-mcp/streamable-http
+    - name: music-analysis
+      registry: false
+      transport: stdio
+      command: uvx
+      args:
+        - "-n"
+        - mcp_local_music_analysis

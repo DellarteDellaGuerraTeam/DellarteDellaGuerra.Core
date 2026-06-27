@@ -30,7 +30,7 @@ Key variables when paused:
 
 ## Investigation path
 
-- **[[bannerlord-debugging-workflow]]** — paused on CLR exception during campaign → did NOT
+- **`bannerlord-debugging-workflow.md`** — paused on CLR exception during campaign → did NOT
   resume; inspected variables and stack first
 - **`mcp__jetbrains-debugger__get_variables`** — confirmed `slotIndex=0`, `cacheLength=0`,
   `wallLevel=2`; this ruled out "slot 3 overflow" hypothesis
@@ -43,7 +43,7 @@ Key variables when paused:
 - Compared against vanilla (`SandBox/SceneObj/Main_map/scene.xscene`) — vanilla has all
   three levels
 
-**See:** `.claude/skills/bannerlord-debug/SKILL.md` §5 (Investigating data bugs) and §6
+**See:** `../SKILL.md` §5 (Investigating data bugs) and §6
 (when to spawn subagents for huge scene files)
 
 ---
@@ -76,6 +76,6 @@ engine immediately accessed slot 0 → `IndexOutOfRangeException`.
   any entity type vanilla uses that DADG omits will silently produce empty caches or
   missing references at runtime
 - **Spawn a subagent for xscene edits** — scene files are 20+ MB; a subagent keeps the
-  main conversation context clean (see `.claude/skills/bannerlord-debug/SKILL.md` §6)
+  main conversation context clean (see `../SKILL.md` §6)
 - **The CLR exception window is everything** — resuming immediately would have lost
   `slotIndex=0` and `cacheLength=0`; those two variables contained the entire diagnosis
