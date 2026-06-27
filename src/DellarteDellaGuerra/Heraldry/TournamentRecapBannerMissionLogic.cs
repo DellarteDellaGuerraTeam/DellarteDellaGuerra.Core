@@ -76,7 +76,7 @@ namespace DellarteDellaGuerra.Heraldry
             // (Tournament__...TournamentVM.cs) which propagates BannerCodeText to the
             // CharacterTableau widget, causing it to render the banner on any
             // banner_replacement_mesh in the winner's equipped heraldic items.
-            winner.Character.BannerCodeText = BannerCode.CreateFrom(clanBanner).Code;
+            winner.Character.BannerCodeText = clanBanner.BannerCode;
         }
 
         /// <summary>
