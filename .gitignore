@@ -96,3 +96,13 @@ Shaders/
 
 #DADG
 /config/nlog.config
+
+# APM dependencies and generated agent client output
+apm_modules/
+.agents/
+.claude/
+.codex/
+src/apm_modules/
+src/.agents/
+src/.claude/
+src/.codex/
