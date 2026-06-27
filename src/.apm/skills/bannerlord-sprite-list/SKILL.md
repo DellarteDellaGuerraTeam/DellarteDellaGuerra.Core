@@ -23,17 +23,17 @@ The user has invoked this skill with: $ARGUMENTS
 Parse the arguments above to extract `--xml` and (optionally) `--filter`.
 
 First check Python is available:
-```bash
+```powershell
 python --version
 ```
 If Python is not found, stop and tell the user to install Python 3 from https://python.org.
 
 Then check Pillow (needed for consistency with other sprite skills, though this skill only uses stdlib):
-```bash
+```powershell
 python -c "import xml.etree.ElementTree" 2>&1
 ```
 
-Now run the following Python script via the Bash tool, substituting the actual path for XML_PATH and the filter string for FILTER_VALUE (empty string if not provided):
+Now run the following Python script via PowerShell, substituting the actual path for XML_PATH and the filter string for FILTER_VALUE (empty string if not provided):
 
 ```python
 import sys
@@ -81,5 +81,5 @@ print(sep)
 print(f"Total: {len(parts)} sprite(s)")
 ```
 
-Pass the script to Python via the Bash tool (write it to a temp file or use python -c / heredoc).
+Pass the script to Python via PowerShell, either by writing it to a temp file or by using `python -c`.
 After running, show the output to the user.
