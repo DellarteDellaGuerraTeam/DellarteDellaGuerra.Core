@@ -24,11 +24,27 @@ function Write-Decision {
     exit 0
 }
 
-# Derive the src project dir from this script's own location (.claude/hooks/ ->
-# ../..), so the guard doesn't depend on CLAUDE_PROJECT_DIR being set/expanded
-# correctly by whatever shell launched it. Rider registers project paths with
-# forward slashes; a backslash Windows path returns project_not_found, so normalize.
-$projectDir = ((Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path -replace '\\', '/')
+# Derive the src project dir from this script's own location, so the guard does
+# not depend on CLAUDE_PROJECT_DIR being set/expanded correctly by whatever shell
+# launched it. This script may live under .claude/hooks or .apm/hooks/scripts.
+$root = $null
+$dir = (Resolve-Path $PSScriptRoot).Path
+while ($dir) {
+    if ((Test-Path (Join-Path $dir 'DellarteDellaGuerra.sln')) -and (Test-Path (Join-Path $dir '.mcp.json'))) {
+        $root = $dir
+        break
+    }
+    $parent = Split-Path -Parent $dir
+    if ([string]::IsNullOrEmpty($parent) -or $parent -eq $dir) { break }
+    $dir = $parent
+}
+if (-not $root) {
+    $root = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
+}
+
+# Rider registers project paths with forward slashes; a backslash Windows path
+# returns project_not_found, so normalize.
+$projectDir = ($root -replace '\\', '/')
 $uri = "http://localhost:7777/state?path=" + [uri]::EscapeDataString($projectDir)
 
 try {

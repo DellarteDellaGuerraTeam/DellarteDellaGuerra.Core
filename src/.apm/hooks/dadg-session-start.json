@@ -1,0 +1,12 @@
+{
+  "SessionStart": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "pwsh -NoProfile -File \"${PLUGIN_ROOT}/.apm/hooks/scripts/session-start.ps1\""
+        }
+      ]
+    }
+  ]
+}
