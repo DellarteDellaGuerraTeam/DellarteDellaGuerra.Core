@@ -29,12 +29,12 @@ The user has invoked this skill with: $ARGUMENTS
 Parse the arguments to extract `--atlas` and `--xml`.
 
 First verify Python 3 and Pillow are available:
-```bash
+```powershell
 python --version
 python -c "from PIL import Image; print('Pillow OK')"
 ```
 If Pillow is missing, install it:
-```bash
+```powershell
 pip install Pillow
 ```
 
@@ -134,5 +134,5 @@ for (gy, gx1, gx2) in free_rows[:5]:
     print(f"  Row {gy:2d}  cols {gx1}-{gx2}  ≈ pixel rect ({px_x1},{px_y1})-({px_x2},{px_y2})  width≈{px_x2-px_x1}px")
 ```
 
-Pass the script to Python via the Bash tool.
+Pass the script to Python via PowerShell.
 Present the output (grid map, sprite list, free space summary) to the user.

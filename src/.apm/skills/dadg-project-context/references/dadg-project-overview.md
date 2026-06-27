@@ -36,7 +36,7 @@ All modules sit under the Bannerlord `Modules/` folder:
 
 All commands run from `src/`:
 
-```bash
+```powershell
 dotnet restore DellarteDellaGuerra.sln
 dotnet build DellarteDellaGuerra.sln --configuration Release
 dotnet test DellarteDellaGuerra.sln

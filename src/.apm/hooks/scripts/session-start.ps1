@@ -6,8 +6,8 @@
 #   3. JetBrains debugger pause monitor ("dadg-jb-debug-bridge") on :7777
 #   4. GABS HTTP server (game-controller MCP backend) on :8080
 #
-# Replaces the previous bash + WSL2 setup. Everything binds Windows localhost
-# directly, so .mcp.json (which points at localhost) needs no changes.
+# Everything binds Windows localhost directly, so .mcp.json (which points at
+# localhost) needs no changes.
 
 $ErrorActionPreference = 'Continue'
 
@@ -70,7 +70,7 @@ if (-not (Test-Path $mcpConfigPath)) {
     # Property order is preserved by ConvertFrom-Json, so it sets the port order.
     $versions = @($mcp.mcpServers.PSObject.Properties.Name |
         Where-Object { $_ -match '^bannerlord-search-(.+)$' } |
-        ForEach-Object { $Matches[1] })
+        ForEach-Object { $Matches[1] -replace '_', '.' })
 
     if ($versions.Count -eq 0) {
         Write-Host "WARNING: no bannerlord-search-* servers in .mcp.json."
@@ -186,13 +186,6 @@ if ($bridgeDll) {
 "@ | Set-Content -Path $nlogPath -Encoding UTF8
         Write-Host "Provisioned missing nlog.config at $nlogPath."
     }
-}
-
-# Drop any WSL2-forwarded bridge from the old setup so the native one owns :7777
-# (a WSL2 instance can't reach Rider at 127.0.0.1 and would only answer 503).
-if (Get-Command wsl.exe -ErrorAction SilentlyContinue) {
-    try { wsl.exe -e pkill -f jetbrains-debugger-pause-monitor 2>$null } catch {}
-    Start-Sleep -Seconds 1
 }
 
 if (Test-PortReady -Port $bridgePort) {
