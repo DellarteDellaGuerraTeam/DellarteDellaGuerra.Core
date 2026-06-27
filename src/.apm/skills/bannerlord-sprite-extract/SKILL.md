@@ -36,12 +36,12 @@ Parse the arguments above to extract:
 - `--output` value (if omitted, default to the directory containing the atlas file)
 
 First verify Python 3 and Pillow are available:
-```bash
+```powershell
 python --version
 python -c "from PIL import Image; print('Pillow OK')"
 ```
 If Pillow is missing, install it:
-```bash
+```powershell
 pip install Pillow
 ```
 
@@ -98,5 +98,5 @@ cropped.save(out_path)
 print(f"\nSaved: {out_path}  ({width}x{height} px)")
 ```
 
-Pass the script to Python via the Bash tool.
+Pass the script to Python via PowerShell.
 Report the output path and dimensions to the user.

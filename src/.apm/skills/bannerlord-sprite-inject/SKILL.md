@@ -39,12 +39,12 @@ Parse the arguments to extract:
 - `--category` value (optional)
 
 First verify Python 3 and Pillow are available:
-```bash
+```powershell
 python --version
 python -c "from PIL import Image; print('Pillow OK')"
 ```
 If Pillow is missing, install it:
-```bash
+```powershell
 pip install Pillow
 ```
 
@@ -183,5 +183,5 @@ print(f"\nUpdated: {spritedata}")
 print(f"\nNext step: run SpriteSheetGenerator.exe to repack the atlas into a .tpac")
 ```
 
-Pass the script to Python via the Bash tool.
+Pass the script to Python via PowerShell.
 Show the user the output, confirm what was changed, and remind them of the manual repack step.

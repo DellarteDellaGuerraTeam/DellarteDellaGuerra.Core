@@ -67,8 +67,8 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ---
 
-**Project context:** If your task involves understanding the codebase, read `.claude/knowledge/dadg-project-overview.md`.
+**Project context:** If your task involves understanding the codebase, read `.apm/skills/dadg-project-context/references/dadg-project-overview.md` or use the `dadg-project-context` skill.
 
-**Debugging context:** If your task involves running or debugging Bannerlord (GABS, GABP, Rider debugger, CLR exceptions, crash investigation, fix → relaunch cycles), read `.claude/skills/bannerlord-debug/SKILL.md`.
+**Debugging context:** If your task involves running or debugging Bannerlord (GABS, GABP, Rider debugger, CLR exceptions, crash investigation, fix → relaunch cycles), read `.apm/skills/bannerlord-debug/SKILL.md` or use the `bannerlord-debug` skill.
 
-**JetBrains/Rider tips:** For conditional breakpoint syntax, dialog handling, and decompiled source breakpoints, read `.claude/knowledge/jetbrains-debugger-tips.md`.
+**JetBrains/Rider tips:** For conditional breakpoint syntax, dialog handling, and decompiled source breakpoints, read `.apm/skills/bannerlord-debug/references/jetbrains-debugger-tips.md`.

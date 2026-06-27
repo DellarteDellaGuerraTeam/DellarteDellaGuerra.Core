@@ -45,8 +45,17 @@ If still alive:
 
 ### 3. Clean the GABS bridge files
 
-Delete stale files via WSL bash (PowerShell path protection blocks this):
-  rm -f /mnt/c/Users/Joe/.gabs/bannerlord/bridge.json /mnt/c/Users/Joe/.gabs/bannerlord/runtime.json
+Delete stale files with PowerShell:
+
+```powershell
+$dir = Join-Path $HOME ".gabs\bannerlord"
+foreach ($name in @("bridge.json", "runtime.json")) {
+    $path = Join-Path $dir $name
+    if (Test-Path -LiteralPath $path) {
+        Remove-Item -LiteralPath $path -Force
+    }
+}
+```
 
 ### 4. Verify the GABS server is reachable
 
