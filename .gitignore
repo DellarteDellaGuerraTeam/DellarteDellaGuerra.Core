@@ -102,6 +102,7 @@ apm_modules/
 .agents/
 .claude/
 .codex/
+.mcp.json
 src/apm_modules/
 src/.agents/
 src/.claude/
