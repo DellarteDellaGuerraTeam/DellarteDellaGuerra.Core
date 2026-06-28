@@ -17,6 +17,7 @@ using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.Events;
 using DellarteDellaGuerra.Infrastructure.Firearm;
 using DellarteDellaGuerra.Infrastructure.Firearm.Patches;
+using DellarteDellaGuerra.Infrastructure.Heraldry.Patches;
 using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
@@ -118,6 +119,10 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, CampaignMusicHandlerTickPatch>();
         // Character creation
         services.AddSingleton<IPatch, DisableSortingBehaviourInCultureMenuPatch>();
+        // Heraldry
+        services.AddSingleton<IPatch, AllowSingleplayerExtendedBannerCodeParsingPatch>();
+        services.AddSingleton<IPatch, AllowSingleplayerExtendedBannerAppendLayerPatch>();
+        services.AddSingleton<IPatch, AllowSingleplayerExtendedBannerInsertLayerPatch>();
         // Firearm
         services.AddSingleton<IPatch, AddFirearmSkillAsRelevantSkillPatch>();
         services.AddSingleton<IPatch, GetHolsterImageForBuIletsInInventoryPatch>();
