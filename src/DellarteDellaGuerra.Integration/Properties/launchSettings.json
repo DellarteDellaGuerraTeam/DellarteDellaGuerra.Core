@@ -33,7 +33,7 @@
     "Standalone.Editor": {
       "commandName": "Executable",
       "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_wEditor\\Bannerlord.exe",
-      "commandLineArgs": "/singleplayer /continuegame _MODULES_*Bannerlord.Harmony*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*DellarteDellaGuerra.Core*DellarteDellaGuerra*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*_MODULES_",
+      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*DellarteDellaGuerra.Core*DellarteDellaGuerra*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*_MODULES_",
       "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_wEditor"
     },    
     "Standalone.BLSE": {

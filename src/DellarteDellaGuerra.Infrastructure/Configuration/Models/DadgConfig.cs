@@ -17,5 +17,13 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Models
          */
         [XmlElement(ElementName = "EnableShaderCompilationNotifications")]
         public bool EnableShaderCompilationNotifications { get; set; } = true;
+
+        /**
+         * <summary>
+         * Gets or sets the skill minimums required to participate in a jousting tournament.
+         * </summary>
+         */
+        [XmlElement(ElementName = "JoustingConfig")]
+        public JoustingConfig JoustingConfig { get; set; } = new JoustingConfig();
     }
 }
