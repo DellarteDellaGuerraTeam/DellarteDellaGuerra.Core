@@ -201,7 +201,6 @@ public class DadgServiceContainer
         // Game models (resolved lazily in SubModule)
         services.AddTransient<DadgTargetScoreCalculatingModel>();
         services.AddTransient<DadgArmyManagementCalculationModel>();
-        services.AddTransient<DadgSettlementAccessModel>();
         services.AddTransient<DadgEncounterModel>();
         services.AddTransient<DadgEncounterGameMenuModel>();
     }
