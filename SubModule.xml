@@ -33,6 +33,12 @@
       <SubModuleClassType value="DellarteDellaGuerra.Integration.SubModule"/>
       <Tags />
     </SubModule>
+    <SubModule>
+      <Name value="Bannerlord.Cannons"/>
+      <DLLName value="Bannerlord.Cannons.dll"/>
+      <SubModuleClassType value="Bannerlord.Cannons.SubModule"/>
+      <Tags />
+    </SubModule>
   </SubModules>
   <Xmls/>
 </Module>

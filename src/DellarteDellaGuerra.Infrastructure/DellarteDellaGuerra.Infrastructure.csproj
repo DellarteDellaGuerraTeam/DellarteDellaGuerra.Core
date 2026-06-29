@@ -20,15 +20,19 @@
         <PackageReference Include="SafeFluentXPath.Implementation" Version="1.0.0" />
         <PackageReference Include="NLog" Version="5.3.4"/>
 
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="2.1.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0" />
-
+        <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All"/>
+        <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>
+        <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All"/>
         <PackageReference Include="Harmony.DependencyInjection" Version="0.2.0"/>
-
-        <!--        <Reference Include="Bannerlord.ExpandedTemplate.API">-->
-        <!--            <HintPath>$(GameFolder)\Modules\Bannerlord.ExpandedTemplate\Bannerlord.ExpandedTemplate.API\bin\Debug\netstandard2.0\Bannerlord.ExpandedTemplate.API.dll</HintPath>-->
-        <!--            <Private>true</Private>-->
-        <!--        </Reference>-->
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0"/>
+        <ProjectReference Include="..\submodules\ExpandedTemplate\Bannerlord.ExpandedTemplate.API\Bannerlord.ExpandedTemplate.API.csproj" />
+        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.API\Bannerlord.Cannons.API.csproj" />
+        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons\Bannerlord.Cannons.csproj" />
+        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.Application\Bannerlord.Cannons.Application.csproj" />
+        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.Domain\Bannerlord.Cannons.Domain.csproj" />
+        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.Infrastructure\Bannerlord.Cannons.Infrastructure.csproj" />
 
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
         <ProjectReference Include="..\DellarteDellaGuerra\DellarteDellaGuerra.csproj" />
@@ -55,9 +59,6 @@
       <Compile Remove="Cannon\PartyVisualTickSettlementVisualPatch.cs" />
     </ItemGroup>
 
-    <ItemGroup>
-      <EmbeddedResource Include="SiegeEngines\cannons.xsd" />
-    </ItemGroup>
 
     <Target Name="Copy Win64 client files to wEditor" AfterTargets="Build">
         <Message Importance="high" Text="Copying files from Win64_Shipping_Client to Win64_Shipping_wEditor..." />

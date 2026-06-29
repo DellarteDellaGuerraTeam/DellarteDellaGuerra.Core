@@ -23,6 +23,18 @@ See our [open issues](https://github.com/DellarteDellaGuerraTeam/DellarteDellaGu
 
 We welcome contributions! If you would like to help improve DADG, feel free to join our [Discord](https://discord.gg/ZVye6tDqyC).
 
+## Agent Tooling
+
+This repository uses [Microsoft APM](https://github.com/microsoft/apm) as the source of truth for agent instructions, skills, hooks, and MCP server configuration.
+
+Install APM, then run this from `src/`:
+
+```powershell
+apm install
+```
+
+APM generates the local tooling for supported agent clients such as Codex and Claude. Generated client folders like `src/.agents/`, `src/.claude/`, and `src/.codex/` are ignored; edit `src/apm.yml` and `src/.apm/` instead.
+
 ## Licence
 
 This mod is released under the [GPL V3](LICENSE).
