@@ -23,7 +23,6 @@
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All"/>
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All"/>
-
         <PackageReference Include="Harmony.DependencyInjection" Version="0.2.0"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.0"/>

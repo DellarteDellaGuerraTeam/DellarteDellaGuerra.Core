@@ -22,6 +22,7 @@ using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Reload;
+using DellarteDellaGuerra.Heraldry;
 using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DI;
@@ -29,11 +30,13 @@ using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.Events;
 using DellarteDellaGuerra.Infrastructure.Firearm;
 using DellarteDellaGuerra.Infrastructure.Firearm.Patches;
+using DellarteDellaGuerra.Infrastructure.Heraldry.Patches;
 using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Titles;
+using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
@@ -41,6 +44,8 @@ using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
 using DellarteDellaGuerra.Integration.Titles;
 using DellarteDellaGuerra.Titles.Api.Campaign;
 using DellarteDellaGuerra.Titles.Api.GameModels;
+using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
+using DellarteDellaGuerra.Infrastructure.Tournament.Jousting;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Reward.Spi;
 using DellarteDellaGuerra.Tournament.Reward.Spi.Mapper;
@@ -79,6 +84,7 @@ public class DadgServiceContainer
                 sp.GetRequiredService<Microsoft.Extensions.Logging.ILoggerFactory>()));
         services.AddSingleton<DadgConfigWatcher>();
         RegisterEvent<SubModuleLoadEvent>(services);
+        services.AddSingleton<DadgScriptComponentRegistrar>();
         services.AddSingleton<CampaignBehaviourDisabler>();
         services.AddSingleton<DadgCampaignStartButtonAdder>();
         services.AddSingleton<VanillaCampaignButtonsRemover>();
@@ -102,6 +108,8 @@ public class DadgServiceContainer
         services.AddSingleton<IRandomProvider, RandomProvider>();
         services.AddSingleton<IHighestTownProsperityProvider, HighestTownProsperityProvider>();
         services.AddSingleton<IGetTournamentRewardUseCase, GetTournamentRewardUseCase>();
+        services.AddSingleton<IJoustRequirementsProvider>(sp =>
+            new JoustRequirementsConfig(sp.GetRequiredService<DadgConfigWatcher>()));
         services.AddTransient<DadgTournamentModel>();
     }
 
@@ -120,6 +128,8 @@ public class DadgServiceContainer
         services.AddTransient<FirearmReloadMissionLogic>();
         services.AddTransient<FirearmSmokeMissionLogic>();
         services.AddTransient<RemoveSiegeTowerSpawnersMissionLogic>();
+        services.AddTransient<BannerSurcoatMissionLogic>();
+        services.AddTransient<TournamentRecapBannerMissionLogic>();
     }
 
     private static void RegisterTitleServices(IServiceCollection services)
@@ -198,8 +208,15 @@ public class DadgServiceContainer
 
     private static void RegisterPatches(IServiceCollection services)
     {
+        // Music
+        services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
+        services.AddSingleton<IPatch, CampaignMusicHandlerTickPatch>();
         // Character creation
         services.AddSingleton<IPatch, DisableSortingBehaviourInCultureMenuPatch>();
+        // Heraldry
+        services.AddSingleton<IPatch, AllowSingleplayerExtendedBannerCodeParsingPatch>();
+        services.AddSingleton<IPatch, AllowSingleplayerExtendedBannerAppendLayerPatch>();
+        services.AddSingleton<IPatch, AllowSingleplayerExtendedBannerInsertLayerPatch>();
         // Firearm
         services.AddSingleton<IPatch, AddFirearmSkillAsRelevantSkillPatch>();
         services.AddSingleton<IPatch, GetHolsterImageForBuIletsInInventoryPatch>();

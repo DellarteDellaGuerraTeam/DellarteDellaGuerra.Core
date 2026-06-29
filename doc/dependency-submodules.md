@@ -26,6 +26,7 @@ git -C src/submodules/ExpandedTemplate checkout upgrade-to-1.3
 
 ```sh
 cd src/submodules/Cannons
+git checkout -b my-fix   # create a branch first — you're on detached HEAD
 git add . && git commit -m "..." && git push
 
 # back in DADG root — record the new pointer
@@ -33,13 +34,15 @@ git add src/submodules/Cannons
 git commit -m "chore: bump Cannons"
 ```
 
-## Pull upstream changes
+
+## Bump to a new tag
 
 ```sh
-git submodule update --remote --rebase
-# rebuild, then commit the updated pointers
-git add src/submodules/Cannons src/submodules/ExpandedTemplate
-git commit -m "chore: update submodules"
-```
+git -C src/submodules/Cannons fetch --tags
+git -C src/submodules/Cannons checkout v1.0.3
 
-> **Detached HEAD** — if you forget `--rebase`, fix it with `git -C <path> checkout <branch>`.
+git -C src/submodules/ExpandedTemplate fetch --tags
+git -C src/submodules/ExpandedTemplate checkout v1.3.2
+
+git commit -m "chore: bump submodules to v1.0.3 / v1.3.2"
+```

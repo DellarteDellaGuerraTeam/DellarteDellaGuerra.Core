@@ -13,16 +13,59 @@
       "url": "http://localhost:5002"
     },
     "bannerlord-game-controller": {
-      "type": "http",
-      "url": "http://127.0.0.1:8080/mcp"
-    },    
+      "type": "local",
+      "url": "http://localhost:8080/mcp",
+      "command": "python",
+      "args": [
+        ".apm/mcp/mcp-http-stdio-bridge.py",
+        "--url",
+        "http://localhost:8080/mcp"
+      ]
+    },
     "jetbrains-debugger": {
-      "type": "http",
-      "url": "http://127.0.0.1:29202/debugger-mcp/streamable-http"
+      "type": "local",
+      "url": "http://localhost:29202/debugger-mcp/streamable-http",
+      "command": "python",
+      "args": [
+        ".apm/mcp/mcp-http-stdio-bridge.py",
+        "--url",
+        "http://localhost:29202/debugger-mcp/streamable-http"
+      ]
     },
     "music-analysis": {
       "command": "uvx",
-      "args": ["-n", "mcp_local_music_analysis"]
-    }		
+      "args": [
+        "-n",
+        "mcp_local_music_analysis"
+      ],
+      "type": "stdio"
+    },
+    "bannerlord-search-1_2_12": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        ".apm/mcp/mcp-http-stdio-bridge.py",
+        "--url",
+        "http://localhost:5000"
+      ]
+    },
+    "bannerlord-search-1_3_1": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        ".apm/mcp/mcp-http-stdio-bridge.py",
+        "--url",
+        "http://localhost:5001"
+      ]
+    },
+    "bannerlord-search-1_4_6": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        ".apm/mcp/mcp-http-stdio-bridge.py",
+        "--url",
+        "http://localhost:5002"
+      ]
+    }
   }
 }
