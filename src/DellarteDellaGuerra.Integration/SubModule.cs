@@ -53,6 +53,8 @@ using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
+using PrivateWarSettlementAccessModel = DellarteDellaGuerra.PrivateWars.Api.GameModels.DadgSettlementAccessModel;
+using TournamentSettlementAccessModel = DellarteDellaGuerra.Tournament.Api.DadgSettlementAccessModel;
 
 namespace DellarteDellaGuerra.Integration
 {
@@ -141,9 +143,10 @@ namespace DellarteDellaGuerra.Integration
 
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
             var joustRequirementsProvider = _serviceProvider.GetRequiredService<IJoustRequirementsProvider>();
-            campaignGameStarter.AddModel(new DadgSettlementAccessModel(
+            SettlementAccessModel settlementAccessModel = new TournamentSettlementAccessModel(
                 campaignGameStarter.Models.OfType<SettlementAccessModel>().Last(),
-                joustRequirementsProvider));
+                joustRequirementsProvider);
+            campaignGameStarter.AddModel(settlementAccessModel);
 
             var loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
             campaignGameStarter.AddModel(new DadgSiegeStrategyActionModel(
@@ -164,7 +167,8 @@ namespace DellarteDellaGuerra.Integration
             // Keep a private-war enemy out of the belligerent's army candidate pool (design §4.1)
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgArmyManagementCalculationModel>());
             // Block player entry into a same-kingdom private-war rival's town/castle (design §4.1)
-            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgSettlementAccessModel>());
+            settlementAccessModel = new PrivateWarSettlementAccessModel(settlementAccessModel);
+            campaignGameStarter.AddModel(settlementAccessModel);
             // Re-include garrison/militia/feud-lord defenders in a same-kingdom siege assault (design §4.1, Gate 1)
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgEncounterModel>());
             // Force a same-kingdom private-war field meeting into a real battle (design §4.3 — breaks the friendly-chat loop)

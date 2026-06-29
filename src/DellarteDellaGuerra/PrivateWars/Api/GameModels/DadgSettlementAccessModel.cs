@@ -1,8 +1,8 @@
 using DellarteDellaGuerra.Titles.Api;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
-using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.Localization;
 
 namespace DellarteDellaGuerra.PrivateWars.Api.GameModels
 {
@@ -12,9 +12,16 @@ namespace DellarteDellaGuerra.PrivateWars.Api.GameModels
     // settlements via DiplomacyHelper.IsSameFactionAndNotEliminated — two clans in the same kingdom
     // share a MapFaction, so the player walks unchallenged into the rival's town/castle. Override to
     // return NoAccess/HostileFaction when the settlement's owner clan is a registered private-war
-    // enemy of the player's clan. All non-enemy settlements fall through to vanilla unchanged.
-    public class DadgSettlementAccessModel : DefaultSettlementAccessModel
+    // enemy of the player's clan. All non-enemy settlements fall through to the wrapped model unchanged.
+    public class DadgSettlementAccessModel : SettlementAccessModel
     {
+        private readonly SettlementAccessModel _inner;
+
+        public DadgSettlementAccessModel(SettlementAccessModel inner)
+        {
+            _inner = inner;
+        }
+
         public override void CanMainHeroEnterSettlement(Settlement settlement, out AccessDetails accessDetails)
         {
             if (settlement.IsFortification
@@ -29,8 +36,26 @@ namespace DellarteDellaGuerra.PrivateWars.Api.GameModels
                 return;
             }
 
-            base.CanMainHeroEnterSettlement(settlement, out accessDetails);
+            _inner.CanMainHeroEnterSettlement(settlement, out accessDetails);
         }
+
+        public override void CanMainHeroEnterLordsHall(Settlement settlement, out AccessDetails accessDetails) =>
+            _inner.CanMainHeroEnterLordsHall(settlement, out accessDetails);
+
+        public override void CanMainHeroEnterDungeon(Settlement settlement, out AccessDetails accessDetails) =>
+            _inner.CanMainHeroEnterDungeon(settlement, out accessDetails);
+
+        public override bool CanMainHeroAccessLocation(Settlement settlement, string locationId,
+            out bool disableOption, out TextObject disabledText) =>
+            _inner.CanMainHeroAccessLocation(settlement, locationId, out disableOption, out disabledText);
+
+        public override bool CanMainHeroDoSettlementAction(Settlement settlement, SettlementAction settlementAction,
+            out bool disableOption, out TextObject disabledText) =>
+            _inner.CanMainHeroDoSettlementAction(settlement, settlementAction, out disableOption, out disabledText);
+
+        public override bool IsRequestMeetingOptionAvailable(Settlement settlement,
+            out bool disableOption, out TextObject disabledText) =>
+            _inner.IsRequestMeetingOptionAvailable(settlement, out disableOption, out disabledText);
 
         private static bool IsPrivateWarEnemy(Clan? ownerClan)
         {
