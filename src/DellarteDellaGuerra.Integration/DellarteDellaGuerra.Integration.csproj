@@ -22,9 +22,9 @@
         <PackageReference Include="NLog.Extensions.Logging" Version="5.3.14"/>
         <PackageReference Include="Harmony.DependencyInjection" Version="0.2.0"/>
 
-<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All"/>-->
-<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>-->
-<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All"/>-->
+        <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All"/>
+        <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>
+        <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All"/>
 
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj"/>
         <ProjectReference Include="..\DellarteDellaGuerra.Infrastructure\DellarteDellaGuerra.Infrastructure.csproj"/>
