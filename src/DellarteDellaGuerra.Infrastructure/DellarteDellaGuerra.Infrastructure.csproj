@@ -23,41 +23,38 @@
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All"/>
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All"/>
-
         <PackageReference Include="Harmony.DependencyInjection" Version="0.2.0"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.0"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0"/>
-        <Reference Include="Bannerlord.ExpandedTemplate.API">
-            <HintPath>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord-v1.3\Modules\Bannerlord.ExpandedTemplate\Bannerlord.ExpandedTemplate.API\bin\Debug\netstandard2.0\Bannerlord.ExpandedTemplate.API.dll</HintPath>
-            <Private>true</Private>
-        </Reference>
-
-        <Reference Include="Bannerlord.Cannons.API">
-            <HintPath>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord-v1.3\Modules\Bannerlord.Cannons\Bannerlord.Cannons.API\bin\Debug\netstandard2.0\Bannerlord.Cannons.API.dll</HintPath>
-            <Private>true</Private>
-        </Reference>
-        <Reference Include="Bannerlord.Cannons">
-            <HintPath>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord-v1.3\Modules\Bannerlord.Cannons\Bannerlord.Cannons.API\bin\Debug\netstandard2.0\Bannerlord.Cannons.dll</HintPath>
-            <Private>true</Private>
-        </Reference>
-        <Reference Include="Bannerlord.Cannons.Application">
-            <HintPath>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord-v1.3\Modules\Bannerlord.Cannons\Bannerlord.Cannons.API\bin\Debug\netstandard2.0\Bannerlord.Cannons.Application.dll</HintPath>
-            <Private>true</Private>
-        </Reference>
-        <Reference Include="Bannerlord.Cannons.Domain">
-            <HintPath>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord-v1.3\Modules\Bannerlord.Cannons\Bannerlord.Cannons.API\bin\Debug\netstandard2.0\Bannerlord.Cannons.Domain.dll</HintPath>
-            <Private>true</Private>
-        </Reference>
-        <Reference Include="Bannerlord.Cannons.Infrastructure">
-            <HintPath>D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord-v1.3\Modules\Bannerlord.Cannons\Bannerlord.Cannons.API\bin\Debug\netstandard2.0\Bannerlord.Cannons.Infrastructure.dll</HintPath>
-            <Private>true</Private>
-        </Reference>
+        <ProjectReference Include="..\submodules\ExpandedTemplate\Bannerlord.ExpandedTemplate.API\Bannerlord.ExpandedTemplate.API.csproj" />
+        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.API\Bannerlord.Cannons.API.csproj" />
+        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons\Bannerlord.Cannons.csproj" />
+        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.Application\Bannerlord.Cannons.Application.csproj" />
+        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.Domain\Bannerlord.Cannons.Domain.csproj" />
+        <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.Infrastructure\Bannerlord.Cannons.Infrastructure.csproj" />
 
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
         <ProjectReference Include="..\DellarteDellaGuerra\DellarteDellaGuerra.csproj" />
+
+<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All" />-->
+<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All" />-->
+<!--        <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All" />-->
+
     </ItemGroup>
 
+    <ItemGroup>
+        <Reference Include="$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.*.dll">
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="$(GameFolder)\Modules\SandBox\bin\Win64_Shipping_Client\SandBox*.dll">
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="$(GameFolder)\Modules\Native\bin\Win64_Shipping_Client\*.dll">
+            <Private>false</Private>
+        </Reference>
+    </ItemGroup>
+    
     <ItemGroup>
       <Compile Remove="Cannon\PartyVisualTickSettlementVisualPatch.cs" />
     </ItemGroup>

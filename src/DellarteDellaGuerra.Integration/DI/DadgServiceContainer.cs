@@ -126,7 +126,6 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, FixSettlementDistanceCacheFilePathPatch>();
         // Music
         services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
-        services.AddSingleton<IPatch, CampaignMusicHandlerTickPatch>();
         // POC
         services.AddSingleton<IPatch, PocConfigReaderOverriderPatch>();
         // Siege engines
