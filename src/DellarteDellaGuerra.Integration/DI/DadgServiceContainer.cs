@@ -202,7 +202,6 @@ public class DadgServiceContainer
         services.AddTransient<DadgTargetScoreCalculatingModel>();
         services.AddTransient<DadgArmyManagementCalculationModel>();
         services.AddTransient<DadgEncounterModel>();
-        services.AddTransient<DadgEncounterGameMenuModel>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
@@ -248,5 +247,15 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, PlayerEncounterSetupFieldsPatch>();
         services.AddSingleton<IPatch, SallyOutStrengthPatch>();
         services.AddSingleton<IPatch, SiegeDefenderJoinPatch>();
+        // Private wars (§4.3 field-encounter dialog): make a same-kingdom rival meeting open the
+        // enemy conversation that can escalate to battle instead of a forced battle or friendly chat.
+        // All three re-apply vanilla's own guards but swap the MapFaction war check for
+        // PrivateWarPatchHelper.AreEnemies, gated behind `if (__result) return;` so they never touch a
+        // real MapFaction war. Their targets (PlayerIsEnemyTag / HeroHelper / LordConversations) have no
+        // static GameTexts cctor, so they are safe to apply early (unlike the EncounterGameMenuBehavior
+        // menu patches above).
+        services.AddSingleton<IPatch, PlayerIsEnemyTagPatch>();
+        services.AddSingleton<IPatch, WillLordAttackPrivateWarPatch>();
+        services.AddSingleton<IPatch, PlayerCanAttackPrivateWarRivalPatch>();
     }
 }
