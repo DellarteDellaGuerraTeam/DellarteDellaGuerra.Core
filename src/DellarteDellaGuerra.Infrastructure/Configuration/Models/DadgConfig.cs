@@ -25,5 +25,13 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Models
          */
         [XmlElement(ElementName = "JoustingConfig")]
         public JoustingConfig JoustingConfig { get; set; } = new JoustingConfig();
+
+        /**
+         * <summary>
+         * Gets or sets configuration for the private-war feature.
+         * </summary>
+         */
+        [XmlElement(ElementName = "PrivateWarConfig")]
+        public PrivateWarConfig PrivateWarConfig { get; set; } = new PrivateWarConfig();
     }
 }

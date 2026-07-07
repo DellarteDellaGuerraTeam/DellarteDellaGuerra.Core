@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DellarteDellaGuerra.Domain.PrivateWars;
@@ -27,6 +28,8 @@ namespace DellarteDellaGuerra.Infrastructure.PrivateWars
             _hierarchy = hierarchy;
         }
 
+        public event Action? Changed;
+
         public PrivateWar? Get(string id)
             => _warsById.TryGetValue(id, out var war) ? war : null;
 
@@ -50,17 +53,31 @@ namespace DellarteDellaGuerra.Infrastructure.PrivateWars
 
         public IReadOnlyList<PrivateWar> GetAll() => _warsById.Values.ToList();
 
-        public void Add(PrivateWar war) => _warsById[war.Id] = war;
+        public void Add(PrivateWar war)
+        {
+            _warsById[war.Id] = war;
+            Changed?.Invoke();
+        }
 
-        public void Update(PrivateWar war) => _warsById[war.Id] = war;
+        public void Update(PrivateWar war)
+        {
+            _warsById[war.Id] = war;
+            Changed?.Invoke();
+        }
 
-        public void Remove(string id) => _warsById.Remove(id);
+        public void Remove(string id)
+        {
+            _warsById.Remove(id);
+            Changed?.Invoke();
+        }
 
         public void Initialise(IEnumerable<PrivateWar> wars)
         {
             _warsById.Clear();
             foreach (var war in wars)
                 _warsById[war.Id] = war;
+
+            Changed?.Invoke();
         }
 
         public IReadOnlyList<PrivateWar> Snapshot() => _warsById.Values.ToList();
@@ -78,6 +95,26 @@ namespace DellarteDellaGuerra.Infrastructure.PrivateWars
                 if (sideB is null) continue;
 
                 if (sideA != sideB) return true;
+            }
+
+            return false;
+        }
+
+        public bool AreAllies(string clanIdA, string clanIdB)
+        {
+            if (clanIdA == clanIdB) return false;
+
+            foreach (var war in _warsById.Values)
+            {
+                if (war.Status != PrivateWarStatus.Active) continue;
+
+                var sideA = _sideResolver.ResolveSide(clanIdA, war, _hierarchy.GetSuzerain);
+                if (sideA is null) continue;
+
+                var sideB = _sideResolver.ResolveSide(clanIdB, war, _hierarchy.GetSuzerain);
+                if (sideB is null) continue;
+
+                if (sideA == sideB) return true;
             }
 
             return false;

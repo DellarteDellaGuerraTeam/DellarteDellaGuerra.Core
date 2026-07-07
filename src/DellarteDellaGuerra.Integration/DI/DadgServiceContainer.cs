@@ -202,6 +202,12 @@ public class DadgServiceContainer
         services.AddTransient<DadgTargetScoreCalculatingModel>();
         services.AddTransient<DadgArmyManagementCalculationModel>();
         services.AddTransient<DadgEncounterModel>();
+
+        // Nameplate tint color (configurable for colorblind accessibility). The infra provider only
+        // supplies the raw configured string; the use case owns all validation and the default orange.
+        services.AddSingleton<IPrivateWarNameplateColorProvider>(sp =>
+            new PrivateWarNameplateColorConfig(sp.GetRequiredService<DadgConfigWatcher>()));
+        services.AddSingleton<IPrivateWarNameplateColorUseCase, PrivateWarNameplateColorUseCase>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
