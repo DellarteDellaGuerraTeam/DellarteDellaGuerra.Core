@@ -26,6 +26,7 @@ using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Domain.Levy.Port;
+using DellarteDellaGuerra.Domain.PrivateWars;
 using DellarteDellaGuerra.Domain.PrivateWars.Port;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Domain.Titles;
@@ -203,7 +204,9 @@ namespace DellarteDellaGuerra.Integration
                 _serviceProvider.GetRequiredService<IGetSuzerainUseCase>(),
                 _serviceProvider.GetRequiredService<IGetDirectVassalsUseCase>(),
                 _serviceProvider.GetRequiredService<IBuildFeudalMapUseCase>(),
-                _serviceProvider.GetRequiredService<ILevyRepository>());
+                _serviceProvider.GetRequiredService<ILevyRepository>(),
+                _serviceProvider.GetRequiredService<IPrivateWarNameplateColorUseCase>(),
+                _serviceProvider.GetRequiredService<IPrivateWarHostility>());
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();
