@@ -55,6 +55,32 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.UI.Mixins
             }
         }
 
+        [DataSourceProperty]
+        public int SettlementCapsuleRelationType
+        {
+            get
+            {
+                SettlementNameplateVM? vm = ViewModel;
+                if (vm is null)
+                {
+                    return (int)SettlementNameplateRelation.Neutral;
+                }
+
+                int privateWarState = ResolvePrivateWarState();
+                if (privateWarState == PrivateWarEnemy)
+                {
+                    return (int)SettlementNameplateRelation.Enemy;
+                }
+
+                if (privateWarState == PrivateWarAlly)
+                {
+                    return (int)SettlementNameplateRelation.Ally;
+                }
+
+                return vm.Relation;
+            }
+        }
+
         public override void OnFinalize()
         {
             if (ViewModel is not null)
@@ -72,7 +98,8 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.UI.Mixins
 
         private void OnBasePropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == nameof(SettlementNameplateVM.Relation))
+            if (string.IsNullOrEmpty(e.PropertyName)
+                || e.PropertyName == nameof(SettlementNameplateVM.Relation))
             {
                 NotifyPrivateWarCapsuleProperties();
             }
@@ -83,6 +110,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.UI.Mixins
 
         private void NotifyPrivateWarCapsuleProperties()
         {
+            OnPropertyChanged(nameof(SettlementCapsuleRelationType));
             OnPropertyChanged(nameof(SettlementCapsuleColor));
         }
 

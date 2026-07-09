@@ -1,37 +1,73 @@
+using System.Collections.Generic;
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.Prefabs2;
+using Attribute = Bannerlord.UIExtenderEx.Prefabs2.PrefabExtensionSetAttributePatch.Attribute;
 
 namespace DellarteDellaGuerra.Integration.PrivateWars.UI.PrefabExtensions
 {
-    internal abstract class SettlementNameplatePrivateWarCapsuleOverlayPatch : PrefabExtensionInsertPatch
+    internal abstract class SettlementNameplatePrivateWarCapsuleColorPatch : PrefabExtensionSetAttributePatch
     {
-        public override InsertType Type => InsertType.Child;
-
-        public override int Index => 0;
-
-        protected abstract string Sprite { get; }
-
-        [PrefabExtensionText]
-        public string Content => $"""
-            <Widget Id="SettlementCapsuleTintOverlay" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="{Sprite}" Color="@SettlementCapsuleColor" IsEnabled="false" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" />
-            """;
+        public override List<Attribute> Attributes => new()
+        {
+            new Attribute("Color", "@SettlementCapsuleColor")
+        };
     }
 
-    [PrefabExtension("SettlementNameplateItemSmall", "descendant::ButtonWidget[@Id='SettlementNameplateCapsuleWidget']/Children")]
-    internal sealed class SmallSettlementNameplatePrivateWarCapsuleOverlayPatch : SettlementNameplatePrivateWarCapsuleOverlayPatch
+    internal abstract class SettlementNameplatePrivateWarRelationPatch : PrefabExtensionSetAttributePatch
     {
-        protected override string Sprite => "enemy_village_9";
+        public override List<Attribute> Attributes => new()
+        {
+            new Attribute("RelationType", "@SettlementCapsuleRelationType")
+        };
     }
 
-    [PrefabExtension("SettlementNameplateItemMedium", "descendant::ButtonWidget[@Id='SettlementNameplateCapsuleWidget']/Children")]
-    internal sealed class MediumSettlementNameplatePrivateWarCapsuleOverlayPatch : SettlementNameplatePrivateWarCapsuleOverlayPatch
+    [PrefabExtension("SettlementNameplateItemSmall", "descendant::SettlementNameplateItemWidget[@Id='NameplateWidget']")]
+    internal sealed class SmallSettlementNameplatePrivateWarCapsuleColorPatch : SettlementNameplatePrivateWarCapsuleColorPatch
     {
-        protected override string Sprite => "enemy_castle_9";
     }
 
-    [PrefabExtension("SettlementNameplateItemLarge", "descendant::ButtonWidget[@Id='SettlementNameplateCapsuleWidget']/Children")]
-    internal sealed class LargeSettlementNameplatePrivateWarCapsuleOverlayPatch : SettlementNameplatePrivateWarCapsuleOverlayPatch
+    [PrefabExtension("SettlementNameplateItemMedium", "descendant::SettlementNameplateItemWidget[@Id='NameplateWidget']")]
+    internal sealed class MediumSettlementNameplatePrivateWarCapsuleColorPatch : SettlementNameplatePrivateWarCapsuleColorPatch
     {
-        protected override string Sprite => "enemy_town_9";
+    }
+
+    [PrefabExtension("SettlementNameplateItemLarge", "descendant::SettlementNameplateItemWidget[@Id='NameplateWidget']")]
+    internal sealed class LargeSettlementNameplatePrivateWarCapsuleColorPatch : SettlementNameplatePrivateWarCapsuleColorPatch
+    {
+    }
+
+    [PrefabExtension("SettlementNameplateItem", "descendant::SettlementNameplateItemWidget[@Id='SmallSizeNameplateWidget']")]
+    internal sealed class CombinedSmallSettlementNameplatePrivateWarCapsuleColorPatch : SettlementNameplatePrivateWarCapsuleColorPatch
+    {
+    }
+
+    [PrefabExtension("SettlementNameplateItem", "descendant::SettlementNameplateItemWidget[@Id='NormalSizeNameplateWidget']")]
+    internal sealed class CombinedNormalSettlementNameplatePrivateWarCapsuleColorPatch : SettlementNameplatePrivateWarCapsuleColorPatch
+    {
+    }
+
+    [PrefabExtension("SettlementNameplateItem", "descendant::SettlementNameplateItemWidget[@Id='BigSizeNameplateWidget']")]
+    internal sealed class CombinedBigSettlementNameplatePrivateWarCapsuleColorPatch : SettlementNameplatePrivateWarCapsuleColorPatch
+    {
+    }
+
+    [PrefabExtension("SettlementNameplateItemSmall", "descendant::SettlementNameplateWidget")]
+    internal sealed class SmallSettlementNameplatePrivateWarRelationPatch : SettlementNameplatePrivateWarRelationPatch
+    {
+    }
+
+    [PrefabExtension("SettlementNameplateItemMedium", "descendant::SettlementNameplateWidget")]
+    internal sealed class MediumSettlementNameplatePrivateWarRelationPatch : SettlementNameplatePrivateWarRelationPatch
+    {
+    }
+
+    [PrefabExtension("SettlementNameplateItemLarge", "descendant::SettlementNameplateWidget")]
+    internal sealed class LargeSettlementNameplatePrivateWarRelationPatch : SettlementNameplatePrivateWarRelationPatch
+    {
+    }
+
+    [PrefabExtension("SettlementNameplateItem", "descendant::SettlementNameplateWidget")]
+    internal sealed class CombinedSettlementNameplatePrivateWarRelationPatch : SettlementNameplatePrivateWarRelationPatch
+    {
     }
 }
