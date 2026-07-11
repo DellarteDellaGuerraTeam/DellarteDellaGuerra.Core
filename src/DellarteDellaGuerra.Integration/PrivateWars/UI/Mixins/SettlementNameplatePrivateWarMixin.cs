@@ -122,6 +122,13 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.UI.Mixins
                 return NoPrivateWar;
             }
 
+            IFaction? settlementFaction = vm.Settlement?.MapFaction;
+            IFaction? mainFaction = Hero.MainHero?.MapFaction;
+            if (settlementFaction is null || mainFaction is null || settlementFaction != mainFaction)
+            {
+                return NoPrivateWar;
+            }
+
             Clan? mainClan = Hero.MainHero?.Clan;
             Clan? ownerClan = ResolveOwnerClan(vm);
             if (mainClan is null || ownerClan is null)
