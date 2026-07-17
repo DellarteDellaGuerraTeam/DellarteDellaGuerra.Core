@@ -437,3 +437,145 @@ Runtime under 1.4.6:
 - player field/army conversations, village raid, siege assault, captivity, ransom, escape, and peace;
 - party/settlement nameplates and immediate hostility refresh;
 - load a real 1.3.15 mid-war save in 1.4.6 and continue through resolution.
+
+---
+
+## 12. SDD execution tasks
+
+The following tasks are the implementation order for the 1.4.6 port. Each production-code task uses
+red-green-refactor, records the focused RED and GREEN commands, commits independently, and passes a
+separate spec-and-quality review before the next task begins. The final branch receives an additional
+whole-diff review.
+
+### Global constraints
+
+- Belligerents remain in their kingdom; hostility is pair-scoped and must never create a synthetic
+  same-kingdom `DeclareWarAction`.
+- Each side may assign at most one army to the frozen private-war goal. An eligible principal-clan
+  party has exclusive leadership priority; another participating clan may lead only when no
+  principal-clan party is eligible. Do not replace an existing fallback leader mid-army.
+- Private-war army membership is limited to eligible parties on the same resolved side. Opposing and
+  uninvolved same-kingdom parties are excluded.
+- Use public 1.4.6 models, scored behavior APIs, campaign events, and UIExtenderEx seams where they can
+  express the rule. Retained Harmony patches must be pair-filtered, target-verified, and no broader
+  than the hard-coded predicate they replace.
+- Do not restore the removed 1.3 `NoActiveWar` army-dispersion patch. Preserve vanilla cohesion,
+  starvation, objective-completion, naval, and port behavior unless the private-war rule explicitly
+  requires a change.
+- Synthetic siege capture must take losing lords prisoner and transfer ownership once without using
+  destroyed garrison references.
+- Persistence must accept current 12-field and legacy 11-field records, tolerate malformed records,
+  and restore the runtime hostility registry without losing the goal-last-taken fallback day.
+- Do not run the known-hanging `DellarteDellaGuerra.Integration.Tests` command. Use focused tests and
+  `dotnet build DellarteDellaGuerra.sln --configuration Release -v:minimal`.
+
+### Task 1: Integrate the Bannerlord 1.4.6 baseline
+
+Merge `migrate-to-1.4` into this feature branch without rebasing the feature history. Resolve the
+known metadata and submodule overlaps exactly as specified in §11.1, retaining UIExtenderEx while
+adopting the migration branch's 1.4.6 references and jousting compatibility fix. Remove obsolete 1.3
+submodule branch hints and accept deletion of the obsolete `.mcp.json`.
+
+This is a branch/configuration integration task rather than a behavior change, so TDD does not apply.
+Verify the resolved metadata and gitlinks, run the existing private-war domain suite, then run one
+Release solution build to capture the remaining 1.4 feature-specific failures for Task 4.
+
+### Task 2: Harden private-war save migration
+
+Write failing persistence tests for current 12-field round-trip, legacy 11-field fallback,
+non-numeric optional goal-last-taken data, malformed-record isolation, and hostility-registry
+restoration. Fix `PrivateWarStateSerialiser` and the campaign save/load adapter minimally so malformed
+optional data cannot overwrite the fallback and a bad record cannot poison valid records.
+
+Focused verification: the new persistence tests plus existing private-war domain tests.
+
+### Task 3: Define and test private-war army policy
+
+Introduce the smallest testable policy needed to decide whether a party may lead the private-war
+army and which parties may join it. Start with failing tests for principal-clan priority, participating-
+clan fallback, one-army-per-side, no mid-army replacement, same-side membership, opposite/uninvolved
+exclusion, ineligible parties, and the frozen-goal association. Keep Bannerlord objects at the adapter
+edge where practical; do not add speculative configuration.
+
+Focused verification: the new policy tests and all private-war domain tests.
+
+### Task 4: Port and connect 1.4.6 army decision making
+
+Port `DadgArmyManagementCalculationModel` from the removed
+`GetMobilePartiesToCallToArmy(MobileParty)` method to
+`CanLordCreateArmy(MobileParty, out MBList<MobileParty>)`. Preserve vanilla eligibility gates, filter
+ordinary kingdom armies away from private-war enemies, and allow a private-war-only army when the
+Task 3 policy authorizes it.
+
+Change the hourly private-war goal injection so the winning `BesiegeSettlement` candidate sets
+`WillGatherArmy` and calls `PartyThinkParams.SetArmyMembers(...)` with the authorized same-side list.
+Write failing adapter tests for leader priority/fallback, ordinary-army filtering, private-war-only
+formation, a private-war candidate losing the score vote, and prevention of stale shared army-member
+state being applied to a different winning objective.
+
+Focused verification: the army adapter tests, private-war domain tests, and the affected application
+project build against 1.4.6.
+
+### Task 5: Fill clean model and campaign-event gaps
+
+Write failing tests and implement the missing clean reinforcement override in `DadgEncounterModel`.
+Then cover the other pre-existing requirements from §11.3: private-enemy recruitment restrictions,
+AI hostile-fief visitation, hostile-fief retreat/camp filtering, and the player-crime guard. Prefer
+public model or campaign-event seams; if one requirement has no clean seam, add only the narrowly
+filtered patch documented by the source audit. Unrelated and cross-kingdom behavior must remain
+vanilla.
+
+Focused verification: tests for each gate with private enemy, same-side participant, uninvolved
+same-kingdom clan, and normal cross-kingdom enemy cases.
+
+### Task 6: Harden Harmony targets and narrow copied behavior
+
+Add automated 1.4.6 target/overload resolution for every retained private-war and heraldry patch.
+Any transpiler must assert its exact replacement count and fail visibly on IL drift. Using failing
+behavior tests where practical:
+
+- replace the whole `PlayerCaptivityCampaignBehavior.CheckCaptivityChange` prefix with interception
+  of only the no-more-enemies decision, preserving ransom and time escape;
+- keep the prisoner-release veto pair-filtered;
+- narrow the sally-out change to the same-faction strength predicate if an exact safe replacement is
+  available;
+- replace the three simple encounter-menu condition patches with private-war-only registered options
+  only if the public consequences reproduce vanilla exactly; otherwise keep verified postfixes;
+- retain village-flow Harmony and preserve 1.4 naval/port fall-through.
+
+Focused verification: target-resolution tests, replacement-count tests, captivity branch tests, and
+the affected application build.
+
+### Task 7: Make siege retention and synthetic capture 1.4-safe
+
+Write failing tests around the synthetic capture sequence before changing it. Ensure losing lords are
+captured, ownership transfers exactly once, the 1.4 `ApplyBySiege` garrison destruction does not cause
+a second destruction or stale reference, and the frozen goal can later be reclaimed. Verify that the
+scored `BesiegeSettlement`/army attachment path survives
+`BesiegerCamp.CheckBesiegerPartiesAndMakeThemLeave`; patch only if the public behavior path cannot
+retain a valid private-war besieger.
+
+Focused verification: capture-sequence tests, siege-side tests, affected build, then a targeted
+AI-vs-AI attacker-capture/defender-reclaim runtime scenario.
+
+### Task 8: Correct 1.4 nameplates and immediate refresh
+
+Write failing tests proving settlement relation values are mapped explicitly to 1.4.6
+`Neutral`/`SameFaction`/`Enemy`/`Ally` semantics rather than cast from the domain enum ordinal. Cover
+party and settlement private-enemy colors, same-side/uninvolved fallback, missing-color fallback, and
+refresh after war start/end. Retain UIExtenderEx; do not introduce Harmony for nameplates.
+
+Focused verification: color/mapping tests, prefab selector resolution, and an in-game start/end
+refresh check.
+
+### Task 9: Complete compatibility and runtime verification
+
+Run all permitted targeted automated suites and the Release solution build. Resolve any failures with
+a reproducing test first. Under Bannerlord 1.4.6, execute the §11.4 runtime matrix, including AI army
+formation, siege retention, captivity/ransom/escape, prisoner release, nameplates, and a real 1.3.15
+mid-war save migration. Record unsupported naval private-war cases explicitly; otherwise verify that
+naval and port branches fall through to vanilla.
+
+Commit only fixes supported by a failing automated test or a reproducible runtime scenario. This task
+is complete only when results and any deliberate deferrals are recorded in the existing manual test
+guide or this implementation plan.
