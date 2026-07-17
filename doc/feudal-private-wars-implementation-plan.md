@@ -6,8 +6,8 @@
 > `feudal-private-wars-tempkingdom-cost.md` (why the substrate was chosen),
 > `feudal-title-transfer-design.md` (the de jure/de facto split this reuses) and `feudal-titles.md`
 > (architecture).
-> **Branch:** `claude/banner-lord-mcp-integration-79WN8` · **Target engine: 1.3.1** (matches
-> `src/supported-game-versions.txt` = v1.3.15). 1.4.6 deltas are noted inline but **not** built for.
+> **Branch:** `feature/add-internal-faction-wars` · **Target engine: 1.4.6**. The original plan was
+> implemented on 1.3.15; §11 is the approved port/hardening amendment.
 
 ---
 
@@ -23,6 +23,7 @@
 8. [Phase 4 — Player path](#8-phase-4--player-path)
 9. [Cross-phase: the auto-end hazards](#9-cross-phase-the-auto-end-hazards)
 10. [Risks carried into implementation](#10-risks-carried-into-implementation)
+11. [1.4.6 port and hardening amendment](#11-146-port-and-hardening-amendment-2026-07-18)
 
 ---
 
@@ -230,7 +231,7 @@ multi-attacker re-eval and same-CB collision in later phases), `IPrivateWarHosti
 ## 6. Phase 2 — Make a same-kingdom war RESOLVE
 
 > **Verify (GABS smoke test, AI-vs-AI):** declare a war between two same-K AI clans; confirm (1) the
-> attacker AI besieges the goal, (2) the siege transitions to assault and resolves, (3) uninvolved K
+> attacker AI besieges the goal, (2) the siege resolves through the designed AI capture path, (3) uninvolved K
 > lords don't gather to relieve, (4) A's own army defends A's besieged fief. These are design §15 risks
 > #1–#3. **If risk #1 fails, stop and switch to explicit army formation before phase 3.**
 
@@ -241,7 +242,9 @@ alongside the existing `DadgDiplomacyModel`:
   drives attacker intent toward the goal *and* damps kingdom-relief (design §4.1, §5).
 - `DadgEncounterModel` — `GetDefenderPartiesOfSettlement`/`GetNextDefenderPartyOfSettlement` so A's
   field army (not just the static garrison) defends A's fief.
-- `DadgArmyManagementCalculationModel.GetMobilePartiesToCallToArmy` — keep C out of A's army.
+- `DadgArmyManagementCalculationModel.CanLordCreateArmy` (1.4.6) — preserve vanilla eligibility for
+  ordinary kingdom armies, filter every opposing private-war-side party from the returned candidates,
+  and fail the vanilla formation result if the filtered list no longer satisfies its contract.
 
 **Core hostility Harmony patches (design §4.2)** in `PrivateWar/Api/Patches/`, each a thin
 prefix/postfix consulting `FeudalServices.PrivateWarHostility.AreEnemies(party.ActualClan, …)` and
@@ -252,13 +255,24 @@ otherwise no-op:
 - `EncounterManager.StartPartyEncounter` / `HandleEncounterForMobileParty` (un-merge → battle).
 - `EncounterManager.StartSettlementEncounter` (siege actually assaults — load-bearing for "real sieges").
 - `MapEvent.CanPartyJoinBattle` (reinforcements pick a side).
-- Feud-army disband guard (design §4.2 / §14): the cohesion/disband path reads `FactionsAtWarWith`,
-  blind to the registry war → an army raised for the feud auto-disbands. Patch to keep it alive while
-  the pair is active.
+- No feud-specific disband patch on 1.4.6: the old `NoActiveWar` dispersion path is gone. Preserve
+  normal cohesion, starvation, and objective-completion dispersal and verify them in runtime tests.
 
-**DADG drive loop** in `PrivateWarCampaignBehavior`: daily tick directs the attacker toward the goal via
-the `GetTargetScoreForFaction` boost; if stock siege AI doesn't bite (risk #1), fall back to explicitly
-forming an army with the goal as siege target.
+**DADG drive loop** in `PrivateWarCampaignBehavior`: the AI-hourly listener injects the frozen goal as
+a scored `BesiegeSettlement` candidate for both sides whenever the opposing side holds it. On 1.4.6,
+the candidate may set `AIBehaviorData.WillGatherArmy = true` and supply
+`PartyThinkParams.SetArmyMembers(...)` only when the private-war army policy authorizes the party:
+
+- at most one private-war army per side for this goal;
+- an eligible principal-clan party has exclusive leader priority;
+- if no principal-clan party is eligible, an eligible party from another participating clan may lead;
+- candidates are eligible parties whose clans currently resolve to the same war side, never the
+  opposing side or an uninvolved same-kingdom clan;
+- a fallback-led army is not replaced when a principal party later becomes eligible.
+
+The private-war army candidate must still compete in the normal score vote so defence, captivity,
+starvation, and stronger objectives can win. Targeted tests must cover both winning and losing that
+vote and ensure the shared `PartyThinkParams` army-member list is not applied to a different objective.
 
 ---
 
@@ -317,10 +331,13 @@ Dormant unless the player's clan is A or C. Player-only encounter/menu layer (de
 `PlayerEncounter.SetupFields`/`DoMeetingInternal`, the besiege/sally/break-out menu conditions,
 village-raid redirect; plus the player-menu model overrides (`GetEncounterMenu`, `SettlementAccessModel`,
 `FindNonAttachedNpcParties…`). **Player auto-end #2:**
-`PlayerCaptivityCampaignBehavior.CheckCaptivityChange` (see §9). The bespoke **"Press your claim by
-force"** trigger menu and **"end the feud"** conversation (the engine's barter-peace path can't represent
-a private war, so the negotiated-exit UI is ours, not a patch). Cosmetic guards (design §4.4) —
-nameplate/target tint, encyclopedia enemy list — last, optionally as UIExtenderEx mixins.
+`PlayerCaptivityCampaignBehavior.CheckCaptivityChange` (see §9), patched only at the
+"no more enemies" predicate so ransom and time-based escape continue to run. The bespoke **"Press your
+claim by force"** trigger menu and **"end the feud"** conversation (the engine's barter-peace path can't
+represent a private war, so the negotiated-exit UI is ours, not a patch). Cosmetic guards (design §4.4)
+— nameplate/target tint and encyclopedia enemy list — last, using UIExtenderEx mixins. On 1.4.6 the
+settlement relation mapping must explicitly use Neutral=0, SameFaction=1, Enemy=2, Ally=3 rather than
+casting the domain enum by ordinal.
 
 ---
 
@@ -333,7 +350,8 @@ at war" off the MapFaction wall and free captives (design §4.5 point 3). They s
   faction is `!IsAtWarWith` the captor on any peace/owner-change/load. Highest-severity correctness
   patch after the core hostility signal.
 - **Player — `PlayerCaptivityCampaignBehavior.CheckCaptivityChange`** (phase 4). Releases the captured
-  player the first tick after capture (same-K → "no more enemies").
+  player the first tick after capture (same-K → "no more enemies"). The current whole-method prefix is
+  invalid because it also prevents ransom/time escape; replace only the faction-war predicate.
 
 Neither degrades the war quietly — they end it. Flagged here so they aren't lost inside their phases.
 
@@ -347,5 +365,75 @@ Neither degrades the war quietly — they end it. Flagged here so they aren't lo
 3. **Patch hot-path cost** — `IsEnemy`/`CalculateStanceScore` and the per-tick model overrides run
    constantly; the `AreEnemies` lookup must be genuinely O(1) and no-op cheaply when no war is active
    (design §15 risk #4).
-4. **Targeting 1.3.1.** Code against 1.3.1 seams. 1.4.6 deltas (design §17) are out of scope for this
-   build but recorded there for a future port (~4 members to re-point, one fewer Harmony).
+4. **1.4.6 siege retention.** `BesiegerCamp.CheckBesiegerPartiesAndMakeThemLeave` can eject an
+   unattached party whose selected behavior drifted away from Besiege/Escort/Assault. Verify the
+   score-driven objective keeps the private-war army attached and its leader besieging.
+5. **1.4.6 synthetic capture.** `ApplyBySiege` now destroys the garrison party. Verify there is no
+   double destruction/stale reference and that losing lords become prisoners before the goal can be
+   reclaimed.
+6. **Shared army-decision cache.** `PartyThinkParams` stores one army-member list for the winning
+   behavior. Never overwrite it for a private-war objective that did not win the score vote.
+
+---
+
+## 11. 1.4.6 port and hardening amendment (2026-07-18)
+
+This amendment supersedes 1.3-only member names and turns the compatibility audit into implementation
+gates. It does not broaden the feature beyond the design's existing private-war contract.
+
+### 11.1 Integration baseline
+
+- Merge `migrate-to-1.4` into `feature/add-internal-faction-wars`; do not rebase the feature's long
+  history.
+- Resolve top-level `SubModule.xml` with 1.4.6 Native/Sandbox versions while retaining
+  `Bannerlord.UIExtenderEx`.
+- Accept deletion of the obsolete `.mcp.json`, retain the APM configuration, pin Cannons to `f02ba26`
+  and ExpandedTemplate to `f1d93f4`, and remove stale 1.3 submodule branch hints.
+- Build once after the merge to establish the 1.4 compile baseline before feature repairs.
+
+### 11.2 Patch-seam decisions
+
+| Surface | 1.4.6 decision |
+| --- | --- |
+| Army creation and candidate list | Public model + scored behavior APIs; no Harmony. |
+| AI `IsEnemy` / stance score | Keep Harmony; private helpers precede the public attack/avoid hooks. |
+| Static encounter start and non-virtual battle/siege side gates | Keep targeted Harmony. |
+| Besiege/continue/attack-army menu conditions | Prefer private-war-only registered menu options if public consequences reproduce vanilla exactly; otherwise retain the postfixes. |
+| Village hostile/raid flow | Keep Harmony; the required start-hostile-action consequence is private. |
+| Player captivity | Replace whole-method prefix with a predicate-level patch. |
+| AI prisoner retention | Keep a tightly filtered veto; no pre-release model/event exists. |
+| Sally-out strength | Prefer a predicate-level transpiler over a copied full-method prefix if exact IL matching is reliable. |
+| Party/settlement nameplates | UIExtenderEx, never Harmony; explicit 1.4 relation mapping. |
+
+Every retained patch gets an automated target-resolution assertion against the 1.4 assemblies. Every
+transpiler asserts its exact replacement count and fails visibly when the IL shape changes.
+
+### 11.3 Design/code gaps included in the hardening pass
+
+- Add the clean `EncounterModel.FindNonAttachedNpcPartiesWhoWillJoinPlayerEncounter` override so
+  nearby participants are enumerated before `MapEvent.CanPartyJoinBattle` assigns them.
+- Implement or explicitly defer, in the final task plan, recruitment restrictions, AI hostile-fief
+  visitation, hostile-fief retreat filtering, and the player crime guard. They are pre-existing design
+  requirements, not newly discovered 1.4 regressions.
+- Preserve the 1.4 naval/port branches in all patched methods. Private-war naval support is verified
+  where the feature permits it; unsupported naval cases must fall through to vanilla unchanged.
+
+### 11.4 Verification matrix
+
+Automated:
+
+- existing private-war domain tests;
+- army leader priority, fallback, one-per-side, same-side membership, and losing-score cases;
+- Harmony target/overload resolution and transpiler replacement counts;
+- serializer round-trip, legacy 11-field load, malformed record handling, and registry restoration;
+- explicit settlement-nameplate relation values and color fallback.
+
+Runtime under 1.4.6:
+
+- AI-vs-AI field battle with correct reinforcements;
+- attacker army capture and defender army reclaim of the frozen goal;
+- siege retention, sally-out strength, garrison destruction, prisoner capture/release, and normal army
+  dispersal;
+- player field/army conversations, village raid, siege assault, captivity, ransom, escape, and peace;
+- party/settlement nameplates and immediate hostility refresh;
+- load a real 1.3.15 mid-war save in 1.4.6 and continue through resolution.
