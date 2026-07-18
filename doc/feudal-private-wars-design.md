@@ -244,6 +244,7 @@ registry and returns the stock answer when the pair is not in a private war.
 | **Enemy heroes don't walk free in the captor's town** | `PrisonerCaptureCampaignBehavior` — private, CampaignBehavior | Capture/eject sweep gated on `IsAtWarWith(hero.MapFaction, settlement.MapFaction)`; never fires for same-K. **Resolved at the synthetic capture instead** (§10): a same-kingdom siege never stages an assault `MapEvent`, so the engine's own `MapEvent.LootDefeatedPartyMembers → TakePrisonerAction.Apply` post-assault prisoner-taking never runs. `TryCaptureCompletedSieges` mirrors it directly — when the goal falls, every losing-side lord party still inside has its leader taken prisoner by the besieger (`TakePrisonerAction.Apply(besiegerParty, hero)`), exactly as a real assault would. The AUTO-END-risk-#1 `PrisonerReleaseCampaignBehavior` patch then keeps them held despite the shared MapFaction. No model hook. |
 | **A can't freely recruit inside C's town/castle** (entry gate) | `RecruitmentCampaignBehavior.OnBeforeSettlementEntered` — CampaignBehavior | Hardcoded `ownerClan.IsAtWarWith` gate (and **villages have no gate at all**). |
 | **AI doesn't freely wander into enemy fiefs** | `AiBehaviorCampaignBehavior.IsSettlementSuitableForVisitingCondition` — private, CampaignBehavior | No model hook. Also blocks the expulsion sweep that would eject C's parties from A's towns (`!Owner.MapFaction.IsAtWarWith(settlement.MapFaction)`). |
+| **The selected private-war army gathers only its own side** | `Kingdom.CreateArmy(Hero, Settlement, ArmyTypes, MBReadOnlyList<MobileParty>)` — public creation boundary | 1.4 exposes public eligibility and scoring APIs, but no post-scoring/pre-creation event. `AiHourlyTickEvent` listeners run LIFO and all objectives share one mutable `PartyThinkParams` member cache, so setting it from DADG's listener can be overwritten by later stock producers or leak into another winner. A prefix at the creation boundary runs only after vanilla has selected the winner and passed its random formation gate. It is filtered by `Besieger`, active private war, leader side, and frozen goal; it replaces only the member argument after fresh policy validation and otherwise falls through unchanged. |
 | **Attacker's feud army doesn't auto-disband (1.3-only risk)** | `ArmyManagementCampaignBehavior` / cohesion-loss path (`FactionsAtWarWith.AnyQ(x => x.Fiefs.Any())`) — CampaignBehavior | Historical 1.3 concern only. The 1.4.6 `NoActiveWar` dispersion path is gone, so the port must **not** add this Harmony patch; verify normal cohesion, food, and objective-completion dispersal instead (§17). |
 | **Enemy fiefs aren't offered to A as safe retreat/camp targets** | `SettlementHelper.FindNearestFortificationToMobileParty` / `FindNextSettlementAroundMobileParty` — static helpers | NEW, HIGH. Both filter on `!OwnerClan.IsAtWarWith(mobileParty.MapFaction)` = K-vs-K = false → C's fortifications pass as valid retreat targets for A's parties. Harmony postfix to exclude the enemy set. |
 | **Crime by a player belligerent doesn't spawn a phantom K-vs-K war** | `CrimeRatingChangeAction.ApplyByCrimeRatingChange` — static action | NEW, HIGH (player only). If the player (A) commits crimes against C's fief, `!faction.IsAtWarWith(MainHero.MapFaction)` is true → it tries to `DeclareWarAction` K-vs-K. The same-faction guard blocks the declaration, but the crime/relation escalation still fires confusingly. Harmony prefix to guard the same-kingdom pair. |
@@ -795,9 +796,13 @@ The 1.3.15 and 1.4.6 source bodies narrow these risks but cannot prove live camp
 need focused GABS smoke tests:
 
 1. **AI siege/army decision under DADG drive (highest risk).** The feature already injects the frozen
-   goal into the AI score vote, but currently marks it `willGatherArmy: false`. The 1.4.6 port must prove
-   that the goal wins when appropriate, that `WillGatherArmy` uses the matching same-side candidate
-   list, and that principal-clan leader priority/fallback and the one-army-per-side guard hold.
+   goal into the AI score vote, but originally marked it `willGatherArmy: false`. The 1.4.6 port must
+   prove that the goal wins when appropriate and sets `WillGatherArmy`. Because `AiHourlyTickEvent`
+   listeners run LIFO and later stock listeners can overwrite the single shared army-member cache,
+   the private listener must not call `SetArmyMembers`. The narrowly filtered `Kingdom.CreateArmy`
+   prefix substitutes the matching same-side list only after vanilla has selected the winner and
+   passed its formation gate. Runtime verification must also prove principal-clan priority/fallback
+   and the one-army-per-side guard.
 2. **Relief damping sufficiency.** Confirm the `GetTargetScoreForFaction` override alone keeps
    uninvolved K lords from gathering to "relieve" the private siege; if it leaks, add the
    `AiMilitaryBehavior.CalculateMilitaryBehaviorForSettlement` Harmony fallback (§4.2).
@@ -882,7 +887,7 @@ substrate decision (§1) therefore transfers to 1.4.6 without revisiting.
 | Area | 1.3.15 | 1.4.6 | Required handling |
 | --- | --- | --- | --- |
 | **Army candidate/filter API** | `GetMobilePartiesToCallToArmy(MobileParty)` | Removed; the extension seam is now `CanLordCreateArmy(MobileParty, out MBList<MobileParty>)` | Port the ordinary-army enemy filter to the new model method. Do **not** re-point to `CheckPartyEligibility`; that method is player-oriented and cannot represent side-specific AI candidates. |
-| **Private-war army creation** | DADG injected a siege score with `willGatherArmy: false` | `PartyThinkParams.SetArmyMembers(...)` and `AIBehaviorData.WillGatherArmy` feed the final scored decision | Use these public APIs to supply only same-side participants when the private-war objective is eligible to win. No army-creation Harmony patch. |
+| **Private-war army creation** | DADG injected a siege score with `willGatherArmy: false` | `AIBehaviorData.WillGatherArmy` enters vanilla formation, but `PartyThinkParams` exposes only one shared member cache and `AiHourlyTickEvent` listeners run LIFO | Keep the private goal in the normal score vote with `WillGatherArmy = true`, but do not call `SetArmyMembers` from the private listener. Prefix public `Kingdom.CreateArmy(Hero, Settlement, ArmyTypes, MBReadOnlyList<MobileParty>)` and, only for a matching private-war besieger/leader/frozen goal, replace the member argument with a freshly revalidated Task 3 policy result. Abort that private creation if revalidation fails; every ordinary call falls through unchanged. This is the narrowest reliable same-tick seam because it runs after winner selection and vanilla's random formation gate. |
 | **Feud-army auto-disband** | `Army.Tick()` could disperse for `NoActiveWar` | The `NoActiveWar` dispersion path is gone | Delete the planned disband Harmony patch; verify normal cohesion/food dispersal remains intact. |
 | **Besieger retention** | No per-tick cleanup of this shape | `SiegeEvent.Tick` calls `BesiegerCamp.CheckBesiegerPartiesAndMakeThemLeave`; unattached parties leave unless their default behavior is Besiege/Escort/Assault | Verify the scored private-war objective keeps the leader on `BesiegeSettlement` and attached army members remain attached. Patch only if the public behavior path cannot satisfy the rule. |
 | **Ownership transfer** | Synthetic capture used `ApplyBySiege` after clearing the routed defenders | `ChangeOwnerOfSettlementAction.ApplyInternal` now destroys the garrison party for `BySiege` | Adapt the synthetic-capture sequence to avoid double destruction or stale party references; verify prisoner capture and re-besiege. |
@@ -905,9 +910,11 @@ behavioral proof: each retained patch still needs a target-resolution test and a
 Classify every private-war patch before carrying it forward:
 
 1. **Replace with a public model/event/registration seam** when 1.4 exposes the decision directly.
-   Army formation belongs here. The three simple encounter menu conditions (besiege, continue siege,
-   attack army) should be explored as private-war-only `CampaignGameStarter` options because their
-   consequences use public APIs.
+   Ordinary army eligibility/candidate filtering belongs here. Private-war member substitution is the
+   narrow exception described in §17.2: 1.4 has no post-scoring/pre-creation event and its single
+   `PartyThinkParams` member cache cannot safely represent a target-specific private army. The three
+   simple encounter menu conditions (besiege, continue siege, attack army) should be explored as
+   private-war-only `CampaignGameStarter` options because their consequences use public APIs.
 2. **Keep Harmony for hard-coded faction gates** where no policy seam exists: the private AI hostility
    helpers, static encounter managers, non-virtual battle/siege side gates, player side assignment,
    village-hostile flow, conversation tags, and captivity release vetoes.
@@ -922,7 +929,10 @@ Classify every private-war patch before carrying it forward:
 These are not all 1.4 regressions; several are requirements in this design that the current feature
 branch never completed:
 
-- Private-war siege candidates currently set `willGatherArmy: false`, so no private-war army forms.
+- The original private-war siege candidates set `willGatherArmy: false`, so no private-war army
+  formed. The 1.4 port must set `WillGatherArmy`, but must not populate the shared
+  `PartyThinkParams` member cache; the winning creation call is corrected at `Kingdom.CreateArmy`
+  (§17.2).
 - `DadgEncounterModel` does not yet override
   `FindNonAttachedNpcPartiesWhoWillJoinPlayerEncounter`, leaving a clean reinforcement seam unused.
 - Recruitment, AI settlement visitation, hostile-fief retreat filtering, and the player crime guard
