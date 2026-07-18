@@ -7,64 +7,13 @@ namespace DellarteDellaGuerra.Tests.PrivateWars;
 public class PrivateWarArmyDecisionAdapterTests
 {
     [Fact]
-    public void CreatePlan_GivesEligiblePrincipalPartyPriority()
-    {
-        var adapter = new PrivateWarArmyDecisionAdapter(new PrivateWarArmyPolicy());
-        var candidates = new[]
-        {
-            new PrivateWarArmyCandidate("principal", "A", true, 600f),
-            new PrivateWarArmyCandidate("vassal", "A_vassal", true, 500f)
-        };
-        var war = War();
-        Func<string, string?> suzerain = clan => clan == "A_vassal" ? "A" : null;
-
-        var principal = adapter.CreatePlan(
-            war, WarSide.Attacker, "principal", candidates,
-            Array.Empty<PrivateWarArmyAssignment>(), suzerain,
-            kingdomHasSettlements: true, maximumMemberCount: 2);
-        var vassal = adapter.CreatePlan(
-            war, WarSide.Attacker, "vassal", candidates,
-            Array.Empty<PrivateWarArmyAssignment>(), suzerain,
-            kingdomHasSettlements: true, maximumMemberCount: 2);
-
-        Assert.Equal("principal", principal?.LeaderPartyId);
-        Assert.Null(vassal);
-    }
-
-    [Fact]
-    public void CreatePlan_AllowsParticipatingClanFallbackWhenPrincipalIsIneligible()
-    {
-        var adapter = new PrivateWarArmyDecisionAdapter(new PrivateWarArmyPolicy());
-        var candidates = new[]
-        {
-            new PrivateWarArmyCandidate("principal", "A", false, 600f),
-            new PrivateWarArmyCandidate("fallback", "A_vassal", true, 600f),
-            new PrivateWarArmyCandidate("member", "A_subvassal", true, 500f)
-        };
-        Func<string, string?> suzerain = clan => clan switch
-        {
-            "A_vassal" => "A",
-            "A_subvassal" => "A_vassal",
-            _ => null
-        };
-
-        var plan = adapter.CreatePlan(
-            War(), WarSide.Attacker, "fallback", candidates,
-            Array.Empty<PrivateWarArmyAssignment>(), suzerain,
-            kingdomHasSettlements: true, maximumMemberCount: 2);
-
-        Assert.Equal("fallback", plan?.LeaderPartyId);
-        Assert.Equal(new[] { "member" }, plan?.MemberPartyIds);
-    }
-
-    [Fact]
     public void FilterOrdinaryMembers_ExcludesPrivateEnemyAndFailsWeakenedFormation()
     {
         var adapter = new PrivateWarArmyDecisionAdapter(new PrivateWarArmyPolicy());
         var candidates = new[]
         {
-            new PrivateWarArmyCandidate("ally", "A_vassal", true, 400f),
-            new PrivateWarArmyCandidate("private_enemy", "D", true, 600f)
+            new PrivateWarArmyCandidate("ally", "A_vassal", false, true, 400f, 1f),
+            new PrivateWarArmyCandidate("private_enemy", "D", false, true, 600f, 1f)
         };
 
         var decision = adapter.FilterOrdinaryMembers(
@@ -85,8 +34,8 @@ public class PrivateWarArmyDecisionAdapterTests
         var adapter = new PrivateWarArmyDecisionAdapter(new PrivateWarArmyPolicy());
         var candidates = new[]
         {
-            new PrivateWarArmyCandidate("ally", "A_vassal", true, 600f),
-            new PrivateWarArmyCandidate("private_enemy", "D", true, 600f)
+            new PrivateWarArmyCandidate("ally", "A_vassal", false, true, 600f, 1f),
+            new PrivateWarArmyCandidate("private_enemy", "D", false, true, 600f, 1f)
         };
 
         var decision = adapter.FilterOrdinaryMembers(
@@ -107,8 +56,8 @@ public class PrivateWarArmyDecisionAdapterTests
         var adapter = new PrivateWarArmyDecisionAdapter(new PrivateWarArmyPolicy());
         var candidates = new[]
         {
-            new PrivateWarArmyCandidate("leader", "A", true, 500f),
-            new PrivateWarArmyCandidate("same_side", "A_vassal", true, 400f)
+            new PrivateWarArmyCandidate("leader", "A", true, false, 500f, 0f),
+            new PrivateWarArmyCandidate("same_side", "A_vassal", true, true, 400f, 1f)
         };
 
         var plan = adapter.CreatePlan(
@@ -121,35 +70,14 @@ public class PrivateWarArmyDecisionAdapterTests
     }
 
     [Fact]
-    public void CreatePlan_FormsPrivateOnlyArmyFromAuthorizedSameSideMembers()
+    public void CreatePlan_SelectsHighestDesirabilityMemberBeforeCapacityAndStrengthChecks()
     {
         var adapter = new PrivateWarArmyDecisionAdapter(new PrivateWarArmyPolicy());
         var candidates = new[]
         {
-            new PrivateWarArmyCandidate("leader", "A", true, 600f),
-            new PrivateWarArmyCandidate("same_side", "A_vassal", true, 500f),
-            new PrivateWarArmyCandidate("enemy", "D", true, 900f),
-            new PrivateWarArmyCandidate("uninvolved", "X", true, 900f)
-        };
-
-        var plan = adapter.CreatePlan(
-            War(), WarSide.Attacker, "leader", candidates,
-            Array.Empty<PrivateWarArmyAssignment>(),
-            clan => clan == "A_vassal" ? "A" : null,
-            kingdomHasSettlements: true, maximumMemberCount: 3);
-
-        Assert.Equal(new[] { "same_side" }, plan?.MemberPartyIds);
-    }
-
-    [Fact]
-    public void CreatePlan_RestrictsMembersToVanillaCapacityInCandidateOrder()
-    {
-        var adapter = new PrivateWarArmyDecisionAdapter(new PrivateWarArmyPolicy());
-        var candidates = new[]
-        {
-            new PrivateWarArmyCandidate("leader", "A", true, 600f),
-            new PrivateWarArmyCandidate("first", "A_vassal", true, 500f),
-            new PrivateWarArmyCandidate("second", "A_subvassal", true, 900f)
+            new PrivateWarArmyCandidate("leader", "A", true, false, 600f, 0f),
+            new PrivateWarArmyCandidate("first", "A_vassal", true, true, 300f, 2f),
+            new PrivateWarArmyCandidate("second", "A_subvassal", true, true, 900f, 8f)
         };
 
         var plan = adapter.CreatePlan(
@@ -164,7 +92,7 @@ public class PrivateWarArmyDecisionAdapterTests
             kingdomHasSettlements: true,
             maximumMemberCount: 1);
 
-        Assert.Equal(new[] { "first" }, plan?.MemberPartyIds);
+        Assert.Equal(new[] { "second" }, plan?.MemberPartyIds);
     }
 
     [Theory]

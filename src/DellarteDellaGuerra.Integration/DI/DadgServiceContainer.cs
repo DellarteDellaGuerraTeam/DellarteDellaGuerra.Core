@@ -197,6 +197,9 @@ public class DadgServiceContainer
         services.AddSingleton<IResolvePrivateWarUseCase, ResolvePrivateWarUseCase>();
         services.AddSingleton<PrivateWarArmyPolicy>();
         services.AddSingleton<PrivateWarInteractionPolicy>();
+        services.AddSingleton<PrivateWarCaptivityPolicy>();
+        services.AddSingleton<PrivateWarSallyOutPolicy>();
+        services.AddSingleton<PrivateWarSyntheticCapturePolicy>();
         services.AddSingleton<PrivateWarArmyDecisionAdapter>();
 
         // Campaign behaviour (persistence lifecycle)
@@ -242,11 +245,9 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, MobilePartyAiIsEnemyPatch>();
         services.AddSingleton<IPatch, MobilePartyAiStanceScorePatch>();
         services.AddSingleton<IPatch, StartPartyEncounterBattlePatch>();
-        services.AddSingleton<IPatch, StartSettlementEncounterSiegePatch>();
         services.AddSingleton<IPatch, CanPartyJoinBattlePatch>();
         services.AddSingleton<IPatch, KingdomCreateArmyPatch>();
         services.AddSingleton<IPatch, PrivateWarPrisonerRetentionPatch>();
-        services.AddSingleton<IPatch, PlayerCaptivityRetentionPatch>();
         services.AddSingleton<IPatch, RecruitmentEntryPatch>();
         services.AddSingleton<IPatch, SettlementVisitPatch>();
         // Private wars (player-facing encounter menus and side assignment)
@@ -256,7 +257,6 @@ public class DadgServiceContainer
         // PlayerEncounterSetupFieldsPatch targets PlayerEncounter (no static GameTexts call)
         // and is safe to apply early.
         services.AddSingleton<IPatch, PlayerEncounterSetupFieldsPatch>();
-        services.AddSingleton<IPatch, SallyOutStrengthPatch>();
         services.AddSingleton<IPatch, SiegeDefenderJoinPatch>();
         // Private wars (§4.3 field-encounter dialog): make a same-kingdom rival meeting open the
         // enemy conversation that can escalate to battle instead of a forced battle or friendly chat.

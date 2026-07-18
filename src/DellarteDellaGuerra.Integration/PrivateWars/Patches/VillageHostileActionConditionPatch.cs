@@ -1,4 +1,5 @@
 using System.Reflection;
+using DellarteDellaGuerra.Domain.PrivateWars;
 using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
@@ -17,6 +18,8 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // it when the village's bound-town owner is a registered private-war enemy.
     public class VillageHostileActionConditionPatch : IPatch
     {
+        private static readonly PrivateWarVillageActionPolicy Policy = new();
+
         public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.VillageHostileActionCondition();
 
         public MethodInfo? PatchMethod =>
@@ -28,16 +31,23 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
         {
             if (__result) return;
             var cs = Settlement.CurrentSettlement;
-            if (cs is null || !cs.IsVillage) return;
-            var village = cs.Village;
-            if (village is null) return;
+            var village = cs?.Village;
             // village.Owner is the bound Town; its OwnerClan is the relevant clan for the war check.
-            var ownerClan = village.Owner?.Settlement?.OwnerClan;
-            if (!PrivateWarPatchHelper.AreEnemies(Hero.MainHero?.Clan, ownerClan)) return;
-            if (MobileParty.MainParty.Army != null && MobileParty.MainParty.Army.LeaderParty != MobileParty.MainParty) return;
+            var ownerClan = village?.Owner?.Settlement?.OwnerClan;
+            bool canLeadArmyAction = MobileParty.MainParty.Army is null
+                                     || MobileParty.MainParty.Army.LeaderParty == MobileParty.MainParty;
+            var decision = Policy.EvaluateHostileAction(
+                __result,
+                args.IsEnabled,
+                cs?.IsVillage == true,
+                village?.VillageState == Village.VillageStates.Normal,
+                canLeadArmyAction,
+                PrivateWarPatchHelper.AreEnemies(Hero.MainHero?.Clan, ownerClan));
+            args.IsEnabled = decision.IsEnabled;
+            if (!decision.IsVisible) return;
 
             args.optionLeaveType = GameMenuOption.LeaveType.Submenu;
-            __result = village.VillageState == Village.VillageStates.Normal;
+            __result = true;
         }
     }
 }

@@ -118,7 +118,7 @@ public class PrivateWarStateSerialiserTests
     }
 
     private static PrivateWarCampaignBehavior CreateBehavior(IFeudalStateStore stateStore)
-        => new(stateStore, null!, null!, null!, null!, null!, null!, null!);
+        => new(stateStore, null!, null!, null!, null!, null!, null!, null!, null!);
 
     private static void SetSerialisedWars(PrivateWarCampaignBehavior behavior, List<string> serialisedWars)
         => typeof(PrivateWarCampaignBehavior)

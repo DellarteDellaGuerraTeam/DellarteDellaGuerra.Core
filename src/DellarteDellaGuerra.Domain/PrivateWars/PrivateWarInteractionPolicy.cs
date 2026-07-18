@@ -18,12 +18,6 @@ namespace DellarteDellaGuerra.Domain.PrivateWars
         public bool AllowSettlementVisit(bool vanillaSuitable, bool arePrivateEnemies)
             => vanillaSuitable && !arePrivateEnemies;
 
-        public bool ResolveCaptivityWarPredicate(bool vanillaAtWar, bool arePrivateEnemies)
-            => vanillaAtWar || arePrivateEnemies;
-
-        public bool ResolveSallyOutStrengthEnemy(bool vanillaEnemies, bool arePrivateEnemies)
-            => vanillaEnemies || arePrivateEnemies;
-
         public bool CanShowPrivateWarBesiegeOption(
             bool arePrivateEnemies,
             bool hasHealthyMembers,

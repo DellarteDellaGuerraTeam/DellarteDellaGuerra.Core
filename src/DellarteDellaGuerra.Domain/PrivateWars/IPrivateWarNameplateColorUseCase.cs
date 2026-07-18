@@ -3,8 +3,9 @@ namespace DellarteDellaGuerra.Domain.PrivateWars
     public enum SettlementNameplateRelation
     {
         Neutral,
-        Ally,
-        Enemy
+        SameFaction,
+        Enemy,
+        Alliance
     }
 
     // Returns the ARGB-packed color to use when tinting a party or settlement nameplate that
@@ -19,8 +20,9 @@ namespace DellarteDellaGuerra.Domain.PrivateWars
         // onto the player's own side of an active private war (default purple/BlueViolet).
         uint GetPrivateWarAllyArgbColor();
 
-        // Settlement capsule tint. Private-war enemy/ally colors override vanilla relation colors;
-        // otherwise this returns Bannerlord's vanilla settlement capsule color for the relation.
+        // Settlement capsule tint. Private-war enemy/same-side colors override vanilla relation
+        // colors; otherwise this returns Bannerlord's vanilla settlement capsule color for the
+        // semantic relation supplied by the Integration adapter.
         uint GetSettlementCapsuleArgbColor(
             SettlementNameplateRelation vanillaRelation,
             bool isPrivateWarEnemy,

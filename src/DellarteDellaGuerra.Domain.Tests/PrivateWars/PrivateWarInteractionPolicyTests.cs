@@ -87,36 +87,6 @@ public class PrivateWarInteractionPolicyTests
     }
 
     [Theory]
-    [InlineData("ordinary faction war", true, false, true)]
-    [InlineData("active private war", false, true, true)]
-    [InlineData("ransom and time escape remain eligible", false, false, false)]
-    public void ResolveCaptivityWarPredicate_ChangesOnlyThePrivateWarNoMoreEnemiesDecision(
-        string _,
-        bool vanillaAtWar,
-        bool areCaptiveAndCaptorPrivateEnemies,
-        bool expected)
-    {
-        Assert.Equal(
-            expected,
-            _policy.ResolveCaptivityWarPredicate(vanillaAtWar, areCaptiveAndCaptorPrivateEnemies));
-    }
-
-    [Theory]
-    [InlineData("ordinary faction enemy", true, false, true)]
-    [InlineData("active private-war besieger", false, true, true)]
-    [InlineData("same-side or uninvolved party", false, false, false)]
-    public void ResolveSallyOutStrengthEnemy_CombinesVanillaAndPrivateHostility(
-        string _,
-        bool vanillaEnemies,
-        bool partyAndOwnerPrivateEnemies,
-        bool expected)
-    {
-        Assert.Equal(
-            expected,
-            _policy.ResolveSallyOutStrengthEnemy(vanillaEnemies, partyAndOwnerPrivateEnemies));
-    }
-
-    [Theory]
     [InlineData(true, true, false, true)]
     [InlineData(false, true, false, false)]
     [InlineData(true, false, false, false)]

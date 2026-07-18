@@ -1,4 +1,5 @@
 using System.Reflection;
+using DellarteDellaGuerra.Domain.PrivateWars;
 using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
@@ -17,6 +18,8 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // registered private-war enemy.
     public class VillageRaidConditionPatch : IPatch
     {
+        private static readonly PrivateWarVillageActionPolicy Policy = new();
+
         public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.VillageRaidCondition();
 
         public MethodInfo? PatchMethod =>
@@ -28,9 +31,14 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
         {
             if (__result) return;
             var cs = Settlement.CurrentSettlement;
-            if (cs is null || !cs.IsVillage) return;
-            var ownerClan = cs.Village?.Owner?.Settlement?.OwnerClan;
-            if (!PrivateWarPatchHelper.AreEnemies(Hero.MainHero?.Clan, ownerClan)) return;
+            var ownerClan = cs?.Village?.Owner?.Settlement?.OwnerClan;
+            var decision = Policy.EvaluateRaid(
+                __result,
+                args.IsEnabled,
+                cs?.IsVillage == true,
+                PrivateWarPatchHelper.AreEnemies(Hero.MainHero?.Clan, ownerClan));
+            args.IsEnabled = decision.IsEnabled;
+            if (!decision.IsVisible) return;
 
             args.optionLeaveType = GameMenuOption.LeaveType.Submenu;
             __result = true;

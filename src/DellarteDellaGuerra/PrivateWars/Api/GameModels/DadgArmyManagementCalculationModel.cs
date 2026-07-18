@@ -43,9 +43,11 @@ namespace DellarteDellaGuerra.PrivateWars.Api.GameModels
             var candidates = possibleArmyMembers.Select(party => new PrivateWarArmyCandidate(
                 party.StringId,
                 party.ActualClan?.StringId ?? string.Empty,
-                IsEligible: true,
-                party.Party.GetCustomStrength(
-                    BattleSideEnum.Attacker, MapEvent.PowerCalculationContext.Siege))).ToList();
+                CanLeadArmy: false,
+                CanJoinArmy: true,
+                SiegeStrength: party.Party.GetCustomStrength(
+                    BattleSideEnum.Attacker, MapEvent.PowerCalculationContext.Siege),
+                MemberDesirability: 0f)).ToList();
             var kingdom = leaderParty.MapFaction as Kingdom;
             var decision = _armyDecisionAdapter.FilterOrdinaryMembers(
                 canCreateArmy,

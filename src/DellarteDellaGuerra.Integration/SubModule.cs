@@ -48,6 +48,7 @@ using Harmony.DependencyInjection.Patches;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
@@ -136,6 +137,7 @@ namespace DellarteDellaGuerra.Integration
 
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
+            ReplacePrivateWarCampaignBehaviors(campaignGameStarter);
             PrivateWarEncounterMenuOptions.Register(campaignGameStarter);
 
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
@@ -210,6 +212,33 @@ namespace DellarteDellaGuerra.Integration
             game.AddGameHandler<CompilingShaderNotifier>();
 
             campaignGameStarter.AddBehavior(new JoustTournamentCampaignBehavior(joustRequirementsProvider));
+        }
+
+        private void ReplacePrivateWarCampaignBehaviors(CampaignGameStarter starter)
+        {
+            var vanillaCaptivity = starter.CampaignBehaviors
+                .FirstOrDefault(behavior => behavior.GetType() == typeof(PlayerCaptivityCampaignBehavior))
+                as PlayerCaptivityCampaignBehavior;
+            if (vanillaCaptivity != null)
+            {
+                // Preserve the vanilla instance's menus, events, and save identity. The DADG router is
+                // first for ICaptivityCampaignBehavior lookup and delegates every ordinary capture back.
+                starter.RemoveBehavior(vanillaCaptivity);
+                starter.AddBehavior(new DadgPlayerCaptivityCampaignBehavior(
+                    vanillaCaptivity,
+                    _serviceProvider.GetRequiredService<PrivateWarCaptivityPolicy>()));
+                starter.AddBehavior(vanillaCaptivity);
+            }
+
+            // The stock behavior has no save state. Replace its private implementation with the same
+            // public event/action flow plus explicit clan-side strength classification.
+            var vanillaSallyOut = starter.CampaignBehaviors
+                .FirstOrDefault(behavior => behavior.GetType() == typeof(SallyOutsCampaignBehavior))
+                as SallyOutsCampaignBehavior;
+            if (vanillaSallyOut != null)
+                starter.RemoveBehavior(vanillaSallyOut);
+            starter.AddBehavior(new DadgSallyOutCampaignBehavior(
+                _serviceProvider.GetRequiredService<PrivateWarSallyOutPolicy>()));
         }
 
         public override void OnGameInitializationFinished(Game game)

@@ -136,10 +136,9 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
 
         // TEMP: make the player (Hero.MainHero) a prisoner of the given captor clan's leader party,
         // bypassing the vanilla faction-war check. Mirrors capture_lord but targets the main hero.
-        // Used to stage the player-captivity retention patch (PlayerCaptivityRetentionPatch) for
-        // manual testing: declare a private war first, then capture_player the rival clan, advance
-        // time, and confirm the player stays captive. Remove once the player-facing captivity path
-        // is exercised by normal gameplay.
+        // Used to stage the player-captivity behavior for manual testing: declare a private war
+        // first, then capture_player the rival clan, advance time, and confirm the public behavior
+        // replacement preserves the vanilla captivity flow while the private war remains active.
         [CommandLineFunctionality.CommandLineArgumentFunction("capture_player", "campaign")]
         public static string CapturePlayer(List<string> args)
         {
@@ -165,7 +164,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
         }
 
         // TEMP: report whether a hero is currently held prisoner, and by whom. Used to assert the
-        // prisoner-retention patch before/after a release trigger.
+        // private-war retention/release behavior before and after a release trigger.
         [CommandLineFunctionality.CommandLineArgumentFunction("is_prisoner", "campaign")]
         public static string IsPrisonerCmd(List<string> args)
         {
@@ -187,7 +186,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
         // TEMP: fire the real OnMakePeace prisoner sweep over a captor clan's parties. There is no
         // vanilla make_peace cheat, so this declares (if needed) then immediately makes peace between
         // the captor's MapFaction and another kingdom - exercising the ReleasedAfterPeace hazard the
-        // prisoner-retention patch guards against.
+        // private-war retention veto guards against.
         [CommandLineFunctionality.CommandLineArgumentFunction("force_peace", "campaign")]
         public static string ForcePeace(List<string> args)
         {
@@ -361,37 +360,6 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Cheats
             return $"Created siege event on '{settlement.StringId}' (besieger: {besieger?.StringId ?? "?"}). " +
                    "Run complete_siege_prep then advance ~1 hour for the capture trigger to fire.";
         }
-
-        // // TEMP: bulk-add troops to a hero's mobile party so a lone private-war besieger has the force
-        // // to advance siege construction to the assault threshold (the lone-besieger camps-forever
-        // // finding: vanilla construction keys on attacker-vs-(garrison+militia), so a ~47-man party
-        // // stalls). Adds <count> of the party culture's elite basic troop. Used to isolate-verify the
-        // // assault gate (StartSettlementEncounterSiegePatch) without building the full feud-army stack.
-        // [CommandLineFunctionality.CommandLineArgumentFunction("boost_party", "campaign")]
-        // public static string BoostParty(List<string> args)
-        // {
-        //     if (args.Count < 1)
-        //         return "Usage: campaign.boost_party <heroStringId> [count]";
-        //
-        //     var hero = Hero.AllAliveHeroes.FirstOrDefault(h => h.StringId == args[0]);
-        //     if (hero is null) return $"No alive hero with id '{args[0]}'.";
-        //
-        //     var party = hero.PartyBelongedTo;
-        //     if (party is null) return $"{hero.StringId} ({hero.Name}) has no mobile party to reinforce.";
-        //
-        //     int count = 200;
-        //     if (args.Count >= 2 && int.TryParse(args[1], out var parsed) && parsed > 0)
-        //         count = parsed;
-        //
-        //     var culture = hero.Culture ?? party.ActualClan?.Culture;
-        //     var troop = culture?.EliteBasicTroop ?? culture?.BasicTroop;
-        //     if (troop is null) return $"Could not resolve a troop type for {hero.StringId}'s culture.";
-        //
-        //     party.MemberRoster.AddToCounts(troop, count);
-        //
-        //     return $"Added {count}x {troop.Name} to {hero.StringId} ({hero.Name})'s party " +
-        //            $"'{party.StringId}'. Party now {party.MemberRoster.TotalManCount} men.";
-        // }
 
         private static Clan? FindClan(string stringId)
             => TaleWorlds.CampaignSystem.Campaign.Current?.Clans.FirstOrDefault(c => c.StringId == stringId);
