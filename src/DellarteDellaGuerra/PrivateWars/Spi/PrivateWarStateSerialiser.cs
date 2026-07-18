@@ -58,6 +58,8 @@ namespace DellarteDellaGuerra.PrivateWars.Spi
             var wars = new List<PrivateWar>(serialisedWars.Count);
             foreach (string line in serialisedWars)
             {
+                if (line is null) continue;
+
                 string[] fields = line.Split(Delimiter);
                 if (fields.Length != 11 && fields.Length != 12) continue;
                 if (!TryParseEnum(fields[9], out PrivateWarStatus status)) continue;
@@ -67,8 +69,11 @@ namespace DellarteDellaGuerra.PrivateWars.Spi
 
                 // Appended field; older saves omit it, so default the fatigue epoch to the war's start day.
                 float goalLastTakenDay = startDay;
-                if (fields.Length == 12)
-                    float.TryParse(fields[11], NumberStyles.Float, CultureInfo.InvariantCulture, out goalLastTakenDay);
+                if (fields.Length == 12
+                    && float.TryParse(fields[11], NumberStyles.Float, CultureInfo.InvariantCulture, out float parsedGoalLastTakenDay))
+                {
+                    goalLastTakenDay = parsedGoalLastTakenDay;
+                }
 
                 wars.Add(new PrivateWar(
                     fields[0],
