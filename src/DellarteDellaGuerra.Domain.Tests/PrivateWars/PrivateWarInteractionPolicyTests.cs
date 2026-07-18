@@ -68,4 +68,21 @@ public class PrivateWarInteractionPolicyTests
     {
         Assert.Equal(expected, _policy.AllowSettlementVisit(vanillaSuitable, arePrivateEnemies));
     }
+
+    [Theory]
+    [InlineData(false, 6f, 12f, 6f)]
+    [InlineData(true, 6f, 12f, 15f)]
+    public void ResolveEncounterJoiningRadius_MatchesVanillaPlayerSiegeBranch(
+        bool hasActivePlayerSiege,
+        float normalEncounterRadius,
+        float settlementDefendingWaitingPositionRadius,
+        float expected)
+    {
+        var result = _policy.ResolveEncounterJoiningRadius(
+            hasActivePlayerSiege,
+            normalEncounterRadius,
+            settlementDefendingWaitingPositionRadius);
+
+        Assert.Equal(expected, result);
+    }
 }

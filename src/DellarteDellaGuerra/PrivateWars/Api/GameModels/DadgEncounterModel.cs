@@ -8,6 +8,7 @@ using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.Siege;
 
 namespace DellarteDellaGuerra.PrivateWars.Api.GameModels
 {
@@ -50,7 +51,11 @@ namespace DellarteDellaGuerra.PrivateWars.Api.GameModels
             var encounteredClan = encounteredParty?.MobileParty?.ActualClan ?? encounteredParty?.Settlement?.OwnerClan;
             if (mainParty?.ActualClan is null || encounteredParty is null || encounteredClan is null) return;
 
-            var radius = TaleWorlds.CampaignSystem.Campaign.Current.Models.EncounterModel.GetEncounterJoiningRadius;
+            var models = TaleWorlds.CampaignSystem.Campaign.Current.Models;
+            var radius = _interactionPolicy.ResolveEncounterJoiningRadius(
+                PlayerSiege.PlayerSiegeEvent != null,
+                models.EncounterModel.GetEncounterJoiningRadius,
+                models.MobilePartyAIModel.SettlementDefendingWaitingPositionRadius);
             var search = MobileParty.StartFindingLocatablesAroundPosition(mainParty.Position.ToVec2(), radius);
             for (var nearbyParty = MobileParty.FindNextLocatable(ref search);
                  nearbyParty != null;
