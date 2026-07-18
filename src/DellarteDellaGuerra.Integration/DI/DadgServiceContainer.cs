@@ -14,6 +14,7 @@ using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Infrastructure.Levy;
 using DellarteDellaGuerra.Infrastructure.PrivateWars;
 using DellarteDellaGuerra.Integration.PrivateWars;
+using DellarteDellaGuerra.PrivateWars.Api.Armies;
 using DellarteDellaGuerra.PrivateWars.Api.Campaign;
 using DellarteDellaGuerra.PrivateWars.Api.GameModels;
 using DellarteDellaGuerra.Integration.PrivateWars.Patches;
@@ -194,6 +195,8 @@ public class DadgServiceContainer
         services.AddSingleton<ITickPrivateWarUseCase, TickPrivateWarUseCase>();
         services.AddSingleton<IApplyBattleOutcomeUseCase, ApplyBattleOutcomeUseCase>();
         services.AddSingleton<IResolvePrivateWarUseCase, ResolvePrivateWarUseCase>();
+        services.AddSingleton<PrivateWarArmyPolicy>();
+        services.AddSingleton<PrivateWarArmyDecisionAdapter>();
 
         // Campaign behaviour (persistence lifecycle)
         services.AddSingleton<PrivateWarCampaignBehavior>();
