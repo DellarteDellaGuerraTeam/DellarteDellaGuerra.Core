@@ -253,7 +253,8 @@ otherwise no-op:
 - `DefaultMobilePartyAIModel.IsEnemy` + `CalculateStanceScore` (private helpers — the central signal,
   Harmony-only).
 - `EncounterManager.StartPartyEncounter` / `HandleEncounterForMobileParty` (un-merge → battle).
-- `EncounterManager.StartSettlementEncounter` (siege actually assaults — load-bearing for "real sieges").
+- No `EncounterManager.StartSettlementEncounter` patch: its relevant gates are AI-only raid/assault
+  branches, while supported frozen-goal sieges resolve through DADG's hourly capture driver.
 - `MapEvent.CanPartyJoinBattle` (reinforcements pick a side).
 - `Kingdom.CreateArmy` (after vanilla winner selection, replace members only for a matching active
   private-war besieger/leader/frozen goal; abort if fresh policy validation fails).
@@ -346,29 +347,34 @@ Dormant unless the player's clan is A or C. Player-only encounter/menu layer (de
 `PlayerEncounter.SetupFields`/`DoMeetingInternal`, the besiege/sally/break-out menu conditions,
 village-raid redirect; plus the player-menu model overrides (`GetEncounterMenu`, `SettlementAccessModel`,
 `FindNonAttachedNpcParties…`). **Player auto-end #2:**
-`PlayerCaptivityCampaignBehavior.CheckCaptivityChange` (see §9), patched only at the
-"no more enemies" predicate so ransom and time-based escape continue to run. The bespoke **"Press your
-claim by force"** trigger menu and **"end the feud"** conversation (the engine's barter-peace path can't
-represent a private war, so the negotiated-exit UI is ours, not a patch). Cosmetic guards (design §4.4)
+`PlayerCaptivityCampaignBehavior.CheckCaptivityChange` (see §9), handled by a public behavior router:
+ordinary captivity remains with the untouched vanilla instance, while the private-war path preserves
+ransom, transfer, timed escape, and naval semantics behind a focused domain release policy. The bespoke
+**"Press your claim by force"** trigger menu and **"end the feud"** conversation (the engine's
+barter-peace path can't represent a private war, so the negotiated-exit UI is ours, not a patch). Cosmetic guards (design §4.4)
 — nameplate/target tint and encyclopedia enemy list — last, using UIExtenderEx mixins. On 1.4.6 the
-settlement relation mapping must explicitly use Neutral=0, SameFaction=1, Enemy=2, Ally=3 rather than
-casting the domain enum by ordinal.
+settlement relation mapping must explicitly use Neutral=0, SameFaction=1, Enemy=2, Alliance=3 rather
+than casting the domain enum by ordinal. Private-war co-belligerents remain SameFaction=1 and receive
+the configured DADG same-side tint; Alliance=3 is reserved for uninvolved diplomatic alliances and
+preserves the vanilla `#2986CCFF` fallback.
 
 ---
 
 ## 9. Cross-phase: the auto-end hazards
 
-Two **independent** mechanisms silently *terminate* the war if unpatched, because both read "no longer
-at war" off the MapFaction wall and free captives (design §4.5 point 3). They split across phases by side:
+Two **independent** mechanisms silently end captivity if unhandled, because both read "no longer at
+war" off the MapFaction wall and free captives (design §4.5 point 3). They split across phases by side:
 
 - **AI — `PrisonerReleaseCampaignBehavior.ReleasePartyPrisoners`** (phase 3). Frees prisoners whose
   faction is `!IsAtWarWith` the captor on any peace/owner-change/load. Highest-severity correctness
   patch after the core hostility signal.
 - **Player — `PlayerCaptivityCampaignBehavior.CheckCaptivityChange`** (phase 4). Releases the captured
-  player the first tick after capture (same-K → "no more enemies"). The current whole-method prefix is
-  invalid because it also prevents ransom/time escape; replace only the faction-war predicate.
+  player the first tick after capture (same-K → "no more enemies"). Install the DADG behavior through
+  the public starter collection, keep the vanilla instance for ordinary cases and save/menu identity,
+  and reproduce the 1.4.6 private path with only the release decision moved to the Domain policy.
 
-Neither degrades the war quietly — they end it. Flagged here so they aren't lost inside their phases.
+Both silently release a captive and erase the intended prisoner state. They are flagged here so the
+two different integration seams are not conflated or lost inside their phases.
 
 ---
 
@@ -376,16 +382,19 @@ Neither degrades the war quietly — they end it. Flagged here so they aren't lo
 
 1. **Design §15 risk #1 (siege-seeking under DADG drive)** — the project's pivot point; a **phase-2
    gate**, not a late surprise. Test before building phase 3.
-2. **Two auto-end mechanisms** (§9) — must both be patched or any prisoner taken evaporates.
+2. **Two captivity auto-end mechanisms** (§9) — the AI release veto and public player behavior
+   replacement must both remain active or captives evaporate.
 3. **Patch hot-path cost** — `IsEnemy`/`CalculateStanceScore` and the per-tick model overrides run
    constantly; the `AreEnemies` lookup must be genuinely O(1) and no-op cheaply when no war is active
    (design §15 risk #4).
-4. **1.4.6 siege retention.** `BesiegerCamp.CheckBesiegerPartiesAndMakeThemLeave` can eject an
-   unattached party whose selected behavior drifted away from Besiege/Escort/Assault. Verify the
-   score-driven objective keeps the private-war army attached and its leader besieging.
-5. **1.4.6 synthetic capture.** `ApplyBySiege` now destroys the garrison party. Verify there is no
-   double destruction/stale reference and that losing lords become prisoners before the goal can be
-   reclaimed.
+4. **1.4.6 siege retention.** `BesiegerCamp.CheckBesiegerPartiesAndMakeThemLeave` exempts attached army
+   members and accepts a leader whose selected behavior remains Besiege/Escort/Assault. The public
+   scored objective supplies a dominant hold score once the leader is besieging the frozen goal; add
+   no patch unless runtime shows that selected behavior still drifts.
+5. **1.4.6 synthetic capture.** `ApplyBySiege` owns garrison destruction/replacement. DADG must not
+   retain, destroy, or otherwise access the old garrison reference. Snapshot losing lords before
+   detachment/owner callbacks, transfer exactly once, capture only that snapshot, and update the
+   fatigue epoch only after the requested ownership change succeeds.
 6. **Shared army-decision cache.** `PartyThinkParams` stores one army-member list for the winning
    behavior. Never overwrite it for a private-war objective that did not win the score vote.
 
@@ -415,13 +424,14 @@ gates. It does not broaden the feature beyond the design's existing private-war 
 | Static encounter start and non-virtual battle/siege side gates | Keep targeted Harmony. |
 | Besiege/continue/attack-army menu conditions | Private-war-only registered options. The 1.4.6 consequences are public and reproduced exactly; the three condition postfixes are removed. |
 | Village hostile/raid flow | Keep Harmony; the required start-hostile-action consequence is private. |
-| Player captivity | Predicate-level transpiler on the single no-more-enemies war check; derive the actual captor clan and preserve the rest of the 1.4.6 method. |
+| Player captivity | Public campaign-behavior routing: keep the vanilla instance for ordinary captures and its events/save identity; run the faithful private-war path through a focused release policy. |
 | AI prisoner retention | Keep a tightly filtered veto; no pre-release model/event exists. |
-| Sally-out strength | Predicate-level transpiler on the single evaluated party/settlement enemy check; preserve the complete vanilla land/blockade/naval scan. |
+| Sally-out strength | Replace the stateless vanilla campaign behavior through `CampaignGameStarter`; preserve its complete cadence and land/blockade/naval flow while classifying nearby parties through a focused domain policy. |
 | Party/settlement nameplates | UIExtenderEx, never Harmony; explicit 1.4 relation mapping. |
 
-Every retained patch gets an automated target-resolution assertion against the 1.4 assemblies. Every
-transpiler asserts its exact replacement count and fails visibly when the IL shape changes.
+Do not test Harmony targets, signatures, IL counts, or source shape. Those tests validate wiring rather
+than behavior. Pure private-war decisions get domain tests; Bannerlord composition and actions get build
+verification and targeted runtime smoke.
 
 ### 11.3 Design/code gaps included in the hardening pass
 
@@ -442,9 +452,10 @@ Automated:
 
 - existing private-war domain tests;
 - army leader priority, fallback, one-per-side, same-side membership, and losing-score cases;
-- Harmony target/overload resolution and transpiler replacement counts;
+- captivity release and sally-out side/threshold domain decisions;
 - serializer round-trip, legacy 11-field load, malformed record handling, and registry restoration;
-- explicit settlement-nameplate relation values and color fallback.
+- settlement-nameplate semantic relation colors, including the 1.4 Alliance fallback, configured
+  six/eight-digit colors, malformed/transparent fallback, and private-enemy precedence.
 
 Runtime under 1.4.6:
 
@@ -452,7 +463,8 @@ Runtime under 1.4.6:
 - attacker army capture and defender army reclaim of the frozen goal;
 - siege retention, sally-out strength, garrison destruction, prisoner capture/release, and normal army
   dispersal;
-- player field/army conversations, village raid, siege assault, captivity, ransom, escape, and peace;
+- player field/army conversations, village raid, player siege menu/assault, captivity, ransom, escape,
+  and peace;
 - party/settlement nameplates and immediate hostility refresh;
 - load a real 1.3.15 mid-war save in 1.4.6 and continue through resolution.
 
@@ -548,54 +560,66 @@ vanilla.
 Focused verification: tests for each gate with private enemy, same-side participant, uninvolved
 same-kingdom clan, and normal cross-kingdom enemy cases.
 
-### Task 6: Harden Harmony targets and narrow copied behavior
+### Task 6: Replace opaque Harmony behavior with public composition
 
-Add automated 1.4.6 target/overload resolution for every retained private-war and heraldry patch.
-Any transpiler must assert its exact replacement count and fail visibly on IL drift. Using failing
-behavior tests where practical:
+Using focused pure-domain tests for DADG decisions and build/runtime verification for engine mechanics:
 
-- replace the whole `PlayerCaptivityCampaignBehavior.CheckCaptivityChange` prefix with interception
-  of only the no-more-enemies decision, preserving ransom and time escape;
+- replace player-captivity Harmony with a public campaign-behavior router that delegates ordinary
+  captures to the untouched vanilla instance and preserves private-war ransom, transfer, timed escape,
+  and naval semantics;
 - keep the prisoner-release veto pair-filtered;
-- narrow the sally-out change to the same-faction strength predicate if an exact safe replacement is
-  available;
+- replace the stateless vanilla sally-out behavior through `CampaignGameStarter`, faithfully preserving
+  cadence, land/naval strength contexts, ratios, and consequences while classifying private-war sides;
+- delete the `StartSettlementEncounter` patch without replacement because its two gates are AI-only and
+  the supported frozen-goal siege is already covered by DADG's hourly synthetic-capture path;
 - replace the three simple encounter-menu condition patches with private-war-only registered options
   only if the public consequences reproduce vanilla exactly; otherwise keep verified postfixes;
 - retain village-flow Harmony and preserve 1.4 naval/port fall-through.
 
-Focused verification: target-resolution tests, replacement-count tests, captivity branch tests, and
-the affected application build.
+Focused verification: captivity/sally domain policies, affected Release builds, and Task 9 runtime
+smoke for captivity, ransom/escape, land/blockade sallies, and supported goal capture.
 
 ### Task 7: Make siege retention and synthetic capture 1.4-safe
 
-Write failing tests around the synthetic capture sequence before changing it. Ensure losing lords are
-captured, ownership transfers exactly once, the 1.4 `ApplyBySiege` garrison destruction does not cause
-a second destruction or stale reference, and the frozen goal can later be reclaimed. Verify that the
-scored `BesiegeSettlement`/army attachment path survives
-`BesiegerCamp.CheckBesiegerPartiesAndMakeThemLeave`; patch only if the public behavior path cannot
-retain a valid private-war besieger.
+The framework-free `PrivateWarSyntheticCapturePolicy` owns capture admissibility: active war, exact
+frozen goal, completed preparations, AI leadership, an actual active siege-leader hero/party, and
+resolved opposite owner/besieger sides. This is symmetric, so attacker capture and defender reclaim
+use the same decision. The Bannerlord adapter snapshots eligible losing-side leaders before any
+mutation, detaches the siege, clears only `Settlement.Party.MemberRoster`, calls `ApplyBySiege` once,
+captures only the immutable snapshot, and updates `GoalLastTakenDay` only after ownership changed to
+the siege leader's clan. `ApplyBySiege` alone owns the old garrison's destruction and replacement.
 
-Focused verification: capture-sequence tests, siege-side tests, affected build, then a targeted
-AI-vs-AI attacker-capture/defender-reclaim runtime scenario.
+Siege retention remains on the public scored behavior path. Attached army members are exempt from
+`CheckBesiegerPartiesAndMakeThemLeave`; the leader's dominant hold score keeps its selected behavior
+at `BesiegeSettlement`. Do not add Harmony unless the targeted runtime scenario disproves this.
+
+Focused verification: capture-policy tests, all private-war Domain tests, affected Release builds,
+then a targeted AI-vs-AI attacker-capture/defender-reclaim runtime scenario. Runtime must also prove
+one garrison replacement per transfer, losing-lord captivity, immediate same-side no-op, retained army
+attachment/leader behavior, and normal post-objective dispersal.
 
 ### Task 8: Correct 1.4 nameplates and immediate refresh
 
-Write failing tests proving settlement relation values are mapped explicitly to 1.4.6
-`Neutral`/`SameFaction`/`Enemy`/`Ally` semantics rather than cast from the domain enum ordinal. Cover
-party and settlement private-enemy colors, same-side/uninvolved fallback, missing-color fallback, and
-refresh after war start/end. Retain UIExtenderEx; do not introduce Harmony for nameplates.
+Map settlement relations explicitly to 1.4.6 `Neutral=0`, `SameFaction=1`, `Enemy=2`, and
+`Alliance=3` semantics rather than casting from the domain enum ordinal. Private enemies use Enemy;
+same-side private-war participants use SameFaction behavior with their configured DADG tint; an
+uninvolved vanilla alliance retains Alliance and the vanilla blue fallback. Cover configured
+six/eight-digit colors, missing/malformed/transparent fallback, and private-enemy precedence in the
+Domain policy. Retain UIExtenderEx and the registry `Changed` invalidation; do not introduce Harmony
+or procedural tests of prefab selectors/subscription lifecycle.
 
-Focused verification: color/mapping tests, prefab selector resolution, and an in-game start/end
-refresh check.
+Focused verification: color/mapping Domain tests plus an in-game prefab-binding, recycled-VM, and
+start/end refresh check. UIExtender reports failed prefab selector application at runtime, so no
+source-shape test duplicates that wiring check.
 
-### Task 9: Complete compatibility and runtime verification
+### Task 9: Complete compatibility documentation and runtime verification
 
-Run all permitted targeted automated suites and the Release solution build. Resolve any failures with
-a reproducing test first. Under Bannerlord 1.4.6, execute the §11.4 runtime matrix, including AI army
-formation, siege retention, captivity/ransom/escape, prisoner release, nameplates, and a real 1.3.15
-mid-war save migration. Record unsupported naval private-war cases explicitly; otherwise verify that
-naval and port branches fall through to vanilla.
+Reconcile the exact 1.3.15→1.4.6 source history and record permitted targeted automated/build evidence.
+Under Bannerlord 1.4.6, execute the §11.4 runtime matrix, including AI army formation, siege retention,
+captivity/ransom/escape, prisoner release, nameplates, and a real 1.3.15 mid-war save migration. Record
+unsupported naval private-war cases explicitly; otherwise verify that naval and port branches fall
+through to vanilla.
 
-Commit only fixes supported by a failing automated test or a reproducible runtime scenario. This task
-is complete only when results and any deliberate deferrals are recorded in the existing manual test
-guide or this implementation plan.
+Runtime scenarios remain open until actually exercised; compilation or source inspection does not
+stand in for them. Record results and deliberate deferrals in the existing manual test guide or this
+implementation plan.

@@ -13,10 +13,11 @@ namespace DellarteDellaGuerra.Domain.PrivateWars
             string candidateLeaderPartyId,
             IReadOnlyList<PrivateWarArmyParty> parties,
             IReadOnlyList<PrivateWarArmyAssignment> assignments,
-            Func<string, string?> getSuzerain)
+            Func<string, string?> getSuzerain,
+            int maximumMemberCount)
         {
             var candidate = parties.FirstOrDefault(p => p.PartyId == candidateLeaderPartyId);
-            if (candidate is null || !candidate.IsEligible) return null;
+            if (candidate is null || !candidate.CanLeadArmy) return null;
 
             var currentAssignment = assignments.FirstOrDefault(a =>
                 a.PrivateWarId == war.Id
@@ -33,11 +34,11 @@ namespace DellarteDellaGuerra.Domain.PrivateWars
                 ? war.AttackerPrincipalClanId
                 : war.DefenderPrincipalClanId;
             var sideResolver = new WarSideResolver();
-            var hasEligiblePrincipalParty = parties.Any(p =>
-                p.IsEligible && p.ClanId == principalClanId);
+            var hasEligiblePrincipalLeader = parties.Any(p =>
+                p.CanLeadArmy && p.ClanId == principalClanId);
 
             if (!isCurrentLeader
-                && hasEligiblePrincipalParty
+                && hasEligiblePrincipalLeader
                 && candidate.ClanId != principalClanId)
             {
                 return null;
@@ -46,8 +47,10 @@ namespace DellarteDellaGuerra.Domain.PrivateWars
 
             var memberPartyIds = parties
                 .Where(p => p.PartyId != candidate.PartyId)
-                .Where(p => p.IsEligible)
+                .Where(p => p.CanJoinArmy)
                 .Where(p => sideResolver.ResolveSide(p.ClanId, war, getSuzerain) == side)
+                .OrderByDescending(p => p.MemberDesirability)
+                .Take(maximumMemberCount)
                 .Select(p => p.PartyId)
                 .ToList();
 

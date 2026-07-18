@@ -17,8 +17,9 @@ namespace DellarteDellaGuerra.Domain.PrivateWars
 
         // Bannerlord vanilla settlement capsule colors, packed ARGB 0xAARRGGBB.
         public const uint VanillaNeutralSettlementArgb = 0xFF000000u;
-        public const uint VanillaAllySettlementArgb = 0xFF245E05u;
+        public const uint VanillaSameFactionSettlementArgb = 0xFF245E05u;
         public const uint VanillaEnemySettlementArgb = 0xFF870707u;
+        public const uint VanillaAllianceSettlementArgb = 0xFF2986CCu;
 
         private readonly IPrivateWarNameplateColorProvider _provider;
 
@@ -76,10 +77,12 @@ namespace DellarteDellaGuerra.Domain.PrivateWars
 
             switch (vanillaRelation)
             {
-                case SettlementNameplateRelation.Ally:
-                    return VanillaAllySettlementArgb;
+                case SettlementNameplateRelation.SameFaction:
+                    return VanillaSameFactionSettlementArgb;
                 case SettlementNameplateRelation.Enemy:
                     return VanillaEnemySettlementArgb;
+                case SettlementNameplateRelation.Alliance:
+                    return VanillaAllianceSettlementArgb;
                 default:
                     return VanillaNeutralSettlementArgb;
             }

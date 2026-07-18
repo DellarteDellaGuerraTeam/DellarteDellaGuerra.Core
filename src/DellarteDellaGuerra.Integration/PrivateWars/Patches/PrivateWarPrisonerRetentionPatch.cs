@@ -1,4 +1,5 @@
 using System.Reflection;
+using DellarteDellaGuerra.Domain.PrivateWars;
 using DellarteDellaGuerra.Titles.Api;
 using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
@@ -20,6 +21,8 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // main hero is left to vanilla here.
     public class PrivateWarPrisonerRetentionPatch : IPatch
     {
+        private static readonly PrivateWarPrisonerRetentionPolicy Policy = new();
+
         public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.PrisonerRelease();
 
         public MethodInfo? PatchMethod =>
@@ -29,15 +32,29 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
 
         private static bool SkipPrivateWarRelease(Hero prisoner, EndCaptivityDetail detail)
         {
-            if (prisoner is null || prisoner == Hero.MainHero) return true;
-            if (detail != EndCaptivityDetail.ReleasedAfterPeace && detail != EndCaptivityDetail.ReleasedAfterBattle)
-                return true;
+            if (prisoner is null) return true;
 
+            var reason = ToReleaseReason(detail);
             var captorParty = prisoner.PartyBelongedToAsPrisoner;
             var captorClan = captorParty?.MobileParty?.ActualClan ?? captorParty?.Settlement?.OwnerClan;
+            bool arePrivateEnemies = PrivateWarPatchHelper.AreEnemies(prisoner.Clan, captorClan);
 
-            // Block the auto-release (return false) only for a genuine private-war captor/captive pair.
-            return !PrivateWarPatchHelper.AreEnemies(prisoner.Clan, captorClan);
+            return Policy.ShouldAllowRelease(prisoner == Hero.MainHero, reason, arePrivateEnemies);
+        }
+
+        private static PrivateWarPrisonerReleaseReason ToReleaseReason(EndCaptivityDetail detail)
+        {
+            return detail switch
+            {
+                EndCaptivityDetail.Ransom => PrivateWarPrisonerReleaseReason.Ransom,
+                EndCaptivityDetail.ReleasedAfterPeace => PrivateWarPrisonerReleaseReason.AfterPeace,
+                EndCaptivityDetail.ReleasedAfterBattle => PrivateWarPrisonerReleaseReason.AfterBattle,
+                EndCaptivityDetail.ReleasedAfterEscape => PrivateWarPrisonerReleaseReason.Escape,
+                EndCaptivityDetail.ReleasedByChoice => PrivateWarPrisonerReleaseReason.DeliberateRelease,
+                EndCaptivityDetail.Death => PrivateWarPrisonerReleaseReason.Death,
+                EndCaptivityDetail.ReleasedByCompensation => PrivateWarPrisonerReleaseReason.Compensation,
+                _ => PrivateWarPrisonerReleaseReason.DeliberateRelease
+            };
         }
     }
 }

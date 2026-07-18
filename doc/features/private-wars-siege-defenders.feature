@@ -10,9 +10,9 @@
 # live campaign; plain When/Then steps are dev-console (`Alt + ~`) commands or on-screen observations.
 # Clan ids look like `clan_york`; settlement ids like `dadg_Pontefract_castle`.
 #
-# The single shared rule under test is PrivateWarSiegeDefenderPolicy (MAIN layer), reached through three
-# engine seams (GetDefenderPartiesOfSettlement, GetNextDefenderPartyOfSettlement, CanPartyJoinSide) plus
-# the SallyOutStrengthPatch strength scan.
+# The shared defender rule is PrivateWarSiegeDefenderPolicy (MAIN layer), reached through three engine
+# seams (GetDefenderPartiesOfSettlement, GetNextDefenderPartyOfSettlement, CanPartyJoinSide). Sally-out
+# decisions are composed by DadgSallyOutCampaignBehavior through PrivateWarSallyOutPolicy.
 
 Feature: Same-kingdom private-war siege defender population
   The garrison, militia, and feud-belligerent lord parties of a besieged fortification must defend it
@@ -37,15 +37,16 @@ Feature: Same-kingdom private-war siege defender population
     # eval: Pontefract.SiegeEvent.GetSiegeEventSide(Defender).HasInvolvedPartyForEventType(garrison) == true
     # eval: Pontefract.SiegeEvent.GetSiegeEventSide(Attacker).HasInvolvedPartyForEventType(garrison) == false
 
-  # Verified PASS — sally-out reaches the same augmented defender set; SallyOutStrengthPatch fires.
+  # Historical PASS — the superseded implementation reached the augmented defender set. Repeat this
+  # runtime smoke test for DadgSallyOutCampaignBehavior; its replacement path is not yet runtime-verified.
   Scenario: A weak besieger triggers a garrison sally-out
     Given `player_faction` (1 troop) is besieging `dadg_Pontefract_castle` owned by `clan_york`
     And the garrison plus militia far outpower the besieger
     When the sally-out strength check runs
-    Then `SallyOutStrengthPatch` enters its private-war branch because the besieger is the owner's enemy
+    Then `DadgSallyOutCampaignBehavior` classifies the sides through `PrivateWarSallyOutPolicy`
     And the garrison sallies out (296 defenders vs 1 besieger), no crash
     # eval: PrivateWarSiegeDefenderPolicy.AreEnemies(player_faction, clan_york) == true
-    # eval: SallyOutStrengthPatch — num3 (sally side) ≈ 324.99 ; num (besieger) ≈ 0.797 ; garrisonWouldSally == true
+    # historical eval: sally side ≈ 324.99 ; besieger ≈ 0.797 ; garrisonWouldSally == true
     # eval: Pontefract.SiegeEvent.CanPartyJoinSide(garrison.Party, Defender) == true
 
   # Verified PASS (2026-06-24) — vanilla sally-out parity; militia are static wall defenders, excluded from SallyOut.

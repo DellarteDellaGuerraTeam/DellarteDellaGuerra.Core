@@ -62,6 +62,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
         private readonly WarSideResolver _sideResolver;
         private readonly IFeudalHierarchy _hierarchy;
         private readonly PrivateWarArmyDecisionAdapter _armyDecisionAdapter;
+        private readonly PrivateWarSyntheticCapturePolicy _syntheticCapturePolicy;
 
         private List<string> _serialisedWars = new();
 
@@ -73,7 +74,8 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             IApplyBattleOutcomeUseCase applyBattleOutcome,
             WarSideResolver sideResolver,
             IFeudalHierarchy hierarchy,
-            PrivateWarArmyDecisionAdapter armyDecisionAdapter)
+            PrivateWarArmyDecisionAdapter armyDecisionAdapter,
+            PrivateWarSyntheticCapturePolicy syntheticCapturePolicy)
         {
             _stateStore = stateStore;
             _privateWars = privateWars;
@@ -83,6 +85,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             _sideResolver = sideResolver;
             _hierarchy = hierarchy;
             _armyDecisionAdapter = armyDecisionAdapter;
+            _syntheticCapturePolicy = syntheticCapturePolicy;
         }
 
         public override void RegisterEvents()
@@ -142,30 +145,9 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             MobileParty leaderParty,
             PrivateWarGoal objective)
         {
-            var leaderHero = leaderParty.LeaderHero;
-            var leaderClan = leaderHero?.Clan;
-            if (leaderHero is null || leaderClan is null || leaderParty.Army != null)
-                return null;
+            if (!CanLeadPrivateWarArmy(leaderParty)) return null;
             if (leaderParty.MapFaction is not Kingdom kingdom)
                 return null;
-
-            // These are the 1.4.6 DefaultArmyManagementCalculationModel leader gates, with only
-            // the formal FactionsAtWarWith requirement omitted: this objective is the authorized
-            // same-kingdom private war itself.
-            if (leaderParty.IsCurrentlyAtSea
-                || leaderClan.Influence <= 100f
-                || leaderClan.IsUnderMercenaryService
-                || leaderParty.GetNumDaysForFoodToLast()
-                    <= TaleWorlds.CampaignSystem.Campaign.Current.Models.MobilePartyAIModel.NeededFoodsInDaysThresholdForSiege
-                || leaderParty.PartySizeRatio
-                    <= TaleWorlds.CampaignSystem.Campaign.Current.Models.ArmyManagementCalculationModel.AIMobilePartySizeRatioToCallToArmy
-                || leaderClan.Leader != leaderHero
-                && (leaderClan.Leader.PartyBelongedTo != null
-                    || leaderClan.WarPartyComponents == null
-                    || leaderClan.WarPartyComponents.FirstOrDefault() != leaderParty.WarPartyComponent))
-            {
-                return null;
-            }
 
             var eligibleParties = new List<(MobileParty Party, float Priority)>();
             foreach (WarPartyComponent component in kingdom.WarPartyComponents)
@@ -219,15 +201,19 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
                 - kingdom.Armies.Sum(army => army.Parties.Count));
             if (maximumMemberCount <= 0) return null;
 
-            var orderedParties = eligibleParties
-                .OrderBy(candidate => candidate.Priority)
-                .Select(candidate => candidate.Party)
-                .ToList();
             var candidates = new List<PrivateWarArmyCandidate>
             {
-                ToArmyCandidate(leaderParty)
+                ToArmyCandidate(
+                    leaderParty,
+                    canLeadArmy: true,
+                    canJoinArmy: false,
+                    memberDesirability: 0f)
             };
-            candidates.AddRange(orderedParties.Select(ToArmyCandidate));
+            candidates.AddRange(eligibleParties.Select(candidate => ToArmyCandidate(
+                candidate.Party,
+                canLeadArmy: CanLeadPrivateWarArmy(candidate.Party),
+                canJoinArmy: true,
+                memberDesirability: candidate.Priority)));
 
             var assignments = kingdom.Armies
                 .Where(army => army.AiBehaviorObject == objective.Goal)
@@ -252,7 +238,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
                 maximumMemberCount);
             if (plan is null) return null;
 
-            var membersById = orderedParties.ToDictionary(party => party.StringId);
+            var membersById = eligibleParties.ToDictionary(candidate => candidate.Party.StringId, candidate => candidate.Party);
             return new MBList<MobileParty>(
                 plan.MemberPartyIds.Select(partyId => membersById[partyId]));
         }
@@ -287,13 +273,44 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             return decision.Action;
         }
 
-        private static PrivateWarArmyCandidate ToArmyCandidate(MobileParty party)
+        private static PrivateWarArmyCandidate ToArmyCandidate(
+            MobileParty party,
+            bool canLeadArmy,
+            bool canJoinArmy,
+            float memberDesirability)
             => new(
                 party.StringId,
                 party.ActualClan?.StringId ?? string.Empty,
-                IsEligible: true,
+                canLeadArmy,
+                canJoinArmy,
                 party.Party.GetCustomStrength(
-                    BattleSideEnum.Attacker, MapEvent.PowerCalculationContext.Siege));
+                    BattleSideEnum.Attacker, MapEvent.PowerCalculationContext.Siege),
+                memberDesirability);
+
+        private static bool CanLeadPrivateWarArmy(MobileParty party)
+        {
+            var leaderHero = party.LeaderHero;
+            var clan = leaderHero?.Clan;
+            if (leaderHero is null
+                || clan is null
+                || party.Army != null
+                || party.MapFaction is not Kingdom
+                || party.IsCurrentlyAtSea
+                || clan.Influence <= 100f
+                || clan.IsUnderMercenaryService
+                || party.GetNumDaysForFoodToLast()
+                    <= TaleWorlds.CampaignSystem.Campaign.Current.Models.MobilePartyAIModel.NeededFoodsInDaysThresholdForSiege
+                || party.PartySizeRatio
+                    <= TaleWorlds.CampaignSystem.Campaign.Current.Models.ArmyManagementCalculationModel.AIMobilePartySizeRatioToCallToArmy)
+            {
+                return false;
+            }
+
+            return clan.Leader == leaderHero
+                || clan.Leader?.PartyBelongedTo is null
+                && clan.WarPartyComponents != null
+                && clan.WarPartyComponents.FirstOrDefault() == party.WarPartyComponent;
+        }
 
         // Capture must be immediate: the moment a private-war besieger's siege preparations complete the
         // fief changes hands, not on the next daily tick. Siege preparations advance on the engine's
@@ -330,7 +347,9 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
         // siege has no vanilla path to an assault (the assault/defender logic is gated on
         // MapFaction.IsAtWarWith, which is false within one kingdom), so once a besieger has completed its
         // preparations on the goal, capture the fief directly: mirror the engine's own post-assault
-        // sequence (detach the besiegers, clear the routed garrison, transfer ownership by siege).
+        // sequence (detach the besiegers, clear the routed settlement defenders, transfer ownership by
+        // siege). ApplyBySiege owns 1.4's garrison destruction and replacement; DADG must not retain or
+        // destroy that engine-owned party itself.
         // Possession can change hands repeatedly - the attacker takes the goal, the defender later
         // reclaims it - and the war itself is resolved only when the score crosses +/-100 on the daily
         // tick, so the contest has time to swing. The transfer goes to whichever side is besieging, as
@@ -344,31 +363,47 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
 
                 var goal = Settlement.Find(war.MainGoalSettlementId);
                 var camp = goal?.SiegeEvent?.BesiegerCamp;
-                if (goal is null || camp is null || !camp.IsPreparationComplete) continue;
+                if (goal is null || camp is null) continue;
 
-                // When the player's own party leads the siege, do not auto-capture: the player must lead
-                // the assault themselves through the normal encounter, so PlayerEncounter.SetupFields runs
-                // and places the player on the attacker side. Auto-capture stays the path for AI besiegers,
-                // which never stage a real assault MapEvent.
-                if (camp.LeaderParty?.IsMainParty == true) continue;
-
-                var besiegerClan = camp.LeaderParty?.ActualClan;
+                var leaderParty = camp.LeaderParty;
+                var leaderHero = leaderParty?.LeaderHero;
+                var besiegerClan = leaderParty?.ActualClan;
                 var besiegerSide = besiegerClan is null ? null : ResolveSide(besiegerClan.StringId, war);
-                if (besiegerSide is null) continue;
-
-                // Only a transfer between the war's two sides: the besieger must belong to the side that
-                // does not currently hold the goal. This single path drives both the attacker's capture
-                // and the defender's reclaim.
                 var ownerSide = goal.OwnerClan is null ? null : ResolveSide(goal.OwnerClan.StringId, war);
-                if (ownerSide == besiegerSide) continue;
+                bool hasUsableSiegeLeader = leaderParty?.IsActive == true
+                    && leaderHero?.PartyBelongedTo == leaderParty;
+                var losingSide = _syntheticCapturePolicy.GetLosingSide(
+                    war,
+                    goal.StringId,
+                    camp.IsPreparationComplete,
+                    leaderParty?.IsMainParty == true,
+                    hasUsableSiegeLeader,
+                    besiegerSide,
+                    ownerSide);
+                if (losingSide is null || leaderParty is null || leaderHero is null) continue;
 
-                var capturer = camp.LeaderParty?.LeaderHero ?? besiegerClan?.Leader;
-                if (capturer is null) continue;
+                // Owner-change callbacks can mutate the settlement's party list. Snapshot the losing
+                // leaders first, then operate only on this immutable capture set after the transfer.
+                var losingHeroes = goal.Parties
+                    .Where(inside => inside.MapEvent is null
+                                     && inside.ActualClan is not null
+                                     && ResolveSide(inside.ActualClan.StringId, war) == losingSide
+                                     && inside.LeaderHero is not null)
+                    .Select(inside => inside.LeaderHero)
+                    .Distinct()
+                    .ToList();
+                var capturerParty = leaderParty.Party;
 
-                var capturerParty = camp.LeaderParty?.Party;
                 camp.RemoveAllSiegeParties();
+
+                // Settlement.Party is the static defender roster used by the siege. It is not
+                // Town.GarrisonParty; ApplyBySiege destroys and replaces that mobile garrison in 1.4.
                 goal.Party.MemberRoster.Clear();
-                ChangeOwnerOfSettlementAction.ApplyBySiege(capturer, capturer, goal);
+                ChangeOwnerOfSettlementAction.ApplyBySiege(leaderHero, leaderHero, goal);
+
+                // ApplyBySiege is synchronous. Do not capture/update the fatigue epoch unless the
+                // requested ownership transfer actually completed.
+                if (goal.OwnerClan != leaderHero.Clan) continue;
 
                 // Classic-war parity: a same-kingdom capture changes neither MapFaction nor stages an assault
                 // MapEvent, so the engine's own post-assault prisoner-taking (MapEvent.LootDefeatedPartyMembers
@@ -376,16 +411,10 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
                 // fief they just lost as if it were friendly. Mirror what a real assault does to defeated
                 // defenders: take their leaders prisoner via the same engine action, capturing them for the
                 // besieger. PrivateWarPrisonerRetentionPatch keeps them held despite the shared kingdom.
-                if (capturerParty != null)
+                foreach (var losingHero in losingHeroes)
                 {
-                    foreach (var inside in goal.Parties.ToList())
-                    {
-                        if (inside.MapEvent != null || inside.ActualClan is null) continue;
-                        if (ResolveSide(inside.ActualClan.StringId, war) != ownerSide) continue;
-                        if (inside.LeaderHero is null) continue;
-
-                        TakePrisonerAction.Apply(capturerParty, inside.LeaderHero);
-                    }
+                    if (!losingHero.IsPrisoner)
+                        TakePrisonerAction.Apply(capturerParty, losingHero);
                 }
 
                 // The goal just changed hands, so reset the fatigue epoch: the accumulated drift toward

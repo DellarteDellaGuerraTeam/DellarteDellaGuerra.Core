@@ -4,7 +4,6 @@ using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
 using DellarteDellaGuerra.Domain.PrivateWars;
 using DellarteDellaGuerra.Integration.Titles.UI;
-using Helpers;
 using SandBox.ViewModelCollection.Nameplate;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
@@ -17,6 +16,11 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.UI.Mixins
         private const int NoPrivateWar = 0;
         private const int PrivateWarEnemy = 1;
         private const int PrivateWarAlly = 2;
+
+        private const int BannerlordNeutralRelation = 0;
+        private const int BannerlordSameFactionRelation = 1;
+        private const int BannerlordEnemyRelation = 2;
+        private const int BannerlordAllianceRelation = 3;
 
         private readonly PropertyChangedEventHandler _propertyChangedHandler;
         private readonly Action _hostilityChangedHandler;
@@ -47,7 +51,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.UI.Mixins
 
                 int privateWarState = ResolvePrivateWarState();
                 uint argb = colors.GetSettlementCapsuleArgbColor(
-                    ResolveVanillaRelation(vm),
+                    ResolveVanillaRelation(vm.Relation),
                     privateWarState == PrivateWarEnemy,
                     privateWarState == PrivateWarAlly);
 
@@ -63,21 +67,21 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.UI.Mixins
                 SettlementNameplateVM? vm = ViewModel;
                 if (vm is null)
                 {
-                    return (int)SettlementNameplateRelation.Neutral;
+                    return BannerlordNeutralRelation;
                 }
 
                 int privateWarState = ResolvePrivateWarState();
                 if (privateWarState == PrivateWarEnemy)
                 {
-                    return (int)SettlementNameplateRelation.Enemy;
+                    return BannerlordEnemyRelation;
                 }
 
                 if (privateWarState == PrivateWarAlly)
                 {
-                    return (int)SettlementNameplateRelation.Ally;
+                    return BannerlordSameFactionRelation;
                 }
 
-                return vm.Relation;
+                return ToBannerlordRelation(ResolveVanillaRelation(vm.Relation));
             }
         }
 
@@ -158,26 +162,34 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.UI.Mixins
         private static Clan? ResolveOwnerClan(SettlementNameplateVM vm)
             => vm.Settlement?.OwnerClan ?? vm.Settlement?.MapFaction as Clan;
 
-        private static SettlementNameplateRelation ResolveVanillaRelation(SettlementNameplateVM vm)
+        private static SettlementNameplateRelation ResolveVanillaRelation(int bannerlordRelation)
         {
-            IFaction? settlementFaction = vm.Settlement?.MapFaction;
-            IFaction? mainFaction = Hero.MainHero?.MapFaction;
-            if (vm.Settlement?.OwnerClan is null || settlementFaction is null || mainFaction is null)
+            switch (bannerlordRelation)
             {
-                return SettlementNameplateRelation.Neutral;
+                case BannerlordSameFactionRelation:
+                    return SettlementNameplateRelation.SameFaction;
+                case BannerlordEnemyRelation:
+                    return SettlementNameplateRelation.Enemy;
+                case BannerlordAllianceRelation:
+                    return SettlementNameplateRelation.Alliance;
+                default:
+                    return SettlementNameplateRelation.Neutral;
             }
+        }
 
-            if (FactionManager.IsAtWarAgainstFaction(settlementFaction, mainFaction))
+        private static int ToBannerlordRelation(SettlementNameplateRelation relation)
+        {
+            switch (relation)
             {
-                return SettlementNameplateRelation.Enemy;
+                case SettlementNameplateRelation.SameFaction:
+                    return BannerlordSameFactionRelation;
+                case SettlementNameplateRelation.Enemy:
+                    return BannerlordEnemyRelation;
+                case SettlementNameplateRelation.Alliance:
+                    return BannerlordAllianceRelation;
+                default:
+                    return BannerlordNeutralRelation;
             }
-
-            if (DiplomacyHelper.IsSameFactionAndNotEliminated(settlementFaction, mainFaction))
-            {
-                return SettlementNameplateRelation.Ally;
-            }
-
-            return SettlementNameplateRelation.Neutral;
         }
 
         private static Color ArgbToColor(uint argb)

@@ -9,8 +9,10 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Armies
     public record PrivateWarArmyCandidate(
         string PartyId,
         string ClanId,
-        bool IsEligible,
-        float SiegeStrength);
+        bool CanLeadArmy,
+        bool CanJoinArmy,
+        float SiegeStrength,
+        float MemberDesirability);
 
     public record ArmyFormationDecision(
         bool CanCreateArmy,
@@ -51,15 +53,19 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Armies
                 side,
                 leaderPartyId,
                 candidates.Select(candidate => new PrivateWarArmyParty(
-                    candidate.PartyId, candidate.ClanId, candidate.IsEligible)).ToList(),
+                    candidate.PartyId,
+                    candidate.ClanId,
+                    candidate.CanLeadArmy,
+                    candidate.CanJoinArmy,
+                    candidate.MemberDesirability)).ToList(),
                 assignments,
-                getSuzerain);
+                getSuzerain,
+                maximumMemberCount);
             if (plan is null) return null;
 
-            var limitedMemberIds = plan.MemberPartyIds.Take(maximumMemberCount).ToList();
             var leader = candidates.First(candidate => candidate.PartyId == plan.LeaderPartyId);
             var members = candidates
-                .Where(candidate => limitedMemberIds.Contains(candidate.PartyId))
+                .Where(candidate => plan.MemberPartyIds.Contains(candidate.PartyId))
                 .ToList();
             if (members.Count == 0
                 || kingdomHasSettlements
@@ -68,7 +74,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Armies
                 return null;
             }
 
-            return plan with { MemberPartyIds = limitedMemberIds };
+            return plan;
         }
 
         public ArmyFormationDecision FilterOrdinaryMembers(
@@ -83,6 +89,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Armies
                 return new ArmyFormationDecision(false, Array.Empty<string>());
 
             var members = candidates
+                .Where(candidate => candidate.CanJoinArmy)
                 .Where(candidate => !areEnemies(leaderClanId, candidate.ClanId))
                 .ToList();
             if (members.Count == 0

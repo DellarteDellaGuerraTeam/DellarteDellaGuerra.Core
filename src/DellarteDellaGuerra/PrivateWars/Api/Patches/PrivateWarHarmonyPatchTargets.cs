@@ -18,22 +18,6 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Patches
 {
     public static class PrivateWarHarmonyPatchTargets
     {
-        public static MethodInfo PlayerCaptivityCheck() => ResolveExact(
-            typeof(PlayerCaptivityCampaignBehavior),
-            nameof(PlayerCaptivityCampaignBehavior.CheckCaptivityChange),
-            BindingFlags.Instance | BindingFlags.Public,
-            typeof(void),
-            typeof(float));
-
-        public static MethodInfo SallyOutCheck() => ResolveExact(
-            typeof(SallyOutsCampaignBehavior),
-            "CheckSallyOut",
-            BindingFlags.Instance | BindingFlags.NonPublic,
-            typeof(void),
-            typeof(Settlement),
-            typeof(bool),
-            typeof(bool).MakeByRefType());
-
         public static MethodInfo VillageHostileActionCondition() => ResolveExact(
             typeof(VillageHostileActionCampaignBehavior),
             "game_menu_village_hostile_action_on_condition",
@@ -71,14 +55,6 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Patches
             typeof(void),
             typeof(PartyBase),
             typeof(PartyBase));
-
-        public static MethodInfo StartSettlementEncounter() => ResolveExact(
-            typeof(EncounterManager),
-            nameof(EncounterManager.StartSettlementEncounter),
-            BindingFlags.Static | BindingFlags.Public,
-            typeof(void),
-            typeof(MobileParty),
-            typeof(Settlement));
 
         public static MethodInfo CanPartyJoinBattle() => ResolveExact(
             typeof(MapEvent),
