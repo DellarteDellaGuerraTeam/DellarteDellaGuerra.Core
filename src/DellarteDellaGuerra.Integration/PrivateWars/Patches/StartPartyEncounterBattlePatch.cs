@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Reflection;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using DellarteDellaGuerra.Titles.Api;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
@@ -20,8 +21,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // already battle, parties the player's map event involves) falls through to vanilla untouched.
     public class StartPartyEncounterBattlePatch : IPatch
     {
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(EncounterManager), nameof(EncounterManager.StartPartyEncounter));
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.StartPartyEncounter();
 
         public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(StartPartyEncounterBattlePatch), nameof(RouteSameKingdomToBattle));

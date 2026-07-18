@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Reflection;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using DellarteDellaGuerra.Titles.Api;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
@@ -17,8 +18,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // holds a private-war enemy of its clan and the requested side holds none.
     public class CanPartyJoinBattlePatch : IPatch
     {
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(MapEvent), nameof(MapEvent.CanPartyJoinBattle));
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.CanPartyJoinBattle();
 
         public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(CanPartyJoinBattlePatch), nameof(AllowPrivateWarJoin));

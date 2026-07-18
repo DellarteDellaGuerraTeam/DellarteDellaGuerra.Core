@@ -1,5 +1,6 @@
 using System.Reflection;
 using DellarteDellaGuerra.Titles.Api;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
@@ -19,8 +20,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // main hero is left to vanilla here.
     public class PrivateWarPrisonerRetentionPatch : IPatch
     {
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(EndCaptivityAction), "ApplyInternal");
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.PrisonerRelease();
 
         public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(PrivateWarPrisonerRetentionPatch), nameof(SkipPrivateWarRelease));

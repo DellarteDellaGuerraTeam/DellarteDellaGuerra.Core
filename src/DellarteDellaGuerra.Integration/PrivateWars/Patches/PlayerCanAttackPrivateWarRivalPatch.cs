@@ -1,4 +1,5 @@
 using System.Reflection;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
@@ -21,8 +22,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // the existing "Surrender or die" → battle dialog runs unchanged for a private-war rival.
     public class PlayerCanAttackPrivateWarRivalPatch : IPatch
     {
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(LordConversationsCampaignBehavior), "conversation_player_can_attack_hero_on_condition");
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.PlayerCanAttackRival();
 
         public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(PlayerCanAttackPrivateWarRivalPatch), nameof(Postfix));

@@ -1,48 +1,63 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using DellarteDellaGuerra.Titles.Api;
+using DellarteDellaGuerra.Domain.PrivateWars;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
 
 namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
 {
-    // Keep the player captive when held by a same-kingdom private-war rival (design §4.2 AUTO-END
-    // risk #2). PlayerCaptivityCampaignBehavior.CheckCaptivityChange (called each tick while the
-    // player is a prisoner) checks !FactionManager.IsAtWarAgainstFaction(captorMapFaction, mainMapFaction).
-    // For a same-kingdom pair both parties share one MapFaction → the test is always false, and the
-    // method's third branch immediately routes the player to "menu_captivity_end_no_more_enemies" and
-    // releases them on the next tick. A Prefix that returns false (skip the method body) when an
-    // Active private war exists between the player's clan and the captor's clan prevents that automatic
-    // release. All player-initiated escape paths go through menu consequences (EndCaptivityAction.ApplyByEscape)
-    // and are unaffected. When the war concludes AreEnemies returns false → vanilla resumes → the
-    // engine releases the player naturally via the same "no more enemies" menu.
+    // Change only CheckCaptivityChange's no-more-enemies war predicate. The rest of the 1.4.6 method,
+    // including ransom offers, timed escape and naval captor state, remains vanilla.
     public class PlayerCaptivityRetentionPatch : IPatch
     {
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(PlayerCaptivityCampaignBehavior), nameof(PlayerCaptivityCampaignBehavior.CheckCaptivityChange));
+        private static readonly PrivateWarInteractionPolicy InteractionPolicy = new();
+
+        private static readonly MethodInfo VanillaWarPredicate =
+            AccessTools.Method(typeof(FactionManager), nameof(FactionManager.IsAtWarAgainstFaction),
+                new[] { typeof(IFaction), typeof(IFaction) });
+
+        private static readonly MethodInfo CaptivityWarPredicate =
+            AccessTools.Method(typeof(PlayerCaptivityRetentionPatch), nameof(IsAtWarOrPrivateWar));
+
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.PlayerCaptivityCheck();
 
         public MethodInfo? PatchMethod =>
-            AccessTools.Method(typeof(PlayerCaptivityRetentionPatch), nameof(SkipIfPrivateWarCaptive));
+            AccessTools.Method(typeof(PlayerCaptivityRetentionPatch), nameof(Transpiler));
 
-        public PatchType PatchType => PatchType.Prefix;
+        public PatchType PatchType => PatchType.Transpiler;
 
-        // Returns false (skip vanilla) only while the player is held by a private-war rival,
-        // suppressing the automatic "no more enemies" release. Returns true in all other situations
-        // so vanilla captivity logic (ransom, time-based escape) proceeds normally.
-        private static bool SkipIfPrivateWarCaptive()
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            if (!FeudalServices.IsInitialised || FeudalServices.PrivateWarHostility is null) return true;
+            var code = instructions.ToList();
+            var replaced = 0;
 
-            var captorParty = Hero.MainHero.PartyBelongedToAsPrisoner;
-            if (captorParty is null) return true;
+            foreach (var instruction in code)
+            {
+                if (!instruction.Calls(VanillaWarPredicate)) continue;
+                instruction.operand = CaptivityWarPredicate;
+                replaced++;
+            }
 
-            var captorClan = captorParty.MobileParty?.ActualClan ?? captorParty.Settlement?.OwnerClan;
-            if (captorClan is null) return true;
+            if (replaced != 1)
+                throw new InvalidOperationException(
+                    $"{nameof(PlayerCaptivityRetentionPatch)} expected exactly one no-more-enemies war predicate, found {replaced}.");
 
-            // Return false (skip the method body) while an active private war keeps these two clans
-            // as enemies. Once the war concludes AreEnemies returns false and vanilla runs again.
-            return !PrivateWarPatchHelper.AreEnemies(Hero.MainHero.Clan, captorClan);
+            return code;
+        }
+
+        private static bool IsAtWarOrPrivateWar(IFaction captorFaction, IFaction playerFaction)
+        {
+            var vanillaAtWar = FactionManager.IsAtWarAgainstFaction(captorFaction, playerFaction);
+
+            var captorParty = PlayerCaptivity.CaptorParty;
+            var captorClan = captorParty?.MobileParty?.ActualClan ?? captorParty?.Settlement?.OwnerClan;
+            var arePrivateEnemies = PrivateWarPatchHelper.AreEnemies(Hero.MainHero.Clan, captorClan);
+
+            return InteractionPolicy.ResolveCaptivityWarPredicate(vanillaAtWar, arePrivateEnemies);
         }
     }
 }

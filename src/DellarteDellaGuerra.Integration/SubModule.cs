@@ -64,9 +64,9 @@ namespace DellarteDellaGuerra.Integration
         private readonly ILogger _logger;
         private IServiceProvider _serviceProvider;
         private UIExtender? _uiExtender;
-        // Guard: EncounterGameMenuBehavior patches applied exactly once, deferred until
+        // Guard: VillageHostileActionCampaignBehavior patches applied exactly once, deferred until
         // InitializeGameStarter where GameTexts._gameTextManager is guaranteed non-null.
-        private static bool _encounterMenuPatchesApplied;
+        private static bool _villageMenuPatchesApplied;
 
         public SubModule()
         {
@@ -120,19 +120,13 @@ namespace DellarteDellaGuerra.Integration
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
-            // Deferred: EncounterGameMenuBehavior patches must not be applied at OnSubModuleLoad
-            // because that type's static initializer calls GameTexts.FindText and GameTexts is not
-            // ready until Game.Initialize() runs (which fires before InitializeGameStarter).
-            // The guard ensures we apply exactly once even across campaign reloads.
-            if (!_encounterMenuPatchesApplied)
+            // Deferred until GameTexts is initialized; the guard applies both village postfixes once.
+            if (!_villageMenuPatchesApplied)
             {
-                _encounterMenuPatchesApplied = true;
+                _villageMenuPatchesApplied = true;
                 var menuHarmony = new HarmonyLib.Harmony("com.dadg.private-wars-menus");
                 IPatch[] menuPatches =
                 [
-                    new BesiegeMenuConditionPatch(),
-                    new ContinueSiegeMenuConditionPatch(),
-                    new ArmyAttackMenuConditionPatch(),
                     new VillageHostileActionConditionPatch(),
                     new VillageRaidConditionPatch(),
                 ];
@@ -141,6 +135,8 @@ namespace DellarteDellaGuerra.Integration
             }
 
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
+
+            PrivateWarEncounterMenuOptions.Register(campaignGameStarter);
 
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
             var joustRequirementsProvider = _serviceProvider.GetRequiredService<IJoustRequirementsProvider>();

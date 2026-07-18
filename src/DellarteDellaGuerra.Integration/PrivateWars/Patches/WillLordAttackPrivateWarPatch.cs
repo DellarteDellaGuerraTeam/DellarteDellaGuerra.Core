@@ -1,4 +1,5 @@
 using System.Reflection;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using Helpers;
@@ -24,8 +25,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // supplies the hostile greeting lines on top of this.
     public class WillLordAttackPrivateWarPatch : IPatch
     {
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(HeroHelper), nameof(HeroHelper.WillLordAttack));
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.WillLordAttack();
 
         public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(WillLordAttackPrivateWarPatch), nameof(Postfix));

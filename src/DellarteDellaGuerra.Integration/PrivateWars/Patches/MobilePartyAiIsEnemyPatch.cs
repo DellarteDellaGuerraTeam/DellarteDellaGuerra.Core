@@ -1,4 +1,5 @@
 using System.Reflection;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem.GameComponents;
@@ -12,8 +13,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // war, so the strategic AI treats the opponent as a target.
     public class MobilePartyAiIsEnemyPatch : IPatch
     {
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(DefaultMobilePartyAIModel), "IsEnemy");
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.MobilePartyAiIsEnemy();
 
         public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(MobilePartyAiIsEnemyPatch), nameof(ForcePrivateWarEnemy));

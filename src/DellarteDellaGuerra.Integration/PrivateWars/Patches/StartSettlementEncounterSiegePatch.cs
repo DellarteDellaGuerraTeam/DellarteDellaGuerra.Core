@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Titles.Api;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
@@ -28,15 +29,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // the vanilla answer.
     public class StartSettlementEncounterSiegePatch : IPatch
     {
-        private static ILogger _logger;
-
-        public StartSettlementEncounterSiegePatch(ILoggerFactory loggerFactory)
-        {
-            _logger = loggerFactory.CreateLogger<StartSettlementEncounterSiegePatch>();
-        }
-
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(EncounterManager), nameof(EncounterManager.StartSettlementEncounter));
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.StartSettlementEncounter();
 
         public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(StartSettlementEncounterSiegePatch), nameof(Transpiler));
@@ -73,10 +66,9 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
                 replaced++;
             }
 
-            if (replaced == 0)
-                _logger.Error(
-                    $"{nameof(StartSettlementEncounterSiegePatch)} found no IsAtWarAgainstFaction gate to patch; " +
-                    "private-war sieges will not assault on this game version.");
+            if (replaced != 2)
+                throw new InvalidOperationException(
+                    $"{nameof(StartSettlementEncounterSiegePatch)} expected exactly two settlement hostility gates, found {replaced}.");
 
             return code;
         }
