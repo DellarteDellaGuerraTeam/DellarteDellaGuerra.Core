@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Bannerlord.ExpandedTemplate.API;
+using DellarteDellaGuerra.Church.Api.Campaign;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.MainMenu;
@@ -112,6 +113,8 @@ namespace DellarteDellaGuerra.Integration
             game.AddGameHandler<CompilingShaderNotifier>();
 
             campaignGameStarter.AddBehavior(new JoustTournamentCampaignBehavior(joustRequirementsProvider));
+            campaignGameStarter.AddBehavior(new ChurchCampaignBehavior());
+            campaignGameStarter.AddBehavior(new SanctuaryCampaignBehavior());
         }
 
         public override void OnGameInitializationFinished(Game game)
