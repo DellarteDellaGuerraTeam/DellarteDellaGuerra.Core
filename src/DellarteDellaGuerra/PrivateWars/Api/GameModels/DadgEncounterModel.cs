@@ -1,5 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
+using DellarteDellaGuerra.Domain.PrivateWars;
+using DellarteDellaGuerra.Titles.Api;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
@@ -22,6 +26,79 @@ namespace DellarteDellaGuerra.PrivateWars.Api.GameModels
     // alone. When no private war is active this returns exactly the vanilla set.
     public class DadgEncounterModel : DefaultEncounterModel
     {
+        private readonly PrivateWarInteractionPolicy _interactionPolicy;
+
+        public DadgEncounterModel(PrivateWarInteractionPolicy interactionPolicy)
+        {
+            _interactionPolicy = interactionPolicy;
+        }
+
+        public override void FindNonAttachedNpcPartiesWhoWillJoinPlayerEncounter(
+            List<MobileParty> partiesToJoinPlayerSide,
+            List<MobileParty> partiesToJoinEnemySide)
+        {
+            var initialPlayerParties = new HashSet<MobileParty>(partiesToJoinPlayerSide);
+            var initialEnemyParties = new HashSet<MobileParty>(partiesToJoinEnemySide);
+            base.FindNonAttachedNpcPartiesWhoWillJoinPlayerEncounter(
+                partiesToJoinPlayerSide,
+                partiesToJoinEnemySide);
+
+            if (PlayerEncounter.Battle != null || !FeudalServices.IsInitialised) return;
+
+            var mainParty = MobileParty.MainParty;
+            var encounteredParty = PlayerEncounter.EncounteredParty;
+            var encounteredClan = encounteredParty?.MobileParty?.ActualClan ?? encounteredParty?.Settlement?.OwnerClan;
+            if (mainParty?.ActualClan is null || encounteredParty is null || encounteredClan is null) return;
+
+            var radius = TaleWorlds.CampaignSystem.Campaign.Current.Models.EncounterModel.GetEncounterJoiningRadius;
+            var search = MobileParty.StartFindingLocatablesAroundPosition(mainParty.Position.ToVec2(), radius);
+            for (var nearbyParty = MobileParty.FindNextLocatable(ref search);
+                 nearbyParty != null;
+                 nearbyParty = MobileParty.FindNextLocatable(ref search))
+            {
+                if (!CanJoinEncounter(nearbyParty, mainParty)) continue;
+
+                var side = _interactionPolicy.ResolveReinforcementSide(
+                    nearbyParty.MapFaction.IsAtWarWith(mainParty.MapFaction),
+                    nearbyParty.MapFaction.IsAtWarWith(encounteredParty.MapFaction),
+                    PrivateWarSiegeDefenderPolicy.AreEnemies(nearbyParty.ActualClan, mainParty.ActualClan),
+                    PrivateWarSiegeDefenderPolicy.AreEnemies(nearbyParty.ActualClan, encounteredClan));
+
+                if (side == ReinforcementSide.Player &&
+                    partiesToJoinEnemySide.All(party => AreEnemies(nearbyParty, party)))
+                {
+                    if (!partiesToJoinPlayerSide.Contains(nearbyParty))
+                        partiesToJoinPlayerSide.Add(nearbyParty);
+                }
+                else if (side == ReinforcementSide.Enemy &&
+                         partiesToJoinPlayerSide.All(party => party == mainParty || AreEnemies(nearbyParty, party)))
+                {
+                    if (!partiesToJoinEnemySide.Contains(nearbyParty))
+                        partiesToJoinEnemySide.Add(nearbyParty);
+                }
+            }
+
+            if (partiesToJoinEnemySide.Any(party => party.ShouldBeIgnored))
+                partiesToJoinPlayerSide.RemoveAll(party => !initialPlayerParties.Contains(party));
+            if (partiesToJoinPlayerSide.Any(party => party != mainParty && party.ShouldBeIgnored))
+                partiesToJoinEnemySide.RemoveAll(party => !initialEnemyParties.Contains(party));
+        }
+
+        private static bool CanJoinEncounter(MobileParty candidate, MobileParty mainParty)
+        {
+            if (candidate == mainParty || candidate.MapEvent != null || candidate.IsInRaftState ||
+                candidate.SiegeEvent != null || candidate.CurrentSettlement != null ||
+                candidate.AttachedTo != null || candidate.IsCurrentlyAtSea != mainParty.IsCurrentlyAtSea)
+                return false;
+
+            return candidate.IsLordParty || candidate.IsBandit || candidate.IsPatrolParty ||
+                   candidate.ShouldJoinPlayerBattles;
+        }
+
+        private static bool AreEnemies(MobileParty first, MobileParty second)
+            => first.MapFaction.IsAtWarWith(second.MapFaction) ||
+               PrivateWarSiegeDefenderPolicy.AreEnemies(first.ActualClan, second.ActualClan);
+
         public override IEnumerable<PartyBase> GetDefenderPartiesOfSettlement(
             Settlement settlement, MapEvent.BattleTypes mapEventType)
         {

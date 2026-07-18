@@ -315,10 +315,13 @@ invalidated plans abort, and ordinary `Kingdom.CreateArmy` calls retain their or
   `IPrivateWarRepository.GetByDefender`/`GetByTitle` queries from Phase 0.
 - **State-leak patches (design §4.2):** `PrisonerReleaseCampaignBehavior.ReleasePartyPrisoners` (AI
   auto-end #1 — see §9); enable `PrisonerCaptureCampaignBehavior` for the pair;
+  `DadgVolunteerModel.MaximumIndexHeroCanRecruitFromHero` plus the
   `RecruitmentCampaignBehavior.OnBeforeSettlementEntered` entry gate;
-  `AiBehaviorCampaignBehavior.IsSettlementSuitableForVisitingCondition`;
-  `SettlementHelper.FindNearest*` retreat-target exclusion;
-  `ChangeOwnerOfSettlementAction.ApplyInternal` re-besiege; `CrimeRatingChangeAction` phantom-war guard.
+  renamed 1.4.6 `AiVisitSettlementBehavior.IsSettlementSuitableForVisitingCondition`;
+  `ChangeOwnerOfSettlementAction.ApplyInternal` re-besiege. The audited crime action already guards
+  same-faction declarations. Retreat/disband and army-camp selection remain an explicit v1 limitation:
+  their exact 1.4.6 selectors are private multi-stage methods, and `SettlementHelper` is not patched
+  globally because offensive patrol and unrelated gathering callers share it.
 - **Registry maintenance:** `OnClanChangedKingdom` hook — the pair **persists** by default (the feud is
   clan-vs-clan); fold/resolve only if the move makes it cross-kingdom into a formal war (design §14). A
   behavior callback, not an engine patch.
@@ -424,9 +427,12 @@ transpiler asserts its exact replacement count and fails visibly when the IL sha
 
 - Add the clean `EncounterModel.FindNonAttachedNpcPartiesWhoWillJoinPlayerEncounter` override so
   nearby participants are enumerated before `MapEvent.CanPartyJoinBattle` assigns them.
-- Implement or explicitly defer, in the final task plan, recruitment restrictions, AI hostile-fief
-  visitation, hostile-fief retreat filtering, and the player crime guard. They are pre-existing design
-  requirements, not newly discovered 1.4 regressions.
+- Recruitment restrictions use the clean volunteer model plus the public recruitment-entry callback;
+  AI hostile-fief visitation uses the renamed 1.4.6 private predicate. Hostile-fief disband/army-camp
+  filtering is explicitly deferred from v1 because the exact callers are private multi-stage selectors
+  and a global `SettlementHelper` patch would affect offensive patrol/gathering behavior. No player-crime
+  patch is carried: 1.4.6 `ChangeCrimeRatingAction.ApplyInternal` checks
+  `Hero.MainHero.MapFaction != faction` before relation loss and `DeclareWarAction`.
 - Preserve the 1.4 naval/port branches in all patched methods. Private-war naval support is verified
   where the feature permits it; unsupported naval cases must fall through to vanilla unchanged.
 
