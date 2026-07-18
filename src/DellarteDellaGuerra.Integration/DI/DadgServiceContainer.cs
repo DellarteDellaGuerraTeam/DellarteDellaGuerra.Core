@@ -242,6 +242,7 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, StartPartyEncounterBattlePatch>();
         services.AddSingleton<IPatch, StartSettlementEncounterSiegePatch>();
         services.AddSingleton<IPatch, CanPartyJoinBattlePatch>();
+        services.AddSingleton<IPatch, KingdomCreateArmyPatch>();
         services.AddSingleton<IPatch, PrivateWarPrisonerRetentionPatch>();
         services.AddSingleton<IPatch, PlayerCaptivityRetentionPatch>();
         // Private wars (player-facing encounter menus and side assignment)

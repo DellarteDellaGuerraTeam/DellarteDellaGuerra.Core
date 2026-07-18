@@ -167,43 +167,80 @@ public class PrivateWarArmyDecisionAdapterTests
         Assert.Equal(new[] { "first" }, plan?.MemberPartyIds);
     }
 
-    [Fact]
-    public void SelectPrivateMembers_ReturnsNullWhenPrivateCandidateLosesScoreVote()
+    [Theory]
+    [InlineData(false, true, "leader", "goal", "leader", "goal")]
+    [InlineData(true, false, "leader", "goal", "leader", "goal")]
+    [InlineData(true, true, "leader", "goal", "other", "goal")]
+    [InlineData(true, true, "leader", "goal", "leader", "other_goal")]
+    public void DecidePrivateCreation_LeavesUnrelatedCreationUnchanged(
+        bool isBesieger,
+        bool hasActivePrivateWar,
+        string leaderPartyId,
+        string targetSettlementId,
+        string privateWarLeaderPartyId,
+        string frozenGoalSettlementId)
     {
         var adapter = new PrivateWarArmyDecisionAdapter(new PrivateWarArmyPolicy());
+        var revalidationCalls = 0;
 
-        var selected = adapter.SelectPrivateMembers(
-            earlierScores: new[] { 20f },
-            privateWarScore: 12f,
-            privateWarMemberPartyIds: new[] { "same_side" });
+        var decision = adapter.DecidePrivateCreation(
+            isBesieger,
+            hasActivePrivateWar,
+            leaderPartyId,
+            targetSettlementId,
+            privateWarLeaderPartyId,
+            frozenGoalSettlementId,
+            () =>
+            {
+                revalidationCalls++;
+                return new[] { "private_member" };
+            });
 
-        Assert.Null(selected);
+        Assert.Equal(PrivateWarArmyCreationAction.ContinueOriginal, decision.Action);
+        Assert.Equal(0, revalidationCalls);
     }
 
     [Fact]
-    public void SelectPrivateMembers_DoesNotReplaceCacheWhenEarlierObjectiveWinsTie()
+    public void DecidePrivateCreation_RevalidatesMatchingCreationAndReplacesMembers()
     {
         var adapter = new PrivateWarArmyDecisionAdapter(new PrivateWarArmyPolicy());
+        var authorizedMembers = new[] { "fresh_member" };
+        var revalidationCalls = 0;
 
-        var selected = adapter.SelectPrivateMembers(
-            earlierScores: new[] { 12f },
-            privateWarScore: 12f,
-            privateWarMemberPartyIds: new[] { "private_member" });
+        var decision = adapter.DecidePrivateCreation(
+            isBesieger: true,
+            hasActivePrivateWar: true,
+            leaderPartyId: "leader",
+            targetSettlementId: "goal",
+            privateWarLeaderPartyId: "leader",
+            frozenGoalSettlementId: "goal",
+            revalidateMembers: () =>
+            {
+                revalidationCalls++;
+                return authorizedMembers;
+            });
 
-        Assert.Null(selected);
+        Assert.Equal(PrivateWarArmyCreationAction.ReplaceMembers, decision.Action);
+        Assert.Same(authorizedMembers, decision.MemberPartyIds);
+        Assert.Equal(1, revalidationCalls);
     }
 
     [Fact]
-    public void SelectPrivateMembers_ReturnsMembersWhenPrivateCandidateStrictlyWins()
+    public void DecidePrivateCreation_SuppressesMatchingCreationWhenRevalidationFails()
     {
         var adapter = new PrivateWarArmyDecisionAdapter(new PrivateWarArmyPolicy());
 
-        var selected = adapter.SelectPrivateMembers(
-            earlierScores: new[] { 11f },
-            privateWarScore: 12f,
-            privateWarMemberPartyIds: new[] { "private_member" });
+        var decision = adapter.DecidePrivateCreation(
+            isBesieger: true,
+            hasActivePrivateWar: true,
+            leaderPartyId: "leader",
+            targetSettlementId: "goal",
+            privateWarLeaderPartyId: "leader",
+            frozenGoalSettlementId: "goal",
+            revalidateMembers: () => null);
 
-        Assert.Equal(new[] { "private_member" }, selected);
+        Assert.Equal(PrivateWarArmyCreationAction.Suppress, decision.Action);
+        Assert.Empty(decision.MemberPartyIds);
     }
 
     private static PrivateWar War()
