@@ -109,8 +109,6 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
 
         private void OnGameLoaded(CampaignGameStarter campaignGameStarter)
         {
-            if (_serialisedWars.Count == 0) return;
-
             _stateStore.InitialisePrivateWars(PrivateWarStateSerialiser.DeserialiseWars(_serialisedWars));
         }
 
