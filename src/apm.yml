@@ -5,10 +5,7 @@ type: hybrid
 targets:
   - claude
   - codex
-includes:
-  - .apm/instructions/
-  - .apm/skills/
-  - .apm/hooks/
+includes: auto
 dependencies:
   mcp:
     - name: bannerlord-search-1_2_12
@@ -19,7 +16,7 @@ dependencies:
         - .apm/mcp/mcp-http-stdio-bridge.py
         - --url
         - http://localhost:5000
-    - name: bannerlord-search-1_3_1
+    - name: bannerlord-search-1_3_15
       registry: false
       transport: stdio
       command: python
