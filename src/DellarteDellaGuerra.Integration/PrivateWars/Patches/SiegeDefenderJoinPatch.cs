@@ -1,4 +1,5 @@
 using System.Reflection;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using DellarteDellaGuerra.PrivateWars.Api;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
@@ -26,8 +27,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     //     left to vanilla, which ejects them from the siege.
     public class SiegeDefenderJoinPatch : IPatch
     {
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(SiegeEvent), nameof(SiegeEvent.CanPartyJoinSide));
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.SiegeDefenderJoin();
 
         public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(SiegeDefenderJoinPatch), nameof(Postfix));

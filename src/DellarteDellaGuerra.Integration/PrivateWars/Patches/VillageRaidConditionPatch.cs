@@ -1,8 +1,8 @@
 using System.Reflection;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Settlements;
 
@@ -17,9 +17,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // registered private-war enemy.
     public class VillageRaidConditionPatch : IPatch
     {
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(VillageHostileActionCampaignBehavior),
-                "game_menu_village_hostile_action_raid_village_on_condition");
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.VillageRaidCondition();
 
         public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(VillageRaidConditionPatch), nameof(Postfix));

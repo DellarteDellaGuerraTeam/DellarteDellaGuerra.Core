@@ -250,12 +250,9 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, RecruitmentEntryPatch>();
         services.AddSingleton<IPatch, SettlementVisitPatch>();
         // Private wars (player-facing encounter menus and side assignment)
-        // NOTE: BesiegeMenuConditionPatch, ContinueSiegeMenuConditionPatch, and
-        // ArmyAttackMenuConditionPatch all target EncounterGameMenuBehavior, whose static
-        // initializer calls GameTexts.FindText. Applying them at OnSubModuleLoad (via
-        // ApplyPatches) forces that cctor to run when GameTexts._gameTextManager is still
-        // null → TypeInitializationException → game crash. They are applied deferred in
-        // SubModule.InitializeGameStarter where GameTexts is guaranteed to be ready.
+        // The three simple encounter options are registered through CampaignGameStarter.
+        // The two retained village condition postfixes are applied later from InitializeGameStarter,
+        // after GameTexts has initialized.
         // PlayerEncounterSetupFieldsPatch targets PlayerEncounter (no static GameTexts call)
         // and is safe to apply early.
         services.AddSingleton<IPatch, PlayerEncounterSetupFieldsPatch>();

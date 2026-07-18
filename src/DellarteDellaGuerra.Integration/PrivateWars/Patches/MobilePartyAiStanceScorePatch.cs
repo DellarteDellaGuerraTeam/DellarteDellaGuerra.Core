@@ -1,4 +1,5 @@
 using System.Reflection;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem.GameComponents;
@@ -12,8 +13,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // the enemy score (+1) so the engage/strength-accumulation maths sees the opponent as hostile.
     public class MobilePartyAiStanceScorePatch : IPatch
     {
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(DefaultMobilePartyAIModel), "CalculateStanceScore");
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.MobilePartyAiStanceScore();
 
         public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(MobilePartyAiStanceScorePatch), nameof(ForcePrivateWarStance));

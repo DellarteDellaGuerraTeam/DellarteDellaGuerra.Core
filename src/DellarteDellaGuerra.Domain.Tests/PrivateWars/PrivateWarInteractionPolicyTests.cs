@@ -85,4 +85,74 @@ public class PrivateWarInteractionPolicyTests
 
         Assert.Equal(expected, result);
     }
+
+    [Theory]
+    [InlineData("ordinary faction war", true, false, true)]
+    [InlineData("active private war", false, true, true)]
+    [InlineData("ransom and time escape remain eligible", false, false, false)]
+    public void ResolveCaptivityWarPredicate_ChangesOnlyThePrivateWarNoMoreEnemiesDecision(
+        string _,
+        bool vanillaAtWar,
+        bool areCaptiveAndCaptorPrivateEnemies,
+        bool expected)
+    {
+        Assert.Equal(
+            expected,
+            _policy.ResolveCaptivityWarPredicate(vanillaAtWar, areCaptiveAndCaptorPrivateEnemies));
+    }
+
+    [Theory]
+    [InlineData("ordinary faction enemy", true, false, true)]
+    [InlineData("active private-war besieger", false, true, true)]
+    [InlineData("same-side or uninvolved party", false, false, false)]
+    public void ResolveSallyOutStrengthEnemy_CombinesVanillaAndPrivateHostility(
+        string _,
+        bool vanillaEnemies,
+        bool partyAndOwnerPrivateEnemies,
+        bool expected)
+    {
+        Assert.Equal(
+            expected,
+            _policy.ResolveSallyOutStrengthEnemy(vanillaEnemies, partyAndOwnerPrivateEnemies));
+    }
+
+    [Theory]
+    [InlineData(true, true, false, true)]
+    [InlineData(false, true, false, false)]
+    [InlineData(true, false, false, false)]
+    [InlineData(true, true, true, false)]
+    public void CanShowPrivateWarBesiegeOption_RequiresEnemyHealthyPartyAndFreeSettlement(
+        bool arePrivateEnemies,
+        bool hasHealthyMembers,
+        bool isUnderSiege,
+        bool expected)
+    {
+        Assert.Equal(
+            expected,
+            _policy.CanShowPrivateWarBesiegeOption(arePrivateEnemies, hasHealthyMembers, isUnderSiege));
+    }
+
+    [Theory]
+    [InlineData(true, true, true)]
+    [InlineData(false, true, false)]
+    [InlineData(true, false, false)]
+    public void CanShowPrivateWarContinueSiegeOption_RequiresEnemyAndVanillaSiegeShape(
+        bool arePrivateEnemies,
+        bool hasVanillaSiegeShape,
+        bool expected)
+    {
+        Assert.Equal(
+            expected,
+            _policy.CanShowPrivateWarContinueSiegeOption(arePrivateEnemies, hasVanillaSiegeShape));
+    }
+
+    [Theory]
+    [InlineData(true, true)]
+    [InlineData(false, false)]
+    public void CanShowPrivateWarArmyAttackOption_RequiresPrivateEnemy(
+        bool arePrivateEnemies,
+        bool expected)
+    {
+        Assert.Equal(expected, _policy.CanShowPrivateWarArmyAttackOption(arePrivateEnemies));
+    }
 }

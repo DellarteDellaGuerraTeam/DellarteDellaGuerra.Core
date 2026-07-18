@@ -18,6 +18,26 @@ namespace DellarteDellaGuerra.Domain.PrivateWars
         public bool AllowSettlementVisit(bool vanillaSuitable, bool arePrivateEnemies)
             => vanillaSuitable && !arePrivateEnemies;
 
+        public bool ResolveCaptivityWarPredicate(bool vanillaAtWar, bool arePrivateEnemies)
+            => vanillaAtWar || arePrivateEnemies;
+
+        public bool ResolveSallyOutStrengthEnemy(bool vanillaEnemies, bool arePrivateEnemies)
+            => vanillaEnemies || arePrivateEnemies;
+
+        public bool CanShowPrivateWarBesiegeOption(
+            bool arePrivateEnemies,
+            bool hasHealthyMembers,
+            bool isUnderSiege)
+            => arePrivateEnemies && hasHealthyMembers && !isUnderSiege;
+
+        public bool CanShowPrivateWarContinueSiegeOption(
+            bool arePrivateEnemies,
+            bool hasVanillaSiegeShape)
+            => arePrivateEnemies && hasVanillaSiegeShape;
+
+        public bool CanShowPrivateWarArmyAttackOption(bool arePrivateEnemies)
+            => arePrivateEnemies;
+
         public float ResolveEncounterJoiningRadius(
             bool hasActivePlayerSiege,
             float normalEncounterRadius,

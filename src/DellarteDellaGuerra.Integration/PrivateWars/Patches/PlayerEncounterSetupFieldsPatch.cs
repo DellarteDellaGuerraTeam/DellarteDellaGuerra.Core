@@ -1,4 +1,5 @@
 using System.Reflection;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
@@ -29,8 +30,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
         private static readonly MethodInfo OpponentSideSetter =
             AccessTools.PropertySetter(typeof(PlayerEncounter), nameof(PlayerEncounter.OpponentSide));
 
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(PlayerEncounter), nameof(PlayerEncounter.SetupFields));
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.PlayerEncounterSetupFields();
 
         public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(PlayerEncounterSetupFieldsPatch), nameof(Postfix));

@@ -413,11 +413,11 @@ gates. It does not broaden the feature beyond the design's existing private-war 
 | Army creation and candidate list | Public model for ordinary eligibility/filtering and scored behavior for the goal. Use one narrowly filtered `Kingdom.CreateArmy` prefix for final private member substitution because 1.4 has no post-scoring/pre-creation event and the shared member cache is unsafe under LIFO listener order. |
 | AI `IsEnemy` / stance score | Keep Harmony; private helpers precede the public attack/avoid hooks. |
 | Static encounter start and non-virtual battle/siege side gates | Keep targeted Harmony. |
-| Besiege/continue/attack-army menu conditions | Prefer private-war-only registered menu options if public consequences reproduce vanilla exactly; otherwise retain the postfixes. |
+| Besiege/continue/attack-army menu conditions | Private-war-only registered options. The 1.4.6 consequences are public and reproduced exactly; the three condition postfixes are removed. |
 | Village hostile/raid flow | Keep Harmony; the required start-hostile-action consequence is private. |
-| Player captivity | Replace whole-method prefix with a predicate-level patch. |
+| Player captivity | Predicate-level transpiler on the single no-more-enemies war check; derive the actual captor clan and preserve the rest of the 1.4.6 method. |
 | AI prisoner retention | Keep a tightly filtered veto; no pre-release model/event exists. |
-| Sally-out strength | Prefer a predicate-level transpiler over a copied full-method prefix if exact IL matching is reliable. |
+| Sally-out strength | Predicate-level transpiler on the single evaluated party/settlement enemy check; preserve the complete vanilla land/blockade/naval scan. |
 | Party/settlement nameplates | UIExtenderEx, never Harmony; explicit 1.4 relation mapping. |
 
 Every retained patch gets an automated target-resolution assertion against the 1.4 assemblies. Every

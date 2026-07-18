@@ -1,4 +1,5 @@
 using System.Reflection;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
@@ -17,8 +18,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // routes them to the enemy dialogue tree.
     public class PlayerIsEnemyTagPatch : IPatch
     {
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(PlayerIsEnemyTag), nameof(PlayerIsEnemyTag.IsApplicableTo));
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.PlayerIsEnemyTag();
 
         public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(PlayerIsEnemyTagPatch), nameof(Postfix));

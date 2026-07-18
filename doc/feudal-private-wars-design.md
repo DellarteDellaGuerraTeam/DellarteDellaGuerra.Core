@@ -197,10 +197,13 @@ registry and returns the stock answer when the pair is not in a private war.
 > - `SiegeEvent.CanPartyJoinSide` (`SiegeDefenderJoinPatch` postfix, §4.2) — assault `MapEventSide`
 >   *membership*.
 >
-> All three (plus the `SallyOutStrengthPatch` strength scan, §4.2) now consult one shared rule,
+> All three defender-population seams consult one shared rule,
 > `PrivateWarSiegeDefenderPolicy.IsDefender/AreEnemies` (MAIN layer; composes over the domain
 > `FeudalServices.PrivateWarHostility`), so the seams cannot disagree. The rule is **player-agnostic** —
 > it keys on `besiegerClan` vs `settlement.OwnerClan`, never on `MainHero`.
+> `SallyOutStrengthPatch` is now a separate predicate-level transpiler: it changes only the evaluated
+> mobile-party/settlement enemy predicate and leaves the complete 1.4.6 land/blockade/naval strength
+> scan and consequences in vanilla.
 >
 > Runtime-verified PASS (`privatewartest`):
 > - **Player besieger** (Pontefract Castle, `clan_york`): garrison (137) + militia bucket to the
@@ -336,15 +339,17 @@ as-is** — they check only "are there enemy troops in this map event" and the s
 > `MapFaction.IsAtWarWith` directly — needs a separate deferred patch), and the bespoke "end the
 > feud" conversation (§4.3 last row).
 >
-> **Implementation status — phase 4 slice 3 (player-captivity retention guard, implemented).**
-> - `PlayerCaptivityCampaignBehavior.CheckCaptivityChange` → `PlayerCaptivityRetentionPatch` (prefix;
->   skips the method body while `AreEnemies(mainHero.Clan, captorClan)` is true, preventing the
+> **Implementation status — phase 4 slice 3 (player-captivity retention guard, hardened for 1.4.6).**
+> - `PlayerCaptivityCampaignBehavior.CheckCaptivityChange` → `PlayerCaptivityRetentionPatch`
+>   (predicate-level transpiler; replaces only the method's single `IsAtWarAgainstFaction` call with
+>   vanilla-war OR actual captor-clan/player-clan private hostility, preventing the
 >   `!IsAtWarAgainstFaction && same-MapFaction` branch from routing the player to
 >   `menu_captivity_end_no_more_enemies`). Registered as a normal `IPatch` in `DadgServiceContainer`
 >   (safe to apply at `OnSubModuleLoad` — `PlayerCaptivityCampaignBehavior` has no `GameTexts`
->   static-initializer trap). When the war concludes `AreEnemies` returns false and vanilla resumes,
->   releasing the player through the standard "no more enemies" path. Player-initiated escape via menu
->   consequences (`EndCaptivityAction.ApplyByEscape`) is unaffected. TEMP debug command
+>   static-initializer trap). The rest of `CheckCaptivityChange` still runs, preserving party removal,
+>   ally rescue, town transfer, ransom offers, timed escape and 1.4 naval captor state. When the war
+>   concludes, the predicate returns the vanilla result and the standard no-more-enemies path resumes.
+>   TEMP debug command
 >   `campaign.capture_player <captorClanId>` added to stage the player as prisoner.
 >
 > **Slice 3 (crime→phantom-war guard) — NON-ISSUE (no patch needed).**

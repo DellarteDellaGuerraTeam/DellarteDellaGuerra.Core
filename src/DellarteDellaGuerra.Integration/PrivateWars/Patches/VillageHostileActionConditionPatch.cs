@@ -1,8 +1,8 @@
 using System.Reflection;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -17,9 +17,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
     // it when the village's bound-town owner is a registered private-war enemy.
     public class VillageHostileActionConditionPatch : IPatch
     {
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(VillageHostileActionCampaignBehavior),
-                "game_menu_village_hostile_action_on_condition");
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.VillageHostileActionCondition();
 
         public MethodInfo? PatchMethod =>
             AccessTools.Method(typeof(VillageHostileActionConditionPatch), nameof(Postfix));

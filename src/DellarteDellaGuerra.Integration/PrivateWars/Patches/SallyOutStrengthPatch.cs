@@ -1,122 +1,86 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
+using DellarteDellaGuerra.Domain.PrivateWars;
+using DellarteDellaGuerra.PrivateWars.Api.Patches;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.CampaignBehaviors;
-using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
-using TaleWorlds.Core;
-using TaleWorlds.Library;
 
 namespace DellarteDellaGuerra.Integration.PrivateWars.Patches
 {
-    // Fix the sally-out strength check for same-kingdom private-war besiegers.
-    //
-    // SallyOutsCampaignBehavior.CheckSallyOut accumulates besieger-side strength only when
-    //   mobileParty.MapFaction.IsAtWarWith(settlement.Party.MapFaction)
-    // For a same-kingdom private-war besieger this is always false, so besieger strength = 0
-    // and the garrison sallies unconditionally (even 1 man beats a 280-man army by the ratio
-    // test "garrisonStrength > 0 * 2f").
-    //
-    // This prefix intercepts when the siege besieger is a private-war enemy of the settlement
-    // owner. It replicates the vanilla strength comparison using siege-camp membership
-    // (BesiegerCamp.IsBesiegerSideParty) as the besieger discriminator instead of MapFaction
-    // equality, which breaks in a same-kingdom private war where both sides share a MapFaction.
-    //   - Garrison NOT stronger: suppress the sally (salliedOut = false, skip original).
-    //   - Garrison IS stronger: let original run (it will naturally reach the same conclusion
-    //     and start the sally, which is the correct outcome).
+    // Amend only the 1.4.6 strength-loop enemy predicate. All land/blockade selection, sea parity,
+    // strength contexts, ratios and sally consequences remain in the vanilla method body.
     public class SallyOutStrengthPatch : IPatch
     {
-        private const float SallyOutPowerRatioForHelpingReliefForce = 1.5f;
-        private const float SallyOutPowerRatio = 2f;
+        private static readonly PrivateWarInteractionPolicy InteractionPolicy = new();
 
-        public MethodInfo? TargetMethod =>
-            AccessTools.Method(typeof(SallyOutsCampaignBehavior), "CheckSallyOut");
+        private static readonly MethodInfo MobilePartyMapFactionGetter =
+            AccessTools.PropertyGetter(typeof(MobileParty), nameof(MobileParty.MapFaction));
+
+        private static readonly MethodInfo SettlementPartyGetter =
+            AccessTools.PropertyGetter(typeof(Settlement), nameof(Settlement.Party));
+
+        private static readonly MethodInfo PartyMapFactionGetter =
+            AccessTools.PropertyGetter(typeof(PartyBase), nameof(PartyBase.MapFaction));
+
+        private static readonly MethodInfo VanillaEnemyPredicate =
+            AccessTools.Method(typeof(IFaction), nameof(IFaction.IsAtWarWith), new[] { typeof(IFaction) });
+
+        private static readonly MethodInfo SallyOutEnemyPredicate =
+            AccessTools.Method(typeof(SallyOutStrengthPatch), nameof(IsEnemyForSallyOutStrength));
+
+        public MethodInfo TargetMethod => PrivateWarHarmonyPatchTargets.SallyOutCheck();
 
         public MethodInfo? PatchMethod =>
-            AccessTools.Method(typeof(SallyOutStrengthPatch), nameof(Prefix));
+            AccessTools.Method(typeof(SallyOutStrengthPatch), nameof(Transpiler));
 
-        public PatchType PatchType => PatchType.Prefix;
+        public PatchType PatchType => PatchType.Transpiler;
 
-        // Returns false = skip original. Returns true = run original.
-        private static bool Prefix(Settlement settlement, bool checkForNavalSallyOut, ref bool salliedOut)
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            // Only intercept when this is a private-war siege (same-kingdom enemies).
-            var siegeEvent = settlement.SiegeEvent;
-            if (siegeEvent is null) return true;
+            var code = instructions.ToList();
+            var replaced = 0;
 
-            var besiegerClan = siegeEvent.BesiegerCamp?.LeaderParty?.ActualClan;
-            var ownerClan = settlement.OwnerClan;
-            if (!PrivateWarPatchHelper.AreEnemies(besiegerClan, ownerClan)) return true;
-
-            // Mirror vanilla's flag/flag2 to pick the same ratio it would pick.
-            var leaderMapEvent = siegeEvent.BesiegerCamp!.LeaderParty!.MapEvent;
-            bool isSiegeOutside = leaderMapEvent?.IsSiegeOutside ?? false;
-            bool isBlockade = leaderMapEvent?.IsBlockade ?? false;
-
-            // Early-out mirrors vanilla: wrong map-event type for this sallyOut variant.
-            if ((isBlockade && !checkForNavalSallyOut) || (isSiegeOutside && checkForNavalSallyOut))
-                return true;
-
-            // Private-war besieger detected. Replicate vanilla's strength scan.
-            // num  = besieger-side strength (parties that belong to the besieger camp)
-            // num2 = garrison-relief strength (same-faction, non-private-war-enemy parties)
-            // num3 = garrison strength (already-involved defender parties)
-            var context = checkForNavalSallyOut
-                ? MapEvent.PowerCalculationContext.SeaBattle
-                : MapEvent.PowerCalculationContext.PlainBattle;
-            var garrisonEventType = checkForNavalSallyOut
-                ? MapEvent.BattleTypes.BlockadeSallyOutBattle
-                : MapEvent.BattleTypes.SallyOut;
-
-            float num3 = 0f;
-            foreach (var party in settlement.GetInvolvedPartiesForEventType(garrisonEventType))
-                num3 += party.GetCustomStrength(BattleSideEnum.Attacker, context);
-
-            float num = 0f;
-            float num2 = 0f;
-
-            // Vanilla scans parties within GetEncounterJoiningRadius of the besieger camp.
-            var leaderPos = siegeEvent.BesiegerCamp.LeaderParty.Position.ToVec2();
-            float radius = Campaign.Current.Models.EncounterModel.GetEncounterJoiningRadius;
-            var data = MobileParty.StartFindingLocatablesAroundPosition(leaderPos, radius);
-
-            for (var mp = MobileParty.FindNextLocatable(ref data); mp != null; mp = MobileParty.FindNextLocatable(ref data))
+            for (var i = 4; i < code.Count; i++)
             {
-                if (mp.CurrentSettlement != null || !(mp.Aggressiveness > 0f)) continue;
+                if (!code[i].Calls(VanillaEnemyPredicate) ||
+                    !code[i - 4].Calls(MobilePartyMapFactionGetter) ||
+                    !code[i - 2].Calls(SettlementPartyGetter) ||
+                    !code[i - 1].Calls(PartyMapFactionGetter))
+                    continue;
 
-                float aggrMult = mp.Aggressiveness > 0.5f ? 1f : mp.Aggressiveness * 2f;
-
-                if (siegeEvent.BesiegerCamp.IsBesiegerSideParty(mp))
-                {
-                    // Party is in the besieger camp (leader + attached parties).
-                    num += aggrMult * mp.Party.GetCustomStrength(BattleSideEnum.Defender, context);
-                }
-                else if (mp.MapFaction == settlement.MapFaction
-                         && !PrivateWarPatchHelper.AreEnemies(mp.ActualClan, settlement.OwnerClan))
-                {
-                    // Same faction as settlement and NOT a private-war enemy of the owner
-                    // → counts as garrison relief.
-                    num2 += aggrMult * mp.Party.GetCustomStrength(BattleSideEnum.Attacker, context);
-                }
+                // Preserve the two object loads but remove the three getters, changing the stack from
+                // (IFaction, IFaction) to the evaluated (MobileParty, Settlement) pair.
+                code[i - 4].opcode = OpCodes.Nop;
+                code[i - 4].operand = null;
+                code[i - 2].opcode = OpCodes.Nop;
+                code[i - 2].operand = null;
+                code[i - 1].opcode = OpCodes.Nop;
+                code[i - 1].operand = null;
+                code[i].operand = SallyOutEnemyPredicate;
+                replaced++;
             }
 
-            float sallySideStrength = num3 + num2;
-            float ratio = (isSiegeOutside || isBlockade) ? SallyOutPowerRatioForHelpingReliefForce : SallyOutPowerRatio;
-            bool garrisonWouldSally = sallySideStrength > num * ratio;
+            if (replaced != 1)
+                throw new InvalidOperationException(
+                    $"{nameof(SallyOutStrengthPatch)} expected exactly one sally-out strength predicate, found {replaced}.");
 
-            if (!garrisonWouldSally)
-            {
-                // Besieger is strong enough — suppress the sally and skip the original.
-                salliedOut = false;
-                return false;
-            }
+            return code;
+        }
 
-            // Garrison outpowers the besieger — let vanilla run. Vanilla will compute num=0 (its
-            // IsAtWarWith is false for same-kingdom) so it will ALWAYS decide to sally in this
-            // branch, which is what we want here (garrison genuinely stronger).
-            return true;
+        private static bool IsEnemyForSallyOutStrength(MobileParty mobileParty, Settlement settlement)
+        {
+            var vanillaEnemies = mobileParty.MapFaction.IsAtWarWith(settlement.Party.MapFaction);
+            var arePrivateEnemies = PrivateWarPatchHelper.AreEnemies(
+                mobileParty.ActualClan,
+                settlement.OwnerClan);
+
+            return InteractionPolicy.ResolveSallyOutStrengthEnemy(vanillaEnemies, arePrivateEnemies);
         }
     }
 }

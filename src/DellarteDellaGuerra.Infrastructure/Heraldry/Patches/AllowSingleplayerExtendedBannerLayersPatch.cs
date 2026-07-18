@@ -81,7 +81,10 @@ internal static class SingleplayerExtendedBannerLayers
 public class AllowSingleplayerExtendedBannerCodeParsingPatch : IPatch
 {
     public MethodInfo? TargetMethod =>
-        AccessTools.Method(typeof(Banner), nameof(Banner.TryGetBannerDataFromCode));
+        AccessTools.Method(
+            typeof(Banner),
+            nameof(Banner.TryGetBannerDataFromCode),
+            new[] { typeof(string), typeof(List<BannerData>).MakeByRefType() });
 
     public MethodInfo? PatchMethod =>
         AccessTools.Method(typeof(AllowSingleplayerExtendedBannerCodeParsingPatch), nameof(Prefix));
