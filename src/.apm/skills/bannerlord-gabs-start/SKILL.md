@@ -15,7 +15,7 @@ description: >
 
 # DellarteDellaGuerra Debug Launch
 
-Launches Bannerlord via the JetBrains "DellarteDellaGuerra.Integration: Standalone.GABS"
+Launches Bannerlord via the JetBrains "DellarteDellaGuerra.Integration: Standalone"
 debug config and connects GABS to the running instance. By the end the debugger is
 attached and all GABP tools are live.
 
@@ -90,12 +90,12 @@ if (-not (Get-Process -Name "AssertAutoIgnore" -ErrorAction SilentlyContinue)) {
 ## Step 3 — Start the JetBrains debug session
 
 Call `mcp__jetbrains-debugger__start_debug_session`:
-- `configuration_name`: `"DellarteDellaGuerra.Integration: Standalone.GABS"`
+- `configuration_name`: `"DellarteDellaGuerra.Integration: Standalone"`
 - `project_path`: the path resolved in the Version resolution section above
 
 Note the session ID from the response — report it to the user.
 
-The launchSettings.json Standalone.GABS profile already includes `Bannerlord.GABS` in the
+The launchSettings.json Standalone profile already includes `Bannerlord.GABS` in the
 module list and sets `GABP_SERVER_PORT=4825`, `GABP_TOKEN`, `GABS_GAME_ID`, and
 `GABS_BRIDGE_PATH` as env vars — so the game will start the GABP bridge on port 4825
 with the token written in Step 2. No further configuration needed.
