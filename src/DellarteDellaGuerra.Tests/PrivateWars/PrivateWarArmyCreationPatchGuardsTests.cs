@@ -6,6 +6,23 @@ namespace DellarteDellaGuerra.Tests.PrivateWars;
 public class PrivateWarArmyCreationPatchGuardsTests
 {
     [Fact]
+    public void TestProject_ResolvesBannerlordRootBeforeUsingRuntimeReferences()
+    {
+        var testFilePath = GetTestFilePath();
+        var projectPath = Path.GetFullPath(Path.Combine(
+            Path.GetDirectoryName(testFilePath)!, "..", "DellarteDellaGuerra.Tests.csproj"));
+        var projectSource = File.ReadAllText(projectPath);
+
+        Assert.Contains("<BannerlordGameRoot Condition=", projectSource, StringComparison.Ordinal);
+        Assert.Contains("Exists('$(GameFolder)\\bin\\Win64_Shipping_Client\\TaleWorlds.CampaignSystem.dll')", projectSource, StringComparison.Ordinal);
+        Assert.Contains("Exists('$(GameFolder)\\..\\bin\\Win64_Shipping_Client\\TaleWorlds.CampaignSystem.dll')", projectSource, StringComparison.Ordinal);
+        Assert.Contains("Exists('$(GameFolder)\\..\\..\\..\\bin\\Win64_Shipping_Client\\TaleWorlds.CampaignSystem.dll')", projectSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("<HintPath>$(GameFolder)", projectSource, StringComparison.Ordinal);
+        Assert.Equal(4, projectSource.Split("<HintPath>$(BannerlordGameRoot)").Length - 1);
+        Assert.Contains("Could not resolve Bannerlord game root", projectSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void TargetResolver_SelectsExactKingdomCreateArmyOverload()
     {
         var target = KingdomCreateArmyPatchTarget.Resolve();
