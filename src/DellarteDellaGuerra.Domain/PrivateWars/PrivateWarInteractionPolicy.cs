@@ -18,6 +18,14 @@ namespace DellarteDellaGuerra.Domain.PrivateWars
         public bool AllowSettlementVisit(bool vanillaSuitable, bool arePrivateEnemies)
             => vanillaSuitable && !arePrivateEnemies;
 
+        public float ResolveEncounterJoiningRadius(
+            bool hasActivePlayerSiege,
+            float normalEncounterRadius,
+            float settlementDefendingWaitingPositionRadius)
+            => hasActivePlayerSiege
+                ? settlementDefendingWaitingPositionRadius * 1.25f
+                : normalEncounterRadius;
+
         public ReinforcementSide ResolveReinforcementSide(
             bool vanillaEnemyOfPlayer,
             bool vanillaEnemyOfEncounteredParty,
