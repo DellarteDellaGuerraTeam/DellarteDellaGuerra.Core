@@ -1,7 +1,13 @@
 using System.Collections.Generic;
+using System.Linq;
+using DellarteDellaGuerra.PrivateWars.Api.Armies;
 using DellarteDellaGuerra.Titles.Api;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
+using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.Core;
+using TaleWorlds.Library;
 
 namespace DellarteDellaGuerra.PrivateWars.Api.GameModels
 {
@@ -17,22 +23,49 @@ namespace DellarteDellaGuerra.PrivateWars.Api.GameModels
     // (the latter stays a scored AI vote in AiArmyMemberBehavior / PrivateWarCampaignBehavior).
     public class DadgArmyManagementCalculationModel : DefaultArmyManagementCalculationModel
     {
-        public override List<MobileParty> GetMobilePartiesToCallToArmy(MobileParty leaderParty)
+        private readonly PrivateWarArmyDecisionAdapter _armyDecisionAdapter;
+
+        public DadgArmyManagementCalculationModel(PrivateWarArmyDecisionAdapter armyDecisionAdapter)
         {
-            var parties = base.GetMobilePartiesToCallToArmy(leaderParty);
+            _armyDecisionAdapter = armyDecisionAdapter;
+        }
 
-            var leaderClan = leaderParty?.LeaderHero?.Clan;
+        public override bool CanLordCreateArmy(
+            MobileParty leaderParty,
+            out MBList<MobileParty> possibleArmyMembers)
+        {
+            var canCreateArmy = base.CanLordCreateArmy(leaderParty, out possibleArmyMembers);
+
+            var leaderClan = leaderParty.LeaderHero?.Clan;
             if (leaderClan is null || !FeudalServices.IsInitialised || FeudalServices.PrivateWarHostility is null)
-                return parties;
+                return canCreateArmy;
 
-            parties.RemoveAll(party =>
+            var candidates = possibleArmyMembers.Select(party => new PrivateWarArmyCandidate(
+                party.StringId,
+                party.ActualClan?.StringId ?? string.Empty,
+                IsEligible: true,
+                party.Party.GetCustomStrength(
+                    BattleSideEnum.Attacker, MapEvent.PowerCalculationContext.Siege))).ToList();
+            var kingdom = leaderParty.MapFaction as Kingdom;
+            var decision = _armyDecisionAdapter.FilterOrdinaryMembers(
+                canCreateArmy,
+                leaderClan.StringId,
+                leaderParty.Party.GetCustomStrength(
+                    BattleSideEnum.Attacker, MapEvent.PowerCalculationContext.Siege),
+                kingdom?.Settlements.Count > 0,
+                candidates,
+                FeudalServices.PrivateWarHostility.AreEnemies);
+
+            if (!decision.CanCreateArmy)
             {
-                var candidateClan = party?.ActualClan;
-                return candidateClan != null
-                    && FeudalServices.PrivateWarHostility.AreEnemies(leaderClan.StringId, candidateClan.StringId);
-            });
+                possibleArmyMembers.Clear();
+                return false;
+            }
 
-            return parties;
+            var allowedPartyIds = new HashSet<string>(decision.MemberPartyIds);
+            possibleArmyMembers.RemoveAll(party => !allowedPartyIds.Contains(party.StringId));
+
+            return true;
         }
     }
 }

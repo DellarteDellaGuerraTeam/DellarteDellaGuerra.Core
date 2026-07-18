@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DellarteDellaGuerra.PrivateWars.Api.Armies;
 using DellarteDellaGuerra.Domain.PrivateWars;
 using DellarteDellaGuerra.Domain.PrivateWars.Model;
 using DellarteDellaGuerra.Domain.PrivateWars.Port;
@@ -8,10 +9,14 @@ using DellarteDellaGuerra.Titles.Api.Campaign;
 using DellarteDellaGuerra.Utils;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
+using TaleWorlds.Library;
+using Helpers;
 
 namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
 {
@@ -56,6 +61,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
         private readonly IApplyBattleOutcomeUseCase _applyBattleOutcome;
         private readonly WarSideResolver _sideResolver;
         private readonly IFeudalHierarchy _hierarchy;
+        private readonly PrivateWarArmyDecisionAdapter _armyDecisionAdapter;
 
         private List<string> _serialisedWars = new();
 
@@ -66,7 +72,8 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             IResolvePrivateWarUseCase resolvePrivateWar,
             IApplyBattleOutcomeUseCase applyBattleOutcome,
             WarSideResolver sideResolver,
-            IFeudalHierarchy hierarchy)
+            IFeudalHierarchy hierarchy,
+            PrivateWarArmyDecisionAdapter armyDecisionAdapter)
         {
             _stateStore = stateStore;
             _privateWars = privateWars;
@@ -75,6 +82,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             _applyBattleOutcome = applyBattleOutcome;
             _sideResolver = sideResolver;
             _hierarchy = hierarchy;
+            _armyDecisionAdapter = armyDecisionAdapter;
         }
 
         public override void RegisterEvents()
@@ -113,22 +121,161 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
         // higher-priority objective (notably defending the clan's own besieged fief) naturally wins.
         private void OnAiHourlyTick(MobileParty mobileParty, PartyThinkParams p)
         {
-            var goal = FindPrivateWarGoalFor(mobileParty);
-            if (goal is null) return;
+            var objective = FindPrivateWarGoalFor(mobileParty);
+            if (objective is null) return;
+
+            var armyMembers = GetPrivateWarArmyMembers(mobileParty, objective);
 
             // While en route, use the low selection score so a higher-priority objective (notably
             // defending the clan's own besieged fief) still wins. Once the party has actually established
             // the siege on the goal, switch to the dominant hold score so the engine's periodic re-think
             // does not abandon the camp before preparations complete.
-            float score = mobileParty.BesiegedSettlement == goal
+            float score = mobileParty.BesiegedSettlement == objective.Goal
                 ? PrivateWarSiegeHoldScore
                 : PrivateWarSiegeSelectionScore;
 
             var behaviour = new AIBehaviorData(
-                goal, AiBehavior.BesiegeSettlement, MobileParty.NavigationType.Default,
-                willGatherArmy: false, isFromPort: false, isTargetingPort: false);
+                objective.Goal, AiBehavior.BesiegeSettlement, MobileParty.NavigationType.Default,
+                willGatherArmy: armyMembers != null, isFromPort: false, isTargetingPort: false);
+            var earlierScores = p.AIBehaviorScores.Select(candidate => candidate.Item2).ToList();
             p.AddBehaviorScore((behaviour, score));
+
+            if (armyMembers is null) return;
+
+            var selectedMembers = _armyDecisionAdapter.SelectPrivateMembers(
+                earlierScores,
+                score,
+                armyMembers.Select(member => member.StringId).ToList());
+            if (selectedMembers != null)
+                p.SetArmyMembers(armyMembers);
         }
+
+        private MBList<MobileParty>? GetPrivateWarArmyMembers(
+            MobileParty leaderParty,
+            PrivateWarGoal objective)
+        {
+            var leaderHero = leaderParty.LeaderHero;
+            var leaderClan = leaderHero?.Clan;
+            if (leaderHero is null || leaderClan is null || leaderParty.Army != null)
+                return null;
+            if (leaderParty.MapFaction is not Kingdom kingdom)
+                return null;
+
+            // These are the 1.4.6 DefaultArmyManagementCalculationModel leader gates, with only
+            // the formal FactionsAtWarWith requirement omitted: this objective is the authorized
+            // same-kingdom private war itself.
+            if (leaderParty.IsCurrentlyAtSea
+                || leaderClan.Influence <= 100f
+                || leaderClan.IsUnderMercenaryService
+                || leaderParty.GetNumDaysForFoodToLast()
+                    <= TaleWorlds.CampaignSystem.Campaign.Current.Models.MobilePartyAIModel.NeededFoodsInDaysThresholdForSiege
+                || leaderParty.PartySizeRatio
+                    <= TaleWorlds.CampaignSystem.Campaign.Current.Models.ArmyManagementCalculationModel.AIMobilePartySizeRatioToCallToArmy
+                || leaderClan.Leader != leaderHero
+                && (leaderClan.Leader.PartyBelongedTo != null
+                    || leaderClan.WarPartyComponents == null
+                    || leaderClan.WarPartyComponents.FirstOrDefault() != leaderParty.WarPartyComponent))
+            {
+                return null;
+            }
+
+            var eligibleParties = new List<(MobileParty Party, float Priority)>();
+            foreach (WarPartyComponent component in kingdom.WarPartyComponents)
+            {
+                var party = component.MobileParty;
+                var partyLeader = party.LeaderHero;
+                if (!party.IsLordParty
+                    || party.Army != null
+                    || party == leaderParty
+                    || partyLeader == null
+                    || party.IsMainParty
+                    || partyLeader == partyLeader.MapFaction.Leader
+                    || party.Ai.DoNotMakeNewDecisions
+                    || party.CurrentSettlement?.SiegeEvent != null
+                    || party.IsDisbanding
+                    || party.GetNumDaysForFoodToLast()
+                        <= TaleWorlds.CampaignSystem.Campaign.Current.Models.ArmyManagementCalculationModel.MinimumNeededFoodInDaysToCallToArmy
+                    || party.PartySizeRatio
+                        <= TaleWorlds.CampaignSystem.Campaign.Current.Models.ArmyManagementCalculationModel.AIMobilePartySizeRatioToCallToArmy
+                    || !partyLeader.CanLeadParty()
+                    || party.IsInRaftState
+                    || party.MapEvent != null
+                    || party.BesiegedSettlement != null)
+                {
+                    continue;
+                }
+
+                var disbandBehavior = TaleWorlds.CampaignSystem.Campaign.Current
+                    .GetCampaignBehavior<IDisbandPartyCampaignBehavior>();
+                if (disbandBehavior != null && disbandBehavior.IsPartyWaitingForDisband(party))
+                    continue;
+
+                var maximumDistance = TaleWorlds.CampaignSystem.Campaign.Current.Models
+                    .ArmyManagementCalculationModel.MaximumDistanceToCallToArmy;
+                if (DistanceHelper.GetDistanceBetweenMobilePartyToMobileParty(
+                        party, leaderParty, party.NavigationCapability, out _) >= maximumDistance)
+                {
+                    continue;
+                }
+
+                int influenceCost = TaleWorlds.CampaignSystem.Campaign.Current.Models.ArmyManagementCalculationModel
+                    .CalculatePartyInfluenceCost(leaderParty, party);
+                float unwoundedRatio = 1f - (float)party.Party.MemberRoster.TotalWounded
+                    / party.Party.MemberRoster.TotalManCount;
+                float priority = party.Party.EstimatedStrength / (influenceCost + 0.1f) * unwoundedRatio;
+                eligibleParties.Add((party, priority));
+            }
+
+            int maximumMemberCount = MathF.Ceiling(
+                kingdom.WarPartyComponents.Count * 0.7f
+                - kingdom.Armies.Sum(army => army.Parties.Count));
+            if (maximumMemberCount <= 0) return null;
+
+            var orderedParties = eligibleParties
+                .OrderBy(candidate => candidate.Priority)
+                .Select(candidate => candidate.Party)
+                .ToList();
+            var candidates = new List<PrivateWarArmyCandidate>
+            {
+                ToArmyCandidate(leaderParty)
+            };
+            candidates.AddRange(orderedParties.Select(ToArmyCandidate));
+
+            var assignments = kingdom.Armies
+                .Where(army => army.AiBehaviorObject == objective.Goal)
+                .Where(army => army.LeaderParty.ActualClan != null)
+                .Where(army => ResolveSide(
+                    army.LeaderParty.ActualClan.StringId, objective.War) == objective.Side)
+                .Select(army => new PrivateWarArmyAssignment(
+                    objective.War.Id,
+                    objective.Side,
+                    objective.War.MainGoalSettlementId,
+                    army.LeaderParty.StringId))
+                .ToList();
+
+            var plan = _armyDecisionAdapter.CreatePlan(
+                objective.War,
+                objective.Side,
+                leaderParty.StringId,
+                candidates,
+                assignments,
+                _hierarchy.GetSuzerain,
+                kingdom.Settlements.Count > 0,
+                maximumMemberCount);
+            if (plan is null) return null;
+
+            var membersById = orderedParties.ToDictionary(party => party.StringId);
+            return new MBList<MobileParty>(
+                plan.MemberPartyIds.Select(partyId => membersById[partyId]));
+        }
+
+        private static PrivateWarArmyCandidate ToArmyCandidate(MobileParty party)
+            => new(
+                party.StringId,
+                party.ActualClan?.StringId ?? string.Empty,
+                IsEligible: true,
+                party.Party.GetCustomStrength(
+                    BattleSideEnum.Attacker, MapEvent.PowerCalculationContext.Siege));
 
         // Capture must be immediate: the moment a private-war besieger's siege preparations complete the
         // fief changes hands, not on the next daily tick. Siege preparations advance on the engine's
@@ -447,7 +594,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
         // An attached army member still gets the goal injected so that quitting the army to prosecute (or
         // defend) the feud is a *scored* AI decision: the besiege candidate competes with
         // AiArmyMemberBehavior's escort-the-leader score (10-20) in the same vote.
-        private Settlement? FindPrivateWarGoalFor(MobileParty mobileParty)
+        private PrivateWarGoal? FindPrivateWarGoalFor(MobileParty mobileParty)
         {
             if (mobileParty is null || !mobileParty.IsActive || mobileParty.IsMainParty) return null;
             if (mobileParty.MapEvent != null) return null;
@@ -469,10 +616,15 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
                 // reclaim); skip when my own side already holds it.
                 var ownerSide = ResolveSide(goal.OwnerClan.StringId, war);
                 if (ownerSide is null || ownerSide == mySide) continue;
-                return goal;
+                return new PrivateWarGoal(war, mySide.Value, goal);
             }
 
             return null;
         }
+
+        private sealed record PrivateWarGoal(
+            PrivateWar War,
+            WarSide Side,
+            Settlement Goal);
     }
 }
