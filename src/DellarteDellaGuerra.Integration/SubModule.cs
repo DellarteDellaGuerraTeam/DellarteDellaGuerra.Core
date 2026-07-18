@@ -172,6 +172,8 @@ namespace DellarteDellaGuerra.Integration
             campaignGameStarter.AddModel(settlementAccessModel);
             // Re-include garrison/militia/feud-lord defenders in a same-kingdom siege assault (design §4.1, Gate 1)
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgEncounterModel>());
+            // Deny private-war rivals the recruit slots that same-faction vanilla grants (design §4.1)
+            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgVolunteerModel>());
 
             // Feudal title campaign behaviours
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleCampaignBehavior>());

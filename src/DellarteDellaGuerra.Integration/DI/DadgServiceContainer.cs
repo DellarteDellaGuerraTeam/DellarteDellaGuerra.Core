@@ -196,6 +196,7 @@ public class DadgServiceContainer
         services.AddSingleton<IApplyBattleOutcomeUseCase, ApplyBattleOutcomeUseCase>();
         services.AddSingleton<IResolvePrivateWarUseCase, ResolvePrivateWarUseCase>();
         services.AddSingleton<PrivateWarArmyPolicy>();
+        services.AddSingleton<PrivateWarInteractionPolicy>();
         services.AddSingleton<PrivateWarArmyDecisionAdapter>();
 
         // Campaign behaviour (persistence lifecycle)
@@ -205,6 +206,7 @@ public class DadgServiceContainer
         services.AddTransient<DadgTargetScoreCalculatingModel>();
         services.AddTransient<DadgArmyManagementCalculationModel>();
         services.AddTransient<DadgEncounterModel>();
+        services.AddTransient<DadgVolunteerModel>();
 
         // Nameplate tint color (configurable for colorblind accessibility). The infra provider only
         // supplies the raw configured string; the use case owns all validation and the default orange.
@@ -245,6 +247,8 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, KingdomCreateArmyPatch>();
         services.AddSingleton<IPatch, PrivateWarPrisonerRetentionPatch>();
         services.AddSingleton<IPatch, PlayerCaptivityRetentionPatch>();
+        services.AddSingleton<IPatch, RecruitmentEntryPatch>();
+        services.AddSingleton<IPatch, SettlementVisitPatch>();
         // Private wars (player-facing encounter menus and side assignment)
         // NOTE: BesiegeMenuConditionPatch, ContinueSiegeMenuConditionPatch, and
         // ArmyAttackMenuConditionPatch all target EncounterGameMenuBehavior, whose static
