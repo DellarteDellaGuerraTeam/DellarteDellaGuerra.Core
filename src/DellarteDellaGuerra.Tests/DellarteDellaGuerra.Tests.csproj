@@ -7,6 +7,12 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <BannerlordGameRoot Condition="'$(BannerlordGameRoot)' == '' and Exists('$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll')">$([System.IO.Path]::GetFullPath('$(GameFolder)'))</BannerlordGameRoot>
+    <BannerlordGameRoot Condition="'$(BannerlordGameRoot)' == '' and Exists('$(GameFolder)\..\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll')">$([System.IO.Path]::GetFullPath('$(GameFolder)\..'))</BannerlordGameRoot>
+    <BannerlordGameRoot Condition="'$(BannerlordGameRoot)' == '' and Exists('$(GameFolder)\..\..\..\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll')">$([System.IO.Path]::GetFullPath('$(GameFolder)\..\..\..'))</BannerlordGameRoot>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
@@ -19,19 +25,19 @@
 
   <ItemGroup>
     <Reference Include="TaleWorlds.CampaignSystem">
-      <HintPath>$(GameFolder)\..\..\..\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
+      <HintPath>$(BannerlordGameRoot)\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
       <Private>true</Private>
     </Reference>
     <Reference Include="TaleWorlds.Core">
-      <HintPath>$(GameFolder)\..\..\..\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
+      <HintPath>$(BannerlordGameRoot)\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
       <Private>true</Private>
     </Reference>
     <Reference Include="TaleWorlds.Library">
-      <HintPath>$(GameFolder)\..\..\..\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
+      <HintPath>$(BannerlordGameRoot)\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
       <Private>true</Private>
     </Reference>
     <Reference Include="TaleWorlds.ObjectSystem">
-      <HintPath>$(GameFolder)\..\..\..\bin\Win64_Shipping_Client\TaleWorlds.ObjectSystem.dll</HintPath>
+      <HintPath>$(BannerlordGameRoot)\bin\Win64_Shipping_Client\TaleWorlds.ObjectSystem.dll</HintPath>
       <Private>true</Private>
     </Reference>
   </ItemGroup>
@@ -40,5 +46,11 @@
     <ProjectReference Include="..\DellarteDellaGuerra\DellarteDellaGuerra.csproj" />
     <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
   </ItemGroup>
+
+  <Target Name="ValidateBannerlordGameRoot" BeforeTargets="ResolveAssemblyReferences">
+    <Error
+      Condition="'$(BannerlordGameRoot)' == '' or !Exists('$(BannerlordGameRoot)\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll')"
+      Text="Could not resolve Bannerlord game root from GameFolder '$(GameFolder)'. Expected TaleWorlds.CampaignSystem.dll under bin\Win64_Shipping_Client in GameFolder or a supported parent." />
+  </Target>
 
 </Project>
