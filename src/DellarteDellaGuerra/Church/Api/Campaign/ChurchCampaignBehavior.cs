@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using DellarteDellaGuerra.Domain.Church;
 using DellarteDellaGuerra.Domain.Church.Donation;
 using DellarteDellaGuerra.Domain.Church.Mass;
+using DellarteDellaGuerra.Domain.Church.Port;
 using Helpers;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
@@ -16,13 +18,15 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
 {
     public class ChurchCampaignBehavior : CampaignBehaviorBase
     {
-        private const int WeeklyTithePower = 2;
-        private const int DonationPower = 5;
-        private const int SacrilegeRelationLocal = -15;
-        private const int SacrilegeRelationOthers = -5;
+        private readonly IChurchSettingsProvider _churchSettingsProvider;
 
         private Dictionary<Hero, CampaignTime> _lastDonationTimes = new();
         private CampaignTime _lastMassTime = CampaignTime.Never;
+
+        public ChurchCampaignBehavior(IChurchSettingsProvider churchSettingsProvider)
+        {
+            _churchSettingsProvider = churchSettingsProvider;
+        }
 
         public override void RegisterEvents()
         {
@@ -88,11 +92,12 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
 
         private void AttendMass(MenuCallbackArgs args)
         {
-            MobileParty.MainParty.RecentEventsMorale += MassPolicy.MoraleGain;
+            var settings = _churchSettingsProvider.GetSettings();
+            MobileParty.MainParty.RecentEventsMorale += settings.MassMorale;
 
             var abbot = Settlement.CurrentSettlement.Notables
                 .FirstOrDefault(notable => notable.IsPreacher && notable.IsAlive);
-            if (abbot != null) ChangeRelationAction.ApplyPlayerRelation(abbot, MassPolicy.RelationGain);
+            if (abbot != null) ChangeRelationAction.ApplyPlayerRelation(abbot, settings.MassRelation);
 
             _lastMassTime = CampaignTime.Now;
             GameMenu.SwitchToMenu("village");
@@ -100,12 +105,13 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
 
         private void ApplyTithe()
         {
+            var weeklyTithePower = _churchSettingsProvider.GetSettings().WeeklyTithePower;
             foreach (var settlement in Settlement.All)
             {
                 if (!ChurchSettlements.IsChurchSettlement(settlement)) continue;
 
                 foreach (var abbot in settlement.Notables.Where(notable => notable.IsPreacher && notable.IsAlive))
-                    abbot.AddPower(WeeklyTithePower);
+                    abbot.AddPower(weeklyTithePower);
             }
         }
 
@@ -116,10 +122,10 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
             var raider = village.Settlement.LastAttackerParty?.LeaderHero;
             if (raider == null || !raider.IsAlive) return;
 
-            ApplySacrilege(raider, village.Settlement);
+            ApplySacrilege(raider, village.Settlement, _churchSettingsProvider.GetSettings());
         }
 
-        internal static void ApplySacrilege(Hero offender, Settlement site)
+        internal static void ApplySacrilege(Hero offender, Settlement site, ChurchSettings settings)
         {
             var isPlayerOffender = offender == Hero.MainHero;
 
@@ -128,8 +134,8 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
                 if (!ChurchSettlements.IsChurchSettlement(settlement)) continue;
 
                 var relationChange = settlement == site
-                    ? SacrilegeRelationLocal
-                    : SacrilegeRelationOthers;
+                    ? settings.SacrilegeRelationLocal
+                    : settings.SacrilegeRelationOthers;
                 foreach (var abbot in settlement.Notables.Where(notable => notable.IsPreacher && notable.IsAlive))
                 {
                     if (isPlayerOffender) ChangeRelationAction.ApplyPlayerRelation(abbot, relationChange);
@@ -207,26 +213,28 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
             var abbot = Hero.OneToOneConversationHero;
             if (abbot == null) return false;
 
+            var donationCost = _churchSettingsProvider.GetSettings().DonationCost;
             float? daysSinceLastDonation = _lastDonationTimes.TryGetValue(abbot, out var lastDonation)
                 ? lastDonation.ElapsedDaysUntilNow
                 : (float?)null;
-            if (DonationPolicy.Evaluate(Hero.MainHero.Gold, daysSinceLastDonation) != DonationOutcome.Allowed)
+            if (DonationPolicy.Evaluate(Hero.MainHero.Gold, daysSinceLastDonation, donationCost) != DonationOutcome.Allowed)
                 return false;
 
             var settlement = abbot.CurrentSettlement;
             MBTextManager.SetTextVariable("CHURCH_TYPE", ChurchSettlements.GetChurchType(settlement));
             MBTextManager.SetTextVariable("TITLE", ChurchSettlements.GetClergyTitle(settlement));
-            MBTextManager.SetTextVariable("DONATION_COST", DonationPolicy.CostInGold);
+            MBTextManager.SetTextVariable("DONATION_COST", donationCost);
             return true;
         }
 
         private void Donate()
         {
+            var settings = _churchSettingsProvider.GetSettings();
             var abbot = Hero.OneToOneConversationHero;
-            GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, abbot, DonationPolicy.CostInGold);
-            ChangeRelationAction.ApplyPlayerRelation(abbot, DonationPolicy.RelationGain);
+            GiveGoldAction.ApplyBetweenCharacters(Hero.MainHero, abbot, settings.DonationCost);
+            ChangeRelationAction.ApplyPlayerRelation(abbot, settings.DonationRelation);
             GainRenownAction.Apply(Hero.MainHero, DonationPolicy.RenownGain);
-            abbot.AddPower(DonationPower);
+            abbot.AddPower(settings.DonationPower);
             _lastDonationTimes[abbot] = CampaignTime.Now;
         }
     }

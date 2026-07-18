@@ -5,10 +5,12 @@ namespace DellarteDellaGuerra.Domain.Tests.Church.Donation
 {
     public class DonationPolicyTests
     {
+        private const int CostInGold = 500;
+
         [Fact]
         public void Evaluate_WhenGoldSufficientAndCooldownElapsed_ReturnsAllowed()
         {
-            var outcome = DonationPolicy.Evaluate(DonationPolicy.CostInGold, 8f);
+            var outcome = DonationPolicy.Evaluate(CostInGold, 8f, CostInGold);
 
             Assert.Equal(DonationOutcome.Allowed, outcome);
         }
@@ -16,7 +18,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Church.Donation
         [Fact]
         public void Evaluate_WhenNeverDonated_ReturnsAllowed()
         {
-            var outcome = DonationPolicy.Evaluate(DonationPolicy.CostInGold, null);
+            var outcome = DonationPolicy.Evaluate(CostInGold, null, CostInGold);
 
             Assert.Equal(DonationOutcome.Allowed, outcome);
         }
@@ -24,7 +26,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Church.Donation
         [Fact]
         public void Evaluate_WhenInsufficientGold_ReturnsInsufficientGold()
         {
-            var outcome = DonationPolicy.Evaluate(DonationPolicy.CostInGold - 1, null);
+            var outcome = DonationPolicy.Evaluate(CostInGold - 1, null, CostInGold);
 
             Assert.Equal(DonationOutcome.InsufficientGold, outcome);
         }
@@ -32,7 +34,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Church.Donation
         [Fact]
         public void Evaluate_WhenOnCooldown_ReturnsOnCooldown()
         {
-            var outcome = DonationPolicy.Evaluate(DonationPolicy.CostInGold, DonationPolicy.CooldownInDays - 0.1f);
+            var outcome = DonationPolicy.Evaluate(CostInGold, DonationPolicy.CooldownInDays - 0.1f, CostInGold);
 
             Assert.Equal(DonationOutcome.OnCooldown, outcome);
         }
@@ -40,7 +42,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Church.Donation
         [Fact]
         public void Evaluate_WhenCooldownExactlyElapsed_ReturnsAllowed()
         {
-            var outcome = DonationPolicy.Evaluate(DonationPolicy.CostInGold, DonationPolicy.CooldownInDays);
+            var outcome = DonationPolicy.Evaluate(CostInGold, DonationPolicy.CooldownInDays, CostInGold);
 
             Assert.Equal(DonationOutcome.Allowed, outcome);
         }

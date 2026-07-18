@@ -4,4 +4,14 @@
     <MinimumRidingSkill>100</MinimumRidingSkill>
     <MinimumPolearmSkill>100</MinimumPolearmSkill>
   </JoustingConfig>
+  <ChurchConfig>
+    <DonationCost>500</DonationCost>
+    <DonationRelation>2</DonationRelation>
+    <MassRelation>1</MassRelation>
+    <MassMorale>4</MassMorale>
+    <SacrilegeRelationLocal>-15</SacrilegeRelationLocal>
+    <SacrilegeRelationOthers>-5</SacrilegeRelationOthers>
+    <WeeklyTithePower>2</WeeklyTithePower>
+    <DonationPower>5</DonationPower>
+  </ChurchConfig>
 </DadgConfiguration>

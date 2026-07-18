@@ -26,7 +26,9 @@ using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
+using DellarteDellaGuerra.Domain.Church.Port;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
+using DellarteDellaGuerra.Infrastructure.Church;
 using DellarteDellaGuerra.Infrastructure.Tournament.Jousting;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Reward.Spi;
@@ -48,6 +50,7 @@ public class DadgServiceContainer
         RegisterCoreServices(services);
         services.AddDadgInfrastructure();
         RegisterTournamentServices(services);
+        RegisterChurchServices(services);
         RegisterDisplayServices(services);
         RegisterMissionServices(services);
         RegisterPatches(services);
@@ -90,6 +93,12 @@ public class DadgServiceContainer
         services.AddSingleton<IJoustRequirementsProvider>(sp =>
             new JoustRequirementsConfig(sp.GetRequiredService<DadgConfigWatcher>()));
         services.AddTransient<DadgTournamentModel>();
+    }
+
+    private static void RegisterChurchServices(IServiceCollection services)
+    {
+        services.AddSingleton<IChurchSettingsProvider>(sp =>
+            new ChurchSettingsConfig(sp.GetRequiredService<DadgConfigWatcher>()));
     }
 
     private static void RegisterDisplayServices(IServiceCollection services)

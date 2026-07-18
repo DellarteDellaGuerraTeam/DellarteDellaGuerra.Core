@@ -72,14 +72,42 @@ vanilla already displays on the settlement overlay card and hero tooltip ("Power
 Extend the existing feature (no new projects/folders beyond one Domain file):
 
 - `src\DellarteDellaGuerra.Domain\Church\Mass\MassPolicy.cs` — pure: eligibility
-  (`isSunday`, `attendedToday` → outcome) + constants (MoraleGain=4, RelationGain=1);
+  (`isSunday`, `attendedToday` → outcome);
   `src\DellarteDellaGuerra.Domain.Tests\MassPolicyTests.cs`.
-- Tithe and sacrilege have no branching logic worth a policy class — constants live in the
-  behavior (WeeklyTithePower=2, DonationPower=5, SacrilegeRelationLocal=−15, SacrilegeRelationOthers=−5).
+- Tithe and sacrilege have no branching logic worth a policy class — the behavior reads the
+  amounts (mass morale/relation, tithe/donation power, sacrilege relations) from `ChurchSettings`
+  (see Configuration below).
 - `src\DellarteDellaGuerra\Church\Api\Campaign\ChurchCampaignBehavior.cs` — add the menu
   option, `WeeklyTickEvent` and `VillageLooted` listeners, `_lastMassTime` in `SyncData`, and
   the +5 power line in `Donate()`. If the behavior grows past comfortable size, split a
   `ChurchLifeCampaignBehavior` — but don't pre-split.
+
+## 4b. Configuration (added with the config pass, 2026-07-19)
+
+The eight balance values across v0.1/v0.2 are configurable in `config/dadg.config.xml` under
+`<ChurchConfig>` (sibling of `<JoustingConfig>`), hot-reloaded by `DadgConfigWatcher`; any
+missing field/section/file falls back to the defaults below (property initializers on
+`ChurchConfig`):
+
+| Element | Default | Meaning |
+|---|---|---|
+| `DonationCost` | 500 | Gold cost of a donation (v0.1) |
+| `DonationRelation` | 2 | Relation gained with the abbot per donation (v0.1) |
+| `MassRelation` | 1 | Relation gained with the abbot per mass |
+| `MassMorale` | 4 | Party morale gained per mass |
+| `SacrilegeRelationLocal` | −15 | Relation with the wronged site's abbot |
+| `SacrilegeRelationOthers` | −5 | Relation with every other church abbot |
+| `WeeklyTithePower` | 2 | Abbot Power gained per week |
+| `DonationPower` | 5 | Abbot Power gained per donation |
+
+Deliberately **not** configurable (identity constants): donation renown (+1), the 7-day
+donation cooldown, and the 40/20-day sanctuary durations (v0.3).
+
+Wiring follows the joust pattern: Domain port `IChurchSettingsProvider` → immutable
+`ChurchSettings` → Infrastructure `ChurchSettingsConfig(IConfigurationProvider<DadgConfig>)` →
+registered in `DadgServiceContainer.RegisterChurchServices`, constructor-injected into
+`ChurchCampaignBehavior` and `SanctuaryCampaignBehavior`. Policies stay pure —
+`DonationPolicy.Evaluate` takes the cost as a parameter.
 
 ## 5. Verification
 

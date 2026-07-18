@@ -25,5 +25,13 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Models
          */
         [XmlElement(ElementName = "JoustingConfig")]
         public JoustingConfig JoustingConfig { get; set; } = new JoustingConfig();
+
+        /**
+         * <summary>
+         * Gets or sets the balance values for the church feature.
+         * </summary>
+         */
+        [XmlElement(ElementName = "ChurchConfig")]
+        public ChurchConfig ChurchConfig { get; set; } = new ChurchConfig();
     }
 }

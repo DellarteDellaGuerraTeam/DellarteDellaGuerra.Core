@@ -24,6 +24,7 @@ using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
+using DellarteDellaGuerra.Domain.Church.Port;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Campaign;
@@ -113,8 +114,9 @@ namespace DellarteDellaGuerra.Integration
             game.AddGameHandler<CompilingShaderNotifier>();
 
             campaignGameStarter.AddBehavior(new JoustTournamentCampaignBehavior(joustRequirementsProvider));
-            campaignGameStarter.AddBehavior(new ChurchCampaignBehavior());
-            campaignGameStarter.AddBehavior(new SanctuaryCampaignBehavior());
+            var churchSettingsProvider = _serviceProvider.GetRequiredService<IChurchSettingsProvider>();
+            campaignGameStarter.AddBehavior(new ChurchCampaignBehavior(churchSettingsProvider));
+            campaignGameStarter.AddBehavior(new SanctuaryCampaignBehavior(churchSettingsProvider));
         }
 
         public override void OnGameInitializationFinished(Game game)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DellarteDellaGuerra.Domain.Church.Port;
 using DellarteDellaGuerra.Domain.Church.Sanctuary;
 using Helpers;
 using TaleWorlds.CampaignSystem;
@@ -18,10 +19,17 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
     {
         private const string SanctuaryMenuId = "dadg_church_sanctuary";
 
+        private readonly IChurchSettingsProvider _churchSettingsProvider;
+
         private CampaignTime _playerSanctuaryStart = CampaignTime.Never;
         private Dictionary<Hero, Settlement> _fugitiveSanctuaries = new();
         private Dictionary<Hero, CampaignTime> _fugitiveSanctuaryStarts = new();
         private bool _raidNoticeShown;
+
+        public SanctuaryCampaignBehavior(IChurchSettingsProvider churchSettingsProvider)
+        {
+            _churchSettingsProvider = churchSettingsProvider;
+        }
 
         public override void RegisterEvents()
         {
@@ -205,7 +213,7 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
 
             Untag(target);
             TakePrisonerAction.Apply(PartyBase.MainParty, target);
-            ChurchCampaignBehavior.ApplySacrilege(Hero.MainHero, settlement);
+            ChurchCampaignBehavior.ApplySacrilege(Hero.MainHero, settlement, _churchSettingsProvider.GetSettings());
             GameMenu.SwitchToMenu("village");
         }
 

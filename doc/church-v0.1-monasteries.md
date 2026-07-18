@@ -73,10 +73,11 @@ Flow (tokens in parentheses):
 
 Pure policy class, unit-tested, no Bannerlord references:
 
-- Cost: **500 gold**
-- Effects: **+2 relation** with the abbot (`ChangeRelationAction`), **+1 renown**
-  (`GainRenownAction`) — applied by the behavior, amounts decided by the policy.
-- Cooldown: **7 in-game days per abbot** (one Bannerlord week, `CampaignTime.DaysInWeek`).
+- Cost: **500 gold** (configurable — `DonationCost` in `<ChurchConfig>`, see the
+  Configuration section of church-v0.2)
+- Effects: **+2 relation** with the abbot (`ChangeRelationAction`; configurable
+  `DonationRelation`), **+1 renown** (`GainRenownAction`, fixed) — applied by the behavior.
+- Cooldown: **7 in-game days per abbot** (one Bannerlord week, fixed).
 - Policy outcomes: `Allowed`, `InsufficientGold`, `OnCooldown`. Inputs are plain values
   (player gold, days since last donation) so no ports are needed for v0.1.
 
