@@ -255,13 +255,24 @@ otherwise no-op:
 - `EncounterManager.StartPartyEncounter` / `HandleEncounterForMobileParty` (un-merge → battle).
 - `EncounterManager.StartSettlementEncounter` (siege actually assaults — load-bearing for "real sieges").
 - `MapEvent.CanPartyJoinBattle` (reinforcements pick a side).
+- `Kingdom.CreateArmy` (after vanilla winner selection, replace members only for a matching active
+  private-war besieger/leader/frozen goal; abort if fresh policy validation fails).
 - No feud-specific disband patch on 1.4.6: the old `NoActiveWar` dispersion path is gone. Preserve
   normal cohesion, starvation, and objective-completion dispersal and verify them in runtime tests.
 
 **DADG drive loop** in `PrivateWarCampaignBehavior`: the AI-hourly listener injects the frozen goal as
 a scored `BesiegeSettlement` candidate for both sides whenever the opposing side holds it. On 1.4.6,
-the candidate may set `AIBehaviorData.WillGatherArmy = true` and supply
-`PartyThinkParams.SetArmyMembers(...)` only when the private-war army policy authorizes the party:
+the candidate sets `AIBehaviorData.WillGatherArmy = true` only when the private-war army policy
+authorizes the party. It does **not** call `PartyThinkParams.SetArmyMembers(...)`: Bannerlord's event
+listeners run LIFO, later stock score producers can overwrite the single shared list, and the private
+listener cannot know the final winner at its execution point.
+
+A narrowly filtered Harmony prefix on public
+`Kingdom.CreateArmy(Hero, Settlement, ArmyTypes, MBReadOnlyList<MobileParty>)` runs after vanilla has
+selected the strict winner and passed its random formation gate. Only when the type is `Besieger` and
+the leader/target match an active private-war side and frozen goal does the prefix revalidate the
+policy and replace `partiesToCallToArmy` with the authorized same-side list. If revalidation fails it
+suppresses that private creation; ordinary and unrelated calls are unchanged:
 
 - at most one private-war army per side for this goal;
 - an eligible principal-clan party has exclusive leader priority;
@@ -270,9 +281,10 @@ the candidate may set `AIBehaviorData.WillGatherArmy = true` and supply
   opposing side or an uninvolved same-kingdom clan;
 - a fallback-led army is not replaced when a principal party later becomes eligible.
 
-The private-war army candidate must still compete in the normal score vote so defence, captivity,
-starvation, and stronger objectives can win. Targeted tests must cover both winning and losing that
-vote and ensure the shared `PartyThinkParams` army-member list is not applied to a different objective.
+The private-war army candidate still competes in the normal score vote so defence, captivity,
+starvation, and stronger objectives can win. Targeted tests must prove losing/tied private candidates
+do not reach the filtered creation path, matching winners receive only their current authorized side,
+invalidated plans abort, and ordinary `Kingdom.CreateArmy` calls retain their original member list.
 
 ---
 
@@ -395,7 +407,7 @@ gates. It does not broaden the feature beyond the design's existing private-war 
 
 | Surface | 1.4.6 decision |
 | --- | --- |
-| Army creation and candidate list | Public model + scored behavior APIs; no Harmony. |
+| Army creation and candidate list | Public model for ordinary eligibility/filtering and scored behavior for the goal. Use one narrowly filtered `Kingdom.CreateArmy` prefix for final private member substitution because 1.4 has no post-scoring/pre-creation event and the shared member cache is unsafe under LIFO listener order. |
 | AI `IsEnemy` / stance score | Keep Harmony; private helpers precede the public attack/avoid hooks. |
 | Static encounter start and non-virtual battle/siege side gates | Keep targeted Harmony. |
 | Besiege/continue/attack-army menu conditions | Prefer private-war-only registered menu options if public consequences reproduce vanilla exactly; otherwise retain the postfixes. |
@@ -507,11 +519,13 @@ Port `DadgArmyManagementCalculationModel` from the removed
 ordinary kingdom armies away from private-war enemies, and allow a private-war-only army when the
 Task 3 policy authorizes it.
 
-Change the hourly private-war goal injection so the winning `BesiegeSettlement` candidate sets
-`WillGatherArmy` and calls `PartyThinkParams.SetArmyMembers(...)` with the authorized same-side list.
-Write failing adapter tests for leader priority/fallback, ordinary-army filtering, private-war-only
-formation, a private-war candidate losing the score vote, and prevention of stale shared army-member
-state being applied to a different winning objective.
+Change the hourly private-war goal injection so an authorized `BesiegeSettlement` candidate sets
+`WillGatherArmy` but never writes the shared `PartyThinkParams` member cache. Add the narrowly filtered
+`Kingdom.CreateArmy` prefix described above so the already-selected matching private-war creation gets
+a freshly revalidated same-side list. Write failing adapter/patch tests for leader priority/fallback,
+ordinary-army filtering, private-war-only formation, matching type/leader/frozen-goal filters,
+revalidation failure, unchanged ordinary calls, and the absence of a private-listener
+`SetArmyMembers` call.
 
 Focused verification: the army adapter tests, private-war domain tests, and the affected application
 project build against 1.4.6.
