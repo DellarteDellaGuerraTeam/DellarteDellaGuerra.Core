@@ -16,6 +16,17 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Armies
         bool CanCreateArmy,
         IReadOnlyList<string> MemberPartyIds);
 
+    public enum PrivateWarArmyCreationAction
+    {
+        ContinueOriginal,
+        ReplaceMembers,
+        Suppress
+    }
+
+    public record PrivateWarArmyCreationDecision(
+        PrivateWarArmyCreationAction Action,
+        IReadOnlyList<string> MemberPartyIds);
+
     public class PrivateWarArmyDecisionAdapter
     {
         private readonly PrivateWarArmyPolicy _policy;
@@ -85,14 +96,36 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Armies
                 true, members.Select(member => member.PartyId).ToList());
         }
 
-        public IReadOnlyList<string>? SelectPrivateMembers(
-            IReadOnlyList<float> earlierScores,
-            float privateWarScore,
-            IReadOnlyList<string> privateWarMemberPartyIds)
+        public PrivateWarArmyCreationDecision DecidePrivateCreation(
+            bool isBesieger,
+            bool hasActivePrivateWar,
+            string leaderPartyId,
+            string targetSettlementId,
+            string privateWarLeaderPartyId,
+            string frozenGoalSettlementId,
+            Func<IReadOnlyList<string>?> revalidateMembers)
         {
-            return earlierScores.Any(score => score >= privateWarScore)
-                ? null
-                : privateWarMemberPartyIds;
+            if (isBesieger
+                && hasActivePrivateWar
+                && leaderPartyId == privateWarLeaderPartyId
+                && targetSettlementId == frozenGoalSettlementId)
+            {
+                var memberPartyIds = revalidateMembers();
+                if (memberPartyIds != null)
+                {
+                    return new PrivateWarArmyCreationDecision(
+                        PrivateWarArmyCreationAction.ReplaceMembers,
+                        memberPartyIds);
+                }
+
+                return new PrivateWarArmyCreationDecision(
+                    PrivateWarArmyCreationAction.Suppress,
+                    Array.Empty<string>());
+            }
+
+            return new PrivateWarArmyCreationDecision(
+                PrivateWarArmyCreationAction.ContinueOriginal,
+                Array.Empty<string>());
         }
     }
 }

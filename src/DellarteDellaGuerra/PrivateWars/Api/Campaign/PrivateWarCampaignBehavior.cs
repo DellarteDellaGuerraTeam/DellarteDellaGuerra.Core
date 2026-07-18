@@ -137,17 +137,7 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             var behaviour = new AIBehaviorData(
                 objective.Goal, AiBehavior.BesiegeSettlement, MobileParty.NavigationType.Default,
                 willGatherArmy: armyMembers != null, isFromPort: false, isTargetingPort: false);
-            var earlierScores = p.AIBehaviorScores.Select(candidate => candidate.Item2).ToList();
             p.AddBehaviorScore((behaviour, score));
-
-            if (armyMembers is null) return;
-
-            var selectedMembers = _armyDecisionAdapter.SelectPrivateMembers(
-                earlierScores,
-                score,
-                armyMembers.Select(member => member.StringId).ToList());
-            if (selectedMembers != null)
-                p.SetArmyMembers(armyMembers);
         }
 
         private MBList<MobileParty>? GetPrivateWarArmyMembers(
@@ -267,6 +257,36 @@ namespace DellarteDellaGuerra.PrivateWars.Api.Campaign
             var membersById = orderedParties.ToDictionary(party => party.StringId);
             return new MBList<MobileParty>(
                 plan.MemberPartyIds.Select(partyId => membersById[partyId]));
+        }
+
+        public PrivateWarArmyCreationAction PreparePrivateWarArmyCreation(
+            Hero armyLeader,
+            Settlement targetSettlement,
+            Army.ArmyTypes selectedArmyType,
+            out MBReadOnlyList<MobileParty>? replacementMembers)
+        {
+            replacementMembers = null;
+
+            var leaderParty = armyLeader?.PartyBelongedTo;
+            var objective = leaderParty is null ? null : FindPrivateWarGoalFor(leaderParty);
+            MBList<MobileParty>? freshMembers = null;
+            var decision = _armyDecisionAdapter.DecidePrivateCreation(
+                selectedArmyType == Army.ArmyTypes.Besieger,
+                objective != null,
+                leaderParty?.StringId ?? string.Empty,
+                targetSettlement?.StringId ?? string.Empty,
+                objective is null ? string.Empty : leaderParty!.StringId,
+                objective?.War.MainGoalSettlementId ?? string.Empty,
+                () =>
+                {
+                    freshMembers = GetPrivateWarArmyMembers(leaderParty!, objective!);
+                    return freshMembers?.Select(member => member.StringId).ToList();
+                });
+
+            if (decision.Action == PrivateWarArmyCreationAction.ReplaceMembers)
+                replacementMembers = freshMembers;
+
+            return decision.Action;
         }
 
         private static PrivateWarArmyCandidate ToArmyCandidate(MobileParty party)
