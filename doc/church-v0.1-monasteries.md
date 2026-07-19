@@ -31,9 +31,9 @@ logs a warning and leaves the list empty, so the church features simply stay ina
 | village_Lanercost_Priory | Carlisle_town | Prior |
 | village_Lindisfarne_Priory | dadg_Bamburgh_castle | Prior |
 | village_Finchale_Priory | dadg_Durham_castle | Prior |
-| village_Ely_Cathedral | Bury_St_Edmunds_town | Dean |
-| village_Llandaff_Cathedral | Cardiff_town | Dean |
-| village_St_Asaph_Cathedral | dadg_Denbigh_castle | Dean |
+| village_Ely_Cathedral | Bury_St_Edmunds_town | Bishop |
+| village_Llandaff_Cathedral | Cardiff_town | Bishop |
+| village_St_Asaph_Cathedral | dadg_Denbigh_castle | Bishop |
 
 Title is derived from the `kind` attribute and only used in dialog text (v0.1 does not rename the
 hero).

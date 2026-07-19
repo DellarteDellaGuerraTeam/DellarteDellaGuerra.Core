@@ -10,6 +10,7 @@ namespace DellarteDellaGuerra.Domain.Church
         public int SacrilegeRelationOthers { get; }
         public int WeeklyTithePower { get; }
         public int DonationPower { get; }
+        public int BlessingMorale { get; }
 
         public ChurchSettings(
             int donationCost,
@@ -19,7 +20,8 @@ namespace DellarteDellaGuerra.Domain.Church
             int sacrilegeRelationLocal,
             int sacrilegeRelationOthers,
             int weeklyTithePower,
-            int donationPower)
+            int donationPower,
+            int blessingMorale)
         {
             DonationCost = donationCost;
             DonationRelation = donationRelation;
@@ -29,6 +31,7 @@ namespace DellarteDellaGuerra.Domain.Church
             SacrilegeRelationOthers = sacrilegeRelationOthers;
             WeeklyTithePower = weeklyTithePower;
             DonationPower = donationPower;
+            BlessingMorale = blessingMorale;
         }
     }
 }

@@ -13,5 +13,6 @@
     <SacrilegeRelationOthers>-5</SacrilegeRelationOthers>
     <WeeklyTithePower>2</WeeklyTithePower>
     <DonationPower>5</DonationPower>
+    <BlessingMorale>5</BlessingMorale>
   </ChurchConfig>
 </DadgConfiguration>

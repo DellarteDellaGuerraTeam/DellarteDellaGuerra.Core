@@ -27,5 +27,8 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Models
 
         [XmlElement(ElementName = "DonationPower")]
         public int DonationPower { get; set; } = 5;
+
+        [XmlElement(ElementName = "BlessingMorale")]
+        public int BlessingMorale { get; set; } = 5;
     }
 }

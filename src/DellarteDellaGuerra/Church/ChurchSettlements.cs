@@ -19,11 +19,15 @@ namespace DellarteDellaGuerra.Church
         public bool IsChurchSettlement(Settlement settlement) =>
             _kindsBySettlementId.ContainsKey(settlement.StringId);
 
+        public bool IsCathedral(Settlement settlement) =>
+            _kindsBySettlementId.TryGetValue(settlement.StringId, out var kind) &&
+            kind == ChurchSettlementKind.Cathedral;
+
         public TextObject GetClergyTitle(Settlement settlement)
         {
             _kindsBySettlementId.TryGetValue(settlement.StringId, out var kind);
             if (kind == ChurchSettlementKind.Priory) return new TextObject("{=fW2qLp8D}Prior");
-            if (kind == ChurchSettlementKind.Cathedral) return new TextObject("{=hN6cRw3B}Dean");
+            if (kind == ChurchSettlementKind.Cathedral) return new TextObject("{=nQ4wRb8T}Bishop");
             return new TextObject("{=uK9dTe5S}Abbot");
         }
 

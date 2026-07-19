@@ -25,7 +25,8 @@ namespace DellarteDellaGuerra.Infrastructure.Church
                 config.SacrilegeRelationLocal,
                 config.SacrilegeRelationOthers,
                 config.WeeklyTithePower,
-                config.DonationPower);
+                config.DonationPower,
+                config.BlessingMorale);
         }
     }
 }
