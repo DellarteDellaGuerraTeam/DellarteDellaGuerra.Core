@@ -1,31 +1,37 @@
+using System.Collections.Generic;
+using DellarteDellaGuerra.Domain.Church;
+using DellarteDellaGuerra.Domain.Church.Port;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Localization;
 
 namespace DellarteDellaGuerra.Church
 {
-    public static class ChurchSettlements
+    public class ChurchSettlements
     {
-        private const string AbbeySuffix = "_Abbey";
-        private const string PriorySuffix = "_Priory";
-        private const string CathedralSuffix = "_Cathedral";
+        private readonly Dictionary<string, ChurchSettlementKind> _kindsBySettlementId = new();
 
-        public static bool IsChurchSettlement(Settlement settlement) =>
-            settlement.IsVillage &&
-            (settlement.StringId.EndsWith(AbbeySuffix) ||
-             settlement.StringId.EndsWith(PriorySuffix) ||
-             settlement.StringId.EndsWith(CathedralSuffix));
-
-        public static TextObject GetClergyTitle(Settlement settlement)
+        public ChurchSettlements(IChurchSettlementsProvider churchSettlementsProvider)
         {
-            if (settlement.StringId.EndsWith(PriorySuffix)) return new TextObject("{=fW2qLp8D}Prior");
-            if (settlement.StringId.EndsWith(CathedralSuffix)) return new TextObject("{=hN6cRw3B}Dean");
+            foreach (var churchSettlement in churchSettlementsProvider.GetChurchSettlements())
+                _kindsBySettlementId[churchSettlement.SettlementId] = churchSettlement.Kind;
+        }
+
+        public bool IsChurchSettlement(Settlement settlement) =>
+            _kindsBySettlementId.ContainsKey(settlement.StringId);
+
+        public TextObject GetClergyTitle(Settlement settlement)
+        {
+            _kindsBySettlementId.TryGetValue(settlement.StringId, out var kind);
+            if (kind == ChurchSettlementKind.Priory) return new TextObject("{=fW2qLp8D}Prior");
+            if (kind == ChurchSettlementKind.Cathedral) return new TextObject("{=hN6cRw3B}Dean");
             return new TextObject("{=uK9dTe5S}Abbot");
         }
 
-        public static TextObject GetChurchType(Settlement settlement)
+        public TextObject GetChurchType(Settlement settlement)
         {
-            if (settlement.StringId.EndsWith(PriorySuffix)) return new TextObject("{=cV4bXm7J}priory");
-            if (settlement.StringId.EndsWith(CathedralSuffix)) return new TextObject("{=pG8sZn2M}cathedral");
+            _kindsBySettlementId.TryGetValue(settlement.StringId, out var kind);
+            if (kind == ChurchSettlementKind.Priory) return new TextObject("{=cV4bXm7J}priory");
+            if (kind == ChurchSettlementKind.Cathedral) return new TextObject("{=pG8sZn2M}cathedral");
             return new TextObject("{=wQ3jYf6H}abbey");
         }
     }

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using DellarteDellaGuerra.Domain.Church.Port;
 using DellarteDellaGuerra.Domain.Church.Sanctuary;
 using Helpers;
 using TaleWorlds.CampaignSystem;
@@ -19,16 +18,18 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
     {
         private const string SanctuaryMenuId = "dadg_church_sanctuary";
 
-        private readonly IChurchSettingsProvider _churchSettingsProvider;
+        private readonly ChurchSettlements _churchSettlements;
+        private readonly ChurchSacrilege _churchSacrilege;
 
         private CampaignTime _playerSanctuaryStart = CampaignTime.Never;
         private Dictionary<Hero, Settlement> _fugitiveSanctuaries = new();
         private Dictionary<Hero, CampaignTime> _fugitiveSanctuaryStarts = new();
         private bool _raidNoticeShown;
 
-        public SanctuaryCampaignBehavior(IChurchSettingsProvider churchSettingsProvider)
+        public SanctuaryCampaignBehavior(ChurchSettlements churchSettlements, ChurchSacrilege churchSacrilege)
         {
-            _churchSettingsProvider = churchSettingsProvider;
+            _churchSettlements = churchSettlements;
+            _churchSacrilege = churchSacrilege;
         }
 
         public override void RegisterEvents()
@@ -83,12 +84,12 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
                 isLeave: true);
         }
 
-        private static bool CanClaimSanctuary(MenuCallbackArgs args)
+        private bool CanClaimSanctuary(MenuCallbackArgs args)
         {
             args.optionLeaveType = GameMenuOption.LeaveType.Wait;
 
             var settlement = Settlement.CurrentSettlement;
-            if (settlement == null || !ChurchSettlements.IsChurchSettlement(settlement)) return false;
+            if (settlement == null || !_churchSettlements.IsChurchSettlement(settlement)) return false;
 
             var enabled = settlement.Village.VillageState == Village.VillageStates.Normal;
             var tooltip = new TextObject("{=jR4wXe8B}The cloister is in no state to shelter you.");
@@ -191,7 +192,7 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
             args.optionLeaveType = GameMenuOption.LeaveType.HostileAction;
 
             var settlement = Settlement.CurrentSettlement;
-            if (settlement == null || !ChurchSettlements.IsChurchSettlement(settlement)) return false;
+            if (settlement == null || !_churchSettlements.IsChurchSettlement(settlement)) return false;
 
             var fugitives = GetFugitivesPresent(settlement);
             if (fugitives.Count == 0) return false;
@@ -213,7 +214,7 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
 
             Untag(target);
             TakePrisonerAction.Apply(PartyBase.MainParty, target);
-            ChurchCampaignBehavior.ApplySacrilege(Hero.MainHero, settlement, _churchSettingsProvider.GetSettings());
+            _churchSacrilege.Apply(Hero.MainHero, settlement);
             GameMenu.SwitchToMenu("village");
         }
 
@@ -226,13 +227,13 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
         private static bool IsAtWarWithPlayer(Hero hero) =>
             hero.MapFaction != null && hero.MapFaction.IsAtWarWith(Hero.MainHero.MapFaction);
 
-        private static Settlement FindNearestChurchSettlement(Vec2 position)
+        private Settlement FindNearestChurchSettlement(Vec2 position)
         {
             Settlement nearest = null;
             var nearestDistanceSquared = float.MaxValue;
             foreach (var settlement in Settlement.All)
             {
-                if (!ChurchSettlements.IsChurchSettlement(settlement)) continue;
+                if (!_churchSettlements.IsChurchSettlement(settlement)) continue;
 
                 var distanceSquared = position.DistanceSquared(settlement.GetPosition2D);
                 if (distanceSquared >= nearestDistanceSquared) continue;

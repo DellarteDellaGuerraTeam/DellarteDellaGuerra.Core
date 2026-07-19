@@ -1,0 +1,18 @@
+<ChurchSettlements>
+  <ChurchSettlement id="village_Malmesbury_Abbey" kind="Abbey" />
+  <ChurchSettlement id="village_Tintern_Abbey" kind="Abbey" />
+  <ChurchSettlement id="village_Hexham_Abbey" kind="Abbey" />
+  <ChurchSettlement id="village_Buckfast_Abbey" kind="Abbey" />
+  <ChurchSettlement id="village_Evesham_Abbey" kind="Abbey" />
+  <ChurchSettlement id="village_Whitland_Abbey" kind="Abbey" />
+  <ChurchSettlement id="village_Battle_Abbey" kind="Abbey" />
+  <ChurchSettlement id="village_Byland_Abbey" kind="Abbey" />
+  <ChurchSettlement id="village_Walsingham_Abbey" kind="Abbey" />
+  <ChurchSettlement id="village_Rievaulx_Abbey" kind="Abbey" />
+  <ChurchSettlement id="village_Lanercost_Priory" kind="Priory" />
+  <ChurchSettlement id="village_Lindisfarne_Priory" kind="Priory" />
+  <ChurchSettlement id="village_Finchale_Priory" kind="Priory" />
+  <ChurchSettlement id="village_Ely_Cathedral" kind="Cathedral" />
+  <ChurchSettlement id="village_Llandaff_Cathedral" kind="Cathedral" />
+  <ChurchSettlement id="village_St_Asaph_Cathedral" kind="Cathedral" />
+</ChurchSettlements>

@@ -77,10 +77,13 @@ Extend the existing feature (no new projects/folders beyond one Domain file):
 - Tithe and sacrilege have no branching logic worth a policy class — the behavior reads the
   amounts (mass morale/relation, tithe/donation power, sacrilege relations) from `ChurchSettings`
   (see Configuration below).
-- `src\DellarteDellaGuerra\Church\Api\Campaign\ChurchCampaignBehavior.cs` — add the menu
-  option, `WeeklyTickEvent` and `VillageLooted` listeners, `_lastMassTime` in `SyncData`, and
-  the +5 power line in `Donate()`. If the behavior grows past comfortable size, split a
-  `ChurchLifeCampaignBehavior` — but don't pre-split.
+- `src\DellarteDellaGuerra\Church\Api\Campaign\ChurchCampaignBehavior.cs` — `WeeklyTickEvent`
+  and `VillageLooted` listeners (tithe, sacrilege trigger). The mass menu option and
+  `_lastMassTime` in `SyncData` were later split into `ChurchMassCampaignBehavior.cs`, the
+  sacrilege cascade into the `ChurchSacrilege` injected service
+  (`src\DellarteDellaGuerra\Church\ChurchSacrilege.cs` — owns its `IChurchSettingsProvider`
+  lookup, so callers just call `Apply(offender, site)`), and the +5 power line in `Donate()`
+  into `AbbotDialogCampaignBehavior.cs`.
 
 ## 4b. Configuration (added with the config pass, 2026-07-19)
 
@@ -105,9 +108,9 @@ donation cooldown, and the 40/20-day sanctuary durations (v0.3).
 
 Wiring follows the joust pattern: Domain port `IChurchSettingsProvider` → immutable
 `ChurchSettings` → Infrastructure `ChurchSettingsConfig(IConfigurationProvider<DadgConfig>)` →
-registered in `DadgServiceContainer.RegisterChurchServices`, constructor-injected into
-`ChurchCampaignBehavior` and `SanctuaryCampaignBehavior`. Policies stay pure —
-`DonationPolicy.Evaluate` takes the cost as a parameter.
+registered in `DadgServiceContainer.RegisterChurchServices`, constructor-injected into the church
+behaviors and into the `ChurchSacrilege` service (which owns the settings lookup for the sacrilege
+cascade). Policies stay pure — `DonationPolicy.Evaluate` takes the cost as a parameter.
 
 ## 5. Verification
 

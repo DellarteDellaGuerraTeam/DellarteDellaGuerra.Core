@@ -71,10 +71,10 @@ Defeated lords appear at the nearest monastery instead of vanishing into the fug
   present; with several fugitives, each seizure re-shows the option for the next.
 - **Consequence**: `TakePrisonerAction.Apply(PartyBase.MainParty, fugitive)` (verified 1.4.6
   signature; `ApplyInternal` nulls `StayingInSettlement`, so no manual settlement-leave needed),
-  untag the hero, then **sacrilege** — the v0.2 raid-relation cascade refactored into shared
-  `ChurchCampaignBehavior.ApplySacrilege(Hero offender, Settlement site)` (−15 with the local
-  abbot, −5 with every other church abbot, player message) called from both the raid listener
-  and here.
+  untag the hero, then **sacrilege** — the v0.2 raid-relation cascade refactored into the shared
+  injected `ChurchSacrilege` service: `Apply(Hero offender, Settlement site)` (−15 with the local
+  abbot, −5 with every other church abbot, player message; the service fetches the amounts from
+  its own `IChurchSettingsProvider`) called from both the raid listener and here.
 - The strategic loop: monasteries protect your beaten enemies; you *can* break the rules and take
   a valuable prisoner, and all of England's clergy remembers.
 
@@ -91,8 +91,9 @@ Defeated lords appear at the nearest monastery instead of vanishing into the fug
 - `src\DellarteDellaGuerra\Church\Api\Campaign\ChurchSaveableTypeDefiner.cs` — registers the
   `Dictionary<Hero, Settlement>` save container (vanilla 1.4.6 doesn't define it); base id
   674592360, distinct from the tournament definers.
-- `src\DellarteDellaGuerra\Church\Api\Campaign\ChurchCampaignBehavior.cs` — `OnVillageLooted`
-  cascade refactored into `internal static ApplySacrilege`.
+- `src\DellarteDellaGuerra\Church\ChurchSacrilege.cs` — `OnVillageLooted` cascade refactored
+  into the injected `ChurchSacrilege` service (`Apply(offender, site)`), called from both
+  `ChurchCampaignBehavior` and here.
 
 ## 5. Risks
 

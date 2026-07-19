@@ -10,10 +10,11 @@ custom domain system, deliberately not built on Bannerlord clans.
 
 ## 1. Church settlements
 
-Detection rule: `settlement.IsVillage` and settlement id ends with `_Abbey`, `_Priory`, or
-`_Cathedral`. This matches exactly 16 villages in
-`DellarteDellaGuerraMap\ModuleData\settlements.xml` and correctly excludes name-only lookalikes
-(`village_Westminster`, `village_Axminster`, `village_Kidderminster`, `village_Priors_Hardwick`).
+Detection rule: the settlement id is listed in the dedicated config file
+`config\dadg.church_settlements.xml` (`<ChurchSettlement id="..." kind="Abbey|Priory|Cathedral" />`),
+loaded once at startup by `ChurchSettlementsXmlProvider`. The shipped file lists exactly the 16
+villages below from `DellarteDellaGuerraMap\ModuleData\settlements.xml`; a missing or invalid file
+logs a warning and leaves the list empty, so the church features simply stay inactive.
 
 | Settlement id | Bound to | Clergy title |
 |---|---|---|
@@ -34,7 +35,8 @@ Detection rule: `settlement.IsVillage` and settlement id ends with `_Abbey`, `_P
 | village_Llandaff_Cathedral | Cardiff_town | Dean |
 | village_St_Asaph_Cathedral | dadg_Denbigh_castle | Dean |
 
-Title is derived from the id suffix and only used in dialog text (v0.1 does not rename the hero).
+Title is derived from the `kind` attribute and only used in dialog text (v0.1 does not rename the
+hero).
 
 ## 2. Abbot notable
 
@@ -85,10 +87,15 @@ Pure policy class, unit-tested, no Bannerlord references:
 
 - `src\DellarteDellaGuerra.Domain\Church\Donation\DonationPolicy.cs` — rules above.
 - `src\DellarteDellaGuerra.Domain.Tests\DonationPolicyTests.cs` — xUnit, plain values.
-- `src\DellarteDellaGuerra\Church\ChurchSettlements.cs` — id-suffix detection + title mapping
-  (single-use helper, no interface).
+- `src\DellarteDellaGuerra\Church\ChurchSettlements.cs` — DI-injected instance service
+  (registered as a singleton in `RegisterChurchServices`): detection + title mapping, backed by
+  the Domain port `IChurchSettlementsProvider`
+  (`src\DellarteDellaGuerra.Infrastructure\Church\ChurchSettlementsXmlProvider.cs` reads
+  `config\dadg.church_settlements.xml`).
 - `src\DellarteDellaGuerra\Church\Api\Campaign\ChurchCampaignBehavior.cs` —
-  `CampaignBehaviorBase`: spawn loop, dialog registration, applies donation effects.
+  `CampaignBehaviorBase`: spawn loop.
+- `src\DellarteDellaGuerra\Church\Api\Campaign\AbbotDialogCampaignBehavior.cs` —
+  dialog registration, applies donation effects.
   `SyncData`: `Dictionary<Hero, CampaignTime>` of last donation per abbot.
 - `src\DellarteDellaGuerra.Integration\DI\DadgServiceContainer.cs` — `RegisterChurchServices`.
 - `src\DellarteDellaGuerra.Integration\SubModule.cs` — `campaignGameStarter.AddBehavior(...)` in

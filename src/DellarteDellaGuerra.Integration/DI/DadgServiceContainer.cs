@@ -26,6 +26,7 @@ using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
+using DellarteDellaGuerra.Church;
 using DellarteDellaGuerra.Domain.Church.Port;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Infrastructure.Church;
@@ -99,6 +100,9 @@ public class DadgServiceContainer
     {
         services.AddSingleton<IChurchSettingsProvider>(sp =>
             new ChurchSettingsConfig(sp.GetRequiredService<DadgConfigWatcher>()));
+        services.AddSingleton<IChurchSettlementsProvider, ChurchSettlementsXmlProvider>();
+        services.AddSingleton<ChurchSettlements>();
+        services.AddSingleton<ChurchSacrilege>();
     }
 
     private static void RegisterDisplayServices(IServiceCollection services)

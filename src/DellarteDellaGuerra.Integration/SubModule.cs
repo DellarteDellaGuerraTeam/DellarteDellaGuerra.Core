@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Bannerlord.ExpandedTemplate.API;
+using DellarteDellaGuerra.Church;
 using DellarteDellaGuerra.Church.Api.Campaign;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders;
@@ -115,8 +116,15 @@ namespace DellarteDellaGuerra.Integration
 
             campaignGameStarter.AddBehavior(new JoustTournamentCampaignBehavior(joustRequirementsProvider));
             var churchSettingsProvider = _serviceProvider.GetRequiredService<IChurchSettingsProvider>();
-            campaignGameStarter.AddBehavior(new ChurchCampaignBehavior(churchSettingsProvider));
-            campaignGameStarter.AddBehavior(new SanctuaryCampaignBehavior(churchSettingsProvider));
+            var churchSettlements = _serviceProvider.GetRequiredService<ChurchSettlements>();
+            var churchSacrilege = _serviceProvider.GetRequiredService<ChurchSacrilege>();
+            campaignGameStarter.AddBehavior(
+                new ChurchCampaignBehavior(churchSettlements, churchSacrilege, churchSettingsProvider));
+            campaignGameStarter.AddBehavior(
+                new AbbotDialogCampaignBehavior(churchSettlements, churchSettingsProvider));
+            campaignGameStarter.AddBehavior(
+                new ChurchMassCampaignBehavior(churchSettlements, churchSettingsProvider));
+            campaignGameStarter.AddBehavior(new SanctuaryCampaignBehavior(churchSettlements, churchSacrilege));
         }
 
         public override void OnGameInitializationFinished(Game game)
