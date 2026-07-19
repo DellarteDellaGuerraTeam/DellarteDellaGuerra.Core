@@ -71,7 +71,7 @@ namespace DellarteDellaGuerra.Infrastructure.Church
                     continue;
                 }
 
-                churchSettlements.Add(new ChurchSettlementData(settlement.Id, kind));
+                churchSettlements.Add(new ChurchSettlementData(settlement.Id, kind, settlement.Shrine));
             }
 
             return churchSettlements;

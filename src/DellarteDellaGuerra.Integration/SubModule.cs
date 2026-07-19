@@ -125,6 +125,8 @@ namespace DellarteDellaGuerra.Integration
             campaignGameStarter.AddBehavior(
                 new ChurchMassCampaignBehavior(churchSettlements, churchSettingsProvider));
             campaignGameStarter.AddBehavior(new SanctuaryCampaignBehavior(churchSettlements, churchSacrilege));
+            campaignGameStarter.AddBehavior(new PilgrimageCampaignBehavior(
+                churchSettlements, churchSacrilege, churchSettingsProvider, loggerFactory));
         }
 
         public override void OnGameInitializationFinished(Game game)

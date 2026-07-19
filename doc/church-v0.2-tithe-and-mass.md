@@ -87,7 +87,7 @@ Extend the existing feature (no new projects/folders beyond one Domain file):
 
 ## 4b. Configuration (added with the config pass, 2026-07-19)
 
-The nine balance values across v0.1–v0.4 are configurable in `config/dadg.config.xml` under
+The eleven balance values across v0.1–v0.5 are configurable in `config/dadg.config.xml` under
 `<ChurchConfig>` (sibling of `<JoustingConfig>`), hot-reloaded by `DadgConfigWatcher`; any
 missing field/section/file falls back to the defaults below (property initializers on
 `ChurchConfig`):
@@ -103,6 +103,8 @@ missing field/section/file falls back to the defaults below (property initialize
 | `WeeklyTithePower` | 2 | Abbot Power gained per week |
 | `DonationPower` | 5 | Abbot Power gained per donation |
 | `BlessingMorale` | 5 | Party morale gained from a bishop's blessing (v0.4) |
+| `MaxPilgrimParties` | 3 | Maximum concurrent pilgrim bands on the map (v0.5) |
+| `PilgrimProtectionRelation` | 2 | Relation gained with a band's home clergy for defeating bandits near it (v0.5) |
 
 Deliberately **not** configurable (identity constants): donation renown (+1), the 7-day
 donation cooldown, and the 40/20-day sanctuary durations (v0.3).

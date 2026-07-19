@@ -14,5 +14,7 @@
     <WeeklyTithePower>2</WeeklyTithePower>
     <DonationPower>5</DonationPower>
     <BlessingMorale>5</BlessingMorale>
+    <MaxPilgrimParties>3</MaxPilgrimParties>
+    <PilgrimProtectionRelation>2</PilgrimProtectionRelation>
   </ChurchConfig>
 </DadgConfiguration>

@@ -26,7 +26,9 @@ namespace DellarteDellaGuerra.Infrastructure.Church
                 config.SacrilegeRelationOthers,
                 config.WeeklyTithePower,
                 config.DonationPower,
-                config.BlessingMorale);
+                config.BlessingMorale,
+                config.MaxPilgrimParties,
+                config.PilgrimProtectionRelation);
         }
     }
 }

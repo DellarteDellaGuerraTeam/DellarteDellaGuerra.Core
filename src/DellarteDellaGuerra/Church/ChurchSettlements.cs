@@ -9,15 +9,22 @@ namespace DellarteDellaGuerra.Church
     public class ChurchSettlements
     {
         private readonly Dictionary<string, ChurchSettlementKind> _kindsBySettlementId = new();
+        private readonly HashSet<string> _shrineSettlementIds = new();
 
         public ChurchSettlements(IChurchSettlementsProvider churchSettlementsProvider)
         {
             foreach (var churchSettlement in churchSettlementsProvider.GetChurchSettlements())
+            {
                 _kindsBySettlementId[churchSettlement.SettlementId] = churchSettlement.Kind;
+                if (churchSettlement.IsShrine) _shrineSettlementIds.Add(churchSettlement.SettlementId);
+            }
         }
 
         public bool IsChurchSettlement(Settlement settlement) =>
             _kindsBySettlementId.ContainsKey(settlement.StringId);
+
+        public bool IsShrine(Settlement settlement) =>
+            _shrineSettlementIds.Contains(settlement.StringId);
 
         public bool IsCathedral(Settlement settlement) =>
             _kindsBySettlementId.TryGetValue(settlement.StringId, out var kind) &&

@@ -30,5 +30,11 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Models
 
         [XmlElement(ElementName = "BlessingMorale")]
         public int BlessingMorale { get; set; } = 5;
+
+        [XmlElement(ElementName = "MaxPilgrimParties")]
+        public int MaxPilgrimParties { get; set; } = 3;
+
+        [XmlElement(ElementName = "PilgrimProtectionRelation")]
+        public int PilgrimProtectionRelation { get; set; } = 2;
     }
 }

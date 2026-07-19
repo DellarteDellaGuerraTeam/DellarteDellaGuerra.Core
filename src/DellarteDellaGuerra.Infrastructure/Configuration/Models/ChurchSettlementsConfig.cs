@@ -17,5 +17,8 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Models
 
         [XmlAttribute(AttributeName = "kind")]
         public string Kind { get; set; } = "";
+
+        [XmlAttribute(AttributeName = "shrine")]
+        public bool Shrine { get; set; }
     }
 }

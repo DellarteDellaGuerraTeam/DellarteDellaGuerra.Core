@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.SaveSystem;
 
@@ -15,6 +16,7 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
         protected override void DefineContainerDefinitions()
         {
             ConstructContainerDefinition(typeof(Dictionary<Hero, Settlement>));
+            ConstructContainerDefinition(typeof(Dictionary<MobileParty, Settlement>));
         }
     }
 }

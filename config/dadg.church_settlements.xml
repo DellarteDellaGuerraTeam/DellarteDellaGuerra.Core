@@ -7,7 +7,7 @@
   <ChurchSettlement id="village_Whitland_Abbey" kind="Abbey" />
   <ChurchSettlement id="village_Battle_Abbey" kind="Abbey" />
   <ChurchSettlement id="village_Byland_Abbey" kind="Abbey" />
-  <ChurchSettlement id="village_Walsingham_Abbey" kind="Abbey" />
+  <ChurchSettlement id="village_Walsingham_Abbey" kind="Abbey" shrine="true" />
   <ChurchSettlement id="village_Rievaulx_Abbey" kind="Abbey" />
   <ChurchSettlement id="village_Lanercost_Priory" kind="Priory" />
   <ChurchSettlement id="village_Lindisfarne_Priory" kind="Priory" />
