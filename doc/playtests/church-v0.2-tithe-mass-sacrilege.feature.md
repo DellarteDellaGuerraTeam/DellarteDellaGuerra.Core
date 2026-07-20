@@ -7,14 +7,14 @@ Tags: @bannerlord @gabs @dadg @church @v0.2 @mass @tithe @sacrilege
 ## Scenario 1: "Attend mass" option is visible at a church village and hidden at a non-church village
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save>
-- Created pre-trigger save: <pre-trigger save>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: saveauto1 (Summer 2, 1084), teleported to Tintern Abbey, Evesham Abbey, Romford, Watford
+- Created pre-trigger save: N/A
 - Created post-result save: N/A
-- Evidence status: Not run
+- Evidence status: Passed (overturned from Failed on parent review — see Parent Review below)
 
 ```gherkin
 Feature: Church v0.2 — Sunday Mass, Weekly Tithe, and Sacrilege
@@ -33,52 +33,66 @@ Feature: Church v0.2 — Sunday Mass, Weekly Tithe, and Sacrilege
 ## Command Log
 | Step | Tool | Arguments | Result |
 |------|------|-----------|--------|
-| 1 | (travel to village_Tintern_Abbey) | | <fill on run> |
-| 2 | bannerlord.menu.get_current | {} | <fill on run — see Attend mass> |
-| 3 | (travel to non-church village) | | <fill on run> |
-| 4 | bannerlord.menu.get_current | {} | <fill on run — no Attend mass> |
+| 1 | bannerlord.party.enter_settlement | village_Tintern_Abbey | Entered Tintern Abbey |
+| 2 | bannerlord.menu.get_current | {} | dadg_church_attend_mass present (disabled, "6 days hence") |
+| 3 | bannerlord.party.enter_settlement | village_Evesham_Abbey | Entered Evesham Abbey |
+| 4 | bannerlord.menu.get_current | {} | dadg_church_attend_mass present (disabled, "4 days hence") — both are church settlements |
+| 5 | bannerlord.party.enter_settlement | village_Romford | Entered Romford (non-church) |
+| 6 | bannerlord.menu.get_current | {} | DEFECT: dadg_church_attend_mass present and ENABLED at Romford (non-church village) |
+| 7 | bannerlord.party.enter_settlement | village_Watford | Entered Watford (non-church) |
+| 8 | bannerlord.menu.get_current | {} | DEFECT: dadg_church_attend_mass present and ENABLED at Watford (non-church village) |
 
 ## Screenshots
 | Step | File path | What it proves |
 |------|-----------|----------------|
-| Church village menu | <fill on run> | "Attend mass" present |
-| Non-church village menu | <fill on run> | "Attend mass" absent |
+| Tintern Abbey menu | C:\Users\Joe\Documents\Mount and Blade II Bannerlord\Screenshots\GABS\screenshot_20260720_135431.jpg | "Attend mass" present at Tintern Abbey (church) |
+| Romford menu | C:\Users\Joe\Documents\Mount and Blade II Bannerlord\Screenshots\GABS\screenshot_20260720_143915.jpg | Rendered Romford menu shows ONLY vanilla options — church options correctly hidden (contradicts the get_current-based defect claim; see Parent Review) |
+| Watford menu | C:\Users\Joe\Documents\Mount and Blade II Bannerlord\Screenshots\GABS\screenshot_20260720_143949.jpg | Rendered Watford menu shows ONLY vanilla options — church options correctly hidden (see Parent Review) |
 
 ## Saves
-- Reproduction save before trigger: <pre-trigger save>
+- Reproduction save before trigger: saveauto1
 - Final save after result: N/A
 
 ## Debugger Evidence
 | Breakpoint/source | Stack frame | Expression/value | Meaning |
 |-------------------|-------------|------------------|---------|
+| (not used for this scenario) | | | |
 
 ## Reproduction Steps
-1. Travel to village_Tintern_Abbey, open village menu.
-2. Screenshot or read menu options.
-3. Travel to an ordinary village, repeat.
+1. Load saveauto1. Enter village_Tintern_Abbey — confirm dadg_church_attend_mass in menu (disabled with countdown).
+2. Enter village_Romford — observe dadg_church_attend_mass present and ENABLED (should be absent).
+3. Enter village_Watford — same result (defect confirmed at 2 non-church villages).
 
 ## Result
-<fill on run>
+FAILED. "Attend mass" confirmed present at church settlements (Tintern Abbey, Evesham Abbey) with correct disabled/countdown behavior. DEFECT: "Attend mass" (and all other church menu options) also appears at non-church villages Romford and Watford, where it is enabled with no tooltip. Church menu options are not correctly filtered to church settlements.
+
+DEFECT: Church menu options (`dadg_church_survey_hierarchy`, `dadg_church_attend_mass`, `dadg_church_claim_sanctuary`, `dadg_church_drag_fugitive`) appear at ALL villages regardless of settlement type. The isChurchSettlement filtering is not working.
+
+Additional observation: `dadg_church_drag_fugitive` shows "Drag  from the cloister" (blank name) at all settlements — separate display defect.
 
 ## Strengths
-- Confirms visibility is gated by IsChurchSettlement, not globally added.
+- Positive case confirmed: attend mass present at church settlements with correct Sunday gating.
+- Negative case confirmed to be defective: option visible at two independent non-church villages.
 
 ## Limitations
-- Relies on menu option list from GABS; option text may vary if localization keys don't resolve.
+- Sunday-enabled state not tested (fast-forward overshoots; `campaign.advance_time` command not available).
+
+## Parent Review (2026-07-20)
+The FAILED verdict is overturned; scenario re-marked **Passed**. The defect claim rested solely on `bannerlord.menu.get_current`, which enumerates registered menu options WITHOUT evaluating their visibility conditions. The agent's own screenshots disprove the claim: screenshot_20260720_143915.jpg (Romford) and screenshot_20260720_143949.jpg (Watford) show only vanilla options — no church options are rendered at either non-church village. Code review confirms `ChurchMassCampaignBehavior.CanAttendMass` returns false when `IsChurchSettlement` is false, which hides the option in the real UI. Both halves of the scenario are therefore satisfied: present at Tintern/Evesham, absent (in the rendered menu) at Romford/Watford. The "Drag  from the cloister" blank-name observation is likewise an artifact of listing a hidden option. Lesson recorded in the GABS protocol reference: never use `menu.get_current` alone to prove option absence/presence — always corroborate with a screenshot.
 
 ---
 
 ## Scenario 2: Mass is enabled on Sunday (day-of-week 0) and disabled on other days with countdown tooltip
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save at village_Tintern_Abbey — non-Sunday>
-- Created pre-trigger save: agent_church_mass_sunday_before_<timestamp>
-- Created post-result save: agent_church_mass_sunday_after_<timestamp>
-- Evidence status: Not run
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: saveauto1 (Summer 2, 1084)
+- Created pre-trigger save: N/A
+- Created post-result save: N/A
+- Evidence status: Partial
 
 ```gherkin
   Scenario: Mass is disabled on weekdays and enabled on Sunday
@@ -101,52 +115,52 @@ Metadata:
 ## Command Log
 | Step | Tool | Arguments | Result |
 |------|------|-----------|--------|
-| 1 | JetBrains eval | CampaignTime.Now.GetDayOfWeek | <fill on run> |
-| 2 | bannerlord.menu.get_current | {} | <fill on run — disabled with tooltip> |
-| 3 | bannerlord.core.run_command | {"command": "campaign.advance_time N"} | <fill on run> |
-| 4 | bannerlord.menu.get_current | {} | <fill on run — enabled> |
+| 1 | bannerlord.menu.get_current | {} at village_Tintern_Abbey | dadg_church_attend_mass: isEnabled=false, tooltip="Mass will be held on the Lord's day. (6 days hence)" |
+| 2 | bannerlord.menu.get_current | {} at village_Evesham_Abbey | dadg_church_attend_mass: isEnabled=false, tooltip="Mass will be held on the Lord's day. (4 days hence)" |
+| 3 | (waited via village_wait for time to pass) | village_wait_menus → stop | Campaign time advanced to Autumn 1 1084 |
+| 4 | bannerlord.menu.get_current | {} at Evesham | dadg_church_attend_mass: isEnabled=false, tooltip="Mass will be held on the Lord's day. (7 days hence)" — Sunday overshot |
+| 5 | (Sunday enabled test) | NOT ACHIEVED — fast-forward overshot Sunday each time | |
 
 ## Screenshots
 | Step | File path | What it proves |
 |------|-----------|----------------|
-| Weekday menu | <fill on run> | Option greyed with countdown tooltip |
-| Sunday menu | <fill on run> | Option enabled |
+| Tintern Abbey menu (non-Sunday) | C:\Users\Joe\Documents\Mount and Blade II Bannerlord\Screenshots\GABS\screenshot_20260720_135431.jpg | Attend mass greyed with countdown tooltip |
 
 ## Saves
-- Reproduction save before trigger: agent_church_mass_sunday_before_<timestamp>
-- Final save after result: agent_church_mass_sunday_after_<timestamp>
+- Reproduction save before trigger: N/A
+- Final save after result: N/A
 
 ## Debugger Evidence
 | Breakpoint/source | Stack frame | Expression/value | Meaning |
 |-------------------|-------------|------------------|---------|
-| ChurchMassCampaignBehavior.CanAttendMass | local isSunday | value | Day-of-week check |
+| Not evaluated | | | |
 
 ## Reproduction Steps
-1. Confirm not Sunday via JetBrains eval.
-2. Open village menu at church settlement — option greyed.
-3. Advance to Sunday — option enabled.
+1. Enter church village on non-Sunday — confirm attend mass greyed with "N days hence" tooltip.
+2. Use campaign.set_campaign_speed_multiplier 1 (slow) and wait in village until day counter reaches 0.
+3. Confirm attend mass becomes enabled on Sunday.
 
 ## Result
-<fill on run>
+PARTIAL. Non-Sunday disabled state confirmed with countdown tooltip at both Tintern Abbey ("6 days hence" from Summer 2) and Evesham Abbey ("4 days hence"). Sunday-enabled state not confirmed — village wait fast-forward overshot Sunday on each attempt before game crashed.
 
 ## Strengths
-- Tests the day-of-week gate and countdown tooltip text.
+- Disabled state with countdown tooltip text fully confirmed.
 
 ## Limitations
-- campaign.advance_time granularity may overshoot Sunday if days-per-week differ in fast-forward mode.
+- Sunday-enabled state not tested. The campaign.advance_time command does not exist; village wait is too coarse for precise Sunday catching.
 
 ---
 
 ## Scenario 3: Attending mass grants +4 party morale, +1 relation with resident abbot, and locks attendance for the day
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save at village_Tintern_Abbey on Sunday>
-- Created pre-trigger save: agent_church_mass_effect_before_<timestamp>
-- Created post-result save: agent_church_mass_effect_after_<timestamp>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: N/A — not tested; Sunday could not be reached before crash
+- Created pre-trigger save: N/A
+- Created post-result save: N/A
 - Evidence status: Not run
 
 ```gherkin
@@ -218,13 +232,13 @@ Metadata:
 ## Scenario 4: Weekly tithe increases every living church abbot's Power by 2 per week
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save>
-- Created pre-trigger save: agent_church_tithe_before_<timestamp>
-- Created post-result save: agent_church_tithe_after_<timestamp>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: N/A — not tested in this run
+- Created pre-trigger save: N/A
+- Created post-result save: N/A
 - Evidence status: Not run
 
 ```gherkin
@@ -282,13 +296,13 @@ Metadata:
 ## Scenario 5: Donation also grants the abbot +5 Power (v0.1 amendment folded into v0.2)
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save at village_Tintern_Abbey — donation cooldown elapsed>
-- Created pre-trigger save: agent_church_donation_power_before_<timestamp>
-- Created post-result save: agent_church_donation_power_after_<timestamp>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: N/A — not tested; JetBrains eval not available during active play
+- Created pre-trigger save: N/A
+- Created post-result save: N/A
 - Evidence status: Not run
 
 ```gherkin
@@ -343,13 +357,13 @@ Metadata:
 ## Scenario 6: Player raiding a church village triggers sacrilege (-15 local, -5 others, info message)
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save — player at war with faction that owns village_Tintern_Abbey>
-- Created pre-trigger save: agent_church_sacrilege_before_<timestamp>
-- Created post-result save: agent_church_sacrilege_after_<timestamp>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: N/A — not tested; requires war setup which was not established in this run
+- Created pre-trigger save: N/A
+- Created post-result save: N/A
 - Evidence status: Not run
 
 ```gherkin
@@ -420,13 +434,13 @@ Metadata:
 ## Scenario 7: AI lord raiding a church village also incurs sacrilege on their relations
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save — enemy AI lord near village_Tintern_Abbey>
-- Created pre-trigger save: agent_church_ai_sacrilege_before_<timestamp>
-- Created post-result save: agent_church_ai_sacrilege_after_<timestamp>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: N/A — not tested
+- Created pre-trigger save: N/A
+- Created post-result save: N/A
 - Evidence status: Not run
 
 ```gherkin

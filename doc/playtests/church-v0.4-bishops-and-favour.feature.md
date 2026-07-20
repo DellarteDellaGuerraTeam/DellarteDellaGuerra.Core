@@ -7,14 +7,14 @@ Tags: @bannerlord @gabs @dadg @church @v0.4 @bishops @favour
 ## Scenario 1: Cathedral clergy are addressed as "Bishop", not "Abbot" or "Prior"
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1029274746
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save>
-- Created pre-trigger save: <pre-trigger save>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: saveauto1 → teleported to Ely Cathedral then Tintern Abbey
+- Created pre-trigger save: N/A
 - Created post-result save: N/A
-- Evidence status: Not run
+- Evidence status: Passed
 
 ```gherkin
 Feature: Church v0.4 — Bishops and the Church's Favour
@@ -37,56 +37,68 @@ Feature: Church v0.4 — Bishops and the Church's Favour
 ## Command Log
 | Step | Tool | Arguments | Result |
 |------|------|-----------|--------|
-| 1 | (travel to village_Ely_Cathedral) | | <fill on run> |
-| 2 | bannerlord.conversation.get_state | {} | <fill on run> |
-| 3 | bannerlord.conversation.select_option | {"option": "dadg_church_donate"} | <fill on run> |
-| 4 | bannerlord.ui.take_screenshot | {} | <fill on run — "Bishop" in reply> |
-| 5 | (travel to village_Tintern_Abbey) | | <fill on run> |
-| 6 | bannerlord.conversation.select_option | {"option": "dadg_church_donate"} | <fill on run> |
-| 7 | bannerlord.ui.take_screenshot | {} | <fill on run — "Abbot" in reply> |
+| 1 | bannerlord.party.enter_settlement | {"settlementNameOrId": "village_Ely_Cathedral"} | Entered Ely Cathedral |
+| 2 | bannerlord.conversation.start | {"nameOrId": "Henry of the Cavern"} | Started conversation with Bishop |
+| 3 | bannerlord.conversation.get_state | {} | Hub text: "God keep you, my lord. What brings you to Ely Cathedral?" — 4 options incl. dadg_church_favour |
+| 4 | bannerlord.conversation.select_option | {"index": 0} (dadg_church_donate) | Selected donation |
+| 5 | bannerlord.conversation.get_state | {} | Reply: "God reward you, my lord. This Bishop will remember your generosity." |
+| 6 | bannerlord.ui.take_screenshot | {} | screenshot_20260720_144959.jpg |
+| 7 | bannerlord.party.enter_settlement | {"settlementNameOrId": "village_Tintern_Abbey"} | Entered Tintern Abbey |
+| 8 | bannerlord.conversation.start | {"nameOrId": "Margaret of the Pasture"} | Started conversation with Abbot |
+| 9 | bannerlord.conversation.get_state | {} | Hub: 3 options, NO dadg_church_favour option; donate text "donation to the abbey. (500 denars)" |
+| 10 | bannerlord.conversation.select_option | {"index": 0} (dadg_church_donate) | Selected donation |
+| 11 | bannerlord.conversation.get_state | {} | Reply: "God reward you, my lord. This Abbot will remember your generosity." |
+| 12 | bannerlord.ui.take_screenshot | {} | screenshot_20260720_145126.jpg |
 
 ## Screenshots
 | Step | File path | What it proves |
 |------|-----------|----------------|
-| Ely Cathedral dialog | <fill on run> | "Bishop" title in reply text |
-| Tintern Abbey dialog | <fill on run> | "Abbot" title in reply text |
+| Ely Cathedral donation reply | screenshot_20260720_144959.jpg | "This Bishop will remember your generosity." — Bishop title confirmed |
+| Tintern Abbey donation reply | screenshot_20260720_145126.jpg | "This Abbot will remember your generosity." — Abbot title confirmed |
 
 ## Saves
-- Reproduction save before trigger: <pre-trigger save>
+- Reproduction save before trigger: saveauto1
 - Final save after result: N/A
 
 ## Debugger Evidence
 | Breakpoint/source | Stack frame | Expression/value | Meaning |
 |-------------------|-------------|------------------|---------|
-| ChurchSettlements.GetClergyTitle | return value | "Bishop" | Cathedral → Bishop mapping |
+| bannerlord.conversation.get_state | text field | "This Bishop will remember your generosity." | Cathedral → Bishop confirmed |
+| bannerlord.conversation.get_state | text field | "This Abbot will remember your generosity." | Abbey → Abbot confirmed |
 
 ## Reproduction Steps
-1. Travel to Ely Cathedral, enter conversation, donate.
-2. Screenshot thanks text — must say "Bishop".
-3. Travel to Tintern Abbey, repeat — must say "Abbot".
+1. Load saveauto1.
+2. `bannerlord.party.enter_settlement {"settlementNameOrId": "village_Ely_Cathedral"}`.
+3. `bannerlord.conversation.start {"nameOrId": "Henry of the Cavern"}`.
+4. Select donate (index 0) — reply must say "This Bishop".
+5. Go to Tintern Abbey, start conversation with Margaret of the Pasture.
+6. Select donate — reply must say "This Abbot".
 
 ## Result
-<fill on run>
+PASSED. The donation reply at Ely Cathedral (Cathedral) says "This Bishop will remember your generosity." and at Tintern Abbey (Abbey) says "This Abbot will remember your generosity." The clergy title is correctly differentiated by settlement type. Also confirmed: the donate option text says "donation to the cathedral" at Ely and "donation to the abbey" at Tintern.
+
+Note: Female Preacher "Margaret of the Pasture" is still called "Abbot" not "Abbess" — gender-insensitive title defect (already recorded in v0.1 S1).
 
 ## Strengths
-- Validates the Cathedral → Bishop title change introduced in v0.4.
+- Direct get_state confirmation of reply text at both settlement types.
+- Both donation amounts are 500 denars (no tiered pricing).
 
 ## Limitations
-- Donation cooldown may block the thanks line; use time advance to clear it, or check GetClergyTitle directly in JetBrains.
+- Donation cooldown was cleared because freshly loaded save — title in reply would be blocked if cooldown is active.
 
 ---
 
 ## Scenario 2: "How does the Church regard me?" question appears only at cathedrals
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1029274746
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save>
-- Created pre-trigger save: <pre-trigger save>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: saveauto1 → Ely Cathedral then Tintern Abbey
+- Created pre-trigger save: N/A
 - Created post-result save: N/A
-- Evidence status: Not run
+- Evidence status: Passed
 
 ```gherkin
   Scenario: Favour inquiry option is present at cathedral and absent at abbey/priory
@@ -102,52 +114,54 @@ Metadata:
 ## Command Log
 | Step | Tool | Arguments | Result |
 |------|------|-----------|--------|
-| 1 | (enter conversation at Ely Cathedral) | | <fill on run> |
-| 2 | bannerlord.conversation.get_state | {} | <fill on run — favour option present> |
-| 3 | (enter conversation at Tintern Abbey) | | <fill on run> |
-| 4 | bannerlord.conversation.get_state | {} | <fill on run — favour option absent> |
+| 1 | bannerlord.conversation.start | {"nameOrId": "Henry of the Cavern"} at Ely Cathedral | Hub: 4 options — dadg_church_donate, dadg_church_blessing, dadg_church_favour, dadg_church_leave |
+| 2 | bannerlord.conversation.get_state | {} | dadg_church_favour present: "How does the Church regard me, Your Grace?" |
+| 3 | bannerlord.conversation.start | {"nameOrId": "Margaret of the Pasture"} at Tintern Abbey | Hub: 3 options — dadg_church_donate, dadg_church_blessing, dadg_church_leave |
+| 4 | bannerlord.conversation.get_state | {} | dadg_church_favour ABSENT at Tintern Abbey |
 
 ## Screenshots
 | Step | File path | What it proves |
 |------|-----------|----------------|
-| Cathedral hub | <fill on run> | Favour option visible |
-| Abbey hub | <fill on run> | Favour option absent |
+| Cathedral hub | screenshot_20260720_144910.jpg | Favour option "How does the Church regard me, Your Grace?" visible as index 2 |
+| Abbey hub | (no dedicated screenshot) | Confirmed via get_state: 3 options, no dadg_church_favour |
 
 ## Saves
-- Reproduction save before trigger: <pre-trigger save>
+- Reproduction save before trigger: saveauto1
 - Final save after result: N/A
 
 ## Debugger Evidence
 | Breakpoint/source | Stack frame | Expression/value | Meaning |
 |-------------------|-------------|------------------|---------|
-| AbbotDialogCampaignBehavior.IsConversationWithBishop | return | _churchSettlements.IsCathedral(settlement) | Gating check |
+| bannerlord.conversation.get_state | options list | 4 options at Cathedral, 3 at Abbey | Favour option gated correctly |
 
 ## Reproduction Steps
-1. Go to Ely Cathedral — confirm favour option present.
-2. Go to Tintern Abbey — confirm favour option absent.
+1. Load saveauto1. Go to Ely Cathedral, start conversation with bishop.
+2. Confirm dadg_church_favour at index 2.
+3. Go to Tintern Abbey, start conversation with abbot.
+4. Confirm dadg_church_favour absent (3 options only).
 
 ## Result
-<fill on run>
+PASSED. "How does the Church regard me, Your Grace?" (dadg_church_favour) appears at Ely Cathedral (Cathedral) and is absent at Tintern Abbey (Abbey). The IsCathedral gate works correctly.
 
 ## Strengths
-- Directly tests the IsConversationWithBishop gate.
+- Both positive and negative cases confirmed via get_state option enumeration.
 
 ## Limitations
-- Conversation option list from GABS may not enumerate all options; screenshot is the primary proof.
+- Only one cathedral and one abbey tested. Priory not tested (expected same as abbey).
 
 ---
 
 ## Scenario 3: Favour reply matches the ChurchFavourRank at each threshold
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1029274746
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <fresh campaign save — all relations at 0, rank = Indifferent>
-- Created pre-trigger save: agent_church_favour_before_<timestamp>
-- Created post-result save: agent_church_favour_after_<timestamp>
-- Evidence status: Not run
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: saveauto1 (Summer 2, 1084 — relations near 0)
+- Created pre-trigger save: N/A
+- Created post-result save: N/A
+- Evidence status: Partial
 
 ```gherkin
   Scenario: Favour inquiry reply matches the computed rank at multiple thresholds
@@ -185,56 +199,50 @@ Metadata:
 ## Command Log
 | Step | Tool | Arguments | Result |
 |------|------|-----------|--------|
-| 1 | JetBrains eval | average relation across all clergy | <fill on run — ~0> |
-| 2 | bannerlord.conversation.select_option | {"option": "dadg_church_favour"} | <fill on run> |
-| 3 | bannerlord.ui.take_screenshot | {} | <fill on run — Indifferent reply> |
-| 4 | JetBrains: set relations to >= 2 | loop over abbots | <fill on run> |
-| 5 | bannerlord.conversation.select_option | {"option": "dadg_church_favour"} | <fill on run> |
-| 6 | bannerlord.ui.take_screenshot | {} | <fill on run — Favoured reply> |
-| ... | repeat for Beloved and Reviled | | |
+| 1 | bannerlord.conversation.start | {"nameOrId": "Henry of the Cavern"} at Ely Cathedral | Hub open |
+| 2 | bannerlord.conversation.select_option | {"index": 2} (dadg_church_favour) | "How does the Church regard me, Your Grace?" selected |
+| 3 | bannerlord.conversation.get_state | {} | Reply: "The Church knows little of you, my lord. Works, not words, commend a soul." |
+| 4 | (Favoured, Beloved, Reviled ranks) | NOT TESTED — JetBrains relation manipulation not completed | |
 
 ## Screenshots
 | Step | File path | What it proves |
 |------|-----------|----------------|
-| Indifferent reply | <fill on run> | Correct rank text |
-| Favoured reply | <fill on run> | Correct rank text |
-| Beloved reply | <fill on run> | Correct rank text |
-| Reviled reply | <fill on run> | Correct rank text |
+| Indifferent reply | screenshot_20260720_144910.jpg | Conversation hub at Ely Cathedral (taken before favour inquiry) |
+| (Favoured/Beloved/Reviled) | Not taken | Other rank thresholds not tested |
 
 ## Saves
-- Reproduction save before trigger: agent_church_favour_before_<timestamp>
-- Final save after result: agent_church_favour_after_<timestamp>
+- Reproduction save before trigger: saveauto1
+- Final save after result: N/A
 
 ## Debugger Evidence
 | Breakpoint/source | Stack frame | Expression/value | Meaning |
 |-------------------|-------------|------------------|---------|
-| AbbotDialogCampaignBehavior.GetFavourRank | averageRelation | computed value | Rank input |
-| ChurchFavourPolicy.Evaluate | return | ChurchFavourRank enum value | Rank output |
+| bannerlord.conversation.get_state | text field | "The Church knows little of you, my lord. Works, not words, commend a soul." | Indifferent rank text confirmed |
 
 ## Reproduction Steps
-1. Load fresh campaign.
-2. Check Indifferent reply at bishop.
-3. Boost relations via JetBrains to cross each threshold.
-4. Screenshot each reply.
+1. Load saveauto1. Go to Ely Cathedral, start conversation with Henry of the Cavern.
+2. Select favour inquiry (index 2) — confirm Indifferent reply text.
+3. Use JetBrains to set relations to +2 on all clergy, re-ask — expect Favoured reply.
+4. Repeat for +10 (Beloved) and -10 (Reviled).
 
 ## Result
-<fill on run>
+PARTIAL. Indifferent rank reply confirmed: "The Church knows little of you, my lord. Works, not words, commend a soul." The other 4 rank thresholds (IllRegarded, Favoured, Beloved, Reviled) were not tested — JetBrains relation manipulation was not executed in this run.
 
 ## Strengths
-- Covers all 5 favour ranks in a single run using JetBrains to avoid hours of gameplay.
+- Indifferent rank text confirmed live in a fresh campaign.
 
 ## Limitations
-- JetBrains SetHeroRelation may not match CharacterRelationManager's internal key; verify read-back via GetHeroRelation after setting.
+- Only the Indifferent rank tested. The 4 other rank thresholds require JetBrains relation manipulation or significant gameplay time.
 
 ---
 
 ## Scenario 4: Bishop blessing grants +5 morale and +1 renown when rank >= Favoured
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1029274746
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
+- DADG branch/commit: feature/add-church / bf5242e
 - Loaded save: <campaign save — player at Favoured rank>
 - Created pre-trigger save: agent_church_blessing_before_<timestamp>
 - Created post-result save: agent_church_blessing_after_<timestamp>
@@ -303,10 +311,10 @@ Metadata:
 ## Scenario 5: Blessing option is absent when rank < Favoured (IllRegarded / Indifferent)
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1029274746
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
+- DADG branch/commit: feature/add-church / bf5242e
 - Loaded save: <campaign save — player at Indifferent or IllRegarded rank>
 - Created pre-trigger save: <pre-trigger save>
 - Created post-result save: N/A
@@ -360,10 +368,10 @@ Metadata:
 ## Scenario 6: Blessing cooldown persists across save/load and the option returns after 7 days
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1029274746
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
+- DADG branch/commit: feature/add-church / bf5242e
 - Loaded save: <campaign save — blessing just received>
 - Created pre-trigger save: agent_church_blessing_cd_before_<timestamp>
 - Created post-result save: agent_church_blessing_cd_after_<timestamp>
@@ -425,10 +433,10 @@ Metadata:
 ## Scenario 7: Sacrilege (raid) drops favour and changes the bishop's reply
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1029274746
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
+- DADG branch/commit: feature/add-church / bf5242e
 - Loaded save: <campaign save at Favoured rank>
 - Created pre-trigger save: agent_church_favour_drop_before_<timestamp>
 - Created post-result save: agent_church_favour_drop_after_<timestamp>

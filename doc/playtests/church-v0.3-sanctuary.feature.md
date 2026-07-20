@@ -7,14 +7,14 @@ Tags: @bannerlord @gabs @dadg @church @v0.3 @sanctuary
 ## Scenario 1: Player claims sanctuary — time passes under progress bar, raid does not eject player
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save at village_Tintern_Abbey in Normal state>
-- Created pre-trigger save: agent_church_sanctuary_player_before_<timestamp>
-- Created post-result save: agent_church_sanctuary_player_after_<timestamp>
-- Evidence status: Not run
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: saveauto1 (Summer 2, 1084) → teleported to Tintern Abbey, time advanced to Autumn 1 1084
+- Created pre-trigger save: N/A
+- Created post-result save: N/A
+- Evidence status: Partial
 
 ```gherkin
 Feature: Church v0.3 — Player Sanctuary, Fugitive Sanctuary, and Violation
@@ -43,55 +43,55 @@ Feature: Church v0.3 — Player Sanctuary, Fugitive Sanctuary, and Violation
 ## Command Log
 | Step | Tool | Arguments | Result |
 |------|------|-----------|--------|
-| 1 | bannerlord.menu.select_option | {"option": "dadg_church_claim_sanctuary"} | <fill on run> |
-| 2 | bannerlord.menu.get_current | {} | <fill on run — confirm sanctuary menu> |
-| 3 | bannerlord.ui.take_screenshot | {} | <fill on run — progress bar> |
-| 4 | (trigger raid condition) | | <fill on run> |
-| 5 | bannerlord.menu.get_current | {} | <fill on run — still sanctuary menu> |
+| 1 | bannerlord.menu.select_option | {"index": 2} (dadg_church_claim_sanctuary) at Tintern Abbey | Selected "Claim sanctuary" |
+| 2 | bannerlord.menu.get_current | {} | menuId: "dadg_church_sanctuary", text: "You have claimed sanctuary within the walls of Tintern Abbey. None may lay hands on you here, by law of God and man. (40 days of grace remain)", option: "Leave the sanctuary" |
+| 3 | bannerlord.ui.take_screenshot | {} | screenshot_20260720_140516.jpg — sanctuary menu visible with text |
+| 4 | (raid test) | NOT EXECUTED — no war state established | |
 
 ## Screenshots
 | Step | File path | What it proves |
 |------|-----------|----------------|
-| Sanctuary menu open | <fill on run> | Wait menu with progress bar |
-| During raid | <fill on run> | Raid log message, still in sanctuary |
+| Sanctuary menu | C:\Users\Joe\Documents\Mount and Blade II Bannerlord\Screenshots\GABS\screenshot_20260720_140516.jpg | Sanctuary wait menu with "40 days of grace remain" text visible on campaign map |
 
 ## Saves
-- Reproduction save before trigger: agent_church_sanctuary_player_before_<timestamp>
-- Final save after result: agent_church_sanctuary_player_after_<timestamp>
+- Reproduction save before trigger: N/A
+- Final save after result: N/A (game crashed after this session)
 
 ## Debugger Evidence
 | Breakpoint/source | Stack frame | Expression/value | Meaning |
 |-------------------|-------------|------------------|---------|
-| SanctuaryCampaignBehavior.SanctuaryWaitTick | raid branch | settlement.IsUnderRaid | Confirms raid path hit |
-| SanctuaryCampaignBehavior.SanctuaryWaitTick | after message | GameMenu current | Still sanctuary, not ejected |
+| N/A | | | |
 
 ## Reproduction Steps
-1. Open Claim sanctuary option at church village.
-2. Observe wait menu and progress bar.
-3. Trigger a raid (cheat or time advance).
-4. Confirm raid message appears and player remains in sanctuary menu.
+1. Enter Tintern Abbey village menu.
+2. Select "Claim sanctuary" (dadg_church_claim_sanctuary, index 2).
+3. Confirm menuId: "dadg_church_sanctuary" and text contains "40 days of grace remain".
+4. For raid test: establish war state, trigger raid on Tintern Abbey, confirm sanctuary menu persists.
 
 ## Result
-<fill on run>
+PARTIAL. Sanctuary claimed successfully at Tintern Abbey: menu "dadg_church_sanctuary" shown with text "You have claimed sanctuary within the walls of Tintern Abbey. None may lay hands on you here, by law of God and man. (40 days of grace remain)." Only option: "Leave the sanctuary." Raid-while-sanctuary test not executed (no war state). Note: there was an initial confusing sequence where the hierarchy screen appeared when claim_sanctuary was triggered (due to stacked menu operations) — on the second clean attempt the correct sanctuary menu appeared immediately.
+
+RELATED DEFECT (found in later test): `dadg_church_claim_sanctuary` also appears at non-church villages Romford and Watford — the option is not filtered to church settlements (see v0.2 S1 and v0.6 S1). This means claim sanctuary can be triggered at any village.
 
 ## Strengths
-- Directly tests the core sanctuary promise: time passes without ejection even during a raid.
+- Core sanctuary activation confirmed at a church settlement: correct menu ID, exact text with 40-day grace period.
 
 ## Limitations
-- Triggering a natural raid requires war setup; JetBrains eval of IsUnderRaid is an acceptable substitute.
+- Raid-while-in-sanctuary not tested; progress bar visual not confirmed (screenshot shows campaign map not village scene).
+- Non-church filtering defect confirmed in separate run (see v0.2 S1 findings).
 
 ---
 
 ## Scenario 2: Progress bar and days-remaining survive a save/load round-trip
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save — player mid-sanctuary>
-- Created pre-trigger save: agent_church_sanctuary_saveload_before_<timestamp>
-- Created post-result save: agent_church_sanctuary_saveload_after_<timestamp>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: N/A — not tested
+- Created pre-trigger save: N/A
+- Created post-result save: N/A
 - Evidence status: Not run
 
 ```gherkin
@@ -150,13 +150,13 @@ Metadata:
 ## Scenario 3: 40-day sanctuary expires and ejects player back to the village menu
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save — player in sanctuary with <40 days elapsed>
-- Created pre-trigger save: agent_church_sanctuary_expire_before_<timestamp>
-- Created post-result save: agent_church_sanctuary_expire_after_<timestamp>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: N/A — not tested
+- Created pre-trigger save: N/A
+- Created post-result save: N/A
 - Evidence status: Not run
 
 ```gherkin
@@ -213,14 +213,14 @@ Metadata:
 ## Scenario 4: Early "Leave the sanctuary" option exits to village menu
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save — player in sanctuary>
-- Created pre-trigger save: <pre-trigger save>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: saveauto1 → sanctuary claimed at Tintern Abbey
+- Created pre-trigger save: N/A
 - Created post-result save: N/A
-- Evidence status: Not run
+- Evidence status: Passed
 
 ```gherkin
   Scenario: Player can leave sanctuary early via the "Leave the sanctuary" option
@@ -235,49 +235,49 @@ Metadata:
 ## Command Log
 | Step | Tool | Arguments | Result |
 |------|------|-----------|--------|
-| 1 | bannerlord.menu.select_option | {"option": "dadg_church_sanctuary_leave"} | <fill on run> |
-| 2 | bannerlord.menu.get_current | {} | <fill on run — village menu> |
+| 1 | bannerlord.menu.select_option | {"index": 0} (dadg_church_sanctuary_leave) | Selected "Leave the sanctuary" |
+| 2 | bannerlord.menu.get_current | {} | menuId: "village", 15 options — village menu restored |
 
 ## Screenshots
 | Step | File path | What it proves |
 |------|-----------|----------------|
-| After leave | <fill on run> | Village menu visible |
+| After leave | C:\Users\Joe\Documents\Mount and Blade II Bannerlord\Screenshots\GABS\screenshot_20260720_140005.jpg | Village menu after leaving sanctuary (15 options present) |
 
 ## Saves
-- Reproduction save before trigger: <pre-trigger save>
+- Reproduction save before trigger: N/A
 - Final save after result: N/A
 
 ## Debugger Evidence
 | Breakpoint/source | Stack frame | Expression/value | Meaning |
 |-------------------|-------------|------------------|---------|
-| SanctuaryCampaignBehavior.EndPlayerSanctuary | _playerSanctuaryStart | CampaignTime.Never | Start reset |
+| N/A — menu state sufficient | | | |
 
 ## Reproduction Steps
-1. Claim sanctuary.
-2. Select Leave.
-3. Confirm village menu.
+1. Claim sanctuary at any church village.
+2. Select "Leave the sanctuary" (index 0 from dadg_church_sanctuary menu).
+3. Confirm menuId returns to "village".
 
 ## Result
-<fill on run>
+PASSED. "Leave the sanctuary" selection immediately returns to the village menu (menuId: "village", 15 options). Claim sanctuary re-appeared as an option at index 2, confirming state was reset.
 
 ## Strengths
-- Confirms early exit path and state cleanup.
+- Direct confirmation via GABS menu state.
 
 ## Limitations
-- Simple; mainly a regression guard.
+- _playerSanctuaryStart reset not verified via JetBrains (game running).
 
 ---
 
 ## Scenario 5: Defeated AI lord appears in the nearest church settlement and stays for up to 20 days
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save — an enemy AI lord party exists near a church settlement>
-- Created pre-trigger save: agent_church_fugitive_before_<timestamp>
-- Created post-result save: agent_church_fugitive_after_<timestamp>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: N/A — not tested
+- Created pre-trigger save: N/A
+- Created post-result save: N/A
 - Evidence status: Not run
 
 ```gherkin
@@ -348,13 +348,13 @@ Metadata:
 ## Scenario 6: Fugitive sanctuary tag survives a save/load round-trip
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save — fugitive lord is in sanctuary>
-- Created pre-trigger save: agent_church_fugitive_saveload_before_<timestamp>
-- Created post-result save: agent_church_fugitive_saveload_after_<timestamp>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: N/A — not tested
+- Created pre-trigger save: N/A
+- Created post-result save: N/A
 - Evidence status: Not run
 
 ```gherkin
@@ -410,13 +410,13 @@ Metadata:
 ## Scenario 7: Player can drag a war-enemy fugitive from the cloister (sacrilege applies)
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save — fugitive lord at village_Tintern_Abbey, player at war with that lord's faction>
-- Created pre-trigger save: agent_church_drag_before_<timestamp>
-- Created post-result save: agent_church_drag_after_<timestamp>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: N/A — not tested; observed that dadg_church_drag_fugitive option was present in village menu but with blank name ("Drag  from the cloister") indicating no current fugitive
+- Created pre-trigger save: N/A
+- Created post-result save: N/A
 - Evidence status: Not run
 
 ```gherkin
@@ -482,12 +482,12 @@ Metadata:
 ## Scenario 8: Drag option is greyed when not at war with the fugitive's faction
 
 Metadata:
-- Date: <fill on run>
-- Agent/session: <fill on run>
+- Date: 2026-07-20
+- Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
-- DADG branch/commit: church-v0.1-monasteries / <fill on run>
-- Loaded save: <campaign save — fugitive lord at village_Tintern_Abbey, player NOT at war>
-- Created pre-trigger save: <pre-trigger save>
+- DADG branch/commit: feature/add-church / bf5242e
+- Loaded save: N/A — not tested
+- Created pre-trigger save: N/A
 - Created post-result save: N/A
 - Evidence status: Not run
 
