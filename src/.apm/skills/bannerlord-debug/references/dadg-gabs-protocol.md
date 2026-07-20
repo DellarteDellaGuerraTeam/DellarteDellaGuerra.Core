@@ -37,7 +37,7 @@ Config name: `"DellarteDellaGuerra.Integration: Standalone"`
 Project path (main 1.4.7 install, default): `D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord/Modules/DellarteDellaGuerra.Core/src`  
 Project path (v1.3 install): `D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.3/Modules/DellarteDellaGuerra.Core/src`
 
-The `launchSettings.json` Standalone profile must set `GABP_SERVER_PORT`, `GABP_TOKEN`, `GABS_GAME_ID`, and `GABS_BRIDGE_PATH` as env vars and include `Bannerlord.ButterLib*Bannerlord.UIExtenderEx*Bannerlord.MBOptionScreen*Bannerlord.GABS*` in the module list before `Native` (on the 1.4.7 checkout this is an uncommitted local edit — verify before launching). The GABP bridge silently fails to start if MCM (`Bannerlord.MBOptionScreen`) is not loaded. No other manual configuration needed beyond writing `bridge.json`.
+The `launchSettings.json` Standalone profile must set `GABP_SERVER_PORT`, `GABP_TOKEN`, `GABS_GAME_ID`, and `GABS_BRIDGE_PATH` as env vars and include `Bannerlord.ButterLib*Bannerlord.UIExtenderEx*Bannerlord.MBOptionScreen*Bannerlord.GABS*` in the module list before `Native` (committed on the 1.4.7 checkout). The GABP bridge silently fails to start if MCM (`Bannerlord.MBOptionScreen`) is not loaded. No other manual configuration needed beyond writing `bridge.json`.
 
 ## Session Lifecycle
 

@@ -49,7 +49,7 @@ back to the latest implementation DLL), but only if:
    `Bannerlord.Harmony*Bannerlord.ButterLib*Bannerlord.UIExtenderEx*Bannerlord.MBOptionScreen*Bannerlord.GABS*`
    immediately before `Native`, plus the `environmentVariables` block
    (`GABP_SERVER_PORT=4825`, `GABP_TOKEN`, `GABS_GAME_ID=bannerlord`, `GABS_BRIDGE_PATH`).
-   This edit is kept uncommitted — verify it is present before launching.
+   This wiring is committed on the v1.4 checkout.
 
 ---
 
@@ -118,7 +118,7 @@ The target checkout's launchSettings.json Standalone profile must include `Banne
 (and its dependency modules — see the v1.4 prerequisites above) in the module list and set
 `GABP_SERVER_PORT=4825`, `GABP_TOKEN`, `GABS_GAME_ID`, and `GABS_BRIDGE_PATH` as env vars —
 then the game will start the GABP bridge on port 4825 with the token written in Step 2.
-Verify this wiring is present before launching (on v1.4 it is an uncommitted local edit).
+Verify this wiring is present before launching (committed on v1.4; local edit on v1.2/v1.3).
 
 ---
 
