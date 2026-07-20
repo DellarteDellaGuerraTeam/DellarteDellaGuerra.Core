@@ -34,9 +34,10 @@ Always rewrite `bridge.json` to this before launching (the `bannerlord-gabs-star
 ## JetBrains Debug Configuration
 
 Config name: `"DellarteDellaGuerra.Integration: Standalone"`  
-Project path: `D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.3/Modules/DellarteDellaGuerra.Core/src`
+Project path (main 1.4.7 install, default): `D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord/Modules/DellarteDellaGuerra.Core/src`  
+Project path (v1.3 install): `D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.3/Modules/DellarteDellaGuerra.Core/src`
 
-The `launchSettings.json` Standalone profile sets `GABP_SERVER_PORT`, `GABP_TOKEN`, `GABS_GAME_ID`, and `GABS_BRIDGE_PATH` as env vars — no manual configuration needed beyond writing `bridge.json`.
+The `launchSettings.json` Standalone profile must set `GABP_SERVER_PORT`, `GABP_TOKEN`, `GABS_GAME_ID`, and `GABS_BRIDGE_PATH` as env vars and include `Bannerlord.ButterLib*Bannerlord.UIExtenderEx*Bannerlord.MBOptionScreen*Bannerlord.GABS*` in the module list before `Native` (on the 1.4.7 checkout this is an uncommitted local edit — verify before launching). The GABP bridge silently fails to start if MCM (`Bannerlord.MBOptionScreen`) is not loaded. No other manual configuration needed beyond writing `bridge.json`.
 
 ## Session Lifecycle
 
@@ -44,6 +45,14 @@ The `launchSettings.json` Standalone profile sets `GABP_SERVER_PORT`, `GABP_TOKE
 2. `bannerlord-gabs-start` skill: writes `bridge.json`, deletes `runtime.json`, starts JetBrains debug session, calls `games_connect`.
 3. GABP inside the game creates `runtime.json` and registers with the GABS server.
 4. `runtime.json` tracks ownership — if stale after a crash or abandoned session, use `bannerlord-gabs-session-reset` skill to clear it.
+
+## Tool Pitfalls
+
+- `bannerlord.menu.get_current` enumerates **registered** menu options without evaluating
+  their visibility conditions. Never use it alone to prove an option is present or absent
+  in the rendered menu — always corroborate with a screenshot of the actual UI.
+  (Caused a false Critical defect report on 2026-07-20: church options "appeared" at
+  non-church villages in `get_current` but were correctly hidden in the rendered menu.)
 
 ## Breakpoints & Tool Flow
 

@@ -6,11 +6,12 @@ description: >
   whenever the user wants to start Bannerlord for debugging, says things like
   "launch the debug config", "start dadg debug", "start bannerlord with debugger",
   "launch dadg standalone", "debug bannerlord", "start bannerlord for v1.2",
-  "start bannerlord for v1.3", or "start the jetbrains debug config".
+  "start bannerlord for v1.3", "start bannerlord for v1.4", or "start the jetbrains debug config".
   Also use it when the user wants to both have the debugger attached AND be able to
   control the game via GABS tools. This skill handles the full setup — bridge.json,
   runtime state, JetBrains session, and GABS connection — in one go.
-  Pass "v1.2" or "v1.3" as an argument to target a specific game version (default: v1.3).
+  Pass "v1.2", "v1.3", or "v1.4" as an argument to target a specific game version
+  (default: v1.4, the main 1.4.7 War Sails install).
 ---
 
 # DellarteDellaGuerra Debug Launch
@@ -23,14 +24,32 @@ attached and all GABP tools are live.
 
 ## Version resolution
 
-Determine the target game version from ARGUMENTS (default: v1.3):
+Determine the target game version from ARGUMENTS (default: v1.4):
 
 | ARGUMENTS contains | `project_path` |
 |--------------------|----------------|
 | `v1.2`             | `D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.2/Modules/DellarteDellaGuerra.Core/src` |
-| `v1.3` or (empty)  | `D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.3/Modules/DellarteDellaGuerra.Core/src` |
+| `v1.3`             | `D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.3/Modules/DellarteDellaGuerra.Core/src` |
+| `v1.4` or (empty)  | `D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord/Modules/DellarteDellaGuerra.Core/src` (main 1.4.7 War Sails install) |
 
 Use this `project_path` in Step 3. All other steps are version-independent.
+
+### v1.4 prerequisites (verified working 2026-07-20)
+
+GABS runs on 1.4.7 with its stock `Bannerlord.GABS.v1.3.13.dll` (the ModuleLoader falls
+back to the latest implementation DLL), but only if:
+
+1. The main install's `Modules\` contains `Bannerlord.MBOptionScreen` (MCM) and
+   `Bannerlord.UIExtenderEx` — GABS's `StartServer()` references an MCM settings type,
+   and without MCM the GABP bridge silently never starts (game runs fine otherwise).
+   Both were copied from the v1.3 install; if missing again, re-copy them from
+   `D:\SteamLibrary\steamapps\common\Mount & Blade II Bannerlord-v1.3\Modules\`.
+2. The v1.4 checkout's `launchSettings.json` Standalone profile includes the GABS wiring
+   (see Step 3 note): module list must contain
+   `Bannerlord.Harmony*Bannerlord.ButterLib*Bannerlord.UIExtenderEx*Bannerlord.MBOptionScreen*Bannerlord.GABS*`
+   immediately before `Native`, plus the `environmentVariables` block
+   (`GABP_SERVER_PORT=4825`, `GABP_TOKEN`, `GABS_GAME_ID=bannerlord`, `GABS_BRIDGE_PATH`).
+   This edit is kept uncommitted — verify it is present before launching.
 
 ---
 
@@ -95,10 +114,11 @@ Call `mcp__jetbrains-debugger__start_debug_session`:
 
 Note the session ID from the response — report it to the user.
 
-The launchSettings.json Standalone profile already includes `Bannerlord.GABS` in the
-module list and sets `GABP_SERVER_PORT=4825`, `GABP_TOKEN`, `GABS_GAME_ID`, and
-`GABS_BRIDGE_PATH` as env vars — so the game will start the GABP bridge on port 4825
-with the token written in Step 2. No further configuration needed.
+The target checkout's launchSettings.json Standalone profile must include `Bannerlord.GABS`
+(and its dependency modules — see the v1.4 prerequisites above) in the module list and set
+`GABP_SERVER_PORT=4825`, `GABP_TOKEN`, `GABS_GAME_ID`, and `GABS_BRIDGE_PATH` as env vars —
+then the game will start the GABP bridge on port 4825 with the token written in Step 2.
+Verify this wiring is present before launching (on v1.4 it is an uncommitted local edit).
 
 ---
 
