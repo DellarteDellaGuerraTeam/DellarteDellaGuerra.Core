@@ -5,5 +5,7 @@ namespace DellarteDellaGuerra.Domain.Church.Port
     public interface IChurchSettlementsProvider
     {
         IReadOnlyCollection<ChurchSettlementData> GetChurchSettlements();
+
+        IReadOnlyCollection<ChurchDioceseData> GetDioceses();
     }
 }

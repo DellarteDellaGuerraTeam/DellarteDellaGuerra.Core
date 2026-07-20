@@ -6,6 +6,18 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Models
     [XmlRoot(ElementName = "ChurchSettlements")]
     public class ChurchSettlementsConfig
     {
+        [XmlElement(ElementName = "Diocese")]
+        public List<ChurchDioceseConfig> Dioceses { get; set; } = new();
+    }
+
+    public class ChurchDioceseConfig
+    {
+        [XmlAttribute(AttributeName = "id")]
+        public string Id { get; set; } = "";
+
+        [XmlAttribute(AttributeName = "name")]
+        public string Name { get; set; } = "";
+
         [XmlElement(ElementName = "ChurchSettlement")]
         public List<ChurchSettlementConfig> Settlements { get; set; } = new();
     }

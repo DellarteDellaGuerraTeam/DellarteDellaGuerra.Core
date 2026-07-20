@@ -25,7 +25,9 @@ using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
+using DellarteDellaGuerra.Domain.Church.Hierarchy;
 using DellarteDellaGuerra.Domain.Church.Port;
+using DellarteDellaGuerra.Integration.Church.UI;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Campaign;
@@ -127,6 +129,9 @@ namespace DellarteDellaGuerra.Integration
             campaignGameStarter.AddBehavior(new SanctuaryCampaignBehavior(churchSettlements, churchSacrilege));
             campaignGameStarter.AddBehavior(new PilgrimageCampaignBehavior(
                 churchSettlements, churchSacrilege, churchSettingsProvider, loggerFactory));
+            var buildChurchMap = _serviceProvider.GetRequiredService<IBuildChurchMapUseCase>();
+            ChurchUiServices.Initialise(buildChurchMap, churchSettlements);
+            campaignGameStarter.AddBehavior(new ChurchHierarchyMenuBehavior(churchSettlements, buildChurchMap));
         }
 
         public override void OnGameInitializationFinished(Game game)
