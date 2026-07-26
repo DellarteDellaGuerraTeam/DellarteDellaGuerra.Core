@@ -257,17 +257,33 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
                         agent.SetAgentFlags(agent.GetAgentFlags() | AgentFlag.MoveForwardOnly);
                         agent.SetScriptedFlags(Agent.AIScriptedFrameFlags.NeverSlowDown);
 
-                        if (agent.WieldedWeapon.IsEmpty)
+                        // The couch-only lance has no active attack usage, so whenever the AI is
+                        // allowed to change weapons it sheathes the lance to bare fists. Below couch
+                        // speed we strip CanWieldWeapon so it cannot sheathe: the lance stays in hand
+                        // and there is nothing to re-wield, which removes the low-speed flicker.
+                        // Once fast enough to couch we restore wielding and re-wield the lance if it
+                        // was sheathed; the couch then engages and holds (it will not sheathe mid
+                        // passive attack).
+                        if (!agent.IsPassiveUsageConditionsAreMet)
                         {
-                            for (var equipmentIndex = EquipmentIndex.Weapon0;
-                                 equipmentIndex < EquipmentIndex.NumPrimaryWeaponSlots;
-                                 equipmentIndex++)
+                            agent.SetAgentFlags(agent.GetAgentFlags() & ~AgentFlag.CanWieldWeapon);
+                        }
+                        else
+                        {
+                            agent.SetAgentFlags(agent.GetAgentFlags() | AgentFlag.CanWieldWeapon);
+
+                            if (agent.WieldedWeapon.IsEmpty)
                             {
-                                if (agent.Equipment[equipmentIndex].CurrentUsageItem?.WeaponClass ==
-                                    WeaponClass.TwoHandedPolearm)
+                                for (var equipmentIndex = EquipmentIndex.Weapon0;
+                                     equipmentIndex < EquipmentIndex.NumPrimaryWeaponSlots;
+                                     equipmentIndex++)
                                 {
-                                    agent.TryToWieldWeaponInSlot(equipmentIndex, Agent.WeaponWieldActionType.Instant, true);
-                                    break;
+                                    if (agent.Equipment[equipmentIndex].CurrentUsageItem?.WeaponClass ==
+                                        WeaponClass.TwoHandedPolearm)
+                                    {
+                                        agent.TryToWieldWeaponInSlot(equipmentIndex, Agent.WeaponWieldActionType.Instant, true);
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -523,6 +539,10 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
 
                     if (!agent.IsPlayerControlled)
                     {
+                        // Restore weapon wielding stripped in SpawnParticipantAgent so the agent can
+                        // wield a melee weapon once combat continues on foot.
+                        agent.SetAgentFlags(agent.GetAgentFlags() | AgentFlag.CanWieldWeapon);
+
                         var spawnPoint = GetSpawnPointForTeam(agent.Team.TeamIndex, false);
                         WorldPosition pos = new WorldPosition(Mission.Scene, spawnPoint.GlobalPosition);
                         agent.SetScriptedPosition(ref pos, true,
