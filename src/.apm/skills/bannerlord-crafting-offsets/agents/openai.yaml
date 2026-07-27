@@ -1,0 +1,4 @@
+interface:
+  display_name: "Crafting Offset CLI"
+  short_description: "Extract and diagnose weapon offsets"
+  default_prompt: "Use -crafting-offsets to diagnose and correct my crafted weapon piece offsets."
