@@ -4,3 +4,6 @@
 [submodule "src/submodules/ExpandedTemplate"]
 	path = src/submodules/ExpandedTemplate
 	url = https://github.com/JoeFwd/Bannerlord.ExpandedTemplate.git
+[submodule "src/submodules/PocColor"]
+	path = src/submodules/PocColor
+	url = https://github.com/JoeFwd/PocColor.git
