@@ -34,6 +34,8 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0" />
 
         <ProjectReference Include="..\submodules\ExpandedTemplate\Bannerlord.ExpandedTemplate.API\Bannerlord.ExpandedTemplate.API.csproj" />
+
+        <ProjectReference Include="..\submodules\PocColor\src\PocColor.Integration\PocColor.Integration.csproj" />
     </ItemGroup>
 
     <!-- Project properties -->
