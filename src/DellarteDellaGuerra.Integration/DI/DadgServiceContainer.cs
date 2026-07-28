@@ -11,6 +11,8 @@ using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Reload;
 using DellarteDellaGuerra.Heraldry;
 using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
+using DellarteDellaGuerra.Infrastructure.Campaign;
+using DellarteDellaGuerra.Infrastructure.Configuration.Models;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DI;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
@@ -62,6 +64,8 @@ public class DadgServiceContainer
             new LoggerFactory(
                 sp.GetRequiredService<Microsoft.Extensions.Logging.ILoggerFactory>()));
         services.AddSingleton<DadgConfigWatcher>();
+        services.AddSingleton<IConfigurationProvider<DadgConfig>>(sp => sp.GetRequiredService<DadgConfigWatcher>());
+        services.AddSingleton<FemalePartyLeaderRestrictionCampaignBehavior>();
         RegisterEvent<SubModuleLoadEvent>(services);
         services.AddSingleton<DadgScriptComponentRegistrar>();
         services.AddSingleton<CampaignBehaviourDisabler>();

@@ -20,6 +20,14 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Models
 
         /**
          * <summary>
+         * Gets or sets a value indicating whether women can lead parties.
+         * </summary>
+         */
+        [XmlElement(ElementName = "EnableFemalePartyLeaders")]
+        public bool EnableFemalePartyLeaders { get; set; }
+
+        /**
+         * <summary>
          * Gets or sets the skill minimums required to participate in a jousting tournament.
          * </summary>
          */
