@@ -23,6 +23,7 @@ using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
+using DellarteDellaGuerra.Integration.CampaignTime;
 using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.Music.Patches;
@@ -69,6 +70,7 @@ public class DadgServiceContainer
         RegisterEvent<SubModuleLoadEvent>(services);
         services.AddSingleton<DadgScriptComponentRegistrar>();
         services.AddSingleton<CampaignBehaviourDisabler>();
+        services.AddSingleton<DadgCampaignTimeModel>();
         services.AddSingleton<DadgCampaignStartButtonAdder>();
         services.AddSingleton<VanillaCampaignButtonsRemover>();
         services.AddSingleton<FirearmSkillProvider>();
