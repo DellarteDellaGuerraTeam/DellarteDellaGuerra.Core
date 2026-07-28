@@ -11,6 +11,7 @@ using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Heraldry;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
+using DellarteDellaGuerra.Infrastructure.Campaign;
 using DellarteDellaGuerra.Infrastructure.Events;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
@@ -112,6 +113,7 @@ namespace DellarteDellaGuerra.Integration
             game.AddGameHandler<CompilingShaderNotifier>();
 
             campaignGameStarter.AddBehavior(new JoustTournamentCampaignBehavior(joustRequirementsProvider));
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FemalePartyLeaderRestrictionCampaignBehavior>());
         }
 
         public override void OnGameInitializationFinished(Game game)

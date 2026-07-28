@@ -1,5 +1,6 @@
 <DadgConfiguration>
   <EnableShaderCompilationNotifications>true</EnableShaderCompilationNotifications>
+  <EnableFemalePartyLeaders>false</EnableFemalePartyLeaders>
   <JoustingConfig>
     <MinimumRidingSkill>100</MinimumRidingSkill>
     <MinimumPolearmSkill>100</MinimumPolearmSkill>
