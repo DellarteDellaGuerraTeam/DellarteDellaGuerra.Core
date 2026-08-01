@@ -114,6 +114,11 @@ def write_error(request_id: Any, message: str) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--url", required=True, help="Streamable HTTP MCP endpoint URL")
+    parser.add_argument(
+        "--stateless",
+        action="store_true",
+        help="Do not retain or send MCP session identifiers between requests",
+    )
     args = parser.parse_args()
 
     session_id: str | None = None
@@ -129,7 +134,8 @@ def main() -> int:
             if isinstance(message, dict):
                 request_id = message.get("id")
 
-            responses, session_id = http_roundtrip(args.url, message, session_id)
+            responses, next_session_id = http_roundtrip(args.url, message, session_id)
+            session_id = None if args.stateless else next_session_id
             if is_notification(message):
                 continue
 
