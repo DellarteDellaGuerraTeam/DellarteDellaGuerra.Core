@@ -78,10 +78,23 @@ if (-not (Test-Path $mcpConfigPath)) {
         Write-Host "Bannerlord source versions from .mcp.json: $($versions -join ' ')"
         $nugetCache = Join-Path $HOME '.nuget\packages\bannerlordsearch.source'
         $serverExe  = Join-Path $ToolsDir 'BannerlordSearch.Mcp.Server.exe'
+        $serverPackageId = 'BannerlordSearch.Mcp.Server'
+        $serverVersion = '0.1.1'
+        $installedServer = (dotnet tool list --global --format json | ConvertFrom-Json).data |
+            Where-Object { $_.packageId -eq $serverPackageId }
 
-        if (-not (Test-Path $serverExe)) {
-            Write-Host "Installing BannerlordSearch.Mcp.Server..."
-            dotnet tool install --global BannerlordSearch.Mcp.Server | Out-Null
+        if ($installedServer.version -ne $serverVersion) {
+            if (Test-Path $serverExe) {
+                Get-Process -Name 'BannerlordSearch.Mcp.Server' -ErrorAction SilentlyContinue |
+                    Stop-Process -ErrorAction Stop
+            }
+
+            Write-Host "Installing BannerlordSearch.Mcp.Server v$serverVersion..."
+            if ($null -eq $installedServer) {
+                dotnet tool install --global $serverPackageId --version $serverVersion | Out-Null
+            } else {
+                dotnet tool update --global $serverPackageId --version $serverVersion | Out-Null
+            }
         }
 
         # Resolve (and restore if missing) the source contentFiles for each version.
