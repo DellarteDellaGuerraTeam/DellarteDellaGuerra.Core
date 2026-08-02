@@ -1,9 +1,9 @@
-using Bannerlord.PrivateWars.Domain.Resolution;
+using Bannerlord.PrivateWars.Domain;
 using Bannerlord.PrivateWars.Domain.Scoring;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
-    public class TickPrivateWarUseCaseTests
+    public class TickWarUseCaseTests
     {
         private readonly TickWarUseCase _useCase = new(new ScoreCalculator());
 

@@ -2,7 +2,7 @@ using Bannerlord.PrivateWars.Domain.Siege;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars;
 
-public class PrivateWarSallyOutPolicyTests
+public class SallyOutPolicyTests
 {
     private readonly SallyOutPolicy _policy = new();
 

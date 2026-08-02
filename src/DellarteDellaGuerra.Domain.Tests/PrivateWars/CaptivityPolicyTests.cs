@@ -2,7 +2,7 @@ using Bannerlord.PrivateWars.Domain.Captivity;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars;
 
-public class PrivateWarCaptivityPolicyTests
+public class CaptivityPolicyTests
 {
     private readonly CaptivityPolicy _policy = new();
 

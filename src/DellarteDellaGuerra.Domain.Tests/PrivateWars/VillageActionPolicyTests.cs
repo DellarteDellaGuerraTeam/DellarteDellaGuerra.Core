@@ -2,7 +2,7 @@ using Bannerlord.PrivateWars.Domain.Interaction;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
-    public class PrivateWarVillageActionPolicyTests
+    public class VillageActionPolicyTests
     {
         private readonly VillageActionPolicy _policy = new();
 

@@ -4,7 +4,7 @@ using Bannerlord.PrivateWars.Domain.Declaration;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
-    public class DeclarePrivateWarUseCaseTests
+    public class DeclareWarUseCaseTests
     {
         private static readonly IReadOnlyDictionary<string, string> EmptySnapshot = new Dictionary<string, string>();
 
