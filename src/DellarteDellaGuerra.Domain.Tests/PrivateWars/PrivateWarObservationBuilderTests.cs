@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Bannerlord.PrivateWars.Domain;
-using Bannerlord.PrivateWars.Domain.Model;
+using Bannerlord.PrivateWars.Domain.Scoring;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
@@ -21,7 +21,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
                 Fief("still_a", current: "A", original: "A", town: true)        // no crossing
             };
 
-            var observations = PrivateWarObservationBuilder.Build(
+            var observations = ObservationBuilder.Build(
                 war, fiefs, Resolver(), defenderPrisoners: 3, attackerPrisoners: 2);
 
             Assert.True(observations.AttackerHoldsMainGoal);
@@ -45,7 +45,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
                 Fief("town", current: "A_vassal", original: "D_vassal", town: true)
             };
 
-            var observations = PrivateWarObservationBuilder.Build(
+            var observations = ObservationBuilder.Build(
                 war, fiefs, Resolver(), defenderPrisoners: 0, attackerPrisoners: 0);
 
             Assert.Equal(1, observations.DefenderSideTownsHeldByAttacker);
@@ -61,7 +61,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
                 Fief("neutral", current: "X", original: "D", town: true)    // uninvolved current owner
             };
 
-            var observations = PrivateWarObservationBuilder.Build(
+            var observations = ObservationBuilder.Build(
                 war, fiefs, Resolver(), defenderPrisoners: 0, attackerPrisoners: 0);
 
             Assert.False(observations.AttackerHoldsMainGoal);

@@ -1,10 +1,10 @@
-using Bannerlord.PrivateWars.Domain;
+using Bannerlord.PrivateWars.Domain.Interaction;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
     public class PrivateWarVillageActionPolicyTests
     {
-        private readonly PrivateWarVillageActionPolicy _policy = new();
+        private readonly VillageActionPolicy _policy = new();
 
         [Theory]
         [InlineData(true)]

@@ -1,11 +1,11 @@
 using Bannerlord.PrivateWars.Domain;
-using Bannerlord.PrivateWars.Domain.Model;
+using Bannerlord.PrivateWars.Domain.Siege;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
     public class PrivateWarSyntheticCapturePolicyTests
     {
-        private readonly PrivateWarSyntheticCapturePolicy _policy = new();
+        private readonly SyntheticCapturePolicy _policy = new();
 
         [Fact]
         public void GetLosingSide_ApprovesAttackerCaptureOfDefenderHeldFrozenGoal()

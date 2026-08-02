@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using Bannerlord.PrivateWars.Domain;
-using Bannerlord.PrivateWars.Domain.Model;
+using Bannerlord.PrivateWars.Domain.Declaration;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {

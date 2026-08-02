@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Bannerlord.PrivateWars.Domain.Model;
-using Bannerlord.PrivateWars.Domain.Port;
+using Bannerlord.PrivateWars.Domain;
+using Bannerlord.PrivateWars.Domain.Scoring;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
@@ -53,7 +53,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
     /// <summary>Shared builders so tests state only the fields they care about.</summary>
     internal static class PrivateWarTestData
     {
-        public static readonly PrivateWarObservations NoControl = new(
+        public static readonly Observations NoControl = new(
             AttackerHoldsMainGoal: false,
             DefenderSideTownsHeldByAttacker: 0,
             DefenderSideCastlesHeldByAttacker: 0,
