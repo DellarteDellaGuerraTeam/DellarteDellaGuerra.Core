@@ -1,4 +1,4 @@
-using DellarteDellaGuerra.Domain.PrivateWars;
+using Bannerlord.PrivateWars.Domain;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars;
 

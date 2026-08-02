@@ -20,6 +20,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
+    <!-- The private-war domain tests exercise Bannerlord.PrivateWars.Domain directly. Reference it
+         explicitly rather than transitively, so DellarteDellaGuerra.Domain stays free of the mechanism. -->
+    <ProjectReference Include="..\submodules\PrivateWars\Bannerlord.PrivateWars.Domain\Bannerlord.PrivateWars.Domain.csproj" />
   </ItemGroup>
 
 </Project>

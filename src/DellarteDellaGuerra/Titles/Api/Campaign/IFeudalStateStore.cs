@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using DellarteDellaGuerra.Domain.PrivateWars.Model;
 using DellarteDellaGuerra.Domain.Titles.Model;
 
 namespace DellarteDellaGuerra.Titles.Api.Campaign
@@ -24,9 +23,5 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         void InitialiseTensions(IEnumerable<FeudalTension> tensions);
 
         IReadOnlyList<FeudalTension> SnapshotTensions();
-
-        void InitialisePrivateWars(IEnumerable<PrivateWar> wars);
-
-        IReadOnlyList<PrivateWar> SnapshotPrivateWars();
     }
 }

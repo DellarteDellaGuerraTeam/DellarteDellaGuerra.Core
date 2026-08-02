@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using DellarteDellaGuerra.Domain.PrivateWars.Model;
 using DellarteDellaGuerra.Domain.Titles.Model;
-using DellarteDellaGuerra.Infrastructure.PrivateWars;
 using DellarteDellaGuerra.Infrastructure.Titles;
 using DellarteDellaGuerra.Titles.Api.Campaign;
 
@@ -14,18 +12,15 @@ namespace DellarteDellaGuerra.Integration.Titles
         private readonly InMemoryTitleRegistry _titleRegistry;
         private readonly InMemoryClaimRegistry _claimRegistry;
         private readonly InMemoryTensionRegistry _tensionRegistry;
-        private readonly InMemoryPrivateWarRegistry _privateWarRegistry;
 
         public FeudalStateStoreAdapter(
             InMemoryTitleRegistry titleRegistry,
             InMemoryClaimRegistry claimRegistry,
-            InMemoryTensionRegistry tensionRegistry,
-            InMemoryPrivateWarRegistry privateWarRegistry)
+            InMemoryTensionRegistry tensionRegistry)
         {
             _titleRegistry = titleRegistry;
             _claimRegistry = claimRegistry;
             _tensionRegistry = tensionRegistry;
-            _privateWarRegistry = privateWarRegistry;
         }
 
         public void InitialiseTitles(IEnumerable<Title> titles) => _titleRegistry.Initialise(titles);
@@ -34,7 +29,5 @@ namespace DellarteDellaGuerra.Integration.Titles
         public IReadOnlyList<Claim> SnapshotClaims() => _claimRegistry.Snapshot();
         public void InitialiseTensions(IEnumerable<FeudalTension> tensions) => _tensionRegistry.Initialise(tensions);
         public IReadOnlyList<FeudalTension> SnapshotTensions() => _tensionRegistry.Snapshot();
-        public void InitialisePrivateWars(IEnumerable<PrivateWar> wars) => _privateWarRegistry.Initialise(wars);
-        public IReadOnlyList<PrivateWar> SnapshotPrivateWars() => _privateWarRegistry.Snapshot();
     }
 }

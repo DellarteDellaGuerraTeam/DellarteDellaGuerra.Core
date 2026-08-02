@@ -18,7 +18,7 @@ using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.Integration.DI;
 using DellarteDellaGuerra.Integration.Music.Patches;
-using DellarteDellaGuerra.Integration.PrivateWars.Patches;
+using DellarteDellaGuerra.Integration.PrivateWars;
 using HarmonyLib;
 using DellarteDellaGuerra.Integration.ExpandedTemplateApi.Logging;
 using DellarteDellaGuerra.Integration.Initialisation;
@@ -26,12 +26,9 @@ using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Domain.Levy.Port;
-using DellarteDellaGuerra.Domain.PrivateWars;
-using DellarteDellaGuerra.Domain.PrivateWars.Port;
+using Bannerlord.PrivateWars.Api;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Domain.Titles;
-using DellarteDellaGuerra.PrivateWars.Api.Campaign;
-using DellarteDellaGuerra.PrivateWars.Api.GameModels;
 using DellarteDellaGuerra.Infrastructure.Titles;
 using DellarteDellaGuerra.Integration.Titles;
 using DellarteDellaGuerra.Integration.Titles.UI;
@@ -44,7 +41,6 @@ using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Campaign;
 using DellarteDellaGuerra.Utils;
 using Harmony.DependencyInjection;
-using Harmony.DependencyInjection.Patches;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using TaleWorlds.CampaignSystem;
@@ -55,7 +51,6 @@ using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
-using PrivateWarSettlementAccessModel = DellarteDellaGuerra.PrivateWars.Api.GameModels.DadgSettlementAccessModel;
 using TournamentSettlementAccessModel = DellarteDellaGuerra.Tournament.Api.DadgSettlementAccessModel;
 
 namespace DellarteDellaGuerra.Integration
@@ -65,9 +60,6 @@ namespace DellarteDellaGuerra.Integration
         private readonly ILogger _logger;
         private IServiceProvider _serviceProvider;
         private UIExtender? _uiExtender;
-        // Guard: VillageHostileActionCampaignBehavior patches applied exactly once, deferred until
-        // InitializeGameStarter where GameTexts._gameTextManager is guaranteed non-null.
-        private static bool _villageMenuPatchesApplied;
 
         public SubModule()
         {
@@ -121,24 +113,18 @@ namespace DellarteDellaGuerra.Integration
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
-            // Deferred until GameTexts is initialized; the guard applies both village postfixes once.
-            if (!_villageMenuPatchesApplied)
-            {
-                _villageMenuPatchesApplied = true;
-                var menuHarmony = new HarmonyLib.Harmony("com.dadg.private-wars-menus");
-                IPatch[] menuPatches =
-                [
-                    new VillageHostileActionConditionPatch(),
-                    new VillageRaidConditionPatch(),
-                ];
-                foreach (var p in menuPatches)
-                    menuHarmony.Patch(p.TargetMethod, postfix: new HarmonyMethod(p.PatchMethod));
-            }
-
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
-            ReplacePrivateWarCampaignBehaviors(campaignGameStarter);
-            PrivateWarEncounterMenuOptions.Register(campaignGameStarter);
+            // Supply the private-war mechanism with DADG's feudal hierarchy and configured nameplate
+            // tints. The Bannerlord.PrivateWars module has self-wired its own behaviours, models, and
+            // patches by this point; DADG only feeds it the two consumer-provided collaborators.
+            var privateWarsApi = _serviceProvider.GetRequiredService<IPrivateWarsApi>();
+            privateWarsApi.SetSuzerainProvider(new FeudalHierarchyAdapter(
+                _serviceProvider.GetRequiredService<IGetSuzerainUseCase>()));
+            var privateWarConfig = _serviceProvider.GetRequiredService<DadgConfigWatcher>().Config?.PrivateWarConfig;
+            privateWarsApi.SetNameplateColors(
+                privateWarConfig?.PrivateWarEnemyNameplateColorArgb,
+                privateWarConfig?.PrivateWarAllyNameplateColorArgb);
 
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
             var joustRequirementsProvider = _serviceProvider.GetRequiredService<IJoustRequirementsProvider>();
@@ -161,24 +147,11 @@ namespace DellarteDellaGuerra.Integration
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgClanPoliticsModel>());
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgSettlementLoyaltyModel>());
 
-            // Private-war siege-retention scoring (drive is explicit; see DadgTargetScoreCalculatingModel)
-            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTargetScoreCalculatingModel>());
-            // Keep a private-war enemy out of the belligerent's army candidate pool (design §4.1)
-            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgArmyManagementCalculationModel>());
-            // Block player entry into a same-kingdom private-war rival's town/castle (design §4.1)
-            settlementAccessModel = new PrivateWarSettlementAccessModel(settlementAccessModel);
-            campaignGameStarter.AddModel(settlementAccessModel);
-            // Re-include garrison/militia/feud-lord defenders in a same-kingdom siege assault (design §4.1, Gate 1)
-            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgEncounterModel>());
-            // Deny private-war rivals the recruit slots that same-faction vanilla grants (design §4.1)
-            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgVolunteerModel>());
-
             // Feudal title campaign behaviours
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleCampaignBehavior>());
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<InternalConflictCampaignBehavior>());
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleSwapBehavior>());
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<LevyCampaignBehavior>());
-            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<PrivateWarCampaignBehavior>());
 
             // Initialise the static service locator used by KingdomDecision subclasses
             FeudalServices.Initialise(
@@ -191,9 +164,7 @@ namespace DellarteDellaGuerra.Integration
                 _serviceProvider.GetRequiredService<IEvaluateClaimUseCase>(),
                 _serviceProvider.GetRequiredService<IComputeFeudalSupportUseCase>(),
                 _serviceProvider.GetRequiredService<IComputeInfluenceTierBonusUseCase>(),
-                _serviceProvider.GetRequiredService<IAccumulateTensionUseCase>(),
-                _serviceProvider.GetRequiredService<IPrivateWarRepository>(),
-                _serviceProvider.GetRequiredService<IPrivateWarHostility>());
+                _serviceProvider.GetRequiredService<IAccumulateTensionUseCase>());
 
             // Initialise the static service locator used by the feudal UI
             // (encyclopedia mixins and the hierarchy screen are created by the game's UI
@@ -204,41 +175,12 @@ namespace DellarteDellaGuerra.Integration
                 _serviceProvider.GetRequiredService<IGetSuzerainUseCase>(),
                 _serviceProvider.GetRequiredService<IGetDirectVassalsUseCase>(),
                 _serviceProvider.GetRequiredService<IBuildFeudalMapUseCase>(),
-                _serviceProvider.GetRequiredService<ILevyRepository>(),
-                _serviceProvider.GetRequiredService<IPrivateWarNameplateColorUseCase>(),
-                _serviceProvider.GetRequiredService<IPrivateWarHostility>());
+                _serviceProvider.GetRequiredService<ILevyRepository>());
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();
 
             campaignGameStarter.AddBehavior(new JoustTournamentCampaignBehavior(joustRequirementsProvider));
-        }
-
-        private void ReplacePrivateWarCampaignBehaviors(CampaignGameStarter starter)
-        {
-            var vanillaCaptivity = starter.CampaignBehaviors
-                .FirstOrDefault(behavior => behavior.GetType() == typeof(PlayerCaptivityCampaignBehavior))
-                as PlayerCaptivityCampaignBehavior;
-            if (vanillaCaptivity != null)
-            {
-                // Preserve the vanilla instance's menus, events, and save identity. The DADG router is
-                // first for ICaptivityCampaignBehavior lookup and delegates every ordinary capture back.
-                starter.RemoveBehavior(vanillaCaptivity);
-                starter.AddBehavior(new DadgPlayerCaptivityCampaignBehavior(
-                    vanillaCaptivity,
-                    _serviceProvider.GetRequiredService<PrivateWarCaptivityPolicy>()));
-                starter.AddBehavior(vanillaCaptivity);
-            }
-
-            // The stock behavior has no save state. Replace its private implementation with the same
-            // public event/action flow plus explicit clan-side strength classification.
-            var vanillaSallyOut = starter.CampaignBehaviors
-                .FirstOrDefault(behavior => behavior.GetType() == typeof(SallyOutsCampaignBehavior))
-                as SallyOutsCampaignBehavior;
-            if (vanillaSallyOut != null)
-                starter.RemoveBehavior(vanillaSallyOut);
-            starter.AddBehavior(new DadgSallyOutCampaignBehavior(
-                _serviceProvider.GetRequiredService<PrivateWarSallyOutPolicy>()));
         }
 
         public override void OnGameInitializationFinished(Game game)

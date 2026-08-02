@@ -1,4 +1,3 @@
-using DellarteDellaGuerra.Domain.PrivateWars.Port;
 using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.Domain.Titles.Port;
 
@@ -30,8 +29,6 @@ namespace DellarteDellaGuerra.Titles.Api
         public static IComputeFeudalSupportUseCase? ComputeSupport { get; private set; }
         public static IComputeInfluenceTierBonusUseCase? ComputeInfluenceTierBonus { get; private set; }
         public static IAccumulateTensionUseCase? AccumulateTension { get; private set; }
-        public static IPrivateWarRepository? PrivateWars { get; private set; }
-        public static IPrivateWarHostility? PrivateWarHostility { get; private set; }
 
         public static bool IsInitialised { get; private set; }
 
@@ -45,9 +42,7 @@ namespace DellarteDellaGuerra.Titles.Api
             IEvaluateClaimUseCase evaluateClaim,
             IComputeFeudalSupportUseCase computeSupport,
             IComputeInfluenceTierBonusUseCase computeInfluenceTierBonus,
-            IAccumulateTensionUseCase accumulateTension,
-            IPrivateWarRepository privateWars,
-            IPrivateWarHostility privateWarHostility)
+            IAccumulateTensionUseCase accumulateTension)
         {
             Titles = titles;
             Claims = claims;
@@ -59,8 +54,6 @@ namespace DellarteDellaGuerra.Titles.Api
             ComputeSupport = computeSupport;
             ComputeInfluenceTierBonus = computeInfluenceTierBonus;
             AccumulateTension = accumulateTension;
-            PrivateWars = privateWars;
-            PrivateWarHostility = privateWarHostility;
             IsInitialised = true;
         }
 
@@ -76,8 +69,6 @@ namespace DellarteDellaGuerra.Titles.Api
             ComputeSupport = null;
             ComputeInfluenceTierBonus = null;
             AccumulateTension = null;
-            PrivateWars = null;
-            PrivateWarHostility = null;
             IsInitialised = false;
         }
     }

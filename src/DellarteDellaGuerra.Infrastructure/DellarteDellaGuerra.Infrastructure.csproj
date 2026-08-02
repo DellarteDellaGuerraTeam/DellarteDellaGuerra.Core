@@ -34,6 +34,8 @@
         <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.Domain\Bannerlord.Cannons.Domain.csproj" />
         <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.Infrastructure\Bannerlord.Cannons.Infrastructure.csproj" />
 
+        <ProjectReference Include="..\submodules\PrivateWars\Bannerlord.PrivateWars.API\Bannerlord.PrivateWars.API.csproj" />
+
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
         <ProjectReference Include="..\DellarteDellaGuerra\DellarteDellaGuerra.csproj" />
 
