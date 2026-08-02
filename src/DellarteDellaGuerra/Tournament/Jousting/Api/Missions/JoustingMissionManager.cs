@@ -50,7 +50,8 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions
                      var joustFightMissionController = new JoustFightMissionController(
                          culture,
                          getJoustEquipmentUtil,
-                         equipmentMapper);
+                         equipmentMapper,
+                         tournamentGame.LoggerFactory);
 
                      return new MissionBehavior[]
                      {
