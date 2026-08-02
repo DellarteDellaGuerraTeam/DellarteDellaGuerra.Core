@@ -1,4 +1,4 @@
 interface:
-  display_name: "Crafting Offset CLI"
-  short_description: "Extract and diagnose weapon offsets"
-  default_prompt: "Use -crafting-offsets to diagnose and correct my crafted weapon piece offsets."
+  display_name: "Bannerlord Crafting Offsets"
+  short_description: "Diagnose crafted reach and piece alignment"
+  default_prompt: "Use $bannerlord-crafting-offsets to diagnose and correct this crafted weapon's reach or piece alignment."
