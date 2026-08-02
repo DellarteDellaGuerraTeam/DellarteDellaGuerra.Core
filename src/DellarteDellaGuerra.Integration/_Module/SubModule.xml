@@ -41,6 +41,12 @@
       <SubModuleClassType value="Bannerlord.Cannons.SubModule"/>
       <Tags />
     </SubModule>
+    <SubModule>
+      <Name value="Bannerlord.PrivateWars"/>
+      <DLLName value="Bannerlord.PrivateWars.dll"/>
+      <SubModuleClassType value="Bannerlord.PrivateWars.SubModule"/>
+      <Tags />
+    </SubModule>
   </SubModules>
   <Xmls/>
 </Module>
