@@ -7,17 +7,9 @@ using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders.Ports;
 using DellarteDellaGuerra.Domain.Levy;
 using DellarteDellaGuerra.Domain.Levy.Port;
-using DellarteDellaGuerra.Domain.PrivateWars;
-using DellarteDellaGuerra.Domain.PrivateWars.Port;
 using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Infrastructure.Levy;
-using DellarteDellaGuerra.Infrastructure.PrivateWars;
-using DellarteDellaGuerra.Integration.PrivateWars;
-using DellarteDellaGuerra.PrivateWars.Api.Armies;
-using DellarteDellaGuerra.PrivateWars.Api.Campaign;
-using DellarteDellaGuerra.PrivateWars.Api.GameModels;
-using DellarteDellaGuerra.Integration.PrivateWars.Patches;
 using DellarteDellaGuerra.Levy.Api;
 using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
@@ -71,7 +63,6 @@ public class DadgServiceContainer
         RegisterDisplayServices(services);
         RegisterMissionServices(services);
         RegisterLevyServices(services);
-        RegisterPrivateWarServices(services);
         RegisterPatches(services);
         services.AddHarmonyPatching();
         var provider = services.BuildServiceProvider();
@@ -180,44 +171,6 @@ public class DadgServiceContainer
         services.AddSingleton<LevyCampaignBehavior>();
     }
 
-    private static void RegisterPrivateWarServices(IServiceCollection services)
-    {
-        // Infrastructure: the registry doubles as repository and the patch-facing hostility signal
-        services.AddSingleton<WarSideResolver>();
-        services.AddSingleton<PrivateWarScoreCalculator>();
-        services.AddSingleton<IFeudalHierarchy, FeudalHierarchyAdapter>();
-        services.AddSingleton<InMemoryPrivateWarRegistry>();
-        services.AddSingleton<IPrivateWarRepository>(sp => sp.GetRequiredService<InMemoryPrivateWarRegistry>());
-        services.AddSingleton<IPrivateWarHostility>(sp => sp.GetRequiredService<InMemoryPrivateWarRegistry>());
-
-        // Domain use cases
-        services.AddSingleton<IDeclarePrivateWarUseCase, DeclarePrivateWarUseCase>();
-        services.AddSingleton<ITickPrivateWarUseCase, TickPrivateWarUseCase>();
-        services.AddSingleton<IApplyBattleOutcomeUseCase, ApplyBattleOutcomeUseCase>();
-        services.AddSingleton<IResolvePrivateWarUseCase, ResolvePrivateWarUseCase>();
-        services.AddSingleton<PrivateWarArmyPolicy>();
-        services.AddSingleton<PrivateWarInteractionPolicy>();
-        services.AddSingleton<PrivateWarCaptivityPolicy>();
-        services.AddSingleton<PrivateWarSallyOutPolicy>();
-        services.AddSingleton<PrivateWarSyntheticCapturePolicy>();
-        services.AddSingleton<PrivateWarArmyDecisionAdapter>();
-
-        // Campaign behaviour (persistence lifecycle)
-        services.AddSingleton<PrivateWarCampaignBehavior>();
-
-        // Game models (resolved lazily in SubModule)
-        services.AddTransient<DadgTargetScoreCalculatingModel>();
-        services.AddTransient<DadgArmyManagementCalculationModel>();
-        services.AddTransient<DadgEncounterModel>();
-        services.AddTransient<DadgVolunteerModel>();
-
-        // Nameplate tint color (configurable for colorblind accessibility). The infra provider only
-        // supplies the raw configured string; the use case owns all validation and the default orange.
-        services.AddSingleton<IPrivateWarNameplateColorProvider>(sp =>
-            new PrivateWarNameplateColorConfig(sp.GetRequiredService<DadgConfigWatcher>()));
-        services.AddSingleton<IPrivateWarNameplateColorUseCase, PrivateWarNameplateColorUseCase>();
-    }
-
     private static void RegisterPatches(IServiceCollection services)
     {
         // Music
@@ -241,32 +194,5 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, PocConfigReaderOverriderPatch>();
         // Siege engines
         services.AddSingleton<IPatch, CannonballTrailCleanupPatch>();
-        // Private wars (same-kingdom hostility signal)
-        services.AddSingleton<IPatch, MobilePartyAiIsEnemyPatch>();
-        services.AddSingleton<IPatch, MobilePartyAiStanceScorePatch>();
-        services.AddSingleton<IPatch, StartPartyEncounterBattlePatch>();
-        services.AddSingleton<IPatch, CanPartyJoinBattlePatch>();
-        services.AddSingleton<IPatch, KingdomCreateArmyPatch>();
-        services.AddSingleton<IPatch, PrivateWarPrisonerRetentionPatch>();
-        services.AddSingleton<IPatch, RecruitmentEntryPatch>();
-        services.AddSingleton<IPatch, SettlementVisitPatch>();
-        // Private wars (player-facing encounter menus and side assignment)
-        // The three simple encounter options are registered through CampaignGameStarter.
-        // The two retained village condition postfixes are applied later from InitializeGameStarter,
-        // after GameTexts has initialized.
-        // PlayerEncounterSetupFieldsPatch targets PlayerEncounter (no static GameTexts call)
-        // and is safe to apply early.
-        services.AddSingleton<IPatch, PlayerEncounterSetupFieldsPatch>();
-        services.AddSingleton<IPatch, SiegeDefenderJoinPatch>();
-        // Private wars (§4.3 field-encounter dialog): make a same-kingdom rival meeting open the
-        // enemy conversation that can escalate to battle instead of a forced battle or friendly chat.
-        // All three re-apply vanilla's own guards but swap the MapFaction war check for
-        // PrivateWarPatchHelper.AreEnemies, gated behind `if (__result) return;` so they never touch a
-        // real MapFaction war. Their targets (PlayerIsEnemyTag / HeroHelper / LordConversations) have no
-        // static GameTexts cctor, so they are safe to apply early (unlike the EncounterGameMenuBehavior
-        // menu patches above).
-        services.AddSingleton<IPatch, PlayerIsEnemyTagPatch>();
-        services.AddSingleton<IPatch, WillLordAttackPrivateWarPatch>();
-        services.AddSingleton<IPatch, PlayerCanAttackPrivateWarRivalPatch>();
     }
 }

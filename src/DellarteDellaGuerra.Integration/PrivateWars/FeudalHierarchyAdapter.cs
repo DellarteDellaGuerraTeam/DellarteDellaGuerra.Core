@@ -1,11 +1,11 @@
-using DellarteDellaGuerra.Domain.PrivateWars.Port;
+using Bannerlord.PrivateWars.Domain.Port;
 using DellarteDellaGuerra.Domain.Titles;
 
 namespace DellarteDellaGuerra.Integration.PrivateWars
 {
-    // Adapts the existing feudal suzerain query to the IFeudalHierarchy port the private-war
+    // Adapts the existing feudal suzerain query to the ISuzerainProvider port the private-war
     // registry walks to resolve war sides, keeping the two domain features decoupled.
-    public class FeudalHierarchyAdapter : IFeudalHierarchy
+    public class FeudalHierarchyAdapter : ISuzerainProvider
     {
         private readonly IGetSuzerainUseCase _getSuzerain;
 

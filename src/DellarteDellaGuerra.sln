@@ -69,6 +69,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bannerlord.ExpandedTemplate
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bannerlord.ExpandedTemplate.Infrastructure", "submodules\ExpandedTemplate\Bannerlord.ExpandedTemplate.Infrastructure\Bannerlord.ExpandedTemplate.Infrastructure.csproj", "{A89D89AD-51CF-4679-8824-A655208189CB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PrivateWars", "PrivateWars", "{9E3F4816-98B0-16BB-356B-42A8D474077B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bannerlord.PrivateWars.Domain", "submodules\PrivateWars\Bannerlord.PrivateWars.Domain\Bannerlord.PrivateWars.Domain.csproj", "{7AC02BC9-370C-4DB0-880F-4C773F9B310D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bannerlord.PrivateWars.API", "submodules\PrivateWars\Bannerlord.PrivateWars.API\Bannerlord.PrivateWars.API.csproj", "{761B9D88-22A7-45D9-B05B-09F0E6E857B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bannerlord.PrivateWars", "submodules\PrivateWars\Bannerlord.PrivateWars\Bannerlord.PrivateWars.csproj", "{EFCECA2F-102E-4905-92A7-E04B8A950FA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -271,6 +279,42 @@ Global
 		{A89D89AD-51CF-4679-8824-A655208189CB}.Release|Any CPU.Build.0 = Release|x64
 		{A89D89AD-51CF-4679-8824-A655208189CB}.Release|x86.ActiveCfg = Release|x64
 		{A89D89AD-51CF-4679-8824-A655208189CB}.Release|x86.Build.0 = Release|x64
+		{7AC02BC9-370C-4DB0-880F-4C773F9B310D}.Debug|x64.ActiveCfg = Debug|x64
+		{7AC02BC9-370C-4DB0-880F-4C773F9B310D}.Debug|x64.Build.0 = Debug|x64
+		{7AC02BC9-370C-4DB0-880F-4C773F9B310D}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{7AC02BC9-370C-4DB0-880F-4C773F9B310D}.Debug|Any CPU.Build.0 = Debug|x64
+		{7AC02BC9-370C-4DB0-880F-4C773F9B310D}.Debug|x86.ActiveCfg = Debug|x64
+		{7AC02BC9-370C-4DB0-880F-4C773F9B310D}.Debug|x86.Build.0 = Debug|x64
+		{7AC02BC9-370C-4DB0-880F-4C773F9B310D}.Release|x64.ActiveCfg = Release|x64
+		{7AC02BC9-370C-4DB0-880F-4C773F9B310D}.Release|x64.Build.0 = Release|x64
+		{7AC02BC9-370C-4DB0-880F-4C773F9B310D}.Release|Any CPU.ActiveCfg = Release|x64
+		{7AC02BC9-370C-4DB0-880F-4C773F9B310D}.Release|Any CPU.Build.0 = Release|x64
+		{7AC02BC9-370C-4DB0-880F-4C773F9B310D}.Release|x86.ActiveCfg = Release|x64
+		{7AC02BC9-370C-4DB0-880F-4C773F9B310D}.Release|x86.Build.0 = Release|x64
+		{761B9D88-22A7-45D9-B05B-09F0E6E857B9}.Debug|x64.ActiveCfg = Debug|x64
+		{761B9D88-22A7-45D9-B05B-09F0E6E857B9}.Debug|x64.Build.0 = Debug|x64
+		{761B9D88-22A7-45D9-B05B-09F0E6E857B9}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{761B9D88-22A7-45D9-B05B-09F0E6E857B9}.Debug|Any CPU.Build.0 = Debug|x64
+		{761B9D88-22A7-45D9-B05B-09F0E6E857B9}.Debug|x86.ActiveCfg = Debug|x64
+		{761B9D88-22A7-45D9-B05B-09F0E6E857B9}.Debug|x86.Build.0 = Debug|x64
+		{761B9D88-22A7-45D9-B05B-09F0E6E857B9}.Release|x64.ActiveCfg = Release|x64
+		{761B9D88-22A7-45D9-B05B-09F0E6E857B9}.Release|x64.Build.0 = Release|x64
+		{761B9D88-22A7-45D9-B05B-09F0E6E857B9}.Release|Any CPU.ActiveCfg = Release|x64
+		{761B9D88-22A7-45D9-B05B-09F0E6E857B9}.Release|Any CPU.Build.0 = Release|x64
+		{761B9D88-22A7-45D9-B05B-09F0E6E857B9}.Release|x86.ActiveCfg = Release|x64
+		{761B9D88-22A7-45D9-B05B-09F0E6E857B9}.Release|x86.Build.0 = Release|x64
+		{EFCECA2F-102E-4905-92A7-E04B8A950FA6}.Debug|x64.ActiveCfg = Debug|x64
+		{EFCECA2F-102E-4905-92A7-E04B8A950FA6}.Debug|x64.Build.0 = Debug|x64
+		{EFCECA2F-102E-4905-92A7-E04B8A950FA6}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{EFCECA2F-102E-4905-92A7-E04B8A950FA6}.Debug|Any CPU.Build.0 = Debug|x64
+		{EFCECA2F-102E-4905-92A7-E04B8A950FA6}.Debug|x86.ActiveCfg = Debug|x64
+		{EFCECA2F-102E-4905-92A7-E04B8A950FA6}.Debug|x86.Build.0 = Debug|x64
+		{EFCECA2F-102E-4905-92A7-E04B8A950FA6}.Release|x64.ActiveCfg = Release|x64
+		{EFCECA2F-102E-4905-92A7-E04B8A950FA6}.Release|x64.Build.0 = Release|x64
+		{EFCECA2F-102E-4905-92A7-E04B8A950FA6}.Release|Any CPU.ActiveCfg = Release|x64
+		{EFCECA2F-102E-4905-92A7-E04B8A950FA6}.Release|Any CPU.Build.0 = Release|x64
+		{EFCECA2F-102E-4905-92A7-E04B8A950FA6}.Release|x86.ActiveCfg = Release|x64
+		{EFCECA2F-102E-4905-92A7-E04B8A950FA6}.Release|x86.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -292,6 +336,9 @@ Global
 		{AD34CA18-8AEF-4382-A8FC-B4961BAD435D} = {1B3E8FDC-33ED-8FAA-4F2B-2D75B5BC9BC4}
 		{E2A4F431-2CA9-4FFB-BE8C-D4DC5D566779} = {1B3E8FDC-33ED-8FAA-4F2B-2D75B5BC9BC4}
 		{A89D89AD-51CF-4679-8824-A655208189CB} = {1B3E8FDC-33ED-8FAA-4F2B-2D75B5BC9BC4}
+		{7AC02BC9-370C-4DB0-880F-4C773F9B310D} = {9E3F4816-98B0-16BB-356B-42A8D474077B}
+		{761B9D88-22A7-45D9-B05B-09F0E6E857B9} = {9E3F4816-98B0-16BB-356B-42A8D474077B}
+		{EFCECA2F-102E-4905-92A7-E04B8A950FA6} = {9E3F4816-98B0-16BB-356B-42A8D474077B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B3D4AB65-9162-4EE2-9413-1867C12DC041}
