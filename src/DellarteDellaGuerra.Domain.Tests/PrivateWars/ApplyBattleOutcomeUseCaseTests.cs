@@ -1,5 +1,5 @@
 using Bannerlord.PrivateWars.Domain;
-using Bannerlord.PrivateWars.Domain.Model;
+using Bannerlord.PrivateWars.Domain.Scoring;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {

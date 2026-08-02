@@ -1,10 +1,10 @@
-using Bannerlord.PrivateWars.Domain;
+using Bannerlord.PrivateWars.Domain.Interaction;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars;
 
 public class PrivateWarInteractionPolicyTests
 {
-    private readonly PrivateWarInteractionPolicy _policy = new();
+    private readonly InteractionPolicy _policy = new();
 
     [Theory]
     [InlineData(false, false, true, false, ReinforcementSide.Enemy)]

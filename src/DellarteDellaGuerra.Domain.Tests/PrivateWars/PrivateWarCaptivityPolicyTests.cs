@@ -1,10 +1,10 @@
-using Bannerlord.PrivateWars.Domain;
+using Bannerlord.PrivateWars.Domain.Captivity;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars;
 
 public class PrivateWarCaptivityPolicyTests
 {
-    private readonly PrivateWarCaptivityPolicy _policy = new();
+    private readonly CaptivityPolicy _policy = new();
 
     [Theory]
     [InlineData(true, false, true, false, false, false)]

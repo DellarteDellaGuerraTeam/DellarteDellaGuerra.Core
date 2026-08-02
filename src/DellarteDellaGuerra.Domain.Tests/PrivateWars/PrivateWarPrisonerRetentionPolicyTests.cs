@@ -1,10 +1,10 @@
-using Bannerlord.PrivateWars.Domain;
+using Bannerlord.PrivateWars.Domain.Captivity;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
     public class PrivateWarPrisonerRetentionPolicyTests
     {
-        private readonly PrivateWarPrisonerRetentionPolicy _policy = new();
+        private readonly PrisonerRetentionPolicy _policy = new();
 
         [Theory]
         [InlineData(PrivateWarPrisonerReleaseReason.AfterPeace)]

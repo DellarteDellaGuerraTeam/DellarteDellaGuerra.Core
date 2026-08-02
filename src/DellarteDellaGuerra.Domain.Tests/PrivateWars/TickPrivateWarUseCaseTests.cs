@@ -1,11 +1,11 @@
-using Bannerlord.PrivateWars.Domain;
-using Bannerlord.PrivateWars.Domain.Model;
+using Bannerlord.PrivateWars.Domain.Resolution;
+using Bannerlord.PrivateWars.Domain.Scoring;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
     public class TickPrivateWarUseCaseTests
     {
-        private readonly TickPrivateWarUseCase _useCase = new(new PrivateWarScoreCalculator());
+        private readonly TickWarUseCase _useCase = new(new ScoreCalculator());
 
         [Fact]
         public void Execute_AttackerReachesLimit_ReportsAttackerVictory()
@@ -16,7 +16,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             var result = _useCase.Execute(war, obs, currentDay: 1000f);
 
             Assert.Equal(100f, result.Score);
-            Assert.Equal(PrivateWarOutcome.AttackerVictory, result.Outcome);
+            Assert.Equal(Outcome.AttackerVictory, result.Outcome);
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             var result = _useCase.Execute(war, obs, currentDay: 1000f);
 
             Assert.Equal(-100f, result.Score);
-            Assert.Equal(PrivateWarOutcome.DefenderVictory, result.Outcome);
+            Assert.Equal(Outcome.DefenderVictory, result.Outcome);
         }
 
         [Fact]

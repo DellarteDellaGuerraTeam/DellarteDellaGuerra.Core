@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Bannerlord.PrivateWars.Domain;
-using Bannerlord.PrivateWars.Domain.Model;
-using Bannerlord.PrivateWars.Domain.Port;
+using Bannerlord.PrivateWars.Domain.Armies;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
@@ -12,7 +11,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         public void CreatePlan_EligiblePrincipalPartyHasExclusiveLeadershipPriority()
         {
             var war = PrivateWarTestData.War(attacker: "A", defender: "D");
-            var parties = new List<PrivateWarArmyParty>
+            var parties = new List<ArmyParty>
             {
                 Party("principal_party", "A"),
                 Party("participant_party", "A_vassal")
@@ -21,10 +20,10 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 
             var principalPlan = policy.CreatePlan(
                 war, WarSide.Attacker, "principal_party", parties,
-                Array.Empty<PrivateWarArmyAssignment>(), maximumMemberCount: 2);
+                Array.Empty<ArmyAssignment>(), maximumMemberCount: 2);
             var participantPlan = policy.CreatePlan(
                 war, WarSide.Attacker, "participant_party", parties,
-                Array.Empty<PrivateWarArmyAssignment>(), maximumMemberCount: 2);
+                Array.Empty<ArmyAssignment>(), maximumMemberCount: 2);
 
             Assert.Equal("principal_party", principalPlan?.LeaderPartyId);
             Assert.Null(participantPlan);
@@ -34,7 +33,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         public void CreatePlan_ParticipatingClanMayLeadWhenNoPrincipalPartyIsEligible()
         {
             var war = PrivateWarTestData.War(attacker: "A", defender: "D");
-            var parties = new List<PrivateWarArmyParty>
+            var parties = new List<ArmyParty>
             {
                 Party("principal_party", "A", canLead: false, canJoin: false),
                 Party("participant_party", "A_vassal")
@@ -42,7 +41,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 
             var plan = Policy(("A_vassal", "A")).CreatePlan(
                 war, WarSide.Attacker, "participant_party", parties,
-                Array.Empty<PrivateWarArmyAssignment>(),
+                Array.Empty<ArmyAssignment>(),
                 maximumMemberCount: 2);
 
             Assert.Equal("participant_party", plan?.LeaderPartyId);
@@ -52,14 +51,14 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         public void CreatePlan_RejectsSecondLeaderForSameWarSideAndGoal()
         {
             var war = PrivateWarTestData.War(attacker: "A", defender: "D");
-            var parties = new List<PrivateWarArmyParty>
+            var parties = new List<ArmyParty>
             {
                 Party("existing_leader", "A"),
                 Party("candidate_leader", "A")
             };
             var assignments = new[]
             {
-                new PrivateWarArmyAssignment(
+                new ArmyAssignment(
                     war.Id, WarSide.Attacker, war.MainGoalSettlementId, "existing_leader")
             };
 
@@ -74,14 +73,14 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         public void CreatePlan_DoesNotReplaceExistingFallbackLeaderWhenPrincipalBecomesEligible()
         {
             var war = PrivateWarTestData.War(attacker: "A", defender: "D");
-            var parties = new List<PrivateWarArmyParty>
+            var parties = new List<ArmyParty>
             {
                 Party("fallback_leader", "A_vassal"),
                 Party("principal_party", "A")
             };
             var assignments = new[]
             {
-                new PrivateWarArmyAssignment(
+                new ArmyAssignment(
                     war.Id, WarSide.Attacker, war.MainGoalSettlementId, "fallback_leader")
             };
             var policy = Policy(("A_vassal", "A"));
@@ -101,7 +100,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         public void CreatePlan_IncludesParticipatingPartiesFromTheSameSide()
         {
             var war = PrivateWarTestData.War(attacker: "A", defender: "D");
-            var parties = new List<PrivateWarArmyParty>
+            var parties = new List<ArmyParty>
             {
                 Party("leader", "A"),
                 Party("same_side_member", "A_vassal")
@@ -109,7 +108,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 
             var plan = Policy(("A_vassal", "A")).CreatePlan(
                 war, WarSide.Attacker, "leader", parties,
-                Array.Empty<PrivateWarArmyAssignment>(),
+                Array.Empty<ArmyAssignment>(),
                 maximumMemberCount: 2);
 
             Assert.Equal(new[] { "same_side_member" }, plan?.MemberPartyIds);
@@ -119,7 +118,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         public void CreatePlan_ExcludesOpposingAndUninvolvedPartiesFromMembership()
         {
             var war = PrivateWarTestData.War(attacker: "A", defender: "D");
-            var parties = new List<PrivateWarArmyParty>
+            var parties = new List<ArmyParty>
             {
                 Party("leader", "A"),
                 Party("same_side_member", "A_vassal"),
@@ -129,7 +128,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 
             var plan = Policy(("A_vassal", "A"), ("D_vassal", "D")).CreatePlan(
                 war, WarSide.Attacker, "leader", parties,
-                Array.Empty<PrivateWarArmyAssignment>(), maximumMemberCount: 4);
+                Array.Empty<ArmyAssignment>(), maximumMemberCount: 4);
 
             Assert.Equal(new[] { "same_side_member" }, plan?.MemberPartyIds);
         }
@@ -145,7 +144,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 
             var plan = Policy().CreatePlan(
                 war, WarSide.Attacker, "leader", parties,
-                Array.Empty<PrivateWarArmyAssignment>(), maximumMemberCount: 1);
+                Array.Empty<ArmyAssignment>(), maximumMemberCount: 1);
 
             Assert.Null(plan);
         }
@@ -162,7 +161,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 
             var plan = Policy(("A_vassal", "A")).CreatePlan(
                 war, WarSide.Attacker, "leader", parties,
-                Array.Empty<PrivateWarArmyAssignment>(),
+                Array.Empty<ArmyAssignment>(),
                 maximumMemberCount: 2);
 
             Assert.Empty(plan?.MemberPartyIds ?? Array.Empty<string>());
@@ -179,7 +178,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             };
             var assignments = new[]
             {
-                new PrivateWarArmyAssignment(
+                new ArmyAssignment(
                     war.Id, WarSide.Attacker, "other_goal", "other_leader")
             };
 
@@ -202,7 +201,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 
             var plan = Policy(("A_vassal", "A")).CreatePlan(
                 war, WarSide.Attacker, "fallback", parties,
-                Array.Empty<PrivateWarArmyAssignment>(),
+                Array.Empty<ArmyAssignment>(),
                 maximumMemberCount: 1);
 
             Assert.Equal("fallback", plan?.LeaderPartyId);
@@ -223,13 +222,13 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 
             var plan = Policy(("A_vassal", "A"), ("A_subvassal", "A_vassal")).CreatePlan(
                 war, WarSide.Attacker, "leader", parties,
-                Array.Empty<PrivateWarArmyAssignment>(),
+                Array.Empty<ArmyAssignment>(),
                 maximumMemberCount: 2);
 
             Assert.Equal(new[] { "highest", "middle" }, plan?.MemberPartyIds);
         }
 
-        private static PrivateWarArmyParty Party(
+        private static ArmyParty Party(
             string partyId,
             string clanId,
             bool canLead = true,
@@ -237,7 +236,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             float desirability = 0f)
             => new(partyId, clanId, canLead, canJoin, desirability);
 
-        private static PrivateWarArmyPolicy Policy(params (string clan, string suzerain)[] suzerains)
+        private static ArmyPolicy Policy(params (string clan, string suzerain)[] suzerains)
             => new(new WarSideResolver(new MapSuzerainProvider(suzerains)));
     }
 }

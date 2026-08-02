@@ -1,10 +1,10 @@
-using Bannerlord.PrivateWars.Domain;
+using Bannerlord.PrivateWars.Domain.Siege;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars;
 
 public class PrivateWarSallyOutPolicyTests
 {
-    private readonly PrivateWarSallyOutPolicy _policy = new();
+    private readonly SallyOutPolicy _policy = new();
 
     [Theory]
     [InlineData(false, true, false, true, true, true, SallyOutPartySide.Besieger)]
