@@ -5,7 +5,7 @@ using Bannerlord.PrivateWars.Domain.Armies;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
-    public class PrivateWarArmyPolicyTests
+    public class ArmyPolicyTests
     {
         [Fact]
         public void CreatePlan_EligiblePrincipalPartyHasExclusiveLeadershipPriority()

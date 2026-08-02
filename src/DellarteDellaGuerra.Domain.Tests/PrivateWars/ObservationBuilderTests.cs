@@ -4,7 +4,7 @@ using Bannerlord.PrivateWars.Domain.Scoring;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
-    public class PrivateWarObservationBuilderTests
+    public class ObservationBuilderTests
     {
         [Fact]
         public void Build_CountsFiefsThatCrossedSidesTracksGoalAndPassesTallies()

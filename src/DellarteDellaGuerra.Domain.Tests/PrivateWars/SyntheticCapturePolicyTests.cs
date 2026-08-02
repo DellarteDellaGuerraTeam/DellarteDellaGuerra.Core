@@ -3,7 +3,7 @@ using Bannerlord.PrivateWars.Domain.Siege;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
-    public class PrivateWarSyntheticCapturePolicyTests
+    public class SyntheticCapturePolicyTests
     {
         private readonly SyntheticCapturePolicy _policy = new();
 

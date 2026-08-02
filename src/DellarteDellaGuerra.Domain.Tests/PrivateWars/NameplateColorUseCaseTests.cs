@@ -2,7 +2,7 @@ using Bannerlord.PrivateWars.Domain.Interaction;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
-    public class PrivateWarNameplateColorUseCaseTests
+    public class NameplateColorUseCaseTests
     {
         [Theory]
         [InlineData(SettlementNameplateRelation.Enemy, 0xFF870707u)]

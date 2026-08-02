@@ -2,7 +2,7 @@ using Bannerlord.PrivateWars.Domain.Scoring;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
-    public class PrivateWarScoreCalculatorTests
+    public class ScoreCalculatorTests
     {
         private readonly ScoreCalculator _calculator = new();
 

@@ -2,15 +2,15 @@ using Bannerlord.PrivateWars.Domain.Captivity;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
-    public class PrivateWarPrisonerRetentionPolicyTests
+    public class PrisonerRetentionPolicyTests
     {
         private readonly PrisonerRetentionPolicy _policy = new();
 
         [Theory]
-        [InlineData(PrivateWarPrisonerReleaseReason.AfterPeace)]
-        [InlineData(PrivateWarPrisonerReleaseReason.AfterBattle)]
+        [InlineData(PrisonerReleaseReason.AfterPeace)]
+        [InlineData(PrisonerReleaseReason.AfterBattle)]
         public void ShouldAllowRelease_BlocksInvoluntaryReleaseForPrivateEnemies(
-            PrivateWarPrisonerReleaseReason reason)
+            PrisonerReleaseReason reason)
         {
             Assert.False(_policy.ShouldAllowRelease(
                 isMainHero: false,
@@ -19,13 +19,13 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         }
 
         [Theory]
-        [InlineData(PrivateWarPrisonerReleaseReason.Ransom)]
-        [InlineData(PrivateWarPrisonerReleaseReason.Escape)]
-        [InlineData(PrivateWarPrisonerReleaseReason.DeliberateRelease)]
-        [InlineData(PrivateWarPrisonerReleaseReason.Death)]
-        [InlineData(PrivateWarPrisonerReleaseReason.Compensation)]
+        [InlineData(PrisonerReleaseReason.Ransom)]
+        [InlineData(PrisonerReleaseReason.Escape)]
+        [InlineData(PrisonerReleaseReason.DeliberateRelease)]
+        [InlineData(PrisonerReleaseReason.Death)]
+        [InlineData(PrisonerReleaseReason.Compensation)]
         public void ShouldAllowRelease_PreservesVoluntaryAndTerminalVanillaPaths(
-            PrivateWarPrisonerReleaseReason reason)
+            PrisonerReleaseReason reason)
         {
             Assert.True(_policy.ShouldAllowRelease(
                 isMainHero: false,
@@ -34,10 +34,10 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         }
 
         [Theory]
-        [InlineData(PrivateWarPrisonerReleaseReason.AfterPeace)]
-        [InlineData(PrivateWarPrisonerReleaseReason.AfterBattle)]
+        [InlineData(PrisonerReleaseReason.AfterPeace)]
+        [InlineData(PrisonerReleaseReason.AfterBattle)]
         public void ShouldAllowRelease_PreservesMainHeroAndOrdinaryCases(
-            PrivateWarPrisonerReleaseReason reason)
+            PrisonerReleaseReason reason)
         {
             Assert.True(_policy.ShouldAllowRelease(
                 isMainHero: true,

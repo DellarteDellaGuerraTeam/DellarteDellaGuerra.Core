@@ -6,7 +6,7 @@ using Bannerlord.PrivateWars.Domain.Resolution;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
-    public class ResolvePrivateWarUseCaseTests
+    public class ResolveWarUseCaseTests
     {
         private readonly ResolveWarUseCase _useCase = new();
 
