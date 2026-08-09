@@ -94,6 +94,9 @@ namespace DellarteDellaGuerra.Integration
         {
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
+            campaignGameStarter.AddModel(ActivatorUtilities.CreateInstance<FemaleNonCombatantHeroCreationModel>(
+                _serviceProvider,
+                campaignGameStarter.Models.OfType<HeroCreationModel>().Last()));
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgCampaignTimeModel>());
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
             var joustRequirementsProvider = _serviceProvider.GetRequiredService<IJoustRequirementsProvider>();
@@ -114,7 +117,6 @@ namespace DellarteDellaGuerra.Integration
             game.AddGameHandler<CompilingShaderNotifier>();
 
             campaignGameStarter.AddBehavior(new JoustTournamentCampaignBehavior(joustRequirementsProvider));
-            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FemalePartyLeaderRestrictionCampaignBehavior>());
         }
 
         public override void OnGameInitializationFinished(Game game)

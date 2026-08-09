@@ -23,8 +23,8 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Models
          * Gets or sets a value indicating whether women can lead parties.
          * </summary>
          */
-        [XmlElement(ElementName = "EnableFemalePartyLeaders")]
-        public bool EnableFemalePartyLeaders { get; set; }
+        [XmlElement(ElementName = "EnableFemaleFighters")]
+        public bool EnableFemaleFighters { get; set; }
 
         /**
          * <summary>
