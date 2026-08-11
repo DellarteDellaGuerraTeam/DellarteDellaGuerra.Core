@@ -79,7 +79,7 @@ if (-not (Test-Path $mcpConfigPath)) {
         $nugetCache = Join-Path $HOME '.nuget\packages\bannerlordsearch.source'
         $serverExe  = Join-Path $ToolsDir 'BannerlordSearch.Mcp.Server.exe'
         $serverPackageId = 'BannerlordSearch.Mcp.Server'
-        $serverVersion = '0.1.1'
+        $serverVersion = '0.2.0'
         $installedServer = (dotnet tool list --global --format json | ConvertFrom-Json).data |
             Where-Object { $_.packageId -eq $serverPackageId }
 
