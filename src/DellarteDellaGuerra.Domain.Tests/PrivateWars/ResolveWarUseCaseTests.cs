@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bannerlord.PrivateWars.Domain;
-using Bannerlord.PrivateWars.Domain.Resolution;
+using Bannerlord.PrivateWars.Domain.Model;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
     public class ResolveWarUseCaseTests
     {
-        private readonly ResolveWarUseCase _useCase = new();
+        private readonly ResolvePrivateWarUseCase _useCase = new();
 
         // Two principals A (attacker) and D (defender); everyone else uninvolved.
         private static Func<string, WarSide?> TwoSides() =>
@@ -25,7 +25,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             var war = PrivateWarTestData.War(attacker: "A", defender: "D", mainGoal: "settlement_goal", fiefSnapshot: snapshot);
             var currentOwners = new Dictionary<string, string> { ["settlement_goal"] = "A", ["town_a"] = "D" };
 
-            var plan = _useCase.Execute(war, Outcome.WhitePeace, currentOwners, TwoSides());
+            var plan = _useCase.Execute(war, PrivateWarOutcome.WhitePeace, currentOwners, TwoSides());
 
             Assert.Null(plan.Prize);
             Assert.True(plan.AttackerClaimLost);
@@ -46,7 +46,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
                 mainGoal: "settlement_goal", fiefSnapshot: snapshot);
             var currentOwners = new Dictionary<string, string> { ["settlement_goal"] = "A", ["town_a"] = "D" };
 
-            var plan = _useCase.Execute(war, Outcome.AttackerVictory, currentOwners, TwoSides());
+            var plan = _useCase.Execute(war, PrivateWarOutcome.AttackerVictory, currentOwners, TwoSides());
 
             Assert.False(plan.AttackerClaimLost);
             Assert.NotNull(plan.Prize);
@@ -69,7 +69,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             var war = PrivateWarTestData.War(attacker: "A", defender: "D", fiefSnapshot: snapshot);
             var currentOwners = new Dictionary<string, string> { ["town_contested"] = "B" };
 
-            var plan = _useCase.Execute(war, Outcome.WhitePeace, currentOwners, TwoSides());
+            var plan = _useCase.Execute(war, PrivateWarOutcome.WhitePeace, currentOwners, TwoSides());
 
             Assert.Empty(plan.Reverts);
         }
@@ -81,7 +81,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             var war = PrivateWarTestData.War(attacker: "A", defender: "D", fiefSnapshot: snapshot);
             var currentOwners = new Dictionary<string, string> { ["town_a"] = "A" }; // unchanged
 
-            var plan = _useCase.Execute(war, Outcome.WhitePeace, currentOwners, TwoSides());
+            var plan = _useCase.Execute(war, PrivateWarOutcome.WhitePeace, currentOwners, TwoSides());
 
             Assert.Empty(plan.Reverts);
         }

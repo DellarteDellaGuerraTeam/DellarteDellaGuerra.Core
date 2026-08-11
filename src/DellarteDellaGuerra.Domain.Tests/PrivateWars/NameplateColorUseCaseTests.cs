@@ -1,4 +1,4 @@
-using Bannerlord.PrivateWars.Domain.Interaction;
+using Bannerlord.PrivateWars.Domain;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
@@ -13,7 +13,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             SettlementNameplateRelation relation,
             uint expected)
         {
-            var useCase = new NameplateColorUseCase(new FakeNameplateColorProvider());
+            var useCase = new PrivateWarNameplateColorUseCase(new FakeNameplateColorProvider());
 
             uint color = useCase.GetSettlementCapsuleArgbColor(
                 relation,
@@ -26,7 +26,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         [Fact]
         public void GetSettlementCapsuleArgbColor_PrivateWarEnemy_OverridesVanillaRelationColor()
         {
-            var useCase = new NameplateColorUseCase(new FakeNameplateColorProvider(
+            var useCase = new PrivateWarNameplateColorUseCase(new FakeNameplateColorProvider(
                 enemy: "FF112233",
                 ally: "FF445566"));
 
@@ -41,7 +41,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         [Fact]
         public void GetSettlementCapsuleArgbColor_PrivateWarAlly_OverridesVanillaRelationColor()
         {
-            var useCase = new NameplateColorUseCase(new FakeNameplateColorProvider(
+            var useCase = new PrivateWarNameplateColorUseCase(new FakeNameplateColorProvider(
                 enemy: "FF112233",
                 ally: "FF445566"));
 
@@ -56,7 +56,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         [Fact]
         public void GetSettlementCapsuleArgbColor_WhenBothPrivateFlagsAreSet_EnemyTakesPrecedence()
         {
-            var useCase = new NameplateColorUseCase(new FakeNameplateColorProvider(
+            var useCase = new PrivateWarNameplateColorUseCase(new FakeNameplateColorProvider(
                 enemy: "FF112233",
                 ally: "FF445566"));
 
@@ -69,40 +69,40 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         }
 
         [Theory]
-        [InlineData(null, NameplateColorUseCase.DefaultPrivateWarEnemyArgb)]
-        [InlineData("", NameplateColorUseCase.DefaultPrivateWarEnemyArgb)]
-        [InlineData("not-a-color", NameplateColorUseCase.DefaultPrivateWarEnemyArgb)]
-        [InlineData("00112233", NameplateColorUseCase.DefaultPrivateWarEnemyArgb)]
+        [InlineData(null, PrivateWarNameplateColorUseCase.DefaultPrivateWarEnemyArgb)]
+        [InlineData("", PrivateWarNameplateColorUseCase.DefaultPrivateWarEnemyArgb)]
+        [InlineData("not-a-color", PrivateWarNameplateColorUseCase.DefaultPrivateWarEnemyArgb)]
+        [InlineData("00112233", PrivateWarNameplateColorUseCase.DefaultPrivateWarEnemyArgb)]
         [InlineData("112233", 0xFF112233u)]
         [InlineData("#112233", 0xFF112233u)]
         [InlineData("80112233", 0x80112233u)]
         [InlineData("#80112233", 0x80112233u)]
         public void GetPrivateWarEnemyArgbColor_ValidatesConfiguredColor(string? configured, uint expected)
         {
-            var useCase = new NameplateColorUseCase(
+            var useCase = new PrivateWarNameplateColorUseCase(
                 new FakeNameplateColorProvider(enemy: configured));
 
             Assert.Equal(expected, useCase.GetPrivateWarEnemyArgbColor());
         }
 
         [Theory]
-        [InlineData(null, NameplateColorUseCase.DefaultPrivateWarAllyArgb)]
-        [InlineData("", NameplateColorUseCase.DefaultPrivateWarAllyArgb)]
-        [InlineData("not-a-color", NameplateColorUseCase.DefaultPrivateWarAllyArgb)]
-        [InlineData("00112233", NameplateColorUseCase.DefaultPrivateWarAllyArgb)]
+        [InlineData(null, PrivateWarNameplateColorUseCase.DefaultPrivateWarAllyArgb)]
+        [InlineData("", PrivateWarNameplateColorUseCase.DefaultPrivateWarAllyArgb)]
+        [InlineData("not-a-color", PrivateWarNameplateColorUseCase.DefaultPrivateWarAllyArgb)]
+        [InlineData("00112233", PrivateWarNameplateColorUseCase.DefaultPrivateWarAllyArgb)]
         [InlineData("445566", 0xFF445566u)]
         [InlineData("#445566", 0xFF445566u)]
         [InlineData("80445566", 0x80445566u)]
         [InlineData("#80445566", 0x80445566u)]
         public void GetPrivateWarAllyArgbColor_ValidatesConfiguredColor(string? configured, uint expected)
         {
-            var useCase = new NameplateColorUseCase(
+            var useCase = new PrivateWarNameplateColorUseCase(
                 new FakeNameplateColorProvider(ally: configured));
 
             Assert.Equal(expected, useCase.GetPrivateWarAllyArgbColor());
         }
 
-        private sealed class FakeNameplateColorProvider : INameplateColorProvider
+        private sealed class FakeNameplateColorProvider : IPrivateWarNameplateColorProvider
         {
             private readonly string? _enemy;
             private readonly string? _ally;

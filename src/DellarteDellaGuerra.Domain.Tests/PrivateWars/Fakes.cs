@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Bannerlord.PrivateWars.Domain;
-using Bannerlord.PrivateWars.Domain.Scoring;
+using Bannerlord.PrivateWars.Domain.Model;
+using Bannerlord.PrivateWars.Domain.Port;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
@@ -19,6 +20,16 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             _wars.Values
                 .Where(w => w.AttackerPrincipalClanId == attackerPrincipalClanId
                             && w.DefenderPrincipalClanId == defenderPrincipalClanId)
+                .ToList();
+
+        public IReadOnlyList<PrivateWar> GetByDefender(string defenderPrincipalClanId) =>
+            _wars.Values
+                .Where(w => w.DefenderPrincipalClanId == defenderPrincipalClanId)
+                .ToList();
+
+        public IReadOnlyList<PrivateWar> GetByTitle(string titleId) =>
+            _wars.Values
+                .Where(w => w.TitleId == titleId)
                 .ToList();
 
         public IReadOnlyList<PrivateWar> GetByClan(string principalClanId) =>
@@ -47,7 +58,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
     /// <summary>Shared builders so tests state only the fields they care about.</summary>
     internal static class PrivateWarTestData
     {
-        public static readonly Observations NoControl = new(
+        public static readonly PrivateWarObservations NoControl = new(
             AttackerHoldsMainGoal: false,
             DefenderSideTownsHeldByAttacker: 0,
             DefenderSideCastlesHeldByAttacker: 0,
