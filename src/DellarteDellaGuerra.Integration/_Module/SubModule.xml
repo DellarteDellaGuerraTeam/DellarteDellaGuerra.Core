@@ -47,6 +47,12 @@
       <SubModuleClassType value="Bannerlord.PrivateWars.SubModule"/>
       <Tags />
     </SubModule>
+    <SubModule>
+      <Name value="PocColor"/>
+      <DLLName value="PocColor.Integration.dll"/>
+      <SubModuleClassType value="PocColor.PocColorSubModule"/>
+      <Tags />
+    </SubModule>
   </SubModules>
   <Xmls/>
 </Module>
