@@ -108,12 +108,20 @@ Poll `games_connect` with `gameId: "bannerlord"`, `timeout: 15` every ~15 second
 it succeeds. AssertAutoIgnore (started in Step 2) handles any Safe Mode popups in the
 background — no special handling needed here.
 
+**Readiness rule:** `games_connect` is the authoritative GABP-readiness check. A Rider
+session with zero threads/frames and `games_status == stopped` do **not** prove that the
+Bannerlord window has not reached the main menu; they can simply mean GABP has not
+registered yet. If the user reports that the game is at the menu, retry `games_connect`
+immediately before diagnosing a launch failure. `games_connect` confirms only the bridge;
+Step 5 confirms the UI state.
+
 - **Connected** → follow immediately with `games_status` to confirm, then go to Step 5.
 - **Timeout / connection refused** → game is still loading. Wait 15 s and retry.
-- **Game process gone** (check via `games_status` returning `stopped`) → game crashed
-  during loading. Call `mcp__jetbrains-debugger__get_debug_session_status` immediately
-  (50 frames, include variables). Act fast — the JetBrains session closes when the
-  process exits.
+- **`games_status` returns `stopped`** → GABP is unavailable, not necessarily that the
+  game exited. Verify that the Bannerlord process or debugger session has actually ended
+  before treating it as a crash. If it has ended, call
+  `mcp__jetbrains-debugger__get_debug_session_status` immediately (50 frames, include
+  variables). Act fast — the JetBrains session closes when the process exits.
 
 ---
 
