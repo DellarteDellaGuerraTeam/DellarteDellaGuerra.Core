@@ -1,4 +1,4 @@
-using Bannerlord.PrivateWars.Domain;
+using Bannerlord.PrivateWars.Domain.Port;
 using DellarteDellaGuerra.Domain.Titles;
 
 namespace DellarteDellaGuerra.Integration.PrivateWars

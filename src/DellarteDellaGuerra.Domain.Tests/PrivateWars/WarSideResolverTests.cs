@@ -1,4 +1,6 @@
+using System;
 using Bannerlord.PrivateWars.Domain;
+using Bannerlord.PrivateWars.Domain.Model;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
@@ -9,13 +11,14 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         {
             var war = PrivateWarTestData.War(attacker: "A", defender: "D");
             // A_vassal -> A ; D_vassal -> D ; X is uninvolved.
-            var resolver = Resolver(("A_vassal", "A"), ("D_vassal", "D"));
+            var resolver = new WarSideResolver();
+            var getSuzerain = Suzerain(("A_vassal", "A"), ("D_vassal", "D"));
 
-            Assert.Equal(WarSide.Attacker, resolver.ResolveSide("A", war));
-            Assert.Equal(WarSide.Attacker, resolver.ResolveSide("A_vassal", war));
-            Assert.Equal(WarSide.Defender, resolver.ResolveSide("D", war));
-            Assert.Equal(WarSide.Defender, resolver.ResolveSide("D_vassal", war));
-            Assert.Null(resolver.ResolveSide("X", war));
+            Assert.Equal(WarSide.Attacker, resolver.ResolveSide("A", war, getSuzerain));
+            Assert.Equal(WarSide.Attacker, resolver.ResolveSide("A_vassal", war, getSuzerain));
+            Assert.Equal(WarSide.Defender, resolver.ResolveSide("D", war, getSuzerain));
+            Assert.Equal(WarSide.Defender, resolver.ResolveSide("D_vassal", war, getSuzerain));
+            Assert.Null(resolver.ResolveSide("X", war, getSuzerain));
         }
 
         [Fact]
@@ -24,27 +27,29 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             // Hierarchy: A is a vassal of D, and A presses a claim against its own liege D.
             // A's own subtree must follow A (the nearer principal), not D.
             var war = PrivateWarTestData.War(attacker: "A", defender: "D");
-            var resolver = Resolver(
+            var resolver = new WarSideResolver();
+            var getSuzerain = Suzerain(
                 ("A", "D"),
                 ("A_vassal", "A"),
                 ("D_other_vassal", "D"));
 
-            Assert.Equal(WarSide.Attacker, resolver.ResolveSide("A", war));
-            Assert.Equal(WarSide.Attacker, resolver.ResolveSide("A_vassal", war));
-            Assert.Equal(WarSide.Defender, resolver.ResolveSide("D", war));
-            Assert.Equal(WarSide.Defender, resolver.ResolveSide("D_other_vassal", war));
+            Assert.Equal(WarSide.Attacker, resolver.ResolveSide("A", war, getSuzerain));
+            Assert.Equal(WarSide.Attacker, resolver.ResolveSide("A_vassal", war, getSuzerain));
+            Assert.Equal(WarSide.Defender, resolver.ResolveSide("D", war, getSuzerain));
+            Assert.Equal(WarSide.Defender, resolver.ResolveSide("D_other_vassal", war, getSuzerain));
         }
 
         [Fact]
         public void ResolveSide_CyclicChain_TerminatesAndReturnsNull()
         {
             var war = PrivateWarTestData.War(attacker: "A", defender: "D");
-            var resolver = Resolver(("P", "Q"), ("Q", "P")); // neither reaches a principal
+            var resolver = new WarSideResolver();
+            var getSuzerain = Suzerain(("P", "Q"), ("Q", "P")); // neither reaches a principal
 
-            Assert.Null(resolver.ResolveSide("P", war));
+            Assert.Null(resolver.ResolveSide("P", war, getSuzerain));
         }
 
-        private static WarSideResolver Resolver(params (string clan, string suzerain)[] links)
-            => new(new MapSuzerainProvider(links));
+        private static Func<string, string?> Suzerain(params (string clan, string suzerain)[] links)
+            => new MapSuzerainProvider(links).GetSuzerain;
     }
 }

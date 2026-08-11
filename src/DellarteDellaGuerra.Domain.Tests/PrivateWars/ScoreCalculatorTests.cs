@@ -1,10 +1,10 @@
-using Bannerlord.PrivateWars.Domain.Scoring;
+using Bannerlord.PrivateWars.Domain;
 
 namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 {
     public class ScoreCalculatorTests
     {
-        private readonly ScoreCalculator _calculator = new();
+        private readonly PrivateWarScoreCalculator _calculator = new();
 
         [Fact]
         public void Compute_AttackerHoldsMainGoal_FatigueDrivesToPlus100()
