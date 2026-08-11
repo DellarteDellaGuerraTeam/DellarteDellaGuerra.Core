@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Equipment;
+using DellarteDellaGuerra.Tournament.Jousting.Api.Missions;
 using DellarteDellaGuerra.Tournament.Jousting.Equipment.Spi;
 using SandBox;
 using SandBox.Tournaments;
@@ -37,15 +38,13 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
 
         private const string JoustBarrierTag = "jousting_barrier_passable";
 
-        private static readonly MethodInfo? ItemUsageSetter = typeof(WeaponComponentData).GetMethod("set_ItemUsage",
-            BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
-
         private readonly CultureObject _culture;
         private readonly List<Agent> _currentTournamentAgents;
         private readonly List<Agent> _currentTournamentMountAgents;
 
         private readonly IGetJoustEquipmentUtil _getJoustEquipmentUtil;
         private readonly IEquipmentMapper _equipmentMapper;
+        private readonly JoustingLanceUtil _joustingLanceUtil;
         private readonly IList<Action> _matchEndListeners;
 
         private List<TournamentParticipant> _aliveParticipants;
@@ -66,12 +65,14 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
         public JoustFightMissionController(
             CultureObject culture,
             IGetJoustEquipmentUtil getJoustEquipmentUtil,
-            IEquipmentMapper equipmentMapper)
+            IEquipmentMapper equipmentMapper,
+            ILoggerFactory loggerFactory)
         {
             _match = null;
             _culture = culture;
             _getJoustEquipmentUtil = getJoustEquipmentUtil;
             _equipmentMapper = equipmentMapper;
+            _joustingLanceUtil = new JoustingLanceUtil(loggerFactory);
             _cheerStarted = false;
             _currentTournamentAgents = new List<Agent>();
             _currentTournamentMountAgents = new List<Agent>();
@@ -257,17 +258,33 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
                         agent.SetAgentFlags(agent.GetAgentFlags() | AgentFlag.MoveForwardOnly);
                         agent.SetScriptedFlags(Agent.AIScriptedFrameFlags.NeverSlowDown);
 
-                        if (agent.WieldedWeapon.IsEmpty)
+                        // The couch-only lance has no active attack usage, so whenever the AI is
+                        // allowed to change weapons it sheathes the lance to bare fists. Below couch
+                        // speed we strip CanWieldWeapon so it cannot sheathe: the lance stays in hand
+                        // and there is nothing to re-wield, which removes the low-speed flicker.
+                        // Once fast enough to couch we restore wielding and re-wield the lance if it
+                        // was sheathed; the couch then engages and holds (it will not sheathe mid
+                        // passive attack).
+                        if (!agent.IsPassiveUsageConditionsAreMet)
                         {
-                            for (var equipmentIndex = EquipmentIndex.Weapon0;
-                                 equipmentIndex < EquipmentIndex.NumPrimaryWeaponSlots;
-                                 equipmentIndex++)
+                            agent.SetAgentFlags(agent.GetAgentFlags() & ~AgentFlag.CanWieldWeapon);
+                        }
+                        else
+                        {
+                            agent.SetAgentFlags(agent.GetAgentFlags() | AgentFlag.CanWieldWeapon);
+
+                            if (agent.WieldedWeapon.IsEmpty)
                             {
-                                if (agent.Equipment[equipmentIndex].CurrentUsageItem?.WeaponClass ==
-                                    WeaponClass.TwoHandedPolearm)
+                                for (var equipmentIndex = EquipmentIndex.Weapon0;
+                                     equipmentIndex < EquipmentIndex.NumPrimaryWeaponSlots;
+                                     equipmentIndex++)
                                 {
-                                    agent.TryToWieldWeaponInSlot(equipmentIndex, Agent.WeaponWieldActionType.Instant, true);
-                                    break;
+                                    if (agent.Equipment[equipmentIndex].CurrentUsageItem?.WeaponClass ==
+                                        WeaponClass.TwoHandedPolearm)
+                                    {
+                                        agent.TryToWieldWeaponInSlot(equipmentIndex, Agent.WeaponWieldActionType.Instant, true);
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -403,6 +420,7 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
                     : AgentControllerType.AI);
             Agent agent = Mission.SpawnAgent(agentBuildData2);
 
+            _joustingLanceUtil.RestrictToCouchUsage(agent);
             DisableNonTwoHandedPolearmsOnHorseback(agent);
 
             if (character.IsPlayerCharacter)
@@ -445,17 +463,18 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
             var noMountItemUsageVariant =
                 weapon.CurrentUsageItem.ItemUsage + "_nomount";
 
-            if (ItemUsageSetter is null || MBItem.GetItemUsageIndex(noMountItemUsageVariant) < 0)
+            if (MBItem.GetItemUsageIndex(noMountItemUsageVariant) < 0)
                 // TODO: Log both error use cases
                 return;
 
-            var originalItemUsage = weapon.CurrentUsageItem.ItemUsage;
+            var usageItem = weapon.CurrentUsageItem;
+            var originalItemUsage = usageItem.ItemUsage;
+            if (!_joustingLanceUtil.TrySetItemUsage(usageItem, noMountItemUsageVariant)) return;
+
             _matchEndListeners.Add(() =>
             {
-                ItemUsageSetter.Invoke(weapon.CurrentUsageItem, new object[] { originalItemUsage });
+                _joustingLanceUtil.TrySetItemUsage(usageItem, originalItemUsage);
             });
-
-            ItemUsageSetter.Invoke(weapon.CurrentUsageItem, new object[] { noMountItemUsageVariant });
         }
 
         private void AddRandomClothes(CultureObject culture, TournamentParticipant participant)
@@ -523,6 +542,10 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
 
                     if (!agent.IsPlayerControlled)
                     {
+                        // Restore weapon wielding stripped in SpawnParticipantAgent so the agent can
+                        // wield a melee weapon once combat continues on foot.
+                        agent.SetAgentFlags(agent.GetAgentFlags() | AgentFlag.CanWieldWeapon);
+
                         var spawnPoint = GetSpawnPointForTeam(agent.Team.TeamIndex, false);
                         WorldPosition pos = new WorldPosition(Mission.Scene, spawnPoint.GlobalPosition);
                         agent.SetScriptedPosition(ref pos, true,

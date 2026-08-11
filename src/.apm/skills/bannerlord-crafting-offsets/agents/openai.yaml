@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bannerlord Crafting Offsets"
+  short_description: "Diagnose crafted reach and piece alignment"
+  default_prompt: "Use $bannerlord-crafting-offsets to diagnose and correct this crafted weapon's reach or piece alignment."

@@ -18,6 +18,10 @@ Inventory of every gameplay feature, where the C# code lives, and key implementa
 - **Critical gotcha**: cannon spawner must face **away from walls** (forward = toward camp). `clean` entity needs `rotation_euler Z = 3.14159`. Symptom if missing: cannon snaps 180° and points away from walls at battle start. See `doc/adding-a-cannon.md` Rule 4.
 - Scene placement: `../DellarteDellaGuerraScenes/SceneObj/<name>/scene.xscene` — place `dadg_<id>_spawner` within range of a `siege_deployment_placeholder`
 
+## Weapon Crafting / Piece Alignment
+- Crafted weapons assemble from pieces (Blade/Guard/Handle/Pommel) chained along the weapon axis; each piece's position is driven by `<BuildData>` offsets in `crafting_pieces.xml`. Piece meshes are FBX under `../DellarteDellaGuerra/AssetSources/weapons/`.
+- Diagnose and fix misaligned pieces with the standalone `BannerlordCraftingTool` (`D:\Bannerlord\Tools\BannerlordCraftingTool`; desktop WPF GUI for humans, `BannerlordCraftingTool.Cli` for automation). Prefer the CLI `render` command — it produces a side/front/top screenshot plus 3D measurements to decide between a `<BuildData>` offset edit and a Blender mesh fix. Full workflow: the `bannerlord-crafting-offsets` skill.
+
 ## Tournament
 - `Domain/Tournament/Reward/` — `GetTournamentRewardUseCase` determines prize based on town prosperity + troop type
 - `DellarteDellaGuerra/Tournament/Api/DadgTournamentModel` — overrides native tournament model via `InitializeGameStarter`
