@@ -1,12 +1,9 @@
 # Dependency Submodules
 
-| Submodule | Path | Pinned tag |
-|-----------|------|------------|
-| Bannerlord.Cannons | `src/submodules/Cannons` | `v1.0.2` |
-| Bannerlord.ExpandedTemplate | `src/submodules/ExpandedTemplate` | `v1.3.1` |
-
-Both tags target Bannerlord v1.2.12. Submodules are pinned to a specific commit
-SHA — they do not track a branch and will not advance automatically.
+| Submodule | Path | Branch |
+|-----------|------|--------|
+| Bannerlord.Cannons | `src/submodules/Cannons` | `migrate-to-v1.3` |
+| Bannerlord.ExpandedTemplate | `src/submodules/ExpandedTemplate` | `upgrade-to-1.3` |
 
 ## Clone
 
@@ -18,8 +15,12 @@ git clone --recurse-submodules <url>
 git submodule update --init --recursive
 ```
 
-No extra checkout needed — the recorded commit is checked out automatically
-(detached HEAD at the pinned tag).
+Then get off detached HEAD:
+
+```sh
+git -C src/submodules/Cannons checkout migrate-to-v1.3
+git -C src/submodules/ExpandedTemplate checkout upgrade-to-1.3
+```
 
 ## Change → push in a submodule
 
@@ -33,6 +34,7 @@ git add src/submodules/Cannons
 git commit -m "chore: bump Cannons"
 ```
 
+
 ## Bump to a new tag
 
 ```sh
@@ -42,6 +44,5 @@ git -C src/submodules/Cannons checkout v1.0.3
 git -C src/submodules/ExpandedTemplate fetch --tags
 git -C src/submodules/ExpandedTemplate checkout v1.3.2
 
-git add src/submodules/Cannons src/submodules/ExpandedTemplate
 git commit -m "chore: bump submodules to v1.0.3 / v1.3.2"
 ```

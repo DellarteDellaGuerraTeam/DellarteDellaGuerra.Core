@@ -55,3 +55,19 @@ dependencies:
       args:
         - "-n"
         - mcp_local_music_analysis
+lifecycle:
+  post-install:
+    - type: command
+      description: >-
+        Workaround for an apm-cli bug where ${PLUGIN_ROOT} sometimes resolves
+        to the invalid $env:CLAUDE_PROJECT_DIR instead of $CLAUDE_PROJECT_DIR
+        in .claude/settings.json hook commands. Claude Code runs hooks through
+        a POSIX shell, which mangles the PowerShell env: syntax and breaks
+        SessionStart/PreToolUse.
+      command: pwsh -NoProfile -File ".apm/hooks/scripts/fix-claude-hook-vars.ps1"
+      timeoutSec: 30
+  post-update:
+    - type: command
+      description: Same fixup, re-applied after apm update.
+      command: pwsh -NoProfile -File ".apm/hooks/scripts/fix-claude-hook-vars.ps1"
+      timeoutSec: 30

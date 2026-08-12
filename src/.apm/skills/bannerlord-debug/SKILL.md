@@ -26,7 +26,8 @@ skill references:
 For live runtime debugging, read:
 
 - `references/bannerlord-debugging-workflow.md` — CLR exception strategy
-- `references/dadg-gabs-protocol.md` — GABS/GABP bridge details
+- `references/dadg-gabs-protocol.md` — GABS/GABP bridge **setup** (bridge.json, ports, session lifecycle)
+- `references/gabs-runtime-workarounds.md` — **using** GABS once it is up: tool discovery, argument shapes, and the known runtime traps (invisible global inquiries, paused-debugger timeouts, campaign-init crashes). Read this before any live playtest.
 - `references/jetbrains-debugger-tips.md` — Rider debugger gotchas
 
 For scene/data-cache style crashes, also read:
