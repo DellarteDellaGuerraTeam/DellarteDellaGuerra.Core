@@ -13,7 +13,7 @@ not create an assault `MapEvent`; DADG resolves the frozen goal after preparatio
 ## 1. DADG private-war console commands
 
 All live under the `campaign.` namespace (registered in
-`src/DellarteDellaGuerra/PrivateWars/Api/Cheats/PrivateWarDebugCommands.cs`). Clan ids look like
+`src/submodules/PrivateWars/Bannerlord.PrivateWars/Cheats/PrivateWarDebugCommands.cs`). Clan ids look like
 `clan_percy`; settlement ids like `dadg_Pontefract_castle`. On a bad id, each command prints the
 valid ids to choose from.
 
