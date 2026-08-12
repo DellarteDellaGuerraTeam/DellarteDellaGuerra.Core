@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Reflection;
 using System.Xml;
 using Bannerlord.ExpandedTemplate.API;
 using DellarteDellaGuerra.Church;
@@ -13,10 +12,12 @@ using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Heraldry;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
+using DellarteDellaGuerra.Infrastructure.Campaign;
 using DellarteDellaGuerra.Infrastructure.Events;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Utils;
+using DellarteDellaGuerra.Integration.CampaignTime;
 using DellarteDellaGuerra.Integration.DI;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using HarmonyLib;
@@ -98,6 +99,10 @@ namespace DellarteDellaGuerra.Integration
         {
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
+            campaignGameStarter.AddModel(ActivatorUtilities.CreateInstance<FemaleNonCombatantHeroCreationModel>(
+                _serviceProvider,
+                campaignGameStarter.Models.OfType<HeroCreationModel>().Last()));
+            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgCampaignTimeModel>());
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
             var joustRequirementsProvider = _serviceProvider.GetRequiredService<IJoustRequirementsProvider>();
             campaignGameStarter.AddModel(new DadgSettlementAccessModel(
@@ -139,7 +144,6 @@ namespace DellarteDellaGuerra.Integration
             if (game.GameType is not Campaign) return;
             _serviceProvider.GetRequiredService<CampaignBehaviourDisabler>()
                 .Disable(Campaign.Current.CampaignBehaviorManager);
-            SetCampaignStartingDate();
             LoadDadgBattleScenes();
         }
 
@@ -157,12 +161,6 @@ namespace DellarteDellaGuerra.Integration
         {
             foreach (var provider in _serviceProvider.GetServices<IMBObjectProvider<SkillObject>>())
                 MBObjectManager.Instance.RegisterPresumedObject(provider.GetMbObject());
-        }
-
-        private void SetCampaignStartingDate()
-        {
-            CampaignTime startTime = CampaignTime.Years(1471) + CampaignTime.Weeks(4) + CampaignTime.Days(1);
-            typeof(CampaignData).GetField("CampaignStartTime",BindingFlags.Static|BindingFlags.Public)?.SetValue(null,startTime);
         }
 
         private void LoadDadgBattleScenes()

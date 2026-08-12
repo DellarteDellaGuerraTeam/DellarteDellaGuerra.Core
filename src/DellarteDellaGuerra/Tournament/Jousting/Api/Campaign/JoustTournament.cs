@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Missions;
@@ -16,10 +17,14 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Campaign
     {
         private const string SceneName = "dadg_joust_v2";
 
-        public JoustTournament(Town town, IGetTournamentRewardUseCase getTournamentRewardUseCase)
+        public JoustTournament(Town town, IGetTournamentRewardUseCase getTournamentRewardUseCase,
+            ILoggerFactory loggerFactory)
             : base(town, getTournamentRewardUseCase)
         {
+            LoggerFactory = loggerFactory;
         }
+
+        internal ILoggerFactory LoggerFactory { get; }
 
         public override int MaxTeamSize => 1;
         public override int MaxTeamNumberPerMatch => 2;

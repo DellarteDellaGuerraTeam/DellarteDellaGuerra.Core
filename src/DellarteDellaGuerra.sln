@@ -69,6 +69,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bannerlord.ExpandedTemplate
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bannerlord.ExpandedTemplate.Infrastructure", "submodules\ExpandedTemplate\Bannerlord.ExpandedTemplate.Infrastructure\Bannerlord.ExpandedTemplate.Infrastructure.csproj", "{A89D89AD-51CF-4679-8824-A655208189CB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PocColor", "PocColor", "{A7023928-A066-C793-5AF6-AB551C07A2E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocColor.Domain", "submodules\PocColor\src\PocColor.Domain\PocColor.Domain.csproj", "{12B0EBFD-C9C0-47AE-827C-E40AB0252901}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocColor.Infrastructure", "submodules\PocColor\src\PocColor.Infrastructure\PocColor.Infrastructure.csproj", "{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PocColor.Integration", "submodules\PocColor\src\PocColor.Integration\PocColor.Integration.csproj", "{8334EC78-0E30-4FF0-8643-A7A938A705B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -271,6 +279,42 @@ Global
 		{A89D89AD-51CF-4679-8824-A655208189CB}.Release|Any CPU.Build.0 = Release|x64
 		{A89D89AD-51CF-4679-8824-A655208189CB}.Release|x86.ActiveCfg = Release|x64
 		{A89D89AD-51CF-4679-8824-A655208189CB}.Release|x86.Build.0 = Release|x64
+		{12B0EBFD-C9C0-47AE-827C-E40AB0252901}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{12B0EBFD-C9C0-47AE-827C-E40AB0252901}.Debug|x64.Build.0 = Debug|Any CPU
+		{12B0EBFD-C9C0-47AE-827C-E40AB0252901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12B0EBFD-C9C0-47AE-827C-E40AB0252901}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12B0EBFD-C9C0-47AE-827C-E40AB0252901}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{12B0EBFD-C9C0-47AE-827C-E40AB0252901}.Debug|x86.Build.0 = Debug|Any CPU
+		{12B0EBFD-C9C0-47AE-827C-E40AB0252901}.Release|x64.ActiveCfg = Release|Any CPU
+		{12B0EBFD-C9C0-47AE-827C-E40AB0252901}.Release|x64.Build.0 = Release|Any CPU
+		{12B0EBFD-C9C0-47AE-827C-E40AB0252901}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12B0EBFD-C9C0-47AE-827C-E40AB0252901}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12B0EBFD-C9C0-47AE-827C-E40AB0252901}.Release|x86.ActiveCfg = Release|Any CPU
+		{12B0EBFD-C9C0-47AE-827C-E40AB0252901}.Release|x86.Build.0 = Release|Any CPU
+		{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD}.Debug|x64.Build.0 = Debug|Any CPU
+		{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD}.Debug|x86.Build.0 = Debug|Any CPU
+		{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD}.Release|x64.ActiveCfg = Release|Any CPU
+		{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD}.Release|x64.Build.0 = Release|Any CPU
+		{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD}.Release|x86.ActiveCfg = Release|Any CPU
+		{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD}.Release|x86.Build.0 = Release|Any CPU
+		{8334EC78-0E30-4FF0-8643-A7A938A705B8}.Debug|x64.ActiveCfg = Debug|x64
+		{8334EC78-0E30-4FF0-8643-A7A938A705B8}.Debug|x64.Build.0 = Debug|x64
+		{8334EC78-0E30-4FF0-8643-A7A938A705B8}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{8334EC78-0E30-4FF0-8643-A7A938A705B8}.Debug|Any CPU.Build.0 = Debug|x64
+		{8334EC78-0E30-4FF0-8643-A7A938A705B8}.Debug|x86.ActiveCfg = Debug|x64
+		{8334EC78-0E30-4FF0-8643-A7A938A705B8}.Debug|x86.Build.0 = Debug|x64
+		{8334EC78-0E30-4FF0-8643-A7A938A705B8}.Release|x64.ActiveCfg = Release|x64
+		{8334EC78-0E30-4FF0-8643-A7A938A705B8}.Release|x64.Build.0 = Release|x64
+		{8334EC78-0E30-4FF0-8643-A7A938A705B8}.Release|Any CPU.ActiveCfg = Release|x64
+		{8334EC78-0E30-4FF0-8643-A7A938A705B8}.Release|Any CPU.Build.0 = Release|x64
+		{8334EC78-0E30-4FF0-8643-A7A938A705B8}.Release|x86.ActiveCfg = Release|x64
+		{8334EC78-0E30-4FF0-8643-A7A938A705B8}.Release|x86.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -292,6 +336,9 @@ Global
 		{AD34CA18-8AEF-4382-A8FC-B4961BAD435D} = {1B3E8FDC-33ED-8FAA-4F2B-2D75B5BC9BC4}
 		{E2A4F431-2CA9-4FFB-BE8C-D4DC5D566779} = {1B3E8FDC-33ED-8FAA-4F2B-2D75B5BC9BC4}
 		{A89D89AD-51CF-4679-8824-A655208189CB} = {1B3E8FDC-33ED-8FAA-4F2B-2D75B5BC9BC4}
+		{12B0EBFD-C9C0-47AE-827C-E40AB0252901} = {A7023928-A066-C793-5AF6-AB551C07A2E9}
+		{6A50C1BF-EB3D-4161-B4FA-6A1F20F44ECD} = {A7023928-A066-C793-5AF6-AB551C07A2E9}
+		{8334EC78-0E30-4FF0-8643-A7A938A705B8} = {A7023928-A066-C793-5AF6-AB551C07A2E9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B3D4AB65-9162-4EE2-9413-1867C12DC041}
