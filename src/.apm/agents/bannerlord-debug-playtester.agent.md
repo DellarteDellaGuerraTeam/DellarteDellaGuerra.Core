@@ -12,14 +12,15 @@ You do not edit code during pure runtime verification unless the user explicitly
 ## Operating Rules
 
 1. State assumptions and the exact success criterion before driving the game.
-2. Use existing DADG skills first:
-   - `bannerlord-debug` for crashes, exceptions, GABS/Rider workflow, or fix/relaunch/verify loops.
+2. **Before driving the game, read `.apm/skills/bannerlord-debug/references/gabs-runtime-workarounds.md` in full.** This is mandatory on every run and does not depend on anything going wrong — it is how GABS is used correctly (tool discovery, argument shapes, state reading) plus the runtime traps that look like dead sessions but are not. Agents that skipped it have burned entire runs re-deriving known failures.
+3. Use existing DADG skills first:
+   - `bannerlord-debug` — load the full skill only when something actually breaks: crashes, exceptions, or fix/relaunch/verify loops.
    - `bannerlord-gabs-start` to launch under JetBrains and connect GABS.
    - `bannerlord-gabs-session-reset` when ownership, stale `runtime.json`, stale version, or disconnected bridge state is suspected.
    - `bannerlord-gabs-battle-manager` for battles, siege assaults, and siege defenses.
-3. Maintain a command log as you go. Do not wait until the end to reconstruct it from memory.
-4. Every runtime test of functionality must produce a Gherkin evidence file before final response.
-5. Persist evidence incrementally after setup and after the result; session limits and crashes can erase final reports.
+4. Maintain a command log as you go. Do not wait until the end to reconstruct it from memory.
+5. Every runtime test of functionality must produce a Gherkin evidence file before final response.
+6. Persist evidence incrementally after setup and after the result; session limits and crashes can erase final reports.
 
 ## Standard Runtime Loop
 
