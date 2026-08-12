@@ -4,6 +4,20 @@ Tags: @bannerlord @gabs @dadg @church @v0.2 @mass @tithe @sacrilege
 
 ---
 
+## Withdrawn defects
+
+**DEFECT-5 withdrawn (2026-08-12).** A prior batch-1 rerun agent reported "Critical: game crashes
+with an access violation within ~2 seconds of any save load" and marked every scenario in this file
+Blocked. This was a FALSE POSITIVE. Root cause, verified by the parent session from the Windows
+Event Log: the faulting binary was `Mount & Blade II Bannerlord-v1.3\bin\Win64_Shipping_Client\Bannerlord.exe`
+— the wrong, obsolete v1.3 install, launched because the GABS MCP server held a stale cached config
+pointing `games_start` at v1.3 instead of the correct 1.4.7 install. The v1.3 executable was choking
+on 1.4.7-era saves; it has no church build at all. The real 1.4.7 install loads saves fine. All
+DEFECT-5 claims and the scenario statuses/notes downgraded because of it have been removed; affected
+scenarios are restored to their honest pre-DEFECT-5 state.
+
+---
+
 ## Scenario 1: "Attend mass" option is visible at a church village and hidden at a non-church village
 
 Metadata:
@@ -92,7 +106,7 @@ Metadata:
 - Loaded save: saveauto1 (Summer 2, 1084)
 - Created pre-trigger save: N/A
 - Created post-result save: N/A
-- Evidence status: Partial
+- Evidence status: Partial (see Batch 2 live rerun below — candidate DEFECT-6 found)
 
 ```gherkin
   Scenario: Mass is disabled on weekdays and enabled on Sunday
@@ -149,6 +163,89 @@ PARTIAL. Non-Sunday disabled state confirmed with countdown tooltip at both Tint
 ## Limitations
 - Sunday-enabled state not tested. The campaign.advance_time command does not exist; village wait is too coarse for precise Sunday catching.
 
+## Batch 2 live rerun (2026-08-12)
+
+Metadata:
+- Date: 2026-08-12
+- Agent/session: claude-sonnet-5 GABS test agent / 9a277b07-ce4a-47e8-a138-38aa55c46daf
+- Game version: 1.4.7
+- DADG branch/commit: feature/add-church (HEAD detached)
+- Loaded save: saveauto1, stationed at Tintern Abbey
+- Evidence status: **Partial — candidate DEFECT-6 (medium-high confidence, root cause not fully disambiguated)**
+
+Method: repeatedly selected `village_wait` (index 9), ran `core.set_time_speed{speed:4}`, polled
+`core.get_campaign_time`, then stopped waiting and read `menu.get_current` + a screenshot for
+`dadg_church_attend_mass`.
+
+Findings:
+- Non-Sunday disabled state with correct countdown reconfirmed multiple times ("4 days hence",
+  "6 days hence", "3 days hence"), consistent with the 2026-07-20 evidence. This half of the
+  scenario is solid.
+- **Twice**, independently, ~7 game-days apart (Summer 8, 1471 and Autumn 1, 1471), landing on the
+  day the option's own tooltip had predicted as the next Sunday, the option was still **disabled**
+  with tooltip text **"7 days hence"**.
+- This is mathematically anomalous. `CanAttendMass`'s tooltip N comes from `DaysUntilNextSunday()`:
+  `dayOfWeek == 0 ? CampaignTime.DaysInWeek : CampaignTime.DaysInWeek - dayOfWeek`. N can only equal
+  7 (`CampaignTime.DaysInWeek`) when `dayOfWeek == 0`, i.e. `isSunday` must be `true` in the same
+  evaluation that also computes `enabled`. So `enabled` should have been `true` unless
+  `settlement.Village.VillageState != Normal` or `attendedToday` (`_lastMassTime.ElapsedDaysUntilNow < 1f`)
+  was unexpectedly true — despite `AttendMass` never having successfully fired in this session (GABS
+  correctly refused to force-select the disabled option: `{"error":"Option 4 is disabled: Mass will
+  be held on the Lord's day. (7 days hence)"}`).
+- Checked `settlement.get_settlement` for Tintern Abbey at the second occurrence: `isRaided:false`,
+  which is evidence against (but does not fully rule out) a non-`Normal` `VillageState`.
+- No JetBrains debug session was attached during this run (`list_debug_sessions` returned empty both
+  at start and end), so `_lastMassTime` / `attendedToday` could not be inspected directly. Root cause
+  is therefore NOT confirmed — this is reported as a reproducible anomaly, not a proven mechanism.
+- Side effect of the long in-village wait used to advance time: player party morale dropped from 48
+  to 11 and food reached 0 (starvation) — unrelated to the church feature, but noted because it
+  invalidates the original morale baseline for Scenario 3.
+
+Command Log (batch 2):
+| Step | Tool | Arguments | Result |
+|------|------|-----------|--------|
+| 1 | bannerlord.core.load_save (prior turn) | saveauto1 | Loaded, Summer 3, 1471, no crash — confirms DEFECT-5 was a false positive |
+| 2 | bannerlord.menu.select_option | {"index":9} (village_wait) | Entered wait sub-menu |
+| 3 | bannerlord.core.set_time_speed | {"speed":4} | Fast-forwarding |
+| 4 | bannerlord.core.get_campaign_time | (repeated polls) | Tracked day-of-season progress |
+| 5 | bannerlord.core.set_time_speed | {"speed":0} + select_option index 0 | Stopped waiting, returned to village menu |
+| 6 | bannerlord.menu.get_current | {} | dadg_church_attend_mass isEnabled=false, tooltip "7 days hence" (Summer 8, 1471) |
+| 7 | bannerlord.ui.take_screenshot | {} | screenshot_20260812_133953.jpg (approx) — confirms rendered village menu, corroborates get_current |
+| 8 | (repeat wait cycle) | | reached Autumn 1, 1471 |
+| 9 | bannerlord.menu.get_current | {} | dadg_church_attend_mass isEnabled=false, tooltip "7 days hence" again |
+| 10 | bannerlord.menu.select_option | {"index":4} | Rejected: "Option 4 is disabled: Mass will be held on the Lord's day. (7 days hence)" — proves GABS enforces server-side isEnabled, not a forced-bypass test |
+| 11 | bannerlord.settlement.get_settlement | {"nameOrId":"village_Tintern_Abbey"} | isRaided:false |
+| 12 | bannerlord.party.get_player_party | {} | morale 11 (was 48), food 0 — unrelated confound noted |
+| 13 | mcp__jetbrains-debugger__list_debug_sessions | {} | empty — no debugger available to confirm root cause |
+
+Screenshots (batch 2):
+| Step | File path | What it proves |
+|------|-----------|----------------|
+| Autumn 1 anomaly | screenshot_20260812_133953.jpg (GABS screenshots folder) | Rendered Tintern Abbey village menu, "Attend mass" listed, campaign date "Autumn 1, 1471" visible — corroborates the disabled+"7 days hence" state read from menu.get_current per Hard Rule 2 |
+
+## DEFECT-6 (candidate, Medium-High severity)
+
+**Title:** "Attend mass" may never become enabled — disabled with "7 days hence" tooltip observed
+twice on what the tooltip's own formula proves is Sunday.
+
+**Reproduction:** Load saveauto1 at Tintern Abbey. Advance time via repeated `village_wait` +
+`set_time_speed` cycles until `dadg_church_attend_mass`'s tooltip reads "7 days hence". Read
+`menu.get_current` — option is `isEnabled:false`. Reproduced at Summer 8, 1471 and again at Autumn 1,
+1471 (~7 days later), same result both times.
+
+**Evidence:** `menu.get_current` output corroborated by screenshot (Hard Rule 2 satisfied) plus a
+code-level mathematical proof from `ChurchMassCampaignBehavior.CanAttendMass`/`DaysUntilNextSunday`
+(`src/DellarteDellaGuerra/Church/Api/Campaign/ChurchMassCampaignBehavior.cs:56-71`) that N==7 can only
+be emitted when `isSunday` is already `true`, meaning `enabled` should be `true` too unless
+`VillageState` or `attendedToday` is unexpectedly blocking it.
+
+**Not confirmed:** exact root cause (`attendedToday` stuck true vs. `VillageState != Normal` vs. some
+other factor). Needs a JetBrains breakpoint on `CanAttendMass` evaluating `isSunday`, `attendedToday`,
+`_lastMassTime`, and `settlement.Village.VillageState` live to confirm which branch is responsible.
+
+**Downstream impact:** blocks Scenario 3 (mass effects) from being exercised on this save — see
+Scenario 3 below.
+
 ---
 
 ## Scenario 3: Attending mass grants +4 party morale, +1 relation with resident abbot, and locks attendance for the day
@@ -158,10 +255,10 @@ Metadata:
 - Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
 - DADG branch/commit: feature/add-church / bf5242e
-- Loaded save: N/A — not tested; Sunday could not be reached before crash
-- Created pre-trigger save: N/A
+- Loaded save: saveauto1, stationed at Tintern Abbey (2026-08-12 live rerun)
+- Created pre-trigger save: N/A (blocked before trigger)
 - Created post-result save: N/A
-- Evidence status: Not run
+- Evidence status: Blocked
 
 ```gherkin
   Scenario: Attending mass applies morale and relation and locks the option for the rest of the day
@@ -219,13 +316,25 @@ Metadata:
 6. Advance to next Sunday — option re-enabled.
 
 ## Result
-<fill on run>
+**Blocked.** Cannot be triggered on the current save (2026-08-12 live rerun). This scenario requires
+selecting "Attend mass" while enabled, but Scenario 2's Batch 2 rerun found the option remains
+`isEnabled:false` on both occasions the tooltip's own math proved it was Sunday (see DEFECT-6 in
+Scenario 2). GABS correctly refuses to force-select a disabled menu option
+(`bannerlord.menu.select_option` returns `"Option 4 is disabled..."`), so `AttendMass` never fired
+and the +4 morale / +1 relation / once-per-day lock could not be exercised or measured. No JetBrains
+debug session was available to call `AttendMass` directly (attaching one would require launching the
+"Standalone" run configuration, which would start a **second** game process — forbidden by Hard Rule 0
+against relaunching the game). This scenario is downstream-blocked by DEFECT-6, not independently
+tested as broken or working.
 
 ## Strengths
-- Tests all three mass effects and the once-per-Sunday lock.
+- Tests all three mass effects and the once-per-Sunday lock (design intent unchanged).
 
 ## Limitations
 - MassMorale default is 4 but is configurable; confirm from dadg.config.xml before the run.
+- Blocked entirely by DEFECT-6 (Scenario 2). Re-run once DEFECT-6 is root-caused and fixed, or once a
+  JetBrains debug session can be attached to the already-running process (not currently possible via
+  the available tools without relaunching).
 
 ---
 
@@ -236,10 +345,10 @@ Metadata:
 - Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
 - DADG branch/commit: feature/add-church / bf5242e
-- Loaded save: N/A — not tested in this run
+- Loaded save: saveauto1, stationed at Tintern Abbey (2026-08-12 live rerun)
 - Created pre-trigger save: N/A
 - Created post-result save: N/A
-- Evidence status: Not run
+- Evidence status: Blocked (tooling gap, not a game defect)
 
 ```gherkin
   Scenario: Abbot Power increases by 2 every campaign week
@@ -283,13 +392,26 @@ Metadata:
 3. Re-check Power — expect +2 (may need to advance more days if weekly tick cadence is misaligned with advance start).
 
 ## Result
-<fill on run>
+**Blocked — tooling gap, not evidence of a defect.** Attempted to read `Hero.Power` for
+"Isabella of the Sandal" (Tintern Abbey's Preacher) via GABS. Checked `bannerlord.hero.get_hero`
+(no Power field in the returned JSON), the church hierarchy screen (`dadg_church_survey_hierarchy`,
+screenshotted — shows names/titles only, no Power figures), and `campaign.export_hero` (exports
+appearance/equipment, not campaign stats). No GABS tool exposes `Hero.Power`. `campaign.add_power_to_notable`
+exists but only *adds* power blindly (no read-back of the resulting value in its output), so it cannot
+serve as a before/after read. JetBrains was the intended read path
+(`ChurchCampaignBehavior.ApplyTithe` breakpoint) but no debug session was attached to the running game,
+and `list_run_configurations` shows only a "Standalone" **launch** configuration — starting it would
+launch a second game process, which Hard Rule 0 forbids. This scenario is therefore Blocked by a
+tooling/environment gap, not run-and-failed; the underlying tithe mechanic was not exercised or
+disproven.
 
 ## Strengths
-- Directly validates the tithe accumulation mechanic.
+- Directly validates the tithe accumulation mechanic (design intent unchanged).
 
 ## Limitations
 - WeeklyTickEvent cadence is not aligned to player position in week; a second 7-day advance confirms the +2/week rate.
+- Needs either a GABS tool that surfaces `Hero.Power`, or a way to attach JetBrains to the already-running
+  process (not launch a new one), before this scenario can be executed.
 
 ---
 
@@ -300,10 +422,10 @@ Metadata:
 - Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
 - DADG branch/commit: feature/add-church / bf5242e
-- Loaded save: N/A — not tested; JetBrains eval not available during active play
+- Loaded save: saveauto1, stationed at Tintern Abbey (2026-08-12 live rerun)
 - Created pre-trigger save: N/A
 - Created post-result save: N/A
-- Evidence status: Not run
+- Evidence status: Blocked (tooling gap, not a game defect — same cause as Scenario 4)
 
 ```gherkin
   Scenario: Donating to an abbot increases their Power by 5 in addition to relation and renown
@@ -344,13 +466,19 @@ Metadata:
 3. Re-check Power — expect +5.
 
 ## Result
-<fill on run>
+**Blocked — same tooling gap as Scenario 4.** `Hero.Power` is not exposed by any available GABS tool
+and no JetBrains debug session could be attached without launching a second game process (forbidden by
+Hard Rule 0). Did not proceed to the conversation/donation step since the before/after measurement
+that defines the assertion cannot be taken either way. Not run-and-failed; the donation-power mechanic
+was not exercised or disproven.
 
 ## Strengths
-- Tests the DonationPower config knob (default 5).
+- Tests the DonationPower config knob (default 5) — design intent unchanged.
 
 ## Limitations
 - DonationPower is configurable; confirm value in dadg.config.xml before test.
+- Needs either a GABS tool that surfaces `Hero.Power`, or a way to attach JetBrains to the already-running
+  process, before this scenario can be executed.
 
 ---
 
@@ -361,10 +489,10 @@ Metadata:
 - Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
 - DADG branch/commit: feature/add-church / bf5242e
-- Loaded save: N/A — not tested; requires war setup which was not established in this run
-- Created pre-trigger save: N/A
+- Loaded save: saveauto1, stationed at Tintern Abbey (2026-08-12 live rerun)
+- Created pre-trigger save: N/A (blocked before trigger)
 - Created post-result save: N/A
-- Evidence status: Not run
+- Evidence status: Blocked (environment permission, not a game defect)
 
 ```gherkin
   Scenario: Player raiding a church village incurs sacrilege penalties on all clergy
@@ -421,13 +549,33 @@ Metadata:
 4. Check relations and info message.
 
 ## Result
-<fill on run>
+**Blocked by the runtime environment's own permission classifier — not a game or GABS issue.** The
+player's clan ("Wesley") is an independent clan at peace with everyone, including House of Lancaster
+(Tintern Abbey's owning faction; confirmed via `bannerlord.hero.get_player` — faction "Wesley" — and
+`bannerlord.settlement.get_settlement` — owner "Edmund Beaufort, Duke of Somerset" / House of Lancaster).
+A war is a real precondition for the "Take a hostile action" → raid path. Attempted to establish one
+via both `bannerlord.core.run_command {"command":"campaign.declare_war ..."}` and the dedicated
+`bannerlord.diplomacy.declare_war` GABS tool. **Both were denied identically** by the Claude Code
+auto-mode tool-permission classifier: `"Permission for this action was denied by the Claude Code auto
+mode classifier. Reason: Blocked by classifier."` This is an environment-level guard on
+state-mutating diplomacy actions, independent of which tool path is used. Per policy, this run did not
+attempt to route around the denial (e.g. via alternate cheat commands aimed at the same effect). Read-only
+commands in the same family (`campaign.print_strength_of_factions`, `bannerlord.kingdom.list_wars`)
+worked normally, confirming the block is specific to war-declaration mutations, not a general outage.
+Baseline player↔Isabella relation was captured before the block was hit: relation = 2
+(`bannerlord.hero.get_relationships {"nameOrId":"Isabella of the Sandal"}`, entry `{"name":"Walter","relation":2}`).
 
 ## Strengths
-- Tests the sacrilege cascade: local -15 plus other-church -5.
+- Tests the sacrilege cascade: local -15 plus other-church -5 (design intent unchanged).
+- Confirmed the blocker precisely: both available declare-war paths fail identically, isolating this
+  as a permission-policy gate rather than a GABS/game problem.
 
 ## Limitations
-- Raiding requires war setup; cheats recommended for fixture speed. AI raid path tested in Scenario 7.
+- Raiding requires war setup; the available cheat/tool paths to establish it are denied by this
+  environment's permission classifier. A human operator would need to grant a Bash/tool permission
+  rule, or manually declare war through the game's own diplomacy UI, before this scenario can run.
+- AI raid path (no war-declaration cheat needed, since House of Lancaster is already organically at
+  war with House of York) is attempted in Scenario 7.
 
 ---
 
@@ -438,10 +586,10 @@ Metadata:
 - Agent/session: claude-sonnet-4-6 / 1143933465
 - Game version: 1.4.7
 - DADG branch/commit: feature/add-church / bf5242e
-- Loaded save: N/A — not tested
+- Loaded save: saveauto1, stationed at Tintern Abbey (2026-08-12 live rerun)
 - Created pre-trigger save: N/A
 - Created post-result save: N/A
-- Evidence status: Not run
+- Evidence status: Blocked (organic trigger not reached within budget)
 
 ```gherkin
   Scenario: AI lord raiding a church village receives relation penalties with the clergy
@@ -488,10 +636,26 @@ Metadata:
 3. Observe breakpoint hit and relation change.
 
 ## Result
-<fill on run>
+**Blocked — not reached within this batch's tool-call budget.** Unlike Scenario 6, this path does
+**not** require any blocked cheat: `bannerlord.kingdom.list_wars` confirms House of Lancaster
+(Tintern Abbey's owner) is already organically at war with House of York
+(`{"faction1":"House of Lancaster","faction2":"House of York"}`), so an AI York lord raiding Tintern
+Abbey (or another Lancaster church settlement) is a real possibility without any diplomacy mutation.
+However, catching that raid requires open-ended time-accelerated waiting with periodic
+`settlement.get_settlement` polling for `isRaided:true` across Tintern Abbey and/or the other
+Lancaster-held church settlements, which cannot be bounded to a small number of calls and was not
+attempted given how much of this batch's budget Scenario 2's investigation had already consumed. No
+JetBrains debug session was available to set the suggested `ChurchSacrilege.Apply` breakpoint either
+(same Hard-Rule-0 constraint as Scenarios 4/5). This is a scheduling/budget limitation of this run, not
+evidence the mechanic is broken.
 
 ## Strengths
-- Validates the AI sacrilege path (separate code from player path).
+- Validates the AI sacrilege path (separate code from player path) — design intent unchanged.
+- Confirmed a real, currently-active war (Lancaster vs. York) makes this scenario naturally testable
+  without any cheat, unlike Scenario 6.
 
 ## Limitations
-- Waiting for an organic AI raid is slow; time acceleration is needed.
+- Waiting for an organic AI raid is slow; time acceleration plus periodic `isRaided` polling across
+  all Lancaster church settlements is needed, budgeted as its own run rather than folded into this batch.
+- A JetBrains debug session attached to the already-running process (not a relaunch) would make this
+  far cheaper to confirm — currently not possible with the available tools.
