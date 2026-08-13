@@ -45,6 +45,68 @@ detectable or dismissable via MCP**. If such a dialog blocks the game:
 
 ---
 
+## A paused breakpoint is indistinguishable from a soft-lock
+
+**Symptom:** the game looks hung — static screen, campaign time frozen, no menu ever binds,
+`bannerlord.*` GABS calls time out, and breakpoints you just set on other classes never fire.
+
+**Cause:** the process is not hung, it is *paused at a breakpoint* — often a stale one left
+enabled by an earlier run. Breakpoints persist in Rider's workspace across game relaunches and
+across Claude sessions, so a breakpoint someone set hours ago is still armed on the next launch.
+
+**Workaround — check before you diagnose:**
+
+```
+mcp__jetbrains-debugger__get_debug_session_status   # state: "paused" vs "running"
+```
+
+If `state` is `paused`, call `resume_execution` and carry on. Only call it a freeze once you have
+seen `running` while the symptoms persist.
+
+**Prevention — audit breakpoints before any playtest run:**
+
+```
+mcp__jetbrains-debugger__list_breakpoints           # check enabledCount, not totalCount
+```
+
+Disabled breakpoints are harmless and accumulate by the hundred; only `enabled: true` line
+breakpoints matter. Remove stale ones with `remove_breakpoint` before launching.
+
+**Rules that follow from this:**
+
+- **Every breakpoint you set is yours to remove.** Remove it *before* `resume_execution`, not after.
+- Never leave a **per-frame** breakpoint (one in an `OnTick`/update path) enabled across a scenario
+  boundary — it re-breaks on the very next frame and the game appears frozen again immediately.
+- Exception breakpoints set to *uncaught only* are safe to leave on and are useful for catching a
+  real CLR crash. Ones that break on *caught* exceptions will pause constantly during load — vanilla
+  Bannerlord throws and swallows exceptions routinely.
+
+This confound invalidated an entire save/load investigation on 2026-08-12: two "Critical" freeze
+defects were filed against DADG church code, and the control run intended to disprove them started
+while already paused at a leftover per-frame breakpoint.
+
+---
+
+## Getting an on-demand pause with the full campaign object graph
+
+`evaluate_expression` and `set_variable` only work while **paused at a breakpoint**. To get a pause
+whenever you want one, breakpoint DADG's own per-frame code rather than hunting for a call site:
+
+```
+<root>\src\DellarteDellaGuerra\DisplayCompilingShaders\CompilingShaderNotifier.cs   line 37
+```
+
+(`_tickCount += dt;`) It is DADG source, so it binds cleanly with no decompiled-path pain, and it
+runs every frame on the main game thread with the whole campaign object graph in scope. Do **not**
+use lines 43+ — they sit behind an early `return` and fire only intermittently.
+
+Loop: `set_breakpoint` → `wait_for_pause` → all your `evaluate_expression` / `set_variable` calls at
+that one pause → **`remove_breakpoint` FIRST** → `resume_execution`. Skipping the removal is exactly
+how the soft-lock confound above gets created. While paused, the game is frozen and GABS
+`bannerlord.*` calls will not respond — that is expected, not a failure.
+
+---
+
 ## Decompiled source breakpoints
 
 Rider decompiles Bannerlord DLLs on demand and caches them at:

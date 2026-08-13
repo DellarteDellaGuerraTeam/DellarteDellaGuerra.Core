@@ -270,6 +270,12 @@ If the test is expected to crash, the "before" save is mandatory unless technica
 - Long natural campaign waits are weak tests. Prefer fixture commands, targeted time advancement, and direct state checks.
 - XScene files are huge. Grep targeted patterns; never read whole scene files.
 - Battle telemetry has quirks: `playerAgent.position` may look frozen between polls, and enemy remaining power can spike after player power reaches zero. Use `battleResult` for outcome.
+- A paused breakpoint is indistinguishable from a soft-lock: static screen, frozen campaign time, no menu binding, GABS calls timing out, other breakpoints never firing. Call `get_debug_session_status` and confirm `running` before reporting any freeze. Stale breakpoints survive game relaunches and earlier sessions — audit `list_breakpoints` for `enabledCount` first, and always `remove_breakpoint` before `resume_execution`. This invalidated a whole save/load investigation and produced two bogus Critical defects.
+- `games_start` can launch an obsolete install (the GABS MCP server caches `config.json` at startup, so editing it mid-session does nothing). Verify with `Get-Process Bannerlord | Select Id,Path` before trusting any crash report.
+- `conversation.start` immediately after `load_save` crashes the game — `get_game_state` reports `campaign_map` before the map state has settled. Screenshot and let real time pass first.
+- `menu.get_current` enumerates registered options without evaluating visibility conditions. Never use it alone as evidence that an option exists or is missing; corroborate with a screenshot. Select options by index, not by option ID.
+- The ButterLib log line `Created GameScope` appears once per process, not once per campaign load. It is not a count of successful loads.
+- Fuller detail for all of these: the `bannerlord-debug` skill's `references/jetbrains-debugger-tips.md` and `references/dadg-gabs-protocol.md`.
 
 ## Strengths
 
