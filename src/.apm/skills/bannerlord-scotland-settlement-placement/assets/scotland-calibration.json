@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "model": "affine_lon_lat_to_dadg_xy",
+  "map_bounds": {"min_x": 0.0, "max_x": 1120.0, "min_y": 0.0, "max_y": 1120.0},
+  "water_level": 10.0,
+  "provenance": "Real coordinates from the copied Crown/Isles KMZ datasources; DADG coordinates from user-confirmed existing placements in DellarteDellaGuerraMap/ModuleData/settlements.xml on 2026-08-29.",
+  "controls": [
+    {"id":"dadg_sco_dornoch_village","source":"crown-of-scotland-locations.kmz","source_name":"Dornoch","longitude":-4.028026,"latitude":57.87907,"map_x":551.02,"map_y":934.28},
+    {"id":"dadg_sco_inverness_town","source":"lordship-of-the-isles-locations.kmz","source_name":"Inverness","longitude":-4.224721,"latitude":57.477773,"map_x":539.22,"map_y":885.94},
+    {"id":"dadg_sco_cawdor_castle","source":"lordship-of-the-isles-locations.kmz","source_name":"Cawdor Castle","longitude":-3.9265056,"latitude":57.5241399,"map_x":556.66,"map_y":892.76},
+    {"id":"dadg_sco_aberdeen_town","source":"crown-of-scotland-locations.kmz","source_name":"Aberdeen","longitude":-2.0937528,"latitude":57.1498891,"map_x":669.62,"map_y":847.59},
+    {"id":"dadg_sco_brechin_abbey","source":"crown-of-scotland-locations.kmz","source_name":"Brechin","longitude":-2.6603269,"latitude":56.7322384,"map_x":633.72,"map_y":799.28},
+    {"id":"dadg_sco_dundee_town","source":"crown-of-scotland-locations.kmz","source_name":"Dundee","longitude":-2.970721,"latitude":56.462018,"map_x":614.14,"map_y":769.45},
+    {"id":"dadg_sco_perth_town","source":"crown-of-scotland-locations.kmz","source_name":"Perth","longitude":-3.430838,"latitude":56.394994,"map_x":585.31,"map_y":760.52},
+    {"id":"dadg_sco_stirling_town","source":"crown-of-scotland-locations.kmz","source_name":"Stirling","longitude":-3.9369029,"latitude":56.1165227,"map_x":553.41,"map_y":728.42},
+    {"id":"dadg_sco_edinburgh_town","source":"crown-of-scotland-locations.kmz","source_name":"Edinburgh","longitude":-3.188267,"latitude":55.953252,"map_x":599.53,"map_y":708.75},
+    {"id":"dadg_sco_glasgow_town","source":"crown-of-scotland-locations.kmz","source_name":"Glasgow","longitude":-4.2583345,"latitude":55.8616704,"map_x":533.01,"map_y":698.92},
+    {"id":"dadg_sco_ayr_town","source":"crown-of-scotland-locations.kmz","source_name":"Ayr","longitude":-4.629179,"latitude":55.458564,"map_x":513.52,"map_y":651.88},
+    {"id":"dadg_sco_dumfries_town","source":"crown-of-scotland-locations.kmz","source_name":"Dumfries","longitude":-3.60512,"latitude":55.070859,"map_x":572.05,"map_y":606.06},
+    {"id":"dadg_sco_threave_castle","source":"crown-of-scotland-locations.kmz","source_name":"Threave Castle","longitude":-3.9695107,"latitude":54.9391833,"map_x":549.21,"map_y":590.98},
+    {"id":"dadg_sco_berwick_upon_tweed_village","source":"crown-of-scotland-locations.kmz","source_name":"Berwick-upon-Tweed","longitude":-2.005395,"latitude":55.770242,"map_x":672.55,"map_y":686.43}
+  ]
+}
