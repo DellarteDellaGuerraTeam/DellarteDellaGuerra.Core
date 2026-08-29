@@ -31,6 +31,60 @@ mergedXmlForManaged?.DocumentElement?.Name == "MusicTracks"
 - Single boolean conditions with no logical connectives
 - Method calls that encapsulate the logic (`string.Equals(...)`, `.Contains(...)`, etc.)
 
+### `<`, `>` and `&` are XML-escaped — and the condition dies *silently*
+
+**Symptom:** the breakpoint fires on **every** hit, with no error dialog, as if you had set no
+condition at all. You then read the data of whatever object happened to arrive first and
+attribute it to the one you were filtering for.
+
+**Cause:** the condition travels through an XML layer on its way to Rider. Any `<`, `>` or `&`
+comes back out as `&lt;`, `&gt;`, `&amp;`. Read the `condition` field echoed in the
+`set_breakpoint` / `wait_for_pause` response — if it shows `&amp;&amp;` or `&lt;`, the condition
+is already corrupt. A corrupt condition is not always reported as an error; it is often just
+dropped, and `hitCount` stays `0` while the breakpoint keeps pausing.
+
+```csharp
+// ❌ silently dead — comparison operators and && are escaped
+_weapon.Side == BattleSideEnum.Defender && _weapon.GameEntity.GlobalPosition.Distance(Agent.Main.Position) < 25
+
+// ❌ still dead — the ternary removes `&&` but `<` is escaped too
+_weapon.Side == BattleSideEnum.Defender ? dist < 25f : false
+
+// ✅ equality only, no <, >, &, or generics
+_weapon.Id.Id == 2408
+```
+
+**Rule: breakpoint conditions must contain only `==` / `!=` equality on a scalar.** Anything
+requiring a comparison, a conjunction, or a generic type argument (`OfType<T>` — the `<>`
+break too) belongs in `evaluate_expression` at the pause, not in the condition. Pin the
+object you want by identity first (evaluate a query to get its `Id`), then condition on that id.
+
+**Verify before trusting a pause:** at the first hit, evaluate the identity you were filtering
+for (e.g. `_weapon.Id.Id`) and confirm it matches. Cost: one call. It caught a wrong-cannon
+mix-up on 2026-08-15 where every reading came from a cannon 107 m from the intended one.
+
+---
+
+## Multi-statement `evaluate_expression` needs a `Func<T>` IIFE
+
+`evaluate_expression` accepts several statements, but a trailing `return` yields `"value": "void"` —
+the result never comes back. Wrap the body in an immediately-invoked lambda instead:
+
+```csharp
+((System.Func<string>)(() => {
+  var cn = /* ... */;
+  int n = 0;
+  foreach (var a in items) { if (cn.SomeGate(a)) n++; }
+  return "n=" + n;
+}))()
+```
+
+Unlike breakpoint conditions, expressions are **not** escaped, so `&&`, `<` and `OfType<T>` are all
+fine here. Two more gotchas: re-declaring a local from a previous evaluate fails with
+`Synthetic with name "x" is already added` (rename it), and namespace-qualify mod types
+(`Bannerlord.Cannons.BattleMechanics.Artillery.BaseFieldSiegeWeapon`) so the expression works from
+any frame, not just one that already imports them.
+
 ---
 
 ## Dialog detection
