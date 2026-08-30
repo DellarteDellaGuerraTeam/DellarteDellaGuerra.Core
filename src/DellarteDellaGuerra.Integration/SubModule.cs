@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Xml;
 using Bannerlord.ExpandedTemplate.API;
+using Bannerlord.UIExtenderEx;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.MainMenu;
@@ -24,6 +25,7 @@ using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
+using DellarteDellaGuerra.Integration.Tournament.Jousting.UI;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Campaign;
@@ -46,6 +48,7 @@ namespace DellarteDellaGuerra.Integration
     {
         private readonly ILogger _logger;
         private IServiceProvider _serviceProvider;
+        private UIExtender? _uiExtender;
 
         public SubModule()
         {
@@ -67,6 +70,8 @@ namespace DellarteDellaGuerra.Integration
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
+            // Deferred until here so that the brush factory and the sprite categories are loaded.
+            _serviceProvider.GetRequiredService<JoustTournamentNameplateBrushRegistrar>().Register();
             InfoPrinter.Display("DADG loaded");
             var currentModule = TaleWorlds.MountAndBlade.Module.CurrentModule;
             _serviceProvider.GetRequiredService<DadgCampaignStartButtonAdder>().AddDadgCampaignStartButton(currentModule);
@@ -85,6 +90,11 @@ namespace DellarteDellaGuerra.Integration
             JoustingMissionManagerProvider.Init(_serviceProvider.GetRequiredService<JoustingMissionManager>());
 
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
+
+            // Registers the view model mixins in this assembly by attribute.
+            _uiExtender = UIExtender.Create("DellarteDellaGuerra.Core");
+            _uiExtender.Register(typeof(SubModule).Assembly);
+            _uiExtender.Enable();
         }
 
         protected override void OnSubModuleUnloaded()
