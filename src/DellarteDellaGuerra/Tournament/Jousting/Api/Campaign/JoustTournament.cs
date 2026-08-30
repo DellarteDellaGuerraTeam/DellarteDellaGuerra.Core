@@ -14,7 +14,7 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Campaign
 {
     public class JoustTournament : DadgFightingTournament
     {
-        private const string SceneName = "dadg_joust_v2";
+        private const string SceneName = "dadg_joust_v3";
 
         public JoustTournament(Town town, IGetTournamentRewardUseCase getTournamentRewardUseCase)
             : base(town, getTournamentRewardUseCase)
