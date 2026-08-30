@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Equipment;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Campaign;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic;
@@ -31,11 +32,16 @@ using TaleWorlds.MountAndBlade.View.MissionViews.Singleplayer;
 
 namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions
 {
-    [MissionManager]
     public class JoustingMissionManager
     {
-        [MissionMethod]
-        public static Mission OpenJoustingFightMission(string scene, JoustTournament tournamentGame,
+        private readonly ILoggerFactory _loggerFactory;
+
+        public JoustingMissionManager(ILoggerFactory loggerFactory)
+        {
+            _loggerFactory = loggerFactory;
+        }
+
+        public Mission OpenJoustingFightMission(string scene, JoustTournament tournamentGame,
             Settlement settlement, CultureObject culture, bool isPlayerParticipating)
         {
             return MissionState.OpenNew("JoustFight",
@@ -51,7 +57,7 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions
                          culture,
                          getJoustEquipmentUtil,
                          equipmentMapper,
-                         tournamentGame.LoggerFactory);
+                         _loggerFactory);
 
                      return new MissionBehavior[]
                      {

@@ -27,6 +27,7 @@ using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Campaign;
+using DellarteDellaGuerra.Tournament.Jousting.Api.Missions;
 using DellarteDellaGuerra.Utils;
 using Harmony.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -80,6 +81,8 @@ namespace DellarteDellaGuerra.Integration
 
             _serviceProvider.GetRequiredService<DadgScriptComponentRegistrar>()
                 .RegisterLoadedDadgTypes();
+
+            JoustingMissionManagerProvider.Init(_serviceProvider.GetRequiredService<JoustingMissionManager>());
 
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
         }
