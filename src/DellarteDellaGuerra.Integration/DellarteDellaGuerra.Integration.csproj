@@ -22,6 +22,9 @@
         <PackageReference Include="NLog.Extensions.Logging" Version="5.3.14"/>
         <PackageReference Include="Harmony.DependencyInjection" Version="0.2.0"/>
 
+        <!-- Compile-time only: the DLL is provided at runtime by the Bannerlord.UIExtenderEx module -->
+        <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.2" IncludeAssets="compile" PrivateAssets="all"/>
+
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All"/>
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All"/>
