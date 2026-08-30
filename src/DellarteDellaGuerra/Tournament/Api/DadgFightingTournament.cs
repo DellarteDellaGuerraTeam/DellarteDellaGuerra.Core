@@ -22,10 +22,12 @@ namespace DellarteDellaGuerra.Tournament.Api
             bool includePlayer,
             int lastRecordedLordCountForTournamentPrize)
         {
+            // A reloaded tournament is deserialised without its constructor, so the use case is
+            // null; the persisted reward is the source of truth in that case.
+            if (_savedReward is not null) return GetRewardItem(_savedReward);
+
             // GetTournamentPrize is called in the base constructor before the use case is initialised.
             if (_getTournamentRewardUseCase == null) return Items.All.First();
-
-            if (_savedReward is not null) return GetRewardItem(_savedReward);
 
             var participants = GetParticipantCharacters(Town.Settlement, includePlayer)
                 .Select(participant => participant.StringId).ToList();
