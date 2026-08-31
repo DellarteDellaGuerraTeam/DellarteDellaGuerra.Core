@@ -6,7 +6,7 @@ namespace DellarteDellaGuerra.Titles.Spi
 {
     /**
      * <summary>
-     *  Converts between the pure domain records (Title/Claim/FeudalTension) and flat,
+     *  Converts between the pure domain records (Title/Claim) and flat,
      *  pipe-delimited string lists that are natively serialisable through Bannerlord's
      *  <c>IDataStore.SyncData</c> mechanism. This keeps the domain records free of any
      *  <c>SaveableField</c> attributes.
@@ -18,7 +18,6 @@ namespace DellarteDellaGuerra.Titles.Spi
      *    ('' sentinel for a vacant/absent field). Pre-occupant saves carry 5 fields and load
      *    as uncontested.</item>
      *   <item>Claim: Id|ClaimantClanId|TitleId|Strength|Origin</item>
-     *   <item>Tension: ClaimantClanId|TitleId|Amount (invariant culture float)</item>
      *  </list>
      *  The delimiter '|' must not appear in ids or title names. Ids are Bannerlord
      *  StringIds and configuration-defined title ids, neither of which contain pipes.
@@ -112,39 +111,6 @@ namespace DellarteDellaGuerra.Titles.Spi
             }
 
             return claims;
-        }
-
-        public static List<string> SerialiseTensions(IReadOnlyList<FeudalTension> tensions)
-        {
-            var serialised = new List<string>(tensions.Count);
-            foreach (var tension in tensions)
-            {
-                serialised.Add(string.Join(
-                    Delimiter.ToString(),
-                    tension.ClaimantClanId,
-                    tension.TitleId,
-                    tension.Amount.ToString("R", CultureInfo.InvariantCulture)));
-            }
-
-            return serialised;
-        }
-
-        public static List<FeudalTension> DeserialiseTensions(List<string> serialisedTensions)
-        {
-            var tensions = new List<FeudalTension>(serialisedTensions.Count);
-            foreach (string line in serialisedTensions)
-            {
-                string[] fields = line.Split(Delimiter);
-                if (fields.Length != 3) continue;
-                if (!float.TryParse(fields[2], NumberStyles.Float, CultureInfo.InvariantCulture, out float amount))
-                {
-                    continue;
-                }
-
-                tensions.Add(new FeudalTension(fields[0], fields[1], amount));
-            }
-
-            return tensions;
         }
 
         private static bool TryParseEnum<TEnum>(string value, out TEnum result) where TEnum : struct
