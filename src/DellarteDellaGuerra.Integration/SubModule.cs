@@ -37,7 +37,6 @@ using DellarteDellaGuerra.Integration.Titles;
 using DellarteDellaGuerra.Integration.Titles.UI;
 using DellarteDellaGuerra.Titles.Api;
 using DellarteDellaGuerra.Titles.Api.Campaign;
-using DellarteDellaGuerra.Titles.Api.GameModels;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Campaign;
@@ -148,23 +147,17 @@ namespace DellarteDellaGuerra.Integration
                 _serviceProvider,
                 campaignGameStarter.Models.OfType<SiegeEventModel>().Last()));
 
-            // Feudal title models (each replaces the vanilla default)
-            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgDiplomacyModel>());
-            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgClanPoliticsModel>());
-            campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgSettlementLoyaltyModel>());
-
-            // Feudal title campaign behaviours
+            // Feudal title campaign behaviour
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleCampaignBehavior>());
 
-            // Initialise the static service locator used by KingdomDecision subclasses
+            // Initialise the static service locator used by the feudal campaign layer
             FeudalServices.Initialise(
                 _serviceProvider.GetRequiredService<ITitleRepository>(),
                 _serviceProvider.GetRequiredService<IClaimRepository>(),
                 _serviceProvider.GetRequiredService<IFeudalStructure>(),
                 _serviceProvider.GetRequiredService<IAssignTitleUseCase>(),
                 _serviceProvider.GetRequiredService<IGetSuzerainUseCase>(),
-                _serviceProvider.GetRequiredService<IEvaluateClaimUseCase>(),
-                _serviceProvider.GetRequiredService<IComputeInfluenceTierBonusUseCase>());
+                _serviceProvider.GetRequiredService<IEvaluateClaimUseCase>());
 
             // Initialise the static service locator used by the feudal UI
             // (encyclopedia mixins and the hierarchy screen are created by the game's UI

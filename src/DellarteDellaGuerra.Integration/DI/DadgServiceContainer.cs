@@ -34,7 +34,6 @@ using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
 using DellarteDellaGuerra.Integration.Titles;
 using DellarteDellaGuerra.Titles.Api.Campaign;
-using DellarteDellaGuerra.Titles.Api.GameModels;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Infrastructure.Tournament.Jousting;
 using DellarteDellaGuerra.Tournament.Api;
@@ -140,19 +139,15 @@ public class DadgServiceContainer
         services.AddSingleton<IGetSuzerainUseCase, GetSuzerainUseCase>();
         services.AddSingleton<IGetDirectVassalsUseCase, GetDirectVassalsUseCase>();
         services.AddSingleton<IEvaluateClaimUseCase, EvaluateClaimUseCase>();
-        services.AddSingleton<IComputeInfluenceTierBonusUseCase, ComputeInfluenceTierBonusUseCase>();
         services.AddSingleton<IGenerateInheritanceClaimsUseCase, GenerateInheritanceClaimsUseCase>();
         services.AddSingleton<IBuildFeudalMapUseCase, BuildFeudalMapUseCase>();
 
-        // Campaign behaviours and game models (resolved lazily in SubModule)
+        // Campaign behaviour (resolved lazily in SubModule)
         services.AddSingleton<FeudalTitleCampaignBehavior>(sp => new FeudalTitleCampaignBehavior(
             sp.GetRequiredService<IAssignTitleUseCase>(),
             sp.GetRequiredService<IGenerateInheritanceClaimsUseCase>(),
             sp.GetRequiredService<IFeudalStateStore>(),
             () => sp.GetRequiredService<XmlFeudalStructure>().BuildInitialTitles()));
-        services.AddTransient<DadgDiplomacyModel>();
-        services.AddTransient<DadgClanPoliticsModel>();
-        services.AddTransient<DadgSettlementLoyaltyModel>();
     }
 
 

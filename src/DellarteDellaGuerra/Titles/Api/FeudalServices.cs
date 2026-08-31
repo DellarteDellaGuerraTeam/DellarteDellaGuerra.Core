@@ -9,12 +9,11 @@ namespace DellarteDellaGuerra.Titles.Api
      *  Integration layer.
      * </summary>
      * <remarks>
-     *  Bannerlord serialises <c>KingdomDecision</c> instances (and their outcomes) into save
-     *  games. A decision deserialised from a save cannot receive constructor-injected services,
-     *  so decisions and replaced game models must resolve their collaborators from this static
-     *  holder instead of keeping instance references. Every consumer must null-check (or check
-     *  <see cref="IsInitialised"/>) and silently fall back to vanilla behaviour when the locator
-     *  has not been initialised (unit tests, unexpected load order).
+     *  Consumers instantiated by the game rather than by the DI container (campaign
+     *  behaviours restored from a save, static helpers) resolve their collaborators from
+     *  this holder instead of keeping instance references. Every consumer must null-check
+     *  (or check <see cref="IsInitialised"/>) and silently fall back to vanilla behaviour
+     *  when the locator has not been initialised (unit tests, unexpected load order).
      * </remarks>
      */
     public static class FeudalServices
@@ -25,7 +24,6 @@ namespace DellarteDellaGuerra.Titles.Api
         public static IAssignTitleUseCase? AssignTitle { get; private set; }
         public static IGetSuzerainUseCase? GetSuzerain { get; private set; }
         public static IEvaluateClaimUseCase? EvaluateClaim { get; private set; }
-        public static IComputeInfluenceTierBonusUseCase? ComputeInfluenceTierBonus { get; private set; }
 
         public static bool IsInitialised { get; private set; }
 
@@ -35,8 +33,7 @@ namespace DellarteDellaGuerra.Titles.Api
             IFeudalStructure structure,
             IAssignTitleUseCase assignTitle,
             IGetSuzerainUseCase getSuzerain,
-            IEvaluateClaimUseCase evaluateClaim,
-            IComputeInfluenceTierBonusUseCase computeInfluenceTierBonus)
+            IEvaluateClaimUseCase evaluateClaim)
         {
             Titles = titles;
             Claims = claims;
@@ -44,7 +41,6 @@ namespace DellarteDellaGuerra.Titles.Api
             AssignTitle = assignTitle;
             GetSuzerain = getSuzerain;
             EvaluateClaim = evaluateClaim;
-            ComputeInfluenceTierBonus = computeInfluenceTierBonus;
             IsInitialised = true;
         }
 
@@ -56,7 +52,6 @@ namespace DellarteDellaGuerra.Titles.Api
             AssignTitle = null;
             GetSuzerain = null;
             EvaluateClaim = null;
-            ComputeInfluenceTierBonus = null;
             IsInitialised = false;
         }
     }
