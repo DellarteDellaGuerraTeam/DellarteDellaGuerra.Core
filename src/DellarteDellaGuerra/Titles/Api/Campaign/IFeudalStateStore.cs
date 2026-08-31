@@ -19,9 +19,5 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         void InitialiseClaims(IEnumerable<Claim> claims);
 
         IReadOnlyList<Claim> SnapshotClaims();
-
-        void InitialiseTensions(IEnumerable<FeudalTension> tensions);
-
-        IReadOnlyList<FeudalTension> SnapshotTensions();
     }
 }

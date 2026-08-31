@@ -21,39 +21,30 @@ namespace DellarteDellaGuerra.Titles.Api
     {
         public static ITitleRepository? Titles { get; private set; }
         public static IClaimRepository? Claims { get; private set; }
-        public static ITensionRepository? Tensions { get; private set; }
         public static IFeudalStructure? Structure { get; private set; }
         public static IAssignTitleUseCase? AssignTitle { get; private set; }
         public static IGetSuzerainUseCase? GetSuzerain { get; private set; }
         public static IEvaluateClaimUseCase? EvaluateClaim { get; private set; }
-        public static IComputeFeudalSupportUseCase? ComputeSupport { get; private set; }
         public static IComputeInfluenceTierBonusUseCase? ComputeInfluenceTierBonus { get; private set; }
-        public static IAccumulateTensionUseCase? AccumulateTension { get; private set; }
 
         public static bool IsInitialised { get; private set; }
 
         public static void Initialise(
             ITitleRepository titles,
             IClaimRepository claims,
-            ITensionRepository tensions,
             IFeudalStructure structure,
             IAssignTitleUseCase assignTitle,
             IGetSuzerainUseCase getSuzerain,
             IEvaluateClaimUseCase evaluateClaim,
-            IComputeFeudalSupportUseCase computeSupport,
-            IComputeInfluenceTierBonusUseCase computeInfluenceTierBonus,
-            IAccumulateTensionUseCase accumulateTension)
+            IComputeInfluenceTierBonusUseCase computeInfluenceTierBonus)
         {
             Titles = titles;
             Claims = claims;
-            Tensions = tensions;
             Structure = structure;
             AssignTitle = assignTitle;
             GetSuzerain = getSuzerain;
             EvaluateClaim = evaluateClaim;
-            ComputeSupport = computeSupport;
             ComputeInfluenceTierBonus = computeInfluenceTierBonus;
-            AccumulateTension = accumulateTension;
             IsInitialised = true;
         }
 
@@ -61,14 +52,11 @@ namespace DellarteDellaGuerra.Titles.Api
         {
             Titles = null;
             Claims = null;
-            Tensions = null;
             Structure = null;
             AssignTitle = null;
             GetSuzerain = null;
             EvaluateClaim = null;
-            ComputeSupport = null;
             ComputeInfluenceTierBonus = null;
-            AccumulateTension = null;
             IsInitialised = false;
         }
     }

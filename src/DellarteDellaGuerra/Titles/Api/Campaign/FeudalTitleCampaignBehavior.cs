@@ -26,7 +26,6 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
         private List<string> _serialisedTitles = new();
         private List<string> _serialisedClaims = new();
-        private List<string> _serialisedTensions = new();
 
         public FeudalTitleCampaignBehavior(
             IAssignTitleUseCase assignTitleUseCase,
@@ -55,16 +54,13 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             {
                 _serialisedTitles = TitleStateSerialiser.SerialiseTitles(_stateStore.SnapshotTitles());
                 _serialisedClaims = TitleStateSerialiser.SerialiseClaims(_stateStore.SnapshotClaims());
-                _serialisedTensions = TitleStateSerialiser.SerialiseTensions(_stateStore.SnapshotTensions());
             }
 
             dataStore.SyncData("DadgFeudalTitles", ref _serialisedTitles);
             dataStore.SyncData("DadgFeudalClaims", ref _serialisedClaims);
-            dataStore.SyncData("DadgFeudalTensions", ref _serialisedTensions);
 
             _serialisedTitles ??= new List<string>();
             _serialisedClaims ??= new List<string>();
-            _serialisedTensions ??= new List<string>();
         }
 
         private void OnNewGameCreated(CampaignGameStarter campaignGameStarter)
@@ -90,7 +86,6 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
             _stateStore.InitialiseTitles(TitleStateSerialiser.DeserialiseTitles(_serialisedTitles));
             _stateStore.InitialiseClaims(TitleStateSerialiser.DeserialiseClaims(_serialisedClaims));
-            _stateStore.InitialiseTensions(TitleStateSerialiser.DeserialiseTensions(_serialisedTensions));
         }
 
         private void OnSettlementOwnerChanged(

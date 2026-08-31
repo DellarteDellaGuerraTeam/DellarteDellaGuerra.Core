@@ -133,8 +133,6 @@ public class DadgServiceContainer
         services.AddSingleton<ITitleRepository>(sp => sp.GetRequiredService<InMemoryTitleRegistry>());
         services.AddSingleton<InMemoryClaimRegistry>();
         services.AddSingleton<IClaimRepository>(sp => sp.GetRequiredService<InMemoryClaimRegistry>());
-        services.AddSingleton<InMemoryTensionRegistry>();
-        services.AddSingleton<ITensionRepository>(sp => sp.GetRequiredService<InMemoryTensionRegistry>());
         services.AddSingleton<IFeudalStateStore, FeudalStateStoreAdapter>();
 
         // Domain use cases
@@ -142,9 +140,7 @@ public class DadgServiceContainer
         services.AddSingleton<IGetSuzerainUseCase, GetSuzerainUseCase>();
         services.AddSingleton<IGetDirectVassalsUseCase, GetDirectVassalsUseCase>();
         services.AddSingleton<IEvaluateClaimUseCase, EvaluateClaimUseCase>();
-        services.AddSingleton<IComputeFeudalSupportUseCase, ComputeFeudalSupportUseCase>();
         services.AddSingleton<IComputeInfluenceTierBonusUseCase, ComputeInfluenceTierBonusUseCase>();
-        services.AddSingleton<IAccumulateTensionUseCase, AccumulateTensionUseCase>();
         services.AddSingleton<IGenerateInheritanceClaimsUseCase, GenerateInheritanceClaimsUseCase>();
         services.AddSingleton<IBuildFeudalMapUseCase, BuildFeudalMapUseCase>();
 
@@ -154,8 +150,6 @@ public class DadgServiceContainer
             sp.GetRequiredService<IGenerateInheritanceClaimsUseCase>(),
             sp.GetRequiredService<IFeudalStateStore>(),
             () => sp.GetRequiredService<XmlFeudalStructure>().BuildInitialTitles()));
-        services.AddSingleton<InternalConflictCampaignBehavior>();
-        services.AddSingleton<FeudalTitleSwapBehavior>();
         services.AddTransient<DadgDiplomacyModel>();
         services.AddTransient<DadgClanPoliticsModel>();
         services.AddTransient<DadgSettlementLoyaltyModel>();

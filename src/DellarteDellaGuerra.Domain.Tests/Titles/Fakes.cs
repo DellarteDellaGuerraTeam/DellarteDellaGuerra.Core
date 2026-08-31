@@ -46,22 +46,6 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         public IReadOnlyList<Claim> AllClaims => _claims.Values.ToList();
     }
 
-    internal sealed class FakeTensionRepository : ITensionRepository
-    {
-        private readonly Dictionary<(string, string), FeudalTension> _tensions = new();
-
-        public FeudalTension? GetTension(string claimantClanId, string titleId) =>
-            _tensions.TryGetValue((claimantClanId, titleId), out var tension) ? tension : null;
-
-        public IReadOnlyList<FeudalTension> GetTensionsFor(string claimantClanId) =>
-            _tensions.Values.Where(tension => tension.ClaimantClanId == claimantClanId).ToList();
-
-        public void SetTension(FeudalTension tension) =>
-            _tensions[(tension.ClaimantClanId, tension.TitleId)] = tension;
-
-        public void ResetTension(string claimantClanId, string titleId) =>
-            _tensions.Remove((claimantClanId, titleId));
-    }
 
     internal sealed class FakeFeudalStructure : IFeudalStructure
     {
