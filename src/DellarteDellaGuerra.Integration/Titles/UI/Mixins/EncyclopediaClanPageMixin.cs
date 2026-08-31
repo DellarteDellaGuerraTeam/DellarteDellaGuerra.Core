@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
-using DellarteDellaGuerra.Domain.Levy.Model;
 using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using TaleWorlds.CampaignSystem;
@@ -15,7 +14,7 @@ namespace DellarteDellaGuerra.Integration.Titles.UI.Mixins
 {
     /// <summary>
     /// Adds the full feudal summary (titles, suzerain, de jure liege chain, direct
-    /// vassals and active levies) to the clan encyclopedia page, together with a
+    /// vassals) to the clan encyclopedia page, together with a
     /// button opening the realm-wide hierarchy screen. Hidden for clans outside the
     /// feudal structure. A new page VM is created on every encyclopedia navigation,
     /// so computing the values once here stays correct.
@@ -30,14 +29,12 @@ namespace DellarteDellaGuerra.Integration.Titles.UI.Mixins
             FeudalSuzerainLabel = new TextObject("{=dadg_feudal_suzerain}Suzerain:").ToString();
             FeudalLiegeChainLabel = new TextObject("{=dadg_feudal_liege_chain}De Jure Lieges:").ToString();
             FeudalVassalsLabel = new TextObject("{=dadg_feudal_vassals}Direct Vassals:").ToString();
-            FeudalLeviesLabel = new TextObject("{=dadg_feudal_levies}Levies:").ToString();
             ViewHierarchyText = new TextObject("{=dadg_feudal_view_hierarchy}View Feudal Hierarchy").ToString();
             string none = new TextObject("{=dadg_feudal_none}None").ToString();
             FeudalTitlesText = none;
             FeudalSuzerainText = none;
             FeudalLiegeChainText = none;
             FeudalVassalsText = none;
-            FeudalLeviesText = none;
 
             if (vm.Obj is not Clan clan || !FeudalUiServices.IsInitialised) return;
 
@@ -61,16 +58,6 @@ namespace DellarteDellaGuerra.Integration.Titles.UI.Mixins
             if (vassalClanIds.Count > 0)
                 FeudalVassalsText = string.Join(", ", vassalClanIds.Select(ResolveClanName));
 
-            int issued = FeudalUiServices.Levies?.GetLeviesIssuedBy(clan.StringId)
-                .Count(call => call.Status == LevyStatus.Called) ?? 0;
-            int owed = FeudalUiServices.Levies?.GetPendingLeviesFor(clan.StringId).Count ?? 0;
-            if (issued > 0 || owed > 0)
-            {
-                TextObject leviesText = new TextObject("{=dadg_feudal_levies_counts}{ISSUED} issued, {OWED} owed");
-                leviesText.SetTextVariable("ISSUED", issued);
-                leviesText.SetTextVariable("OWED", owed);
-                FeudalLeviesText = leviesText.ToString();
-            }
         }
 
         [DataSourceProperty] public bool IsFeudalInfoVisible { get; }
@@ -83,8 +70,6 @@ namespace DellarteDellaGuerra.Integration.Titles.UI.Mixins
         [DataSourceProperty] public string FeudalLiegeChainText { get; }
         [DataSourceProperty] public string FeudalVassalsLabel { get; }
         [DataSourceProperty] public string FeudalVassalsText { get; }
-        [DataSourceProperty] public string FeudalLeviesLabel { get; }
-        [DataSourceProperty] public string FeudalLeviesText { get; }
         [DataSourceProperty] public string ViewHierarchyText { get; }
 
         [DataSourceMethod]

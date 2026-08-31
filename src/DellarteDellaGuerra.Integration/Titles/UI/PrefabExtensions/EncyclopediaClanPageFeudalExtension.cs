@@ -45,12 +45,6 @@ namespace DellarteDellaGuerra.Integration.Titles.UI.PrefabExtensions
                         <AutoHideRichTextWidget HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" VerticalAlignment="Bottom" Brush="Encyclopedia.Stat.ValueText" Text="@FeudalVassalsText"/>
                       </Children>
                     </ListPanel>
-                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" MarginLeft="30" MarginTop="3">
-                      <Children>
-                        <AutoHideRichTextWidget HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" VerticalAlignment="Bottom" Brush="Encyclopedia.Stat.DefinitionText" Text="@FeudalLeviesLabel" MarginRight="5"/>
-                        <AutoHideRichTextWidget HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" VerticalAlignment="Bottom" Brush="Encyclopedia.Stat.ValueText" Text="@FeudalLeviesText"/>
-                      </Children>
-                    </ListPanel>
                     <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="340" SuggestedHeight="58" HorizontalAlignment="Left" MarginLeft="30" MarginTop="15" MarginBottom="10" Brush="Popup.Done.Button.NineGrid" Command.Click="ExecuteViewFeudalHierarchy" UpdateChildrenStates="true">
                       <Children>
                         <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Popup.Button.Text" Text="@ViewHierarchyText"/>

@@ -1,4 +1,3 @@
-using DellarteDellaGuerra.Domain.Levy.Port;
 using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.Domain.Titles.Port;
 
@@ -24,7 +23,6 @@ namespace DellarteDellaGuerra.Integration.Titles.UI
         public static IGetSuzerainUseCase? GetSuzerain { get; private set; }
         public static IGetDirectVassalsUseCase? GetDirectVassals { get; private set; }
         public static IBuildFeudalMapUseCase? BuildFeudalMap { get; private set; }
-        public static ILevyRepository? Levies { get; private set; }
 
         public static bool IsInitialised { get; private set; }
 
@@ -33,15 +31,14 @@ namespace DellarteDellaGuerra.Integration.Titles.UI
             IFeudalStructure structure,
             IGetSuzerainUseCase getSuzerain,
             IGetDirectVassalsUseCase getDirectVassals,
-            IBuildFeudalMapUseCase buildFeudalMap,
-            ILevyRepository levies)
+            IBuildFeudalMapUseCase buildFeudalMap)
+
         {
             Titles = titles;
             Structure = structure;
             GetSuzerain = getSuzerain;
             GetDirectVassals = getDirectVassals;
             BuildFeudalMap = buildFeudalMap;
-            Levies = levies;
             IsInitialised = true;
         }
 
@@ -52,7 +49,6 @@ namespace DellarteDellaGuerra.Integration.Titles.UI
             GetSuzerain = null;
             GetDirectVassals = null;
             BuildFeudalMap = null;
-            Levies = null;
             IsInitialised = false;
         }
     }

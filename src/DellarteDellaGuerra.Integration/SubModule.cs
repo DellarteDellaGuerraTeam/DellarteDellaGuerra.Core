@@ -29,7 +29,6 @@ using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
-using DellarteDellaGuerra.Domain.Levy.Port;
 using Bannerlord.PrivateWars.Api;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Domain.Titles;
@@ -37,7 +36,6 @@ using DellarteDellaGuerra.Infrastructure.Titles;
 using DellarteDellaGuerra.Integration.Titles;
 using DellarteDellaGuerra.Integration.Titles.UI;
 using DellarteDellaGuerra.Titles.Api;
-using DellarteDellaGuerra.Levy.Api;
 using DellarteDellaGuerra.Titles.Api.Campaign;
 using DellarteDellaGuerra.Titles.Api.GameModels;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
@@ -159,7 +157,6 @@ namespace DellarteDellaGuerra.Integration
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleCampaignBehavior>());
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<InternalConflictCampaignBehavior>());
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleSwapBehavior>());
-            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<LevyCampaignBehavior>());
 
             // Initialise the static service locator used by KingdomDecision subclasses
             FeudalServices.Initialise(
@@ -182,8 +179,7 @@ namespace DellarteDellaGuerra.Integration
                 _serviceProvider.GetRequiredService<IFeudalStructure>(),
                 _serviceProvider.GetRequiredService<IGetSuzerainUseCase>(),
                 _serviceProvider.GetRequiredService<IGetDirectVassalsUseCase>(),
-                _serviceProvider.GetRequiredService<IBuildFeudalMapUseCase>(),
-                _serviceProvider.GetRequiredService<ILevyRepository>());
+                _serviceProvider.GetRequiredService<IBuildFeudalMapUseCase>());
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();
