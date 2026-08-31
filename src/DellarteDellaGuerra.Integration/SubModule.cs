@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Xml;
 using Bannerlord.ExpandedTemplate.API;
-using Bannerlord.UIExtenderEx;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.DisplayCompilingShaders;
 using DellarteDellaGuerra.MainMenu;
@@ -25,11 +24,8 @@ using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
-using DellarteDellaGuerra.Integration.Tournament.Jousting.UI;
-using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
+using DellarteDellaGuerra.Integration.Tournament.Jousting;
 using DellarteDellaGuerra.Tournament.Api;
-using DellarteDellaGuerra.Tournament.Jousting.Api.Campaign;
-using DellarteDellaGuerra.Tournament.Jousting.Api.Missions;
 using DellarteDellaGuerra.Utils;
 using Harmony.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,7 +44,6 @@ namespace DellarteDellaGuerra.Integration
     {
         private readonly ILogger _logger;
         private IServiceProvider _serviceProvider;
-        private UIExtender? _uiExtender;
 
         public SubModule()
         {
@@ -71,7 +66,7 @@ namespace DellarteDellaGuerra.Integration
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
             // Deferred until here so that the brush factory and the sprite categories are loaded.
-            _serviceProvider.GetRequiredService<JoustTournamentNameplateBrushRegistrar>().Register();
+            _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().RegisterNameplateBrush();
             InfoPrinter.Display("DADG loaded");
             var currentModule = TaleWorlds.MountAndBlade.Module.CurrentModule;
             _serviceProvider.GetRequiredService<DadgCampaignStartButtonAdder>().AddDadgCampaignStartButton(currentModule);
@@ -87,14 +82,9 @@ namespace DellarteDellaGuerra.Integration
             _serviceProvider.GetRequiredService<DadgScriptComponentRegistrar>()
                 .RegisterLoadedDadgTypes();
 
-            JoustingMissionManagerProvider.Init(_serviceProvider.GetRequiredService<JoustingMissionManager>());
-
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
 
-            // Registers the view model mixins in this assembly by attribute.
-            _uiExtender = UIExtender.Create("DellarteDellaGuerra.Core");
-            _uiExtender.Register(typeof(SubModule).Assembly);
-            _uiExtender.Enable();
+            _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().InstallOnSubModuleLoad();
         }
 
         protected override void OnSubModuleUnloaded()
@@ -112,10 +102,7 @@ namespace DellarteDellaGuerra.Integration
                 campaignGameStarter.Models.OfType<HeroCreationModel>().Last()));
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgCampaignTimeModel>());
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
-            var joustRequirementsProvider = _serviceProvider.GetRequiredService<IJoustRequirementsProvider>();
-            campaignGameStarter.AddModel(new DadgSettlementAccessModel(
-                campaignGameStarter.Models.OfType<SettlementAccessModel>().Last(),
-                joustRequirementsProvider));
+            _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().InstallCampaign(campaignGameStarter);
 
             var loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
             campaignGameStarter.AddModel(new DadgSiegeStrategyActionModel(
@@ -128,8 +115,6 @@ namespace DellarteDellaGuerra.Integration
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();
-
-            campaignGameStarter.AddBehavior(new JoustTournamentCampaignBehavior(joustRequirementsProvider));
         }
 
         public override void OnGameInitializationFinished(Game game)

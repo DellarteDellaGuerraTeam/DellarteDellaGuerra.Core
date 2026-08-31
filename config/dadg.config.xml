@@ -2,6 +2,7 @@
   <EnableShaderCompilationNotifications>true</EnableShaderCompilationNotifications>
   <EnableFemaleFighters>false</EnableFemaleFighters>
   <JoustingConfig>
+    <EnableJousting>true</EnableJousting>
     <MinimumRidingSkill>100</MinimumRidingSkill>
     <MinimumPolearmSkill>100</MinimumPolearmSkill>
   </JoustingConfig>

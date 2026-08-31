@@ -29,6 +29,7 @@ using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Infrastructure.Tournament.Jousting;
+using DellarteDellaGuerra.Integration.Tournament.Jousting;
 using DellarteDellaGuerra.Integration.Tournament.Jousting.UI;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Missions;
@@ -94,9 +95,12 @@ public class DadgServiceContainer
         services.AddSingleton<IGetTournamentRewardUseCase, GetTournamentRewardUseCase>();
         services.AddSingleton<IJoustRequirementsProvider>(sp =>
             new JoustRequirementsConfig(sp.GetRequiredService<DadgConfigWatcher>()));
+        services.AddSingleton<IJoustingFeatureToggle>(sp =>
+            new JoustingFeatureToggleConfig(sp.GetRequiredService<DadgConfigWatcher>()));
         services.AddSingleton<JoustingMissionManager>();
         services.AddTransient<DadgTournamentModel>();
         services.AddSingleton<JoustTournamentNameplateBrushRegistrar>();
+        services.AddSingleton<JoustingFeatureInstaller>();
     }
 
     private static void RegisterDisplayServices(IServiceCollection services)
