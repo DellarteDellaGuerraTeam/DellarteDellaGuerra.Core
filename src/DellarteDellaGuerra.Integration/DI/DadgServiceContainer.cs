@@ -133,19 +133,20 @@ public class DadgServiceContainer
         services.AddSingleton<InMemoryClaimRegistry>();
         services.AddSingleton<IClaimRepository>(sp => sp.GetRequiredService<InMemoryClaimRegistry>());
         services.AddSingleton<IFeudalStateStore, FeudalStateStoreAdapter>();
+        services.AddSingleton<IGenealogy, CampaignGenealogy>();
 
         // Domain use cases
         services.AddSingleton<IAssignTitleUseCase, AssignTitleUseCase>();
         services.AddSingleton<IGetSuzerainUseCase, GetSuzerainUseCase>();
         services.AddSingleton<IGetDirectVassalsUseCase, GetDirectVassalsUseCase>();
         services.AddSingleton<IEvaluateClaimUseCase, EvaluateClaimUseCase>();
-        services.AddSingleton<IGenerateInheritanceClaimsUseCase, GenerateInheritanceClaimsUseCase>();
+        services.AddSingleton<IGenerateBloodClaimsUseCase, GenerateBloodClaimsUseCase>();
         services.AddSingleton<IBuildFeudalMapUseCase, BuildFeudalMapUseCase>();
 
         // Campaign behaviour (resolved lazily in SubModule)
         services.AddSingleton<FeudalTitleCampaignBehavior>(sp => new FeudalTitleCampaignBehavior(
             sp.GetRequiredService<IAssignTitleUseCase>(),
-            sp.GetRequiredService<IGenerateInheritanceClaimsUseCase>(),
+            sp.GetRequiredService<IGenerateBloodClaimsUseCase>(),
             sp.GetRequiredService<IFeudalStateStore>(),
             () => sp.GetRequiredService<XmlFeudalStructure>().BuildInitialTitles()));
     }

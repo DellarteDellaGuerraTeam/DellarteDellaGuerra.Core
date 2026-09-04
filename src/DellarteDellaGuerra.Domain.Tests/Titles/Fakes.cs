@@ -47,6 +47,41 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
     }
 
 
+    internal sealed class FakeGenealogy : IGenealogy
+    {
+        private readonly Dictionary<string, HeroNode> _heroes = new();
+        private readonly Dictionary<string, string> _leaderByClanId = new();
+
+        public FakeGenealogy AddHero(
+            string heroId,
+            string? clanId,
+            bool isFemale = false,
+            bool isAlive = true,
+            params string[] childIds)
+        {
+            _heroes[heroId] = new HeroNode(heroId, isFemale, isAlive, clanId, childIds.ToList());
+            return this;
+        }
+
+        public FakeGenealogy WithLeader(string clanId, string heroId)
+        {
+            _leaderByClanId[clanId] = heroId;
+            return this;
+        }
+
+        public HeroNode? GetHero(string heroId) => _heroes.TryGetValue(heroId, out var hero) ? hero : null;
+
+        public string? GetClanLeaderId(string clanId) =>
+            _leaderByClanId.TryGetValue(clanId, out var heroId) ? heroId : null;
+
+        public IReadOnlyList<string> GetDeceasedClanMemberIds(string clanId) =>
+            _heroes.Values
+                .Where(hero => !hero.IsAlive && hero.ClanId == clanId)
+                .Select(hero => hero.Id)
+                .ToList();
+    }
+
+
     internal sealed class FakeFeudalStructure : IFeudalStructure
     {
         private readonly Dictionary<string, string?> _parents = new();
