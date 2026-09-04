@@ -7,7 +7,7 @@ namespace DellarteDellaGuerra.Infrastructure.Titles;
 
 /**
  * <summary>
- * An in-memory registry of the claims clans hold on feudal titles.
+ * An in-memory registry of hero claims, with a denormalised clan projection for clan-level consumers.
  * </summary>
  */
 public class InMemoryClaimRegistry : IClaimRepository
