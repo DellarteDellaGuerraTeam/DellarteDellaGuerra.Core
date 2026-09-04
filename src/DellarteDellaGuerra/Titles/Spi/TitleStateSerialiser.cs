@@ -17,7 +17,9 @@ namespace DellarteDellaGuerra.Titles.Spi
      *   <item>Title: Id|Name|Rank|SeatSettlementId|HolderClanId|OccupantClanId|ContestedSinceDay
      *    ('' sentinel for a vacant/absent field). Pre-occupant saves carry 5 fields and load
      *    as uncontested.</item>
-     *   <item>Claim: Id|ClaimantClanId|TitleId|Strength|Origin</item>
+     *   <item>Claim: Id|ClaimantClanId|TitleId|Strength|Origin|ClaimantHeroId
+     *    ('' sentinel for a clan-level claim). Pre-hero saves carry 5 fields and load
+     *    with no claimant hero.</item>
      *  </list>
      *  The delimiter '|' must not appear in ids or title names. Ids are Bannerlord
      *  StringIds and configuration-defined title ids, neither of which contain pipes.
@@ -91,7 +93,8 @@ namespace DellarteDellaGuerra.Titles.Spi
                     claim.ClaimantClanId,
                     claim.TitleId,
                     claim.Strength.ToString(),
-                    claim.Origin.ToString()));
+                    claim.Origin.ToString(),
+                    claim.ClaimantHeroId ?? string.Empty));
             }
 
             return serialised;
@@ -103,11 +106,17 @@ namespace DellarteDellaGuerra.Titles.Spi
             foreach (string line in serialisedClaims)
             {
                 string[] fields = line.Split(Delimiter);
-                if (fields.Length != 5) continue;
+                if (fields.Length != 5 && fields.Length != 6) continue;
                 if (!TryParseEnum(fields[3], out ClaimStrength strength)) continue;
                 if (!TryParseEnum(fields[4], out ClaimOrigin origin)) continue;
 
-                claims.Add(new Claim(fields[0], fields[1], fields[2], strength, origin));
+                claims.Add(new Claim(
+                    fields[0],
+                    fields[1],
+                    fields[2],
+                    strength,
+                    origin,
+                    fields.Length == 6 && fields[5].Length > 0 ? fields[5] : null));
             }
 
             return claims;

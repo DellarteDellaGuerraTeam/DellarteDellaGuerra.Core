@@ -13,14 +13,14 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
      * <summary>
      *  Owns the lifecycle of the feudal title state: seeds it on new campaigns, persists it
      *  through saves as flat string lists, reacts to settlement ownership changes by
-     *  reassigning titles and to clan leader deaths by generating inheritance claims for
-     *  passed-over heirs.
+     *  reassigning titles, and rederives the claims that descend by blood whenever a death
+     *  or a change of holder moves the bloodlines they are computed from.
      * </summary>
      */
     public class FeudalTitleCampaignBehavior : CampaignBehaviorBase
     {
         private readonly IAssignTitleUseCase _assignTitleUseCase;
-        private readonly IGenerateInheritanceClaimsUseCase _generateInheritanceClaimsUseCase;
+        private readonly IGenerateBloodClaimsUseCase _generateBloodClaimsUseCase;
         private readonly IFeudalStateStore _stateStore;
         private readonly Func<IReadOnlyList<Title>> _initialTitlesProvider;
 
@@ -29,12 +29,12 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
         public FeudalTitleCampaignBehavior(
             IAssignTitleUseCase assignTitleUseCase,
-            IGenerateInheritanceClaimsUseCase generateInheritanceClaimsUseCase,
+            IGenerateBloodClaimsUseCase generateBloodClaimsUseCase,
             IFeudalStateStore stateStore,
             Func<IReadOnlyList<Title>> initialTitlesProvider)
         {
             _assignTitleUseCase = assignTitleUseCase;
-            _generateInheritanceClaimsUseCase = generateInheritanceClaimsUseCase;
+            _generateBloodClaimsUseCase = generateBloodClaimsUseCase;
             _stateStore = stateStore;
             _initialTitlesProvider = initialTitlesProvider;
         }
@@ -68,6 +68,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             if (_stateStore.SnapshotTitles().Count > 0) return;
 
             _stateStore.InitialiseTitles(_initialTitlesProvider());
+            _generateBloodClaimsUseCase.Execute();
         }
 
         private void OnGameLoaded(CampaignGameStarter campaignGameStarter)
@@ -81,11 +82,17 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                     _stateStore.InitialiseTitles(_initialTitlesProvider());
                 }
 
+                _generateBloodClaimsUseCase.Execute();
                 return;
             }
 
             _stateStore.InitialiseTitles(TitleStateSerialiser.DeserialiseTitles(_serialisedTitles));
             _stateStore.InitialiseClaims(TitleStateSerialiser.DeserialiseClaims(_serialisedClaims));
+
+            // Blood claims are a pure function of the bloodlines, so they are rebuilt rather
+            // than trusted: a save written before this system existed carries none, and one
+            // written by an older rule set carries claims the current rules would not grant.
+            _generateBloodClaimsUseCase.Execute();
         }
 
         private void OnSettlementOwnerChanged(
@@ -120,6 +127,9 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                 newOwner?.Clan?.StringId,
                 kind,
                 (float)CampaignTime.Now.ToDays);
+
+            // Dispossession moves the holder every blood claim on this title descends from.
+            _generateBloodClaimsUseCase.Execute();
         }
 
         // A peace treaty cedes occupied titles: when the title's kingdom makes peace with the
@@ -129,6 +139,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             IFaction side2Faction,
             MakePeaceAction.MakePeaceDetail detail)
         {
+            bool cededAnyTitle = false;
             foreach (var title in _stateStore.SnapshotTitles().Where(t => t.IsContested).ToList())
             {
                 var settlement = TaleWorlds.CampaignSystem.Settlements.Settlement.Find(title.SeatSettlementId);
@@ -146,38 +157,21 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                     settlement!.OwnerClan.StringId,
                     SeatTransferKind.Grant,
                     (float)CampaignTime.Now.ToDays);
+                cededAnyTitle = true;
             }
+
+            if (cededAnyTitle) _generateBloodClaimsUseCase.Execute();
         }
 
+        // Any death can change the claims: the dead hero's own claims lapse, and a clan
+        // leader's death moves the anchor every claim on that clan's titles descends from.
         private void OnHeroKilled(
             Hero victim,
             Hero killer,
             KillCharacterAction.KillCharacterActionDetail detail,
             bool showNotification)
         {
-            if (victim?.Clan is null || victim.Clan.Leader != victim) return;
-
-            var passedOverHeirClanIds = CollectPassedOverHeirClanIds(victim);
-            if (passedOverHeirClanIds.Count == 0) return;
-
-            _generateInheritanceClaimsUseCase.Execute(victim.Clan.StringId, passedOverHeirClanIds);
-        }
-
-        private static IReadOnlyList<string> CollectPassedOverHeirClanIds(Hero victim)
-        {
-            var relatives = new List<Hero>();
-            relatives.AddRange(victim.Children);
-            relatives.AddRange(victim.Siblings);
-            if (victim.Spouse != null) relatives.Add(victim.Spouse);
-
-            return relatives
-                .Where(relative => relative.IsAlive
-                                   && relative.Clan != null
-                                   && relative.Clan != victim.Clan
-                                   && !relative.Clan.IsEliminated)
-                .Select(relative => relative.Clan.StringId)
-                .Distinct()
-                .ToList();
+            _generateBloodClaimsUseCase.Execute();
         }
     }
 }
