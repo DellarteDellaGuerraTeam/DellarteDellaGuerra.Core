@@ -24,6 +24,7 @@ using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
+using DellarteDellaGuerra.Integration.SiegeTactics.Mission;
 using DellarteDellaGuerra.Integration.Tournament.Jousting;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Utils;
@@ -131,6 +132,7 @@ namespace DellarteDellaGuerra.Integration
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmReloadMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmSmokeMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<RemoveSiegeTowerSpawnersMissionLogic>());
+        mission.AddMissionBehavior(_serviceProvider.GetRequiredService<CapacityWeightedAssaultMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<BannerSurcoatMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<TournamentRecapBannerMissionLogic>());
         }

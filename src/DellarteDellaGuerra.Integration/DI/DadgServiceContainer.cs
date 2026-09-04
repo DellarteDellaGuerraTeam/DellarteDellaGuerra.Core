@@ -27,6 +27,7 @@ using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
+using DellarteDellaGuerra.Integration.SiegeTactics.Mission;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Infrastructure.Tournament.Jousting;
 using DellarteDellaGuerra.Integration.Tournament.Jousting;
@@ -118,6 +119,7 @@ public class DadgServiceContainer
         services.AddTransient<FirearmReloadMissionLogic>();
         services.AddTransient<FirearmSmokeMissionLogic>();
         services.AddTransient<RemoveSiegeTowerSpawnersMissionLogic>();
+        services.AddTransient<CapacityWeightedAssaultMissionLogic>();
         services.AddTransient<BannerSurcoatMissionLogic>();
         services.AddTransient<TournamentRecapBannerMissionLogic>();
     }
