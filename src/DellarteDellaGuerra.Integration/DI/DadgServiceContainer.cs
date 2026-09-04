@@ -119,6 +119,7 @@ public class DadgServiceContainer
         services.AddTransient<FirearmReloadMissionLogic>();
         services.AddTransient<FirearmSmokeMissionLogic>();
         services.AddTransient<RemoveSiegeTowerSpawnersMissionLogic>();
+        services.AddTransient<SiegeAssaultDiagnosticsMissionLogic>();
         services.AddTransient<CapacityWeightedAssaultMissionLogic>();
         services.AddTransient<BannerSurcoatMissionLogic>();
         services.AddTransient<TournamentRecapBannerMissionLogic>();
