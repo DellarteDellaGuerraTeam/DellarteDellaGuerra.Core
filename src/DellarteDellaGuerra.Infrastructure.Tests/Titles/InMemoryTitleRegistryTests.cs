@@ -1,11 +1,18 @@
 using DellarteDellaGuerra.Domain.Titles.Model;
+using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Infrastructure.Titles;
 
 namespace DellarteDellaGuerra.Infrastructure.Tests.Titles;
 
 public class InMemoryTitleRegistryTests
 {
-    private readonly InMemoryTitleRegistry _registry = new InMemoryTitleRegistry();
+    private readonly IdentityGenealogy _genealogy = new();
+    private readonly InMemoryTitleRegistry _registry;
+
+    public InMemoryTitleRegistryTests()
+    {
+        _registry = new InMemoryTitleRegistry(_genealogy);
+    }
 
     private static Title YorkDuchy(string? holderClanId = "clan_york", string seat = "town_york") =>
         new Title("duchy_york", "Duchy of York", TitleRank.Duke, seat, holderClanId);
@@ -18,7 +25,7 @@ public class InMemoryTitleRegistryTests
 
         Title? title = _registry.GetTitle("duchy_york");
         Assert.NotNull(title);
-        Assert.Equal("clan_neville", title!.HolderClanId);
+        Assert.Equal("clan_neville", _genealogy.GetHolderClanOf(title));
         Assert.Single(_registry.GetAllTitles());
     }
 

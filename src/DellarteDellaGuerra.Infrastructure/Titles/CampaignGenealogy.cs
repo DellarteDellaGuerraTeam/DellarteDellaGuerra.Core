@@ -32,6 +32,9 @@ public class CampaignGenealogy : IGenealogy
         return MBObjectManager.Instance?.GetObject<Clan>(clanId)?.Leader?.StringId;
     }
 
+    public string? GetClanOf(string heroId)
+        => MBObjectManager.Instance?.GetObject<Hero>(heroId)?.Clan?.StringId;
+
     public IReadOnlyList<string> GetDeceasedClanMemberIds(string clanId)
     {
         var clan = MBObjectManager.Instance?.GetObject<Clan>(clanId);

@@ -8,12 +8,16 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         private static Claim CreateClaim(string titleId) =>
             new("claim_1", "clan_claimant", titleId, ClaimStrength.Strong, ClaimOrigin.Conquest);
 
+        private static FakeGenealogy CreateGenealogy() => new FakeGenealogy()
+            .AddHero("clan_other", "clan_other")
+            .AddHero("clan_claimant", "clan_claimant");
+
         [Fact]
         public void Execute_ReturnsTrue_WhenTitleHeldByAnotherClan()
         {
             var titleRepository = new FakeTitleRepository(
                 new Title("county_a", "County", TitleRank.Count, "s_a", "clan_other"));
-            var useCase = new EvaluateClaimUseCase(titleRepository);
+            var useCase = new EvaluateClaimUseCase(titleRepository, CreateGenealogy());
 
             Assert.True(useCase.Execute(CreateClaim("county_a")));
         }
@@ -23,7 +27,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var titleRepository = new FakeTitleRepository(
                 new Title("county_a", "County", TitleRank.Count, "s_a", "clan_claimant"));
-            var useCase = new EvaluateClaimUseCase(titleRepository);
+            var useCase = new EvaluateClaimUseCase(titleRepository, CreateGenealogy());
 
             Assert.False(useCase.Execute(CreateClaim("county_a")));
         }
@@ -33,7 +37,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var titleRepository = new FakeTitleRepository(
                 new Title("county_a", "County", TitleRank.Count, "s_a", null));
-            var useCase = new EvaluateClaimUseCase(titleRepository);
+            var useCase = new EvaluateClaimUseCase(titleRepository, CreateGenealogy());
 
             Assert.False(useCase.Execute(CreateClaim("county_a")));
         }
@@ -41,7 +45,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         [Fact]
         public void Execute_ReturnsFalse_WhenTitleMissing()
         {
-            var useCase = new EvaluateClaimUseCase(new FakeTitleRepository());
+            var useCase = new EvaluateClaimUseCase(new FakeTitleRepository(), CreateGenealogy());
 
             Assert.False(useCase.Execute(CreateClaim("county_missing")));
         }

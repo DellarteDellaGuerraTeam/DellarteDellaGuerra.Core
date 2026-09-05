@@ -9,15 +9,18 @@ namespace DellarteDellaGuerra.Domain.Titles
     {
         private readonly ITitleRepository _titleRepository;
         private readonly IClaimRepository _claimRepository;
+        private readonly IGenealogy _genealogy;
         private readonly ILogger _logger;
 
         public AssignTitleUseCase(
             ITitleRepository titleRepository,
             IClaimRepository claimRepository,
+            IGenealogy genealogy,
             ILoggerFactory loggerFactory)
         {
             _titleRepository = titleRepository;
             _claimRepository = claimRepository;
+            _genealogy = genealogy;
             _logger = loggerFactory.CreateLogger<AssignTitleUseCase>();
         }
 
@@ -36,7 +39,7 @@ namespace DellarteDellaGuerra.Domain.Titles
 
             // Conquest of a held title does not move the dignity; everything else does.
             // A vacant title has no holder to dispossess, so conquest transfers it directly.
-            if (transferKind == SeatTransferKind.Conquest && title.HolderClanId is not null)
+            if (transferKind == SeatTransferKind.Conquest && title.HolderHeroId is not null)
             {
                 return ExecuteConquest(title, newClanId, currentDay);
             }
@@ -46,33 +49,35 @@ namespace DellarteDellaGuerra.Domain.Titles
 
         private AssignmentResult ExecuteConquest(Title title, string? occupantClanId, float currentDay)
         {
-            if (occupantClanId == title.HolderClanId)
+            string? holderClanId = _genealogy.GetHolderClanOf(title);
+
+            if (occupantClanId == holderClanId)
             {
                 // The de jure holder retook (or already holds) its own seat: contest resolved.
                 if (title.OccupantClanId is not null || title.ContestedSinceDay is not null)
                 {
                     _titleRepository.SaveTitle(title.WithOccupant(null, null));
-                    _logger.Info($"Title '{title.Id}' contest resolved: holder '{title.HolderClanId}' retook the seat");
+                    _logger.Info($"Title '{title.Id}' contest resolved: holder '{holderClanId}' retook the seat");
                 }
 
-                return new AssignmentResult(title.Id, title.HolderClanId, title.HolderClanId, false);
+                return new AssignmentResult(title.Id, holderClanId, holderClanId, false);
             }
 
             if (occupantClanId == title.OccupantClanId)
             {
-                return new AssignmentResult(title.Id, title.HolderClanId, title.HolderClanId, false, true);
+                return new AssignmentResult(title.Id, holderClanId, holderClanId, false, true);
             }
 
             // A new occupant restarts the contested clock.
             _titleRepository.SaveTitle(title.WithOccupant(occupantClanId, currentDay));
-            _logger.Info($"Title '{title.Id}' contested: '{occupantClanId ?? "<vacant>"}' occupies the seat of '{title.HolderClanId}'");
+            _logger.Info($"Title '{title.Id}' contested: '{occupantClanId ?? "<vacant>"}' occupies the seat of '{holderClanId}'");
 
-            return new AssignmentResult(title.Id, title.HolderClanId, title.HolderClanId, false, true);
+            return new AssignmentResult(title.Id, holderClanId, holderClanId, false, true);
         }
 
         private AssignmentResult ExecuteTransfer(Title title, string? newHolderClanId)
         {
-            string? previousHolderClanId = title.HolderClanId;
+            string? previousHolderClanId = _genealogy.GetHolderClanOf(title);
             if (previousHolderClanId == newHolderClanId)
             {
                 if (title.OccupantClanId is not null || title.ContestedSinceDay is not null)
@@ -83,7 +88,9 @@ namespace DellarteDellaGuerra.Domain.Titles
                 return new AssignmentResult(title.Id, previousHolderClanId, newHolderClanId, false);
             }
 
-            _titleRepository.SaveTitle(title.WithHolder(newHolderClanId).WithOccupant(null, null));
+            _titleRepository.SaveTitle(title
+                .WithHolder(newHolderClanId is null ? null : _genealogy.GetClanLeaderId(newHolderClanId))
+                .WithOccupant(null, null));
             _logger.Info($"Title '{title.Id}' reassigned from '{previousHolderClanId ?? "<vacant>"}' to '{newHolderClanId ?? "<vacant>"}'");
 
             bool claimGenerated = false;

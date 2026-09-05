@@ -28,8 +28,8 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             return new GenerateBloodClaimsUseCase(new FakeTitleRepository(titles), _claimRepository, genealogy);
         }
 
-        private static Title CountyA(string? holderClanId = "clan_holder") =>
-            new("county_a", "County A", TitleRank.Count, "seat_a", holderClanId);
+        private static Title CountyA(string? holderHeroId = "holder") =>
+            new("county_a", "County A", TitleRank.Count, "seat_a", holderHeroId);
 
         private Claim? ClaimOf(string heroId) =>
             _claimRepository.AllClaims.FirstOrDefault(claim => claim.ClaimantHeroId == heroId);
@@ -111,7 +111,8 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var genealogy = new FakeGenealogy()
                 .AddHero("ancestor", "clan_holder", isAlive: false, childIds: new[] { "descendant" })
-                .AddHero("descendant", "clan_other");
+                .AddHero("descendant", "clan_other")
+                .AddHero("clan_holder", "clan_holder");
 
             UseCase(
                     genealogy,
@@ -155,7 +156,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         [Fact]
         public void GrantsNothingOnAVacantTitle()
         {
-            UseCase(ThreeGenerations(), CountyA(holderClanId: null)).Execute();
+            UseCase(ThreeGenerations(), CountyA(holderHeroId: null)).Execute();
 
             Assert.Empty(_claimRepository.AllClaims);
         }

@@ -148,7 +148,8 @@ public class DadgServiceContainer
             sp.GetRequiredService<IAssignTitleUseCase>(),
             sp.GetRequiredService<IGenerateBloodClaimsUseCase>(),
             sp.GetRequiredService<IFeudalStateStore>(),
-            () => sp.GetRequiredService<XmlFeudalStructure>().BuildInitialTitles()));
+            () => sp.GetRequiredService<XmlFeudalStructure>()
+                    .BuildInitialTitles(sp.GetRequiredService<IGenealogy>())));
     }
 
 

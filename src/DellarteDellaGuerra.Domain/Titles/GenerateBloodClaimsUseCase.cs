@@ -52,21 +52,24 @@ namespace DellarteDellaGuerra.Domain.Titles
             var titles = _titleRepository.GetAllTitles();
             RemovePreviouslyDerivedClaims(titles);
 
-            var principalTitleByClan = PrincipalTitleByClan(titles);
+            var holderClanByTitleId = titles.ToDictionary(
+                title => title.Id, title => _genealogy.GetHolderClanOf(title));
+            var principalTitleByClan = PrincipalTitleByClan(titles, holderClanByTitleId);
             var createdClaims = new List<Claim>();
 
             foreach (var title in titles)
             {
-                if (title.HolderClanId is null) continue;
+                string? holderClanId = holderClanByTitleId[title.Id];
+                if (holderClanId is null) continue;
 
-                bool isPrincipalTitle = principalTitleByClan.TryGetValue(title.HolderClanId, out string? principalTitleId)
+                bool isPrincipalTitle = principalTitleByClan.TryGetValue(holderClanId, out string? principalTitleId)
                                         && principalTitleId == title.Id;
 
-                foreach (var descendant in Descendants(Anchors(title.HolderClanId, isPrincipalTitle)))
+                foreach (var descendant in Descendants(Anchors(holderClanId, isPrincipalTitle)))
                 {
                     var hero = _genealogy.GetHero(descendant.Key);
                     if (hero is null || !hero.IsAlive || hero.ClanId is null) continue;
-                    if (hero.ClanId == title.HolderClanId) continue;
+                    if (hero.ClanId == holderClanId) continue;
 
                     var claim = new Claim(
                         $"{title.Id}:{hero.Id}:blood",
@@ -104,11 +107,12 @@ namespace DellarteDellaGuerra.Domain.Titles
          *  across a whole portfolio.
          * </summary>
          */
-        private static Dictionary<string, string> PrincipalTitleByClan(IReadOnlyList<Title> titles)
+        private static Dictionary<string, string> PrincipalTitleByClan(
+            IReadOnlyList<Title> titles, IReadOnlyDictionary<string, string?> holderClanByTitleId)
         {
             return titles
-                .Where(title => title.HolderClanId is not null)
-                .GroupBy(title => title.HolderClanId!)
+                .Where(title => holderClanByTitleId[title.Id] is not null)
+                .GroupBy(title => holderClanByTitleId[title.Id]!)
                 .ToDictionary(
                     group => group.Key,
                     group => group.OrderByDescending(title => title.Rank).First().Id);

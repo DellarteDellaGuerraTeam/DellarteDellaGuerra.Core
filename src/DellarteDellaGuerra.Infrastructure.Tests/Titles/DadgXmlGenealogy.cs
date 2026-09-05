@@ -86,6 +86,9 @@ internal sealed class DadgXmlGenealogy : IGenealogy
     public string? GetClanLeaderId(string clanId) =>
         _leaderIdByClanId.TryGetValue(clanId, out string? leaderId) ? leaderId : null;
 
+    public string? GetClanOf(string heroId) =>
+        _heroesById.TryGetValue(heroId, out HeroNode? hero) ? hero.ClanId : null;
+
     public IReadOnlyList<string> GetDeceasedClanMemberIds(string clanId) =>
         _heroesById.Values
             .Where(hero => !hero.IsAlive && hero.ClanId == clanId)

@@ -64,16 +64,19 @@ public class XmlFeudalStructure : IFeudalStructure
     /**
      * <summary>
      * Builds the initial titles from the configured hierarchy,
-     * each held by its configured initial holder clan, if any.
+     * each held by the leader of its configured initial holder clan, if any.
      * </summary>
      */
-    public IReadOnlyList<Title> BuildInitialTitles()
+    public IReadOnlyList<Title> BuildInitialTitles(IGenealogy genealogy)
     {
         var titles = new List<Title>(_allTitleIds.Count);
         foreach (string titleId in _allTitleIds)
         {
             FeudalTitleNode node = _nodesByTitleId[titleId];
-            titles.Add(new Title(node.TitleId, node.Name, node.Rank, node.SeatSettlementId, node.InitialHolderClanId));
+            string? holderHeroId = node.InitialHolderClanId is { } clanId
+                ? genealogy.GetClanLeaderId(clanId)
+                : null;
+            titles.Add(new Title(node.TitleId, node.Name, node.Rank, node.SeatSettlementId, holderHeroId));
         }
 
         return titles;

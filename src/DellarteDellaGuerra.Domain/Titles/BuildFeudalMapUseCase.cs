@@ -13,11 +13,13 @@ namespace DellarteDellaGuerra.Domain.Titles
     {
         private readonly ITitleRepository _titleRepository;
         private readonly IFeudalStructure _feudalStructure;
+        private readonly IGenealogy _genealogy;
 
-        public BuildFeudalMapUseCase(ITitleRepository titleRepository, IFeudalStructure feudalStructure)
+        public BuildFeudalMapUseCase(ITitleRepository titleRepository, IFeudalStructure feudalStructure, IGenealogy genealogy)
         {
             _titleRepository = titleRepository;
             _feudalStructure = feudalStructure;
+            _genealogy = genealogy;
         }
 
         public FeudalMap Execute()
@@ -44,7 +46,7 @@ namespace DellarteDellaGuerra.Domain.Titles
                 _feudalStructure.GetTitleName(titleId) ?? titleId,
                 _feudalStructure.GetRank(titleId) ?? TitleRank.Baron,
                 title?.SeatSettlementId ?? string.Empty,
-                title?.HolderClanId,
+                _genealogy.GetHolderClanOf(title),
                 vassals,
                 title is { IsContested: true } ? title.OccupantClanId : null);
         }

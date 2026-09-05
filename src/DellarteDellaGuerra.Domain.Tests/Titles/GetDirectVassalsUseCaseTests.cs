@@ -20,15 +20,22 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 .AddTitle("county_1", TitleRank.Count, "duchy_1")
                 .AddTitle("county_2", TitleRank.Count, "duchy_2");
 
+            var genealogy = new FakeGenealogy()
+                .AddHero("clan_king", "clan_king")
+                .AddHero("clan_duke", "clan_duke")
+                .AddHero("clan_count1", "clan_count1")
+                .AddHero("clan_count2", "clan_count2");
+
             _titleRepository = new FakeTitleRepository(
                 new Title("kingdom_k", "Kingdom", TitleRank.King, "s_k", "clan_king"),
                 new Title("duchy_1", "Duchy 1", TitleRank.Duke, "s_d1", "clan_duke"),
                 new Title("duchy_2", "Duchy 2", TitleRank.Duke, "s_d2", null),
                 new Title("county_1", "County 1", TitleRank.Count, "s_c1", "clan_count1"),
-                new Title("county_2", "County 2", TitleRank.Count, "s_c2", "clan_count2"));
+                new Title("county_2", "County 2", TitleRank.Count, "s_c2", "clan_count2"))
+            { Genealogy = genealogy };
 
-            var getSuzerainUseCase = new GetSuzerainUseCase(_titleRepository, structure);
-            _useCase = new GetDirectVassalsUseCase(_titleRepository, structure, getSuzerainUseCase);
+            var getSuzerainUseCase = new GetSuzerainUseCase(_titleRepository, structure, genealogy);
+            _useCase = new GetDirectVassalsUseCase(_titleRepository, structure, getSuzerainUseCase, genealogy);
         }
 
         [Fact]
