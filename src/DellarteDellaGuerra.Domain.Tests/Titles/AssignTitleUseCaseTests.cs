@@ -1,5 +1,6 @@
 using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.Domain.Titles.Model;
+using DellarteDellaGuerra.Domain.Titles.Port;
 
 namespace DellarteDellaGuerra.Domain.Tests.Titles
 {
@@ -7,15 +8,25 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
     {
         private readonly FakeTitleRepository _titleRepository;
         private readonly FakeClaimRepository _claimRepository;
+        private readonly FakeGenealogy _genealogy;
         private readonly AssignTitleUseCase _useCase;
 
         public AssignTitleUseCaseTests()
         {
+            _genealogy = new FakeGenealogy()
+                .AddHero("hero_old", "clan_old")
+                .WithLeader("clan_old", "hero_old")
+                .AddHero("hero_new", "clan_new")
+                .WithLeader("clan_new", "hero_new")
+                .AddHero("hero_invader", "clan_invader")
+                .WithLeader("clan_invader", "hero_invader")
+                .AddHero("hero_heir", "clan_heir")
+                .WithLeader("clan_heir", "hero_heir");
             _titleRepository = new FakeTitleRepository(
-                new Title("county_a", "County of A", TitleRank.Count, "settlement_a", "clan_old"),
+                new Title("county_a", "County of A", TitleRank.Count, "settlement_a", "hero_old"),
                 new Title("county_b", "County of B", TitleRank.Count, "settlement_b", null));
             _claimRepository = new FakeClaimRepository();
-            _useCase = new AssignTitleUseCase(_titleRepository, _claimRepository, new FakeLoggerFactory());
+            _useCase = new AssignTitleUseCase(_titleRepository, _claimRepository, _genealogy, new FakeLoggerFactory());
         }
 
         [Fact]
@@ -28,7 +39,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             Assert.Equal("clan_old", result.PreviousHolderClanId);
             Assert.Equal("clan_new", result.NewHolderClanId);
             Assert.False(result.Contested);
-            Assert.Equal("clan_new", _titleRepository.GetTitle("county_a")!.HolderClanId);
+            Assert.Equal("clan_new", _genealogy.GetHolderClanOf(_titleRepository.GetTitle("county_a")));
         }
 
         [Fact]
@@ -84,7 +95,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
 
             Assert.NotNull(result);
             Assert.False(result!.ClaimGenerated);
-            Assert.Equal("clan_old", _titleRepository.GetTitle("county_a")!.HolderClanId);
+            Assert.Equal("clan_old", _genealogy.GetHolderClanOf(_titleRepository.GetTitle("county_a")));
             Assert.Empty(_claimRepository.GetClaimsOn("county_a"));
         }
 
@@ -99,7 +110,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             Assert.Equal("clan_old", result.NewHolderClanId);
 
             var title = _titleRepository.GetTitle("county_a")!;
-            Assert.Equal("clan_old", title.HolderClanId);
+            Assert.Equal("clan_old", _genealogy.GetHolderClanOf(title));
             Assert.Equal("clan_invader", title.OccupantClanId);
             Assert.Equal(42f, title.ContestedSinceDay);
             Assert.True(title.IsContested);
@@ -114,7 +125,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
 
             Assert.False(result!.Contested);
             var title = _titleRepository.GetTitle("county_a")!;
-            Assert.Equal("clan_old", title.HolderClanId);
+            Assert.Equal("clan_old", _genealogy.GetHolderClanOf(title));
             Assert.Null(title.OccupantClanId);
             Assert.Null(title.ContestedSinceDay);
         }
@@ -147,7 +158,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
 
             Assert.False(result!.Contested);
             var title = _titleRepository.GetTitle("county_b")!;
-            Assert.Equal("clan_new", title.HolderClanId);
+            Assert.Equal("clan_new", _genealogy.GetHolderClanOf(title));
             Assert.Null(title.OccupantClanId);
         }
 
@@ -160,7 +171,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             Assert.False(result!.Contested);
             Assert.True(result.ClaimGenerated);
             var title = _titleRepository.GetTitle("county_a")!;
-            Assert.Equal("clan_invader", title.HolderClanId);
+            Assert.Equal("clan_invader", _genealogy.GetHolderClanOf(title));
             Assert.Null(title.OccupantClanId);
             Assert.Null(title.ContestedSinceDay);
             Assert.Single(
@@ -177,7 +188,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             Assert.False(result!.Contested);
             Assert.False(result.ClaimGenerated);
             var title = _titleRepository.GetTitle("county_a")!;
-            Assert.Equal("clan_old", title.HolderClanId);
+            Assert.Equal("clan_old", _genealogy.GetHolderClanOf(title));
             Assert.Null(title.OccupantClanId);
         }
 
@@ -189,7 +200,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
 
             Assert.False(result!.Contested);
             var title = _titleRepository.GetTitle("county_a")!;
-            Assert.Equal("clan_heir", title.HolderClanId);
+            Assert.Equal("clan_heir", _genealogy.GetHolderClanOf(title));
             Assert.Null(title.OccupantClanId);
         }
     }

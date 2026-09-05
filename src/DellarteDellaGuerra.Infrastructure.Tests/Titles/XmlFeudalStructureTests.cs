@@ -1,4 +1,5 @@
 using DellarteDellaGuerra.Domain.Titles.Model;
+using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Infrastructure.Titles;
 
 namespace DellarteDellaGuerra.Infrastructure.Tests.Titles;
@@ -21,6 +22,8 @@ public class XmlFeudalStructureTests
 
     private readonly XmlFeudalStructure _feudalStructure =
         new XmlFeudalStructure(FeudalStructureParser.Parse(SampleXml));
+
+    private readonly IdentityGenealogy _genealogy = new();
 
     [Fact]
     public void ShouldResolveDeJureSuzerain()
@@ -66,7 +69,7 @@ public class XmlFeudalStructureTests
     [Fact]
     public void ShouldBuildInitialTitles()
     {
-        IReadOnlyList<Title> titles = _feudalStructure.BuildInitialTitles();
+        IReadOnlyList<Title> titles = _feudalStructure.BuildInitialTitles(_genealogy);
 
         Assert.Equal(5, titles.Count);
 
@@ -74,11 +77,11 @@ public class XmlFeudalStructureTests
         Assert.Equal("England", kingdom.Name);
         Assert.Equal(TitleRank.King, kingdom.Rank);
         Assert.Equal(string.Empty, kingdom.SeatSettlementId);
-        Assert.Equal("clan_lancaster", kingdom.HolderClanId);
+        Assert.Equal("clan_lancaster", _genealogy.GetHolderClanOf(kingdom));
 
         Title barony = titles.Single(title => title.Id == "barony_middleham");
         Assert.Equal(TitleRank.Baron, barony.Rank);
         Assert.Equal("castle_middleham", barony.SeatSettlementId);
-        Assert.Null(barony.HolderClanId);
+        Assert.Null(_genealogy.GetHolderClanOf(barony));
     }
 }

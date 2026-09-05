@@ -1,6 +1,6 @@
-using System.Linq;
 using DellarteDellaGuerra.Domain.Titles.Model;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.ObjectSystem;
 
 namespace DellarteDellaGuerra.Titles.Api
 {
@@ -28,14 +28,14 @@ namespace DellarteDellaGuerra.Titles.Api
                 current = structure.GetDeJureSuzerainTitleId(current);
             }
 
-            string? holderClanId = (current is not null ? titles.GetTitle(current)?.HolderClanId : null)
-                                   ?? titles.GetTitle(titleId)?.HolderClanId;
-            return FindClan(holderClanId)?.Kingdom;
+            string? holderHeroId = (current is not null ? titles.GetTitle(current)?.HolderHeroId : null)
+                                   ?? titles.GetTitle(titleId)?.HolderHeroId;
+            return HolderClan(holderHeroId)?.Kingdom;
         }
 
-        public static Clan? FindClan(string? clanId) =>
-            clanId is null
-                ? null
-                : Clan.All.FirstOrDefault(clan => clan.StringId == clanId && !clan.IsEliminated);
+        private static Clan? HolderClan(string? heroId) =>
+            heroId is not null && MBObjectManager.Instance?.GetObject<Hero>(heroId)?.Clan is { IsEliminated: false } clan
+                ? clan
+                : null;
     }
 }

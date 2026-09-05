@@ -11,10 +11,14 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             .AddTitle("county_c", TitleRank.Count, "duchy_d", name: "County")
             .AddTitle("barony_b", TitleRank.Baron, "county_c", name: "Barony");
 
+        private static FakeGenealogy CreateGenealogy() => new FakeGenealogy()
+            .AddHero("clan_king", "clan_king")
+            .AddHero("clan_duke", "clan_duke");
+
         [Fact]
         public void Execute_BuildsTreeShape_FollowingDeJureStructure()
         {
-            var useCase = new BuildFeudalMapUseCase(new FakeTitleRepository(), CreateStructure());
+            var useCase = new BuildFeudalMapUseCase(new FakeTitleRepository(), CreateStructure(), CreateGenealogy());
 
             FeudalMap map = useCase.Execute();
 
@@ -32,7 +36,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         [Fact]
         public void Execute_UsesNameAndRank_FromFeudalStructure()
         {
-            var useCase = new BuildFeudalMapUseCase(new FakeTitleRepository(), CreateStructure());
+            var useCase = new BuildFeudalMapUseCase(new FakeTitleRepository(), CreateStructure(), CreateGenealogy());
 
             FeudalMap map = useCase.Execute();
 
@@ -48,7 +52,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             var titleRepository = new FakeTitleRepository(
                 new Title("kingdom_k", "Kingdom", TitleRank.King, "s_k", "clan_king"),
                 new Title("duchy_d", "Duchy", TitleRank.Duke, "s_d", "clan_duke"));
-            var useCase = new BuildFeudalMapUseCase(titleRepository, CreateStructure());
+            var useCase = new BuildFeudalMapUseCase(titleRepository, CreateStructure(), CreateGenealogy());
 
             FeudalMap map = useCase.Execute();
 
@@ -64,7 +68,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var titleRepository = new FakeTitleRepository(
                 new Title("kingdom_k", "Kingdom", TitleRank.King, "s_k", "clan_king"));
-            var useCase = new BuildFeudalMapUseCase(titleRepository, CreateStructure());
+            var useCase = new BuildFeudalMapUseCase(titleRepository, CreateStructure(), CreateGenealogy());
 
             FeudalMap map = useCase.Execute();
 
@@ -78,7 +82,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var titleRepository = new FakeTitleRepository(
                 new Title("kingdom_k", "Kingdom", TitleRank.King, "s_k", null));
-            var useCase = new BuildFeudalMapUseCase(titleRepository, CreateStructure());
+            var useCase = new BuildFeudalMapUseCase(titleRepository, CreateStructure(), CreateGenealogy());
 
             FeudalMap map = useCase.Execute();
 
@@ -93,7 +97,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 .AddTitle("kingdom_a", TitleRank.King, name: "Kingdom A")
                 .AddTitle("kingdom_b", TitleRank.King, name: "Kingdom B")
                 .AddTitle("duchy_d", TitleRank.Duke, "kingdom_b", name: "Duchy");
-            var useCase = new BuildFeudalMapUseCase(new FakeTitleRepository(), structure);
+            var useCase = new BuildFeudalMapUseCase(new FakeTitleRepository(), structure, CreateGenealogy());
 
             FeudalMap map = useCase.Execute();
 
@@ -105,7 +109,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         [Fact]
         public void Execute_ReturnsEmptyMap_WhenStructureHasNoTitles()
         {
-            var useCase = new BuildFeudalMapUseCase(new FakeTitleRepository(), new FakeFeudalStructure());
+            var useCase = new BuildFeudalMapUseCase(new FakeTitleRepository(), new FakeFeudalStructure(), CreateGenealogy());
 
             Assert.Empty(useCase.Execute().Realms);
         }

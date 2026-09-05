@@ -1,5 +1,6 @@
 using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.Domain.Titles.Model;
+using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Infrastructure.Titles;
 
 namespace DellarteDellaGuerra.Infrastructure.Tests.Titles;
@@ -9,10 +10,6 @@ public class InitialBloodClaimsIntegrationTests
     private const string ExpectedClaims =
         """
         barony_barnard|dadg_lord_51_2|clan_lumley|Weak
-        barony_beeston|dadg_lord_20_1|clan_talbot|Strong
-        barony_beeston|dadg_lord_20_3|clan_talbot|Strong
-        barony_beeston|dadg_lord_20_4|clan_talbot|Strong
-        barony_beeston|dadg_lord_20_5|clan_talbot|Strong
         barony_caerphilly|dadg_lord_2_4|clan_lancaster|Weak
         barony_durham|dadg_lord_50_2|clan_scrope_of_masham|Weak
         barony_farleigh|dadg_lord_5_2|clan_grey_of_groby|Weak
@@ -39,6 +36,7 @@ public class InitialBloodClaimsIntegrationTests
         county_glamorgan|dadg_lord_30_2|clan_fitzhugh|Weak
         county_glamorgan|dadg_lord_41_2|clan_de_vere|Weak
         county_glamorgan|dadg_lord_45_2|clan_blount|Weak
+        county_hallamshire|dadg_lord_20_2|clan_vernon|Weak
         county_hallamshire|dadg_lord_23_2|clan_mowbray|Weak
         county_hampshire|dadg_lord_19_2|clan_talbot|Weak
         county_hampshire|dadg_lord_29_2|clan_beaumont|Weak
@@ -62,12 +60,12 @@ public class InitialBloodClaimsIntegrationTests
         DadgContentPaths paths = DadgContentPaths.Find();
         using FileStream titlesStream = File.OpenRead(paths.Titles);
 
+        DadgXmlGenealogy genealogy = DadgXmlGenealogy.Load(paths.Heroes, paths.Characters, paths.Clans);
         var feudalStructure = new XmlFeudalStructure(FeudalStructureParser.Parse(titlesStream));
-        var titleRepository = new InMemoryTitleRegistry();
-        titleRepository.Initialise(feudalStructure.BuildInitialTitles());
+        var titleRepository = new InMemoryTitleRegistry(genealogy);
+        titleRepository.Initialise(feudalStructure.BuildInitialTitles(genealogy));
 
         var claimRepository = new InMemoryClaimRegistry();
-        DadgXmlGenealogy genealogy = DadgXmlGenealogy.Load(paths.Heroes, paths.Characters, paths.Clans);
         var useCase = new GenerateBloodClaimsUseCase(titleRepository, claimRepository, genealogy);
 
         IReadOnlyList<Claim> claims = useCase.Execute();
@@ -77,23 +75,23 @@ public class InitialBloodClaimsIntegrationTests
         Assert.Equal(
             53,
             titleRepository.GetAllTitles()
-                .Where(title => title.HolderClanId is not null)
-                .Select(title => title.HolderClanId)
+                .Where(title => genealogy.GetHolderClanOf(title) is not null)
+                .Select(title => genealogy.GetHolderClanOf(title))
                 .Distinct()
                 .Count());
         Assert.Equal(442, genealogy.HeroCount);
-        Assert.Equal(45, claims.Count);
-        Assert.Equal(5, claims.Count(claim => claim.Strength == ClaimStrength.Strong));
-        Assert.Equal(40, claims.Count(claim => claim.Strength == ClaimStrength.Weak));
-        Assert.Equal(30, claims.Select(claim => claim.ClaimantClanId).Distinct().Count());
-        Assert.Equal(24, claims.Select(claim => claim.TitleId).Distinct().Count());
+        Assert.Equal(42, claims.Count);
+        Assert.Equal(1, claims.Count(claim => claim.Strength == ClaimStrength.Strong));
+        Assert.Equal(41, claims.Count(claim => claim.Strength == ClaimStrength.Weak));
+        Assert.Equal(31, claims.Select(claim => claim.ClaimantClanId).Distinct().Count());
+        Assert.Equal(23, claims.Select(claim => claim.TitleId).Distinct().Count());
         Assert.All(claims, claim => Assert.False(string.IsNullOrEmpty(claim.ClaimantHeroId)));
         Assert.Equal(claims.Count, claims.Select(claim => claim.Id).Distinct().Count());
         Assert.All(
-            titleRepository.GetAllTitles().Where(title => title.HolderClanId is not null),
+            titleRepository.GetAllTitles().Where(title => genealogy.GetHolderClanOf(title) is not null),
             title =>
             {
-                string? leaderId = genealogy.GetClanLeaderId(title.HolderClanId!);
+                string? leaderId = genealogy.GetClanLeaderId(genealogy.GetHolderClanOf(title)!);
                 Assert.False(string.IsNullOrEmpty(leaderId));
                 Assert.NotNull(genealogy.GetHero(leaderId!));
             });
@@ -105,7 +103,7 @@ public class InitialBloodClaimsIntegrationTests
                 Title title = Assert.IsType<Title>(titleRepository.GetTitle(claim.TitleId));
                 Assert.True(claimant.IsAlive);
                 Assert.Equal(claimant.ClanId, claim.ClaimantClanId);
-                Assert.NotEqual(title.HolderClanId, claim.ClaimantClanId);
+                Assert.NotEqual(genealogy.GetHolderClanOf(title), claim.ClaimantClanId);
                 Assert.Equal(ClaimOrigin.Inheritance, claim.Origin);
                 Assert.Equal($"{claim.TitleId}:{claim.ClaimantHeroId}:blood", claim.Id);
             });

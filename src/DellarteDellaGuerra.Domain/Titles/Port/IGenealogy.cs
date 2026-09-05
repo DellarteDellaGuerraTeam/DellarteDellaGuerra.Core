@@ -10,8 +10,14 @@ namespace DellarteDellaGuerra.Domain.Titles.Port
     {
         HeroNode? GetHero(string heroId);
 
-        /// <summary>The clan's current head, treated as the living holder of its titles.</summary>
+        /// <summary>The clan's current head.</summary>
         string? GetClanLeaderId(string clanId);
+
+        /// <summary>
+        /// The hero's current clan. Derived on every call, never cached: heroes change clans through
+        /// marriage and (later) the cadet spinoff, and a stored clan id would go stale silently.
+        /// </summary>
+        string? GetClanOf(string heroId);
 
         /// <summary>
         /// The clan's dead members, treated as its former title holders. The campaign data

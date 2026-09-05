@@ -14,7 +14,7 @@ namespace DellarteDellaGuerra.Titles.Spi
      * <remarks>
      *  Format (fields joined with '|'):
      *  <list type="bullet">
-     *   <item>Title: Id|Name|Rank|SeatSettlementId|HolderClanId|OccupantClanId|ContestedSinceDay
+     *   <item>Title: Id|Name|Rank|SeatSettlementId|HolderHeroId|OccupantClanId|ContestedSinceDay
      *    ('' sentinel for a vacant/absent field). Pre-occupant saves carry 5 fields and load
      *    as uncontested.</item>
      *   <item>Claim: Id|ClaimantClanId|TitleId|Strength|Origin|ClaimantHeroId
@@ -41,7 +41,7 @@ namespace DellarteDellaGuerra.Titles.Spi
                     title.Name,
                     title.Rank.ToString(),
                     title.SeatSettlementId,
-                    title.HolderClanId ?? string.Empty,
+                    title.HolderHeroId ?? string.Empty,
                     title.OccupantClanId ?? string.Empty,
                     title.ContestedSinceDay?.ToString("R", CultureInfo.InvariantCulture) ?? string.Empty));
             }

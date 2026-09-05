@@ -15,8 +15,14 @@ namespace DellarteDellaGuerra.Infrastructure.Titles;
  */
 public class InMemoryTitleRegistry : ITitleRepository
 {
+    private readonly IGenealogy _genealogy;
     private readonly Dictionary<string, Title> _titlesByTitleId = new Dictionary<string, Title>();
     private readonly Dictionary<string, string> _titleIdBySeatSettlementId = new Dictionary<string, string>();
+
+    public InMemoryTitleRegistry(IGenealogy genealogy)
+    {
+        _genealogy = genealogy;
+    }
 
     /**
      * <summary>
@@ -57,7 +63,7 @@ public class InMemoryTitleRegistry : ITitleRepository
 
     public IReadOnlyList<Title> GetTitlesByClan(string clanId)
     {
-        return _titlesByTitleId.Values.Where(title => title.HolderClanId == clanId).ToList();
+        return _titlesByTitleId.Values.Where(title => _genealogy.GetHolderClanOf(title) == clanId).ToList();
     }
 
     public IReadOnlyList<Title> GetAllTitles()

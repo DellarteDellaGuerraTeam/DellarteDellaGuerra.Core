@@ -8,6 +8,8 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
     {
         private readonly Dictionary<string, Title> _titles = new();
 
+        public FakeGenealogy Genealogy { get; init; } = new();
+
         public FakeTitleRepository(params Title[] titles)
         {
             foreach (var title in titles)
@@ -22,7 +24,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             _titles.Values.FirstOrDefault(title => title.SeatSettlementId == settlementId);
 
         public IReadOnlyList<Title> GetTitlesByClan(string clanId) =>
-            _titles.Values.Where(title => title.HolderClanId == clanId).ToList();
+            _titles.Values.Where(title => Genealogy.GetHolderClanOf(title) == clanId).ToList();
 
         public IReadOnlyList<Title> GetAllTitles() => _titles.Values.ToList();
 
@@ -73,6 +75,9 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
 
         public string? GetClanLeaderId(string clanId) =>
             _leaderByClanId.TryGetValue(clanId, out var heroId) ? heroId : null;
+
+        public string? GetClanOf(string heroId) =>
+            _heroes.TryGetValue(heroId, out var hero) ? hero.ClanId : null;
 
         public IReadOnlyList<string> GetDeceasedClanMemberIds(string clanId) =>
             _heroes.Values

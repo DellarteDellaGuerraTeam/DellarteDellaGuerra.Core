@@ -8,11 +8,13 @@ namespace DellarteDellaGuerra.Domain.Titles
     {
         private readonly ITitleRepository _titleRepository;
         private readonly IFeudalStructure _feudalStructure;
+        private readonly IGenealogy _genealogy;
 
-        public GetSuzerainUseCase(ITitleRepository titleRepository, IFeudalStructure feudalStructure)
+        public GetSuzerainUseCase(ITitleRepository titleRepository, IFeudalStructure feudalStructure, IGenealogy genealogy)
         {
             _titleRepository = titleRepository;
             _feudalStructure = feudalStructure;
+            _genealogy = genealogy;
         }
 
         public string? Execute(string clanId)
@@ -23,7 +25,7 @@ namespace DellarteDellaGuerra.Domain.Titles
             string? parentTitleId = _feudalStructure.GetDeJureSuzerainTitleId(highestTitle.Id);
             while (parentTitleId != null)
             {
-                string? holderClanId = _titleRepository.GetTitle(parentTitleId)?.HolderClanId;
+                string? holderClanId = _genealogy.GetHolderClanOf(_titleRepository.GetTitle(parentTitleId));
                 if (holderClanId != null && holderClanId != clanId)
                 {
                     return holderClanId;
