@@ -59,9 +59,11 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             string? clanId,
             bool isFemale = false,
             bool isAlive = true,
+            string? fatherId = null,
+            float age = 0f,
             params string[] childIds)
         {
-            _heroes[heroId] = new HeroNode(heroId, isFemale, isAlive, clanId, childIds.ToList());
+            _heroes[heroId] = new HeroNode(heroId, isFemale, isAlive, clanId, childIds.ToList(), fatherId, age);
             return this;
         }
 

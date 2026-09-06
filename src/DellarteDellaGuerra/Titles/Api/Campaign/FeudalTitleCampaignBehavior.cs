@@ -21,6 +21,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
     {
         private readonly IAssignTitleUseCase _assignTitleUseCase;
         private readonly IGenerateBloodClaimsUseCase _generateBloodClaimsUseCase;
+        private readonly IExecuteSuccessionUseCase _executeSuccessionUseCase;
         private readonly IFeudalStateStore _stateStore;
         private readonly Func<IReadOnlyList<Title>> _initialTitlesProvider;
 
@@ -30,11 +31,13 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         public FeudalTitleCampaignBehavior(
             IAssignTitleUseCase assignTitleUseCase,
             IGenerateBloodClaimsUseCase generateBloodClaimsUseCase,
+            IExecuteSuccessionUseCase executeSuccessionUseCase,
             IFeudalStateStore stateStore,
             Func<IReadOnlyList<Title>> initialTitlesProvider)
         {
             _assignTitleUseCase = assignTitleUseCase;
             _generateBloodClaimsUseCase = generateBloodClaimsUseCase;
+            _executeSuccessionUseCase = executeSuccessionUseCase;
             _stateStore = stateStore;
             _initialTitlesProvider = initialTitlesProvider;
         }
@@ -165,12 +168,15 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
         // Any death can change the claims: the dead hero's own claims lapse, and a clan
         // leader's death moves the anchor every claim on that clan's titles descends from.
+        // Succession runs first, so the re-derivation below sees the new holders rather than
+        // deriving a whole realm's claims from a corpse.
         private void OnHeroKilled(
             Hero victim,
             Hero killer,
             KillCharacterAction.KillCharacterActionDetail detail,
             bool showNotification)
         {
+            _executeSuccessionUseCase.Execute(victim.StringId);
             _generateBloodClaimsUseCase.Execute();
         }
     }

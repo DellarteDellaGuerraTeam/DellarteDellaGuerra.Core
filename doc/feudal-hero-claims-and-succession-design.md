@@ -195,7 +195,7 @@ Every passed-over living child is minted a `ClaimStrength.Strong` / `ClaimOrigin
 clause is what wires requirement 2 into requirement 4: **succession is where brother-against-brother claims
 are born.**
 
-### 2.2 Representation — one `else` branch, recommended
+### 2.2 Representation — one `else` branch, recommended (adopted in phase 2)
 
 Representation is the rule that a predeceased eldest son's own son inherits before his uncle. It is
 bracketed above because it was not part of the decision, and turning it on is literally two `else` branches
@@ -463,8 +463,8 @@ Each phase is independently shippable and leaves the game in a working state.
 | # | Phase | Verify |
 |---|---|---|
 | 1 | ✅ **Done.** `Title.HolderHeroId` **replaces** `HolderClanId`; `IGenealogy.GetClanOf`; registry + `GetSuzerainUseCase` derive; `titles.config.xml` resolved at bootstrap. No save backfill — pre-phase-1 saves are unsupported | `dotnet test` green at 191 + 20. **No intended behaviour change.** The one observed change was four `barony_beeston` Strong claims lost — the phase exposed a `dadg_heroes.xml` inconsistency (`clan_vernon` owning no living members) that let a holder claim his own title; the content has since been fixed, restoring 53 holder clans at 42 claims — see §7 of the phase 1 plan |
-| 2 | `HeroNode.FatherId`/`Age`; `ExecuteSuccessionUseCase` called from `OnHeroKilled` before claim re-derivation | Unit tests over a synthetic genealogy: eldest son / no sons → eldest daughter / no children → brother / no kin → clan-leader backstop. Live: `campaign.kill_hero` on a duke → eldest son holds the duchy, second son holds a Strong claim |
-| 3 | Hero-accurate claim derivation; drop `PrincipalTitleByClan`; per-hero self-exclusion; daughters get claims | Brothers *and* sisters of a title-holder appear in claim queries |
+| 2 | ✅ **Done.** `HeroNode.FatherId`/`Age`; `ExecuteSuccessionUseCase` called from `OnHeroKilled` before claim re-derivation. Representation is **on** (§2.2) | Unit tests over a synthetic genealogy: eldest son / no sons → eldest daughter / no children → brother / no kin → clan-leader backstop / dead leader → vacant, not the corpse / representation / several titles → all move. `dotnet test` green at 199 + 20, claim baseline still 42. Live: `campaign.kill_hero` on a duke → eldest son holds the duchy. **The passed-over second son's Strong claim moved to phase 3** — the wholesale `Inheritance` rebuild plus clan-level self-exclusion make it unreachable until per-hero exclusion lands; see §2 of the phase 2 plan |
+| 3 | Hero-accurate claim derivation; drop `PrincipalTitleByClan`; per-hero self-exclusion; daughters get claims | Brothers *and* sisters of a title-holder appear in claim queries; a passed-over second son holds a Strong claim on the title his elder brother inherited |
 | 4 | Daily evaluator, **inter-clan only**, with the player and same-kingdom gates | Run a campaign at speed; `campaign.list_private_wars` shows plausible declaration rates, never involving the player, never crossing a kingdom border |
 | 5 | Supporter sets in `PrivateWar` + `WarSideResolver` | Resolver unit tests; a war with an explicit defector puts that clan on the attacker side in `AreEnemies` |
 | 6 | Cadet spinoff, support solicitation, reabsorb-on-defeat | **Live check required** — cadet clan exists, is in the parent's kingdom, its party fights the parent, and encyclopedia/nameplates/banners survive |
@@ -487,13 +487,13 @@ from `MobileParty.ActualClan`), and settlements the claimant personally held sti
 
 | # | Question | Answer |
 |---|---|---|
-| 1 | Succession ordering | Eldest son → (no sons) eldest daughter → collateral (brothers, uncles) → clan-leader backstop. **Open sub-question:** representation (§2.2) — recommended, two `else` branches |
+| 1 | Succession ordering | Eldest son → (no sons) eldest daughter → collateral (brothers, uncles) → clan-leader backstop. Representation (§2.2) is **on**, decided in phase 2 |
 | 2 | Which ranks are hero-held | **All of them.** No split rule |
 | 3 | Does the player participate | **No.** Excluded as claimant *and* as target; revisitable later (§3) |
 | 4 | Cadet clan on defeat | **Reabsorb** into the parent clan |
 | 5 | Cross-kingdom claims | **Intra-kingdom only.** Inter-kingdom would need real `StanceLink` wars — a different mechanism, and major evolution in the private-war module |
 
-The one thing still genuinely open is representation in §2.2. Everything else is settled enough to build.
+Representation, the last genuinely open question, was settled in phase 2: it is on.
 
 ---
 
