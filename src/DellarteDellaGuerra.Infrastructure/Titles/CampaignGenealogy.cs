@@ -24,7 +24,9 @@ public class CampaignGenealogy : IGenealogy
             hero.IsFemale,
             hero.IsAlive,
             hero.Clan?.StringId,
-            hero.Children?.Select(child => child.StringId).ToList() ?? new List<string>());
+            hero.Children?.Select(child => child.StringId).ToList() ?? new List<string>(),
+            hero.Father?.StringId,
+            hero.Age);
     }
 
     public string? GetClanLeaderId(string clanId)

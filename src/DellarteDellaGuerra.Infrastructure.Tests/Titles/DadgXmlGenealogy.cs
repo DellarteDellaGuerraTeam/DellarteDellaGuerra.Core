@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Xml.Linq;
 using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
@@ -32,11 +33,15 @@ internal sealed class DadgXmlGenealogy : IGenealogy
         XDocument charactersDocument = XDocument.Load(charactersPath);
         XDocument clansDocument = XDocument.Load(clansPath);
 
-        Dictionary<string, bool> isFemaleByHeroId = charactersDocument
+        // Sex and age live on the character template, not on the hero record that carries the
+        // bloodline: succession needs both, so the two documents are joined by hero id.
+        Dictionary<string, CharacterTraits> traitsByHeroId = charactersDocument
             .Descendants("NPCCharacter")
             .ToDictionary(
                 element => RequiredAttribute(element, "id"),
-                element => ParseBoolean(element.Attribute("is_female")?.Value, false));
+                element => new CharacterTraits(
+                    ParseBoolean(element.Attribute("is_female")?.Value, false),
+                    ParseAge(element.Attribute("age")?.Value)));
 
         XElement[] heroElements = heroesDocument.Descendants("Hero").ToArray();
         var childrenByParentId = new Dictionary<string, List<string>>();
@@ -51,7 +56,7 @@ internal sealed class DadgXmlGenealogy : IGenealogy
         foreach (XElement heroElement in heroElements)
         {
             string heroId = RequiredAttribute(heroElement, "id");
-            if (!isFemaleByHeroId.TryGetValue(heroId, out bool isFemale))
+            if (!traitsByHeroId.TryGetValue(heroId, out CharacterTraits traits))
             {
                 throw new InvalidDataException($"DADG character data has no NPCCharacter for hero '{heroId}'.");
             }
@@ -60,12 +65,14 @@ internal sealed class DadgXmlGenealogy : IGenealogy
                 heroId,
                 new HeroNode(
                     heroId,
-                    isFemale,
+                    traits.IsFemale,
                     ParseBoolean(heroElement.Attribute("alive")?.Value, true),
                     NormaliseReference(heroElement.Attribute("faction")?.Value, FactionPrefix),
                     childrenByParentId.TryGetValue(heroId, out List<string>? children)
                         ? children
-                        : Array.Empty<string>()));
+                        : Array.Empty<string>(),
+                    NormaliseReference(heroElement.Attribute("father")?.Value, HeroPrefix),
+                    traits.Age));
         }
 
         ValidateParentReferences(heroElements, heroesById);
@@ -78,6 +85,26 @@ internal sealed class DadgXmlGenealogy : IGenealogy
                 element => NormaliseReference(RequiredAttribute(element, "owner"), HeroPrefix)!);
 
         return new DadgXmlGenealogy(heroesById, leaderIdByClanId);
+    }
+
+    /// <summary>
+    /// A view of the same content in which one hero has died. The clan-leader index is left
+    /// untouched on purpose: at the moment <c>HeroKilledEvent</c> fires, vanilla may not have
+    /// run <c>ChangeClanLeaderAction</c> yet, so a clan can still name a dead leader.
+    /// </summary>
+    public DadgXmlGenealogy WithDeceased(string heroId)
+    {
+        if (!_heroesById.TryGetValue(heroId, out HeroNode? hero))
+        {
+            throw new ArgumentException($"DADG content has no hero '{heroId}'.", nameof(heroId));
+        }
+
+        var heroesById = new Dictionary<string, HeroNode>(_heroesById)
+        {
+            [heroId] = hero with { IsAlive = false }
+        };
+
+        return new DadgXmlGenealogy(heroesById, _leaderIdByClanId);
     }
 
     public HeroNode? GetHero(string heroId) =>
@@ -137,6 +164,11 @@ internal sealed class DadgXmlGenealogy : IGenealogy
 
     private static bool ParseBoolean(string? value, bool defaultValue) =>
         value is null ? defaultValue : bool.Parse(value);
+
+    private static float ParseAge(string? value) =>
+        value is null ? 0f : float.Parse(value, CultureInfo.InvariantCulture);
+
+    private readonly record struct CharacterTraits(bool IsFemale, float Age);
 
     private static string? NormaliseReference(string? value, string prefix)
     {

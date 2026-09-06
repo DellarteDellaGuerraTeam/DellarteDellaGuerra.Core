@@ -141,12 +141,14 @@ public class DadgServiceContainer
         services.AddSingleton<IGetDirectVassalsUseCase, GetDirectVassalsUseCase>();
         services.AddSingleton<IEvaluateClaimUseCase, EvaluateClaimUseCase>();
         services.AddSingleton<IGenerateBloodClaimsUseCase, GenerateBloodClaimsUseCase>();
+        services.AddSingleton<IExecuteSuccessionUseCase, ExecuteSuccessionUseCase>();
         services.AddSingleton<IBuildFeudalMapUseCase, BuildFeudalMapUseCase>();
 
         // Campaign behaviour (resolved lazily in SubModule)
         services.AddSingleton<FeudalTitleCampaignBehavior>(sp => new FeudalTitleCampaignBehavior(
             sp.GetRequiredService<IAssignTitleUseCase>(),
             sp.GetRequiredService<IGenerateBloodClaimsUseCase>(),
+            sp.GetRequiredService<IExecuteSuccessionUseCase>(),
             sp.GetRequiredService<IFeudalStateStore>(),
             () => sp.GetRequiredService<XmlFeudalStructure>()
                     .BuildInitialTitles(sp.GetRequiredService<IGenealogy>())));
