@@ -1,4 +1,7 @@
 using System;
+using Bannerlord.PrivateWars.Api;
+using Bannerlord.PrivateWars.Domain;
+using DellarteDellaGuerra.Integration.PrivateWars;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.MainMenu;
 using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
@@ -134,6 +137,9 @@ public class DadgServiceContainer
         services.AddSingleton<IClaimRepository>(sp => sp.GetRequiredService<InMemoryClaimRegistry>());
         services.AddSingleton<IFeudalStateStore, FeudalStateStoreAdapter>();
         services.AddSingleton<IGenealogy, CampaignGenealogy>();
+        services.AddSingleton<IPrivateWarDeclaration>(sp => new PrivateWarDeclarationAdapter(
+            sp.GetRequiredService<IPrivateWarsApi>(),
+            new MainGoalSelector()));
 
         // Domain use cases
         services.AddSingleton<IAssignTitleUseCase, AssignTitleUseCase>();
@@ -143,6 +149,8 @@ public class DadgServiceContainer
         services.AddSingleton<IGenerateBloodClaimsUseCase, GenerateBloodClaimsUseCase>();
         services.AddSingleton<IExecuteSuccessionUseCase, ExecuteSuccessionUseCase>();
         services.AddSingleton<IBuildFeudalMapUseCase, BuildFeudalMapUseCase>();
+        services.AddSingleton<IGetDeJureSettlementsUseCase, GetDeJureSettlementsUseCase>();
+        services.AddSingleton<IEvaluatePressClaimUseCase, EvaluatePressClaimUseCase>();
 
         // Campaign behaviour (resolved lazily in SubModule)
         services.AddSingleton<FeudalTitleCampaignBehavior>(sp => new FeudalTitleCampaignBehavior(
@@ -152,6 +160,7 @@ public class DadgServiceContainer
             sp.GetRequiredService<IFeudalStateStore>(),
             () => sp.GetRequiredService<XmlFeudalStructure>()
                     .BuildInitialTitles(sp.GetRequiredService<IGenealogy>())));
+        services.AddSingleton<ClaimPressureCampaignBehavior>();
     }
 
 
