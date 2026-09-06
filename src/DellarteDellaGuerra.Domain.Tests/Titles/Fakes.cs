@@ -80,12 +80,6 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
 
         public string? GetClanOf(string heroId) =>
             _heroes.TryGetValue(heroId, out var hero) ? hero.ClanId : null;
-
-        public IReadOnlyList<string> GetDeceasedClanMemberIds(string clanId) =>
-            _heroes.Values
-                .Where(hero => !hero.IsAlive && hero.ClanId == clanId)
-                .Select(hero => hero.Id)
-                .ToList();
     }
 
 

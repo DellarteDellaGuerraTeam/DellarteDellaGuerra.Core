@@ -227,11 +227,16 @@ Two interactions worth knowing:
 
 ### 2.4 A hack this deletes
 
-`GenerateBloodClaimsUseCase` currently uses `PrincipalTitleByClan` — the highest-rank title per clan — with
-the comment "The campaign data records no per-hero title history". Once `HolderHeroId` exists that is no
-longer true, and the approximation can be replaced by a real per-hero lookup. A net simplification of
-existing code, not an addition. The same applies to `IGenealogy`'s doc comments, which currently assert that
-the clan head is "the living holder of its titles" — no longer the case.
+`GenerateBloodClaimsUseCase` used `PrincipalTitleByClan` — the highest-rank title per clan — with the
+comment "The campaign data records no per-hero title history". Once `HolderHeroId` exists that is no longer
+true, and the approximation can be replaced by a real per-hero lookup. A net simplification of existing
+code, not an addition. The same applies to `IGenealogy`'s doc comments, which asserted that the clan head is
+"the living holder of its titles" — no longer the case.
+
+**Done in phase 3.** The dead clan members that anchored a clan's principal dignity were a proxy for the
+previous generation of the holding line; the holder's `FatherId` *is* that generation, per title and without
+the arbitrary highest-rank tiebreak. `GetDeceasedClanMemberIds` left `IGenealogy` with it, and
+`GetClanLeaderId` survives only as succession's last-resort backstop.
 
 ---
 
@@ -464,7 +469,7 @@ Each phase is independently shippable and leaves the game in a working state.
 |---|---|---|
 | 1 | ✅ **Done.** `Title.HolderHeroId` **replaces** `HolderClanId`; `IGenealogy.GetClanOf`; registry + `GetSuzerainUseCase` derive; `titles.config.xml` resolved at bootstrap. No save backfill — pre-phase-1 saves are unsupported | `dotnet test` green at 191 + 20. **No intended behaviour change.** The one observed change was four `barony_beeston` Strong claims lost — the phase exposed a `dadg_heroes.xml` inconsistency (`clan_vernon` owning no living members) that let a holder claim his own title; the content has since been fixed, restoring 53 holder clans at 42 claims — see §7 of the phase 1 plan |
 | 2 | ✅ **Done.** `HeroNode.FatherId`/`Age`; `ExecuteSuccessionUseCase` called from `OnHeroKilled` before claim re-derivation. Representation is **on** (§2.2) | Unit tests over a synthetic genealogy: eldest son / no sons → eldest daughter / no children → brother / no kin → clan-leader backstop / dead leader → vacant, not the corpse / representation / several titles → all move. `dotnet test` green at 199 + 20, claim baseline still 42. Live: `campaign.kill_hero` on a duke → eldest son holds the duchy. **The passed-over second son's Strong claim moved to phase 3** — the wholesale `Inheritance` rebuild plus clan-level self-exclusion make it unreachable until per-hero exclusion lands; see §2 of the phase 2 plan |
-| 3 | Hero-accurate claim derivation; drop `PrincipalTitleByClan`; per-hero self-exclusion; daughters get claims | Brothers *and* sisters of a title-holder appear in claim queries; a passed-over second son holds a Strong claim on the title his elder brother inherited |
+| 3 | ✅ **Done.** Claims descend from the holder and his father — the same two walks succession makes — so the claimant set is the potential-heir set; `PrincipalTitleByClan` and `GetDeceasedClanMemberIds` deleted; self-exclusion is per hero in derivation *and* in `EvaluateClaimUseCase` | `dotnet test` green at 206 + 29. The baseline grows **42 → 399** (183 Strong, 216 Weak; 89 titles, 53 clans): Warwick's brother holds a Strong claim on Middleham, three of the house of York on the duchy, and Somerset's Strong claimant is the same man phase 2 proves would inherit. Warwick's death now moves 399 → 339 — see §6 of the phase 3 plan |
 | 4 | Daily evaluator, **inter-clan only**, with the player and same-kingdom gates | Run a campaign at speed; `campaign.list_private_wars` shows plausible declaration rates, never involving the player, never crossing a kingdom border |
 | 5 | Supporter sets in `PrivateWar` + `WarSideResolver` | Resolver unit tests; a war with an explicit defector puts that clan on the attacker side in `AreEnemies` |
 | 6 | Cadet spinoff, support solicitation, reabsorb-on-defeat | **Live check required** — cadet clan exists, is in the parent's kingdom, its party fights the parent, and encyclopedia/nameplates/banners survive |

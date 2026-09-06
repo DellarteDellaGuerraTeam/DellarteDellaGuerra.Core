@@ -14,17 +14,19 @@ namespace DellarteDellaGuerra.Domain.Titles
      *  title.
      * </summary>
      * <remarks>
-     *  Strength decays down each generation from the title's holder:
+     *  Strength decays down each generation from an anchor:
      *  <list type="bullet">
      *   <item>a holder's son takes a Strong claim, his daughter a Weak one;</item>
      *   <item>a Strong claimant's children take a Weak claim, son or daughter alike;</item>
      *   <item>a Weak claim passes to nobody.</item>
      *  </list>
-     *  So a claim reaches at most two generations from the last holder, and a female link
-     *  costs a generation without ever cutting the line outright.
+     *  So a claim reaches at most two generations from an anchor, and a female link costs a
+     *  generation without ever cutting the line outright.
      *
-     *  Only claims against another clan's title are recorded. A claim on a title one's own
-     *  clan already holds is not actionable and every consumer discards it.
+     *  The claimants on a title are the heroes ExecuteSuccessionUseCase could have chosen
+     *  from — see <see cref="Anchors"/>. Everyone but the holder himself qualifies, his own
+     *  kin included: a passed-over second son holding a Strong claim on his elder brother's
+     *  dignity is what makes a house able to go to war with itself.
      * </remarks>
      */
     public class GenerateBloodClaimsUseCase : IGenerateBloodClaimsUseCase
@@ -52,24 +54,18 @@ namespace DellarteDellaGuerra.Domain.Titles
             var titles = _titleRepository.GetAllTitles();
             RemovePreviouslyDerivedClaims(titles);
 
-            var holderClanByTitleId = titles.ToDictionary(
-                title => title.Id, title => _genealogy.GetHolderClanOf(title));
-            var principalTitleByClan = PrincipalTitleByClan(titles, holderClanByTitleId);
             var createdClaims = new List<Claim>();
 
             foreach (var title in titles)
             {
-                string? holderClanId = holderClanByTitleId[title.Id];
-                if (holderClanId is null) continue;
+                if (title.HolderHeroId is null) continue;
 
-                bool isPrincipalTitle = principalTitleByClan.TryGetValue(holderClanId, out string? principalTitleId)
-                                        && principalTitleId == title.Id;
-
-                foreach (var descendant in Descendants(Anchors(holderClanId, isPrincipalTitle)))
+                foreach (var descendant in Descendants(Anchors(title.HolderHeroId)))
                 {
+                    if (descendant.Key == title.HolderHeroId) continue;
+
                     var hero = _genealogy.GetHero(descendant.Key);
                     if (hero is null || !hero.IsAlive || hero.ClanId is null) continue;
-                    if (hero.ClanId == holderClanId) continue;
 
                     var claim = new Claim(
                         $"{title.Id}:{hero.Id}:blood",
@@ -101,31 +97,23 @@ namespace DellarteDellaGuerra.Domain.Titles
 
         /**
          * <summary>
-         *  The highest-ranking title each clan holds. The campaign data records no per-hero
-         *  title history, so a clan's dead are anchored to this dignity alone; anchoring them
-         *  to every title the clan holds would let one long-dead ancestor scatter claims
-         *  across a whole portfolio.
+         *  The two points a claim can descend from: the holder, whose children are next in
+         *  line, and the holder's father, whose other children are the holder's brothers and
+         *  sisters.
          * </summary>
+         * <remarks>
+         *  These are the two walks ExecuteSuccessionUseCase makes — HeirOfBody down from the
+         *  holder, then Collateral up one level and down again — so every claimant is a hero
+         *  succession could have picked. That is also why the walk stops at the father: the
+         *  collateral rule goes up exactly one level, and anchoring the grandfather would
+         *  mint Strong claims for uncles that no succession would ever honour.
+         * </remarks>
          */
-        private static Dictionary<string, string> PrincipalTitleByClan(
-            IReadOnlyList<Title> titles, IReadOnlyDictionary<string, string?> holderClanByTitleId)
+        private List<string> Anchors(string holderHeroId)
         {
-            return titles
-                .Where(title => holderClanByTitleId[title.Id] is not null)
-                .GroupBy(title => holderClanByTitleId[title.Id]!)
-                .ToDictionary(
-                    group => group.Key,
-                    group => group.OrderByDescending(title => title.Rank).First().Id);
-        }
+            var anchors = new List<string> { holderHeroId };
 
-        private List<string> Anchors(string holderClanId, bool includeDeceased)
-        {
-            var anchors = new List<string>();
-
-            string? leaderId = _genealogy.GetClanLeaderId(holderClanId);
-            if (leaderId is not null) anchors.Add(leaderId);
-
-            if (includeDeceased) anchors.AddRange(_genealogy.GetDeceasedClanMemberIds(holderClanId));
+            if (_genealogy.GetHero(holderHeroId)?.FatherId is { } fatherId) anchors.Add(fatherId);
 
             return anchors;
         }
@@ -133,8 +121,15 @@ namespace DellarteDellaGuerra.Domain.Titles
         /**
          * <summary>
          *  Walks down from each anchor, keeping the strongest level every descendant reaches.
-         *  The anchors themselves are holders, not claimants, so they are never returned.
+         *  An anchor is only returned when another anchor's walk reaches it — the holder is
+         *  one of his own father's children — and the caller drops him there.
          * </summary>
+         * <remarks>
+         *  A cyclic bloodline cannot trap this walk: every hop decays the level and the walk
+         *  stops below Weak, which bounds it to two generations whatever the data says. That
+         *  is why the self-parent record that crashed the succession walk never touched claim
+         *  derivation, and why no visited set is needed here.
+         * </remarks>
          */
         private Dictionary<string, int> Descendants(IReadOnlyList<string> anchors)
         {

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
 
@@ -17,6 +16,4 @@ internal sealed class IdentityGenealogy : IGenealogy
     public string? GetClanLeaderId(string clanId) => clanId;
 
     public string? GetClanOf(string heroId) => heroId;
-
-    public IReadOnlyList<string> GetDeceasedClanMemberIds(string clanId) => Array.Empty<string>();
 }
