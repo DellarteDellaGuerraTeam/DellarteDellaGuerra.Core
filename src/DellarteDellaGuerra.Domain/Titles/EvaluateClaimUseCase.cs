@@ -14,10 +14,26 @@ namespace DellarteDellaGuerra.Domain.Titles
             _genealogy = genealogy;
         }
 
+        /**
+         * <summary>
+         *  Whether the claim is worth acting on: the title must be held, and it must not be held
+         *  by the claimant himself.
+         * </summary>
+         * <remarks>
+         *  A blood claim names its claimant, and only the holder is barred — his brothers and his
+         *  passed-over sons hold claims against their own house, which is what lets a house go to
+         *  war with itself. A conquest claim names no hero, so it stays the clan comparison it has
+         *  always been.
+         * </remarks>
+         */
         public bool Execute(Claim claim)
         {
-            string? holderClanId = _genealogy.GetHolderClanOf(_titleRepository.GetTitle(claim.TitleId));
-            return holderClanId != null && holderClanId != claim.ClaimantClanId;
+            var title = _titleRepository.GetTitle(claim.TitleId);
+            if (title?.HolderHeroId is null) return false;
+
+            return claim.ClaimantHeroId is { } claimantHeroId
+                ? claimantHeroId != title.HolderHeroId
+                : _genealogy.GetClanOf(title.HolderHeroId) != claim.ClaimantClanId;
         }
     }
 }

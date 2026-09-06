@@ -116,12 +116,6 @@ internal sealed class DadgXmlGenealogy : IGenealogy
     public string? GetClanOf(string heroId) =>
         _heroesById.TryGetValue(heroId, out HeroNode? hero) ? hero.ClanId : null;
 
-    public IReadOnlyList<string> GetDeceasedClanMemberIds(string clanId) =>
-        _heroesById.Values
-            .Where(hero => !hero.IsAlive && hero.ClanId == clanId)
-            .Select(hero => hero.Id)
-            .ToList();
-
     private static void AddChild(
         IDictionary<string, List<string>> childrenByParentId,
         string? parentId,

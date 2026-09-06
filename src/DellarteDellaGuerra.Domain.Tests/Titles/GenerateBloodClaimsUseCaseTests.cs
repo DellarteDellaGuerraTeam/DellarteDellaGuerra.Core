@@ -8,19 +8,32 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         private readonly FakeClaimRepository _claimRepository = new();
 
         /// <summary>
-        /// clan_holder holds county_a. Its head has a son who founded clan_son and a daughter
-        /// who married into clan_daughter; each of them has children of their own.
+        /// The holder of county_a has a son who founded clan_son and a daughter who married into
+        /// clan_daughter; each of them has children of their own.
         /// </summary>
         private static FakeGenealogy ThreeGenerations()
         {
             return new FakeGenealogy()
-                .WithLeader("clan_holder", "holder")
                 .AddHero("holder", "clan_holder", childIds: new[] { "son", "daughter" })
                 .AddHero("son", "clan_son", childIds: new[] { "grandson", "granddaughter" })
                 .AddHero("daughter", "clan_daughter", isFemale: true, childIds: new[] { "daughters_son" })
                 .AddHero("grandson", "clan_son")
                 .AddHero("granddaughter", "clan_son", isFemale: true)
                 .AddHero("daughters_son", "clan_daughter");
+        }
+
+        /// <summary>
+        /// The holder of county_a inherited it from his father, who also left a second son passed
+        /// over by the succession and a daughter married into clan_husband.
+        /// </summary>
+        private static FakeGenealogy ABrotherAndASister()
+        {
+            return new FakeGenealogy()
+                .AddHero("father", "clan_holder", isAlive: false,
+                    childIds: new[] { "holder", "brother", "sister" })
+                .AddHero("holder", "clan_holder", fatherId: "father")
+                .AddHero("brother", "clan_holder", fatherId: "father")
+                .AddHero("sister", "clan_husband", isFemale: true, fatherId: "father");
         }
 
         private GenerateBloodClaimsUseCase UseCase(FakeGenealogy genealogy, params Title[] titles)
@@ -81,23 +94,51 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         }
 
         [Fact]
-        public void IgnoresDescendantsStillInTheHoldingClan()
+        public void GivesThePassedOverSecondSonAStrongClaimOnHisBrothersTitle()
+        {
+            UseCase(ABrotherAndASister(), CountyA()).Execute();
+
+            var claim = ClaimOf("brother");
+            Assert.NotNull(claim);
+            Assert.Equal(ClaimStrength.Strong, claim!.Strength);
+            Assert.Equal("clan_holder", claim.ClaimantClanId);
+        }
+
+        [Fact]
+        public void GivesTheHoldersSisterAWeakClaim()
+        {
+            UseCase(ABrotherAndASister(), CountyA()).Execute();
+
+            Assert.Equal(ClaimStrength.Weak, ClaimOf("sister")?.Strength);
+        }
+
+        [Fact]
+        public void GrantsTheHolderNoClaimOnHisOwnTitle()
+        {
+            UseCase(ABrotherAndASister(), CountyA()).Execute();
+
+            Assert.Null(ClaimOf("holder"));
+        }
+
+        [Fact]
+        public void GivesKinStillInTheHoldingClanAClaim()
         {
             var genealogy = new FakeGenealogy()
-                .WithLeader("clan_holder", "holder")
                 .AddHero("holder", "clan_holder", childIds: new[] { "heir" })
                 .AddHero("heir", "clan_holder");
 
             UseCase(genealogy, CountyA()).Execute();
 
-            Assert.Empty(_claimRepository.AllClaims);
+            var claim = Assert.Single(_claimRepository.AllClaims);
+            Assert.Equal("heir", claim.ClaimantHeroId);
+            Assert.Equal("clan_holder", claim.ClaimantClanId);
+            Assert.Equal(ClaimStrength.Strong, claim.Strength);
         }
 
         [Fact]
         public void IgnoresDeadDescendants()
         {
             var genealogy = new FakeGenealogy()
-                .WithLeader("clan_holder", "holder")
                 .AddHero("holder", "clan_holder", childIds: new[] { "son" })
                 .AddHero("son", "clan_son", isAlive: false);
 
@@ -107,22 +148,18 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         }
 
         [Fact]
-        public void AnchorsTheClansDeadOnItsPrincipalTitleOnly()
+        public void StopsAtTheHoldersFatherRatherThanReachingHisUncles()
         {
             var genealogy = new FakeGenealogy()
-                .AddHero("ancestor", "clan_holder", isAlive: false, childIds: new[] { "descendant" })
-                .AddHero("descendant", "clan_other")
-                .AddHero("clan_holder", "clan_holder");
+                .AddHero("grandfather", "clan_holder", isAlive: false, childIds: new[] { "father", "uncle" })
+                .AddHero("father", "clan_holder", isAlive: false, fatherId: "grandfather",
+                    childIds: new[] { "holder" })
+                .AddHero("uncle", "clan_holder", fatherId: "grandfather")
+                .AddHero("holder", "clan_holder", fatherId: "father");
 
-            UseCase(
-                    genealogy,
-                    new Title("duchy_x", "Duchy X", TitleRank.Duke, "seat_x", "clan_holder"),
-                    new Title("barony_y", "Barony Y", TitleRank.Baron, "seat_y", "clan_holder"))
-                .Execute();
+            UseCase(genealogy, CountyA()).Execute();
 
-            var claim = Assert.Single(_claimRepository.AllClaims);
-            Assert.Equal("duchy_x", claim.TitleId);
-            Assert.Equal(ClaimStrength.Strong, claim.Strength);
+            Assert.Null(ClaimOf("uncle"));
         }
 
         [Fact]

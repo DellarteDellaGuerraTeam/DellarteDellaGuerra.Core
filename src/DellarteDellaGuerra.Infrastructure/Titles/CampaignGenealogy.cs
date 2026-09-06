@@ -36,15 +36,4 @@ public class CampaignGenealogy : IGenealogy
 
     public string? GetClanOf(string heroId)
         => MBObjectManager.Instance?.GetObject<Hero>(heroId)?.Clan?.StringId;
-
-    public IReadOnlyList<string> GetDeceasedClanMemberIds(string clanId)
-    {
-        var clan = MBObjectManager.Instance?.GetObject<Clan>(clanId);
-        if (clan is null || TaleWorlds.CampaignSystem.Campaign.Current is null) return new List<string>();
-
-        return TaleWorlds.CampaignSystem.Campaign.Current.DeadOrDisabledHeroes
-            .Where(hero => hero.Clan == clan)
-            .Select(hero => hero.StringId)
-            .ToList();
-    }
 }

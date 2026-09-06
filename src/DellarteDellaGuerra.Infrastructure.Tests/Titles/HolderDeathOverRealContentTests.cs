@@ -165,10 +165,16 @@ public class HolderDeathOverRealContentTests
     [Trait("Category", "DADG content integration")]
     public void TheClaimsAreRederivedFromTheNewHolderOnceTheSuccessionHasRun()
     {
-        // The whole OnHeroKilled chain. Warwick's daughter stops being a claimant on the five
-        // titles because she now holds them, and the four Neville cousins lose Glamorgan because
-        // it is no longer a Neville title to inherit. Nine claims go, none appear.
+        // The whole OnHeroKilled chain. Warwick's five dignities pass to his only child and every
+        // claim on them lapses: she was a claimant and is now the holder, she has neither children
+        // nor a brother or sister, and the aunts and cousins who held claims through Warwick's
+        // father now stand two levels above her — out of reach of the collateral rule derivation
+        // mirrors. Sixty claims go, none appear, and no other title is touched.
         const string warwick = "dadg_lord_9_1";
+        string[] warwicksTitles =
+        {
+            "barony_caerphilly", "barony_middleham", "barony_rye", "barony_warwick", "county_glamorgan"
+        };
 
         Content content = Content.Load();
         IReadOnlyList<Claim> before = content.GenerateClaims();
@@ -177,25 +183,16 @@ public class HolderDeathOverRealContentTests
         afterDeath.ExecuteSuccession(warwick);
         IReadOnlyList<Claim> after = afterDeath.GenerateClaims();
 
-        Assert.Equal(42, before.Count);
-        Assert.Equal(33, after.Count);
+        Assert.Equal(399, before.Count);
+        Assert.Equal(339, after.Count);
 
+        Assert.Equal(60, Key(before).Except(Key(after)).Count());
         Assert.Equal(
-            new[]
-            {
-                "barony_caerphilly|dadg_lord_2_4",
-                "barony_middleham|dadg_lord_2_4",
-                "barony_rye|dadg_lord_2_4",
-                "barony_warwick|dadg_lord_2_4",
-                "county_glamorgan|dadg_lord_11_2",
-                "county_glamorgan|dadg_lord_2_4",
-                "county_glamorgan|dadg_lord_30_2",
-                "county_glamorgan|dadg_lord_41_2",
-                "county_glamorgan|dadg_lord_45_2"
-            },
-            Key(before).Except(Key(after)).OrderBy(key => key));
+            warwicksTitles,
+            Key(before).Except(Key(after)).Select(key => key.Split('|')[0]).Distinct().OrderBy(id => id));
         Assert.Empty(Key(after).Except(Key(before)));
 
+        Assert.DoesNotContain(after, claim => warwicksTitles.Contains(claim.TitleId));
         Assert.DoesNotContain(after, claim => claim.ClaimantHeroId == "dadg_lord_2_4");
     }
 
