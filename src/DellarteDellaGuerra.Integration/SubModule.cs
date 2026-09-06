@@ -149,6 +149,7 @@ namespace DellarteDellaGuerra.Integration
 
             // Feudal title campaign behaviour
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleCampaignBehavior>());
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<ClaimPressureCampaignBehavior>());
 
             // Initialise the static service locator used by the feudal campaign layer
             FeudalServices.Initialise(
