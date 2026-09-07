@@ -217,10 +217,12 @@ public class HolderDeathOverRealContentTests
 
         public static Content Load()
         {
-            DadgContentPaths paths = DadgContentPaths.Find();
-            using FileStream titlesStream = File.OpenRead(paths.Titles);
+            using Stream titlesStream = DadgContent.OpenTitles();
+            using Stream heroesStream = DadgContent.OpenHeroes();
+            using Stream charactersStream = DadgContent.OpenCharacters();
+            using Stream clansStream = DadgContent.OpenClans();
 
-            DadgXmlGenealogy genealogy = DadgXmlGenealogy.Load(paths.Heroes, paths.Characters, paths.Clans);
+            DadgXmlGenealogy genealogy = DadgXmlGenealogy.Load(heroesStream, charactersStream, clansStream);
             var structure = new XmlFeudalStructure(FeudalStructureParser.Parse(titlesStream));
 
             return new Content(genealogy, structure.BuildInitialTitles(genealogy));

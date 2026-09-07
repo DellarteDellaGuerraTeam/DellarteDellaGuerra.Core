@@ -24,6 +24,19 @@
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
 	</ItemGroup>
 
+	<!--
+		The 1471 content the content-integration tests read, carried in the test assembly so that
+		DADG_CONTENT_SOURCE=Embedded needs no game installation. The title structure is the live
+		one, linked from the module config; the genealogy is a checked-in snapshot of the sibling
+		DellarteDellaGuerraMap module, which is not part of this repository.
+	-->
+	<ItemGroup>
+		<EmbeddedResource Include="$(MSBuildThisFileDirectory)..\..\config\titles.config.xml" LogicalName="DadgContent.titles.config.xml" />
+		<EmbeddedResource Include="Titles\Content\dadg_heroes.xml" LogicalName="DadgContent.dadg_heroes.xml" />
+		<EmbeddedResource Include="Titles\Content\dadg_lords.xml" LogicalName="DadgContent.dadg_lords.xml" />
+		<EmbeddedResource Include="Titles\Content\dadg_clans.xml" LogicalName="DadgContent.dadg_clans.xml" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\DellarteDellaGuerra.Integration\DellarteDellaGuerra.Integration.csproj" />
 		<ProjectReference Include="..\DellarteDellaGuerra.Infrastructure\DellarteDellaGuerra.Infrastructure.csproj" />

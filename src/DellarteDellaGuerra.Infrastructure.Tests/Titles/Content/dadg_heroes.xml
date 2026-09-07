@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Test fixture. A snapshot of the 1471 bloodline shipped in the sibling DellarteDellaGuerraMap
+  module (ModuleData/heroes/dadg_heroes.xml), reduced to the attributes the title system reads:
+  who a hero is, who his parents are, whether he is alive, and which house he belongs to.
+
+  Spouses, occupations and the rest of the hero record take no part in any assertion here and
+  are left out, so that these tests carry their own content and need no game installation.
+-->
+<Heroes>
+  <Hero id="main_hero" father="Hero.main_hero_father" mother="Hero.main_hero_mother" faction="Faction.player_faction" />
+  <Hero id="main_hero_father" alive="false" faction="Faction.player_faction" />
+  <Hero id="main_hero_mother" alive="false" faction="Faction.player_faction" />
+  <Hero id="dadg_dead_lord_10_1" alive="false" faction="Faction.clan_percy" />
+  <Hero id="dadg_dead_lord_11_1" alive="false" faction="Faction.clan_hastings" />
+  <Hero id="dadg_dead_lord_11_2" alive="false" faction="Faction.clan_hastings" />
+  <Hero id="dadg_dead_lord_12_1" alive="false" faction="Faction.clan_bourchier" />
+  <Hero id="dadg_dead_lord_12_2" alive="false" faction="Faction.clan_bourchier" />
+  <Hero id="dadg_dead_lord_13_1" alive="false" faction="Faction.clan_herbert" />
+  <Hero id="dadg_dead_lord_14_1" alive="false" faction="Faction.clan_de_la_pole" />
+  <Hero id="dadg_dead_lord_15_1" alive="false" faction="Faction.clan_stafford" />
+  <Hero id="dadg_dead_lord_16_1" alive="false" faction="Faction.clan_courtenay" />
+  <Hero id="dadg_dead_lord_16_2" alive="false" faction="Faction.clan_courtenay" />
+  <Hero id="dadg_dead_lord_17_1" alive="false" faction="Faction.clan_holland" />
+  <Hero id="dadg_dead_lord_17_2" alive="false" faction="Faction.clan_holland" />
+  <Hero id="dadg_dead_lord_18_1" alive="false" faction="Faction.clan_st_leger" />
+  <Hero id="dadg_dead_lord_18_2" alive="false" faction="Faction.clan_st_leger" />
+  <Hero id="dadg_dead_lord_19_1" alive="false" faction="Faction.clan_talbot" />
+  <Hero id="dadg_dead_lord_1_1" alive="false" faction="Faction.clan_york" />
+  <Hero id="dadg_dead_lord_1_2" father="Hero.dadg_dead_lord_1_1" alive="false" faction="Faction.clan_york" />
+  <Hero id="dadg_dead_lord_20_1" alive="false" faction="Faction.clan_vernon" />
+  <Hero id="dadg_dead_lord_20_2" alive="false" faction="Faction.clan_vernon" />
+  <Hero id="dadg_dead_lord_21_1" alive="false" faction="Faction.clan_woodville" />
+  <Hero id="dadg_dead_lord_22_1" alive="false" faction="Faction.clan_greystoke" />
+  <Hero id="dadg_dead_lord_23_1" alive="false" faction="Faction.clan_mowbray" />
+  <Hero id="dadg_dead_lord_24_1" alive="false" faction="Faction.clan_grey_of_ruthin" />
+  <Hero id="dadg_dead_lord_24_2" alive="false" faction="Faction.clan_grey_of_ruthin" />
+  <Hero id="dadg_dead_lord_25_1" alive="false" faction="Faction.clan_grey_of_wilton" />
+  <Hero id="dadg_dead_lord_25_2" alive="false" faction="Faction.clan_grey_of_wilton" />
+  <Hero id="dadg_dead_lord_26_1" alive="false" faction="Faction.clan_neville_of_raby" />
+  <Hero id="dadg_dead_lord_27_1" alive="false" faction="Faction.clan_neville_of_bergavenny" />
+  <Hero id="dadg_dead_lord_27_2" alive="false" faction="Faction.clan_neville_of_bergavenny" />
+  <Hero id="dadg_dead_lord_28_1" alive="false" faction="Faction.clan_stanley" />
+  <Hero id="dadg_dead_lord_28_2" alive="false" faction="Faction.clan_stanley" />
+  <Hero id="dadg_dead_lord_29_1" alive="false" faction="Faction.clan_beaumont" />
+  <Hero id="dadg_dead_lord_29_2" alive="false" faction="Faction.clan_beaumont" />
+  <Hero id="dadg_dead_lord_2_1" alive="false" faction="Faction.clan_lancaster" />
+  <Hero id="dadg_dead_lord_2_2" alive="false" faction="Faction.clan_lancaster" />
+  <Hero id="dadg_dead_lord_30_1" alive="false" faction="Faction.clan_fitzhugh" />
+  <Hero id="dadg_dead_lord_30_2" alive="false" faction="Faction.clan_fitzhugh" />
+  <Hero id="dadg_dead_lord_31_1" alive="false" faction="Faction.clan_scrope_of_bolton" />
+  <Hero id="dadg_dead_lord_32_1" alive="false" faction="Faction.clan_basset" />
+  <Hero id="dadg_dead_lord_33_1" alive="false" faction="Faction.clan_paston" />
+  <Hero id="dadg_dead_lord_34_1" alive="false" faction="Faction.clan_dynham" />
+  <Hero id="dadg_dead_lord_36_1" alive="false" faction="Faction.clan_tuchet" />
+  <Hero id="dadg_dead_lord_36_2" alive="false" faction="Faction.clan_tuchet" />
+  <Hero id="dadg_dead_lord_37_1" alive="false" faction="Faction.clan_berkeley" />
+  <Hero id="dadg_dead_lord_37_2" alive="false" faction="Faction.clan_berkeley" />
+  <Hero id="dadg_dead_lord_38_1" alive="false" faction="Faction.clan_west" />
+  <Hero id="dadg_dead_lord_38_2" alive="false" faction="Faction.clan_west" />
+  <Hero id="dadg_dead_lord_39_1" alive="false" faction="Faction.clan_parr" />
+  <Hero id="dadg_dead_lord_39_2" alive="false" faction="Faction.clan_parr" />
+  <Hero id="dadg_dead_lord_3_1" alive="false" faction="Faction.clan_fitzalan" />
+  <Hero id="dadg_dead_lord_3_2" alive="false" faction="Faction.clan_fitzalan" />
+  <Hero id="dadg_dead_lord_3_3" alive="false" faction="Faction.clan_fitzalan" />
+  <Hero id="dadg_dead_lord_40_1" alive="false" faction="Faction.clan_devereux" />
+  <Hero id="dadg_dead_lord_40_2" alive="false" faction="Faction.clan_devereux" />
+  <Hero id="dadg_dead_lord_40_3" alive="false" faction="Faction.clan_devereux" />
+  <Hero id="dadg_dead_lord_41_1" alive="false" faction="Faction.clan_de_vere" />
+  <Hero id="dadg_dead_lord_42_1" alive="false" faction="Faction.clan_morley" />
+  <Hero id="dadg_dead_lord_42_2" alive="false" faction="Faction.clan_morley" />
+  <Hero id="dadg_dead_lord_43_1" alive="false" faction="Faction.clan_fienne_of_dacre" />
+  <Hero id="dadg_dead_lord_43_2" alive="false" faction="Faction.clan_fienne_of_dacre" />
+  <Hero id="dadg_dead_lord_44_1" alive="false" faction="Faction.clan_burgh" />
+  <Hero id="dadg_dead_lord_44_2" alive="false" faction="Faction.clan_burgh" />
+  <Hero id="dadg_dead_lord_45_1" alive="false" faction="Faction.clan_blount" />
+  <Hero id="dadg_dead_lord_45_2" alive="false" faction="Faction.clan_blount" />
+  <Hero id="dadg_dead_lord_46_1" alive="false" faction="Faction.clan_harrington" />
+  <Hero id="dadg_dead_lord_46_2" alive="false" faction="Faction.clan_harrington" />
+  <Hero id="dadg_dead_lord_46_3" father="Hero.dadg_dead_lord_46_1" mother="Hero.dadg_dead_lord_46_2" alive="false" faction="Faction.clan_harrington" />
+  <Hero id="dadg_dead_lord_47_1" alive="false" faction="Faction.clan_fiennes_of_saye_and_sele" />
+  <Hero id="dadg_dead_lord_47_2" alive="false" faction="Faction.clan_fiennes_of_saye_and_sele" />
+  <Hero id="dadg_dead_lord_48_1" alive="false" faction="Faction.clan_clinton" />
+  <Hero id="dadg_dead_lord_48_2" alive="false" faction="Faction.clan_clinton" />
+  <Hero id="dadg_dead_lord_49_1" alive="false" faction="Faction.clan_lovell" />
+  <Hero id="dadg_dead_lord_4_1" alive="false" faction="Faction.clan_howard" />
+  <Hero id="dadg_dead_lord_4_2" alive="false" faction="Faction.clan_howard" />
+  <Hero id="dadg_dead_lord_50_1" alive="false" faction="Faction.clan_scrope_of_masham" />
+  <Hero id="dadg_dead_lord_50_2" alive="false" faction="Faction.clan_scrope_of_masham" />
+  <Hero id="dadg_dead_lord_51_1" alive="false" faction="Faction.clan_lumley" />
+  <Hero id="dadg_dead_lord_51_2" alive="false" faction="Faction.clan_lumley" />
+  <Hero id="dadg_dead_lord_52_1" alive="false" faction="Faction.clan_grey_of_codnor" />
+  <Hero id="dadg_dead_lord_52_2" alive="false" faction="Faction.clan_grey_of_codnor" />
+  <Hero id="dadg_dead_lord_53_1" alive="false" faction="Faction.clan_sutton" />
+  <Hero id="dadg_dead_lord_53_2" alive="false" faction="Faction.clan_sutton" />
+  <Hero id="dadg_dead_lord_54_1" alive="false" faction="Faction.clan_beauchamp" />
+  <Hero id="dadg_dead_lord_55_1" alive="false" faction="Faction.clan_stourton" />
+  <Hero id="dadg_dead_lord_55_2" alive="false" faction="Faction.clan_stourton" />
+  <Hero id="dadg_dead_lord_5_1" alive="false" faction="Faction.clan_grey_of_groby" />
+  <Hero id="dadg_dead_lord_6_1" alive="false" faction="Faction.clan_beaufort" />
+  <Hero id="dadg_dead_lord_6_2" alive="false" faction="Faction.clan_beaufort" />
+  <Hero id="dadg_dead_lord_6_3" father="Hero.dadg_dead_lord_6_1" mother="Hero.dadg_dead_lord_6_2" alive="false" faction="Faction.clan_beaufort" />
+  <Hero id="dadg_dead_lord_7_1" alive="false" faction="Faction.clan_tudor" />
+  <Hero id="dadg_dead_lord_7_2" alive="false" faction="Faction.clan_tudor" />
+  <Hero id="dadg_dead_lord_7_3" father="Hero.dadg_dead_lord_7_1" mother="Hero.dadg_dead_lord_7_2" alive="false" faction="Faction.clan_tudor" />
+  <Hero id="dadg_dead_lord_8_1" alive="false" faction="Faction.clan_clifford" />
+  <Hero id="dadg_dead_lord_8_2" alive="false" faction="Faction.clan_clifford" />
+  <Hero id="dadg_dead_lord_8_3" father="Hero.dadg_dead_lord_8_1" mother="Hero.dadg_dead_lord_8_2" alive="false" faction="Faction.clan_clifford" />
+  <Hero id="dadg_dead_lord_9_1" alive="false" faction="Faction.clan_neville_of_middleham" />
+  <Hero id="dadg_dead_lord_9_2" alive="false" faction="Faction.clan_neville_of_middleham" />
+  <Hero id="dadg_dead_thomas_percy_1422_1460" alive="false" faction="Faction.clan_percy" />
+  <Hero id="dadg_lord_10_1" father="Hero.dadg_dead_lord_10_1" mother="Hero.dadg_lord_10_2" faction="Faction.clan_percy" />
+  <Hero id="dadg_lord_10_2" faction="Faction.clan_percy" />
+  <Hero id="dadg_lord_10_3" father="Hero.dadg_dead_lord_10_1" mother="Hero.dadg_lord_10_2" faction="Faction.clan_percy" />
+  <Hero id="dadg_lord_10_4" father="Hero.dadg_dead_lord_10_1" mother="Hero.dadg_lord_10_2" faction="Faction.clan_percy" />
+  <Hero id="dadg_john_egremont_1459" father="Hero.dadg_dead_thomas_percy_1422_1460" faction="Faction.clan_percy" />
+  <Hero id="dadg_lord_11_1" father="Hero.dadg_dead_lord_11_1" mother="Hero.dadg_dead_lord_11_2" faction="Faction.clan_hastings" />
+  <Hero id="dadg_lord_11_2" father="Hero.dadg_dead_lord_9_1" mother="Hero.dadg_dead_lord_9_2" faction="Faction.clan_hastings" />
+  <Hero id="dadg_lord_11_3" father="Hero.dadg_dead_lord_11_1" mother="Hero.dadg_dead_lord_11_2" faction="Faction.clan_hastings" />
+  <Hero id="dadg_lord_11_4" faction="Faction.clan_hastings" />
+  <Hero id="dadg_lord_11_5" father="Hero.dadg_dead_lord_11_1" mother="Hero.dadg_dead_lord_11_2" faction="Faction.clan_hastings" />
+  <Hero id="dadg_lord_11_6" faction="Faction.clan_hastings" />
+  <Hero id="dadg_lord_11_7" father="Hero.dadg_dead_lord_11_1" mother="Hero.dadg_dead_lord_11_2" faction="Faction.clan_hastings" />
+  <Hero id="dadg_lord_11_8" father="Hero.dadg_lord_11_1" mother="Hero.dadg_lord_11_2" faction="Faction.clan_hastings" />
+  <Hero id="dadg_lord_12_1" father="Hero.dadg_dead_lord_12_1" mother="Hero.dadg_dead_lord_12_2" faction="Faction.clan_bourchier" />
+  <Hero id="dadg_lord_12_10" father="Hero.dadg_lord_12_8" mother="Hero.dadg_lord_12_9" faction="Faction.clan_bourchier" />
+  <Hero id="dadg_lord_12_2" faction="Faction.clan_bourchier" />
+  <Hero id="dadg_lord_12_3" father="Hero.dadg_dead_lord_12_1" mother="Hero.dadg_dead_lord_12_2" faction="Faction.clan_bourchier" />
+  <Hero id="dadg_lord_12_4" faction="Faction.clan_bourchier" />
+  <Hero id="dadg_lord_12_5" father="Hero.dadg_dead_lord_12_1" mother="Hero.dadg_dead_lord_12_2" faction="Faction.clan_bourchier" />
+  <Hero id="dadg_lord_12_6" father="Hero.dadg_dead_lord_12_1" mother="Hero.dadg_dead_lord_12_2" faction="Faction.clan_bourchier" />
+  <Hero id="dadg_lord_12_7" faction="Faction.clan_bourchier" />
+  <Hero id="dadg_lord_12_8" father="Hero.dadg_lord_12_3" mother="Hero.dadg_lord_12_4" faction="Faction.clan_bourchier" />
+  <Hero id="dadg_lord_12_9" faction="Faction.clan_bourchier" />
+  <Hero id="dadg_anne_devereux_1430" faction="Faction.clan_herbert" />
+  <Hero id="dadg_william_herbert_1455" father="Hero.dadg_dead_lord_13_1" mother="Hero.dadg_anne_devereux_1430" faction="Faction.clan_herbert" />
+  <Hero id="dadg_mary_woodville_1443" father="Hero.dadg_dead_lord_21_1" mother="Hero.dadg_lord_21_6" faction="Faction.clan_herbert" />
+  <Hero id="dadg_lord_13_4" father="Hero.dadg_dead_lord_13_1" mother="Hero.dadg_anne_devereux_1430" faction="Faction.clan_herbert" />
+  <Hero id="dadg_lord_13_5" father="Hero.dadg_dead_lord_13_1" mother="Hero.dadg_anne_devereux_1430" faction="Faction.clan_herbert" />
+  <Hero id="dadg_lord_13_6" father="Hero.dadg_dead_lord_13_1" mother="Hero.dadg_anne_devereux_1430" faction="Faction.clan_herbert" />
+  <Hero id="dadg_lord_13_7" father="Hero.dadg_dead_lord_13_1" mother="Hero.dadg_anne_devereux_1430" faction="Faction.clan_herbert" />
+  <Hero id="dadg_lord_13_8" father="Hero.dadg_dead_lord_13_1" mother="Hero.dadg_anne_devereux_1430" faction="Faction.clan_herbert" />
+  <Hero id="dadg_lord_13_9" father="Hero.dadg_dead_lord_13_1" mother="Hero.dadg_anne_devereux_1430" faction="Faction.clan_herbert" />
+  <Hero id="dadg_lord_13_10" father="Hero.dadg_dead_lord_13_1" mother="Hero.dadg_anne_devereux_1430" faction="Faction.clan_herbert" />
+  <Hero id="dadg_lord_14_1" father="Hero.dadg_dead_lord_14_1" mother="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
+  <Hero id="dadg_lord_14_2" faction="Faction.clan_de_la_pole" />
+  <Hero id="dadg_lord_14_3" father="Hero.dadg_dead_lord_1_1" mother="Hero.dadg_lord_1_9" faction="Faction.clan_de_la_pole" />
+  <Hero id="dadg_lord_14_4" father="Hero.dadg_dead_lord_14_1" mother="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
+  <Hero id="dadg_lord_14_5" father="Hero.dadg_dead_lord_14_1" mother="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
+  <Hero id="dadg_lord_14_6" father="Hero.dadg_dead_lord_14_1" mother="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
+  <Hero id="dadg_lord_14_7" father="Hero.dadg_dead_lord_14_1" mother="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
+  <Hero id="dadg_lord_15_1" father="Hero.dadg_dead_lord_15_1" mother="Hero.dadg_lord_15_4" faction="Faction.clan_stafford" />
+  <Hero id="dadg_lord_15_2" faction="Faction.clan_stafford" />
+  <Hero id="dadg_lord_15_3" father="Hero.dadg_lord_15_1" mother="Hero.dadg_lord_15_2" faction="Faction.clan_stafford" />
+  <Hero id="dadg_lord_15_4" father="Hero.dadg_dead_lord_27_1" mother="Hero.dadg_dead_lord_27_2" faction="Faction.clan_stafford" />
+  <Hero id="dadg_lord_15_5" father="Hero.dadg_dead_lord_21_1" mother="Hero.dadg_lord_21_2" faction="Faction.clan_stafford" />
+  <Hero id="dadg_lord_15_6" father="Hero.dadg_dead_lord_21_1" mother="Hero.dadg_lord_21_6" faction="Faction.clan_stafford" />
+  <Hero id="dadg_lord_16_1" father="Hero.dadg_dead_lord_16_1" mother="Hero.dadg_dead_lord_16_2" faction="Faction.clan_courtenay" />
+  <Hero id="dadg_lord_16_2" father="Hero.dadg_lord_16_1" mother="Hero.dadg_lord_16_6" faction="Faction.clan_courtenay" />
+  <Hero id="dadg_lord_16_3" father="Hero.dadg_lord_16_1" mother="Hero.dadg_lord_16_6" faction="Faction.clan_courtenay" />
+  <Hero id="dadg_lord_16_4" father="Hero.dadg_lord_16_1" mother="Hero.dadg_lord_16_6" faction="Faction.clan_courtenay" />
+  <Hero id="dadg_lord_16_5" father="Hero.dadg_lord_16_1" mother="Hero.dadg_lord_16_6" faction="Faction.clan_courtenay" />
+  <Hero id="dadg_lord_16_6" faction="Faction.clan_courtenay" />
+  <Hero id="dadg_lord_17_1" father="Hero.dadg_dead_lord_17_1" mother="Hero.dadg_dead_lord_17_2" faction="Faction.clan_holland" />
+  <Hero id="dadg_lord_17_2" father="Hero.dadg_dead_lord_1_1" mother="Hero.dadg_lord_1_9" faction="Faction.clan_holland" />
+  <Hero id="dadg_lord_18_1" father="Hero.dadg_dead_lord_18_1" mother="Hero.dadg_dead_lord_18_2" faction="Faction.clan_st_leger" />
+  <Hero id="dadg_lord_18_2" father="Hero.dadg_dead_lord_18_1" mother="Hero.dadg_dead_lord_18_2" faction="Faction.clan_st_leger" />
+  <Hero id="dadg_lord_18_3" father="Hero.dadg_dead_lord_18_1" mother="Hero.dadg_dead_lord_18_2" faction="Faction.clan_st_leger" />
+  <Hero id="dadg_lord_19_1" father="Hero.dadg_dead_lord_19_1" mother="Hero.dadg_lord_19_4" faction="Faction.clan_talbot" />
+  <Hero id="dadg_lord_19_2" father="Hero.dadg_dead_lord_15_1" mother="Hero.dadg_lord_15_4" faction="Faction.clan_talbot" />
+  <Hero id="dadg_lord_19_3" father="Hero.dadg_lord_19_1" mother="Hero.dadg_lord_19_2" faction="Faction.clan_talbot" />
+  <Hero id="dadg_lord_19_4" faction="Faction.clan_talbot" />
+  <Hero id="dadg_lord_19_5" father="Hero.dadg_dead_lord_19_1" mother="Hero.dadg_lord_19_4" faction="Faction.clan_talbot" />
+  <Hero id="dadg_lord_19_6" father="Hero.dadg_dead_lord_19_1" mother="Hero.dadg_lord_19_4" faction="Faction.clan_talbot" />
+  <Hero id="dadg_lord_19_7" father="Hero.dadg_dead_lord_19_1" mother="Hero.dadg_lord_19_4" faction="Faction.clan_talbot" />
+  <Hero id="dadg_lord_19_8" father="Hero.dadg_dead_lord_19_1" mother="Hero.dadg_lord_19_4" faction="Faction.clan_talbot" />
+  <Hero id="dadg_lord_1_1" father="Hero.dadg_dead_lord_1_1" mother="Hero.dadg_lord_1_9" faction="Faction.clan_york" />
+  <Hero id="dadg_lord_1_2" father="Hero.dadg_dead_lord_1_1" mother="Hero.dadg_lord_1_9" faction="Faction.clan_york" />
+  <Hero id="dadg_lord_1_3" father="Hero.dadg_dead_lord_1_1" mother="Hero.dadg_lord_1_9" faction="Faction.clan_york" />
+  <Hero id="dadg_lord_1_4" father="Hero.dadg_dead_lord_21_1" mother="Hero.dadg_lord_21_6" faction="Faction.clan_york" />
+  <Hero id="dadg_lord_1_5" father="Hero.dadg_lord_1_1" mother="Hero.dadg_lord_1_4" faction="Faction.clan_york" />
+  <Hero id="dadg_lord_1_6" father="Hero.dadg_lord_1_1" mother="Hero.dadg_lord_1_4" faction="Faction.clan_york" />
+  <Hero id="dadg_lord_1_7" father="Hero.dadg_lord_1_1" mother="Hero.dadg_lord_1_4" faction="Faction.clan_york" />
+  <Hero id="dadg_lord_1_8" faction="Faction.clan_york" />
+  <Hero id="dadg_lord_1_9" faction="Faction.clan_york" />
+  <Hero id="dadg_lord_20_1" father="Hero.dadg_dead_lord_20_1" mother="Hero.dadg_dead_lord_20_2" faction="Faction.clan_vernon" />
+  <Hero id="dadg_lord_20_2" father="Hero.dadg_dead_lord_19_1" mother="Hero.dadg_lord_19_4" faction="Faction.clan_vernon" />
+  <Hero id="dadg_lord_20_3" father="Hero.dadg_lord_20_1" mother="Hero.dadg_lord_20_2" faction="Faction.clan_vernon" />
+  <Hero id="dadg_lord_20_4" father="Hero.dadg_lord_20_1" mother="Hero.dadg_lord_20_2" faction="Faction.clan_vernon" />
+  <Hero id="dadg_lord_20_5" father="Hero.dadg_lord_20_1" mother="Hero.dadg_lord_20_2" faction="Faction.clan_vernon" />
+  <Hero id="dadg_lord_21_1" father="Hero.dadg_dead_lord_21_1" mother="Hero.dadg_lord_21_6" faction="Faction.clan_woodville" />
+  <Hero id="dadg_lord_21_2" father="Hero.dadg_dead_lord_21_1" mother="Hero.dadg_lord_21_6" faction="Faction.clan_woodville" />
+  <Hero id="dadg_lord_21_3" father="Hero.dadg_dead_lord_21_1" mother="Hero.dadg_lord_21_6" faction="Faction.clan_woodville" />
+  <Hero id="dadg_lord_21_4" father="Hero.dadg_dead_lord_21_1" mother="Hero.dadg_lord_21_6" faction="Faction.clan_woodville" />
+  <Hero id="dadg_lord_21_5" father="Hero.dadg_dead_lord_21_1" mother="Hero.dadg_lord_21_6" faction="Faction.clan_woodville" />
+  <Hero id="dadg_lord_21_6" faction="Faction.clan_woodville" />
+  <Hero id="dadg_lord_22_1" faction="Faction.clan_greystoke" />
+  <Hero id="dadg_lord_22_2" father="Hero.dadg_lord_22_1" mother="Hero.dadg_dead_lord_22_1" faction="Faction.clan_greystoke" />
+  <Hero id="dadg_lord_22_3" father="Hero.dadg_dead_lord_24_1" mother="Hero.dadg_dead_lord_24_2" faction="Faction.clan_greystoke" />
+  <Hero id="dadg_lord_22_4" father="Hero.dadg_lord_22_1" mother="Hero.dadg_dead_lord_22_1" faction="Faction.clan_greystoke" />
+  <Hero id="dadg_lord_22_5" father="Hero.dadg_lord_22_1" mother="Hero.dadg_dead_lord_22_1" faction="Faction.clan_greystoke" />
+  <Hero id="dadg_lord_23_1" father="Hero.dadg_dead_lord_23_1" mother="Hero.dadg_lord_23_3" faction="Faction.clan_mowbray" />
+  <Hero id="dadg_lord_23_2" father="Hero.dadg_dead_lord_19_1" mother="Hero.dadg_lord_19_4" faction="Faction.clan_mowbray" />
+  <Hero id="dadg_lord_23_3" father="Hero.dadg_dead_lord_12_1" mother="Hero.dadg_dead_lord_12_2" faction="Faction.clan_mowbray" />
+  <Hero id="dadg_lord_24_1" father="Hero.dadg_dead_lord_24_1" mother="Hero.dadg_dead_lord_24_2" faction="Faction.clan_grey_of_ruthin" />
+  <Hero id="dadg_lord_24_2" faction="Faction.clan_grey_of_ruthin" />
+  <Hero id="dadg_lord_24_3" father="Hero.dadg_lord_24_1" mother="Hero.dadg_lord_24_2" faction="Faction.clan_grey_of_ruthin" />
+  <Hero id="dadg_lord_24_4" father="Hero.dadg_lord_24_1" mother="Hero.dadg_lord_24_2" faction="Faction.clan_grey_of_ruthin" />
+  <Hero id="dadg_lord_24_5" father="Hero.dadg_lord_24_1" mother="Hero.dadg_lord_24_2" faction="Faction.clan_grey_of_ruthin" />
+  <Hero id="dadg_lord_24_6" father="Hero.dadg_dead_lord_21_1" mother="Hero.dadg_lord_21_6" faction="Faction.clan_grey_of_ruthin" />
+  <Hero id="dadg_lord_25_1" father="Hero.dadg_dead_lord_25_1" mother="Hero.dadg_dead_lord_25_2" faction="Faction.clan_grey_of_wilton" />
+  <Hero id="dadg_lord_25_2" father="Hero.dadg_dead_lord_6_1" mother="Hero.dadg_dead_lord_6_2" faction="Faction.clan_grey_of_wilton" />
+  <Hero id="dadg_lord_25_3" father="Hero.dadg_dead_lord_25_1" mother="Hero.dadg_dead_lord_25_2" faction="Faction.clan_grey_of_wilton" />
+  <Hero id="dadg_lord_25_4" faction="Faction.clan_grey_of_wilton" />
+  <Hero id="dadg_lord_25_5" father="Hero.dadg_lord_25_3" mother="Hero.dadg_lord_25_4" faction="Faction.clan_grey_of_wilton" />
+  <Hero id="dadg_lord_26_1" faction="Faction.clan_neville_of_raby" />
+  <Hero id="dadg_lord_26_2" faction="Faction.clan_neville_of_raby" />
+  <Hero id="dadg_lord_26_3" father="Hero.dadg_dead_lord_26_1" faction="Faction.clan_neville_of_raby" />
+  <Hero id="dadg_lord_27_1" father="Hero.dadg_dead_lord_27_1" mother="Hero.dadg_dead_lord_27_2" faction="Faction.clan_neville_of_bergavenny" />
+  <Hero id="dadg_lord_27_2" faction="Faction.clan_neville_of_bergavenny" />
+  <Hero id="dadg_lord_27_3" father="Hero.dadg_lord_27_1" mother="Hero.dadg_lord_27_2" faction="Faction.clan_neville_of_bergavenny" />
+  <Hero id="dadg_lord_27_4" father="Hero.dadg_lord_27_1" mother="Hero.dadg_lord_27_2" faction="Faction.clan_neville_of_bergavenny" />
+  <Hero id="dadg_lord_27_5" faction="Faction.clan_neville_of_bergavenny" />
+  <Hero id="dadg_lord_27_6" father="Hero.dadg_lord_27_4" mother="Hero.dadg_lord_27_5" faction="Faction.clan_neville_of_bergavenny" />
+  <Hero id="dadg_lord_27_7" father="Hero.dadg_lord_27_4" mother="Hero.dadg_lord_27_5" faction="Faction.clan_neville_of_bergavenny" />
+  <Hero id="dadg_lord_27_8" father="Hero.dadg_lord_27_4" mother="Hero.dadg_lord_27_5" faction="Faction.clan_neville_of_bergavenny" />
+  <Hero id="dadg_lord_28_1" father="Hero.dadg_dead_lord_28_1" mother="Hero.dadg_dead_lord_28_2" faction="Faction.clan_stanley" />
+  <Hero id="dadg_lord_28_2" father="Hero.dadg_dead_lord_27_1" mother="Hero.dadg_dead_lord_27_2" faction="Faction.clan_stanley" />
+  <Hero id="dadg_lord_28_3" father="Hero.dadg_dead_lord_28_1" mother="Hero.dadg_dead_lord_28_2" faction="Faction.clan_stanley" />
+  <Hero id="dadg_lord_28_4" faction="Faction.clan_stanley" />
+  <Hero id="dadg_lord_28_5" father="Hero.dadg_dead_lord_28_1" mother="Hero.dadg_dead_lord_28_2" faction="Faction.clan_stanley" />
+  <Hero id="dadg_lord_28_6" father="Hero.dadg_lord_28_1" mother="Hero.dadg_lord_28_2" faction="Faction.clan_stanley" />
+  <Hero id="dadg_lord_28_7" father="Hero.dadg_lord_28_1" mother="Hero.dadg_lord_28_2" faction="Faction.clan_stanley" />
+  <Hero id="dadg_lord_28_8" father="Hero.dadg_lord_28_1" mother="Hero.dadg_lord_28_2" faction="Faction.clan_stanley" />
+  <Hero id="dadg_lord_29_1" father="Hero.dadg_dead_lord_29_1" mother="Hero.dadg_dead_lord_29_2" faction="Faction.clan_beaumont" />
+  <Hero id="dadg_lord_29_2" father="Hero.dadg_dead_lord_15_1" mother="Hero.dadg_lord_15_4" faction="Faction.clan_beaumont" />
+  <Hero id="dadg_lord_2_1" father="Hero.dadg_dead_lord_2_1" mother="Hero.dadg_dead_lord_2_2" faction="Faction.clan_lancaster" />
+  <Hero id="dadg_lord_2_2" faction="Faction.clan_lancaster" />
+  <Hero id="dadg_lord_2_3" father="Hero.dadg_lord_2_1" mother="Hero.dadg_lord_2_2" faction="Faction.clan_lancaster" />
+  <Hero id="dadg_lord_2_4" father="Hero.dadg_lord_9_1" faction="Faction.clan_lancaster" />
+  <Hero id="dadg_lord_30_1" father="Hero.dadg_dead_lord_30_1" mother="Hero.dadg_dead_lord_30_2" faction="Faction.clan_fitzhugh" />
+  <Hero id="dadg_lord_30_2" father="Hero.dadg_dead_lord_9_1" mother="Hero.dadg_dead_lord_9_2" faction="Faction.clan_fitzhugh" />
+  <Hero id="dadg_lord_30_3" father="Hero.dadg_lord_30_1" mother="Hero.dadg_lord_30_2" faction="Faction.clan_fitzhugh" />
+  <Hero id="dadg_lord_30_4" father="Hero.dadg_lord_30_1" mother="Hero.dadg_lord_30_2" faction="Faction.clan_fitzhugh" />
+  <Hero id="dadg_lord_31_1" father="Hero.dadg_dead_lord_31_1" mother="Hero.dadg_lord_31_5" faction="Faction.clan_scrope_of_bolton" />
+  <Hero id="dadg_lord_31_2" father="Hero.dadg_dead_lord_30_1" mother="Hero.dadg_dead_lord_30_2" faction="Faction.clan_scrope_of_bolton" />
+  <Hero id="dadg_lord_31_3" father="Hero.dadg_dead_lord_31_1" mother="Hero.dadg_lord_31_5" faction="Faction.clan_scrope_of_bolton" />
+  <Hero id="dadg_lord_31_4" faction="Faction.clan_scrope_of_bolton" />
+  <Hero id="dadg_lord_31_5" faction="Faction.clan_scrope_of_bolton" />
+  <Hero id="dadg_lord_31_6" father="Hero.dadg_lord_31_1" mother="Hero.dadg_lord_31_2" faction="Faction.clan_scrope_of_bolton" />
+  <Hero id="dadg_lord_32_1" father="Hero.dadg_dead_lord_32_1" mother="Hero.dadg_lord_32_4" faction="Faction.clan_basset" />
+  <Hero id="dadg_lord_32_2" faction="Faction.clan_basset" />
+  <Hero id="dadg_lord_32_3" father="Hero.dadg_lord_32_1" mother="Hero.dadg_lord_32_2" faction="Faction.clan_basset" />
+  <Hero id="dadg_lord_32_4" father="Hero.dadg_dead_lord_6_1" mother="Hero.dadg_dead_lord_6_2" faction="Faction.clan_basset" />
+  <Hero id="dadg_lord_33_1" father="Hero.dadg_dead_lord_33_1" mother="Hero.dadg_lord_33_2" faction="Faction.clan_paston" />
+  <Hero id="dadg_lord_33_2" faction="Faction.clan_paston" />
+  <Hero id="dadg_lord_33_3" father="Hero.dadg_dead_lord_33_1" mother="Hero.dadg_lord_33_2" faction="Faction.clan_paston" />
+  <Hero id="dadg_lord_33_4" faction="Faction.clan_paston" />
+  <Hero id="dadg_lord_33_5" father="Hero.dadg_dead_lord_33_1" mother="Hero.dadg_lord_33_2" faction="Faction.clan_paston" />
+  <Hero id="dadg_lord_33_6" father="Hero.dadg_dead_lord_33_1" mother="Hero.dadg_lord_33_2" faction="Faction.clan_paston" />
+  <Hero id="dadg_lord_33_7" father="Hero.dadg_dead_lord_33_1" mother="Hero.dadg_lord_33_2" faction="Faction.clan_paston" />
+  <Hero id="dadg_lord_34_1" father="Hero.dadg_dead_lord_34_1" mother="Hero.dadg_lord_34_3" faction="Faction.clan_dynham" />
+  <Hero id="dadg_lord_34_2" faction="Faction.clan_dynham" />
+  <Hero id="dadg_lord_34_3" faction="Faction.clan_dynham" />
+  <Hero id="dadg_lord_34_4" father="Hero.dadg_dead_lord_34_1" mother="Hero.dadg_lord_34_3" faction="Faction.clan_dynham" />
+  <Hero id="dadg_lord_34_5" father="Hero.dadg_dead_lord_34_1" mother="Hero.dadg_lord_34_3" faction="Faction.clan_dynham" />
+  <Hero id="dadg_lord_35_1" faction="Faction.clan_willoughby" />
+  <Hero id="dadg_lord_35_2" faction="Faction.clan_willoughby" />
+  <Hero id="dadg_lord_35_3" father="Hero.dadg_lord_35_1" mother="Hero.dadg_lord_35_2" faction="Faction.clan_willoughby" />
+  <Hero id="dadg_lord_36_1" father="Hero.dadg_dead_lord_36_1" mother="Hero.dadg_dead_lord_36_2" faction="Faction.clan_tuchet" />
+  <Hero id="dadg_lord_36_2" faction="Faction.clan_tuchet" />
+  <Hero id="dadg_lord_36_3" father="Hero.dadg_lord_36_1" mother="Hero.dadg_lord_36_2" faction="Faction.clan_tuchet" />
+  <Hero id="dadg_lord_36_4" father="Hero.dadg_lord_36_1" mother="Hero.dadg_lord_36_2" faction="Faction.clan_tuchet" />
+  <Hero id="dadg_lord_37_1" father="Hero.dadg_dead_lord_37_1" mother="Hero.dadg_dead_lord_37_2" faction="Faction.clan_berkeley" />
+  <Hero id="dadg_lord_37_2" faction="Faction.clan_berkeley" />
+  <Hero id="dadg_lord_37_3" father="Hero.dadg_lord_37_1" mother="Hero.dadg_lord_37_2" faction="Faction.clan_berkeley" />
+  <Hero id="dadg_lord_37_4" father="Hero.dadg_lord_37_1" mother="Hero.dadg_lord_37_2" faction="Faction.clan_berkeley" />
+  <Hero id="dadg_lord_37_5" father="Hero.dadg_dead_lord_37_1" mother="Hero.dadg_dead_lord_37_2" faction="Faction.clan_berkeley" />
+  <Hero id="dadg_lord_37_6" faction="Faction.clan_berkeley" />
+  <Hero id="dadg_lord_37_7" father="Hero.dadg_lord_37_5" mother="Hero.dadg_lord_37_6" faction="Faction.clan_berkeley" />
+  <Hero id="dadg_lord_37_8" father="Hero.dadg_dead_lord_37_1" mother="Hero.dadg_dead_lord_37_2" faction="Faction.clan_berkeley" />
+  <Hero id="dadg_lord_37_9" faction="Faction.clan_berkeley" />
+  <Hero id="dadg_lord_38_1" father="Hero.dadg_dead_lord_38_1" mother="Hero.dadg_dead_lord_38_2" faction="Faction.clan_west" />
+  <Hero id="dadg_lord_38_2" faction="Faction.clan_west" />
+  <Hero id="dadg_lord_38_3" father="Hero.dadg_lord_38_1" mother="Hero.dadg_lord_38_2" faction="Faction.clan_west" />
+  <Hero id="dadg_lord_38_4" father="Hero.dadg_lord_38_1" mother="Hero.dadg_lord_38_2" faction="Faction.clan_west" />
+  <Hero id="dadg_lord_38_5" father="Hero.dadg_lord_38_1" mother="Hero.dadg_lord_38_2" faction="Faction.clan_west" />
+  <Hero id="dadg_lord_38_6" father="Hero.dadg_lord_38_1" mother="Hero.dadg_lord_38_2" faction="Faction.clan_west" />
+  <Hero id="dadg_lord_39_1" father="Hero.dadg_dead_lord_39_1" mother="Hero.dadg_dead_lord_39_2" faction="Faction.clan_parr" />
+  <Hero id="dadg_lord_39_2" faction="Faction.clan_parr" />
+  <Hero id="dadg_lord_39_3" father="Hero.dadg_dead_lord_39_1" mother="Hero.dadg_dead_lord_39_2" faction="Faction.clan_parr" />
+  <Hero id="dadg_lord_39_4" father="Hero.dadg_dead_lord_39_1" mother="Hero.dadg_dead_lord_39_2" faction="Faction.clan_parr" />
+  <Hero id="dadg_lord_3_1" father="Hero.dadg_dead_lord_3_1" mother="Hero.dadg_dead_lord_3_2" faction="Faction.clan_fitzalan" />
+  <Hero id="dadg_lord_3_2" father="Hero.dadg_lord_3_1" mother="Hero.dadg_dead_lord_3_3" faction="Faction.clan_fitzalan" />
+  <Hero id="dadg_lord_3_3" father="Hero.dadg_dead_lord_21_1" mother="Hero.dadg_lord_21_6" faction="Faction.clan_fitzalan" />
+  <Hero id="dadg_lord_3_4" father="Hero.dadg_lord_3_1" mother="Hero.dadg_dead_lord_3_3" faction="Faction.clan_fitzalan" />
+  <Hero id="dadg_lord_3_5" father="Hero.dadg_lord_3_1" mother="Hero.dadg_dead_lord_3_3" faction="Faction.clan_fitzalan" />
+  <Hero id="dadg_lord_3_6" father="Hero.dadg_lord_3_1" mother="Hero.dadg_dead_lord_3_3" faction="Faction.clan_fitzalan" />
+  <Hero id="dadg_lord_3_7" father="Hero.dadg_lord_3_1" mother="Hero.dadg_dead_lord_3_3" faction="Faction.clan_fitzalan" />
+  <Hero id="dadg_lord_40_1" father="Hero.dadg_dead_lord_40_1" mother="Hero.dadg_dead_lord_40_2" faction="Faction.clan_devereux" />
+  <Hero id="dadg_lord_40_2" father="Hero.dadg_lord_40_1" mother="Hero.dadg_dead_lord_40_3" faction="Faction.clan_devereux" />
+  <Hero id="dadg_lord_40_3" father="Hero.dadg_lord_40_1" mother="Hero.dadg_dead_lord_40_3" faction="Faction.clan_devereux" />
+  <Hero id="dadg_lord_40_4" father="Hero.dadg_lord_40_1" mother="Hero.dadg_dead_lord_40_3" faction="Faction.clan_devereux" />
+  <Hero id="dadg_lord_40_5" father="Hero.dadg_lord_40_1" mother="Hero.dadg_dead_lord_40_3" faction="Faction.clan_devereux" />
+  <Hero id="dadg_lord_40_6" father="Hero.dadg_lord_40_1" mother="Hero.dadg_dead_lord_40_3" faction="Faction.clan_devereux" />
+  <Hero id="dadg_lord_40_7" father="Hero.dadg_lord_40_1" mother="Hero.dadg_dead_lord_40_3" faction="Faction.clan_devereux" />
+  <Hero id="dadg_lord_41_1" father="Hero.dadg_dead_lord_41_1" mother="Hero.dadg_lord_41_5" faction="Faction.clan_de_vere" />
+  <Hero id="dadg_lord_41_2" father="Hero.dadg_dead_lord_9_1" mother="Hero.dadg_dead_lord_9_2" faction="Faction.clan_de_vere" />
+  <Hero id="dadg_lord_41_3" father="Hero.dadg_dead_lord_41_1" mother="Hero.dadg_lord_41_5" faction="Faction.clan_de_vere" />
+  <Hero id="dadg_lord_41_4" father="Hero.dadg_dead_lord_15_1" mother="Hero.dadg_lord_15_4" faction="Faction.clan_de_vere" />
+  <Hero id="dadg_lord_41_5" faction="Faction.clan_de_vere" />
+  <Hero id="dadg_lord_41_6" father="Hero.dadg_dead_lord_41_1" mother="Hero.dadg_lord_41_5" faction="Faction.clan_de_vere" />
+  <Hero id="dadg_lord_41_7" father="Hero.dadg_dead_lord_10_1" mother="Hero.dadg_lord_10_2" faction="Faction.clan_de_vere" />
+  <Hero id="dadg_lord_41_8" father="Hero.dadg_dead_lord_41_1" mother="Hero.dadg_lord_41_5" faction="Faction.clan_de_vere" />
+  <Hero id="dadg_lord_42_1" faction="Faction.clan_morley" />
+  <Hero id="dadg_lord_42_2" father="Hero.dadg_dead_lord_42_1" mother="Hero.dadg_dead_lord_42_2" faction="Faction.clan_morley" />
+  <Hero id="dadg_lord_42_3" father="Hero.dadg_lord_42_1" mother="Hero.dadg_lord_42_2" faction="Faction.clan_morley" />
+  <Hero id="dadg_lord_42_4" father="Hero.dadg_lord_42_1" mother="Hero.dadg_lord_42_2" faction="Faction.clan_morley" />
+  <Hero id="dadg_lord_43_1" father="Hero.dadg_dead_lord_43_1" mother="Hero.dadg_dead_lord_43_2" faction="Faction.clan_fienne_of_dacre" />
+  <Hero id="dadg_lord_43_2" faction="Faction.clan_fienne_of_dacre" />
+  <Hero id="dadg_lord_43_3" father="Hero.dadg_lord_43_1" mother="Hero.dadg_lord_43_2" faction="Faction.clan_fienne_of_dacre" />
+  <Hero id="dadg_lord_43_4" father="Hero.dadg_lord_30_1" mother="Hero.dadg_lord_30_2" faction="Faction.clan_fienne_of_dacre" />
+  <Hero id="dadg_lord_43_5" father="Hero.dadg_lord_43_3" mother="Hero.dadg_lord_43_4" faction="Faction.clan_fienne_of_dacre" />
+  <Hero id="dadg_lord_43_6" father="Hero.dadg_lord_43_1" mother="Hero.dadg_lord_43_2" faction="Faction.clan_fienne_of_dacre" />
+  <Hero id="dadg_lord_43_7" father="Hero.dadg_lord_43_1" mother="Hero.dadg_lord_43_2" faction="Faction.clan_fienne_of_dacre" />
+  <Hero id="dadg_lord_43_8" father="Hero.dadg_lord_43_1" mother="Hero.dadg_lord_43_2" faction="Faction.clan_fienne_of_dacre" />
+  <Hero id="dadg_lord_44_1" father="Hero.dadg_dead_lord_44_1" mother="Hero.dadg_dead_lord_44_2" faction="Faction.clan_burgh" />
+  <Hero id="dadg_lord_44_2" faction="Faction.clan_burgh" />
+  <Hero id="dadg_lord_44_3" father="Hero.dadg_lord_44_1" mother="Hero.dadg_lord_44_2" faction="Faction.clan_burgh" />
+  <Hero id="dadg_lord_44_4" father="Hero.dadg_lord_44_1" mother="Hero.dadg_lord_44_2" faction="Faction.clan_burgh" />
+  <Hero id="dadg_lord_44_5" father="Hero.dadg_lord_44_1" mother="Hero.dadg_lord_44_2" faction="Faction.clan_burgh" />
+  <Hero id="dadg_lord_45_1" father="Hero.dadg_dead_lord_45_1" mother="Hero.dadg_dead_lord_45_2" faction="Faction.clan_blount" />
+  <Hero id="dadg_lord_45_2" father="Hero.dadg_dead_lord_9_1" mother="Hero.dadg_dead_lord_9_2" faction="Faction.clan_blount" />
+  <Hero id="dadg_lord_45_3" father="Hero.dadg_lord_45_1" mother="Hero.dadg_lord_45_2" faction="Faction.clan_blount" />
+  <Hero id="dadg_lord_45_4" faction="Faction.clan_blount" />
+  <Hero id="dadg_lord_45_5" father="Hero.dadg_lord_9_3" mother="Hero.dadg_lord_9_4" faction="Faction.clan_blount" />
+  <Hero id="dadg_lord_45_6" father="Hero.dadg_lord_45_1" mother="Hero.dadg_lord_45_2" faction="Faction.clan_blount" />
+  <Hero id="dadg_lord_45_7" father="Hero.dadg_lord_45_1" mother="Hero.dadg_lord_45_2" faction="Faction.clan_blount" />
+  <Hero id="dadg_lord_46_1" father="Hero.dadg_dead_lord_46_1" mother="Hero.dadg_dead_lord_46_2" faction="Faction.clan_harrington" />
+  <Hero id="dadg_lord_46_2" faction="Faction.clan_harrington" />
+  <Hero id="dadg_lord_46_3" father="Hero.dadg_lord_46_1" mother="Hero.dadg_lord_46_2" faction="Faction.clan_harrington" />
+  <Hero id="dadg_lord_46_4" father="Hero.dadg_dead_lord_46_3" faction="Faction.clan_harrington" />
+  <Hero id="dadg_lord_46_5" father="Hero.dadg_dead_lord_46_3" faction="Faction.clan_harrington" />
+  <Hero id="dadg_lord_46_6" father="Hero.dadg_dead_lord_46_1" mother="Hero.dadg_dead_lord_46_2" faction="Faction.clan_harrington" />
+  <Hero id="dadg_lord_47_1" father="Hero.dadg_dead_lord_47_1" mother="Hero.dadg_dead_lord_47_2" faction="Faction.clan_fiennes_of_saye_and_sele" />
+  <Hero id="dadg_lord_47_2" father="Hero.dadg_lord_47_1" faction="Faction.clan_fiennes_of_saye_and_sele" />
+  <Hero id="dadg_lord_48_1" father="Hero.dadg_dead_lord_48_1" mother="Hero.dadg_dead_lord_48_2" faction="Faction.clan_clinton" />
+  <Hero id="dadg_lord_48_2" father="Hero.dadg_lord_47_1" faction="Faction.clan_clinton" />
+  <Hero id="dadg_lord_48_3" father="Hero.dadg_lord_48_1" mother="Hero.dadg_lord_48_2" faction="Faction.clan_clinton" />
+  <Hero id="dadg_lord_49_1" father="Hero.dadg_dead_lord_49_1" faction="Faction.clan_lovell" />
+  <Hero id="dadg_lord_49_2" father="Hero.dadg_dead_lord_30_1" mother="Hero.dadg_dead_lord_30_2" faction="Faction.clan_lovell" />
+  <Hero id="dadg_lord_49_3" father="Hero.dadg_dead_lord_29_1" mother="Hero.dadg_dead_lord_29_2" faction="Faction.clan_lovell" />
+  <Hero id="dadg_lord_4_1" father="Hero.dadg_dead_lord_4_1" mother="Hero.dadg_dead_lord_4_2" faction="Faction.clan_howard" />
+  <Hero id="dadg_lord_4_2" faction="Faction.clan_howard" />
+  <Hero id="dadg_lord_4_3" father="Hero.dadg_lord_4_1" mother="Hero.dadg_lord_4_2" faction="Faction.clan_howard" />
+  <Hero id="dadg_lord_4_4" father="Hero.dadg_lord_4_1" mother="Hero.dadg_lord_4_2" faction="Faction.clan_howard" />
+  <Hero id="dadg_lord_4_5" father="Hero.dadg_lord_4_1" mother="Hero.dadg_lord_4_2" faction="Faction.clan_howard" />
+  <Hero id="dadg_lord_50_1" father="Hero.dadg_dead_lord_50_1" mother="Hero.dadg_dead_lord_50_2" faction="Faction.clan_scrope_of_masham" />
+  <Hero id="dadg_lord_50_2" father="Hero.dadg_lord_22_1" mother="Hero.dadg_dead_lord_22_1" faction="Faction.clan_scrope_of_masham" />
+  <Hero id="dadg_lord_50_3" father="Hero.dadg_lord_50_1" mother="Hero.dadg_lord_50_2" faction="Faction.clan_scrope_of_masham" />
+  <Hero id="dadg_lord_50_4" father="Hero.dadg_lord_50_1" mother="Hero.dadg_lord_50_2" faction="Faction.clan_scrope_of_masham" />
+  <Hero id="dadg_lord_50_5" father="Hero.dadg_lord_50_1" mother="Hero.dadg_lord_50_2" faction="Faction.clan_scrope_of_masham" />
+  <Hero id="dadg_lord_50_6" father="Hero.dadg_lord_50_1" mother="Hero.dadg_lord_50_2" faction="Faction.clan_scrope_of_masham" />
+  <Hero id="dadg_lord_51_1" father="Hero.dadg_dead_lord_51_1" mother="Hero.dadg_dead_lord_51_2" faction="Faction.clan_lumley" />
+  <Hero id="dadg_lord_51_2" father="Hero.dadg_dead_lord_46_1" mother="Hero.dadg_dead_lord_46_2" faction="Faction.clan_lumley" />
+  <Hero id="dadg_lord_51_3" father="Hero.dadg_lord_51_1" mother="Hero.dadg_lord_51_2" faction="Faction.clan_lumley" />
+  <Hero id="dadg_lord_51_4" faction="Faction.clan_lumley" />
+  <Hero id="dadg_lord_51_5" father="Hero.dadg_lord_51_3" mother="Hero.dadg_lord_51_4" faction="Faction.clan_lumley" />
+  <Hero id="dadg_lord_51_6" father="Hero.dadg_lord_51_3" mother="Hero.dadg_lord_51_4" faction="Faction.clan_lumley" />
+  <Hero id="dadg_lord_51_7" father="Hero.dadg_lord_51_3" mother="Hero.dadg_lord_51_4" faction="Faction.clan_lumley" />
+  <Hero id="dadg_lord_52_1" father="Hero.dadg_dead_lord_52_1" mother="Hero.dadg_dead_lord_52_2" faction="Faction.clan_grey_of_codnor" />
+  <Hero id="dadg_lord_52_2" faction="Faction.clan_grey_of_codnor" />
+  <Hero id="dadg_lord_53_1" father="Hero.dadg_dead_lord_53_1" mother="Hero.dadg_dead_lord_53_2" faction="Faction.clan_sutton" />
+  <Hero id="dadg_lord_53_2" faction="Faction.clan_sutton" />
+  <Hero id="dadg_lord_53_3" father="Hero.dadg_lord_53_1" mother="Hero.dadg_lord_53_2" faction="Faction.clan_sutton" />
+  <Hero id="dadg_lord_53_4" father="Hero.dadg_dead_lord_8_1" mother="Hero.dadg_dead_lord_8_2" faction="Faction.clan_sutton" />
+  <Hero id="dadg_lord_53_5" father="Hero.dadg_lord_53_3" mother="Hero.dadg_lord_53_4" faction="Faction.clan_sutton" />
+  <Hero id="dadg_lord_53_6" father="Hero.dadg_lord_53_1" mother="Hero.dadg_lord_53_2" faction="Faction.clan_sutton" />
+  <Hero id="dadg_lord_54_1" faction="Faction.clan_beauchamp" />
+  <Hero id="dadg_lord_54_2" father="Hero.dadg_lord_54_1" mother="Hero.dadg_dead_lord_54_1" faction="Faction.clan_beauchamp" />
+  <Hero id="dadg_lord_54_3" father="Hero.dadg_dead_lord_15_1" mother="Hero.dadg_lord_15_4" faction="Faction.clan_beauchamp" />
+  <Hero id="dadg_lord_54_4" father="Hero.dadg_lord_54_2" mother="Hero.dadg_lord_54_3" faction="Faction.clan_beauchamp" />
+  <Hero id="dadg_lord_54_5" father="Hero.dadg_lord_54_2" mother="Hero.dadg_lord_54_3" faction="Faction.clan_beauchamp" />
+  <Hero id="dadg_lord_55_1" father="Hero.dadg_dead_lord_55_1" mother="Hero.dadg_dead_lord_55_2" faction="Faction.clan_stourton" />
+  <Hero id="dadg_lord_55_2" faction="Faction.clan_stourton" />
+  <Hero id="dadg_lord_55_3" father="Hero.dadg_lord_55_1" mother="Hero.dadg_lord_55_2" faction="Faction.clan_stourton" />
+  <Hero id="dadg_lord_55_4" father="Hero.dadg_lord_55_1" mother="Hero.dadg_lord_55_2" faction="Faction.clan_stourton" />
+  <Hero id="dadg_lord_55_5" father="Hero.dadg_lord_55_1" mother="Hero.dadg_lord_55_2" faction="Faction.clan_stourton" />
+  <Hero id="dadg_lord_55_6" father="Hero.dadg_lord_55_1" mother="Hero.dadg_lord_55_2" faction="Faction.clan_stourton" />
+  <Hero id="dadg_lord_55_7" father="Hero.dadg_lord_55_1" mother="Hero.dadg_lord_55_2" faction="Faction.clan_stourton" />
+  <Hero id="dadg_lord_5_1" father="Hero.dadg_dead_lord_5_1" mother="Hero.dadg_lord_1_4" faction="Faction.clan_grey_of_groby" />
+  <Hero id="dadg_lord_5_2" father="Hero.dadg_lord_17_1" mother="Hero.dadg_lord_17_2" faction="Faction.clan_grey_of_groby" />
+  <Hero id="dadg_lord_5_3" father="Hero.dadg_dead_lord_5_1" faction="Faction.clan_grey_of_groby" />
+  <Hero id="dadg_lord_6_1" father="Hero.dadg_dead_lord_6_1" mother="Hero.dadg_dead_lord_6_2" faction="Faction.clan_beaufort" />
+  <Hero id="dadg_lord_6_2" father="Hero.dadg_dead_lord_6_1" mother="Hero.dadg_dead_lord_6_2" faction="Faction.clan_beaufort" />
+  <Hero id="dadg_lord_6_3" father="Hero.dadg_dead_lord_6_3" faction="Faction.clan_beaufort" />
+  <Hero id="dadg_lord_7_1" father="Hero.dadg_dead_lord_7_1" mother="Hero.dadg_dead_lord_7_2" faction="Faction.clan_tudor" />
+  <Hero id="dadg_lord_7_2" father="Hero.dadg_dead_lord_7_3" mother="Hero.dadg_lord_7_3" faction="Faction.clan_tudor" />
+  <Hero id="dadg_lord_7_3" father="Hero.dadg_dead_lord_6_1" mother="Hero.dadg_dead_lord_6_2" faction="Faction.clan_tudor" />
+  <Hero id="dadg_lord_7_4" father="Hero.dadg_lord_7_1" faction="Faction.clan_tudor" />
+  <Hero id="dadg_lord_8_1" father="Hero.dadg_dead_lord_8_3" mother="Hero.dadg_lord_8_2" faction="Faction.clan_clifford" />
+  <Hero id="dadg_lord_8_2" faction="Faction.clan_clifford" />
+  <Hero id="dadg_lord_8_3" father="Hero.dadg_dead_lord_8_1" mother="Hero.dadg_dead_lord_8_2" faction="Faction.clan_clifford" />
+  <Hero id="dadg_lord_8_4" father="Hero.dadg_dead_lord_8_1" mother="Hero.dadg_dead_lord_8_2" faction="Faction.clan_clifford" />
+  <Hero id="dadg_lord_8_5" father="Hero.dadg_dead_lord_8_1" mother="Hero.dadg_dead_lord_8_2" faction="Faction.clan_clifford" />
+  <Hero id="dadg_lord_8_6" father="Hero.dadg_dead_lord_16_1" mother="Hero.dadg_dead_lord_16_2" faction="Faction.clan_clifford" />
+  <Hero id="dadg_lord_9_1" father="Hero.dadg_dead_lord_9_1" mother="Hero.dadg_dead_lord_9_2" faction="Faction.clan_neville_of_middleham" />
+  <Hero id="dadg_lord_9_10" faction="Faction.clan_neville_of_middleham" />
+  <Hero id="dadg_lord_9_11" faction="Faction.clan_neville_of_middleham" />
+  <Hero id="dadg_lord_9_2" father="Hero.dadg_dead_lord_9_1" mother="Hero.dadg_dead_lord_9_2" faction="Faction.clan_neville_of_middleham" />
+  <Hero id="dadg_lord_9_3" faction="Faction.clan_neville_of_middleham" />
+  <Hero id="dadg_lord_9_4" father="Hero.dadg_lord_9_2" mother="Hero.dadg_lord_9_3" faction="Faction.clan_neville_of_middleham" />
+  <Hero id="dadg_lord_9_5" father="Hero.dadg_lord_9_2" mother="Hero.dadg_lord_9_3" faction="Faction.clan_neville_of_middleham" />
+  <Hero id="dadg_lord_9_6" father="Hero.dadg_lord_9_2" mother="Hero.dadg_lord_9_3" faction="Faction.clan_neville_of_middleham" />
+  <Hero id="dadg_lord_9_7" father="Hero.dadg_lord_9_2" mother="Hero.dadg_lord_9_3" faction="Faction.clan_neville_of_middleham" />
+  <Hero id="dadg_lord_9_8" father="Hero.dadg_lord_9_2" mother="Hero.dadg_lord_9_3" faction="Faction.clan_neville_of_middleham" />
+  <Hero id="dadg_lord_9_9" father="Hero.dadg_lord_9_2" mother="Hero.dadg_lord_9_3" faction="Faction.clan_neville_of_middleham" />
+  <Hero id="dadg_sco_lord_clan_macdonald_isles" faction="Faction.clan_macdonald_isles" />
+  <Hero id="dadg_sco_lord_clan_macleod" faction="Faction.clan_macleod" />
+  <Hero id="dadg_sco_lord_clan_ross" faction="Faction.clan_ross" />
+  <Hero id="dadg_sco_lord_clan_mackenzie" faction="Faction.clan_mackenzie" />
+  <Hero id="dadg_sco_lord_clan_maclean" faction="Faction.clan_maclean" />
+  <Hero id="dadg_sco_lord_clan_macdonald_sleat" faction="Faction.clan_macdonald_sleat" />
+  <Hero id="dadg_sco_lord_clan_clanranald" faction="Faction.clan_clanranald" />
+  <Hero id="dadg_sco_lord_clan_mackinnon" faction="Faction.clan_mackinnon" />
+  <Hero id="dadg_sco_lord_clan_calder" faction="Faction.clan_calder" />
+  <Hero id="dadg_sco_lord_clan_munro" faction="Faction.clan_munro" />
+  <Hero id="dadg_sco_lord_clan_macphee" faction="Faction.clan_macphee" />
+  <Hero id="dadg_sco_lord_clan_macneil_barra" faction="Faction.clan_macneil_barra" />
+  <Hero id="dadg_sco_lord_clan_keppoch" faction="Faction.clan_keppoch" />
+  <Hero id="dadg_sco_lord_clan_cameron" faction="Faction.clan_cameron" />
+  <Hero id="dadg_sco_lord_clan_macneil" faction="Faction.clan_macneil" />
+  <Hero id="dadg_sco_lord_clan_maclain" faction="Faction.clan_maclain" />
+  <Hero id="dadg_sco_lord_clan_macalister" faction="Faction.clan_macalister" />
+  <Hero id="dadg_sco_lord_clan_stewart" faction="Faction.clan_stewart" />
+  <Hero id="dadg_sco_lord_clan_gordon" faction="Faction.clan_gordon" />
+  <Hero id="dadg_sco_lord_clan_keith" faction="Faction.clan_keith" />
+  <Hero id="dadg_sco_lord_clan_erskine" faction="Faction.clan_erskine" />
+  <Hero id="dadg_sco_lord_clan_lindsay" faction="Faction.clan_lindsay" />
+  <Hero id="dadg_sco_lord_clan_douglas_angus" faction="Faction.clan_douglas_angus" />
+  <Hero id="dadg_sco_lord_clan_hepburn" faction="Faction.clan_hepburn" />
+  <Hero id="dadg_sco_lord_clan_hamilton" faction="Faction.clan_hamilton" />
+  <Hero id="dadg_sco_lord_clan_maxwell" faction="Faction.clan_maxwell" />
+  <Hero id="dadg_sco_lord_clan_kennedy" faction="Faction.clan_kennedy" />
+  <Hero id="dadg_sco_lord_clan_crichton" faction="Faction.clan_crichton" />
+  <Hero id="dadg_sco_lord_clan_sinclair" faction="Faction.clan_sinclair" />
+  <Hero id="dadg_sco_lord_clan_campbell" faction="Faction.clan_campbell" />
+  <Hero id="dadg_sco_lord_clan_ruthven" faction="Faction.clan_ruthven" />
+  <Hero id="dadg_sco_lord_clan_halyburton" faction="Faction.clan_halyburton" />
+  <Hero id="dadg_sco_lord_clan_dunbar_moray" faction="Faction.clan_dunbar_moray" />
+  <Hero id="dadg_sco_lord_clan_home" faction="Faction.clan_home" />
+  <Hero id="dadg_sco_lord_clan_macleod_lewis" faction="Faction.clan_macleod_lewis" />
+</Heroes>
