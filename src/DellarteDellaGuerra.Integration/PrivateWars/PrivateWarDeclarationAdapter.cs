@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bannerlord.PrivateWars.Api;
@@ -6,6 +7,7 @@ using Bannerlord.PrivateWars.Domain.Model;
 using DellarteDellaGuerra.Titles.Api.Campaign;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
+using PrivateWarOutcome = Bannerlord.PrivateWars.Api.PrivateWarOutcome;
 using PrivateWarStatus = Bannerlord.PrivateWars.Api.PrivateWarStatus;
 
 namespace DellarteDellaGuerra.Integration.PrivateWars
@@ -21,7 +23,14 @@ namespace DellarteDellaGuerra.Integration.PrivateWars
         {
             _privateWars = privateWars;
             _mainGoalSelector = mainGoalSelector;
+
+            // Relayed rather than raised here, because the submodule announces every resolution
+            // it makes, including the ones its own daily tick decides on score.
+            _privateWars.WarResolved += (war, outcome) => WarConcluded?.Invoke(
+                new PrivateWarConclusion(war.AttackerClanId, outcome == PrivateWarOutcome.AttackerVictory));
         }
+
+        public event Action<PrivateWarConclusion>? WarConcluded;
 
         public bool IsBelligerent(string clanId) =>
             _privateWars.GetWarsByClan(clanId).Any(w => w.Status == PrivateWarStatus.Active);
@@ -41,7 +50,9 @@ namespace DellarteDellaGuerra.Integration.PrivateWars
             string defenderClanId,
             string titleId,
             string mainGoalSettlementId,
-            float day)
+            float day,
+            IReadOnlyCollection<string> attackerSupporters,
+            IReadOnlyCollection<string> defenderSupporters)
         {
             Clan? defender = Campaign.Current?.CampaignObjectManager.Find<Clan>(defenderClanId);
             IReadOnlyDictionary<string, string> fiefSnapshot = defender == null
@@ -57,7 +68,9 @@ namespace DellarteDellaGuerra.Integration.PrivateWars
                 titleId,
                 mainGoalSettlementId,
                 fiefSnapshot,
-                day);
+                day,
+                attackerSupporters,
+                defenderSupporters);
         }
     }
 }

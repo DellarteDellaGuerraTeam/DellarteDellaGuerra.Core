@@ -68,6 +68,8 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             AttackerClanPrisonersHeldByDefenderSide: 0,
             AccumulatedBattleScore: 0f);
 
+        public static readonly IReadOnlyCollection<string> NoSupporters = Array.Empty<string>();
+
         public static PrivateWar War(
             string attacker = "clan_attacker",
             string defender = "clan_defender",
@@ -76,11 +78,15 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             float battleScore = 0f,
             IReadOnlyDictionary<string, string>? fiefSnapshot = null,
             float startDay = 0f,
-            float? goalLastTakenDay = null) =>
+            float? goalLastTakenDay = null,
+            IReadOnlyCollection<string>? attackerSupporters = null,
+            IReadOnlyCollection<string>? defenderSupporters = null) =>
             new(
                 Id: $"pw_{attacker}_{defender}",
                 AttackerPrincipalClanId: attacker,
                 DefenderPrincipalClanId: defender,
+                AttackerSupporters: attackerSupporters ?? NoSupporters,
+                DefenderSupporters: defenderSupporters ?? NoSupporters,
                 CasusBelliType: "claim",
                 TitleId: title,
                 MainGoalSettlementId: mainGoal,

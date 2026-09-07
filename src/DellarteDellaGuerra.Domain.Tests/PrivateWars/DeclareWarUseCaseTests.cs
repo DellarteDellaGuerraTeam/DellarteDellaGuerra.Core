@@ -7,6 +7,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
     public class DeclareWarUseCaseTests
     {
         private static readonly IReadOnlyDictionary<string, string> EmptySnapshot = new Dictionary<string, string>();
+        private static readonly IReadOnlyCollection<string> NoSupporters = PrivateWarTestData.NoSupporters;
 
         [Fact]
         public void Execute_CreatesAndPersistsActiveWar()
@@ -16,7 +17,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 
             var war = useCase.Execute(
                 "clan_attacker", "clan_defender", new ClaimCasusBelli("title_county"),
-                mainGoalSettlementId: "settlement_goal", EmptySnapshot, startDay: 5f);
+                mainGoalSettlementId: "settlement_goal", EmptySnapshot, startDay: 5f, NoSupporters, NoSupporters);
 
             Assert.NotNull(war);
             Assert.Equal(PrivateWarStatus.Active, war!.Status);
@@ -35,7 +36,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
 
             var war = useCase.Execute(
                 "clan_attacker", "clan_defender", new ClaimCasusBelli("title_county"),
-                mainGoalSettlementId: null, EmptySnapshot, startDay: 5f);
+                mainGoalSettlementId: null, EmptySnapshot, startDay: 5f, NoSupporters, NoSupporters);
 
             Assert.Null(war);
             Assert.Empty(repository.GetAll());
@@ -46,9 +47,9 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         {
             var repository = new FakePrivateWarRepository();
             var useCase = new DeclarePrivateWarUseCase(repository);
-            useCase.Execute("A", "D", new ClaimCasusBelli("title_county"), "settlement_goal", EmptySnapshot, 0f);
+            useCase.Execute("A", "D", new ClaimCasusBelli("title_county"), "settlement_goal", EmptySnapshot, 0f, NoSupporters, NoSupporters);
 
-            var second = useCase.Execute("A", "D", new ClaimCasusBelli("title_county"), "settlement_goal", EmptySnapshot, 1f);
+            var second = useCase.Execute("A", "D", new ClaimCasusBelli("title_county"), "settlement_goal", EmptySnapshot, 1f, NoSupporters, NoSupporters);
 
             Assert.Null(second);
             Assert.Single(repository.GetAll());
@@ -59,9 +60,9 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         {
             var repository = new FakePrivateWarRepository();
             var useCase = new DeclarePrivateWarUseCase(repository);
-            useCase.Execute("A", "D", new ClaimCasusBelli("title_county"), "settlement_goal", EmptySnapshot, 0f);
+            useCase.Execute("A", "D", new ClaimCasusBelli("title_county"), "settlement_goal", EmptySnapshot, 0f, NoSupporters, NoSupporters);
 
-            var second = useCase.Execute("A", "D", new ClaimCasusBelli("title_duchy"), "settlement_goal2", EmptySnapshot, 1f);
+            var second = useCase.Execute("A", "D", new ClaimCasusBelli("title_duchy"), "settlement_goal2", EmptySnapshot, 1f, NoSupporters, NoSupporters);
 
             Assert.NotNull(second);
             Assert.Equal(2, repository.GetAll().Count);
@@ -72,9 +73,9 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         {
             var repository = new FakePrivateWarRepository();
             var useCase = new DeclarePrivateWarUseCase(repository);
-            useCase.Execute("A", "D", new ClaimCasusBelli("title_county"), "settlement_goal", EmptySnapshot, 0f);
+            useCase.Execute("A", "D", new ClaimCasusBelli("title_county"), "settlement_goal", EmptySnapshot, 0f, NoSupporters, NoSupporters);
 
-            var second = useCase.Execute("A", "E", new ClaimCasusBelli("title_county"), "settlement_goal", EmptySnapshot, 1f);
+            var second = useCase.Execute("A", "E", new ClaimCasusBelli("title_county"), "settlement_goal", EmptySnapshot, 1f, NoSupporters, NoSupporters);
 
             Assert.NotNull(second);
             Assert.Equal(2, repository.GetAll().Count);

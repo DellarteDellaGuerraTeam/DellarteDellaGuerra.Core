@@ -49,6 +49,32 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             Assert.Null(resolver.ResolveSide("P", war, getSuzerain));
         }
 
+        [Fact]
+        public void ResolveSide_DefenderVassalPledgedToAttacker_FightsAgainstItsOwnLiege()
+        {
+            // V is D's vassal but answered the attacker's call. The hierarchy alone would put V and
+            // its own vassal on D's side; the supporter set overrides that for both.
+            var war = PrivateWarTestData.War(attacker: "A", defender: "D", attackerSupporters: new[] { "V" });
+            var resolver = new WarSideResolver();
+            var getSuzerain = Suzerain(("V", "D"), ("V_vassal", "V"), ("D_loyal_vassal", "D"));
+
+            Assert.Equal(WarSide.Attacker, resolver.ResolveSide("V", war, getSuzerain));
+            Assert.Equal(WarSide.Attacker, resolver.ResolveSide("V_vassal", war, getSuzerain));
+            Assert.Equal(WarSide.Defender, resolver.ResolveSide("D", war, getSuzerain));
+            Assert.Equal(WarSide.Defender, resolver.ResolveSide("D_loyal_vassal", war, getSuzerain));
+        }
+
+        [Fact]
+        public void ResolveSide_UninvolvedClanPledgedToDefender_BringsItsSubtree()
+        {
+            var war = PrivateWarTestData.War(attacker: "A", defender: "D", defenderSupporters: new[] { "X" });
+            var resolver = new WarSideResolver();
+            var getSuzerain = Suzerain(("X_vassal", "X"));
+
+            Assert.Equal(WarSide.Defender, resolver.ResolveSide("X", war, getSuzerain));
+            Assert.Equal(WarSide.Defender, resolver.ResolveSide("X_vassal", war, getSuzerain));
+        }
+
         private static Func<string, string?> Suzerain(params (string clan, string suzerain)[] links)
             => new MapSuzerainProvider(links).GetSuzerain;
     }

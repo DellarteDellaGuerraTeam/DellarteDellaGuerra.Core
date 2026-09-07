@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DellarteDellaGuerra.Domain.Titles;
@@ -6,14 +7,15 @@ using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Titles.Spi;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using BannerlordCampaign = TaleWorlds.CampaignSystem.Campaign;
 
 namespace DellarteDellaGuerra.Titles.Api.Campaign
 {
     /**
      * <summary>
      *  Turns standing claims into wars. Once a day it looks over the realm's claims, discards
-     *  the ones nobody could act on, prices the rest and declares a private war on the ones
-     *  worth pressing.
+     *  the ones nobody could act on, prices the rest, sends the calls to arms round the realm
+     *  and declares a private war on the ones worth pressing.
      * </summary>
      * <remarks>
      *  Claims are evaluated per claimant clan and title rather than per claim: several heroes
@@ -26,6 +28,10 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
      *  monthly, it declares when the situation actually changes. It is stamped whether or not
      *  the evaluation ends in a war, and it is persisted — restoring it on load is the whole
      *  point of keeping it.
+     *
+     *  A claim on a dignity the claimant's own house already holds is pressed by a hero rather
+     *  than by the house: he founds a cadet branch and takes it to war, and unless he wins the
+     *  branch is folded back in when the war ends.
      * </remarks>
      */
     public class ClaimPressureCampaignBehavior : CampaignBehaviorBase
@@ -34,16 +40,26 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         private const float DeclarationChance = 0.25f;
         private const float EvaluationIntervalDays = 30f;
 
+        // No clan carries the empty id, so pricing a war against it puts on the attacker's side
+        // exactly the clans that pledged to a pretender whose house does not exist yet.
+        private const string UnfoundedCadetBranch = "";
+
+        private static readonly SupportDecision NoSupport = new(Array.Empty<string>(), Array.Empty<string>());
+
         private readonly ITitleRepository _titleRepository;
         private readonly IClaimRepository _claimRepository;
         private readonly IGenealogy _genealogy;
         private readonly IGetSuzerainUseCase _getSuzerainUseCase;
         private readonly IGetDeJureSettlementsUseCase _getDeJureSettlementsUseCase;
         private readonly IEvaluatePressClaimUseCase _evaluatePressClaimUseCase;
+        private readonly ISolicitSupportUseCase _solicitSupportUseCase;
         private readonly IPrivateWarDeclaration _privateWarDeclaration;
+        private readonly ICadetBranch _cadetBranch;
 
         private Dictionary<string, float> _nextEvaluationDayByPair = new();
         private List<string> _serialisedCooldowns = new();
+        private Dictionary<string, string> _parentByCadetClanId = new();
+        private List<string> _serialisedCadetBranches = new();
 
         public ClaimPressureCampaignBehavior(
             ITitleRepository titleRepository,
@@ -52,7 +68,9 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             IGetSuzerainUseCase getSuzerainUseCase,
             IGetDeJureSettlementsUseCase getDeJureSettlementsUseCase,
             IEvaluatePressClaimUseCase evaluatePressClaimUseCase,
-            IPrivateWarDeclaration privateWarDeclaration)
+            ISolicitSupportUseCase solicitSupportUseCase,
+            IPrivateWarDeclaration privateWarDeclaration,
+            ICadetBranch cadetBranch)
         {
             _titleRepository = titleRepository;
             _claimRepository = claimRepository;
@@ -60,7 +78,14 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             _getSuzerainUseCase = getSuzerainUseCase;
             _getDeJureSettlementsUseCase = getDeJureSettlementsUseCase;
             _evaluatePressClaimUseCase = evaluatePressClaimUseCase;
+            _solicitSupportUseCase = solicitSupportUseCase;
             _privateWarDeclaration = privateWarDeclaration;
+            _cadetBranch = cadetBranch;
+
+            // Subscribed here and not in RegisterEvents, which runs once per campaign started
+            // while this behaviour is a container singleton: loading a save, quitting to the
+            // menu and loading again would stack a second handler on the same object.
+            _privateWarDeclaration.WarConcluded += OnWarConcluded;
         }
 
         public override void RegisterEvents()
@@ -73,15 +98,19 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             if (dataStore.IsSaving)
             {
                 _serialisedCooldowns = ClaimCooldownSerialiser.Serialise(_nextEvaluationDayByPair);
+                _serialisedCadetBranches = CadetBranchSerialiser.Serialise(_parentByCadetClanId);
             }
 
             dataStore.SyncData("DadgClaimPressureCooldowns", ref _serialisedCooldowns);
+            dataStore.SyncData("DadgCadetBranches", ref _serialisedCadetBranches);
 
             _serialisedCooldowns ??= new List<string>();
+            _serialisedCadetBranches ??= new List<string>();
 
             if (!dataStore.IsSaving)
             {
                 _nextEvaluationDayByPair = ClaimCooldownSerialiser.Deserialise(_serialisedCooldowns);
+                _parentByCadetClanId = CadetBranchSerialiser.Deserialise(_serialisedCadetBranches);
             }
         }
 
@@ -97,6 +126,9 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                 clanId => clanId,
                 clanId => _getSuzerainUseCase.Execute(clanId));
 
+            string? GetSuzerain(string clanId) =>
+                suzerainByClanId.TryGetValue(clanId, out string? suzerain) ? suzerain : null;
+
             foreach (var title in _titleRepository.GetAllTitles())
             {
                 if (title.HolderHeroId is null) continue;
@@ -106,11 +138,14 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
                 foreach (var claim in BestClaimPerClaimant(title.Id))
                 {
-                    // A clan cannot go to war with itself. A passed-over brother's claim on his
-                    // own house's dignity waits for the cadet spinoff.
-                    if (claim.ClaimantClanId == defenderClanId) continue;
                     if (!clansById.TryGetValue(claim.ClaimantClanId, out var attackerClan)) continue;
                     if (attackerClan == Clan.PlayerClan || defenderClan == Clan.PlayerClan) continue;
+
+                    // A clan still cannot go to war with itself, so a claim on its own dignity
+                    // is only actionable if a hero of the house is behind it to leave with.
+                    bool isInternal = claim.ClaimantClanId == defenderClanId;
+                    Hero? pretender = isInternal ? Pretender(claim, title) : null;
+                    if (isInternal && pretender is null) continue;
 
                     var kingdom = attackerClan.Kingdom;
                     if (kingdom is null || kingdom != defenderClan.Kingdom) continue;
@@ -126,33 +161,139 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                         _getDeJureSettlementsUseCase.Execute(title.Id));
                     if (mainGoalSettlementId is null) continue;
 
-                    var (attackerStrength, defenderStrength) = WarSideStrength.Sum(
-                        strengthByClanId,
-                        clanId => suzerainByClanId.TryGetValue(clanId, out string? suzerain) ? suzerain : null,
-                        claim.ClaimantClanId,
-                        defenderClanId);
+                    string attackerSideId = pretender is null ? claim.ClaimantClanId : UnfoundedCadetBranch;
 
-                    var opportunity = new ClaimOpportunity(
-                        title.Id,
-                        claim.ClaimantClanId,
-                        defenderClanId,
-                        claim.Strength,
-                        attackerStrength,
-                        defenderStrength,
-                        IsDistracted(defenderClan, kingdom),
-                        GetRelation(attackerClan, defenderClan));
+                    ClaimOpportunity Price(SupportDecision support)
+                    {
+                        var (attackerStrength, defenderStrength) = WarSideStrength.Sum(
+                            strengthByClanId,
+                            GetSuzerain,
+                            attackerSideId,
+                            defenderClanId,
+                            support.AttackerSupporters,
+                            support.DefenderSupporters);
 
-                    if (_evaluatePressClaimUseCase.Execute(opportunity) < DeclarationThreshold) continue;
+                        // A cadet branch's whole army is the men its founder leads, and the house
+                        // he is leaving is still counting them among its own.
+                        float ownMen = pretender?.PartyBelongedTo?.Party.EstimatedStrength ?? 0f;
+
+                        return new ClaimOpportunity(
+                            title.Id,
+                            claim.ClaimantClanId,
+                            defenderClanId,
+                            claim.Strength,
+                            attackerStrength + ownMen,
+                            defenderStrength - ownMen,
+                            IsDistracted(defenderClan, kingdom),
+                            GetRelation(pretender ?? attackerClan.Leader, defenderClan.Leader));
+                    }
+
+                    // Priced twice, because nobody pledges to a side on the strength of pledges
+                    // not yet made: the calls to arms go out on what the hierarchy alone fields,
+                    // and the war is then priced on the sides those calls actually produced.
+                    var support = _solicitSupportUseCase.Execute(
+                        Price(NoSupport),
+                        Candidates(kingdom, attackerClan, defenderClan, pretender, attackerSideId, GetSuzerain));
+
+                    if (_evaluatePressClaimUseCase.Execute(Price(support)) < DeclarationThreshold) continue;
                     if (MBRandom.RandomFloat >= DeclarationChance) continue;
 
+                    string attackerClanId = claim.ClaimantClanId;
+
+                    if (pretender is not null)
+                    {
+                        string? cadetClanId = _cadetBranch.Split(pretender.StringId, defenderClanId, title.SeatSettlementId);
+                        if (cadetClanId is null) continue;
+
+                        _parentByCadetClanId[cadetClanId] = defenderClanId;
+                        attackerClanId = cadetClanId;
+                    }
+
                     _privateWarDeclaration.Declare(
-                        claim.ClaimantClanId,
+                        attackerClanId,
                         defenderClanId,
                         title.Id,
                         mainGoalSettlementId,
-                        today);
+                        today,
+                        support.AttackerSupporters,
+                        support.DefenderSupporters);
                 }
             }
+        }
+
+        private void OnWarConcluded(PrivateWarConclusion conclusion)
+        {
+            if (!_parentByCadetClanId.TryGetValue(conclusion.AttackerClanId, out string parentClanId)) return;
+
+            _parentByCadetClanId.Remove(conclusion.AttackerClanId);
+
+            // Winning makes the branch a house in its own right, holding the dignity it fought
+            // for. Anything short of winning, a white peace included, leaves it nothing to be.
+            if (!conclusion.AttackerWon) _cadetBranch.Reabsorb(conclusion.AttackerClanId, parentClanId);
+        }
+
+        /**
+         * <summary>
+         *  The hero who would leave his house to press its own dignity, or null if there is
+         *  nobody to leave: a clan-level claim belongs to no one hero, the holder cannot rise
+         *  against himself, and a claimant who has already left presses it as his own house.
+         * </summary>
+         */
+        private static Hero? Pretender(Claim claim, Title title)
+        {
+            if (claim.ClaimantHeroId is null || claim.ClaimantHeroId == title.HolderHeroId) return null;
+
+            var pretender = BannerlordCampaign.Current?.CampaignObjectManager.Find<Hero>(claim.ClaimantHeroId);
+
+            return pretender is not null && pretender.IsAlive && pretender.Clan?.StringId == claim.ClaimantClanId
+                ? pretender
+                : null;
+        }
+
+        /**
+         * <summary>
+         *  The realm's other houses, each with the two things that decide which way it answers:
+         *  where the feudal hierarchy already puts it, and how its leader stands with the two
+         *  principals.
+         * </summary>
+         */
+        private static IReadOnlyCollection<SupportCandidate> Candidates(
+            Kingdom kingdom,
+            Clan attackerClan,
+            Clan defenderClan,
+            Hero? pretender,
+            string attackerSideId,
+            Func<string, string?> getSuzerain)
+        {
+            Hero? claimant = pretender ?? attackerClan.Leader;
+
+            return kingdom.Clans
+                // The player is never enlisted into somebody else's quarrel, on either side, for
+                // the same reason his house never starts one of these by itself.
+                .Where(clan => clan != attackerClan && clan != defenderClan && clan != Clan.PlayerClan)
+                .Where(clan => clan.Leader is not null)
+                .Select(clan => new SupportCandidate(
+                    clan.StringId,
+                    Allegiance(
+                        WarSideStrength.ResolveSide(
+                            clan.StringId,
+                            getSuzerain,
+                            attackerSideId,
+                            defenderClan.StringId,
+                            NoSupport.AttackerSupporters,
+                            NoSupport.DefenderSupporters),
+                        attackerSideId,
+                        defenderClan.StringId),
+                    GetRelation(clan.Leader, claimant),
+                    GetRelation(clan.Leader, defenderClan.Leader)))
+                .ToList();
+        }
+
+        private static FeudalAllegiance Allegiance(string? side, string attackerSideId, string defenderClanId)
+        {
+            if (side == attackerSideId) return FeudalAllegiance.Claimant;
+
+            return side == defenderClanId ? FeudalAllegiance.Holder : FeudalAllegiance.Uncommitted;
         }
 
         private IEnumerable<Claim> BestClaimPerClaimant(string titleId)
@@ -169,11 +310,9 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                    || Kingdom.All.Any(other => other != kingdom && kingdom.IsAtWarWith(other));
         }
 
-        private static float GetRelation(Clan attackerClan, Clan defenderClan)
+        private static float GetRelation(Hero? claimant, Hero? holder)
         {
-            return attackerClan.Leader is null || defenderClan.Leader is null
-                ? 0f
-                : attackerClan.Leader.GetRelation(defenderClan.Leader);
+            return claimant is null || holder is null ? 0f : claimant.GetRelation(holder);
         }
     }
 }

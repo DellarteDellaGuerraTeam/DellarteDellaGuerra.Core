@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DellarteDellaGuerra.Domain.Titles
 {
@@ -14,7 +15,9 @@ namespace DellarteDellaGuerra.Domain.Titles
      *  ahead of the declaration so that the claimant can price the fight he is about to
      *  start. Nearest ancestor wins, so a vassal of the attacker who is himself a vassal of
      *  the defender further up fights for the attacker. A clan under neither counts for
-     *  neither.
+     *  neither. Supporters are checked at every step of that walk, so a clan that pledged
+     *  to a side brings its own vassals with it, and a defecting vassal takes its subtree
+     *  out of its liege's total.
      * </remarks>
      */
     public static class WarSideStrength
@@ -23,14 +26,17 @@ namespace DellarteDellaGuerra.Domain.Titles
             IReadOnlyDictionary<string, float> strengthByClanId,
             Func<string, string?> getSuzerain,
             string attackerClanId,
-            string defenderClanId)
+            string defenderClanId,
+            IReadOnlyCollection<string> attackerSupporters,
+            IReadOnlyCollection<string> defenderSupporters)
         {
             float attacker = 0f;
             float defender = 0f;
 
             foreach (var entry in strengthByClanId)
             {
-                string? side = ResolveSide(entry.Key, getSuzerain, attackerClanId, defenderClanId);
+                string? side = ResolveSide(
+                    entry.Key, getSuzerain, attackerClanId, defenderClanId, attackerSupporters, defenderSupporters);
                 if (side == attackerClanId) attacker += entry.Value;
                 else if (side == defenderClanId) defender += entry.Value;
             }
@@ -38,11 +44,19 @@ namespace DellarteDellaGuerra.Domain.Titles
             return (attacker, defender);
         }
 
-        private static string? ResolveSide(
+        /**
+         * <summary>
+         *  Which belligerent a clan fights for: the first one it meets walking up its suzerain
+         *  chain, or null if it meets neither. A pledge to a side counts as meeting it.
+         * </summary>
+         */
+        public static string? ResolveSide(
             string clanId,
             Func<string, string?> getSuzerain,
             string attackerClanId,
-            string defenderClanId)
+            string defenderClanId,
+            IReadOnlyCollection<string> attackerSupporters,
+            IReadOnlyCollection<string> defenderSupporters)
         {
             var visited = new HashSet<string>();
             string? current = clanId;
@@ -50,8 +64,8 @@ namespace DellarteDellaGuerra.Domain.Titles
             // The chain is authored data, so it can loop; Add() failing ends the walk.
             while (current != null && visited.Add(current))
             {
-                if (current == attackerClanId) return attackerClanId;
-                if (current == defenderClanId) return defenderClanId;
+                if (current == attackerClanId || attackerSupporters.Contains(current)) return attackerClanId;
+                if (current == defenderClanId || defenderSupporters.Contains(current)) return defenderClanId;
                 current = getSuzerain(current);
             }
 

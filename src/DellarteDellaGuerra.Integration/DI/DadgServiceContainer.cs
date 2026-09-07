@@ -137,6 +137,7 @@ public class DadgServiceContainer
         services.AddSingleton<IClaimRepository>(sp => sp.GetRequiredService<InMemoryClaimRegistry>());
         services.AddSingleton<IFeudalStateStore, FeudalStateStoreAdapter>();
         services.AddSingleton<IGenealogy, CampaignGenealogy>();
+        services.AddSingleton<ICadetBranch, CadetBranchAdapter>();
         services.AddSingleton<IPrivateWarDeclaration>(sp => new PrivateWarDeclarationAdapter(
             sp.GetRequiredService<IPrivateWarsApi>(),
             new MainGoalSelector()));
@@ -151,6 +152,7 @@ public class DadgServiceContainer
         services.AddSingleton<IBuildFeudalMapUseCase, BuildFeudalMapUseCase>();
         services.AddSingleton<IGetDeJureSettlementsUseCase, GetDeJureSettlementsUseCase>();
         services.AddSingleton<IEvaluatePressClaimUseCase, EvaluatePressClaimUseCase>();
+        services.AddSingleton<ISolicitSupportUseCase, SolicitSupportUseCase>();
 
         // Campaign behaviour (resolved lazily in SubModule)
         services.AddSingleton<FeudalTitleCampaignBehavior>(sp => new FeudalTitleCampaignBehavior(
