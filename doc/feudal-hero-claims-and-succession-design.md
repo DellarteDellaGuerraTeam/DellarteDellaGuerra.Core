@@ -350,7 +350,7 @@ cadet.ChangeClanName(name, informalName);
 cadet.Culture = parent.Culture;
 cadet.Banner  = Banner.CreateOneColoredBannerWithOneIcon(/* derived from parent */);
 cadet.Color = parent.Color; cadet.Color2 = parent.Color2;
-cadet.Tier  = Math.Max(1, parent.Tier - 1);
+cadet.AddRenown(parent.Renown / 2f, shouldNotify: false); // Tier's setter is private in 1.4.6
 cadet.SetInitialHomeSettlement(seat ?? parent.HomeSettlement);
 
 claimant.Clan = cadet;                                      // public setter
@@ -429,7 +429,8 @@ strength-bandwagon term. Threshold and done — resist building an opinion syste
   `DestroyClanAction.Apply(cadet)`, unless the claimant died. Any title the claimant still personally holds
   follows them back into the parent clan automatically under §1 — no title bookkeeping in the reabsorption
   path either. Without reabsorption, a century of failed claims accumulates dead landless clans in the clan
-  list and the encyclopedia.
+  list and the encyclopedia. **Anything short of a claimant victory reabsorbs, a white peace included** —
+  the branch exists to hold a dignity it did not win, so there is nothing for it to go on being.
 
 ---
 
@@ -471,8 +472,8 @@ Each phase is independently shippable and leaves the game in a working state.
 | 2 | ✅ **Done.** `HeroNode.FatherId`/`Age`; `ExecuteSuccessionUseCase` called from `OnHeroKilled` before claim re-derivation. Representation is **on** (§2.2) | Unit tests over a synthetic genealogy: eldest son / no sons → eldest daughter / no children → brother / no kin → clan-leader backstop / dead leader → vacant, not the corpse / representation / several titles → all move. `dotnet test` green at 199 + 20, claim baseline still 42. Live: `campaign.kill_hero` on a duke → eldest son holds the duchy. **The passed-over second son's Strong claim moved to phase 3** — the wholesale `Inheritance` rebuild plus clan-level self-exclusion make it unreachable until per-hero exclusion lands; see §2 of the phase 2 plan |
 | 3 | ✅ **Done.** Claims descend from the holder and his father — the same two walks succession makes — so the claimant set is the potential-heir set; `PrincipalTitleByClan` and `GetDeceasedClanMemberIds` deleted; self-exclusion is per hero in derivation *and* in `EvaluateClaimUseCase` | `dotnet test` green at 206 + 29. The baseline grows **42 → 399** (183 Strong, 216 Weak; 89 titles, 53 clans): Warwick's brother holds a Strong claim on Middleham, three of the house of York on the duchy, and Somerset's Strong claimant is the same man phase 2 proves would inherit. Warwick's death now moves 399 → 339 — see §6 of the phase 3 plan |
 | 4 | Daily evaluator, **inter-clan only**, with the player and same-kingdom gates | Run a campaign at speed; `campaign.list_private_wars` shows plausible declaration rates, never involving the player, never crossing a kingdom border |
-| 5 | Supporter sets in `PrivateWar` + `WarSideResolver` | Resolver unit tests; a war with an explicit defector puts that clan on the attacker side in `AreEnemies` |
-| 6 | Cadet spinoff, support solicitation, reabsorb-on-defeat | **Live check required** — cadet clan exists, is in the parent's kingdom, its party fights the parent, and encyclopedia/nameplates/banners survive |
+| 5 | ✅ **Done.** Supporter sets on `PrivateWar`, consulted at every step of `WarSideResolver`'s suzerain walk; the serialiser appends two fields and pre-phase-5 saves still load | Resolver unit tests; a war with an explicit defector puts that clan on the attacker side in `AreEnemies`. `dotnet test` green at 234 + 39, submodule 16 |
+| 6 | ✅ **Code done.** Cadet spinoff, support solicitation, reabsorb-on-defeat. The war is priced twice — on the hierarchy alone to send the calls to arms, then on the sides those calls produced — and an intra-clan claimant is priced as an unfounded branch carrying only his own men | `dotnet test` green at 237 + 43 + 1, submodule 16, plus 3 cadet-serialiser tests in `DellarteDellaGuerra.Tests` (not in the .sln — run it by csproj path). Four content integration tests in `ClaimPressureOverRealContentTests` price the spinoff over the real 1471 realm: 86 intra-clan claims across 47 houses, every one with a living pretender; a pretender musters nothing from the house he leaves; and a weak claim inside a house puts all 53 houses behind the holder. `DadgServiceContainerTests` validates the whole registration graph out of process, which is what a missing `ICadetBranch` registration would otherwise only report as a crash on load. **Live check still outstanding** — cadet clan exists, is in the parent's kingdom, its party fights the parent, and encyclopedia/nameplates/banners survive |
 
 Phase 1 is larger than it was under the revision-1 cache design — it is a migration rather than an append —
 but it is still behaviour-neutral, and it is the phase that makes phases 2, 4 and 6 nearly free of
