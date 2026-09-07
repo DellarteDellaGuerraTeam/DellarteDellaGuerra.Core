@@ -54,8 +54,23 @@ public class DadgServiceContainer
 {
     public IServiceProvider Build()
     {
+        // The logger's config path is looked up in the module folders, so reading it needs the
+        // game running. Nothing else in the composition does, which is what lets it be tested.
+        var provider = Compose(new LoggerConfigPathProvider().Config).BuildServiceProvider();
+
+        return provider.InitializeDadgInfrastructure();
+    }
+
+    /**
+     * <summary>
+     *  Every registration DADG makes, and nothing else: no service is built here and nothing
+     *  reads the running game.
+     * </summary>
+     */
+    public IServiceCollection Compose(string? loggerConfigPath)
+    {
         var services = new ServiceCollection();
-        services.AddLogging(b => { b.AddNLog(new LoggerConfigPathProvider().Config); });
+        services.AddLogging(b => { b.AddNLog(loggerConfigPath); });
         RegisterCoreServices(services);
         services.AddDadgInfrastructure();
         RegisterTitleServices(services);
@@ -64,8 +79,8 @@ public class DadgServiceContainer
         RegisterMissionServices(services);
         RegisterPatches(services);
         services.AddHarmonyPatching();
-        var provider = services.BuildServiceProvider();
-        return provider.InitializeDadgInfrastructure();
+
+        return services;
     }
 
     private static void RegisterCoreServices(IServiceCollection services)
