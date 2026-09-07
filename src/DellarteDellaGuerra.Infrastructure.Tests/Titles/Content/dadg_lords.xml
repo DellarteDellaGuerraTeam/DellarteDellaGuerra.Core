@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Test fixture. A snapshot of the lord templates shipped in the sibling DellarteDellaGuerraMap
+  module (ModuleData/characters/dadg_lords.xml), reduced to the two facts succession needs and
+  the hero record does not carry: sex and age.
+
+  Equipment, skills, faces and culture are omitted for the same reason as in dadg_heroes.xml.
+-->
+<NPCCharacters>
+  <NPCCharacter id="main_hero" is_female="false" age="22" />
+  <NPCCharacter id="main_hero_father" age="50" />
+  <NPCCharacter id="main_hero_mother" is_female="true" age="50" />
+  <NPCCharacter id="dadg_dead_lord_10_1" age="40" />
+  <NPCCharacter id="dadg_dead_lord_11_1" age="59" />
+  <NPCCharacter id="dadg_dead_lord_11_2" is_female="true" age="53" />
+  <NPCCharacter id="dadg_dead_lord_12_1" age="45" />
+  <NPCCharacter id="dadg_dead_lord_12_2" is_female="true" age="55" />
+  <NPCCharacter id="dadg_dead_lord_13_1" is_female="false" age="46" />
+  <NPCCharacter id="dadg_dead_lord_14_1" age="54" />
+  <NPCCharacter id="dadg_dead_lord_15_1" age="57" />
+  <NPCCharacter id="dadg_dead_lord_16_1" age="43" />
+  <NPCCharacter id="dadg_dead_lord_16_2" is_female="true" age="40" />
+  <NPCCharacter id="dadg_dead_lord_17_1" age="52" />
+  <NPCCharacter id="dadg_dead_lord_17_2" is_female="true" age="24" />
+  <NPCCharacter id="dadg_dead_lord_18_1" age="62" />
+  <NPCCharacter id="dadg_dead_lord_18_2" is_female="true" age="57" />
+  <NPCCharacter id="dadg_dead_lord_19_1" age="43" />
+  <NPCCharacter id="dadg_dead_lord_1_1" age="49" />
+  <NPCCharacter id="dadg_dead_lord_1_2" is_female="false" age="17" />
+  <NPCCharacter id="dadg_dead_lord_20_1" age="48" />
+  <NPCCharacter id="dadg_dead_lord_20_2" is_female="true" age="45" />
+  <NPCCharacter id="dadg_dead_lord_21_1" age="64" />
+  <NPCCharacter id="dadg_dead_lord_22_1" is_female="true" age="40" />
+  <NPCCharacter id="dadg_dead_lord_23_1" age="46" />
+  <NPCCharacter id="dadg_dead_lord_24_1" age="52" />
+  <NPCCharacter id="dadg_dead_lord_24_2" is_female="true" age="50" />
+  <NPCCharacter id="dadg_dead_lord_25_1" age="49" />
+  <NPCCharacter id="dadg_dead_lord_25_2" is_female="true" age="45" />
+  <NPCCharacter id="dadg_dead_lord_26_1" age="51" />
+  <NPCCharacter id="dadg_dead_lord_27_1" age="61" />
+  <NPCCharacter id="dadg_dead_lord_27_2" is_female="true" age="61" />
+  <NPCCharacter id="dadg_dead_lord_28_1" age="54" />
+  <NPCCharacter id="dadg_dead_lord_28_2" is_female="true" age="65" />
+  <NPCCharacter id="dadg_dead_lord_29_1" age="50" />
+  <NPCCharacter id="dadg_dead_lord_29_2" is_female="true" age="35" />
+  <NPCCharacter id="dadg_dead_lord_2_1" age="35" />
+  <NPCCharacter id="dadg_dead_lord_2_2" is_female="true" age="33" />
+  <NPCCharacter id="dadg_dead_lord_30_1" age="53" />
+  <NPCCharacter id="dadg_dead_lord_30_2" is_female="true" age="42" />
+  <NPCCharacter id="dadg_dead_lord_31_1" age="40" />
+  <NPCCharacter id="dadg_dead_lord_32_1" age="89" />
+  <NPCCharacter id="dadg_dead_lord_33_1" age="44" />
+  <NPCCharacter id="dadg_dead_lord_34_1" age="52" />
+  <NPCCharacter id="dadg_dead_lord_36_1" age="61" />
+  <NPCCharacter id="dadg_dead_lord_36_2" is_female="true" age="55" />
+  <NPCCharacter id="dadg_dead_lord_37_1" age="69" />
+  <NPCCharacter id="dadg_dead_lord_37_2" is_female="true" age="56" />
+  <NPCCharacter id="dadg_dead_lord_38_1" age="54" />
+  <NPCCharacter id="dadg_dead_lord_38_2" is_female="true" age="50" />
+  <NPCCharacter id="dadg_dead_lord_39_1" age="57" />
+  <NPCCharacter id="dadg_dead_lord_39_2" is_female="true" age="54" />
+  <NPCCharacter id="dadg_dead_lord_3_1" age="35" />
+  <NPCCharacter id="dadg_dead_lord_3_2" is_female="true" age="70" />
+  <NPCCharacter id="dadg_dead_lord_3_3" is_female="true" age="38" />
+  <NPCCharacter id="dadg_dead_lord_40_1" age="48" />
+  <NPCCharacter id="dadg_dead_lord_40_2" is_female="true" age="44" />
+  <NPCCharacter id="dadg_dead_lord_40_3" is_female="true" age="31" />
+  <NPCCharacter id="dadg_dead_lord_41_1" is_female="true" age="53" />
+  <NPCCharacter id="dadg_dead_lord_42_1" age="53" />
+  <NPCCharacter id="dadg_dead_lord_42_2" is_female="true" age="42" />
+  <NPCCharacter id="dadg_dead_lord_43_1" age="54" />
+  <NPCCharacter id="dadg_dead_lord_43_2" is_female="true" age="50" />
+  <NPCCharacter id="dadg_dead_lord_44_1" age="65" />
+  <NPCCharacter id="dadg_dead_lord_44_2" is_female="true" age="63" />
+  <NPCCharacter id="dadg_dead_lord_45_1" age="78" />
+  <NPCCharacter id="dadg_dead_lord_45_2" is_female="true" age="72" />
+  <NPCCharacter id="dadg_dead_lord_46_1" age="60" />
+  <NPCCharacter id="dadg_dead_lord_46_2" is_female="true" age="57" />
+  <NPCCharacter id="dadg_dead_lord_46_3" age="36" />
+  <NPCCharacter id="dadg_dead_lord_47_1" age="54" />
+  <NPCCharacter id="dadg_dead_lord_47_2" is_female="true" age="51" />
+  <NPCCharacter id="dadg_dead_lord_48_1" age="54" />
+  <NPCCharacter id="dadg_dead_lord_48_2" is_female="true" age="51" />
+  <NPCCharacter id="dadg_dead_lord_49_1" age="32" />
+  <NPCCharacter id="dadg_dead_lord_4_1" age="51" />
+  <NPCCharacter id="dadg_dead_lord_4_2" is_female="true" age="49" />
+  <NPCCharacter id="dadg_dead_lord_50_1" age="67" />
+  <NPCCharacter id="dadg_dead_lord_50_2" is_female="true" age="63" />
+  <NPCCharacter id="dadg_dead_lord_51_1" age="66" />
+  <NPCCharacter id="dadg_dead_lord_51_2" is_female="true" age="60" />
+  <NPCCharacter id="dadg_dead_lord_52_1" age="38" />
+  <NPCCharacter id="dadg_dead_lord_52_2" is_female="true" age="40" />
+  <NPCCharacter id="dadg_dead_lord_53_1" age="26" />
+  <NPCCharacter id="dadg_dead_lord_53_2" is_female="true" age="28" />
+  <NPCCharacter id="dadg_dead_lord_54_1" is_female="true" age="58" />
+  <NPCCharacter id="dadg_dead_lord_55_1" age="62" />
+  <NPCCharacter id="dadg_dead_lord_55_2" is_female="true" age="57" />
+  <NPCCharacter id="dadg_dead_lord_5_1" age="29" />
+  <NPCCharacter id="dadg_dead_lord_6_1" age="49" />
+  <NPCCharacter id="dadg_dead_lord_6_2" is_female="true" age="58" />
+  <NPCCharacter id="dadg_dead_lord_6_3" age="28" />
+  <NPCCharacter id="dadg_dead_lord_7_1" age="60" />
+  <NPCCharacter id="dadg_dead_lord_7_2" is_female="true" age="35" />
+  <NPCCharacter id="dadg_dead_lord_7_3" age="26" />
+  <NPCCharacter id="dadg_dead_lord_8_1" age="41" />
+  <NPCCharacter id="dadg_dead_lord_8_2" is_female="true" age="38" />
+  <NPCCharacter id="dadg_dead_lord_8_3" age="26" />
+  <NPCCharacter id="dadg_dead_lord_9_1" age="60" />
+  <NPCCharacter id="dadg_dead_lord_9_2" is_female="true" age="55" />
+  <NPCCharacter id="dadg_lord_10_1" age="22" />
+  <NPCCharacter id="dadg_lord_10_2" is_female="true" age="49" />
+  <NPCCharacter id="dadg_lord_10_3" is_female="true" age="16" />
+  <NPCCharacter id="dadg_lord_10_4" is_female="true" age="11" />
+  <NPCCharacter id="dadg_lord_11_1" age="40" />
+  <NPCCharacter id="dadg_lord_11_2" is_female="true" age="29" />
+  <NPCCharacter id="dadg_lord_11_3" age="30" />
+  <NPCCharacter id="dadg_lord_11_4" is_female="true" age="26" />
+  <NPCCharacter id="dadg_lord_11_5" age="22" />
+  <NPCCharacter id="dadg_lord_11_6" is_female="true" age="19" />
+  <NPCCharacter id="dadg_lord_11_7" age="14" />
+  <NPCCharacter id="dadg_lord_11_8" age="5" />
+  <NPCCharacter id="dadg_lord_12_1" age="65" />
+  <NPCCharacter id="dadg_lord_12_10" age="4" />
+  <NPCCharacter id="dadg_lord_12_2" is_female="true" age="62" />
+  <NPCCharacter id="dadg_lord_12_3" age="55" />
+  <NPCCharacter id="dadg_lord_12_4" is_female="true" age="52" />
+  <NPCCharacter id="dadg_lord_12_5" age="35" />
+  <NPCCharacter id="dadg_lord_12_6" age="33" />
+  <NPCCharacter id="dadg_lord_12_7" is_female="true" age="52" />
+  <NPCCharacter id="dadg_lord_12_8" age="30" />
+  <NPCCharacter id="dadg_lord_12_9" is_female="true" age="26" />
+  <NPCCharacter id="dadg_lord_13_10" is_female="true" age="11" />
+  <NPCCharacter id="dadg_lord_13_4" age="19" />
+  <NPCCharacter id="dadg_lord_13_5" age="18" />
+  <NPCCharacter id="dadg_lord_13_6" age="16" />
+  <NPCCharacter id="dadg_lord_13_7" is_female="true" age="15" />
+  <NPCCharacter id="dadg_lord_13_8" is_female="true" age="17" />
+  <NPCCharacter id="dadg_lord_13_9" is_female="true" age="13" />
+  <NPCCharacter id="dadg_lord_14_1" age="29" />
+  <NPCCharacter id="dadg_lord_14_2" is_female="true" age="67" />
+  <NPCCharacter id="dadg_lord_14_3" is_female="true" age="27" />
+  <NPCCharacter id="dadg_lord_14_4" age="11" />
+  <NPCCharacter id="dadg_lord_14_5" age="5" />
+  <NPCCharacter id="dadg_lord_14_6" is_female="true" age="3" />
+  <NPCCharacter id="dadg_lord_14_7" age="1" />
+  <NPCCharacter id="dadg_lord_15_1" age="44" />
+  <NPCCharacter id="dadg_lord_15_2" is_female="true" age="28" />
+  <NPCCharacter id="dadg_lord_15_3" age="1" />
+  <NPCCharacter id="dadg_lord_15_4" is_female="true" age="63" />
+  <NPCCharacter id="dadg_lord_15_5" age="16" />
+  <NPCCharacter id="dadg_lord_15_6" is_female="true" age="13" />
+  <NPCCharacter id="dadg_lord_16_1" age="36" />
+  <NPCCharacter id="dadg_lord_16_2" is_female="true" age="22" />
+  <NPCCharacter id="dadg_lord_16_3" is_female="true" age="19" />
+  <NPCCharacter id="dadg_lord_16_4" is_female="true" age="17" />
+  <NPCCharacter id="dadg_lord_16_5" is_female="true" age="10" />
+  <NPCCharacter id="dadg_lord_16_6" is_female="true" age="25" />
+  <NPCCharacter id="dadg_lord_17_1" age="40" />
+  <NPCCharacter id="dadg_lord_17_2" is_female="true" age="31" />
+  <NPCCharacter id="dadg_lord_18_1" age="31" />
+  <NPCCharacter id="dadg_lord_18_2" age="30" />
+  <NPCCharacter id="dadg_lord_18_3" age="29" />
+  <NPCCharacter id="dadg_lord_19_1" age="23" />
+  <NPCCharacter id="dadg_lord_19_2" is_female="true" age="34" />
+  <NPCCharacter id="dadg_lord_19_3" age="3" />
+  <NPCCharacter id="dadg_lord_19_4" is_female="true" age="51" />
+  <NPCCharacter id="dadg_lord_19_5" age="21" />
+  <NPCCharacter id="dadg_lord_19_6" age="19" />
+  <NPCCharacter id="dadg_lord_19_7" age="17" />
+  <NPCCharacter id="dadg_lord_19_8" age="15" />
+  <NPCCharacter id="dadg_lord_1_1" age="28" />
+  <NPCCharacter id="dadg_lord_1_2" age="19" />
+  <NPCCharacter id="dadg_lord_1_3" age="21" />
+  <NPCCharacter id="dadg_lord_1_4" is_female="true" age="33" />
+  <NPCCharacter id="dadg_lord_1_5" is_female="true" age="4" />
+  <NPCCharacter id="dadg_lord_1_6" is_female="true" age="1" />
+  <NPCCharacter id="dadg_lord_1_7" is_female="false" age="1" />
+  <NPCCharacter id="dadg_lord_1_8" is_female="true" age="19" />
+  <NPCCharacter id="dadg_lord_1_9" is_female="true" age="55" />
+  <NPCCharacter id="dadg_lord_20_1" age="30" />
+  <NPCCharacter id="dadg_lord_20_2" is_female="true" age="29" />
+  <NPCCharacter id="dadg_lord_20_3" age="10" />
+  <NPCCharacter id="dadg_lord_20_4" age="8" />
+  <NPCCharacter id="dadg_lord_20_5" age="2" />
+  <NPCCharacter id="dadg_lord_21_1" age="31" />
+  <NPCCharacter id="dadg_lord_21_2" is_female="true" age="20" />
+  <NPCCharacter id="dadg_lord_21_3" age="21" />
+  <NPCCharacter id="dadg_lord_21_4" age="20" />
+  <NPCCharacter id="dadg_lord_21_5" age="18" />
+  <NPCCharacter id="dadg_lord_21_6" is_female="true" age="55" />
+  <NPCCharacter id="dadg_lord_22_1" age="65" />
+  <NPCCharacter id="dadg_lord_22_2" age="28" />
+  <NPCCharacter id="dadg_lord_22_3" is_female="true" age="24" />
+  <NPCCharacter id="dadg_lord_22_4" age="10" />
+  <NPCCharacter id="dadg_lord_22_5" age="7" />
+  <NPCCharacter id="dadg_lord_23_1" age="27" />
+  <NPCCharacter id="dadg_lord_23_2" is_female="true" age="29" />
+  <NPCCharacter id="dadg_lord_23_3" is_female="true" age="54" />
+  <NPCCharacter id="dadg_lord_24_1" age="55" />
+  <NPCCharacter id="dadg_lord_24_2" is_female="true" age="48" />
+  <NPCCharacter id="dadg_lord_24_3" age="28" />
+  <NPCCharacter id="dadg_lord_24_4" age="17" />
+  <NPCCharacter id="dadg_lord_24_5" age="13" />
+  <NPCCharacter id="dadg_lord_24_6" is_female="true" age="23" />
+  <NPCCharacter id="dadg_lord_25_1" age="50" />
+  <NPCCharacter id="dadg_lord_25_2" is_female="true" age="37" />
+  <NPCCharacter id="dadg_lord_25_3" age="19" />
+  <NPCCharacter id="dadg_lord_25_4" is_female="true" age="20" />
+  <NPCCharacter id="dadg_lord_25_5" age="2" />
+  <NPCCharacter id="dadg_lord_26_1" age="64" />
+  <NPCCharacter id="dadg_lord_26_2" is_female="true" age="60" />
+  <NPCCharacter id="dadg_lord_26_3" age="15" />
+  <NPCCharacter id="dadg_lord_27_1" age="57" />
+  <NPCCharacter id="dadg_lord_27_2" is_female="true" age="52" />
+  <NPCCharacter id="dadg_lord_27_3" age="32" />
+  <NPCCharacter id="dadg_lord_27_4" age="30" />
+  <NPCCharacter id="dadg_lord_27_5" is_female="true" age="24" />
+  <NPCCharacter id="dadg_lord_27_6" age="3" />
+  <NPCCharacter id="dadg_lord_27_7" age="2" />
+  <NPCCharacter id="dadg_lord_27_8" age="1" />
+  <NPCCharacter id="dadg_lord_28_1" age="36" />
+  <NPCCharacter id="dadg_lord_28_2" is_female="true" age="33" />
+  <NPCCharacter id="dadg_lord_28_3" age="34" />
+  <NPCCharacter id="dadg_lord_28_4" is_female="true" age="30" />
+  <NPCCharacter id="dadg_lord_28_5" age="27" />
+  <NPCCharacter id="dadg_lord_28_6" age="11" />
+  <NPCCharacter id="dadg_lord_28_7" age="8" />
+  <NPCCharacter id="dadg_lord_28_8" age="8" />
+  <NPCCharacter id="dadg_lord_29_1" age="33" />
+  <NPCCharacter id="dadg_lord_29_2" is_female="true" age="29" />
+  <NPCCharacter id="dadg_lord_2_1" age="49" />
+  <NPCCharacter id="dadg_lord_2_2" is_female="true" age="40" />
+  <NPCCharacter id="dadg_lord_2_3" age="17" />
+  <NPCCharacter id="dadg_lord_2_4" is_female="true" age="14" />
+  <NPCCharacter id="dadg_lord_30_1" age="42" />
+  <NPCCharacter id="dadg_lord_30_2" is_female="true" age="41" />
+  <NPCCharacter id="dadg_lord_30_3" age="20" />
+  <NPCCharacter id="dadg_lord_30_4" age="18" />
+  <NPCCharacter id="dadg_lord_31_1" age="35" />
+  <NPCCharacter id="dadg_lord_31_2" is_female="true" age="24" />
+  <NPCCharacter id="dadg_lord_31_3" age="32" />
+  <NPCCharacter id="dadg_lord_31_4" is_female="true" age="27" />
+  <NPCCharacter id="dadg_lord_31_5" is_female="true" age="57" />
+  <NPCCharacter id="dadg_lord_31_6" age="3" />
+  <NPCCharacter id="dadg_lord_32_1" age="30" />
+  <NPCCharacter id="dadg_lord_32_2" is_female="true" age="20" />
+  <NPCCharacter id="dadg_lord_32_3" age="9" />
+  <NPCCharacter id="dadg_lord_32_4" is_female="true" age="52" />
+  <NPCCharacter id="dadg_lord_33_1" age="29" />
+  <NPCCharacter id="dadg_lord_33_2" is_female="true" age="47" />
+  <NPCCharacter id="dadg_lord_33_3" age="27" />
+  <NPCCharacter id="dadg_lord_33_4" is_female="true" age="24" />
+  <NPCCharacter id="dadg_lord_33_5" age="20" />
+  <NPCCharacter id="dadg_lord_33_6" age="15" />
+  <NPCCharacter id="dadg_lord_33_7" age="12" />
+  <NPCCharacter id="dadg_lord_34_1" age="38" />
+  <NPCCharacter id="dadg_lord_34_2" is_female="true" age="41" />
+  <NPCCharacter id="dadg_lord_34_3" is_female="true" age="55" />
+  <NPCCharacter id="dadg_lord_34_4" is_female="true" age="30" />
+  <NPCCharacter id="dadg_lord_34_5" is_female="true" age="27" />
+  <NPCCharacter id="dadg_lord_35_1" age="50" />
+  <NPCCharacter id="dadg_lord_35_2" is_female="true" age="47" />
+  <NPCCharacter id="dadg_lord_35_3" age="19" />
+  <NPCCharacter id="dadg_lord_36_1" age="48" />
+  <NPCCharacter id="dadg_lord_36_2" is_female="true" age="32" />
+  <NPCCharacter id="dadg_lord_36_3" age="8" />
+  <NPCCharacter id="dadg_lord_36_4" is_female="true" age="6" />
+  <NPCCharacter id="dadg_lord_37_1" age="45" />
+  <NPCCharacter id="dadg_lord_37_2" is_female="true" age="30" />
+  <NPCCharacter id="dadg_lord_37_3" is_female="true" age="3" />
+  <NPCCharacter id="dadg_lord_37_4" age="2" />
+  <NPCCharacter id="dadg_lord_37_5" age="36" />
+  <NPCCharacter id="dadg_lord_37_6" is_female="true" age="27" />
+  <NPCCharacter id="dadg_lord_37_7" age="4" />
+  <NPCCharacter id="dadg_lord_37_8" age="34" />
+  <NPCCharacter id="dadg_lord_37_9" is_female="true" age="24" />
+  <NPCCharacter id="dadg_lord_38_1" age="40" />
+  <NPCCharacter id="dadg_lord_38_2" is_female="true" age="37" />
+  <NPCCharacter id="dadg_lord_38_3" age="14" />
+  <NPCCharacter id="dadg_lord_38_4" age="13" />
+  <NPCCharacter id="dadg_lord_38_5" age="10" />
+  <NPCCharacter id="dadg_lord_38_6" age="8" />
+  <NPCCharacter id="dadg_lord_39_1" age="37" />
+  <NPCCharacter id="dadg_lord_39_2" is_female="true" age="40" />
+  <NPCCharacter id="dadg_lord_39_3" age="20" />
+  <NPCCharacter id="dadg_lord_39_4" age="18" />
+  <NPCCharacter id="dadg_lord_3_1" age="53" />
+  <NPCCharacter id="dadg_lord_3_2" age="21" />
+  <NPCCharacter id="dadg_lord_3_3" is_female="true" age="17" />
+  <NPCCharacter id="dadg_lord_3_4" is_female="false" age="7" />
+  <NPCCharacter id="dadg_lord_3_5" is_female="false" age="5" />
+  <NPCCharacter id="dadg_lord_3_6" is_female="false" age="4" />
+  <NPCCharacter id="dadg_lord_3_7" is_female="true" age="5" />
+  <NPCCharacter id="dadg_lord_40_1" age="39" />
+  <NPCCharacter id="dadg_lord_40_2" age="16" />
+  <NPCCharacter id="dadg_lord_40_3" age="8" />
+  <NPCCharacter id="dadg_lord_40_4" is_female="true" age="17" />
+  <NPCCharacter id="dadg_lord_40_5" is_female="true" age="18" />
+  <NPCCharacter id="dadg_lord_40_6" age="7" />
+  <NPCCharacter id="dadg_lord_40_7" age="5" />
+  <NPCCharacter id="dadg_lord_41_1" age="28" />
+  <NPCCharacter id="dadg_lord_41_2" is_female="true" age="27" />
+  <NPCCharacter id="dadg_lord_41_3" age="14" />
+  <NPCCharacter id="dadg_lord_41_4" is_female="true" age="17" />
+  <NPCCharacter id="dadg_lord_41_5" is_female="true" age="61" />
+  <NPCCharacter id="dadg_lord_41_6" age="13" />
+  <NPCCharacter id="dadg_lord_41_7" is_female="true" age="16" />
+  <NPCCharacter id="dadg_lord_41_8" age="10" />
+  <NPCCharacter id="dadg_lord_42_1" age="31" />
+  <NPCCharacter id="dadg_lord_42_2" is_female="true" age="38" />
+  <NPCCharacter id="dadg_lord_42_3" age="5" />
+  <NPCCharacter id="dadg_lord_42_4" is_female="true" age="4" />
+  <NPCCharacter id="dadg_lord_43_1" age="56" />
+  <NPCCharacter id="dadg_lord_43_2" is_female="true" age="38" />
+  <NPCCharacter id="dadg_lord_43_3" age="24" />
+  <NPCCharacter id="dadg_lord_43_4" is_female="true" age="23" />
+  <NPCCharacter id="dadg_lord_43_5" is_female="true" age="7" />
+  <NPCCharacter id="dadg_lord_43_6" age="17" />
+  <NPCCharacter id="dadg_lord_43_7" age="15" />
+  <NPCCharacter id="dadg_lord_43_8" age="13" />
+  <NPCCharacter id="dadg_lord_44_1" age="40" />
+  <NPCCharacter id="dadg_lord_44_2" is_female="true" age="39" />
+  <NPCCharacter id="dadg_lord_44_3" age="8" />
+  <NPCCharacter id="dadg_lord_44_4" is_female="true" age="7" />
+  <NPCCharacter id="dadg_lord_44_5" is_female="true" age="5" />
+  <NPCCharacter id="dadg_lord_45_1" age="55" />
+  <NPCCharacter id="dadg_lord_45_2" is_female="true" age="63" />
+  <NPCCharacter id="dadg_lord_45_3" age="29" />
+  <NPCCharacter id="dadg_lord_45_4" is_female="true" age="25" />
+  <NPCCharacter id="dadg_lord_45_5" age="7" />
+  <NPCCharacter id="dadg_lord_45_6" age="21" />
+  <NPCCharacter id="dadg_lord_45_7" age="19" />
+  <NPCCharacter id="dadg_lord_46_1" age="40" />
+  <NPCCharacter id="dadg_lord_46_2" is_female="true" age="27" />
+  <NPCCharacter id="dadg_lord_46_3" age="7" />
+  <NPCCharacter id="dadg_lord_46_4" is_female="true" age="14" />
+  <NPCCharacter id="dadg_lord_46_5" is_female="true" age="15" />
+  <NPCCharacter id="dadg_lord_46_6" age="27" />
+  <NPCCharacter id="dadg_lord_47_1" age="43" />
+  <NPCCharacter id="dadg_lord_47_2" age="11" />
+  <NPCCharacter id="dadg_lord_48_1" age="42" />
+  <NPCCharacter id="dadg_lord_48_2" is_female="true" age="16" />
+  <NPCCharacter id="dadg_lord_48_3" age="1" />
+  <NPCCharacter id="dadg_lord_49_1" age="20" />
+  <NPCCharacter id="dadg_lord_49_2" is_female="true" age="16" />
+  <NPCCharacter id="dadg_lord_49_3" is_female="true" age="36" />
+  <NPCCharacter id="dadg_lord_4_1" age="46" />
+  <NPCCharacter id="dadg_lord_4_2" is_female="true" age="35" />
+  <NPCCharacter id="dadg_lord_4_3" age="28" />
+  <NPCCharacter id="dadg_lord_4_4" is_female="true" age="21" />
+  <NPCCharacter id="dadg_lord_4_5" is_female="true" age="3" />
+  <NPCCharacter id="dadg_lord_50_1" age="42" />
+  <NPCCharacter id="dadg_lord_50_2" is_female="true" age="35" />
+  <NPCCharacter id="dadg_lord_50_3" age="12" />
+  <NPCCharacter id="dadg_lord_50_4" age="11" />
+  <NPCCharacter id="dadg_lord_50_5" age="10" />
+  <NPCCharacter id="dadg_lord_50_6" age="5" />
+  <NPCCharacter id="dadg_lord_51_1" age="62" />
+  <NPCCharacter id="dadg_lord_51_2" is_female="true" age="51" />
+  <NPCCharacter id="dadg_lord_51_3" age="26" />
+  <NPCCharacter id="dadg_lord_51_4" is_female="true" age="23" />
+  <NPCCharacter id="dadg_lord_51_5" age="8" />
+  <NPCCharacter id="dadg_lord_51_6" age="6" />
+  <NPCCharacter id="dadg_lord_51_7" age="2" />
+  <NPCCharacter id="dadg_lord_52_1" age="36" />
+  <NPCCharacter id="dadg_lord_52_2" is_female="true" age="30" />
+  <NPCCharacter id="dadg_lord_53_1" age="70" />
+  <NPCCharacter id="dadg_lord_53_2" is_female="true" age="63" />
+  <NPCCharacter id="dadg_lord_53_3" age="46" />
+  <NPCCharacter id="dadg_lord_53_4" is_female="true" age="30" />
+  <NPCCharacter id="dadg_lord_53_5" age="12" />
+  <NPCCharacter id="dadg_lord_53_6" age="27" />
+  <NPCCharacter id="dadg_lord_54_1" age="70" />
+  <NPCCharacter id="dadg_lord_54_2" age="36" />
+  <NPCCharacter id="dadg_lord_54_3" is_female="true" age="40" />
+  <NPCCharacter id="dadg_lord_54_4" age="19" />
+  <NPCCharacter id="dadg_lord_54_5" is_female="true" age="18" />
+  <NPCCharacter id="dadg_lord_55_1" age="45" />
+  <NPCCharacter id="dadg_lord_55_2" is_female="true" age="43" />
+  <NPCCharacter id="dadg_lord_55_3" age="17" />
+  <NPCCharacter id="dadg_lord_55_4" age="14" />
+  <NPCCharacter id="dadg_lord_55_5" is_female="false" age="8" />
+  <NPCCharacter id="dadg_lord_55_6" is_female="true" age="16" />
+  <NPCCharacter id="dadg_lord_55_7" is_female="true" age="11" />
+  <NPCCharacter id="dadg_lord_5_1" age="20" />
+  <NPCCharacter id="dadg_lord_5_2" is_female="true" age="16" />
+  <NPCCharacter id="dadg_lord_5_3" age="14" />
+  <NPCCharacter id="dadg_lord_6_1" age="43" />
+  <NPCCharacter id="dadg_lord_6_2" age="30" />
+  <NPCCharacter id="dadg_lord_6_3" is_female="false" age="11" />
+  <NPCCharacter id="dadg_lord_7_1" age="40" />
+  <NPCCharacter id="dadg_lord_7_2" age="14" />
+  <NPCCharacter id="dadg_lord_7_3" is_female="true" age="30" />
+  <NPCCharacter id="dadg_lord_7_4" is_female="true" age="12" />
+  <NPCCharacter id="dadg_lord_8_1" age="17" />
+  <NPCCharacter id="dadg_lord_8_2" is_female="true" age="28" />
+  <NPCCharacter id="dadg_lord_8_3" age="16" />
+  <NPCCharacter id="dadg_lord_8_4" age="13" />
+  <NPCCharacter id="dadg_lord_8_5" age="10" />
+  <NPCCharacter id="dadg_lord_8_6" is_female="true" age="21" />
+  <NPCCharacter id="dadg_lord_9_1" age="42" />
+  <NPCCharacter id="dadg_lord_9_10" is_female="true" age="44" />
+  <NPCCharacter id="dadg_lord_9_11" age="42" />
+  <NPCCharacter id="dadg_lord_9_2" age="40" />
+  <NPCCharacter id="dadg_lord_9_3" is_female="true" age="30" />
+  <NPCCharacter id="dadg_lord_9_4" age="10" />
+  <NPCCharacter id="dadg_lord_9_5" is_female="true" age="14" />
+  <NPCCharacter id="dadg_lord_9_6" is_female="true" age="12" />
+  <NPCCharacter id="dadg_lord_9_7" is_female="true" age="10" />
+  <NPCCharacter id="dadg_lord_9_8" is_female="true" age="8" />
+  <NPCCharacter id="dadg_lord_9_9" is_female="true" age="6" />
+  <NPCCharacter id="dadg_anne_devereux_1430" is_female="true" age="41" />
+  <NPCCharacter id="dadg_william_herbert_1455" age="16" />
+  <NPCCharacter id="dadg_mary_woodville_1443" is_female="true" age="28" />
+  <NPCCharacter id="dadg_john_egremont_1459" age="12" />
+  <NPCCharacter id="dadg_dead_thomas_percy_1422_1460" age="37" />
+  <NPCCharacter id="dadg_sco_lord_clan_macdonald_isles" age="42" />
+  <NPCCharacter id="dadg_sco_lord_clan_macleod" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_ross" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_mackenzie" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_maclean" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_macdonald_sleat" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_clanranald" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_mackinnon" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_calder" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_munro" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_macphee" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_macneil_barra" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_keppoch" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_cameron" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_macneil" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_maclain" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_macalister" age="36" />
+  <NPCCharacter id="dadg_sco_lord_clan_stewart" age="20" />
+  <NPCCharacter id="dadg_sco_lord_clan_gordon" age="32" />
+  <NPCCharacter id="dadg_sco_lord_clan_keith" age="45" />
+  <NPCCharacter id="dadg_sco_lord_clan_erskine" age="45" />
+  <NPCCharacter id="dadg_sco_lord_clan_lindsay" age="33" />
+  <NPCCharacter id="dadg_sco_lord_clan_douglas_angus" age="22" />
+  <NPCCharacter id="dadg_sco_lord_clan_hepburn" age="42" />
+  <NPCCharacter id="dadg_sco_lord_clan_hamilton" age="55" />
+  <NPCCharacter id="dadg_sco_lord_clan_maxwell" age="48" />
+  <NPCCharacter id="dadg_sco_lord_clan_kennedy" age="60" />
+  <NPCCharacter id="dadg_sco_lord_clan_crichton" age="40" />
+  <NPCCharacter id="dadg_sco_lord_clan_sinclair" age="60" />
+  <NPCCharacter id="dadg_sco_lord_clan_campbell" age="38" />
+  <NPCCharacter id="dadg_sco_lord_clan_ruthven" age="35" />
+  <NPCCharacter id="dadg_sco_lord_clan_halyburton" age="45" />
+  <NPCCharacter id="dadg_sco_lord_clan_dunbar_moray" age="45" />
+  <NPCCharacter id="dadg_sco_lord_clan_home" age="45" />
+  <NPCCharacter id="dadg_sco_lord_clan_macleod_lewis" age="40" />
+</NPCCharacters>

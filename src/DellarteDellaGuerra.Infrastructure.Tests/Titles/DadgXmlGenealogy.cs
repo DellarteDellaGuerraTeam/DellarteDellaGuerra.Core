@@ -27,11 +27,11 @@ internal sealed class DadgXmlGenealogy : IGenealogy
 
     public int HeroCount => _heroesById.Count;
 
-    public static DadgXmlGenealogy Load(string heroesPath, string charactersPath, string clansPath)
+    public static DadgXmlGenealogy Load(Stream heroes, Stream characters, Stream clans)
     {
-        XDocument heroesDocument = XDocument.Load(heroesPath);
-        XDocument charactersDocument = XDocument.Load(charactersPath);
-        XDocument clansDocument = XDocument.Load(clansPath);
+        XDocument heroesDocument = XDocument.Load(heroes);
+        XDocument charactersDocument = XDocument.Load(characters);
+        XDocument clansDocument = XDocument.Load(clans);
 
         // Sex and age live on the character template, not on the hero record that carries the
         // bloodline: succession needs both, so the two documents are joined by hero id.

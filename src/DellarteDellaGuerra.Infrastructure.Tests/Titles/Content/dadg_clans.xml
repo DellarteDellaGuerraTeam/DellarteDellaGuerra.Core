@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Test fixture. A snapshot of the houses shipped in the sibling DellarteDellaGuerraMap module
+  (ModuleData/clans/dadg_clans.xml), reduced to the leader of each house, which is all the
+  title system asks of this file. Factions with no owner are dropped, as the reader ignores them.
+
+  Banners, colours, culture and home settlements are omitted for the same reason as above.
+-->
+<Factions>
+  <Faction id="player_faction" owner="Hero.main_hero" />
+  <Faction id="clan_basset" owner="Hero.dadg_lord_32_1" />
+  <Faction id="clan_beauchamp" owner="Hero.dadg_lord_54_1" />
+  <Faction id="clan_beaufort" owner="Hero.dadg_lord_6_1" />
+  <Faction id="clan_beaumont" owner="Hero.dadg_lord_29_1" />
+  <Faction id="clan_berkeley" owner="Hero.dadg_lord_37_1" />
+  <Faction id="clan_blount" owner="Hero.dadg_lord_45_1" />
+  <Faction id="clan_bourchier" owner="Hero.dadg_lord_12_1" />
+  <Faction id="clan_burgh" owner="Hero.dadg_lord_44_1" />
+  <Faction id="clan_clifford" owner="Hero.dadg_lord_8_1" />
+  <Faction id="clan_clinton" owner="Hero.dadg_lord_48_1" />
+  <Faction id="clan_courtenay" owner="Hero.dadg_lord_16_1" />
+  <Faction id="clan_devereux" owner="Hero.dadg_lord_40_1" />
+  <Faction id="clan_de_la_pole" owner="Hero.dadg_lord_14_1" />
+  <Faction id="clan_de_vere" owner="Hero.dadg_lord_41_1" />
+  <Faction id="clan_dynham" owner="Hero.dadg_lord_34_1" />
+  <Faction id="clan_fiennes_of_saye_and_sele" owner="Hero.dadg_lord_47_1" />
+  <Faction id="clan_fienne_of_dacre" owner="Hero.dadg_lord_43_1" />
+  <Faction id="clan_fitzalan" owner="Hero.dadg_lord_3_1" />
+  <Faction id="clan_fitzhugh" owner="Hero.dadg_lord_30_1" />
+  <Faction id="clan_greystoke" owner="Hero.dadg_lord_22_1" />
+  <Faction id="clan_grey_of_codnor" owner="Hero.dadg_lord_52_1" />
+  <Faction id="clan_grey_of_groby" owner="Hero.dadg_lord_5_1" />
+  <Faction id="clan_grey_of_ruthin" owner="Hero.dadg_lord_24_1" />
+  <Faction id="clan_grey_of_wilton" owner="Hero.dadg_lord_25_1" />
+  <Faction id="clan_harrington" owner="Hero.dadg_lord_46_1" />
+  <Faction id="clan_hastings" owner="Hero.dadg_lord_11_1" />
+  <Faction id="clan_herbert" owner="Hero.dadg_william_herbert_1455" />
+  <Faction id="clan_holland" owner="Hero.dadg_lord_17_1" />
+  <Faction id="clan_howard" owner="Hero.dadg_lord_4_1" />
+  <Faction id="clan_lancaster" owner="Hero.dadg_lord_2_1" />
+  <Faction id="clan_lovell" owner="Hero.dadg_lord_49_1" />
+  <Faction id="clan_lumley" owner="Hero.dadg_lord_51_1" />
+  <Faction id="clan_morley" owner="Hero.dadg_lord_42_1" />
+  <Faction id="clan_mowbray" owner="Hero.dadg_lord_23_1" />
+  <Faction id="clan_neville_of_bergavenny" owner="Hero.dadg_lord_27_1" />
+  <Faction id="clan_neville_of_middleham" owner="Hero.dadg_lord_9_1" />
+  <Faction id="clan_neville_of_raby" owner="Hero.dadg_lord_26_1" />
+  <Faction id="clan_parr" owner="Hero.dadg_lord_39_1" />
+  <Faction id="clan_paston" owner="Hero.dadg_lord_33_1" />
+  <Faction id="clan_percy" owner="Hero.dadg_lord_10_1" />
+  <Faction id="clan_scrope_of_bolton" owner="Hero.dadg_lord_31_1" />
+  <Faction id="clan_scrope_of_masham" owner="Hero.dadg_lord_50_1" />
+  <Faction id="clan_stafford" owner="Hero.dadg_lord_15_1" />
+  <Faction id="clan_stanley" owner="Hero.dadg_lord_28_1" />
+  <Faction id="clan_stourton" owner="Hero.dadg_lord_55_1" />
+  <Faction id="clan_st_leger" owner="Hero.dadg_lord_18_1" />
+  <Faction id="clan_sutton" owner="Hero.dadg_lord_53_1" />
+  <Faction id="clan_talbot" owner="Hero.dadg_lord_19_1" />
+  <Faction id="clan_tuchet" owner="Hero.dadg_lord_36_1" />
+  <Faction id="clan_tudor" owner="Hero.dadg_lord_7_1" />
+  <Faction id="clan_vernon" owner="Hero.dadg_lord_20_1" />
+  <Faction id="clan_west" owner="Hero.dadg_lord_38_1" />
+  <Faction id="clan_willoughby" owner="Hero.dadg_lord_35_1" />
+  <Faction id="clan_woodville" owner="Hero.dadg_lord_21_1" />
+  <Faction id="clan_york" owner="Hero.dadg_lord_1_1" />
+  <Faction id="clan_stewart" owner="Hero.dadg_sco_lord_clan_stewart" />
+  <Faction id="clan_gordon" owner="Hero.dadg_sco_lord_clan_gordon" />
+  <Faction id="clan_keith" owner="Hero.dadg_sco_lord_clan_keith" />
+  <Faction id="clan_erskine" owner="Hero.dadg_sco_lord_clan_erskine" />
+  <Faction id="clan_lindsay" owner="Hero.dadg_sco_lord_clan_lindsay" />
+  <Faction id="clan_douglas_angus" owner="Hero.dadg_sco_lord_clan_douglas_angus" />
+  <Faction id="clan_hepburn" owner="Hero.dadg_sco_lord_clan_hepburn" />
+  <Faction id="clan_hamilton" owner="Hero.dadg_sco_lord_clan_hamilton" />
+  <Faction id="clan_maxwell" owner="Hero.dadg_sco_lord_clan_maxwell" />
+  <Faction id="clan_kennedy" owner="Hero.dadg_sco_lord_clan_kennedy" />
+  <Faction id="clan_crichton" owner="Hero.dadg_sco_lord_clan_crichton" />
+  <Faction id="clan_sinclair" owner="Hero.dadg_sco_lord_clan_sinclair" />
+  <Faction id="clan_campbell" owner="Hero.dadg_sco_lord_clan_campbell" />
+  <Faction id="clan_ruthven" owner="Hero.dadg_sco_lord_clan_ruthven" />
+  <Faction id="clan_halyburton" owner="Hero.dadg_sco_lord_clan_halyburton" />
+  <Faction id="clan_dunbar_moray" owner="Hero.dadg_sco_lord_clan_dunbar_moray" />
+  <Faction id="clan_home" owner="Hero.dadg_sco_lord_clan_home" />
+  <Faction id="clan_macdonald_isles" owner="Hero.dadg_sco_lord_clan_macdonald_isles" />
+  <Faction id="clan_macleod" owner="Hero.dadg_sco_lord_clan_macleod" />
+  <Faction id="clan_ross" owner="Hero.dadg_sco_lord_clan_ross" />
+  <Faction id="clan_mackenzie" owner="Hero.dadg_sco_lord_clan_mackenzie" />
+  <Faction id="clan_maclean" owner="Hero.dadg_sco_lord_clan_maclean" />
+  <Faction id="clan_macdonald_sleat" owner="Hero.dadg_sco_lord_clan_macdonald_sleat" />
+  <Faction id="clan_clanranald" owner="Hero.dadg_sco_lord_clan_clanranald" />
+  <Faction id="clan_mackinnon" owner="Hero.dadg_sco_lord_clan_mackinnon" />
+  <Faction id="clan_calder" owner="Hero.dadg_sco_lord_clan_calder" />
+  <Faction id="clan_munro" owner="Hero.dadg_sco_lord_clan_munro" />
+  <Faction id="clan_macphee" owner="Hero.dadg_sco_lord_clan_macphee" />
+  <Faction id="clan_macneil_barra" owner="Hero.dadg_sco_lord_clan_macneil_barra" />
+  <Faction id="clan_keppoch" owner="Hero.dadg_sco_lord_clan_keppoch" />
+  <Faction id="clan_cameron" owner="Hero.dadg_sco_lord_clan_cameron" />
+  <Faction id="clan_macneil" owner="Hero.dadg_sco_lord_clan_macneil" />
+  <Faction id="clan_maclain" owner="Hero.dadg_sco_lord_clan_maclain" />
+  <Faction id="clan_macalister" owner="Hero.dadg_sco_lord_clan_macalister" />
+  <Faction id="clan_macleod_lewis" owner="Hero.dadg_sco_lord_clan_macleod_lewis" />
+</Factions>

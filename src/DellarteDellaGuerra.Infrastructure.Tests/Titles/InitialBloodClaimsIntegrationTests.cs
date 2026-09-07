@@ -414,10 +414,12 @@ public class InitialBloodClaimsIntegrationTests
     [Trait("Category", "DADG content integration")]
     public void Real1471ContentProducesTheExpectedInitialClaims()
     {
-        DadgContentPaths paths = DadgContentPaths.Find();
-        using FileStream titlesStream = File.OpenRead(paths.Titles);
+        using Stream titlesStream = DadgContent.OpenTitles();
+        using Stream heroesStream = DadgContent.OpenHeroes();
+        using Stream charactersStream = DadgContent.OpenCharacters();
+        using Stream clansStream = DadgContent.OpenClans();
 
-        DadgXmlGenealogy genealogy = DadgXmlGenealogy.Load(paths.Heroes, paths.Characters, paths.Clans);
+        DadgXmlGenealogy genealogy = DadgXmlGenealogy.Load(heroesStream, charactersStream, clansStream);
         var feudalStructure = new XmlFeudalStructure(FeudalStructureParser.Parse(titlesStream));
         var titleRepository = new InMemoryTitleRegistry(genealogy);
         titleRepository.Initialise(feudalStructure.BuildInitialTitles(genealogy));
