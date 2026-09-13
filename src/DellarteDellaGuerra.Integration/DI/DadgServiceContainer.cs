@@ -20,7 +20,6 @@ using DellarteDellaGuerra.Infrastructure.Firearm;
 using DellarteDellaGuerra.Infrastructure.Firearm.Patches;
 using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
-using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Integration.CampaignTime;
 using DellarteDellaGuerra.Integration.Initialisation;
@@ -140,8 +139,6 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, FixSettlementDistanceCacheFilePathPatch>();
         // Music
         services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
-        // POC
-        services.AddSingleton<IPatch, PocConfigReaderOverriderPatch>();
         // Siege engines
         services.AddSingleton<IPatch, CannonballTrailCleanupPatch>();
     }
