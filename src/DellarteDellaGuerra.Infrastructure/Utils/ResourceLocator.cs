@@ -106,20 +106,6 @@ namespace DellarteDellaGuerra.Infrastructure.Utils
 
         /**
          * <summary>
-         * Gets the path to the settlements_distance_cache.bin file in the ModuleData folder.
-         * Its existence is checked.
-         * </summary>
-         * <returns>
-         * The first found among all of the mod's modules or null if not found.
-         * </returns>
-         */
-        public static string? GetSettlementDistanceCacheFilePath()
-        {
-            return GetModuleDataFile("settlements_distance_cache.bin");
-        }
-
-        /**
-         * <summary>
          * Gets the path to the dadg_battle_scenes.xml file in the ModuleData folder.
          * Its existence is checked.
          * </summary>
