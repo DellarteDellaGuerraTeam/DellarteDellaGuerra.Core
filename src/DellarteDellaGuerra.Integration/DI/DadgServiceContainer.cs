@@ -69,6 +69,7 @@ public class DadgServiceContainer
         services.AddSingleton<IConfigurationProvider<DadgConfig>>(sp => sp.GetRequiredService<DadgConfigWatcher>());
         RegisterEvent<SubModuleLoadEvent>(services);
         services.AddSingleton<DadgScriptComponentRegistrar>();
+        services.AddSingleton<DadgUIExtenderRegistrar>();
         services.AddSingleton<CampaignBehaviourDisabler>();
         services.AddSingleton<DadgCampaignTimeModel>();
         services.AddSingleton<DadgCampaignStartButtonAdder>();
@@ -136,8 +137,7 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, GetHolsterImageForBuIletsInInventoryPatch>();
         // Steam
         services.AddSingleton<IPatch, FixSettlementFilePathPatch>();
-        services.AddSingleton<IPatch, FixSettlementDistanceCacheFilePathPatch>();
-        // Music
+            // Music
         services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
         // Siege engines
         services.AddSingleton<IPatch, CannonballTrailCleanupPatch>();
