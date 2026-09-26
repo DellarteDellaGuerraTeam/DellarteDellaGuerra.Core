@@ -1,8 +1,9 @@
 using System.Linq;
-using Bannerlord.UIExtenderEx;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
+using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.Tournament.Jousting.UI;
+using DellarteDellaGuerra.Integration.Tournament.Jousting.UI.Mixins;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Campaign;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Missions;
@@ -20,11 +21,10 @@ namespace DellarteDellaGuerra.Integration.Tournament.Jousting;
 /// </summary>
 public class JoustingFeatureInstaller
 {
-    private const string UiExtenderModuleName = "DellarteDellaGuerra.Core";
-
     private readonly IJoustRequirementsProvider _requirementsProvider;
     private readonly JoustingMissionManager _missionManager;
     private readonly JoustTournamentNameplateBrushRegistrar _brushRegistrar;
+    private readonly DadgUIExtenderRegistrar _uiExtenderRegistrar;
     private readonly ILogger _logger;
     private readonly bool _joustingEnabled;
 
@@ -32,11 +32,13 @@ public class JoustingFeatureInstaller
         IJoustRequirementsProvider requirementsProvider,
         JoustingMissionManager missionManager,
         JoustTournamentNameplateBrushRegistrar brushRegistrar,
+        DadgUIExtenderRegistrar uiExtenderRegistrar,
         ILoggerFactory loggerFactory)
     {
         _requirementsProvider = requirementsProvider;
         _missionManager = missionManager;
         _brushRegistrar = brushRegistrar;
+        _uiExtenderRegistrar = uiExtenderRegistrar;
         _logger = loggerFactory.CreateLogger<JoustingFeatureInstaller>();
         _joustingEnabled = featureToggle.IsJoustingEnabled;
     }
@@ -47,13 +49,10 @@ public class JoustingFeatureInstaller
 
         if (!_joustingEnabled)
         {
+            _uiExtenderRegistrar.Disable(typeof(JoustTournamentNameplateMixin));
             _logger.Info("Jousting is disabled in the configuration. Its models, dialogs and nameplate icon will not be installed.");
             return;
         }
-
-        var uiExtender = UIExtender.Create(UiExtenderModuleName);
-        uiExtender.Register(typeof(JoustingFeatureInstaller).Assembly);
-        uiExtender.Enable();
     }
 
     public void RegisterNameplateBrush()
