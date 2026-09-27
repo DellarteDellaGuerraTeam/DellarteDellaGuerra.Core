@@ -314,7 +314,8 @@ Decided 2026-09-27:
   holding a Scottish title (`OnMakePeace`).
 - **Where the won title attaches.** If it ranks below the winner's highest title, it goes under that
   title. Otherwise it goes directly under the winner's king.
-- **The de jure vassals follow their new lord.** Example: Percy wins a Scottish county.
+- **The de jure vassals follow their new lord**, as in Crusader Kings III. Example: Percy wins a
+  Scottish county.
   - Percy takes the county and every de jure land of it that the defender held.
   - A baron whose highest title is a barony under that county now has Percy as his lord, so his clan
     moves to England. In the engine that is a kingdom change for the whole clan, fiefs included.
