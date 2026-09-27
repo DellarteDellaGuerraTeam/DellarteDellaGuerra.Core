@@ -325,15 +325,24 @@ invalidated plans abort, and ordinary `Kingdom.CreateArmy` calls retain their or
   globally because offensive patrol and unrelated gathering callers share it.
 - **Registry maintenance:** `OnClanChangedKingdom` hook — the pair **persists** by default (the feud is
   clan-vs-clan); fold/resolve only if the move makes it cross-kingdom into a formal war (design §14). A
-  behavior callback, not an engine patch.
+  behavior callback, not an engine patch. *Revised 2026-09-27:* at bd1fd24 this handler auto-concluded
+  every cross-kingdom pair and never raised `WarResolved` (cross-kingdom analysis, blocker b). It is
+  being changed to persist the pair, and to fold it into the crown war through `ResolveWar` when the
+  two kingdoms go to war.
 - **Resolve wiring:** prize via the **already-implemented**
   `AssignTitleUseCase.Execute(seatId, attackerId, SeatTransferKind.Conquest, day)` + dignity finalize
   through the attainder path; revert via `ChangeOwnerOfSettlementAction.ApplyByDefault`. The de jure/de
   facto contested-title marking already happens on capture in `FeudalTitleCampaignBehavior` — Private
-  Wars is just its real-war driver (design §7).
-- **AI trigger:** hook the existing `FeudalPetitionDecision.DenyClaimOutcome` → `SurgeTensionOnDenial`
-  path; a strong-claim clan over a tension threshold (with cooldown + not-already-at-private-war-with-
-  this-clan check) escalates to a private war.
+  Wars is just its real-war driver (design §7). *Stale:* the attainder path has been deleted, and only
+  the reverts are applied (`ResolveWar`, `ApplyByDefault`). `PrizeAward` / `AttackerClaimLost` are
+  consumed nowhere (analysis S7). Across a border, capture and prize semantics are **open**
+  (`cross-border-marches-design.md`).
+- **AI trigger** *(stale; the petition machinery is deleted)*: hook the existing
+  `FeudalPetitionDecision.DenyClaimOutcome` → `SurgeTensionOnDenial` path; a strong-claim clan over a
+  tension threshold (with cooldown + not-already-at-private-war-with-this-clan check) escalates to a
+  private war. The actual AI trigger is DADG's `ClaimPressureCampaignBehavior`
+  (`feudal-hero-claims-and-succession-design.md` §3), which declares only within one kingdom
+  (decision 5).
 
 ---
 

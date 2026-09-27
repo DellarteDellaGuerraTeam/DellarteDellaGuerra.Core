@@ -2,6 +2,8 @@
 
 Status: analysis only. No code written. 2026-09-05, branch `feature/add-internal-faction-wars-v2`.
 **Revision 2** — all five open decisions resolved; `Title` now *drops* `HolderClanId` rather than caching it (§1).
+**Revision 3 (2026-09-27)** — decision 5 rewritten (§3, §7): private wars are cross-kingdom capable; only
+*automatic declaration* stays same-kingdom, pending `cross-border-marches-design.md`.
 
 Answers four requirements:
 
@@ -219,9 +221,11 @@ ahistorical restriction and needs the stored-clan denormalisation back, with all
 
 Two interactions worth knowing:
 
-- Combined with decision 5 (intra-kingdom only), a title that marries into another kingdom's clan puts that
-  title permanently **out of reach** of its original family's claims. Historically apt, but it means some
-  claims become dead letters. They cost nothing — the daily evaluator skips them on the kingdom gate.
+- Combined with decision 5 (automatic declaration is same-kingdom only, for now), a title that marries into
+  another kingdom's clan is **out of reach** of the daily evaluator. The private-war engine could fight that
+  war; the evaluator will not start it until `cross-border-marches-design.md` settles when a cross-border
+  claim may be pressed. Until then those claims are dormant, not dead. They cost nothing — the daily
+  evaluator skips them on the kingdom gate.
 - `GenerateBloodClaimsUseCase` should now mint claims for daughters as well, ranked below sons, since they
   are genuinely in the line of succession.
 
@@ -262,8 +266,8 @@ Keep the scoring pure. The behaviour builds a snapshot, the domain scores it, th
 daily:
   for each claim not already backing an active private war:
       if claimant or holder is the player     -> skip     (decision 3)
-      if either kingdom is null               -> skip     (decision 5)
-      if claimant.Kingdom != holder.Kingdom    -> skip     (decision 5)
+      if either kingdom is null               -> skip     (decision 5 — declaration policy)
+      if claimant.Kingdom != holder.Kingdom    -> skip     (decision 5 — declaration policy)
       if no main goal exists                  -> skip     (hard precondition, design §18.D)
       opportunity = snapshot(claim)                       (infrastructure adapter)
       score       = EvaluatePressClaimUseCase(opportunity)(pure)
@@ -276,7 +280,7 @@ daily:
 | Term | Source | Effect |
 |---|---|---|
 | Player not involved | `Clan.PlayerClan` on either side | **hard gate** (decision 3) |
-| Same kingdom | `Clan.Kingdom` on both sides, non-null | **hard gate** (decision 5) |
+| Same kingdom | `Clan.Kingdom` on both sides, non-null | **hard gate** (decision 5 — policy, not a substrate limit) |
 | Main goal exists | defender holds a de jure settlement of the title | **hard precondition** (design §18.D) |
 | Claimant free | claimant not already a belligerent | **hard gate** (design §9: one war per unordered clan pair) |
 | Strength ratio | `Clan.CurrentTotalStrength` summed over each side's subtree | primary score; attack at ≈1.25:1 or better |
@@ -302,10 +306,29 @@ worth knowing.
 
 ### On the kingdom gate (decision 5)
 
-Private wars are same-`MapFaction` by construction — hostility is manufactured *inside* one kingdom, with no
-`StanceLink` and no temporary faction. Cross-kingdom claim pressing would need real `StanceLink` wars, which
-is a different mechanism rather than a bigger version of this one. The gate is therefore a two-line check,
-not a compromise: it states what the substrate already enforces.
+*Revised 2026-09-27.* The earlier text here said private wars are same-`MapFaction` by construction and that
+cross-kingdom claims would need real `StanceLink` wars. That was wrong. Hostility is manufactured per clan
+pair, with no `StanceLink` and no temporary faction, and nothing in that layer reads `Kingdom`
+(`feudal-private-wars-design.md` §3, §14). The substrate is cross-kingdom capable. The first item holds by
+construction; the rest are the cross-kingdom work landing alongside this revision:
+
+- `AreEnemies`/`AreAllies`, `WarSideResolver`, `DeclarePrivateWarUseCase` and the `PrivateWar` record decide
+  per clan and never look at a kingdom.
+- A player attack on a private-war enemy in another kingdom does not escalate to a crown war (vanilla
+  `BeHostileAction` escalation is suppressed for private-war enemies).
+- A private war persists when a belligerent changes kingdom.
+- If the two belligerents' kingdoms go to war with each other, the private war folds into the crown war and
+  is resolved (`ResolveWar`).
+- Party and settlement nameplates and menus show private-war enemies across a kingdom border.
+- DADG prices distraction on the **defender's own** kingdom and solicits supporters along the title chain,
+  across kingdoms.
+
+The gate therefore states a **policy**, not a substrate limit: the daily evaluator declares automatically
+only when both clans are in the same, non-null kingdom. It stays because a cross-border claim war raises
+questions nobody has answered yet: whether a town or castle may be captured across the border, which clan is
+the defender (the de jure holder or the occupant), and how a contested title finalises while the crowns stay
+at peace. Those are **open**, and `cross-border-marches-design.md` sets them out. Lifting the gate is a
+two-line change once they are answered.
 
 ### On excluding the player (decision 3)
 
@@ -362,11 +385,12 @@ ChangeKingdomAction.ApplyByJoinToKingdom(cadet, parent.Kingdom, default, showNot
 CampaignEventDispatcher.Instance.OnClanCreated(cadet, isCompanion: false);
 ```
 
-**`ApplyByJoinToKingdom` is the load-bearing step.** Private wars work by manufacturing hostility *inside one
-`MapFaction`* — no `StanceLink`, no temporary kingdom. If the cadet clan does not join the same kingdom, every
-model override and patch in the submodule stops applying and the war becomes inert. With decision 5 in
-force, this is also what keeps the war legal under the intra-kingdom gate. It is the single easiest thing to
-get wrong.
+**`ApplyByJoinToKingdom` is the load-bearing step.** Private-war hostility is manufactured per clan pair and
+would still apply to a kingdomless cadet, but a kingdomless cadet is exactly the lone-clan ejection that
+`feudal-private-wars-design.md` §13.2 rejects: autonomous join/war/peace, degraded kingdom services, and a
+28-day discontinuation countdown for a landless clan. An internal war is same-kingdom by definition, so the
+cadet joins the parent's kingdom. With decision 5 in force, this is also what lets the war pass the
+same-kingdom declaration gate. It is the single easiest thing to get wrong.
 
 Verified API surface: `Clan.CreateClan(string)` public static; `Clan.SetLeader(Hero)` public (called from the
 `StoryMode` assembly); `Hero.Clan` public setter (assigned from `StoryMode`, `CampaignSystem.Issues`,
@@ -471,7 +495,7 @@ Each phase is independently shippable and leaves the game in a working state.
 | 1 | ✅ **Done.** `Title.HolderHeroId` **replaces** `HolderClanId`; `IGenealogy.GetClanOf`; registry + `GetSuzerainUseCase` derive; `titles.config.xml` resolved at bootstrap. No save backfill — pre-phase-1 saves are unsupported | `dotnet test` green at 191 + 20. **No intended behaviour change.** The one observed change was four `barony_beeston` Strong claims lost — the phase exposed a `dadg_heroes.xml` inconsistency (`clan_vernon` owning no living members) that let a holder claim his own title; the content has since been fixed, restoring 53 holder clans at 42 claims — see §7 of the phase 1 plan |
 | 2 | ✅ **Done.** `HeroNode.FatherId`/`Age`; `ExecuteSuccessionUseCase` called from `OnHeroKilled` before claim re-derivation. Representation is **on** (§2.2) | Unit tests over a synthetic genealogy: eldest son / no sons → eldest daughter / no children → brother / no kin → clan-leader backstop / dead leader → vacant, not the corpse / representation / several titles → all move. `dotnet test` green at 199 + 20, claim baseline still 42. Live: `campaign.kill_hero` on a duke → eldest son holds the duchy. **The passed-over second son's Strong claim moved to phase 3** — the wholesale `Inheritance` rebuild plus clan-level self-exclusion make it unreachable until per-hero exclusion lands; see §2 of the phase 2 plan |
 | 3 | ✅ **Done.** Claims descend from the holder and his father — the same two walks succession makes — so the claimant set is the potential-heir set; `PrincipalTitleByClan` and `GetDeceasedClanMemberIds` deleted; self-exclusion is per hero in derivation *and* in `EvaluateClaimUseCase` | `dotnet test` green at 206 + 29. The baseline grows **42 → 399** (183 Strong, 216 Weak; 89 titles, 53 clans): Warwick's brother holds a Strong claim on Middleham, three of the house of York on the duchy, and Somerset's Strong claimant is the same man phase 2 proves would inherit. Warwick's death now moves 399 → 339 — see §6 of the phase 3 plan |
-| 4 | Daily evaluator, **inter-clan only**, with the player and same-kingdom gates | Run a campaign at speed; `campaign.list_private_wars` shows plausible declaration rates, never involving the player, never crossing a kingdom border |
+| 4 | Daily evaluator, **inter-clan only**, with the player and same-kingdom gates | Run a campaign at speed; `campaign.list_private_wars` shows plausible declaration rates, never involving the player, never crossing a kingdom border. The border limit is the declaration gate (decision 5), not a limit of the war itself |
 | 5 | ✅ **Done.** Supporter sets on `PrivateWar`, consulted at every step of `WarSideResolver`'s suzerain walk; the serialiser appends two fields and pre-phase-5 saves still load | Resolver unit tests; a war with an explicit defector puts that clan on the attacker side in `AreEnemies`. `dotnet test` green at 234 + 39, submodule 16 |
 | 6 | ✅ **Code done.** Cadet spinoff, support solicitation, reabsorb-on-defeat. The war is priced twice — on the hierarchy alone to send the calls to arms, then on the sides those calls produced — and an intra-clan claimant is priced as an unfounded branch carrying only his own men | `dotnet test` green at 237 + 43 + 1, submodule 16, plus 3 cadet-serialiser tests in `DellarteDellaGuerra.Tests` (not in the .sln — run it by csproj path). Four content integration tests in `ClaimPressureOverRealContentTests` price the spinoff over the real 1471 realm: 86 intra-clan claims across 47 houses, every one with a living pretender; a pretender musters nothing from the house he leaves; and a weak claim inside a house puts all 53 houses behind the holder. `DadgServiceContainerTests` validates the whole registration graph out of process, which is what a missing `ICadetBranch` registration would otherwise only report as a crash on load. **Live check still outstanding** — cadet clan exists, is in the parent's kingdom, its party fights the parent, and encyclopedia/nameplates/banners survive |
 
@@ -497,7 +521,7 @@ from `MobileParty.ActualClan`), and settlements the claimant personally held sti
 | 2 | Which ranks are hero-held | **All of them.** No split rule |
 | 3 | Does the player participate | **No.** Excluded as claimant *and* as target; revisitable later (§3) |
 | 4 | Cadet clan on defeat | **Reabsorb** into the parent clan |
-| 5 | Cross-kingdom claims | **Intra-kingdom only.** Inter-kingdom would need real `StanceLink` wars — a different mechanism, and major evolution in the private-war module |
+| 5 | Cross-kingdom claims | *Revised 2026-09-27.* **Private wars are cross-kingdom capable; automatic claim-driven declaration is same-kingdom only for now.** The war itself needs no `StanceLink` and works across a border: no crown escalation, it persists through a kingdom change, and it folds into a crown war between the two kingdoms (§3). The daily evaluator still declares only when both clans are in the same, non-null kingdom. Cross-border capture, defender identity and title finalisation are **open**; see `cross-border-marches-design.md` |
 
 Representation, the last genuinely open question, was settled in phase 2: it is on.
 
