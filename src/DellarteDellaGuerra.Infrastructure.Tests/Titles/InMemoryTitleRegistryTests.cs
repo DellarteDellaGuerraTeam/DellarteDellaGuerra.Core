@@ -72,6 +72,19 @@ public class InMemoryTitleRegistryTests
     }
 
     [Fact]
+    public void ShouldRestoreTheSavedPrimaryTitles()
+    {
+        _registry.SavePrimaryTitleId("clan_york", "duchy_york");
+        IReadOnlyDictionary<string, string> saved = _registry.SnapshotPrimaryTitles();
+
+        _registry.InitialisePrimaryTitles(new Dictionary<string, string>());
+        Assert.Null(_registry.GetPrimaryTitleId("clan_york"));
+
+        _registry.InitialisePrimaryTitles(saved);
+        Assert.Equal("duchy_york", _registry.GetPrimaryTitleId("clan_york"));
+    }
+
+    [Fact]
     public void ShouldSnapshotAllTitles()
     {
         _registry.SaveTitle(YorkDuchy());

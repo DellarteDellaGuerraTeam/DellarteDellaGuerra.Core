@@ -19,10 +19,10 @@ namespace DellarteDellaGuerra.Domain.Titles
 
         public string? Execute(string clanId)
         {
-            var highestTitle = GetHighestTitle(clanId);
-            if (highestTitle is null) return null;
+            var primaryTitle = GetPrimaryTitle(clanId);
+            if (primaryTitle is null) return null;
 
-            string? parentTitleId = _feudalStructure.GetDeJureSuzerainTitleId(highestTitle.Id);
+            string? parentTitleId = _feudalStructure.GetDeJureSuzerainTitleId(primaryTitle.Id);
             while (parentTitleId != null)
             {
                 string? holderClanId = _genealogy.GetHolderClanOf(_titleRepository.GetTitle(parentTitleId));
@@ -37,14 +37,22 @@ namespace DellarteDellaGuerra.Domain.Titles
             return null;
         }
 
-        public TitleRank? GetHighestRank(string clanId) => GetHighestTitle(clanId)?.Rank;
+        public TitleRank? GetHighestRank(string clanId) => GetPrimaryTitle(clanId)?.Rank;
 
-        private Title? GetHighestTitle(string clanId)
+        // The title a clan serves under: its highest. On a tie it keeps the one it already
+        // served under, so gaining a title of the same rank does not change its liege.
+        public Title? GetPrimaryTitle(string clanId)
         {
-            return _titleRepository
-                .GetTitlesByClan(clanId)
-                .OrderByDescending(title => title.Rank)
-                .FirstOrDefault();
+            var heldTitles = _titleRepository.GetTitlesByClan(clanId);
+            Title? highestTitle = heldTitles.OrderByDescending(title => title.Rank).FirstOrDefault();
+            if (highestTitle is null) return null;
+
+            string? pinnedTitleId = _titleRepository.GetPrimaryTitleId(clanId);
+            Title? pinnedTitle = heldTitles.FirstOrDefault(title => title.Id == pinnedTitleId);
+            if (pinnedTitle is not null && pinnedTitle.Rank >= highestTitle.Rank) return pinnedTitle;
+
+            _titleRepository.SavePrimaryTitleId(clanId, highestTitle.Id);
+            return highestTitle;
         }
     }
 }

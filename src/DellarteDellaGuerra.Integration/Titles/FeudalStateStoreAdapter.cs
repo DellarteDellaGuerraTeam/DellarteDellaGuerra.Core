@@ -11,19 +11,28 @@ namespace DellarteDellaGuerra.Integration.Titles
     {
         private readonly InMemoryTitleRegistry _titleRegistry;
         private readonly InMemoryClaimRegistry _claimRegistry;
+        private readonly XmlFeudalStructure _feudalStructure;
 
         public FeudalStateStoreAdapter(
             InMemoryTitleRegistry titleRegistry,
-            InMemoryClaimRegistry claimRegistry)
+            InMemoryClaimRegistry claimRegistry,
+            XmlFeudalStructure feudalStructure)
 
         {
             _titleRegistry = titleRegistry;
             _claimRegistry = claimRegistry;
+            _feudalStructure = feudalStructure;
         }
 
         public void InitialiseTitles(IEnumerable<Title> titles) => _titleRegistry.Initialise(titles);
         public IReadOnlyList<Title> SnapshotTitles() => _titleRegistry.Snapshot();
         public void InitialiseClaims(IEnumerable<Claim> claims) => _claimRegistry.Initialise(claims);
         public IReadOnlyList<Claim> SnapshotClaims() => _claimRegistry.Snapshot();
+        public void InitialiseReattachments(IReadOnlyDictionary<string, string?> suzerainTitleIdByTitleId) =>
+            _feudalStructure.InitialiseReattachments(suzerainTitleIdByTitleId);
+        public IReadOnlyDictionary<string, string?> SnapshotReattachments() => _feudalStructure.SnapshotReattachments();
+        public void InitialisePrimaryTitles(IReadOnlyDictionary<string, string> primaryTitleIdByClanId) =>
+            _titleRegistry.InitialisePrimaryTitles(primaryTitleIdByClanId);
+        public IReadOnlyDictionary<string, string> SnapshotPrimaryTitles() => _titleRegistry.SnapshotPrimaryTitles();
     }
 }
