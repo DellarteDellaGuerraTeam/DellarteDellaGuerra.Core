@@ -19,5 +19,13 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         void InitialiseClaims(IEnumerable<Claim> claims);
 
         IReadOnlyList<Claim> SnapshotClaims();
+
+        void InitialiseReattachments(IReadOnlyDictionary<string, string?> suzerainTitleIdByTitleId);
+
+        IReadOnlyDictionary<string, string?> SnapshotReattachments();
+
+        void InitialisePrimaryTitles(IReadOnlyDictionary<string, string> primaryTitleIdByClanId);
+
+        IReadOnlyDictionary<string, string> SnapshotPrimaryTitles();
     }
 }

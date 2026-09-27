@@ -7,6 +7,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
     internal sealed class FakeTitleRepository : ITitleRepository
     {
         private readonly Dictionary<string, Title> _titles = new();
+        private readonly Dictionary<string, string> _primaryTitleIds = new();
 
         public FakeGenealogy Genealogy { get; init; } = new();
 
@@ -29,6 +30,11 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         public IReadOnlyList<Title> GetAllTitles() => _titles.Values.ToList();
 
         public void SaveTitle(Title title) => _titles[title.Id] = title;
+
+        public string? GetPrimaryTitleId(string clanId) =>
+            _primaryTitleIds.TryGetValue(clanId, out var titleId) ? titleId : null;
+
+        public void SavePrimaryTitleId(string clanId, string titleId) => _primaryTitleIds[clanId] = titleId;
     }
 
     internal sealed class FakeClaimRepository : IClaimRepository
@@ -131,6 +137,8 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
 
         public string? GetTitleName(string titleId) =>
             _names.TryGetValue(titleId, out var name) ? name : null;
+
+        public void Reattach(string titleId, string? suzerainTitleId) => _parents[titleId] = suzerainTitleId;
     }
 
     internal sealed class FakeLogger : ILogger

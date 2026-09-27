@@ -250,19 +250,32 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
         // The winner takes the title and the de jure titles the loser held, and the fortified
         // seats among them that the loser still owns. A village goes with its castle or town.
+        // A title won across the border takes the clans whose primary title it carries into the
+        // winner's realm, fiefs and all.
         private void AwardTheClaim(PrivateWarConclusion conclusion)
         {
             var winner = BannerlordCampaign.Current?.CampaignObjectManager.Find<Clan>(conclusion.AttackerClanId);
             if (winner?.Leader is null) return;
 
-            foreach (string seatId in _awardWonClaimUseCase.Execute(
-                         conclusion.TitleId, conclusion.AttackerClanId, conclusion.DefenderClanId))
+            WonClaimAward award = _awardWonClaimUseCase.Execute(
+                conclusion.TitleId, conclusion.AttackerClanId, conclusion.DefenderClanId);
+
+            foreach (string seatId in award.MovedSeatIds)
             {
                 var seat = Settlement.Find(seatId);
                 if (seat is null || !seat.IsFortification || seat.OwnerClan?.StringId != conclusion.DefenderClanId)
                     continue;
 
                 ChangeOwnerOfSettlementAction.ApplyByDefault(winner.Leader, seat);
+            }
+
+            foreach (string clanId in award.ClansJoiningWinnersRealm)
+            {
+                var clan = BannerlordCampaign.Current?.CampaignObjectManager.Find<Clan>(clanId);
+                if (clan is null || winner.Kingdom is null || clan.Kingdom == winner.Kingdom) continue;
+                if (clan.Kingdom?.RulingClan == clan) continue;
+
+                ChangeKingdomAction.ApplyByJoinToKingdom(clan, winner.Kingdom);
             }
 
             // The holders moved, and every blood claim on these titles descends from its holder.

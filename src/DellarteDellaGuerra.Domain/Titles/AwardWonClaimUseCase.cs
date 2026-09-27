@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
 
@@ -15,6 +16,12 @@ namespace DellarteDellaGuerra.Domain.Titles
      *  Returns the seats of the titles it moved, so the caller can hand over the settlements
      *  that go with them. The loser is given no claim on what it lost.
      *
+     *  A lord cannot be the vassal of two kings, so a title won across the border leaves its
+     *  realm with everything below it. It goes under the winner's primary title when it ranks
+     *  lower, and otherwise directly under the winner's king. The clans whose primary title
+     *  went with it now serve in the winner's realm, and are returned so the caller can move
+     *  them there. A won kingdom stays a realm of its own.
+     *
      *  A seat the winner occupies stops being contested, since the winner now holds it. A seat
      *  some other house occupies stays contested against the new holder.
      * </remarks>
@@ -24,26 +31,90 @@ namespace DellarteDellaGuerra.Domain.Titles
         private readonly ITitleRepository _titleRepository;
         private readonly IFeudalStructure _feudalStructure;
         private readonly IGenealogy _genealogy;
+        private readonly IGetSuzerainUseCase _getSuzerainUseCase;
 
         public AwardWonClaimUseCase(
             ITitleRepository titleRepository,
             IFeudalStructure feudalStructure,
-            IGenealogy genealogy)
+            IGenealogy genealogy,
+            IGetSuzerainUseCase getSuzerainUseCase)
         {
             _titleRepository = titleRepository;
             _feudalStructure = feudalStructure;
             _genealogy = genealogy;
+            _getSuzerainUseCase = getSuzerainUseCase;
         }
 
-        public IReadOnlyList<string> Execute(string titleId, string winnerClanId, string loserClanId)
+        public WonClaimAward Execute(string titleId, string winnerClanId, string loserClanId)
         {
             var movedSeats = new List<string>();
 
+            var joiningClans = new List<string>();
+
             string? winnerLeaderId = _genealogy.GetClanLeaderId(winnerClanId);
-            if (winnerLeaderId is null) return movedSeats;
+            if (winnerLeaderId is null) return new WonClaimAward(movedSeats, joiningClans);
+
+            // Looked up before the award, so a won title of the same rank does not displace it.
+            Title? winnerPrimaryTitle = _getSuzerainUseCase.GetPrimaryTitle(winnerClanId);
 
             Award(titleId, winnerClanId, winnerLeaderId, loserClanId, movedSeats);
-            return movedSeats;
+
+            if (winnerPrimaryTitle is not null && MoveIntoWinnersRealm(titleId, winnerPrimaryTitle))
+            {
+                joiningClans.AddRange(ClansWhosePrimaryTitleIsUnder(titleId, winnerClanId));
+            }
+
+            return new WonClaimAward(movedSeats, joiningClans);
+        }
+
+        private bool MoveIntoWinnersRealm(string titleId, Title winnerPrimaryTitle)
+        {
+            TitleRank? rank = _feudalStructure.GetRank(titleId);
+            if (rank is null || rank >= TitleRank.King) return false;
+
+            string winnerRealm = GetRealm(winnerPrimaryTitle.Id);
+            if (GetRealm(titleId) == winnerRealm) return false;
+
+            string? suzerainTitleId = rank < winnerPrimaryTitle.Rank ? winnerPrimaryTitle.Id
+                : _feudalStructure.GetRank(winnerRealm) > rank ? winnerRealm
+                : null;
+            _feudalStructure.Reattach(titleId, suzerainTitleId);
+            return true;
+        }
+
+        private string GetRealm(string titleId)
+        {
+            string realm = titleId;
+            while (_feudalStructure.GetDeJureSuzerainTitleId(realm) is { } suzerainTitleId)
+            {
+                realm = suzerainTitleId;
+            }
+
+            return realm;
+        }
+
+        private IEnumerable<string> ClansWhosePrimaryTitleIsUnder(string titleId, string winnerClanId)
+        {
+            var subtree = new List<string>();
+            CollectSubtree(titleId, subtree);
+
+            return subtree
+                .Select(id => _genealogy.GetHolderClanOf(_titleRepository.GetTitle(id)))
+                .OfType<string>()
+                .Where(clanId => clanId != winnerClanId)
+                .Distinct()
+                .Where(clanId => _getSuzerainUseCase.GetPrimaryTitle(clanId) is { } primary
+                                 && subtree.Contains(primary.Id))
+                .ToList();
+        }
+
+        private void CollectSubtree(string titleId, List<string> subtree)
+        {
+            subtree.Add(titleId);
+            foreach (string vassalTitleId in _feudalStructure.GetDeJureVassalTitleIds(titleId))
+            {
+                CollectSubtree(vassalTitleId, subtree);
+            }
         }
 
         private void Award(

@@ -67,6 +67,57 @@ public class XmlFeudalStructureTests
     }
 
     [Fact]
+    public void ShouldReattachATitleWithEverythingBelowIt()
+    {
+        _feudalStructure.Reattach("county_richmond", "kingdom_england");
+
+        Assert.Equal("kingdom_england", _feudalStructure.GetDeJureSuzerainTitleId("county_richmond"));
+        Assert.Equal(new[] { "duchy_york", "county_kent", "county_richmond" },
+            _feudalStructure.GetDeJureVassalTitleIds("kingdom_england"));
+        Assert.Empty(_feudalStructure.GetDeJureVassalTitleIds("duchy_york"));
+        Assert.Equal("county_richmond", _feudalStructure.GetDeJureSuzerainTitleId("barony_middleham"));
+    }
+
+    [Fact]
+    public void ShouldReattachATitleAsARoot()
+    {
+        _feudalStructure.Reattach("duchy_york", null);
+
+        Assert.Null(_feudalStructure.GetDeJureSuzerainTitleId("duchy_york"));
+        Assert.Equal(new[] { "county_kent" }, _feudalStructure.GetDeJureVassalTitleIds("kingdom_england"));
+    }
+
+    [Fact]
+    public void ShouldRestoreTheConfiguredHierarchyWithTheSavedReattachments()
+    {
+        _feudalStructure.Reattach("county_richmond", "kingdom_england");
+        IReadOnlyDictionary<string, string?> saved = _feudalStructure.SnapshotReattachments();
+
+        _feudalStructure.InitialiseReattachments(new Dictionary<string, string?>());
+        Assert.Equal("duchy_york", _feudalStructure.GetDeJureSuzerainTitleId("county_richmond"));
+        Assert.Equal(new[] { "duchy_york", "county_kent" },
+            _feudalStructure.GetDeJureVassalTitleIds("kingdom_england"));
+        Assert.Empty(_feudalStructure.SnapshotReattachments());
+
+        _feudalStructure.InitialiseReattachments(saved);
+        Assert.Equal("kingdom_england", _feudalStructure.GetDeJureSuzerainTitleId("county_richmond"));
+        Assert.Empty(_feudalStructure.GetDeJureVassalTitleIds("duchy_york"));
+    }
+
+    [Fact]
+    public void ShouldSkipSavedReattachmentsOfUnknownTitles()
+    {
+        _feudalStructure.InitialiseReattachments(new Dictionary<string, string?>
+        {
+            ["removed_title"] = "kingdom_england",
+            ["county_kent"] = "removed_title"
+        });
+
+        Assert.Equal("kingdom_england", _feudalStructure.GetDeJureSuzerainTitleId("county_kent"));
+        Assert.Equal(5, _feudalStructure.GetAllTitleIds().Count);
+    }
+
+    [Fact]
     public void ShouldBuildInitialTitles()
     {
         IReadOnlyList<Title> titles = _feudalStructure.BuildInitialTitles(_genealogy);

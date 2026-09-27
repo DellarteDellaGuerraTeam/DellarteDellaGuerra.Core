@@ -98,5 +98,57 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             Assert.Equal(TitleRank.Duke, useCase.GetHighestRank("clan_duke"));
             Assert.Null(useCase.GetHighestRank("clan_untitled"));
         }
+
+        // county_x (clan_other) ── barony_x, listed first so an unpinned tie would pick it
+        // county_c (clan_count) ── barony_b (clan_baron)
+        private static (GetSuzerainUseCase UseCase, FakeTitleRepository Titles) SetupTwoBaronies()
+        {
+            var genealogy = CreateGenealogy().AddHero("clan_other", "clan_other");
+            var structure = CreateStructure()
+                .AddTitle("county_x", TitleRank.Count, "duchy_d")
+                .AddTitle("barony_x", TitleRank.Baron, "county_x");
+            var titles = new FakeTitleRepository(
+                new Title("barony_x", "Barony X", TitleRank.Baron, "s_bx", null),
+                new Title("county_x", "County X", TitleRank.Count, "s_cx", "clan_other"),
+                new Title("duchy_d", "Duchy", TitleRank.Duke, "s_d", "clan_duke"),
+                new Title("county_c", "County", TitleRank.Count, "s_c", "clan_count"),
+                new Title("barony_b", "Barony", TitleRank.Baron, "s_b", "clan_baron"))
+            { Genealogy = genealogy };
+            return (new GetSuzerainUseCase(titles, structure, genealogy), titles);
+        }
+
+        [Fact]
+        public void Execute_KeepsTheLiegeItServes_WhenItGainsATitleOfTheSameRank()
+        {
+            var (useCase, titles) = SetupTwoBaronies();
+            Assert.Equal("clan_count", useCase.Execute("clan_baron"));
+
+            titles.SaveTitle(titles.GetTitle("barony_x")!.WithHolder("clan_baron"));
+
+            Assert.Equal("clan_count", useCase.Execute("clan_baron"));
+        }
+
+        [Fact]
+        public void Execute_ServesUnderAHigherTitle_WhenItGainsOne()
+        {
+            var (useCase, titles) = SetupTwoBaronies();
+            Assert.Equal("clan_count", useCase.Execute("clan_baron"));
+
+            titles.SaveTitle(titles.GetTitle("county_x")!.WithHolder("clan_baron"));
+
+            Assert.Equal("clan_duke", useCase.Execute("clan_baron"));
+        }
+
+        [Fact]
+        public void Execute_ServesUnderItsOtherTitle_WhenItLosesThePrimaryOne()
+        {
+            var (useCase, titles) = SetupTwoBaronies();
+            Assert.Equal("clan_count", useCase.Execute("clan_baron"));
+            titles.SaveTitle(titles.GetTitle("barony_x")!.WithHolder("clan_baron"));
+
+            titles.SaveTitle(titles.GetTitle("barony_b")!.WithHolder(null));
+
+            Assert.Equal("clan_other", useCase.Execute("clan_baron"));
+        }
     }
 }

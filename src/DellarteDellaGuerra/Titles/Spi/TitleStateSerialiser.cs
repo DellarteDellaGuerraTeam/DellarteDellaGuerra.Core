@@ -20,6 +20,8 @@ namespace DellarteDellaGuerra.Titles.Spi
      *   <item>Claim: Id|ClaimantClanId|TitleId|Strength|Origin|ClaimantHeroId
      *    ('' sentinel for a clan-level claim). Pre-hero saves carry 5 fields and load
      *    with no claimant hero.</item>
+     *   <item>Link: FromId|ToId ('' sentinel for no target), for the title reattachments
+     *    (TitleId|SuzerainTitleId) and the primary titles (ClanId|TitleId).</item>
      *  </list>
      *  The delimiter '|' must not appear in ids or title names. Ids are Bannerlord
      *  StringIds and configuration-defined title ids, neither of which contain pipes.
@@ -120,6 +122,31 @@ namespace DellarteDellaGuerra.Titles.Spi
             }
 
             return claims;
+        }
+
+        public static List<string> SerialiseLinks(IEnumerable<KeyValuePair<string, string?>> links)
+        {
+            var serialised = new List<string>();
+            foreach (var link in links)
+            {
+                serialised.Add(link.Key + Delimiter + (link.Value ?? string.Empty));
+            }
+
+            return serialised;
+        }
+
+        public static Dictionary<string, string?> DeserialiseLinks(List<string> serialisedLinks)
+        {
+            var links = new Dictionary<string, string?>(serialisedLinks.Count);
+            foreach (string line in serialisedLinks)
+            {
+                string[] fields = line.Split(Delimiter);
+                if (fields.Length != 2 || fields[0].Length == 0) continue;
+
+                links[fields[0]] = fields[1].Length == 0 ? null : fields[1];
+            }
+
+            return links;
         }
 
         private static bool TryParseEnum<TEnum>(string value, out TEnum result) where TEnum : struct

@@ -27,6 +27,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
         private List<string> _serialisedTitles = new();
         private List<string> _serialisedClaims = new();
+        private List<string> _serialisedReattachments = new();
+        private List<string> _serialisedPrimaryTitles = new();
 
         public FeudalTitleCampaignBehavior(
             IAssignTitleUseCase assignTitleUseCase,
@@ -57,17 +59,29 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             {
                 _serialisedTitles = TitleStateSerialiser.SerialiseTitles(_stateStore.SnapshotTitles());
                 _serialisedClaims = TitleStateSerialiser.SerialiseClaims(_stateStore.SnapshotClaims());
+                _serialisedReattachments = TitleStateSerialiser.SerialiseLinks(_stateStore.SnapshotReattachments());
+                _serialisedPrimaryTitles = TitleStateSerialiser.SerialiseLinks(
+                    _stateStore.SnapshotPrimaryTitles().Select(pin => new KeyValuePair<string, string?>(pin.Key, pin.Value)));
             }
 
             dataStore.SyncData("DadgFeudalTitles", ref _serialisedTitles);
             dataStore.SyncData("DadgFeudalClaims", ref _serialisedClaims);
+            dataStore.SyncData("DadgTitleReattachments", ref _serialisedReattachments);
+            dataStore.SyncData("DadgPrimaryTitles", ref _serialisedPrimaryTitles);
 
             _serialisedTitles ??= new List<string>();
             _serialisedClaims ??= new List<string>();
+            _serialisedReattachments ??= new List<string>();
+            _serialisedPrimaryTitles ??= new List<string>();
         }
 
         private void OnNewGameCreated(CampaignGameStarter campaignGameStarter)
         {
+            // The structure and the registries outlive a campaign, so a new one starts from the
+            // configured realms rather than those an earlier campaign in this session redrew.
+            _stateStore.InitialiseReattachments(new Dictionary<string, string?>());
+            _stateStore.InitialisePrimaryTitles(new Dictionary<string, string>());
+
             if (_stateStore.SnapshotTitles().Count > 0) return;
 
             _stateStore.InitialiseTitles(_initialTitlesProvider());
@@ -76,6 +90,12 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
         private void OnGameLoaded(CampaignGameStarter campaignGameStarter)
         {
+            // Empty in a save written before titles could change realm: the configured realms.
+            _stateStore.InitialiseReattachments(TitleStateSerialiser.DeserialiseLinks(_serialisedReattachments));
+            _stateStore.InitialisePrimaryTitles(TitleStateSerialiser.DeserialiseLinks(_serialisedPrimaryTitles)
+                .Where(pin => pin.Value is not null)
+                .ToDictionary(pin => pin.Key, pin => pin.Value!));
+
             // The save did not contain feudal state (mod added to an existing campaign):
             // seed the de jure layout instead of restoring.
             if (_serialisedTitles.Count == 0)

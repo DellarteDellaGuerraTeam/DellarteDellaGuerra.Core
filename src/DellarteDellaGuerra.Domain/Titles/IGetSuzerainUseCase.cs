@@ -6,5 +6,6 @@ namespace DellarteDellaGuerra.Domain.Titles
     {
         string? Execute(string clanId);
         TitleRank? GetHighestRank(string clanId);
+        Title? GetPrimaryTitle(string clanId);
     }
 }

@@ -7,7 +7,8 @@ namespace DellarteDellaGuerra.Infrastructure.Titles;
 
 /**
  * <summary>
- * The static de jure feudal hierarchy backed by the forest parsed from the titles configuration XML.
+ * The de jure feudal hierarchy backed by the forest parsed from the titles configuration XML,
+ * with the titles since reattached to another realm moved to their new suzerain.
  * </summary>
  */
 public class XmlFeudalStructure : IFeudalStructure
@@ -17,16 +18,15 @@ public class XmlFeudalStructure : IFeudalStructure
     private readonly Dictionary<string, FeudalTitleNode> _nodesByTitleId = new Dictionary<string, FeudalTitleNode>();
     private readonly Dictionary<string, string> _parentTitleIdByTitleId = new Dictionary<string, string>();
     private readonly Dictionary<string, string> _titleIdBySeatSettlementId = new Dictionary<string, string>();
-    private readonly Dictionary<string, IReadOnlyList<string>> _childTitleIdsByTitleId =
-        new Dictionary<string, IReadOnlyList<string>>();
+    private readonly Dictionary<string, List<string>> _childTitleIdsByTitleId = new Dictionary<string, List<string>>();
     private readonly List<string> _allTitleIds = new List<string>();
+    private readonly IReadOnlyList<FeudalTitleNode> _forest;
+    private readonly Dictionary<string, string?> _reattachedSuzerainByTitleId = new Dictionary<string, string?>();
 
     internal XmlFeudalStructure(IReadOnlyList<FeudalTitleNode> forest)
     {
-        foreach (FeudalTitleNode rootNode in forest)
-        {
-            IndexNode(rootNode, null);
-        }
+        _forest = forest;
+        IndexForest();
     }
 
     public string? GetDeJureSuzerainTitleId(string titleId)
@@ -36,7 +36,7 @@ public class XmlFeudalStructure : IFeudalStructure
 
     public IReadOnlyList<string> GetDeJureVassalTitleIds(string titleId)
     {
-        return _childTitleIdsByTitleId.TryGetValue(titleId, out IReadOnlyList<string> childTitleIds)
+        return _childTitleIdsByTitleId.TryGetValue(titleId, out List<string> childTitleIds)
             ? childTitleIds
             : NoVassals;
     }
@@ -61,6 +61,58 @@ public class XmlFeudalStructure : IFeudalStructure
         return _nodesByTitleId.TryGetValue(titleId, out FeudalTitleNode node) ? node.Name : null;
     }
 
+    public void Reattach(string titleId, string? suzerainTitleId)
+    {
+        if (GetDeJureSuzerainTitleId(titleId) is { } formerSuzerainTitleId)
+        {
+            _childTitleIdsByTitleId[formerSuzerainTitleId].Remove(titleId);
+        }
+
+        _parentTitleIdByTitleId.Remove(titleId);
+        if (suzerainTitleId is not null)
+        {
+            _parentTitleIdByTitleId[titleId] = suzerainTitleId;
+            _childTitleIdsByTitleId[suzerainTitleId].Add(titleId);
+        }
+
+        _reattachedSuzerainByTitleId[titleId] = suzerainTitleId;
+    }
+
+    /**
+     * <summary>
+     * Returns the titles reattached since the configured hierarchy, each with its new suzerain
+     * (null for a root), typically for save game serialisation.
+     * </summary>
+     */
+    public IReadOnlyDictionary<string, string?> SnapshotReattachments()
+    {
+        return new Dictionary<string, string?>(_reattachedSuzerainByTitleId);
+    }
+
+    /**
+     * <summary>
+     * Resets the hierarchy to the configured one and reapplies the given reattachments,
+     * typically on campaign start or save load.
+     * </summary>
+     */
+    public void InitialiseReattachments(IReadOnlyDictionary<string, string?> reattachments)
+    {
+        _nodesByTitleId.Clear();
+        _parentTitleIdByTitleId.Clear();
+        _titleIdBySeatSettlementId.Clear();
+        _childTitleIdsByTitleId.Clear();
+        _allTitleIds.Clear();
+        _reattachedSuzerainByTitleId.Clear();
+        IndexForest();
+
+        foreach (KeyValuePair<string, string?> reattachment in reattachments)
+        {
+            if (!_nodesByTitleId.ContainsKey(reattachment.Key)) continue;
+            if (reattachment.Value is not null && !_nodesByTitleId.ContainsKey(reattachment.Value)) continue;
+            Reattach(reattachment.Key, reattachment.Value);
+        }
+    }
+
     /**
      * <summary>
      * Builds the initial titles from the configured hierarchy,
@@ -80,6 +132,14 @@ public class XmlFeudalStructure : IFeudalStructure
         }
 
         return titles;
+    }
+
+    private void IndexForest()
+    {
+        foreach (FeudalTitleNode rootNode in _forest)
+        {
+            IndexNode(rootNode, null);
+        }
     }
 
     private void IndexNode(FeudalTitleNode node, string? parentTitleId)

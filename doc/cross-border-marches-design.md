@@ -338,12 +338,35 @@ Decided 2026-09-27:
   supporter's highest title, the claimant becomes the supporter's vassal. If it ranks the same or
   higher, the claimant becomes a vassal of the supporter's king.
 
+**Built in step 4 (2026-09-28):**
+
+- `GetSuzerainUseCase.GetPrimaryTitle` implements the primary title. The pin is kept through
+  `ITitleRepository.GetPrimaryTitleId`/`SavePrimaryTitleId` and is written the first time a clan's
+  primary title is looked up. So a tie decided before that first lookup still falls back to
+  dictionary order.
+- `AwardWonClaimUseCase` reads the winner's primary title *before* the award, so a won title of the
+  same rank does not displace it. After the award it moves the won title with `IFeudalStructure.Reattach`.
+  It returns the clans whose primary title now lies under the moved title (`WonClaimAward.ClansJoiningWinnersRealm`).
+  `ClaimPressureCampaignBehavior.AwardTheClaim` moves those clans with `ChangeKingdomAction.ApplyByJoinToKingdom`.
+  It skips a clan that already serves the winner's kingdom and a clan that rules its own kingdom.
+- `XmlFeudalStructure` is the configured tree plus a record of reattachments. The record is saved as
+  `DadgTitleReattachments` (`titleId|suzerainId`, empty for a root) and the primary pins as
+  `DadgPrimaryTitles` (`clanId|titleId`). Both are reset on a new game. A save that has neither loads
+  with the configured realms.
+- Assumptions: a title only migrates across realms, since a same-realm win leaves the tree alone. A King
+  title never migrates, so a won kingdom stays a realm of its own (a personal union, see below).
+- Not covered yet:
+  - A clan that migrates keeps any lower titles it holds in the old tree, so S3 can reappear for it.
+  - Titles ceded by peace (`OnMakePeace`) and granted by gift do not migrate.
+  - A won King title leaves the winner a vassal in one realm and king of another.
+  - None of this is reachable in play until step 5 lifts the same-kingdom gate.
+
 ### 7.6 Build order
 
 1. **Done:** foreign supporters join through a bond, and never take fiefs.
 2. **Done:** the Weak-claim condition (7.3).
 3. **Done:** the win outcome (7.5): grant the title and the defender's de jure lands. This fixes
    same-realm wars too.
-4. Title migration into the winner's realm (7.5).
+4. **Done:** title migration into the winner's realm, and the primary title (7.5).
 5. Lift the same-kingdom gate, including clans with no kingdom (7.3).
 6. Later: the recovery claim (7.2), proxy claims, U1 raiding feuds, and march castles (U2).
