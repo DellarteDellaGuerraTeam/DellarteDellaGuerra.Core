@@ -152,6 +152,15 @@ internal sealed class DadgXmlGenealogy : IGenealogy
         return new DadgXmlGenealogy(heroesById, _leaderIdByClanId);
     }
 
+    /// <summary>A view of the same content in which some heroes are of another age.</summary>
+    public DadgXmlGenealogy WithAge(IEnumerable<string> heroIds, float age)
+    {
+        var heroesById = new Dictionary<string, HeroNode>(_heroesById);
+        foreach (string heroId in heroIds) heroesById[heroId] = RequiredHero(heroId) with { Age = age };
+
+        return new DadgXmlGenealogy(heroesById, _leaderIdByClanId);
+    }
+
     private HeroNode RequiredHero(string heroId) =>
         _heroesById.TryGetValue(heroId, out HeroNode? hero)
             ? hero

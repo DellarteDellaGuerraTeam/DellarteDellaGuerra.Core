@@ -139,8 +139,11 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                 string? defenderClanId = _genealogy.GetClanOf(title.HolderHeroId);
                 if (defenderClanId is null || !clansById.TryGetValue(defenderClanId, out var defenderClan)) continue;
 
+                var holder = _genealogy.GetHero(title.HolderHeroId);
+
                 foreach (var claim in BestClaimPerClaimant(title.Id))
                 {
+                    if (!WeakClaimPolicy.IsPressable(claim.Strength, holder)) continue;
                     if (!clansById.TryGetValue(claim.ClaimantClanId, out var attackerClan)) continue;
                     if (attackerClan == Clan.PlayerClan || defenderClan == Clan.PlayerClan) continue;
 

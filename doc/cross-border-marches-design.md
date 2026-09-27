@@ -297,6 +297,9 @@ too, so the `kingdom is null` skip goes with it.
 **A Weak claim is pressable only when the current holder is a child or a woman** (decided
 2026-09-27). "Child" means under vanilla's age of majority. This applies to every Weak claim,
 same-realm ones included. So a bride's claim sleeps while her father or brother holds the seat.
+Built as `WeakClaimPolicy` (Domain): the age of majority is 18, and a holder the genealogy
+cannot find counts as neither, so a Weak claim on him is not pressed. Every holder the 1471
+content authors is a grown man, so at campaign start only Strong claims are pressable.
 
 ### 7.5 What a won claim war gives, and where the title goes
 
@@ -337,7 +340,7 @@ Decided 2026-09-27:
 ### 7.6 Build order
 
 1. **Done:** foreign supporters join through a bond, and never take fiefs.
-2. The Weak-claim condition (7.3).
+2. **Done:** the Weak-claim condition (7.3).
 3. The win outcome (7.5): grant the title and the defender's de jure lands. This fixes same-realm
    wars too.
 4. Title migration into the winner's realm (7.5).
