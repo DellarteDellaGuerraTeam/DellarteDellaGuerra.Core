@@ -86,7 +86,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         }
 
         [Fact]
-        public void GetHighestRank_ReturnsHighestRankOrNull()
+        public void GetPrimaryTitle_ReturnsTheHighestRankedTitleOrNull()
         {
             var genealogy = CreateGenealogy();
             var titleRepository = new FakeTitleRepository(
@@ -95,8 +95,8 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             { Genealogy = genealogy };
             var useCase = new GetSuzerainUseCase(titleRepository, CreateStructure(), genealogy);
 
-            Assert.Equal(TitleRank.Duke, useCase.GetHighestRank("clan_duke"));
-            Assert.Null(useCase.GetHighestRank("clan_untitled"));
+            Assert.Equal(TitleRank.Duke, useCase.GetPrimaryTitle("clan_duke")?.Rank);
+            Assert.Null(useCase.GetPrimaryTitle("clan_untitled"));
         }
 
         // county_x (clan_other) ── barony_x, listed first so an unpinned tie would pick it
