@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  De jure feudal hierarchy for the DADG feudal titles system (War of the Roses, England 1471).
+  De jure feudal hierarchy for the DADG feudal titles system (War of the Roses, England 1471;
+  Scotland and the Isles are further roots at the end of the file).
 
   Schema:
     <Feudalism>
@@ -165,5 +166,73 @@
       <Barony id="barony_stafford" name="Barony of Stafford" seat="dadg_Stafford_castle" holderClanId="clan_tuchet"/>
     </County>
 
+  </Kingdom>
+
+  <!--
+    The two Scottish realms, one root per kingdom in the content: the Crown of Scotland (Bannerlord
+    kingdom "khuzait") and the Lordship of the Isles ("battania"). Same rules as England: counties
+    (earldoms and great lordships) at towns, baronies at castles, every holder its seat's owner
+    clan, crowns seatless. Scotland had no duchies in this period, so everything is held of the
+    king through a county or directly. Houses that own no town or castle hold no title.
+  -->
+  <Kingdom id="kingdom_scotland" name="Scotland" kingClanId="clan_stewart">
+    <County id="county_lothian" name="County of Lothian" seat="dadg_sco_edinburgh_town" holderClanId="clan_stewart">
+      <Barony id="barony_dunbar" name="Barony of Dunbar" seat="dadg_sco_dunbar_castle" holderClanId="clan_hepburn"/>
+    </County>
+    <County id="county_stirling" name="County of Stirling" seat="dadg_sco_stirling_town" holderClanId="clan_hamilton"/>
+    <County id="county_lanark" name="County of Lanark" seat="dadg_sco_glasgow_town" holderClanId="clan_hamilton">
+      <Barony id="barony_rothesay" name="Barony of Rothesay" seat="dadg_sco_rothesay_castle" holderClanId="clan_hamilton"/>
+    </County>
+    <County id="county_carrick" name="County of Carrick" seat="dadg_sco_ayr_town" holderClanId="clan_kennedy"/>
+    <County id="county_nithsdale" name="County of Nithsdale" seat="dadg_sco_dumfries_town" holderClanId="clan_maxwell">
+      <Barony id="barony_caerlaverock" name="Barony of Caerlaverock" seat="dadg_sco_caerlaverock_castle" holderClanId="clan_maxwell"/>
+      <Barony id="barony_threave" name="Barony of Threave" seat="dadg_sco_threave_castle" holderClanId="clan_maxwell"/>
+      <Barony id="barony_hermitage" name="Barony of Hermitage" seat="dadg_sco_hermitage_castle" holderClanId="clan_maxwell"/>
+    </County>
+    <County id="county_fife" name="County of Fife" seat="dadg_sco_st_andrews_town" holderClanId="clan_lindsay">
+      <Barony id="barony_lochleven" name="Barony of Lochleven" seat="dadg_sco_lochleven_castle" holderClanId="clan_ruthven"/>
+    </County>
+    <County id="county_crawford" name="County of Crawford" seat="dadg_sco_dundee_town" holderClanId="clan_lindsay"/>
+    <County id="county_gowrie" name="County of Gowrie" seat="dadg_sco_perth_town" holderClanId="clan_ruthven">
+      <Barony id="barony_glenorchy" name="Barony of Glenorchy" seat="dadg_sco_kilchurn_castle" holderClanId="clan_campbell"/>
+    </County>
+    <County id="county_aberdeen" name="County of Aberdeen" seat="dadg_sco_aberdeen_town" holderClanId="clan_keith">
+      <Barony id="barony_dunnottar" name="Barony of Dunnottar" seat="dadg_sco_dunnottar_castle" holderClanId="clan_keith"/>
+      <Barony id="barony_mar" name="Barony of Mar" seat="dadg_sco_kildrummy_castle" holderClanId="clan_erskine"/>
+    </County>
+    <County id="county_moray" name="County of Moray" seat="dadg_sco_elgin_town" holderClanId="clan_dunbar_moray">
+      <Barony id="barony_strathbogie" name="Barony of Strathbogie" seat="dadg_sco_huntly_castle" holderClanId="clan_gordon"/>
+    </County>
+    <County id="county_inverness" name="County of Inverness" seat="dadg_sco_inverness_town" holderClanId="clan_dunbar_moray">
+      <Barony id="barony_urquhart" name="Barony of Urquhart" seat="dadg_sco_urquhart_castle" holderClanId="clan_dunbar_moray"/>
+    </County>
+    <County id="county_orkney" name="County of Orkney" seat="dadg_sco_kirkevaag_village" holderClanId="clan_sinclair">
+      <Barony id="barony_caithness" name="Barony of Caithness" seat="dadg_sco_wick_town" holderClanId="clan_sinclair"/>
+      <Barony id="barony_sutherland" name="Barony of Sutherland" seat="dadg_sco_dornoch_town" holderClanId="clan_sinclair"/>
+      <Barony id="barony_dirlot" name="Barony of Dirlot" seat="dadg_sco_dirlot_castle" holderClanId="clan_stewart"/>
+    </County>
+  </Kingdom>
+
+  <Kingdom id="kingdom_isles" name="Lordship of the Isles" kingClanId="clan_macdonald_isles">
+    <County id="county_islay" name="County of Islay" seat="dadg_sco_finlaggan_town" holderClanId="clan_macdonald_isles">
+      <Barony id="barony_dunyvaig" name="Barony of Dunyvaig" seat="dadg_sco_dunyvaig_castle" holderClanId="clan_macdonald_isles"/>
+      <Barony id="barony_knapdale" name="Barony of Knapdale" seat="dadg_sco_tarbert_castle" holderClanId="clan_macdonald_isles"/>
+      <Barony id="barony_duart" name="Barony of Duart" seat="dadg_sco_duart_castle" holderClanId="clan_maclean"/>
+    </County>
+    <County id="county_lewis" name="County of Lewis" seat="dadg_sco_stornoway_town" holderClanId="clan_macleod_lewis">
+      <Barony id="barony_dunvegan" name="Barony of Dunvegan" seat="dadg_sco_dunvegan_castle" holderClanId="clan_macleod"/>
+      <Barony id="barony_barra" name="Barony of Barra" seat="dadg_sco_kisimul_castle" holderClanId="clan_macneil_barra"/>
+    </County>
+    <County id="county_ross" name="County of Ross" seat="dadg_sco_dingwall_town" holderClanId="clan_munro">
+      <Barony id="barony_balnagowan" name="Barony of Balnagowan" seat="dadg_sco_balnagowan_castle" holderClanId="clan_ross"/>
+      <Barony id="barony_foulis" name="Barony of Foulis" seat="dadg_sco_foulis_castle" holderClanId="clan_munro"/>
+      <Barony id="barony_kintail" name="Barony of Kintail" seat="dadg_sco_eilean_donan_castle" holderClanId="clan_mackenzie"/>
+      <Barony id="barony_sleat" name="Barony of Sleat" seat="dadg_sco_dunscaith_castle" holderClanId="clan_macdonald_sleat"/>
+      <Barony id="barony_cawdor" name="Barony of Cawdor" seat="dadg_sco_cawdor_castle" holderClanId="clan_calder"/>
+    </County>
+    <County id="county_lochaber" name="County of Lochaber" seat="dadg_sco_inverlochy_town" holderClanId="clan_cameron">
+      <Barony id="barony_moidart" name="Barony of Moidart" seat="dadg_sco_tioram_castle" holderClanId="clan_clanranald"/>
+      <Barony id="barony_ardnamurchan" name="Barony of Ardnamurchan" seat="dadg_sco_mingary_castle" holderClanId="clan_maclain"/>
+    </County>
   </Kingdom>
 </Feudalism>
