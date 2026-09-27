@@ -120,6 +120,43 @@ internal sealed class DadgXmlGenealogy : IGenealogy
         return new DadgXmlGenealogy(heroesById, _leaderIdByClanId);
     }
 
+    /// <summary>
+    /// A view of the same content after a lord leading his house marries. The wife joins his
+    /// clan, as vanilla's <c>GetClanAfterMarriage</c> has it when the husband leads one.
+    /// </summary>
+    public DadgXmlGenealogy WithMarriage(string husbandId, string wifeId)
+    {
+        HeroNode husband = RequiredHero(husbandId);
+        HeroNode wife = RequiredHero(wifeId);
+
+        var heroesById = new Dictionary<string, HeroNode>(_heroesById)
+        {
+            [husbandId] = husband with { SpouseId = wifeId },
+            [wifeId] = wife with { SpouseId = husbandId, ClanId = husband.ClanId }
+        };
+
+        return new DadgXmlGenealogy(heroesById, _leaderIdByClanId);
+    }
+
+    /// <summary>A view of the same content in which a hero has a daughter the content does not author.</summary>
+    public DadgXmlGenealogy WithDaughter(string fatherId, string daughterId, float age)
+    {
+        HeroNode father = RequiredHero(fatherId);
+
+        var heroesById = new Dictionary<string, HeroNode>(_heroesById)
+        {
+            [fatherId] = father with { ChildIds = father.ChildIds.Append(daughterId).ToList() },
+            [daughterId] = new HeroNode(daughterId, true, true, father.ClanId, Array.Empty<string>(), fatherId, age)
+        };
+
+        return new DadgXmlGenealogy(heroesById, _leaderIdByClanId);
+    }
+
+    private HeroNode RequiredHero(string heroId) =>
+        _heroesById.TryGetValue(heroId, out HeroNode? hero)
+            ? hero
+            : throw new ArgumentException($"DADG content has no hero '{heroId}'.", nameof(heroId));
+
     public HeroNode? GetHero(string heroId) =>
         _heroesById.TryGetValue(heroId, out HeroNode? hero) ? hero : null;
 

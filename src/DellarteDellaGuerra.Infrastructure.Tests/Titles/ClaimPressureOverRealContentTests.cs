@@ -330,6 +330,112 @@ public class ClaimPressureOverRealContentTests
 
     [Fact]
     [Trait("Category", "DADG content integration")]
+    public void AnEnglishLadyWhoWedsAScottishLordCallsHisHouseToHerFathersFeuds()
+    {
+        // Courtenay's eldest daughter marries the lord of Maxwell. She joins his house, which
+        // makes Courtenay his father-in-law: Maxwell is now asked each time Clifford presses
+        // a claim on a Courtenay seat, though with no relation in play he answers neither side.
+        // Kinship gets him asked; it does not make him fight. He is still not asked into
+        // English feuds that Courtenay has no part in.
+        //
+        // Her blood claims go with her, so Maxwell now holds her three claims on Courtenay's
+        // seats. They cross the border, and ClaimPressureCampaignBehavior drops any pair whose
+        // clans do not share a kingdom, so none is ever pressed. Pressing one would be the
+        // cross-border claim, which has no design yet.
+        const string maxwell = "clan_maxwell";
+        const string courtenay = "clan_courtenay";
+        string[] courtenaySeats = { "barony_okehampton", "barony_saint_michaels_mount", "county_cornwall" };
+
+        Content content = Content.Load();
+        Content married = content.WithMarriage("dadg_sco_lord_clan_maxwell", "dadg_lord_16_2");
+
+        Assert.False(content.IsBonded(maxwell, courtenay, 0f));
+        Assert.True(married.IsBonded(maxwell, courtenay, 0f));
+
+        ClaimOpportunity[] cliffordsFeuds = married.Opportunities()
+            .Where(o => o.AttackerClanId == "clan_clifford" && o.DefenderClanId == courtenay)
+            .ToArray();
+        Assert.Equal(courtenaySeats, cliffordsFeuds.Select(o => o.TitleId).OrderBy(id => id));
+        Assert.All(cliffordsFeuds, o =>
+        {
+            Assert.DoesNotContain(maxwell, content.Candidates(content.Opportunity(o.TitleId, "clan_clifford")));
+            Assert.Contains(maxwell, married.Candidates(o));
+
+            SupportDecision support = married.Solicit(o);
+            Assert.DoesNotContain(maxwell, support.AttackerSupporters);
+            Assert.DoesNotContain(maxwell, support.DefenderSupporters);
+        });
+        Assert.DoesNotContain(maxwell, married.Candidates(married.Opportunity("county_cheshire", "clan_stafford")));
+
+        Assert.Empty(content.Claims().Where(c => c.ClaimantClanId == maxwell));
+        Assert.Equal(
+            courtenaySeats,
+            married.Claims().Where(c => c.ClaimantClanId == maxwell).Select(c => c.TitleId).OrderBy(id => id));
+        Assert.Contains(maxwell, married.Realms()["clan_stewart"]);
+        Assert.Contains(courtenay, married.Realms()["clan_lancaster"]);
+    }
+
+    [Fact]
+    [Trait("Category", "DADG content integration")]
+    public void AScottishLadyWhoWedsAnEnglishLordCallsHerFathersHouseToHisFeuds()
+    {
+        // The other way round: the lord of Percy marries a daughter of the lord of Maxwell. The
+        // Scottish houses do not author their families yet, so she is a stand-in, as a daughter
+        // born in play would be. She joins Percy's house, which makes Maxwell his father-in-law:
+        // Maxwell is now asked each time De Vere presses a claim on a Percy seat, and again, with
+        // no relation in play, he answers neither side.
+        //
+        // Her blood claims go with her, as the English bride's do: she is heir to every seat her
+        // father holds, so Percy now has a claim on each of Maxwell's Scottish dignities. Those
+        // cross the border and are dropped by the same shared-kingdom check, so the pairs
+        // ClaimPressureCampaignBehavior would actually price are De Vere's two, as before.
+        const string maxwell = "clan_maxwell";
+        const string percy = "clan_percy";
+        const string daughter = "stand_in_maxwell_daughter";
+
+        Content content = Content.Load();
+        Content married = content
+            .WithDaughter("dadg_sco_lord_clan_maxwell", daughter, 18f)
+            .WithMarriage("dadg_lord_10_1", daughter);
+
+        Assert.False(content.IsBonded(maxwell, percy, 0f));
+        Assert.True(married.IsBonded(maxwell, percy, 0f));
+
+        Assert.Empty(content.Opportunities().Where(o => o.AttackerClanId == percy));
+        Assert.Equal(
+            content.TitlesHeldBy(maxwell),
+            married.Opportunities()
+                .Where(o => o.AttackerClanId == percy)
+                .Select(o =>
+                {
+                    Assert.Equal(maxwell, o.DefenderClanId);
+                    return o.TitleId;
+                })
+                .OrderBy(id => id));
+        Assert.Contains(percy, married.Realms()["clan_lancaster"]);
+        Assert.Contains(maxwell, married.Realms()["clan_stewart"]);
+
+        ClaimOpportunity[] percysFeuds = married.Opportunities()
+            .Where(o => o.DefenderClanId == percy)
+            .ToArray();
+        Assert.Equal(
+            new[] { ("clan_de_vere", "county_warkworth"), ("clan_de_vere", "duchy_northumberland") },
+            percysFeuds.Select(o => (o.AttackerClanId, o.TitleId)).OrderBy(pair => pair.TitleId));
+        Assert.All(percysFeuds, o =>
+        {
+            Assert.DoesNotContain(maxwell, content.Candidates(content.Opportunity(o.TitleId, o.AttackerClanId)));
+            Assert.Contains(maxwell, married.Candidates(o));
+
+            SupportDecision support = married.Solicit(o);
+            Assert.DoesNotContain(maxwell, support.AttackerSupporters);
+            Assert.DoesNotContain(maxwell, support.DefenderSupporters);
+        });
+
+        Assert.Empty(married.Claims().Where(c => c.ClaimantClanId == maxwell));
+    }
+
+    [Fact]
+    [Trait("Category", "DADG content integration")]
     public void AScottishFriendOfTheClaimantRidesToAnEnglishFeud()
     {
         // Stafford presses his strong claim on Cheshire against Woodville, three houses against
@@ -408,6 +514,12 @@ public class ClaimPressureOverRealContentTests
 
         public Content WithDeceased(string heroId) =>
             new(_genealogy.WithDeceased(heroId), _structure, _titles.GetAllTitles());
+
+        public Content WithMarriage(string husbandId, string wifeId) =>
+            new(_genealogy.WithMarriage(husbandId, wifeId), _structure, _titles.GetAllTitles());
+
+        public Content WithDaughter(string fatherId, string daughterId, float age) =>
+            new(_genealogy.WithDaughter(fatherId, daughterId, age), _structure, _titles.GetAllTitles());
 
         public IReadOnlyList<Claim> Claims() => _claims;
 
