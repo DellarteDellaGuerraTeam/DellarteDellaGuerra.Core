@@ -13,7 +13,9 @@ that already exists in `src/submodules/PrivateWars/`.
 
 Design §6 row 4 asks for the evaluator **inter-clan only**, with the player and same-kingdom gates. Verify:
 run a campaign at speed, `campaign.list_private_wars` shows a plausible declaration rate, never involving
-the player and never crossing a kingdom border.
+the player and never crossing a kingdom border. The border limit belongs to this evaluator only. Since the
+2026-09-27 revision of decision 5, the private-war substrate is cross-kingdom capable, and automatic
+declaration stays same-kingdom until `cross-border-marches-design.md` is settled.
 
 Two things this phase is **not**:
 
@@ -37,6 +39,11 @@ the war transfers; §7 predates the de jure/de facto split landing in code. The 
 it falls out of the main-goal precondition below. A holder whose seat is under occupation holds none of the
 title's de jure settlements, so no main goal can be computed and the claim cannot be pressed at all, which
 is exactly what amendment D says should happen to a "de-facto-dispossessed" defendant.
+
+**Open across a border.** Within one kingdom the rule above is enough. Across a border it means a foreign
+occupant of a seat can never be targeted, because the holder has no main goal and the occupant is not the
+defender. Whether the occupant, the holder, or both should be the defender there is an open question in
+`cross-border-marches-design.md`. `feudal-private-wars-design.md` §7 now defers to this section.
 
 ### 2.2 The main goal is not the seat
 
@@ -80,7 +87,7 @@ Cheapest first; each is a `continue`, and nothing below a failed gate is compute
 |---|---|---|---|
 | 1 | claimant clan == holder clan | `IGenealogy.GetClanOf` | inter-clan only (§1); phase 6 owns the rest |
 | 2 | either clan is the player's | `Clan.PlayerClan` | decision 3 — no UI, no consent flow |
-| 3 | either kingdom null, or the two differ | `Clan.Kingdom` | decision 5 — private wars are same-`MapFaction` by construction |
+| 3 | either kingdom null, or the two differ | `Clan.Kingdom` | decision 5 — a declaration policy pending `cross-border-marches-design.md`; the substrate itself is cross-kingdom capable |
 | 4 | attacker already a belligerent | `IPrivateWarsApi.GetWarsByClan` | design §9, one war at a time per claimant; the defender may face several |
 | 5 | cooldown not elapsed | persisted `NextEvaluationDay` | see §4 |
 | 6 | no main goal | `MainGoalSelector.Select` over the title's de jure settlements | amendment §18.D — hard precondition |
@@ -201,7 +208,7 @@ tested were pushed into the domain and the rest is a live check.
    baseline (235) plus the new cases; the 399-claim baseline is untouched, because this phase reads claims
    and never writes them.
 4. Live → verify: run a campaign at speed, `campaign.list_private_wars` shows declarations accumulating at
-   a plausible rate, none involving the player's clan, none across a kingdom border.
+   a plausible rate, none involving the player's clan, none across a kingdom border (gate 3).
 
 Build and test through the `subst W:` mapping as usual, with `DADG_MODULES_ROOT` set so the real-content
 tests can still find the sibling map module.
@@ -223,7 +230,9 @@ Built as planned, with three deviations, all of them engine-API corrections caug
 - `Clan.TotalStrength` does not exist; the snapshot uses `Clan.CurrentTotalStrength`.
 - `FactionManager.GetEnemyKingdoms` does not exist. `IsDistracted` now takes the kingdom the caller has
   already resolved and asks `Kingdom.All.Any(other => other != kingdom && kingdom.IsAtWarWith(other))` —
-  `IFaction.IsAtWarWith` is what the private-wars submodule uses throughout.
+  `IFaction.IsAtWarWith` is what the private-wars submodule uses throughout. The kingdom passed was the
+  attacker's, which equals the defender's only while gate 3 holds. It is being changed to the
+  **defender's** kingdom (2026-09-27), which is what design §3's "defender's kingdom at war" means.
 - `Settlement.Prosperity` does not exist; the adapter reads `Settlement.Town?.Prosperity ?? 0f`, which
   covers towns and castles and leaves villages at 0, where `MainGoalSelector` tie-breaks them by id.
 

@@ -123,8 +123,8 @@ kingdoms, or independent — the procedure is uniform), **neither clan leaves it
    the clan never leaves K.
 3. The patches in §4 now **manufacture clan-grain hostility for this pair only**: each intercepted
    consumer recovers the acting clan from the party (`party.ActualClan` / `LeaderHero.Clan`) and, if
-   the *pair* is registered, returns the "enemy" answer it would have returned for a cross-kingdom
-   pair; otherwise it returns the stock answer unchanged.
+   the *pair* is registered, returns the "enemy" answer it would have returned for a pair from two
+   warring kingdoms; otherwise it returns the stock answer unchanged.
 4. **DADG drives prosecution** (§5): because the engine will not *autonomously* fight a same-faction
    pair (its planners short-circuit on `MapFaction` equality before our consumer patches are even
    reached), DADG issues the siege/army intent for the attacker and tracks the score from campaign
@@ -155,6 +155,25 @@ makes **no** difference — the topology during the war is always exactly "the p
 everyone else sees stock stances." One code path covers every participant combination, and — unlike
 the temp-kingdom design — there are **no faction objects created or destroyed**, so the orchestration
 traps of §9 (teardown / separate-peace) simply do not exist.
+
+**Cross-kingdom specifics (revised 2026-09-27; see `cross-kingdom-private-wars-analysis.md`).** "No
+difference" holds for the hostility resolvers. Several consumers outside them were written with a shared
+kingdom in mind, and the following is landing in the PrivateWars submodule and DADG:
+- vanilla's crown-war escalation for a player hostile act (−10 relation with the defending ruler plus
+  `DeclareWarAction.ApplyByPlayerHostility`) is suppressed when the two sides are registered private-war
+  enemies;
+- a private war **persists** when a belligerent changes kingdom (§14);
+- when the two crowns go to war, the private war **folds into** the crown war through `ResolveWar`, so
+  `WarResolved` fires as usual;
+- nameplates and encounter menus colour the pair as enemies across kingdoms;
+- DADG checks distraction against the defender's own kingdom and solicits supporters along the title
+  chain across kingdoms.
+
+Still **open**: capturing a fief across the border. At bd1fd24, `ApplyBySiege` moves the captured fief
+into the attacker's kingdom (analysis §4e), and the contested title only finalises on a crown
+`MakePeace` that may never come. Who the defender is across a border is also open. Both are in
+`cross-border-marches-design.md`. Automatic **declaration** stays same-kingdom for now (claims design,
+decision 5).
 
 **Hostility is clan-grained; the engine checks are faction-grained.** Every patch in §4 must
 de-reference the faction-grain argument back to the acting clan before consulting the registry. A
@@ -409,7 +428,7 @@ facts worth stating plainly:
 
 ## 5. The war must be DADG-driven
 
-In a cross-kingdom war the engine's strategic AI *autonomously* plans sieges and forms armies because
+In a real (crown) war the engine's strategic AI *autonomously* plans sieges and forms armies because
 its planners see two different MapFactions at war. In stay-in-kingdom, those planners **short-circuit
 on `MapFaction` equality before our §4 consumer patches are reached** — the attacker's kingdom-war AI
 never proposes besieging a fellow K member's town, and `GetTargetScoreForFaction` returns 0 for a
@@ -517,12 +536,19 @@ public interface ICasusBelli
 **v1 — `ClaimCasusBelli`** (the only implementation):
 - **Defender** = the clan currently **owning the claimed title's seat** (de facto holder). Pressing
   a claim means attacking whoever physically holds it; this keeps "holds the main goal" well-defined.
+  *Superseded:* the implemented defender is the **de jure holder's clan**
+  (`feudal-hero-titles-phase-4-implementation-plan.md` §2.1). Within a kingdom the two rarely differ.
+  Across a border, a foreign occupant can never be targeted under the current rule, and whether it
+  should be is **open** (`cross-border-marches-design.md`).
 - **Main goal** = `Title.SeatSettlementId` (county → county town; duchy → ducal capital; kingdom →
   royal capital — the seat of the title at the claimed rank).
 - **Secondary fiefs** = the defender's other fiefs (capturing them stacks score; they revert).
 - **Prize (attacker victory)** = the claimed **title** + its **seat**, applied through the
   **already-implemented** transfer path: `AssignTitleUseCase.Execute(seatId, attackerId,
-  SeatTransferKind.Conquest, day)` for the seat, plus the dignity transfer (attainder/AssignTitle).
+  SeatTransferKind.Conquest, day)` for the seat, plus the dignity transfer. *Stale:* the attainder
+  decision has since been deleted. `ResolvePrivateWarUseCase` does emit `PrizeAward` /
+  `AttackerClaimLost`, but nothing consumes them, and DADG receives only
+  `(AttackerClanId, AttackerWon)` (cross-kingdom analysis S7).
 - **On defeat/white peace** = `IClaimRepository.RemoveClaim` (or downgrade `ClaimStrength`).
 
 **Dovetail with the de jure/de facto split (already in code):** when the attacker captures the goal
@@ -530,10 +556,13 @@ town mid-war, the stock `ChangeOwnerOfSettlementAction.ApplyBySiege` fires (real
 within a kingdom — the §4 patches make the siege resolve, but the *ownership transfer itself* is
 unguarded), and the existing `FeudalTitleCampaignBehavior` already marks the title
 **contested-occupied** by the attacker (`OccupantClanId` + `ContestedSinceDay`). On **attacker
-victory** we finalize the **dignity** (`HolderClanId`) to the attacker → title uncontested under the
-attacker. On **defeat/white peace** the seat reverts → occupant clears → title uncontested under the
-defender. The private war is, in effect, *the real-war driver for machinery the title system already
-has.*
+victory** we finalize the **dignity** (`HolderClanId`, now `HolderHeroId`) to the attacker → title
+uncontested under the attacker. On **defeat/white peace** the seat reverts → occupant clears → title
+uncontested under the defender. The private war is, in effect, *the real-war driver for machinery the
+title system already has.* **Across a border this does not hold (open).** `ApplyBySiege` also moves the
+fief into the attacker's kingdom. A contested title only finalises on a `MakePeace` between the title's
+kingdom and the occupier's (`FeudalTitleCampaignBehavior.OnMakePeace`), and that never fires if the
+crowns were already at peace. See `cross-border-marches-design.md`.
 
 **Extensibility:** future CBs (independence, duchy conquest, subjugation, restoration) implement the
 same interface with different goal/prize/secondary logic. The registry/patch/score machinery is
@@ -623,10 +652,13 @@ private war" exploit that the earlier designs had to balance-test.
 ```
 
 **Trigger.**
-- *AI:* hooks the existing petition-deny path. `FeudalPetitionDecision` → `DenyClaimOutcome` already
+- *AI (stale; see below):* hooks the existing petition-deny path. `FeudalPetitionDecision` → `DenyClaimOutcome` already
   surges tension on denial (`SurgeTensionOnDenial`, ×5.0). After denial, a claimant clan with a
   strong claim, sufficient strength, and tension over a threshold may escalate to a private war for
   that claim. (Gate on cooldown + a not-already-at-private-war-with-this-clan check.)
+  *Revised:* the petition/attainder/tension machinery has been deleted. The AI trigger is now
+  `ClaimPressureCampaignBehavior` (`feudal-hero-claims-and-succession-design.md` §3), which declares
+  only within one kingdom (decision 5).
 - *Player:* a menu/dialog option "Press your claim by force" against the clan holding the claimed
   seat. Same precondition checks.
 
@@ -666,7 +698,8 @@ Follows the hexagonal layout and the `FeudalServices` static-locator pattern alr
   the patches consult — `IPrivateWarHostility.AreEnemies(clanIdA, clanIdB)` (+ role lookup).
 
 **Integration / engine** (`DellarteDellaGuerra/PrivateWar/`):
-- `PrivateWarCampaignBehavior` — registers triggers (petition-deny escalation, player menu), drives
+- `PrivateWarCampaignBehavior` — registers triggers (player menu; the AI trigger is DADG's
+  `ClaimPressureCampaignBehavior`), drives
   the daily tick (attacker intent + score from events), and executes setup/resolve via the Actions
   in §8/§10. Owns the score event-sourcing (MapEvent results, siege/raid completion, prisoner taken)
   filtered to active pairs. Also owns **registry maintenance** that the engine won't do for a
@@ -781,12 +814,12 @@ cases:
 | Case | Handling |
 | --- | --- |
 | **Both belligerents in the same kingdom** | The core case; handled by construction — pair-scoped patches make exactly A↔C hostile, everyone else (incl. K's other clans) sees stock stances. |
-| **Belligerents in different kingdoms / one or both independent** | Same code path — the registry/patches are clan-grained, so cross-kingdom and independent pairs work identically (the only difference is that for a cross-kingdom pair the stock engine *also* sees them at war; the patches simply agree). |
+| **Belligerents in different kingdoms / one or both independent** | Same code path — the registry/patches are clan-grained, so cross-kingdom and independent pairs work identically for hostility. *Revised 2026-09-27:* this row used to say the stock engine "also sees them at war", which only holds if the two crowns are at war. Usually they are at peace, and the gaps that follow are covered in the §3 "Cross-kingdom specifics" note: crown escalation suppressed, nameplates, and cross-border capture (**open**, `cross-border-marches-design.md`). Automatic declaration stays same-kingdom (claims design, decision 5). |
 | **K declares an external war while A is in a private war with fellow-member C** | A fights K's external war normally (it never left K). Patches are pair-scoped, so A↔C hostility never bleeds into K's external side-assignment. |
 | **K's army AI tries to pool A and C into one army** | The army-management model excludes opposing private-war-side parties from the 1.4.6 `CanLordCreateArmy` candidate result (§4.1/§17). |
 | **Second claim against a clan already privately at war with the claimant** | Disallowed: at most one private war per *unordered clan pair* (the registry/patches can only express one binary hostility per pair, and events can't be attributed across two CBs). Queue it or fold into a multi-goal CB later (§9). A second claim by a *different* clan is fine. |
 | **Belligerent clan eliminated mid-war** | This war voids; surviving side treated as walkover (attacker win if defender eliminated and attacker holds goal; else white-peace cleanup). Unregister the pair. No prize if the attacker is the one eliminated. |
-| **Belligerent changes kingdom mid-war** | The registry war is invisible to `ChangeKingdomAction`'s `FactionsAtWarWith`-driven join/leave cascade (§4.2), so nothing auto-syncs. DADG hooks `OnClanChangedKingdom`: the pair **persists** by default (the feud is clan-vs-clan, not kingdom-vs-kingdom) — but if the move makes the pair *cross-kingdom* and the two kingdoms are now formally at war, fold the private war into that war or resolve it. Also re-evaluate `GetMainGoalSettlementId` if the goal's de-facto holder changed. |
+| **Belligerent changes kingdom mid-war** | The registry war is invisible to `ChangeKingdomAction`'s `FactionsAtWarWith`-driven join/leave cascade (§4.2), so nothing auto-syncs. DADG hooks `OnClanChangedKingdom`: the pair **persists** by default (the feud is clan-vs-clan, not kingdom-vs-kingdom) — but if the move makes the pair *cross-kingdom* and the two kingdoms are now formally at war, fold the private war into that war or resolve it. Also re-evaluate `GetMainGoalSettlementId` if the goal's de-facto holder changed. *Implementation:* the PrivateWars submodule's `OnClanChangedKingdom` handles this. At bd1fd24 it auto-concluded every cross-kingdom pair without raising `WarResolved`. That is being changed to persist the pair, and to fold it into the crown war through `ResolveWar` when the two kingdoms are at war. |
 | **Attacker's feud army dissolves** | On 1.4.6 the old `NoActiveWar` auto-dispersion path is gone. Do not add a feud-specific disband patch; verify the army persists while its scored objective is active and still disperses for normal cohesion, food, or completion reasons. |
 | **Leader captured** | War continues (DADG drives it); capture feeds the score as a prisoner event. The `PrisonerCapture`/`PrisonerRelease` patches (§4.2) keep the captive held despite same-MapFaction. |
 | **Player is a belligerent** | Player's clan fights C with real sieges while *staying in its kingdom* — keeps allies, policies, votes. Needs clear messaging that this is a private feud, not a kingdom war. |
@@ -865,7 +898,8 @@ From the Q&A; treat as fixed for v1:
   stack; defender capturing attacker fiefs counts against the attacker. Counters are **event-sourced
   by DADG** (no `StanceLink` exists for a same-kingdom pair).
 - **Prize (attacker win):** the claimed dignity + its seat, via the existing
-  `AssignTitleUseCase`/attainder path; everything else reverts.
+  `AssignTitleUseCase` path (the attainder path is deleted; the prize is not yet consumed, §7);
+  everything else reverts.
 - **White peace / attacker loss:** status quo ante; attacker loses the casus belli (claim
   removed/weakened).
 - **Concurrency:** at most one private war per *unordered clan pair* (enforced by the registry, §9);

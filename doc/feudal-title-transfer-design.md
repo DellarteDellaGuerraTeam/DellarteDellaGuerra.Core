@@ -8,6 +8,12 @@
 > **Question that prompted it:** "Historically, the title was a title, right? If one lost its
 > place of power, it wouldn't lose its title? It's the king that decided, no? Or vassals placing
 > their allegiance to a new clan?"
+>
+> **Later note (2026-09-27):** the contested-title split and the `MakePeace` finalisation (§7.4) were
+> built. The attainder decision (§4 B, §5.3, §7.2–7.3) was built and then **deleted**, together with
+> the petition and tension machinery. The cross-kingdom rules below assume that the occupant's
+> kingdom is at war with the title's kingdom. A cross-kingdom *private* war between crowns at peace
+> breaks that assumption (see §7.4). That case is **open** in `cross-border-marches-design.md`.
 
 ---
 
@@ -116,7 +122,7 @@ Title still ultimately follows the seat, but not instantly:
 - After a grace period (e.g. 1 game year) *or* an explicit royal grant — whichever first — the
   title transfers and the old holder gets the conquest claim as today.
 - Cross-kingdom conquest never transfers until peace is made (titles are dignities *of* the
-  kingdom).
+  kingdom). (This assumes the crowns were at war; see the §7.4 note.)
 - **Pros:** Most of the historical texture (exile window, royal agency, foreign occupiers
   staying illegitimate) at a fraction of Option B's complexity; degrades gracefully to today's
   behaviour if the AI never acts.
@@ -258,6 +264,14 @@ kingdom), no attainder is possible — the title sits contested indefinitely, a 
 exile. On `MakePeace`, contested titles whose seats stay with the enemy kingdom finalise:
 transfer + conquest claim (Option C), or remain exile dignities (Option B upgrade, later).
 War-end is the only event needed; no per-tick polling.
+
+**Gap (2026-09-27, open).** "War-end is the only event needed" assumes a crown war. A cross-kingdom
+*private* war can capture a seat by `ApplyBySiege` (Conquest → contested) while the two crowns are at
+peace. No `MakePeace` between them follows, so the title stays contested forever. The same siege also
+moves the fief into the attacker's kingdom. Reverts at the end of a private war use `ApplyByDefault`
+(Administrative), which clears the occupation, but a *won* war has no finalisation path. Whether
+cross-border capture should be allowed at all, and how it would finalise, is the subject of
+`cross-border-marches-design.md`.
 
 ### 7.5 Revised smallest first step
 
