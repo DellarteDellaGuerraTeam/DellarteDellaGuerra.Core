@@ -429,9 +429,12 @@ public class InitialBloodClaimsIntegrationTests
 
         IReadOnlyList<Claim> claims = useCase.Execute();
         Assert.Equal(ExpectedClaims, Project(claims));
-        Assert.Equal(97, titleRepository.GetAllTitles().Count);
+        // England's 97 titles and 53 houses, plus Scotland's 27 and 13 and the Isles' 17 and 13.
+        // The Scottish holders are authored without kin, so they add no claims: every count
+        // below, and the expected set above, is still England's alone.
+        Assert.Equal(141, titleRepository.GetAllTitles().Count);
         Assert.Equal(
-            53,
+            79,
             titleRepository.GetAllTitles()
                 .Where(title => genealogy.GetHolderClanOf(title) is not null)
                 .Select(title => genealogy.GetHolderClanOf(title))

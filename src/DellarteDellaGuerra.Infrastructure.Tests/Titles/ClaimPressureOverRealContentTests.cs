@@ -481,10 +481,25 @@ public class ClaimPressureOverRealContentTests
             WarSideStrength.ResolveSide(
                 clanId, Suzerain, AttackerSideId(opportunity), opportunity.DefenderClanId, None, None);
 
-        /// <summary>Every house the calls to arms go out to, both principals excepted.</summary>
+        /// <summary>
+        /// Every house the calls to arms go out to, both principals excepted: a house the chains
+        /// already commit is always asked, an uncommitted one only if it belongs to the defender's
+        /// realm. The content has several realm roots, and a house of another crown is nobody's
+        /// to call on in a war it has no part in.
+        /// </summary>
         public IEnumerable<string> Candidates(ClaimOpportunity opportunity) =>
             UniformStrength().Keys
-                .Where(clanId => clanId != opportunity.AttackerClanId && clanId != opportunity.DefenderClanId);
+                .Where(clanId => clanId != opportunity.AttackerClanId && clanId != opportunity.DefenderClanId)
+                .Where(clanId =>
+                    SideOf(opportunity, clanId) is not null || Realm(clanId) == Realm(opportunity.DefenderClanId));
+
+        /// <summary>The house at the top of a house's suzerain chain.</summary>
+        private string Realm(string clanId)
+        {
+            string current = clanId;
+            while (Suzerain(current) is { } liege) current = liege;
+            return current;
+        }
 
         private FeudalAllegiance Allegiance(ClaimOpportunity opportunity, string clanId)
         {
