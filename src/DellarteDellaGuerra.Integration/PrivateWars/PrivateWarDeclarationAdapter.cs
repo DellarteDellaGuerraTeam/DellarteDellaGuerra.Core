@@ -27,7 +27,11 @@ namespace DellarteDellaGuerra.Integration.PrivateWars
             // Relayed rather than raised here, because the submodule announces every resolution
             // it makes, including the ones its own daily tick decides on score.
             _privateWars.WarResolved += (war, outcome) => WarConcluded?.Invoke(
-                new PrivateWarConclusion(war.AttackerClanId, outcome == PrivateWarOutcome.AttackerVictory));
+                new PrivateWarConclusion(
+                    war.AttackerClanId,
+                    war.DefenderClanId,
+                    war.TitleId,
+                    outcome == PrivateWarOutcome.AttackerVictory));
         }
 
         public event Action<PrivateWarConclusion>? WarConcluded;

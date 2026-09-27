@@ -166,6 +166,7 @@ public class DadgServiceContainer
         services.AddSingleton<IExecuteSuccessionUseCase, ExecuteSuccessionUseCase>();
         services.AddSingleton<IBuildFeudalMapUseCase, BuildFeudalMapUseCase>();
         services.AddSingleton<IGetDeJureSettlementsUseCase, GetDeJureSettlementsUseCase>();
+        services.AddSingleton<IAwardWonClaimUseCase, AwardWonClaimUseCase>();
         services.AddSingleton<IEvaluatePressClaimUseCase, EvaluatePressClaimUseCase>();
         services.AddSingleton<ISolicitSupportUseCase, SolicitSupportUseCase>();
         services.AddSingleton<IPersonalBondPolicy, PersonalBondPolicy>();

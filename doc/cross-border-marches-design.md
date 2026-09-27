@@ -305,11 +305,12 @@ content authors is a grown man, so at campaign start only Strong claims are pres
 
 Decided 2026-09-27:
 
-- **The winner takes the title and the de jure lands the defender held.** This is not built, even
-  within one realm. Today the attacker keeps only the main-goal seat it besieged. That siege counts
-  as occupation, so the title stays with the defender and is marked contested
-  (`AssignTitleUseCase`). The defender's other lands revert to him. `PrizeAward` is computed and
-  never used (S7).
+- **The winner takes the title and the de jure lands the defender held.** Built in step 3
+  (`AwardWonClaimUseCase`, applied from `ClaimPressureCampaignBehavior.OnWarConcluded`). The title
+  and every title below it that the defender holds go to the winner's leader. Those titles' castles
+  and towns that the defender still owns go with them, and villages follow their castle or town.
+  A title below it held by another house stays with that house. The loser gets no claim on what it
+  lost. `PrizeAward` in the private-wars submodule is still computed and never used (S7).
 - **A title follows its holder's kingdom.** A lord cannot be the vassal of two kings, so a title won
   across the border leaves its old realm's tree and joins the winner's. This also removes S3: a clan
   never holds titles in both trees. Today a title's kingdom is fixed by the static tree
@@ -341,8 +342,8 @@ Decided 2026-09-27:
 
 1. **Done:** foreign supporters join through a bond, and never take fiefs.
 2. **Done:** the Weak-claim condition (7.3).
-3. The win outcome (7.5): grant the title and the defender's de jure lands. This fixes same-realm
-   wars too.
+3. **Done:** the win outcome (7.5): grant the title and the defender's de jure lands. This fixes
+   same-realm wars too.
 4. Title migration into the winner's realm (7.5).
 5. Lift the same-kingdom gate, including clans with no kingdom (7.3).
 6. Later: the recovery claim (7.2), proxy claims, U1 raiding feuds, and march castles (U2).
