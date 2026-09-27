@@ -184,7 +184,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                             claim.Strength,
                             attackerStrength + ownMen,
                             defenderStrength - ownMen,
-                            IsDistracted(defenderClan, kingdom),
+                            IsDistracted(defenderClan),
                             GetRelation(pretender ?? attackerClan.Leader, defenderClan.Leader));
                     }
 
@@ -193,7 +193,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                     // and the war is then priced on the sides those calls actually produced.
                     var support = _solicitSupportUseCase.Execute(
                         Price(NoSupport),
-                        Candidates(kingdom, attackerClan, defenderClan, pretender, attackerSideId, GetSuzerain));
+                        Candidates(clansById, kingdom, attackerClan, defenderClan, pretender, attackerSideId, GetSuzerain));
 
                     if (_evaluatePressClaimUseCase.Execute(Price(support)) < DeclarationThreshold) continue;
                     if (MBRandom.RandomFloat >= DeclarationChance) continue;
@@ -252,12 +252,13 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
         /**
          * <summary>
-         *  The realm's other houses, each with the two things that decide which way it answers:
-         *  where the feudal hierarchy already puts it, and how its leader stands with the two
-         *  principals.
+         *  The other houses the war concerns, each with the two things that decide which way it
+         *  answers: where the feudal hierarchy already puts it, and how its leader stands with
+         *  the two principals. Which houses those are is <see cref="SupportCandidacy"/>'s call.
          * </summary>
          */
         private static IReadOnlyCollection<SupportCandidate> Candidates(
+            IReadOnlyDictionary<string, Clan> clansById,
             Kingdom kingdom,
             Clan attackerClan,
             Clan defenderClan,
@@ -267,33 +268,31 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         {
             Hero? claimant = pretender ?? attackerClan.Leader;
 
-            return kingdom.Clans
+            var eligibleClanIds = clansById.Values
                 // The player is never enlisted into somebody else's quarrel, on either side, for
                 // the same reason his house never starts one of these by itself.
                 .Where(clan => clan != attackerClan && clan != defenderClan && clan != Clan.PlayerClan)
                 .Where(clan => clan.Leader is not null)
-                .Select(clan => new SupportCandidate(
-                    clan.StringId,
-                    Allegiance(
-                        WarSideStrength.ResolveSide(
-                            clan.StringId,
-                            getSuzerain,
-                            attackerSideId,
-                            defenderClan.StringId,
-                            NoSupport.AttackerSupporters,
-                            NoSupport.DefenderSupporters),
-                        attackerSideId,
-                        defenderClan.StringId),
-                    GetRelation(clan.Leader, claimant),
-                    GetRelation(clan.Leader, defenderClan.Leader)))
+                .Select(clan => clan.StringId);
+
+            return SupportCandidacy
+                .Select(
+                    eligibleClanIds,
+                    clanId => clansById[clanId].Kingdom == kingdom,
+                    getSuzerain,
+                    attackerSideId,
+                    defenderClan.StringId)
+                .Select(candidate =>
+                {
+                    Hero leader = clansById[candidate.ClanId].Leader;
+
+                    return new SupportCandidate(
+                        candidate.ClanId,
+                        candidate.Allegiance,
+                        GetRelation(leader, claimant),
+                        GetRelation(leader, defenderClan.Leader));
+                })
                 .ToList();
-        }
-
-        private static FeudalAllegiance Allegiance(string? side, string attackerSideId, string defenderClanId)
-        {
-            if (side == attackerSideId) return FeudalAllegiance.Claimant;
-
-            return side == defenderClanId ? FeudalAllegiance.Holder : FeudalAllegiance.Uncommitted;
         }
 
         private IEnumerable<Claim> BestClaimPerClaimant(string titleId)
@@ -304,10 +303,12 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                 .Select(claims => claims.OrderByDescending(claim => claim.Strength).First());
         }
 
-        private bool IsDistracted(Clan defenderClan, Kingdom kingdom)
+        private bool IsDistracted(Clan defenderClan)
         {
+            var kingdom = defenderClan.Kingdom;
+
             return _privateWarDeclaration.IsBelligerent(defenderClan.StringId)
-                   || Kingdom.All.Any(other => other != kingdom && kingdom.IsAtWarWith(other));
+                   || (kingdom is not null && Kingdom.All.Any(other => other != kingdom && kingdom.IsAtWarWith(other)));
         }
 
         private static float GetRelation(Hero? claimant, Hero? holder)
