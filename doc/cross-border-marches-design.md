@@ -321,9 +321,12 @@ Decided 2026-09-27:
     moves to England. In the engine that is a kingdom change for the whole clan, fiefs included.
   - A barony under that county held by a clan whose highest title lies elsewhere, such as another
     Scottish count, stays with that clan. It does not change hands, and the clan stays in Scotland.
-  - So a clan's allegiance is decided by its highest title, and titles are resolved by holder, not
-    only by the static tree. Open edge case: a baron with baronies under two counts in different
-    realms is the S3 tie again, and needs a tiebreak.
+  - So a clan's allegiance is decided by its **primary title**, and titles are resolved by holder,
+    not only by the static tree.
+- **Primary title (a new domain concept).** A clan's primary title is its highest-ranked title. When
+  two titles tie on rank, the one it already serves under stays primary. So a baron who holds two
+  baronies and already has another liege does not switch to the new count. This replaces the
+  dictionary-order tiebreak in `GetSuzerainUseCase.GetHighestTitle` (S3), and step 4 introduces it.
 - **The title goes to the claimant who pressed it.** For now, the presser is always the claimant's own
   clan, which has the forces to wage the war.
 - **Later, proxy claims:** a lord with forces presses the claim of someone in another clan, for
