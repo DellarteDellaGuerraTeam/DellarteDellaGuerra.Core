@@ -7,7 +7,7 @@ namespace DellarteDellaGuerra.Domain.Church.Hierarchy
      * One node of the church hierarchy tree: a diocese (see) root or a member church settlement.
      * For a see, <see cref="SettlementId"/> is the derived cathedral seat and <see cref="Name"/>
      * the diocese name; for a member, the settlement id doubles as the id and the display name is
-     * resolved live by the UI.
+     * resolved from the campaign through a domain port when building the ledger.
      * </summary>
      */
     public class ChurchMapEntry

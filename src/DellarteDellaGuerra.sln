@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Integra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Integration.Tests", "DellarteDellaGuerra.Integration.Tests\DellarteDellaGuerra.Integration.Tests.csproj", "{A3B2C1D0-E4F5-4A6B-8C7D-9E0F1A2B3C4D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Church.Contract.Tests", "DellarteDellaGuerra.Church.Contract.Tests\DellarteDellaGuerra.Church.Contract.Tests.csproj", "{B42C66D3-15B7-4F3B-90B4-ED9EF232AD4A}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DellarteDellaGuerra.Infrastructure.Tests", "DellarteDellaGuerra.Infrastructure.Tests\DellarteDellaGuerra.Infrastructure.Tests.csproj", "{D5160A6C-7EA8-413E-BEBB-D98EACC7AA77}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{609F40C5-C560-40E6-76C7-691311A42DF0}"
@@ -159,6 +161,18 @@ Global
 		{A3B2C1D0-E4F5-4A6B-8C7D-9E0F1A2B3C4D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A3B2C1D0-E4F5-4A6B-8C7D-9E0F1A2B3C4D}.Release|x86.ActiveCfg = Release|Any CPU
 		{A3B2C1D0-E4F5-4A6B-8C7D-9E0F1A2B3C4D}.Release|x86.Build.0 = Release|Any CPU
+		{B42C66D3-15B7-4F3B-90B4-ED9EF232AD4A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B42C66D3-15B7-4F3B-90B4-ED9EF232AD4A}.Debug|x64.Build.0 = Debug|Any CPU
+		{B42C66D3-15B7-4F3B-90B4-ED9EF232AD4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B42C66D3-15B7-4F3B-90B4-ED9EF232AD4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B42C66D3-15B7-4F3B-90B4-ED9EF232AD4A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B42C66D3-15B7-4F3B-90B4-ED9EF232AD4A}.Debug|x86.Build.0 = Debug|Any CPU
+		{B42C66D3-15B7-4F3B-90B4-ED9EF232AD4A}.Release|x64.ActiveCfg = Release|Any CPU
+		{B42C66D3-15B7-4F3B-90B4-ED9EF232AD4A}.Release|x64.Build.0 = Release|Any CPU
+		{B42C66D3-15B7-4F3B-90B4-ED9EF232AD4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B42C66D3-15B7-4F3B-90B4-ED9EF232AD4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B42C66D3-15B7-4F3B-90B4-ED9EF232AD4A}.Release|x86.ActiveCfg = Release|Any CPU
+		{B42C66D3-15B7-4F3B-90B4-ED9EF232AD4A}.Release|x86.Build.0 = Release|Any CPU
 		{D5160A6C-7EA8-413E-BEBB-D98EACC7AA77}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{D5160A6C-7EA8-413E-BEBB-D98EACC7AA77}.Debug|x64.Build.0 = Debug|Any CPU
 		{D5160A6C-7EA8-413E-BEBB-D98EACC7AA77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

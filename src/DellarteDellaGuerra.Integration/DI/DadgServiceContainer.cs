@@ -29,6 +29,7 @@ using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
 using DellarteDellaGuerra.Church;
 using DellarteDellaGuerra.Domain.Church.Hierarchy;
+using DellarteDellaGuerra.Domain.Church.Ledger;
 using DellarteDellaGuerra.Domain.Church.Port;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Infrastructure.Church;
@@ -107,6 +108,9 @@ public class DadgServiceContainer
         services.AddSingleton<IChurchSettlementsProvider, ChurchSettlementsXmlProvider>();
         services.AddSingleton<IBuildChurchMapUseCase, BuildChurchMapUseCase>();
         services.AddSingleton<ChurchSettlements>();
+        services.AddSingleton<IChurchLedgerWorld, BannerlordChurchLedgerWorld>();
+        services.AddSingleton<IBuildChurchLedgerUseCase, BuildChurchLedgerUseCase>();
+        services.AddSingleton<ChurchFavourService>();
         services.AddSingleton<ChurchSacrilege>();
     }
 

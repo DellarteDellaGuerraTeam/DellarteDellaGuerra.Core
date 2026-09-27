@@ -1,5 +1,4 @@
-using DellarteDellaGuerra.Church;
-using DellarteDellaGuerra.Domain.Church.Hierarchy;
+using DellarteDellaGuerra.Domain.Church.Ledger;
 
 namespace DellarteDellaGuerra.Integration.Church.UI
 {
@@ -17,13 +16,11 @@ namespace DellarteDellaGuerra.Integration.Church.UI
      */
     public static class ChurchUiServices
     {
-        public static IBuildChurchMapUseCase? BuildChurchMap { get; private set; }
-        public static ChurchSettlements? Settlements { get; private set; }
+        public static IBuildChurchLedgerUseCase? BuildChurchLedger { get; private set; }
 
-        public static void Initialise(IBuildChurchMapUseCase buildChurchMap, ChurchSettlements settlements)
+        public static void Initialise(IBuildChurchLedgerUseCase buildChurchLedger)
         {
-            BuildChurchMap = buildChurchMap;
-            Settlements = settlements;
+            BuildChurchLedger = buildChurchLedger;
         }
     }
 }

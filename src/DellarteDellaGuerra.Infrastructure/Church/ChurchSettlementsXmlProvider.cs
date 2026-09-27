@@ -66,6 +66,13 @@ namespace DellarteDellaGuerra.Infrastructure.Church
                 return Array.Empty<ChurchDioceseData>();
             }
 
+            return MapAndValidate(config, _logger);
+        }
+
+        internal static IReadOnlyCollection<ChurchDioceseData> MapAndValidate(
+            ChurchSettlementsConfig config,
+            ILogger logger)
+        {
             var dioceses = new List<ChurchDioceseData>();
             foreach (var diocese in config.Dioceses)
             {
@@ -74,7 +81,7 @@ namespace DellarteDellaGuerra.Infrastructure.Church
                 {
                     if (!Enum.TryParse(settlement.Kind, out ChurchSettlementKind kind))
                     {
-                        _logger.Warn(
+                        logger.Warn(
                             $"Unknown church settlement kind '{settlement.Kind}' for '{settlement.Id}': entry skipped");
                         continue;
                     }
@@ -85,17 +92,17 @@ namespace DellarteDellaGuerra.Infrastructure.Church
                 dioceses.Add(new ChurchDioceseData(diocese.Id, diocese.Name, members));
             }
 
-            return Validate(dioceses) ? dioceses : Array.Empty<ChurchDioceseData>();
+            return Validate(dioceses, logger) ? dioceses : Array.Empty<ChurchDioceseData>();
         }
 
-        private bool Validate(List<ChurchDioceseData> dioceses)
+        private static bool Validate(List<ChurchDioceseData> dioceses, ILogger logger)
         {
             var duplicateDioceseId = dioceses
                 .GroupBy(diocese => diocese.Id)
                 .FirstOrDefault(group => group.Count() > 1);
             if (duplicateDioceseId is not null)
             {
-                _logger.Warn(
+                logger.Warn(
                     $"Duplicate diocese id '{duplicateDioceseId.Key}' in {ConfigFileName}: church features stay inactive");
                 return false;
             }
@@ -104,7 +111,7 @@ namespace DellarteDellaGuerra.Infrastructure.Church
                 diocese.Members.Count(member => member.Kind == ChurchSettlementKind.Cathedral) != 1);
             if (dioceseWithoutSingleCathedral is not null)
             {
-                _logger.Warn(
+                logger.Warn(
                     $"Diocese '{dioceseWithoutSingleCathedral.Id}' must have exactly one Cathedral member in {ConfigFileName}: church features stay inactive");
                 return false;
             }
@@ -115,8 +122,15 @@ namespace DellarteDellaGuerra.Infrastructure.Church
                 .FirstOrDefault(group => group.Count() > 1);
             if (duplicateSettlementId is not null)
             {
-                _logger.Warn(
+                logger.Warn(
                     $"Settlement '{duplicateSettlementId.Key}' belongs to more than one diocese in {ConfigFileName}: church features stay inactive");
+                return false;
+            }
+
+            if (dioceses.SelectMany(diocese => diocese.Members).Count(member => member.IsShrine) > 1)
+            {
+                logger.Warn(
+                    $"More than one shrine is configured in {ConfigFileName}: church features stay inactive");
                 return false;
             }
 

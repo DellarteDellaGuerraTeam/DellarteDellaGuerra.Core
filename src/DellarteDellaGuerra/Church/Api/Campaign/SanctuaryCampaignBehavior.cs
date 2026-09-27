@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DellarteDellaGuerra.Domain.Church.Port;
 using DellarteDellaGuerra.Domain.Church.Sanctuary;
 using Helpers;
 using TaleWorlds.CampaignSystem;
@@ -16,20 +17,23 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
 {
     public class SanctuaryCampaignBehavior : CampaignBehaviorBase
     {
-        private const string SanctuaryMenuId = "dadg_church_sanctuary";
-
         private readonly ChurchSettlements _churchSettlements;
         private readonly ChurchSacrilege _churchSacrilege;
+        private readonly IChurchSettingsProvider _churchSettingsProvider;
 
         private CampaignTime _playerSanctuaryStart = CampaignTime.Never;
         private Dictionary<Hero, Settlement> _fugitiveSanctuaries = new();
         private Dictionary<Hero, CampaignTime> _fugitiveSanctuaryStarts = new();
         private bool _raidNoticeShown;
 
-        public SanctuaryCampaignBehavior(ChurchSettlements churchSettlements, ChurchSacrilege churchSacrilege)
+        public SanctuaryCampaignBehavior(
+            ChurchSettlements churchSettlements,
+            ChurchSacrilege churchSacrilege,
+            IChurchSettingsProvider churchSettingsProvider)
         {
             _churchSettlements = churchSettlements;
             _churchSacrilege = churchSacrilege;
+            _churchSettingsProvider = churchSettingsProvider;
         }
 
         public override void RegisterEvents()
@@ -49,19 +53,19 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
         private void OnSessionLaunched(CampaignGameStarter starter)
         {
             starter.AddGameMenuOption(
-                "village",
+                ChurchMenuIds.Hub,
                 "dadg_church_claim_sanctuary",
                 "{=vK7pQn2X}Claim sanctuary",
                 CanClaimSanctuary,
                 ClaimSanctuary);
             starter.AddGameMenuOption(
-                "village",
+                ChurchMenuIds.Hub,
                 "dadg_church_drag_fugitive",
                 "{=iF3zTb6M}Drag {FUGITIVE_NAME} from the cloister",
                 CanDragFugitive,
                 DragFugitive);
             starter.AddWaitGameMenu(
-                SanctuaryMenuId,
+                ChurchMenuIds.Sanctuary,
                 "{=uW6mDv3K}You have claimed sanctuary within the walls of {MONASTERY_NAME}. " +
                 "None may lay hands on you here, by law of God and man. " +
                 "({DAYS_LEFT} days of grace remain)",
@@ -72,7 +76,7 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
                 GameMenu.MenuAndOptionType.WaitMenuShowProgressAndHoursOption,
                 GameMenu.MenuOverlayType.SettlementWithBoth);
             starter.AddGameMenuOption(
-                SanctuaryMenuId,
+                ChurchMenuIds.Sanctuary,
                 "dadg_church_sanctuary_leave",
                 "{=bN2kSj7F}Leave the sanctuary",
                 args =>
@@ -92,14 +96,20 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
             if (settlement == null || !_churchSettlements.IsChurchSettlement(settlement)) return false;
 
             var enabled = settlement.Village.VillageState == Village.VillageStates.Normal;
-            var tooltip = new TextObject("{=jR4wXe8B}The cloister is in no state to shelter you.");
+            var tooltip = enabled
+                ? new TextObject(
+                    "{=zT8nQk3V}Claim sanctuary for up to {DAYS} days. You may leave early, and raids will not force you out.")
+                : new TextObject(
+                    "{=jR4wXe8B}The cloister is in no state to shelter you. Sanctuary lasts up to {DAYS} days, " +
+                    "and raids will not force you out once admitted.");
+            tooltip.SetTextVariable("DAYS", SanctuaryPolicy.PlayerSanctuaryDays);
             return MenuHelper.SetOptionProperties(args, enabled, !enabled, tooltip);
         }
 
         private void ClaimSanctuary(MenuCallbackArgs args)
         {
             _playerSanctuaryStart = CampaignTime.Now;
-            GameMenu.SwitchToMenu(SanctuaryMenuId);
+            GameMenu.SwitchToMenu(ChurchMenuIds.Sanctuary);
         }
 
         private void SanctuaryWaitInit(MenuCallbackArgs args)
@@ -138,7 +148,7 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
         {
             _playerSanctuaryStart = CampaignTime.Never;
             if (PlayerEncounter.Current != null) PlayerEncounter.Current.IsPlayerWaiting = false;
-            GameMenu.SwitchToMenu("village");
+            GameMenu.SwitchToMenu(ChurchMenuIds.Hub);
         }
 
         private static void UpdateSanctuaryText(float elapsedDays)
@@ -212,10 +222,39 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
             var target = GetFugitivesPresent(settlement).FirstOrDefault(IsAtWarWithPlayer);
             if (target == null) return;
 
+            var settings = _churchSettingsProvider.GetSettings();
+            var title = new TextObject("{=rD5kXp2M}Violate sanctuary?");
+            var warning = new TextObject(
+                "{=fJ4sWn7C}Dragging {FUGITIVE_NAME} from the cloister will make them " +
+                "your prisoner and be condemned as sacrilege. Relation changes: local clergy {LOCAL_CHANGE}; " +
+                "all other clergy {OTHER_CHANGE}.");
+            warning.SetTextVariable("FUGITIVE_NAME", target.Name);
+            warning.SetTextVariable("LOCAL_CHANGE", settings.SacrilegeRelationLocal);
+            warning.SetTextVariable("OTHER_CHANGE", settings.SacrilegeRelationOthers);
+
+            InformationManager.ShowInquiry(
+                new InquiryData(
+                    title.ToString(),
+                    warning.ToString(),
+                    true,
+                    true,
+                    new TextObject("{=vM6cQw1H}Violate sanctuary").ToString(),
+                    new TextObject("{=kP3bLt8N}Turn back").ToString(),
+                    () => ConfirmDragFugitive(settlement, target),
+                    null),
+                true);
+        }
+
+        private void ConfirmDragFugitive(Settlement settlement, Hero target)
+        {
+            if (Settlement.CurrentSettlement != settlement ||
+                !GetFugitivesPresent(settlement).Contains(target) ||
+                !IsAtWarWithPlayer(target)) return;
+
             Untag(target);
             TakePrisonerAction.Apply(PartyBase.MainParty, target);
             _churchSacrilege.Apply(Hero.MainHero, settlement);
-            GameMenu.SwitchToMenu("village");
+            GameMenu.SwitchToMenu(ChurchMenuIds.Hub);
         }
 
         private List<Hero> GetFugitivesPresent(Settlement settlement) =>

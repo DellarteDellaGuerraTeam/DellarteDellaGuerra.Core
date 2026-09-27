@@ -27,6 +27,7 @@ using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Domain.Church.Hierarchy;
+using DellarteDellaGuerra.Domain.Church.Ledger;
 using DellarteDellaGuerra.Domain.Church.Port;
 using DellarteDellaGuerra.Integration.Church.UI;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
@@ -124,19 +125,22 @@ namespace DellarteDellaGuerra.Integration
             campaignGameStarter.AddBehavior(new JoustTournamentCampaignBehavior(joustRequirementsProvider));
             var churchSettingsProvider = _serviceProvider.GetRequiredService<IChurchSettingsProvider>();
             var churchSettlements = _serviceProvider.GetRequiredService<ChurchSettlements>();
+            var churchFavourService = _serviceProvider.GetRequiredService<ChurchFavourService>();
             var churchSacrilege = _serviceProvider.GetRequiredService<ChurchSacrilege>();
             campaignGameStarter.AddBehavior(
                 new ChurchCampaignBehavior(churchSettlements, churchSacrilege, churchSettingsProvider));
             campaignGameStarter.AddBehavior(
-                new AbbotDialogCampaignBehavior(churchSettlements, churchSettingsProvider));
+                new AbbotDialogCampaignBehavior(churchSettlements, churchFavourService, churchSettingsProvider));
             campaignGameStarter.AddBehavior(
                 new ChurchMassCampaignBehavior(churchSettlements, churchSettingsProvider));
-            campaignGameStarter.AddBehavior(new SanctuaryCampaignBehavior(churchSettlements, churchSacrilege));
+            campaignGameStarter.AddBehavior(
+                new SanctuaryCampaignBehavior(churchSettlements, churchSacrilege, churchSettingsProvider));
             campaignGameStarter.AddBehavior(new PilgrimageCampaignBehavior(
                 churchSettlements, churchSacrilege, churchSettingsProvider, loggerFactory));
             var buildChurchMap = _serviceProvider.GetRequiredService<IBuildChurchMapUseCase>();
-            ChurchUiServices.Initialise(buildChurchMap, churchSettlements);
+            ChurchUiServices.Initialise(_serviceProvider.GetRequiredService<IBuildChurchLedgerUseCase>());
             campaignGameStarter.AddBehavior(new ChurchHierarchyMenuBehavior(churchSettlements, buildChurchMap));
+            campaignGameStarter.AddBehavior(new ChurchHubCampaignBehavior(churchSettlements));
         }
 
         public override void OnGameInitializationFinished(Game game)

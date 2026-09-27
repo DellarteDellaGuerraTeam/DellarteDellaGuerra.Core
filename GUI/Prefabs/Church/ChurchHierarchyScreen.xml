@@ -2,73 +2,133 @@
   <Constants>
     <Constant Name="Encyclopedia.Canvas.Width" BrushName="Encyclopedia.Canvas" BrushLayer="Default" BrushValueType="Width"/>
     <Constant Name="Encyclopedia.Canvas.Height" BrushName="Encyclopedia.Canvas" BrushLayer="Default" BrushValueType="Height"/>
-
     <Constant Name="Church.Content.Width" Value="!Encyclopedia.Canvas.Width" Additive="-220"/>
-    <Constant Name="Church.Content.Height" Value="!Encyclopedia.Canvas.Height" Additive="-330"/>
+    <Constant Name="Church.Content.Height" Value="!Encyclopedia.Canvas.Height" Additive="-430"/>
   </Constants>
 
   <Window>
     <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
       <Children>
-
-        <!--Dim whatever screen is underneath-->
         <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#000000FF" AlphaFactor="0.6"/>
 
-        <!--Encyclopedia-style book canvas-->
         <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Encyclopedia.Canvas.Width" SuggestedHeight="!Encyclopedia.Canvas.Height" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Encyclopedia.Canvas">
           <Children>
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="78" Brush="Encyclopedia.SubPage.Title.Text" Text="@TitleText"/>
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="130" Brush="Encyclopedia.Stat.ValueText" Text="@FavourText"/>
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="158" Brush="Encyclopedia.Stat.DefinitionText" Text="@FavourProgressText"/>
 
-            <!--Title-->
-            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="95" Brush="Encyclopedia.SubPage.Title.Text" Text="@TitleText"/>
-
-            <!--Hierarchy rows-->
-            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Church.Content.Width" SuggestedHeight="!Church.Content.Height" HorizontalAlignment="Center" MarginTop="180">
+            <ListPanel WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="!Church.Content.Width" SuggestedHeight="!Church.Content.Height" HorizontalAlignment="Center" MarginTop="205" StackLayout.LayoutMethod="HorizontalLeftToRight">
               <Children>
-
-                <ScrollablePanel Id="NodesScrollPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" InnerPanel="NodesRect\NodesList" ClipRect="NodesRect" MouseScrollAxis="Vertical" VerticalScrollbar="..\NodesScrollbar" AutoHideScrollBars="true">
+                <!-- Selectable hierarchy ledger -->
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="630">
                   <Children>
-                    <Widget Id="NodesRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" ClipContents="true">
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Brush="Encyclopedia.SubPage.Header.Text" Text="@LedgerTitleText"/>
+
+                    <ScrollablePanel Id="NodesScrollPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginTop="45" MarginRight="18" InnerPanel="NodesRect\NodesList" ClipRect="NodesRect" MouseScrollAxis="Vertical" VerticalScrollbar="..\NodesScrollbar" AutoHideScrollBars="true">
                       <Children>
-                        <ListPanel Id="NodesList" DataSource="{Nodes}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop" DoNotAcceptEvents="true">
-                          <ItemTemplate>
+                        <Widget Id="NodesRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" ClipContents="true">
+                          <Children>
+                            <NavigatableListPanel Id="NodesList" DataSource="{Nodes}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalBottomToTop" MinIndex="0" MaxIndex="1000" ParentPanel="..\..\..\NodesScrollPanel">
+                              <ItemTemplate>
+                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="72" MarginBottom="3" Brush="FaceGen.Generic.Button" ButtonType="Radio" Command.Click="ExecuteSelect" IsSelected="@IsSelected" UpdateChildrenStates="true">
+                                  <Children>
+                                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="@IndentMargin" MarginRight="12" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalBottomToTop">
+                                      <Children>
+                                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                                          <Children>
+                                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="88" Brush="Encyclopedia.Stat.DefinitionText" Text="@RankText"/>
+                                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Encyclopedia.Stat.ValueText" Text="@NameText"/>
+                                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" Brush="Encyclopedia.Stat.DefinitionText" Text="@BadgeText" IsVisible="@HasBadge"/>
+                                          </Children>
+                                        </ListPanel>
+                                        <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="88" MarginTop="4" Brush="Encyclopedia.Stat.DefinitionText" Text="@HolderLineText"/>
+                                      </Children>
+                                    </ListPanel>
+                                  </Children>
+                                </ButtonWidget>
+                              </ItemTemplate>
+                            </NavigatableListPanel>
+                          </Children>
+                        </Widget>
+                      </Children>
+                    </ScrollablePanel>
 
-                            <!--One church row, indented by hierarchy depth-->
-                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="4" MarginLeft="@IndentMargin">
-                              <Children>
-                                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="110" VerticalAlignment="Center" Brush="Encyclopedia.Stat.DefinitionText" Text="@RankText" IsHidden="@IsSee"/>
-                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Brush="Encyclopedia.Stat.ValueText" Text="@NameText" IsHidden="@IsSee"/>
-                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginTop="12" Brush="Encyclopedia.SubPage.Header.Text" Text="@NameText" IsVisible="@IsSee"/>
-                                <RichTextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="16" Brush="Encyclopedia.Stat.DefinitionText" Text="@HolderLineText"/>
-                              </Children>
-                            </ListPanel>
+                    <ScrollbarWidget Id="NodesScrollbar" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginTop="45" MarginRight="4" AlignmentAxis="Vertical" HorizontalAlignment="Right" VerticalAlignment="Center" Handle="NodesScrollbarHandle" MinValue="0" MaxValue="100">
+                      <Children>
+                        <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Bed"/>
+                        <BrushWidget Id="NodesScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="8" SuggestedHeight="50" HorizontalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Handle"/>
+                      </Children>
+                    </ScrollbarWidget>
+                  </Children>
+                </Widget>
 
-                          </ItemTemplate>
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" MarginLeft="28" MarginRight="28" Sprite="BlankWhiteSquare_9" Color="#765B42FF" AlphaFactor="0.35"/>
+
+                <!-- Read-only details for the selected foundation -->
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Brush="Encyclopedia.SubPage.Header.Text" Text="@DetailsTitleText"/>
+
+                    <ListPanel DataSource="{Details}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="52" MarginLeft="18" MarginRight="18" StackLayout.LayoutMethod="VerticalBottomToTop">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="26" HorizontalAlignment="Center" Brush="Encyclopedia.SubPage.Title.Text" Text="@NameText"/>
+
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="14" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                          <Children>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="170" Brush="Encyclopedia.Stat.DefinitionText" Text="@KindLabelText"/>
+                            <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Encyclopedia.Stat.ValueText" Text="@KindText"/>
+                          </Children>
+                        </ListPanel>
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="14" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                          <Children>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="170" Brush="Encyclopedia.Stat.DefinitionText" Text="@ClergyLabelText"/>
+                            <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Encyclopedia.Stat.ValueText" Text="@ClergyText"/>
+                          </Children>
+                        </ListPanel>
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="14" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                          <Children>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="170" Brush="Encyclopedia.Stat.DefinitionText" Text="@RelationLabelText"/>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Encyclopedia.Stat.ValueText" Text="@RelationText"/>
+                          </Children>
+                        </ListPanel>
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="14" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                          <Children>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="170" Brush="Encyclopedia.Stat.DefinitionText" Text="@PowerLabelText"/>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Encyclopedia.Stat.ValueText" Text="@PowerText"/>
+                          </Children>
+                        </ListPanel>
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="14" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                          <Children>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="170" Brush="Encyclopedia.Stat.DefinitionText" Text="@OwnerLabelText"/>
+                            <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Encyclopedia.Stat.ValueText" Text="@OwnerText"/>
+                          </Children>
+                        </ListPanel>
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="14" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                          <Children>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="170" Brush="Encyclopedia.Stat.DefinitionText" Text="@FactionLabelText"/>
+                            <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Encyclopedia.Stat.ValueText" Text="@FactionText"/>
+                          </Children>
+                        </ListPanel>
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="10" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                          <Children>
+                            <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="170" Brush="Encyclopedia.Stat.DefinitionText" Text="@StatusLabelText"/>
+                            <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Encyclopedia.Stat.ValueText" Text="@StatusText"/>
+                          </Children>
                         </ListPanel>
                       </Children>
-                    </Widget>
+                    </ListPanel>
                   </Children>
-                </ScrollablePanel>
-
-                <ScrollbarWidget Id="NodesScrollbar" WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" MarginRight="4" AlignmentAxis="Vertical" HorizontalAlignment="Right" VerticalAlignment="Center" Handle="NodesScrollbarHandle" MinValue="0" MaxValue="100">
-                  <Children>
-                    <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Bed"/>
-                    <BrushWidget Id="NodesScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="8" SuggestedHeight="50" HorizontalAlignment="Center" Brush="Encyclopedia.Scrollbar.Flat.Handle"/>
-                  </Children>
-                </ScrollbarWidget>
-
+                </Widget>
               </Children>
-            </Widget>
+            </ListPanel>
 
-            <!--Close-->
-            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="250" SuggestedHeight="64" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="60" Brush="Popup.Done.Button.NineGrid" Command.Click="ExecuteClose" UpdateChildrenStates="true">
+            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="250" SuggestedHeight="64" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="55" Brush="Popup.Done.Button.NineGrid" Command.Click="ExecuteClose" UpdateChildrenStates="true">
               <Children>
                 <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Popup.Button.Text" Text="@CloseText"/>
               </Children>
             </ButtonWidget>
-
           </Children>
         </BrushWidget>
-
       </Children>
     </Widget>
   </Window>

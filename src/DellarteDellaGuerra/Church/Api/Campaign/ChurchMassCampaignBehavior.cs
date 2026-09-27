@@ -39,7 +39,7 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
         private void OnSessionLaunched(CampaignGameStarter starter)
         {
             starter.AddGameMenuOption(
-                "village",
+                ChurchMenuIds.Hub,
                 "dadg_church_attend_mass",
                 "{=aM3sVk7P}Attend mass",
                 CanAttendMass,
@@ -55,13 +55,47 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
 
             var isSunday = CampaignTime.Now.GetDayOfWeek == 0;
             var attendedToday = _lastMassTime.ElapsedDaysUntilNow < 1f;
-            var enabled = settlement.Village.VillageState == Village.VillageStates.Normal &&
-                          MassPolicy.Evaluate(isSunday, attendedToday) == MassOutcome.Allowed;
-
-            var tooltip = new TextObject(
-                "{=tY5nQw9R}Mass will be held on the Lord's day. ({N} {?N>1}days{?}day{\\?} hence)");
-            tooltip.SetTextVariable("N", DaysUntilNextSunday());
+            var villageIsNormal = settlement.Village.VillageState == Village.VillageStates.Normal;
+            var outcome = MassPolicy.Evaluate(isSunday, attendedToday);
+            var enabled = villageIsNormal && outcome == MassOutcome.Allowed;
+            var tooltip = GetMassTooltip(villageIsNormal, outcome);
             return MenuHelper.SetOptionProperties(args, enabled, !enabled, tooltip);
+        }
+
+        private TextObject GetMassTooltip(bool villageIsNormal, MassOutcome outcome)
+        {
+            var settings = _churchSettingsProvider.GetSettings();
+            TextObject tooltip;
+
+            if (!villageIsNormal)
+            {
+                tooltip = new TextObject(
+                    "{=qL7wJf4D}Mass cannot be held while the settlement is in turmoil. " +
+                    "When available, attending grants {MORALE} party morale and {RELATION} relation with the local clergy.");
+            }
+            else if (outcome == MassOutcome.AlreadyAttended)
+            {
+                tooltip = new TextObject(
+                    "{=sH2mKv8P}You have already attended mass today. The next mass is in {DAYS} days. " +
+                    "Attending grants {MORALE} party morale and {RELATION} relation with the local clergy.");
+                tooltip.SetTextVariable("DAYS", CampaignTime.DaysInWeek);
+            }
+            else if (outcome == MassOutcome.NotSunday)
+            {
+                tooltip = new TextObject(
+                    "{=yN6cTb3R}Mass is held on Sunday. The next mass is in {DAYS} {?DAYS>1}days{?}day{\\?}. " +
+                    "Attending grants {MORALE} party morale and {RELATION} relation with the local clergy.");
+                tooltip.SetTextVariable("DAYS", DaysUntilNextSunday());
+            }
+            else
+            {
+                tooltip = new TextObject(
+                    "{=pV9dXm5A}Attending mass grants {MORALE} party morale and {RELATION} relation with the local clergy.");
+            }
+
+            tooltip.SetTextVariable("MORALE", settings.MassMorale);
+            tooltip.SetTextVariable("RELATION", settings.MassRelation);
+            return tooltip;
         }
 
         private static int DaysUntilNextSunday()
@@ -80,7 +114,7 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
             if (abbot != null) ChangeRelationAction.ApplyPlayerRelation(abbot, settings.MassRelation);
 
             _lastMassTime = CampaignTime.Now;
-            GameMenu.SwitchToMenu("village");
+            GameMenu.SwitchToMenu(ChurchMenuIds.Hub);
         }
     }
 }

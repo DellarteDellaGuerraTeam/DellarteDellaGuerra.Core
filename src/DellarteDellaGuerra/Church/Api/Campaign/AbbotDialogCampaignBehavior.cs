@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DellarteDellaGuerra.Domain.Church.Donation;
 using DellarteDellaGuerra.Domain.Church.Favour;
@@ -14,6 +15,7 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
     public class AbbotDialogCampaignBehavior : CampaignBehaviorBase
     {
         private readonly ChurchSettlements _churchSettlements;
+        private readonly ChurchFavourService _churchFavourService;
         private readonly IChurchSettingsProvider _churchSettingsProvider;
 
         private Dictionary<Hero, CampaignTime> _lastDonationTimes = new();
@@ -21,9 +23,11 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
 
         public AbbotDialogCampaignBehavior(
             ChurchSettlements churchSettlements,
+            ChurchFavourService churchFavourService,
             IChurchSettingsProvider churchSettingsProvider)
         {
             _churchSettlements = churchSettlements;
+            _churchFavourService = churchFavourService;
             _churchSettingsProvider = churchSettingsProvider;
         }
 
@@ -57,9 +61,12 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
                 "dadg_church_donate",
                 "dadg_church_talk",
                 "dadg_church_donate_thanks",
-                "{=rB7xNc4V}I wish to make a donation to the {CHURCH_TYPE}. ({DONATION_COST} denars)",
-                CanDonate,
-                Donate);
+                "{=rB7xNc4V}I wish to make a donation to the {CHURCH_TYPE}. " +
+                "({DONATION_COST} denars; {DONATION_RELATION} relation, {DONATION_RENOWN} renown, " +
+                "{DONATION_POWER} clergy power)",
+                CanShowDonation,
+                Donate,
+                clickableConditionDelegate: CanDonate);
             starter.AddDialogLine(
                 "dadg_church_donate_thanks",
                 "dadg_church_donate_thanks",
@@ -93,43 +100,45 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
                 "dadg_church_favour_reply",
                 "dadg_church_talk",
                 "{=yL3tWn7C}All England's cloisters speak your name with love. You are a true friend of Holy Church.",
-                () => GetFavourRank() == ChurchFavourRank.Beloved,
+                () => _churchFavourService.GetStatus().Rank == ChurchFavourRank.Beloved,
                 null);
             starter.AddDialogLine(
                 "dadg_church_favour_reply_favoured",
                 "dadg_church_favour_reply",
                 "dadg_church_talk",
                 "{=dK8rBv4J}The Church counts you among her faithful {?PLAYER.GENDER}daughters{?}sons{\\?}.",
-                () => GetFavourRank() == ChurchFavourRank.Favoured,
+                () => _churchFavourService.GetStatus().Rank == ChurchFavourRank.Favoured,
                 null);
             starter.AddDialogLine(
                 "dadg_church_favour_reply_indifferent",
                 "dadg_church_favour_reply",
                 "dadg_church_talk",
                 "{=fT2mHx9P}The Church knows little of you, my {?PLAYER.GENDER}lady{?}lord{\\?}. Works, not words, commend a soul.",
-                () => GetFavourRank() == ChurchFavourRank.Indifferent,
+                () => _churchFavourService.GetStatus().Rank == ChurchFavourRank.Indifferent,
                 null);
             starter.AddDialogLine(
                 "dadg_church_favour_reply_ill_regarded",
                 "dadg_church_favour_reply",
                 "dadg_church_talk",
                 "{=wS5jNc6E}There is murmuring against you in the chapter houses. Mend your ways.",
-                () => GetFavourRank() == ChurchFavourRank.IllRegarded,
+                () => _churchFavourService.GetStatus().Rank == ChurchFavourRank.IllRegarded,
                 null);
             starter.AddDialogLine(
                 "dadg_church_favour_reply_reviled",
                 "dadg_church_favour_reply",
                 "dadg_church_talk",
                 "{=hM7qGz3V}You stand in the shadow of anathema. Repent, before God and His Church.",
-                () => GetFavourRank() == ChurchFavourRank.Reviled,
+                () => _churchFavourService.GetStatus().Rank == ChurchFavourRank.Reviled,
                 null);
             starter.AddPlayerLine(
                 "dadg_church_bishop_blessing",
                 "dadg_church_talk",
                 "dadg_church_bishop_blessing_reply",
-                "{=cX4bPk8R}Grant me your blessing, Your Grace.",
-                CanRequestBishopBlessing,
-                GrantBishopBlessing);
+                "{=cX4bPk8R}Grant me your blessing, Your Grace. " +
+                "({BLESSING_MORALE} party morale, {BLESSING_RENOWN} renown)",
+                CanShowBishopBlessing,
+                GrantBishopBlessing,
+                clickableConditionDelegate: CanRequestBishopBlessing);
             starter.AddDialogLine(
                 "dadg_church_bishop_blessing_reply",
                 "dadg_church_bishop_blessing_reply",
@@ -157,23 +166,53 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
             return true;
         }
 
-        private bool CanDonate()
+        private bool CanShowDonation()
         {
             var abbot = Hero.OneToOneConversationHero;
             if (abbot == null) return false;
 
-            var donationCost = _churchSettingsProvider.GetSettings().DonationCost;
+            var settings = _churchSettingsProvider.GetSettings();
+            var settlement = abbot.CurrentSettlement;
+            if (settlement == null) return false;
+
+            MBTextManager.SetTextVariable("CHURCH_TYPE", _churchSettlements.GetChurchType(settlement));
+            MBTextManager.SetTextVariable("TITLE", _churchSettlements.GetClergyTitle(settlement, abbot));
+            MBTextManager.SetTextVariable("DONATION_COST", settings.DonationCost);
+            MBTextManager.SetTextVariable("DONATION_RELATION", FormatSigned(settings.DonationRelation));
+            MBTextManager.SetTextVariable("DONATION_RENOWN", FormatSigned(DonationPolicy.RenownGain));
+            MBTextManager.SetTextVariable("DONATION_POWER", FormatSigned(settings.DonationPower));
+            return true;
+        }
+
+        private bool CanDonate(out TextObject explanation)
+        {
+            explanation = new TextObject(string.Empty);
+            var abbot = Hero.OneToOneConversationHero;
+            if (abbot == null) return false;
+
+            var settings = _churchSettingsProvider.GetSettings();
             float? daysSinceLastDonation = _lastDonationTimes.TryGetValue(abbot, out var lastDonation)
                 ? lastDonation.ElapsedDaysUntilNow
                 : (float?)null;
-            if (DonationPolicy.Evaluate(Hero.MainHero.Gold, daysSinceLastDonation, donationCost) != DonationOutcome.Allowed)
-                return false;
+            var outcome = DonationPolicy.Evaluate(Hero.MainHero.Gold, daysSinceLastDonation, settings.DonationCost);
+            if (outcome == DonationOutcome.Allowed) return true;
 
-            var settlement = abbot.CurrentSettlement;
-            MBTextManager.SetTextVariable("CHURCH_TYPE", _churchSettlements.GetChurchType(settlement));
-            MBTextManager.SetTextVariable("TITLE", _churchSettlements.GetClergyTitle(settlement));
-            MBTextManager.SetTextVariable("DONATION_COST", donationCost);
-            return true;
+            if (outcome == DonationOutcome.InsufficientGold)
+            {
+                explanation = new TextObject("{=sC4hYp9D}Requires {COST} denars; you have {GOLD}.");
+                explanation.SetTextVariable("COST", settings.DonationCost);
+                explanation.SetTextVariable("GOLD", Hero.MainHero.Gold);
+            }
+            else
+            {
+                var daysRemaining = Math.Max(1,
+                    (int)Math.Ceiling(DonationPolicy.CooldownInDays - daysSinceLastDonation.GetValueOrDefault()));
+                explanation = new TextObject(
+                    "{=aV7nRm3T}Available again in {DAYS} {?DAYS>1}days{?}day{\\?}.");
+                explanation.SetTextVariable("DAYS", daysRemaining);
+            }
+
+            return false;
         }
 
         private void Donate()
@@ -195,15 +234,43 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
             return settlement != null && _churchSettlements.IsCathedral(settlement);
         }
 
-        private bool CanRequestBishopBlessing()
+        private bool CanShowBishopBlessing()
         {
+            if (!IsConversationWithBishop()) return false;
+
+            var settings = _churchSettingsProvider.GetSettings();
+            MBTextManager.SetTextVariable("BLESSING_MORALE", FormatSigned(settings.BlessingMorale));
+            MBTextManager.SetTextVariable("BLESSING_RENOWN", FormatSigned(BishopBlessingPolicy.RenownGain));
+            return true;
+        }
+
+        private bool CanRequestBishopBlessing(out TextObject explanation)
+        {
+            explanation = new TextObject(string.Empty);
             if (!IsConversationWithBishop()) return false;
 
             float? daysSinceLastBlessing = _lastBishopBlessingTime == CampaignTime.Never
                 ? (float?)null
                 : _lastBishopBlessingTime.ElapsedDaysUntilNow;
-            return BishopBlessingPolicy.Evaluate(GetFavourRank(), daysSinceLastBlessing) ==
-                   BishopBlessingOutcome.Allowed;
+            var outcome = BishopBlessingPolicy.Evaluate(
+                _churchFavourService.GetStatus().Rank, daysSinceLastBlessing);
+            if (outcome == BishopBlessingOutcome.Allowed) return true;
+
+            if (outcome == BishopBlessingOutcome.NotFavoured)
+            {
+                explanation = new TextObject("{=pT2dKx6H}Requires Favoured Church standing.");
+            }
+            else
+            {
+                var daysRemaining = Math.Max(1,
+                    (int)Math.Ceiling(BishopBlessingPolicy.CooldownInDays -
+                                           daysSinceLastBlessing.GetValueOrDefault()));
+                explanation = new TextObject(
+                    "{=nM9qFs5B}Available again in {DAYS} {?DAYS>1}days{?}day{\\?}.");
+                explanation.SetTextVariable("DAYS", daysRemaining);
+            }
+
+            return false;
         }
 
         private void GrantBishopBlessing()
@@ -213,28 +280,7 @@ namespace DellarteDellaGuerra.Church.Api.Campaign
             _lastBishopBlessingTime = CampaignTime.Now;
         }
 
-        // The Church's favour is the average of the player's relation with every living clergy
-        // notable. Read from CharacterRelationManager: the raw store ChangeRelationAction writes
-        // (Hero.GetRelation would add personality trait effects on top).
-        private ChurchFavourRank GetFavourRank()
-        {
-            var relationSum = 0f;
-            var clergyCount = 0;
-            foreach (var settlement in Settlement.All)
-            {
-                if (!_churchSettlements.IsChurchSettlement(settlement)) continue;
+        private static string FormatSigned(int value) => value.ToString("+0;-0;0");
 
-                foreach (var clergy in settlement.Notables)
-                {
-                    if (!clergy.IsPreacher || !clergy.IsAlive) continue;
-
-                    relationSum += CharacterRelationManager.GetHeroRelation(Hero.MainHero, clergy);
-                    clergyCount++;
-                }
-            }
-
-            var averageRelation = clergyCount == 0 ? 0f : relationSum / clergyCount;
-            return ChurchFavourPolicy.Evaluate(averageRelation);
-        }
     }
 }

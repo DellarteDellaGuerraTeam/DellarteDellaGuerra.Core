@@ -1,4 +1,5 @@
 using DellarteDellaGuerra.Domain.Church.Favour;
+using System.Collections.Generic;
 using Xunit;
 
 namespace DellarteDellaGuerra.Domain.Tests.Church.Favour
@@ -63,6 +64,28 @@ namespace DellarteDellaGuerra.Domain.Tests.Church.Favour
         public void Evaluate_WhenAverageIsExactlyPlusTen_ReturnsBeloved()
         {
             Assert.Equal(ChurchFavourRank.Beloved, ChurchFavourPolicy.Evaluate(10f));
+        }
+
+        [Fact]
+        public void GetProgress_AveragesClergyRelationsAndReturnsNextBoundaryRule()
+        {
+            var progress = ChurchFavourPolicy.GetProgress(new List<int> { -12, -8 });
+
+            Assert.Equal(-10f, progress.AverageRelation);
+            Assert.Equal(ChurchFavourRank.Reviled, progress.Rank);
+            Assert.Equal(-10f, progress.NextBoundary);
+            Assert.Equal(ChurchFavourBoundaryComparison.GreaterThan, progress.NextBoundaryComparison);
+        }
+
+        [Fact]
+        public void GetProgress_WhenNoClergyDefaultsToIndifferentAtZero()
+        {
+            var progress = ChurchFavourPolicy.GetProgress(new List<int>());
+
+            Assert.Equal(0f, progress.AverageRelation);
+            Assert.Equal(ChurchFavourRank.Indifferent, progress.Rank);
+            Assert.Equal(2f, progress.NextBoundary);
+            Assert.Equal(ChurchFavourBoundaryComparison.AtLeast, progress.NextBoundaryComparison);
         }
     }
 }

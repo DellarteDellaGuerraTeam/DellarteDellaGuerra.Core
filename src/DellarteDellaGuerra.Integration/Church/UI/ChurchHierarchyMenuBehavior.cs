@@ -1,4 +1,5 @@
 using DellarteDellaGuerra.Church;
+using DellarteDellaGuerra.Church.Api.Campaign;
 using DellarteDellaGuerra.Domain.Church.Hierarchy;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameMenus;
@@ -39,7 +40,7 @@ namespace DellarteDellaGuerra.Integration.Church.UI
         private void OnSessionLaunched(CampaignGameStarter starter)
         {
             starter.AddGameMenuOption(
-                "village",
+                ChurchMenuIds.Hub,
                 "dadg_church_survey_hierarchy",
                 "{=dW6pFn4Y}Survey the Church in England",
                 CanSurveyChurch,
