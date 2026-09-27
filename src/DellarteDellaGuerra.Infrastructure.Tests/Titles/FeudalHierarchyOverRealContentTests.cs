@@ -209,7 +209,7 @@ public class FeudalHierarchyOverRealContentTests
         private readonly DadgXmlGenealogy _genealogy;
         private readonly InMemoryTitleRegistry _titles;
         private readonly XmlFeudalStructure _structure;
-        private readonly GetSuzerainUseCase _suzerain;
+        private readonly SuzeraintyPolicy _suzerain;
         private readonly GetDirectVassalsUseCase _directVassals;
         private readonly GetDeJureSettlementsUseCase _deJureSettlements;
 
@@ -219,7 +219,7 @@ public class FeudalHierarchyOverRealContentTests
             _structure = structure;
             _titles = new InMemoryTitleRegistry(genealogy);
             _titles.Initialise(structure.BuildInitialTitles(genealogy));
-            _suzerain = new GetSuzerainUseCase(_titles, structure, genealogy);
+            _suzerain = new SuzeraintyPolicy(_titles, structure, genealogy);
             _directVassals = new GetDirectVassalsUseCase(_titles, structure, _suzerain, genealogy);
             _deJureSettlements = new GetDeJureSettlementsUseCase(_titles, structure);
         }
@@ -238,7 +238,7 @@ public class FeudalHierarchyOverRealContentTests
 
         public IReadOnlyList<Title> AllTitles() => _titles.GetAllTitles();
 
-        public string? Suzerain(string clanId) => _suzerain.Execute(clanId);
+        public string? Suzerain(string clanId) => _suzerain.GetSuzerain(clanId);
 
         public TitleRank? HighestRank(string clanId) => _suzerain.GetPrimaryTitle(clanId)?.Rank;
 

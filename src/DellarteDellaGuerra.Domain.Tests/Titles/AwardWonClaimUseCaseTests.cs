@@ -8,7 +8,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         // county (loser) ── barony_a (loser)
         //                └─ barony_b (third)
         // county_elsewhere (loser) ── barony_c (fourth), outside the fought-for title
-        private static (AwardWonClaimUseCase UseCase, FakeTitleRepository Titles, GetSuzerainUseCase Suzerain) Setup(
+        private static (AwardWonClaimUseCase UseCase, FakeTitleRepository Titles, SuzeraintyPolicy Suzerain) Setup(
             string? countyOccupant = null,
             bool winnerHasLeader = true)
         {
@@ -38,9 +38,9 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             };
 
             return (
-                new AwardWonClaimUseCase(titles, structure, genealogy, new GetSuzerainUseCase(titles, structure, genealogy)),
+                new AwardWonClaimUseCase(titles, structure, genealogy, new SuzeraintyPolicy(titles, structure, genealogy)),
                 titles,
-                new GetSuzerainUseCase(titles, structure, genealogy));
+                new SuzeraintyPolicy(titles, structure, genealogy));
         }
 
         [Fact]
@@ -68,11 +68,11 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         public void Execute_MakesTheWinnerTheLiegeOfAVassalItDidNotDispossess()
         {
             var (useCase, _, suzerain) = Setup();
-            Assert.Equal("clan_loser", suzerain.Execute("clan_third"));
+            Assert.Equal("clan_loser", suzerain.GetSuzerain("clan_third"));
 
             useCase.Execute("county", "clan_winner", "clan_loser");
 
-            Assert.Equal("clan_winner", suzerain.Execute("clan_third"));
+            Assert.Equal("clan_winner", suzerain.GetSuzerain("clan_third"));
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
 
             useCase.Execute("county", "clan_winner", "clan_loser");
 
-            Assert.Equal("clan_loser", suzerain.Execute("clan_fourth"));
+            Assert.Equal("clan_loser", suzerain.GetSuzerain("clan_fourth"));
         }
 
         [Fact]
@@ -143,7 +143,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         //                               │                 └─ barony_split (split)
         //                               └─ county_split (split)
         // kingdom_england (england_king) ── winner_title (winner, of the given rank)
-        private static (AwardWonClaimUseCase UseCase, FakeFeudalStructure Structure, GetSuzerainUseCase Suzerain)
+        private static (AwardWonClaimUseCase UseCase, FakeFeudalStructure Structure, SuzeraintyPolicy Suzerain)
             SetupAcrossTheBorder(TitleRank winnerRank = TitleRank.Count, string winnerRealm = "kingdom_england")
         {
             var genealogy = new FakeGenealogy()
@@ -178,7 +178,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 Genealogy = genealogy
             };
 
-            var suzerain = new GetSuzerainUseCase(titles, structure, genealogy);
+            var suzerain = new SuzeraintyPolicy(titles, structure, genealogy);
             return (new AwardWonClaimUseCase(titles, structure, genealogy, suzerain), structure, suzerain);
         }
 
@@ -190,7 +190,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             useCase.Execute("county", "clan_winner", "clan_loser");
 
             Assert.Equal("kingdom_england", structure.GetDeJureSuzerainTitleId("county"));
-            Assert.Equal("clan_england", suzerain.Execute("clan_winner"));
+            Assert.Equal("clan_england", suzerain.GetSuzerain("clan_winner"));
         }
 
         [Fact]
@@ -211,8 +211,8 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             var award = useCase.Execute("county", "clan_winner", "clan_loser");
 
             Assert.Equal(new[] { "clan_third" }, award.ClansJoiningWinnersRealm);
-            Assert.Equal("clan_winner", suzerain.Execute("clan_third"));
-            Assert.Equal("clan_scots", suzerain.Execute("clan_split"));
+            Assert.Equal("clan_winner", suzerain.GetSuzerain("clan_third"));
+            Assert.Equal("clan_scots", suzerain.GetSuzerain("clan_split"));
         }
 
         [Fact]
