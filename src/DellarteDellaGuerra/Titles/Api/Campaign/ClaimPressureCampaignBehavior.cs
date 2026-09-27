@@ -6,6 +6,8 @@ using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Titles.Spi;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using BannerlordCampaign = TaleWorlds.CampaignSystem.Campaign;
 
@@ -51,6 +53,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         private readonly IGenealogy _genealogy;
         private readonly IGetSuzerainUseCase _getSuzerainUseCase;
         private readonly IGetDeJureSettlementsUseCase _getDeJureSettlementsUseCase;
+        private readonly IAwardWonClaimUseCase _awardWonClaimUseCase;
+        private readonly IGenerateBloodClaimsUseCase _generateBloodClaimsUseCase;
         private readonly IEvaluatePressClaimUseCase _evaluatePressClaimUseCase;
         private readonly ISolicitSupportUseCase _solicitSupportUseCase;
         private readonly IPrivateWarDeclaration _privateWarDeclaration;
@@ -68,6 +72,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             IGenealogy genealogy,
             IGetSuzerainUseCase getSuzerainUseCase,
             IGetDeJureSettlementsUseCase getDeJureSettlementsUseCase,
+            IAwardWonClaimUseCase awardWonClaimUseCase,
+            IGenerateBloodClaimsUseCase generateBloodClaimsUseCase,
             IEvaluatePressClaimUseCase evaluatePressClaimUseCase,
             ISolicitSupportUseCase solicitSupportUseCase,
             IPrivateWarDeclaration privateWarDeclaration,
@@ -79,6 +85,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             _genealogy = genealogy;
             _getSuzerainUseCase = getSuzerainUseCase;
             _getDeJureSettlementsUseCase = getDeJureSettlementsUseCase;
+            _awardWonClaimUseCase = awardWonClaimUseCase;
+            _generateBloodClaimsUseCase = generateBloodClaimsUseCase;
             _evaluatePressClaimUseCase = evaluatePressClaimUseCase;
             _solicitSupportUseCase = solicitSupportUseCase;
             _privateWarDeclaration = privateWarDeclaration;
@@ -229,6 +237,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
         private void OnWarConcluded(PrivateWarConclusion conclusion)
         {
+            if (conclusion.AttackerWon) AwardTheClaim(conclusion);
+
             if (!_parentByCadetClanId.TryGetValue(conclusion.AttackerClanId, out string parentClanId)) return;
 
             _parentByCadetClanId.Remove(conclusion.AttackerClanId);
@@ -236,6 +246,27 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             // Winning makes the branch a house in its own right, holding the dignity it fought
             // for. Anything short of winning, a white peace included, leaves it nothing to be.
             if (!conclusion.AttackerWon) _cadetBranch.Reabsorb(conclusion.AttackerClanId, parentClanId);
+        }
+
+        // The winner takes the title and the de jure titles the loser held, and the fortified
+        // seats among them that the loser still owns. A village goes with its castle or town.
+        private void AwardTheClaim(PrivateWarConclusion conclusion)
+        {
+            var winner = BannerlordCampaign.Current?.CampaignObjectManager.Find<Clan>(conclusion.AttackerClanId);
+            if (winner?.Leader is null) return;
+
+            foreach (string seatId in _awardWonClaimUseCase.Execute(
+                         conclusion.TitleId, conclusion.AttackerClanId, conclusion.DefenderClanId))
+            {
+                var seat = Settlement.Find(seatId);
+                if (seat is null || !seat.IsFortification || seat.OwnerClan?.StringId != conclusion.DefenderClanId)
+                    continue;
+
+                ChangeOwnerOfSettlementAction.ApplyByDefault(winner.Leader, seat);
+            }
+
+            // The holders moved, and every blood claim on these titles descends from its holder.
+            _generateBloodClaimsUseCase.Execute();
         }
 
         /**

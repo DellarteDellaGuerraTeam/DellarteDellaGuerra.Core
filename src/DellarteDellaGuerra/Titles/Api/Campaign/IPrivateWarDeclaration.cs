@@ -53,5 +53,5 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
      *  defender victory and for a white peace alike: in both the claim went unwon.
      * </summary>
      */
-    public record PrivateWarConclusion(string AttackerClanId, bool AttackerWon);
+    public record PrivateWarConclusion(string AttackerClanId, string DefenderClanId, string TitleId, bool AttackerWon);
 }
