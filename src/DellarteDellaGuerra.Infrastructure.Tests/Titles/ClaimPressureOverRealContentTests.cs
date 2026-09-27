@@ -298,17 +298,21 @@ public class ClaimPressureOverRealContentTests
     [Trait("Category", "DADG content integration")]
     public void NoForeignHouseIsKinToAnEnglishLeaderSoOnlyFriendshipCallsOneAcrossTheBorder()
     {
-        // The content authors three realms, and not one clan leader in any of them is the parent,
-        // child or sibling of a leader in another. Kin never carries a call to arms across a
-        // border at the start of a campaign, so with no relations in play every English war asks
-        // English houses only, as it did before bonds existed. A foreign house joins an English
-        // feud only once its leader has made a friend of a principal, which is runtime state.
+        // The content authors three realms, and not one clan leader in any of them is kin to a
+        // leader in another, by blood or by marriage. English marriages do bind English leaders,
+        // York to Woodville through York's Woodville wife, but every one stays inside the realm. Kin
+        // never carries a call to arms across a border at the start of a campaign, so with no
+        // relations in play every English war asks English houses only, as it did before bonds
+        // existed. A foreign house joins an English feud only once its leader has made a friend of
+        // a principal, which is runtime state.
         Content content = Content.Load();
         ILookup<string, string> realms = content.Realms();
 
         Assert.Equal(
             new[] { ("clan_lancaster", 53), ("clan_macdonald_isles", 13), ("clan_stewart", 13) },
             realms.Select(realm => (realm.Key, realm.Count())).OrderBy(realm => realm.Key));
+
+        Assert.True(content.IsBonded("clan_york", "clan_woodville", 0f));
 
         Assert.All(
             realms,
@@ -331,17 +335,17 @@ public class ClaimPressureOverRealContentTests
         // Stafford presses his strong claim on Cheshire against Woodville, three houses against
         // two. Maxwell is a Border house under the Stewart crown and has no part in it, until
         // his leader counts Stafford's leader a firm friend: then he is asked, he answers for the
-        // claimant, and the claimant rides with four. One point short of friendship and he is not
-        // even asked, because a house of another crown is nobody's to call on.
+        // claimant, and the claimant rides with four. At a relation of exactly 50, one short of
+        // friendship, he is not even asked, because a house of another crown is nobody's to call on.
         const string maxwell = "clan_maxwell";
 
         Content content = Content.Load();
         ClaimOpportunity cheshire = content.Opportunity("county_cheshire", "clan_stafford");
 
         Assert.DoesNotContain(maxwell, content.Candidates(cheshire));
-        Assert.DoesNotContain(maxwell, content.Candidates(cheshire, Befriended(maxwell, 49f)));
+        Assert.DoesNotContain(maxwell, content.Candidates(cheshire, Befriended(maxwell, 50f)));
 
-        SupportDecision support = content.Solicit(cheshire, Befriended(maxwell, 50f));
+        SupportDecision support = content.Solicit(cheshire, Befriended(maxwell, 51f));
 
         Assert.Equal(new[] { maxwell }, support.AttackerSupporters);
         Assert.DoesNotContain(maxwell, support.DefenderSupporters);

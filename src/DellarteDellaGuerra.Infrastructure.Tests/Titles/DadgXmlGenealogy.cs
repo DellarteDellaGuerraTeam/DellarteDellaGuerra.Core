@@ -52,6 +52,18 @@ internal sealed class DadgXmlGenealogy : IGenealogy
             AddChild(childrenByParentId, NormaliseReference(heroElement.Attribute("mother")?.Value, HeroPrefix), heroId);
         }
 
+        // A marriage is often written on one partner only, so it is read from either end.
+        var spouseIdByHeroId = new Dictionary<string, string>();
+        foreach (XElement heroElement in heroElements)
+        {
+            string heroId = RequiredAttribute(heroElement, "id");
+            string? spouseId = NormaliseReference(heroElement.Attribute("spouse")?.Value, HeroPrefix);
+            if (spouseId is null) continue;
+
+            spouseIdByHeroId[heroId] = spouseId;
+            spouseIdByHeroId.TryAdd(spouseId, heroId);
+        }
+
         var heroesById = new Dictionary<string, HeroNode>();
         foreach (XElement heroElement in heroElements)
         {
@@ -72,7 +84,8 @@ internal sealed class DadgXmlGenealogy : IGenealogy
                         ? children
                         : Array.Empty<string>(),
                     NormaliseReference(heroElement.Attribute("father")?.Value, HeroPrefix),
-                    traits.Age));
+                    traits.Age,
+                    spouseIdByHeroId.TryGetValue(heroId, out string? spouse) ? spouse : null));
         }
 
         ValidateParentReferences(heroElements, heroesById);

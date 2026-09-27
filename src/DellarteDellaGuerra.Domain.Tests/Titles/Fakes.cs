@@ -67,6 +67,13 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             return this;
         }
 
+        public FakeGenealogy Married(string heroId, string spouseId)
+        {
+            _heroes[heroId] = _heroes[heroId] with { SpouseId = spouseId };
+            _heroes[spouseId] = _heroes[spouseId] with { SpouseId = heroId };
+            return this;
+        }
+
         public FakeGenealogy WithLeader(string clanId, string heroId)
         {
             _leaderByClanId[clanId] = heroId;

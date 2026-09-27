@@ -260,8 +260,9 @@ joins without starting a war between the crowns.
 
 - **Who is asked.** Uncommitted clans from the war's own realm are asked, as before. So is any clan
   whose leader has a **personal bond** with a principal's leader (`PersonalBondPolicy`). A bond is
-  close kin (a parent, a child, or a sibling through the father) or a relation of 50 or more. A
-  foreign clan with no bond is never asked.
+  close kin or a firm friend. Close kin is a parent, a child, or a sibling through the father, and
+  by marriage a spouse, a spouse's father, or a spouse's sibling. A firm friend is what vanilla
+  calls a friend (`Hero.IsFriend`): a relation above 50. A foreign clan with no bond is never asked.
 - **Who gets the fief.** A captured main goal always goes to the besieging side's **principal**
   (`PrivateWarSyntheticCapturePolicy.GetCapturingClanId`), never to the supporter who led the siege.
   Without this, a Scottish supporter leading the siege would carry the English seat into Scotland.
