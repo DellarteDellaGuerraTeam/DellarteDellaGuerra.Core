@@ -243,15 +243,15 @@ These answer §6 for the first cut. They can be reopened, but the code is built 
 
 | # | Question | Provisional answer |
 |---|---|---|
-| 1 | Scope | U1 + U3: a cross-border feud is a raiding feud. Towns and castles change hands across the border only in a crown war. Foreign **supporters** may still join a same-realm private war (see 7.1). |
-| 2 | March castles (U2) | Deferred to step 4. When built: a hand-tagged list, and a captured march castle always reverts at the end of the feud. Slighting is optional flavour. |
+| 1 | Scope | **Revised 2026-09-27:** a cross-border claim is pressed like any other claim. If the claimant wins, it takes the title and the de jure lands the defender held (U5, see 7.5). A raiding feud with no settlement goal (U1) is a possible later feature, not a prerequisite. Foreign **supporters** may still join a same-realm private war (see 7.1). |
+| 2 | March castles (U2) | Deferred (7.6, step 6). When built: a hand-tagged list, and a captured march castle always reverts at the end of the feud. Slighting is optional flavour. |
 | 3 | Towns | Never taken by private war. Berwick is not an exception. |
 | 4 | Defender identity | D1: the de jure title holder defends. An occupied seat is handled by a separate recovery claim (see 7.2). |
 | 5 | Automatic declaration | AI clans declare only on a claim or on bad blood. The player waits for a dedicated "press claim" path. |
 | 6 | Wardens | Flavour only, for now. |
 | 7 | Escalation | Never escalate automatically. A feud folds into a crown war only if the crowns go to war for other reasons. |
 | 8 | End rule for goal-less feuds | A fixed window, a "day of truce", that ends early if fatigue gets there first. |
-| 9 | Contested titles at peace | Moot while nothing is captured across the border. If step 4 lands, the castle reverts. |
+| 9 | Contested titles at peace | A won claim war grants the title (7.5), so it is no longer contested. A captured U2 march castle, if ever built, reverts. |
 
 ### 7.1 A foreign ally in a same-realm feud
 
@@ -290,15 +290,41 @@ So a marriage across the border creates claims across it, in both directions
 - A daughter of Maxwell weds Percy: Percy claims every seat Maxwell holds.
 
 Today none of these is ever pressed: `ClaimPressureCampaignBehavior` skips any pair whose clans
-are not in the same kingdom. **Decided: that gate will be lifted later, not now.** Lifting it on its
-own would be U5, because every claim war besieges and keeps the title's seat. It waits until a
-cross-border claim has a war that fits the scope in 7, item 1, most likely the U1 feud with no
-settlement goal (step 2 below). Null-kingdom rules are still open.
+are not in the same kingdom. **Decided: that gate will be lifted later, not now.** It is lifted
+once the win outcome and the title migration in 7.5 exist. A clan with no kingdom may press a claim
+too, so the `kingdom is null` skip goes with it.
 
-### 7.4 Build order
+**A Weak claim is pressable only when the current holder is a child or a woman** (decided
+2026-09-27). "Child" means under vanilla's age of majority. This applies to every Weak claim,
+same-realm ones included. So a bride's claim sleeps while her father or brother holds the seat.
+
+### 7.5 What a won claim war gives, and where the title goes
+
+Decided 2026-09-27:
+
+- **The winner takes the title and the de jure lands the defender held.** This is not built, even
+  within one realm. Today the attacker keeps only the main-goal seat it besieged. That siege counts
+  as occupation, so the title stays with the defender and is marked contested
+  (`AssignTitleUseCase`). The defender's other lands revert to him. `PrizeAward` is computed and
+  never used (S7).
+- **A title follows its holder's kingdom.** A lord cannot be the vassal of two kings, so a title won
+  across the border leaves its old realm's tree and joins the winner's. This also removes S3: a clan
+  never holds titles in both trees. Today a title's kingdom is fixed by the static tree
+  (`FeudalTitleKingdoms.GetTitleKingdom`), and a crown peace can already leave an English clan
+  holding a Scottish title (`OnMakePeace`).
+- **The title goes to the claimant who pressed it.** For now, the presser is always the claimant's own
+  clan, which has the forces to wage the war.
+- **Later, proxy claims:** a lord with forces presses the claim of someone in another clan, for
+  example a son's wife's claim. The title then goes to the claimant. If it ranks below the
+  supporter's own title, the claimant becomes the supporter's vassal. If it ranks the same, the
+  claimant would be independent of any kingdom (open).
+
+### 7.6 Build order
 
 1. **Done:** foreign supporters join through a bond, and never take fiefs.
-2. U1: a war with no settlement goal. This also unblocks claims on occupied seats, and cross-border
-   claims once the same-kingdom gate is lifted (7.3).
-3. The recovery claim.
-4. March castles (U2).
+2. The Weak-claim condition (7.3).
+3. The win outcome (7.5): grant the title and the defender's de jure lands. This fixes same-realm
+   wars too.
+4. Title migration into the winner's realm (7.5).
+5. Lift the same-kingdom gate, including clans with no kingdom (7.3).
+6. Later: the recovery claim (7.2), proxy claims, U1 raiding feuds, and march castles (U2).
