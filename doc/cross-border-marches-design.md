@@ -314,6 +314,15 @@ Decided 2026-09-27:
   holding a Scottish title (`OnMakePeace`).
 - **Where the won title attaches.** If it ranks below the winner's highest title, it goes under that
   title. Otherwise it goes directly under the winner's king.
+- **The de jure vassals follow their new lord.** Example: Percy wins a Scottish county.
+  - Percy takes the county and every de jure land of it that the defender held.
+  - A baron whose highest title is a barony under that county now has Percy as his lord, so his clan
+    moves to England. In the engine that is a kingdom change for the whole clan, fiefs included.
+  - A barony under that county held by a clan whose highest title lies elsewhere, such as another
+    Scottish count, stays with that clan. It does not change hands, and the clan stays in Scotland.
+  - So a clan's allegiance is decided by its highest title, and titles are resolved by holder, not
+    only by the static tree. Open edge case: a baron with baronies under two counts in different
+    realms is the S3 tie again, and needs a tiebreak.
 - **The title goes to the claimant who pressed it.** For now, the presser is always the claimant's own
   clan, which has the forces to wage the war.
 - **Later, proxy claims:** a lord with forces presses the claim of someone in another clan, for
