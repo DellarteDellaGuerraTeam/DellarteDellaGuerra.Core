@@ -8,18 +8,18 @@ namespace DellarteDellaGuerra.Domain.Titles
     {
         private readonly ITitleRepository _titleRepository;
         private readonly IFeudalStructure _feudalStructure;
-        private readonly IGetSuzerainUseCase _getSuzerainUseCase;
+        private readonly SuzeraintyPolicy _suzeraintyPolicy;
         private readonly IGenealogy _genealogy;
 
         public GetDirectVassalsUseCase(
             ITitleRepository titleRepository,
             IFeudalStructure feudalStructure,
-            IGetSuzerainUseCase getSuzerainUseCase,
+            SuzeraintyPolicy suzeraintyPolicy,
             IGenealogy genealogy)
         {
             _titleRepository = titleRepository;
             _feudalStructure = feudalStructure;
-            _getSuzerainUseCase = getSuzerainUseCase;
+            _suzeraintyPolicy = suzeraintyPolicy;
             _genealogy = genealogy;
         }
 
@@ -30,7 +30,7 @@ namespace DellarteDellaGuerra.Domain.Titles
                 .Select(title => _genealogy.GetHolderClanOf(title))
                 .Where(holderClanId => holderClanId != null && holderClanId != clanId)
                 .Distinct()
-                .Where(holderClanId => _getSuzerainUseCase.Execute(holderClanId!) == clanId)
+                .Where(holderClanId => _suzeraintyPolicy.GetSuzerain(holderClanId!) == clanId)
                 .Select(holderClanId => holderClanId!)
                 .ToList();
         }

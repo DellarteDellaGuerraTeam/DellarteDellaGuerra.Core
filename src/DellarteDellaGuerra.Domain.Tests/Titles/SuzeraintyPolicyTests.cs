@@ -3,7 +3,7 @@ using DellarteDellaGuerra.Domain.Titles.Model;
 
 namespace DellarteDellaGuerra.Domain.Tests.Titles
 {
-    public class GetSuzerainUseCaseTests
+    public class SuzeraintyPolicyTests
     {
         private static FakeFeudalStructure CreateStructure() => new FakeFeudalStructure()
             .AddTitle("kingdom_k", TitleRank.King)
@@ -18,7 +18,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             .AddHero("clan_baron", "clan_baron");
 
         [Fact]
-        public void Execute_ReturnsCount_ForBaron()
+        public void GetSuzerain_ReturnsCount_ForBaron()
         {
             var genealogy = CreateGenealogy();
             var titleRepository = new FakeTitleRepository(
@@ -27,13 +27,13 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 new Title("county_c", "County", TitleRank.Count, "s_c", "clan_count"),
                 new Title("barony_b", "Barony", TitleRank.Baron, "s_b", "clan_baron"))
             { Genealogy = genealogy };
-            var useCase = new GetSuzerainUseCase(titleRepository, CreateStructure(), genealogy);
+            var policy = new SuzeraintyPolicy(titleRepository, CreateStructure(), genealogy);
 
-            Assert.Equal("clan_count", useCase.Execute("clan_baron"));
+            Assert.Equal("clan_count", policy.GetSuzerain("clan_baron"));
         }
 
         [Fact]
-        public void Execute_SkipsVacantCounty_ReturnsDuke()
+        public void GetSuzerain_SkipsVacantCounty_ReturnsDuke()
         {
             var genealogy = CreateGenealogy();
             var titleRepository = new FakeTitleRepository(
@@ -42,13 +42,13 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 new Title("county_c", "County", TitleRank.Count, "s_c", null),
                 new Title("barony_b", "Barony", TitleRank.Baron, "s_b", "clan_baron"))
             { Genealogy = genealogy };
-            var useCase = new GetSuzerainUseCase(titleRepository, CreateStructure(), genealogy);
+            var policy = new SuzeraintyPolicy(titleRepository, CreateStructure(), genealogy);
 
-            Assert.Equal("clan_duke", useCase.Execute("clan_baron"));
+            Assert.Equal("clan_duke", policy.GetSuzerain("clan_baron"));
         }
 
         [Fact]
-        public void Execute_ReturnsKing_ForCountWithoutDuke()
+        public void GetSuzerain_ReturnsKing_ForCountWithoutDuke()
         {
             var genealogy = CreateGenealogy();
             var titleRepository = new FakeTitleRepository(
@@ -56,33 +56,33 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 new Title("duchy_d", "Duchy", TitleRank.Duke, "s_d", null),
                 new Title("county_c", "County", TitleRank.Count, "s_c", "clan_count"))
             { Genealogy = genealogy };
-            var useCase = new GetSuzerainUseCase(titleRepository, CreateStructure(), genealogy);
+            var policy = new SuzeraintyPolicy(titleRepository, CreateStructure(), genealogy);
 
-            Assert.Equal("clan_king", useCase.Execute("clan_count"));
+            Assert.Equal("clan_king", policy.GetSuzerain("clan_count"));
         }
 
         [Fact]
-        public void Execute_ReturnsNull_ForKing()
+        public void GetSuzerain_ReturnsNull_ForKing()
         {
             var genealogy = CreateGenealogy();
             var titleRepository = new FakeTitleRepository(
                 new Title("kingdom_k", "Kingdom", TitleRank.King, "s_k", "clan_king"))
             { Genealogy = genealogy };
-            var useCase = new GetSuzerainUseCase(titleRepository, CreateStructure(), genealogy);
+            var policy = new SuzeraintyPolicy(titleRepository, CreateStructure(), genealogy);
 
-            Assert.Null(useCase.Execute("clan_king"));
+            Assert.Null(policy.GetSuzerain("clan_king"));
         }
 
         [Fact]
-        public void Execute_ReturnsNull_ForUntitledClan()
+        public void GetSuzerain_ReturnsNull_ForUntitledClan()
         {
             var genealogy = CreateGenealogy();
             var titleRepository = new FakeTitleRepository(
                 new Title("kingdom_k", "Kingdom", TitleRank.King, "s_k", "clan_king"))
             { Genealogy = genealogy };
-            var useCase = new GetSuzerainUseCase(titleRepository, CreateStructure(), genealogy);
+            var policy = new SuzeraintyPolicy(titleRepository, CreateStructure(), genealogy);
 
-            Assert.Null(useCase.Execute("clan_untitled"));
+            Assert.Null(policy.GetSuzerain("clan_untitled"));
         }
 
         [Fact]
@@ -93,15 +93,15 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 new Title("duchy_d", "Duchy", TitleRank.Duke, "s_d", "clan_duke"),
                 new Title("county_c", "County", TitleRank.Count, "s_c", "clan_duke"))
             { Genealogy = genealogy };
-            var useCase = new GetSuzerainUseCase(titleRepository, CreateStructure(), genealogy);
+            var policy = new SuzeraintyPolicy(titleRepository, CreateStructure(), genealogy);
 
-            Assert.Equal(TitleRank.Duke, useCase.GetPrimaryTitle("clan_duke")?.Rank);
-            Assert.Null(useCase.GetPrimaryTitle("clan_untitled"));
+            Assert.Equal(TitleRank.Duke, policy.GetPrimaryTitle("clan_duke")?.Rank);
+            Assert.Null(policy.GetPrimaryTitle("clan_untitled"));
         }
 
         // county_x (clan_other) ── barony_x, listed first so an unpinned tie would pick it
         // county_c (clan_count) ── barony_b (clan_baron)
-        private static (GetSuzerainUseCase UseCase, FakeTitleRepository Titles) SetupTwoBaronies()
+        private static (SuzeraintyPolicy Policy, FakeTitleRepository Titles) SetupTwoBaronies()
         {
             var genealogy = CreateGenealogy().AddHero("clan_other", "clan_other");
             var structure = CreateStructure()
@@ -114,41 +114,41 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 new Title("county_c", "County", TitleRank.Count, "s_c", "clan_count"),
                 new Title("barony_b", "Barony", TitleRank.Baron, "s_b", "clan_baron"))
             { Genealogy = genealogy };
-            return (new GetSuzerainUseCase(titles, structure, genealogy), titles);
+            return (new SuzeraintyPolicy(titles, structure, genealogy), titles);
         }
 
         [Fact]
-        public void Execute_KeepsTheLiegeItServes_WhenItGainsATitleOfTheSameRank()
+        public void GetSuzerain_KeepsTheLiegeItServes_WhenItGainsATitleOfTheSameRank()
         {
-            var (useCase, titles) = SetupTwoBaronies();
-            Assert.Equal("clan_count", useCase.Execute("clan_baron"));
+            var (policy, titles) = SetupTwoBaronies();
+            Assert.Equal("clan_count", policy.GetSuzerain("clan_baron"));
 
             titles.SaveTitle(titles.GetTitle("barony_x")!.WithHolder("clan_baron"));
 
-            Assert.Equal("clan_count", useCase.Execute("clan_baron"));
+            Assert.Equal("clan_count", policy.GetSuzerain("clan_baron"));
         }
 
         [Fact]
-        public void Execute_ServesUnderAHigherTitle_WhenItGainsOne()
+        public void GetSuzerain_ServesUnderAHigherTitle_WhenItGainsOne()
         {
-            var (useCase, titles) = SetupTwoBaronies();
-            Assert.Equal("clan_count", useCase.Execute("clan_baron"));
+            var (policy, titles) = SetupTwoBaronies();
+            Assert.Equal("clan_count", policy.GetSuzerain("clan_baron"));
 
             titles.SaveTitle(titles.GetTitle("county_x")!.WithHolder("clan_baron"));
 
-            Assert.Equal("clan_duke", useCase.Execute("clan_baron"));
+            Assert.Equal("clan_duke", policy.GetSuzerain("clan_baron"));
         }
 
         [Fact]
-        public void Execute_ServesUnderItsOtherTitle_WhenItLosesThePrimaryOne()
+        public void GetSuzerain_ServesUnderItsOtherTitle_WhenItLosesThePrimaryOne()
         {
-            var (useCase, titles) = SetupTwoBaronies();
-            Assert.Equal("clan_count", useCase.Execute("clan_baron"));
+            var (policy, titles) = SetupTwoBaronies();
+            Assert.Equal("clan_count", policy.GetSuzerain("clan_baron"));
             titles.SaveTitle(titles.GetTitle("barony_x")!.WithHolder("clan_baron"));
 
             titles.SaveTitle(titles.GetTitle("barony_b")!.WithHolder(null));
 
-            Assert.Equal("clan_other", useCase.Execute("clan_baron"));
+            Assert.Equal("clan_other", policy.GetSuzerain("clan_baron"));
         }
     }
 }

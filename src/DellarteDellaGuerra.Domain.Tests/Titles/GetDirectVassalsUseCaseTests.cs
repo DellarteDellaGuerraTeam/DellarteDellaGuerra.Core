@@ -34,8 +34,8 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 new Title("county_2", "County 2", TitleRank.Count, "s_c2", "clan_count2"))
             { Genealogy = genealogy };
 
-            var getSuzerainUseCase = new GetSuzerainUseCase(_titleRepository, structure, genealogy);
-            _useCase = new GetDirectVassalsUseCase(_titleRepository, structure, getSuzerainUseCase, genealogy);
+            _useCase = new GetDirectVassalsUseCase(
+                _titleRepository, structure, new SuzeraintyPolicy(_titleRepository, structure, genealogy), genealogy);
         }
 
         [Fact]

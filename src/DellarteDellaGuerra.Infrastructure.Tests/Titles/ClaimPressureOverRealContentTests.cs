@@ -531,7 +531,7 @@ public class ClaimPressureOverRealContentTests
         private readonly InMemoryTitleRegistry _titles;
         private readonly InMemoryClaimRegistry _claimRegistry = new();
         private readonly IReadOnlyList<Claim> _claims;
-        private readonly GetSuzerainUseCase _suzerain;
+        private readonly SuzeraintyPolicy _suzerain;
         private readonly EvaluateClaimUseCase _evaluateClaim;
         private readonly EvaluatePressClaimUseCase _evaluatePressClaim = new();
         private readonly SolicitSupportUseCase _solicitSupport = new();
@@ -544,7 +544,7 @@ public class ClaimPressureOverRealContentTests
             _personalBond = new PersonalBondPolicy(genealogy);
             _titles = new InMemoryTitleRegistry(genealogy);
             _titles.Initialise(initialTitles);
-            _suzerain = new GetSuzerainUseCase(_titles, structure, genealogy);
+            _suzerain = new SuzeraintyPolicy(_titles, structure, genealogy);
             _evaluateClaim = new EvaluateClaimUseCase(_titles, genealogy);
             _claims = new GenerateBloodClaimsUseCase(_titles, _claimRegistry, genealogy).Execute();
         }
@@ -789,7 +789,7 @@ public class ClaimPressureOverRealContentTests
             BestClaimPerClaimant(title.Id)
                 .Where(claim => WeakClaimPolicy.IsPressable(claim.Strength, _genealogy.GetHero(title.HolderHeroId!)));
 
-        private string? Suzerain(string clanId) => _suzerain.Execute(clanId);
+        private string? Suzerain(string clanId) => _suzerain.GetSuzerain(clanId);
 
         private IReadOnlyDictionary<string, float> UniformStrength() =>
             _titles.GetAllTitles()

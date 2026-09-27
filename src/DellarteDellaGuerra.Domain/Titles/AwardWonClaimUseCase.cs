@@ -31,18 +31,18 @@ namespace DellarteDellaGuerra.Domain.Titles
         private readonly ITitleRepository _titleRepository;
         private readonly IFeudalStructure _feudalStructure;
         private readonly IGenealogy _genealogy;
-        private readonly IGetSuzerainUseCase _getSuzerainUseCase;
+        private readonly SuzeraintyPolicy _suzeraintyPolicy;
 
         public AwardWonClaimUseCase(
             ITitleRepository titleRepository,
             IFeudalStructure feudalStructure,
             IGenealogy genealogy,
-            IGetSuzerainUseCase getSuzerainUseCase)
+            SuzeraintyPolicy suzeraintyPolicy)
         {
             _titleRepository = titleRepository;
             _feudalStructure = feudalStructure;
             _genealogy = genealogy;
-            _getSuzerainUseCase = getSuzerainUseCase;
+            _suzeraintyPolicy = suzeraintyPolicy;
         }
 
         public WonClaimAward Execute(string titleId, string winnerClanId, string loserClanId)
@@ -55,7 +55,7 @@ namespace DellarteDellaGuerra.Domain.Titles
             if (winnerLeaderId is null) return new WonClaimAward(movedSeats, joiningClans);
 
             // Looked up before the award, so a won title of the same rank does not displace it.
-            Title? winnerPrimaryTitle = _getSuzerainUseCase.GetPrimaryTitle(winnerClanId);
+            Title? winnerPrimaryTitle = _suzeraintyPolicy.GetPrimaryTitle(winnerClanId);
 
             Award(titleId, winnerClanId, winnerLeaderId, loserClanId, movedSeats);
 
@@ -103,7 +103,7 @@ namespace DellarteDellaGuerra.Domain.Titles
                 .OfType<string>()
                 .Where(clanId => clanId != winnerClanId)
                 .Distinct()
-                .Where(clanId => _getSuzerainUseCase.GetPrimaryTitle(clanId) is { } primary
+                .Where(clanId => _suzeraintyPolicy.GetPrimaryTitle(clanId) is { } primary
                                  && subtree.Contains(primary.Id))
                 .ToList();
         }
