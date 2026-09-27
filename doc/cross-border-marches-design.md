@@ -280,9 +280,25 @@ skips the claim without saying so. Proposed model: two separate claims.
 - **Recovery claim on the seat**, pressed against the occupant. Only the title holder can press it,
   and the defender is chosen the D2 way (whoever occupies the seat).
 
-### 7.3 Build order
+### 7.3 Claims that marriage carries across the border
+
+A bride joins her husband's clan (vanilla `GetClanAfterMarriage`), and her blood claims go with her.
+So a marriage across the border creates claims across it, in both directions
+(`ClaimPressureOverRealContentTests`, the two `...WedsA...Lord...` tests):
+
+- Courtenay's daughter weds Maxwell: Maxwell claims Cornwall, Okehampton and St Michael's Mount.
+- A daughter of Maxwell weds Percy: Percy claims every seat Maxwell holds.
+
+Today none of these is ever pressed: `ClaimPressureCampaignBehavior` skips any pair whose clans
+are not in the same kingdom. **Decided: that gate will be lifted later, not now.** Lifting it on its
+own would be U5, because every claim war besieges and keeps the title's seat. It waits until a
+cross-border claim has a war that fits the scope in 7, item 1, most likely the U1 feud with no
+settlement goal (step 2 below). Null-kingdom rules are still open.
+
+### 7.4 Build order
 
 1. **Done:** foreign supporters join through a bond, and never take fiefs.
-2. U1: a war with no settlement goal. This also unblocks claims on occupied seats.
+2. U1: a war with no settlement goal. This also unblocks claims on occupied seats, and cross-border
+   claims once the same-kingdom gate is lifted (7.3).
 3. The recovery claim.
 4. March castles (U2).
