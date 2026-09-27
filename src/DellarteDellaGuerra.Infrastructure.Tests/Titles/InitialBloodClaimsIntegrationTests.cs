@@ -428,7 +428,7 @@ public class InitialBloodClaimsIntegrationTests
         var useCase = new GenerateBloodClaimsUseCase(titleRepository, claimRepository, genealogy);
 
         IReadOnlyList<Claim> claims = useCase.Execute();
-        Assert.Equal(ExpectedClaims, Project(claims));
+        Assert.Equal(ExpectedClaims.ReplaceLineEndings("\n"), Project(claims));
         // England's 97 titles and 53 houses, plus Scotland's 27 and 13 and the Isles' 17 and 13.
         // The Scottish holders are authored without kin, so they add no claims: every count
         // below, and the expected set above, is still England's alone.
