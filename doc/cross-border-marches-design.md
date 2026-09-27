@@ -214,7 +214,7 @@ issues a Grant). It also needs policy on sovereignty moving while the crowns are
 - `FeudalHierarchyOverRealContentTests` assumes a single `clan_lancaster` root. The Scotland work
   owns that update.
 
-## 6. (d) Open questions for you
+## 6. (d) Open questions for you (provisionally decided, see §7)
 
 1. **Scope:** is U1 + U3 (no cross-border capture in private wars) acceptable as the first cut? Or is
    taking a march castle (U2) essential to the feel you want?
@@ -236,3 +236,52 @@ issues a Grant). It also needs policy on sovereignty moving while the crowns are
    the defender's crown intervening?
 9. **Contested titles at peace (S4):** if any capture path is allowed, how does a contested title
    finalise without a crown `MakePeace`? Options: revert, private-war resolution, or never.
+
+## 7. Provisional decisions (2026-09-27)
+
+These answer §6 for the first cut. They can be reopened, but the code is built against them.
+
+| # | Question | Provisional answer |
+|---|---|---|
+| 1 | Scope | U1 + U3: a cross-border feud is a raiding feud. Towns and castles change hands across the border only in a crown war. Foreign **supporters** may still join a same-realm private war (see 7.1). |
+| 2 | March castles (U2) | Deferred to step 4. When built: a hand-tagged list, and a captured march castle always reverts at the end of the feud. Slighting is optional flavour. |
+| 3 | Towns | Never taken by private war. Berwick is not an exception. |
+| 4 | Defender identity | D1: the de jure title holder defends. An occupied seat is handled by a separate recovery claim (see 7.2). |
+| 5 | Automatic declaration | AI clans declare only on a claim or on bad blood. The player waits for a dedicated "press claim" path. |
+| 6 | Wardens | Flavour only, for now. |
+| 7 | Escalation | Never escalate automatically. A feud folds into a crown war only if the crowns go to war for other reasons. |
+| 8 | End rule for goal-less feuds | A fixed window, a "day of truce", that ends early if fatigue gets there first. |
+| 9 | Contested titles at peace | Moot while nothing is captured across the border. If step 4 lands, the castle reverts. |
+
+### 7.1 A foreign ally in a same-realm feud
+
+Case: two English lords fight a private war over a claim, and a Scottish clan allied to one of them
+joins without starting a war between the crowns.
+
+- **Who is asked.** Uncommitted clans from the war's own realm are asked, as before. So is any clan
+  whose leader has a **personal bond** with a principal's leader (`PersonalBondPolicy`). A bond is
+  close kin (a parent, a child, or a sibling through the father) or a relation of 50 or more. A
+  foreign clan with no bond is never asked.
+- **Who gets the fief.** A captured main goal always goes to the besieging side's **principal**
+  (`PrivateWarSyntheticCapturePolicy.GetCapturingClanId`), never to the supporter who led the siege.
+  Without this, a Scottish supporter leading the siege would carry the English seat into Scotland.
+  This also changes same-realm wars: a supporter from the same realm who leads the siege no longer
+  keeps the seat.
+
+### 7.2 The seat is occupied, and its occupant does not hold the title
+
+Today a claim can never be pressed in this case. `MainGoalSelector` only picks seats that the
+defender owns, so when the holder owns none it returns null, and `ClaimPressureCampaignBehavior`
+skips the claim without saying so. Proposed model: two separate claims.
+
+- **Claim on the title**, pressed against the holder. It has no main goal (a U1-style war) and ends
+  through fatigue or the truce window. It moves the title, not the seat.
+- **Recovery claim on the seat**, pressed against the occupant. Only the title holder can press it,
+  and the defender is chosen the D2 way (whoever occupies the seat).
+
+### 7.3 Build order
+
+1. **Done:** foreign supporters join through a bond, and never take fiefs.
+2. U1: a war with no settlement goal. This also unblocks claims on occupied seats.
+3. The recovery claim.
+4. March castles (U2).

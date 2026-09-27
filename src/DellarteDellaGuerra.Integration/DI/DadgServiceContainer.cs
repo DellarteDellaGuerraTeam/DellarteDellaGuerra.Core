@@ -168,6 +168,7 @@ public class DadgServiceContainer
         services.AddSingleton<IGetDeJureSettlementsUseCase, GetDeJureSettlementsUseCase>();
         services.AddSingleton<IEvaluatePressClaimUseCase, EvaluatePressClaimUseCase>();
         services.AddSingleton<ISolicitSupportUseCase, SolicitSupportUseCase>();
+        services.AddSingleton<IPersonalBondPolicy, PersonalBondPolicy>();
 
         // Campaign behaviour (resolved lazily in SubModule)
         services.AddSingleton<FeudalTitleCampaignBehavior>(sp => new FeudalTitleCampaignBehavior(
