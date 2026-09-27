@@ -55,6 +55,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         private readonly ISolicitSupportUseCase _solicitSupportUseCase;
         private readonly IPrivateWarDeclaration _privateWarDeclaration;
         private readonly ICadetBranch _cadetBranch;
+        private readonly IPersonalBondPolicy _personalBondPolicy;
 
         private Dictionary<string, float> _nextEvaluationDayByPair = new();
         private List<string> _serialisedCooldowns = new();
@@ -70,7 +71,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             IEvaluatePressClaimUseCase evaluatePressClaimUseCase,
             ISolicitSupportUseCase solicitSupportUseCase,
             IPrivateWarDeclaration privateWarDeclaration,
-            ICadetBranch cadetBranch)
+            ICadetBranch cadetBranch,
+            IPersonalBondPolicy personalBondPolicy)
         {
             _titleRepository = titleRepository;
             _claimRepository = claimRepository;
@@ -81,6 +83,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             _solicitSupportUseCase = solicitSupportUseCase;
             _privateWarDeclaration = privateWarDeclaration;
             _cadetBranch = cadetBranch;
+            _personalBondPolicy = personalBondPolicy;
 
             // Subscribed here and not in RegisterEvents, which runs once per campaign started
             // while this behaviour is a container singleton: loading a save, quitting to the
@@ -257,7 +260,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
          *  the two principals. Which houses those are is <see cref="SupportCandidacy"/>'s call.
          * </summary>
          */
-        private static IReadOnlyCollection<SupportCandidate> Candidates(
+        private IReadOnlyCollection<SupportCandidate> Candidates(
             IReadOnlyDictionary<string, Clan> clansById,
             Kingdom kingdom,
             Clan attackerClan,
@@ -278,7 +281,9 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             return SupportCandidacy
                 .Select(
                     eligibleClanIds,
-                    clanId => clansById[clanId].Kingdom == kingdom,
+                    clanId => clansById[clanId].Kingdom == kingdom
+                              || IsBonded(clansById[clanId].Leader, claimant)
+                              || IsBonded(clansById[clanId].Leader, defenderClan.Leader),
                     getSuzerain,
                     attackerSideId,
                     defenderClan.StringId)
@@ -309,6 +314,12 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
             return _privateWarDeclaration.IsBelligerent(defenderClan.StringId)
                    || (kingdom is not null && Kingdom.All.Any(other => other != kingdom && kingdom.IsAtWarWith(other)));
+        }
+
+        private bool IsBonded(Hero hero, Hero? principal)
+        {
+            return principal is not null
+                   && _personalBondPolicy.IsBonded(hero.StringId, principal.StringId, GetRelation(hero, principal));
         }
 
         private static float GetRelation(Hero? claimant, Hero? holder)
