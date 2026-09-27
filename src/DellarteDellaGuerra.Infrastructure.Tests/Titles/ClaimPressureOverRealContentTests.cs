@@ -294,12 +294,73 @@ public class ClaimPressureOverRealContentTests
         Assert.Equal((52f, 1f), content.SidesAfter(middleham, crownsCall));
     }
 
+    [Fact]
+    [Trait("Category", "DADG content integration")]
+    public void NoForeignHouseIsKinToAnEnglishLeaderSoOnlyFriendshipCallsOneAcrossTheBorder()
+    {
+        // The content authors three realms, and not one clan leader in any of them is the parent,
+        // child or sibling of a leader in another. Kin never carries a call to arms across a
+        // border at the start of a campaign, so with no relations in play every English war asks
+        // English houses only, as it did before bonds existed. A foreign house joins an English
+        // feud only once its leader has made a friend of a principal, which is runtime state.
+        Content content = Content.Load();
+        ILookup<string, string> realms = content.Realms();
+
+        Assert.Equal(
+            new[] { ("clan_lancaster", 53), ("clan_macdonald_isles", 13), ("clan_stewart", 13) },
+            realms.Select(realm => (realm.Key, realm.Count())).OrderBy(realm => realm.Key));
+
+        Assert.All(
+            realms,
+            realm => Assert.All(
+                realm,
+                clanId => Assert.All(
+                    realms.Where(other => other.Key != realm.Key).SelectMany(other => other),
+                    foreignClanId => Assert.False(content.IsBonded(clanId, foreignClanId, 0f)))));
+
+        string[] english = realms["clan_lancaster"].ToArray();
+        Assert.All(
+            content.Opportunities().Where(o => english.Contains(o.DefenderClanId)),
+            o => Assert.All(content.Candidates(o), clanId => Assert.Contains(clanId, english)));
+    }
+
+    [Fact]
+    [Trait("Category", "DADG content integration")]
+    public void AScottishFriendOfTheClaimantRidesToAnEnglishFeud()
+    {
+        // Stafford presses his strong claim on Cheshire against Woodville, three houses against
+        // two. Maxwell is a Border house under the Stewart crown and has no part in it, until
+        // his leader counts Stafford's leader a firm friend: then he is asked, he answers for the
+        // claimant, and the claimant rides with four. One point short of friendship and he is not
+        // even asked, because a house of another crown is nobody's to call on.
+        const string maxwell = "clan_maxwell";
+
+        Content content = Content.Load();
+        ClaimOpportunity cheshire = content.Opportunity("county_cheshire", "clan_stafford");
+
+        Assert.DoesNotContain(maxwell, content.Candidates(cheshire));
+        Assert.DoesNotContain(maxwell, content.Candidates(cheshire, Befriended(maxwell, 49f)));
+
+        SupportDecision support = content.Solicit(cheshire, Befriended(maxwell, 50f));
+
+        Assert.Equal(new[] { maxwell }, support.AttackerSupporters);
+        Assert.DoesNotContain(maxwell, support.DefenderSupporters);
+        Assert.Equal((4f, 2f), content.SidesAfter(cheshire, support));
+    }
+
+    private static Relations Befriended(string clanId, float toClaimant) =>
+        candidate => candidate == clanId ? (toClaimant, 0f) : (0f, 0f);
+
     /// <summary>
     /// The real content wired through the production adapters, with the campaign behaviour's
     /// candidate selection replicated over it.
     /// </summary>
+    private delegate (float ToClaimant, float ToHolder) Relations(string clanId);
+
     private sealed class Content
     {
+        private static readonly Relations NoRelations = _ => (0f, 0f);
+
         private static readonly string[] None = Array.Empty<string>();
 
         // ClaimPressureCampaignBehavior.UnfoundedCadetBranch, which is private to it.
@@ -314,11 +375,13 @@ public class ClaimPressureOverRealContentTests
         private readonly EvaluateClaimUseCase _evaluateClaim;
         private readonly EvaluatePressClaimUseCase _evaluatePressClaim = new();
         private readonly SolicitSupportUseCase _solicitSupport = new();
+        private readonly PersonalBondPolicy _personalBond;
 
         private Content(DadgXmlGenealogy genealogy, XmlFeudalStructure structure, IReadOnlyList<Title> initialTitles)
         {
             _genealogy = genealogy;
             _structure = structure;
+            _personalBond = new PersonalBondPolicy(genealogy);
             _titles = new InMemoryTitleRegistry(genealogy);
             _titles.Initialise(initialTitles);
             _suzerain = new GetSuzerainUseCase(_titles, structure, genealogy);
@@ -440,15 +503,23 @@ public class ClaimPressureOverRealContentTests
 
         /// <summary>
         /// Both calls to arms, sent round the realm on the hierarchy-only pricing exactly as the
-        /// behaviour sends them. Relation is nought throughout, it being runtime state, so what
-        /// answers here is what the claim and the odds alone are worth.
+        /// behaviour sends them. Relation is runtime state, so it is nought unless a test supplies
+        /// it: with none, what answers here is what the claim and the odds alone are worth.
         /// </summary>
-        public SupportDecision Solicit(ClaimOpportunity opportunity) =>
-            _solicitSupport.Execute(
+        public SupportDecision Solicit(ClaimOpportunity opportunity, Relations? relations = null)
+        {
+            relations ??= NoRelations;
+
+            return _solicitSupport.Execute(
                 opportunity,
-                Candidates(opportunity)
-                    .Select(clanId => new SupportCandidate(clanId, Allegiance(opportunity, clanId), 0f, 0f))
+                Candidates(opportunity, relations)
+                    .Select(clanId => new SupportCandidate(
+                        clanId,
+                        Allegiance(opportunity, clanId),
+                        relations(clanId).ToClaimant,
+                        relations(clanId).ToHolder))
                     .ToList());
+        }
 
         /// <summary>The two totals re-summed once the answers are in.</summary>
         public (float Attacker, float Defender) SidesAfter(ClaimOpportunity opportunity, SupportDecision support) =>
@@ -484,14 +555,35 @@ public class ClaimPressureOverRealContentTests
         /// <summary>
         /// Every house the calls to arms go out to, both principals excepted: a house the chains
         /// already commit is always asked, an uncommitted one only if it belongs to the defender's
-        /// realm. The content has several realm roots, and a house of another crown is nobody's
-        /// to call on in a war it has no part in.
+        /// realm or its leader has a personal bond with a principal's leader. The content has
+        /// several realm roots, and a house of another crown is nobody's to call on in a war it
+        /// has no part in unless it is kin or a friend.
         /// </summary>
-        public IEnumerable<string> Candidates(ClaimOpportunity opportunity) =>
-            UniformStrength().Keys
+        /// <remarks>
+        /// The behaviour tests the bond against the pretender when there is one; the content
+        /// opportunities do not carry him, so the claimant clan's leader stands in for him.
+        /// </remarks>
+        public IEnumerable<string> Candidates(ClaimOpportunity opportunity, Relations? relations = null)
+        {
+            relations ??= NoRelations;
+
+            return UniformStrength().Keys
                 .Where(clanId => clanId != opportunity.AttackerClanId && clanId != opportunity.DefenderClanId)
                 .Where(clanId =>
-                    SideOf(opportunity, clanId) is not null || Realm(clanId) == Realm(opportunity.DefenderClanId));
+                    SideOf(opportunity, clanId) is not null
+                    || Realm(clanId) == Realm(opportunity.DefenderClanId)
+                    || IsBonded(clanId, opportunity.AttackerClanId, relations(clanId).ToClaimant)
+                    || IsBonded(clanId, opportunity.DefenderClanId, relations(clanId).ToHolder));
+        }
+
+        /// <summary>Whether two houses' leaders are bonded, as the behaviour asks it of each candidate.</summary>
+        public bool IsBonded(string clanId, string principalClanId, float relation) =>
+            _genealogy.GetClanLeaderId(clanId) is { } leaderId
+            && _genealogy.GetClanLeaderId(principalClanId) is { } principalId
+            && _personalBond.IsBonded(leaderId, principalId, relation);
+
+        /// <summary>Every house of the content, grouped under the root of its suzerain chain.</summary>
+        public ILookup<string, string> Realms() => UniformStrength().Keys.ToLookup(Realm);
 
         /// <summary>The house at the top of a house's suzerain chain.</summary>
         private string Realm(string clanId)
