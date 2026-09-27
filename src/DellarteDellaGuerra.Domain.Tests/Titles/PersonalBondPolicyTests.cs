@@ -9,7 +9,9 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             .AddHero("father", "clan_a", childIds: new[] { "son", "brother" })
             .AddHero("son", "clan_b", fatherId: "father")
             .AddHero("brother", "clan_c", fatherId: "father")
-            .AddHero("stranger", "clan_d"));
+            .AddHero("wife", "clan_e", isFemale: true)
+            .AddHero("stranger", "clan_d")
+            .Married("son", "wife"));
 
         [Fact]
         public void A_Parent_Is_Bonded_To_His_Child()
@@ -30,15 +32,36 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         }
 
         [Fact]
-        public void A_Firm_Friend_Is_Bonded()
+        public void Spouses_Are_Bonded()
         {
-            Assert.True(_policy.IsBonded("stranger", "son", 50f));
+            Assert.True(_policy.IsBonded("son", "wife", 0f));
+            Assert.True(_policy.IsBonded("wife", "son", 0f));
         }
 
         [Fact]
-        public void A_Stranger_Short_Of_Friendship_Is_Not_Bonded()
+        public void A_Father_In_Law_Is_Bonded_Both_Ways()
         {
-            Assert.False(_policy.IsBonded("stranger", "son", 49f));
+            Assert.True(_policy.IsBonded("wife", "father", 0f));
+            Assert.True(_policy.IsBonded("father", "wife", 0f));
+        }
+
+        [Fact]
+        public void A_Sibling_In_Law_Is_Bonded_Both_Ways()
+        {
+            Assert.True(_policy.IsBonded("wife", "brother", 0f));
+            Assert.True(_policy.IsBonded("brother", "wife", 0f));
+        }
+
+        [Fact]
+        public void A_Firm_Friend_Is_Bonded()
+        {
+            Assert.True(_policy.IsBonded("stranger", "son", 51f));
+        }
+
+        [Fact]
+        public void A_Relation_Of_Exactly_50_Is_Not_Yet_Friendship()
+        {
+            Assert.False(_policy.IsBonded("stranger", "son", 50f));
         }
 
         [Fact]
@@ -55,7 +78,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         public void An_Unknown_Hero_Is_Bonded_Only_By_Friendship()
         {
             Assert.False(_policy.IsBonded("ghost", "son", 0f));
-            Assert.True(_policy.IsBonded("ghost", "son", 50f));
+            Assert.True(_policy.IsBonded("ghost", "son", 51f));
         }
     }
 }
