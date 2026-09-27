@@ -245,7 +245,7 @@ These answer §6 for the first cut. They can be reopened, but the code is built 
 |---|---|---|
 | 1 | Scope | **Revised 2026-09-27:** a cross-border claim is pressed like any other claim. If the claimant wins, it takes the title and the de jure lands the defender held (U5, see 7.5). A raiding feud with no settlement goal (U1) is a possible later feature, not a prerequisite. Foreign **supporters** may still join a same-realm private war (see 7.1). |
 | 2 | March castles (U2) | Deferred (7.6, step 6). When built: a hand-tagged list, and a captured march castle always reverts at the end of the feud. Slighting is optional flavour. |
-| 3 | Towns | Never taken by private war. Berwick is not an exception. |
+| 3 | Towns | **Superseded 2026-09-27 by 1.** This only ever meant towns *across the border*, following Berwick. A won claim war now takes the defender's de jure lands, towns included, on either side of the border. |
 | 4 | Defender identity | D1: the de jure title holder defends. An occupied seat is handled by a separate recovery claim (see 7.2). |
 | 5 | Automatic declaration | AI clans declare only on a claim or on bad blood. The player waits for a dedicated "press claim" path. |
 | 6 | Wardens | Flavour only, for now. |
@@ -312,12 +312,14 @@ Decided 2026-09-27:
   never holds titles in both trees. Today a title's kingdom is fixed by the static tree
   (`FeudalTitleKingdoms.GetTitleKingdom`), and a crown peace can already leave an English clan
   holding a Scottish title (`OnMakePeace`).
+- **Where the won title attaches.** If it ranks below the winner's highest title, it goes under that
+  title. Otherwise it goes directly under the winner's king.
 - **The title goes to the claimant who pressed it.** For now, the presser is always the claimant's own
   clan, which has the forces to wage the war.
 - **Later, proxy claims:** a lord with forces presses the claim of someone in another clan, for
   example a son's wife's claim. The title then goes to the claimant. If it ranks below the
-  supporter's own title, the claimant becomes the supporter's vassal. If it ranks the same, the
-  claimant would be independent of any kingdom (open).
+  supporter's highest title, the claimant becomes the supporter's vassal. If it ranks the same or
+  higher, the claimant becomes a vassal of the supporter's king.
 
 ### 7.6 Build order
 
