@@ -37,8 +37,6 @@ namespace DellarteDellaGuerra.Domain.Titles
             return null;
         }
 
-        public TitleRank? GetHighestRank(string clanId) => GetPrimaryTitle(clanId)?.Rank;
-
         // The title a clan serves under: its highest. On a tie it keeps the one it already
         // served under, so gaining a title of the same rank does not change its liege.
         public Title? GetPrimaryTitle(string clanId)

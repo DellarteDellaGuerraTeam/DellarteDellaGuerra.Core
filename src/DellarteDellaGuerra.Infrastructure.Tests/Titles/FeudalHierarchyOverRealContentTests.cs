@@ -240,7 +240,7 @@ public class FeudalHierarchyOverRealContentTests
 
         public string? Suzerain(string clanId) => _suzerain.Execute(clanId);
 
-        public TitleRank? HighestRank(string clanId) => _suzerain.GetHighestRank(clanId);
+        public TitleRank? HighestRank(string clanId) => _suzerain.GetPrimaryTitle(clanId)?.Rank;
 
         public IReadOnlyList<string> DirectVassals(string clanId) => _directVassals.Execute(clanId);
 
