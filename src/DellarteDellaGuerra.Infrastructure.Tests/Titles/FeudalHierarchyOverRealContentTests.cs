@@ -83,7 +83,7 @@ public class FeudalHierarchyOverRealContentTests
         // exactly one liege, and the three kings are named by none, which is the same statement
         // as "the chains form one tree per realm" arrived at the other way round. England's tree
         // is unchanged by the other two: seventeen houses answer straight to Lancaster, and
-        // sixteen of England's houses have vassals of their own.
+        // seventeen of England's houses have vassals of their own.
         Content content = Content.Load();
         IReadOnlyList<string> holdingClans = content.HoldingClans();
         string[] kings = { Crown, ScottishCrown, IslesCrown };
@@ -92,7 +92,7 @@ public class FeudalHierarchyOverRealContentTests
         IReadOnlyList<string> england = content.HoldingClansUnder("kingdom_england");
 
         Assert.Equal(17, vassalsByLiege[Crown].Count);
-        Assert.Equal(16, vassalsByLiege.Count(entry => england.Contains(entry.Key) && entry.Value.Count > 0));
+        Assert.Equal(17, vassalsByLiege.Count(entry => england.Contains(entry.Key) && entry.Value.Count > 0));
 
         foreach (string clanId in holdingClans)
         {
@@ -139,6 +139,27 @@ public class FeudalHierarchyOverRealContentTests
         // barony sits under a Percy county, so Clifford answers to Percy and Percy to the king.
         Assert.Equal("clan_percy", content.Suzerain("clan_clifford"));
         Assert.Equal(Crown, content.Suzerain("clan_percy"));
+    }
+
+    [Fact]
+    [Trait("Category", "DADG content integration")]
+    public void AHouseTornBetweenTwoEqualDignitiesAnswersForTheOneItHasHeldLongest()
+    {
+        // Every held title is dated, so a tie on rank falls to tenure rather than to where the
+        // title happens to sit in the file. De la Pole were earls of Suffolk from 1385 but of
+        // Lincoln only from 1467: they answer to Norfolk, not York. Willoughby's two baronies are
+        // the setting's own pairing, dated so that they go to the otherwise vassal-less de Vere.
+        Content content = Content.Load();
+
+        Assert.All(
+            content.AllTitles().Where(title => title.HolderHeroId is not null),
+            title => Assert.True(title.HeldSinceDay > 0f, $"{title.Id} has no heldSince year"));
+
+        Assert.Equal("county_suffolk", content.PrimaryTitleId("clan_de_la_pole"));
+        Assert.Equal("clan_mowbray", content.Suzerain("clan_de_la_pole"));
+
+        Assert.Equal("barony_donnington", content.PrimaryTitleId("clan_willoughby"));
+        Assert.Equal("clan_de_vere", content.Suzerain("clan_willoughby"));
     }
 
     [Fact]
@@ -241,6 +262,8 @@ public class FeudalHierarchyOverRealContentTests
         public string? Suzerain(string clanId) => _suzerain.GetSuzerain(clanId);
 
         public TitleRank? HighestRank(string clanId) => _suzerain.GetPrimaryTitle(clanId)?.Rank;
+
+        public string? PrimaryTitleId(string clanId) => _suzerain.GetPrimaryTitle(clanId)?.Id;
 
         public IReadOnlyList<string> DirectVassals(string clanId) => _directVassals.Execute(clanId);
 

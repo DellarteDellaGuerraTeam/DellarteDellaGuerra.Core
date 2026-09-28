@@ -10,7 +10,7 @@ public class XmlFeudalStructureTests
         """
         <Feudalism>
           <Kingdom id="kingdom_england" name="England" kingClanId="clan_lancaster">
-            <Duchy id="duchy_york" name="Duchy of York" seat="town_york" holderClanId="clan_york">
+            <Duchy id="duchy_york" name="Duchy of York" seat="town_york" holderClanId="clan_york" heldSince="1385">
               <County id="county_richmond" name="County of Richmond" seat="town_richmond" holderClanId="clan_neville">
                 <Barony id="barony_middleham" name="Barony of Middleham" seat="castle_middleham"/>
               </County>
@@ -134,5 +134,15 @@ public class XmlFeudalStructureTests
         Assert.Equal(TitleRank.Baron, barony.Rank);
         Assert.Equal("castle_middleham", barony.SeatSettlementId);
         Assert.Null(_genealogy.GetHolderClanOf(barony));
+    }
+
+    [Fact]
+    public void ShouldDateTheInitialHolderFromTheConfiguredYear()
+    {
+        IReadOnlyList<Title> titles = _feudalStructure.BuildInitialTitles(_genealogy);
+
+        // 84 days a year on the default campaign calendar, the scale CampaignTime.Now.ToDays uses.
+        Assert.Equal(1385f * 84, titles.Single(title => title.Id == "duchy_york").HeldSinceDay);
+        Assert.Equal(0f, titles.Single(title => title.Id == "county_richmond").HeldSinceDay);
     }
 }

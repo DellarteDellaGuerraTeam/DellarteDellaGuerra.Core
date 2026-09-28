@@ -25,7 +25,10 @@ namespace DellarteDellaGuerra.Domain.Titles.Model
         public string? OccupantClanId { get; private init; }
         public float? ContestedSinceDay { get; private init; }
 
-        /// <summary>A title as the campaign starts: its ledger opens with the holder on day 0.</summary>
+        /// <summary>
+        /// A title as the campaign starts: its ledger opens with the holder on heldSinceDay,
+        /// the day their house took the title (day 0 when unknown).
+        /// </summary>
         public Title(
             string id,
             string name,
@@ -33,9 +36,10 @@ namespace DellarteDellaGuerra.Domain.Titles.Model
             string seatSettlementId,
             string? holderHeroId,
             string? occupantClanId = null,
-            float? contestedSinceDay = null)
+            float? contestedSinceDay = null,
+            float heldSinceDay = 0f)
             : this(id, name, rank, seatSettlementId,
-                new[] { new TitleHolder(holderHeroId, 0f, TitleAcquisition.Initial) },
+                new[] { new TitleHolder(holderHeroId, heldSinceDay, TitleAcquisition.Initial) },
                 occupantClanId, contestedSinceDay)
         {
         }

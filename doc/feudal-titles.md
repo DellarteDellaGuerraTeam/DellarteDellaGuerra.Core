@@ -87,11 +87,33 @@ Rules enforced by the parser (`FeudalStructureParser.cs`):
 - `seat` (a settlement `StringId`) is optional but must be unique when present.
 - The initial holder attribute is `kingClanId` on `Kingdom` and `holderClanId` on every other
   rank; both are optional (the title starts vacant).
+- `heldSince` is the optional year the holder's house took the title; it must be a plain
+  integer, and an invalid value throws.
 - `name` defaults to the `id` when omitted.
 
 `XmlFeudalStructure.BuildInitialTitles(IGenealogy)` turns the configured tree into the initial
 `Title` records used to seed a new campaign. The config names a *clan*, but a title is held by a
-hero, so each configured clan is resolved to its head at seed time.
+hero, so each configured clan is resolved to its head at seed time. The ledger's opening entry is
+dated `heldSince × 84` (the default calendar's days per year, the scale of
+`CampaignTime.Now.ToDays`), or day 0 when no year is given. Every title gained in play is
+therefore newer than every configured one.
+
+The shipped config dates every held title. The date only matters where a house's top titles tie
+on rank: the oldest is its primary title and so picks its liege. Years are historical where the
+house really held the dignity or seat. Where the setting pairs a house with a title it never
+held, the year is invented, chosen so that the tie sends the house to the less-burdened liege.
+The ties that change a liege:
+
+| House | Tied titles (year) | Primary | Liege |
+|---|---|---|---|
+| de la Pole | Suffolk (1385), Lincoln (1467) | Suffolk | Mowbray |
+| Talbot | Hallamshire (1409, Furnival), Shropshire (1442) | Hallamshire | York |
+| Hastings | Nottingham (1461), Liverpool (1464) | Nottingham | Talbot (Lancaster already has 17) |
+| Willoughby | Donnington (1440), Tattershall (1456) | Donnington | de Vere (otherwise no vassals) |
+| Harrington | Barnard (1445), Taunton (1460) | Barnard | Neville of Raby (a 3–3 wash with Holland) |
+
+Saves started before `heldSince` existed keep their day-0 ledgers; the dates only apply to new
+campaigns.
 
 ## Gameplay mechanics
 

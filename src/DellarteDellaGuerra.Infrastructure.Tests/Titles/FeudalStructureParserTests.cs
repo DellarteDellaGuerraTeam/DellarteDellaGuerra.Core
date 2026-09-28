@@ -10,7 +10,7 @@ public class FeudalStructureParserTests
         """
         <Feudalism>
           <Kingdom id="kingdom_england" name="England" seat="town_london" kingClanId="clan_lancaster">
-            <Duchy id="duchy_york" name="Duchy of York" seat="town_york" holderClanId="clan_york">
+            <Duchy id="duchy_york" name="Duchy of York" seat="town_york" holderClanId="clan_york" heldSince="1385">
               <County id="county_richmond" name="County of Richmond" seat="town_richmond" holderClanId="clan_neville">
                 <Barony id="barony_middleham" name="Barony of Middleham" seat="castle_middleham" holderClanId="clan_neville_cadet"/>
               </County>
@@ -47,6 +47,22 @@ public class FeudalStructureParserTests
         FeudalTitleNode duchy = kingdom.Children[0];
         Assert.Equal("duchy_york", duchy.TitleId);
         Assert.Equal("clan_york", duchy.InitialHolderClanId);
+        Assert.Equal(1385, duchy.InitialHeldSinceYear);
+        Assert.Null(kingdom.InitialHeldSinceYear);
+    }
+
+    [Fact]
+    public void ShouldThrowOnInvalidHeldSinceYear()
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() => FeudalStructureParser.Parse(
+            """
+            <Feudalism>
+              <Kingdom id="kingdom_england" kingClanId="clan_lancaster" heldSince="c. 1399"/>
+            </Feudalism>
+            """));
+
+        Assert.Contains("heldSince", exception.Message);
+        Assert.Contains("kingdom_england", exception.Message);
     }
 
     [Fact]

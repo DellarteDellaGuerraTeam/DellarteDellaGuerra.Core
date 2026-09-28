@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Xml.Linq;
 using DellarteDellaGuerra.Domain.Titles.Model;
@@ -15,15 +16,16 @@ namespace DellarteDellaGuerra.Infrastructure.Titles;
  * Expected schema:
  * <code>
  * &lt;Feudalism&gt;
- *   &lt;Kingdom id="..." name="..." seat="..." kingClanId="..."&gt;
- *     &lt;Duchy id="..." name="..." seat="..." holderClanId="..."&gt;
- *       &lt;County id="..." name="..." seat="..." holderClanId="..."&gt;
- *         &lt;Barony id="..." name="..." seat="..." holderClanId="..."/&gt;
+ *   &lt;Kingdom id="..." name="..." seat="..." kingClanId="..." heldSince="..."&gt;
+ *     &lt;Duchy id="..." name="..." seat="..." holderClanId="..." heldSince="..."&gt;
+ *       &lt;County id="..." name="..." seat="..." holderClanId="..." heldSince="..."&gt;
+ *         &lt;Barony id="..." name="..." seat="..." holderClanId="..." heldSince="..."/&gt;
  *       &lt;/County&gt;
  *     &lt;/Duchy&gt;
  *   &lt;/Kingdom&gt;
  * &lt;/Feudalism&gt;
  * </code>
+ * heldSince is the optional year the holder's house took the title.
  * </summary>
  */
 public static class FeudalStructureParser
@@ -33,6 +35,7 @@ public static class FeudalStructureParser
     private const string SeatAttribute = "seat";
     private const string HolderClanIdAttribute = "holderClanId";
     private const string KingClanIdAttribute = "kingClanId";
+    private const string HeldSinceAttribute = "heldSince";
 
     internal static IReadOnlyList<FeudalTitleNode> Parse(string xml)
     {
@@ -85,6 +88,7 @@ public static class FeudalStructureParser
 
         string holderAttribute = rank == TitleRank.King ? KingClanIdAttribute : HolderClanIdAttribute;
         string? initialHolderClanId = element.Attribute(holderAttribute)?.Value;
+        int? initialHeldSinceYear = ParseHeldSinceYear(element, titleId);
 
         var children = new List<FeudalTitleNode>();
         foreach (XElement child in element.Elements())
@@ -92,7 +96,21 @@ public static class FeudalStructureParser
             children.Add(ParseTitleElement(child, seenTitleIds, seenSeats));
         }
 
-        return new FeudalTitleNode(titleId, name, rank, seatSettlementId, initialHolderClanId, children);
+        return new FeudalTitleNode(
+            titleId, name, rank, seatSettlementId, initialHolderClanId, children, initialHeldSinceYear);
+    }
+
+    private static int? ParseHeldSinceYear(XElement element, string titleId)
+    {
+        string? value = element.Attribute(HeldSinceAttribute)?.Value;
+        if (value is null) return null;
+        if (!int.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out int year))
+        {
+            throw new InvalidOperationException(
+                $"Invalid '{HeldSinceAttribute}' year '{value}' on title '{titleId}' in the feudal titles configuration");
+        }
+
+        return year;
     }
 
     private static TitleRank ParseRank(XElement element)

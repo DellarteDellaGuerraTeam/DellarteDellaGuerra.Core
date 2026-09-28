@@ -14,4 +14,5 @@ internal sealed record FeudalTitleNode(
     TitleRank Rank,
     string SeatSettlementId,
     string? InitialHolderClanId,
-    IReadOnlyList<FeudalTitleNode> Children);
+    IReadOnlyList<FeudalTitleNode> Children,
+    int? InitialHeldSinceYear = null);

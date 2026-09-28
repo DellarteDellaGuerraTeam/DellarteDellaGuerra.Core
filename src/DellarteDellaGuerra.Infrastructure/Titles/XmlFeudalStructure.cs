@@ -15,6 +15,10 @@ public class XmlFeudalStructure : IFeudalStructure
 {
     private static readonly IReadOnlyList<string> NoVassals = new List<string>();
 
+    // The default campaign calendar (4 seasons of 21 days), on which campaign days are counted
+    // from year 0, so a configured year lands on the same scale as CampaignTime.Now.ToDays.
+    private const int DaysInYear = 84;
+
     private readonly Dictionary<string, FeudalTitleNode> _nodesByTitleId = new Dictionary<string, FeudalTitleNode>();
     private readonly Dictionary<string, string> _parentTitleIdByTitleId = new Dictionary<string, string>();
     private readonly Dictionary<string, string> _titleIdBySeatSettlementId = new Dictionary<string, string>();
@@ -116,7 +120,8 @@ public class XmlFeudalStructure : IFeudalStructure
     /**
      * <summary>
      * Builds the initial titles from the configured hierarchy,
-     * each held by the leader of its configured initial holder clan, if any.
+     * each held by the leader of its configured initial holder clan, if any,
+     * since the configured year (day 0 when none is given).
      * </summary>
      */
     public IReadOnlyList<Title> BuildInitialTitles(IGenealogy genealogy)
@@ -128,7 +133,10 @@ public class XmlFeudalStructure : IFeudalStructure
             string? holderHeroId = node.InitialHolderClanId is { } clanId
                 ? genealogy.GetClanLeaderId(clanId)
                 : null;
-            titles.Add(new Title(node.TitleId, node.Name, node.Rank, node.SeatSettlementId, holderHeroId));
+            float heldSinceDay = (node.InitialHeldSinceYear ?? 0) * DaysInYear;
+            titles.Add(new Title(
+                node.TitleId, node.Name, node.Rank, node.SeatSettlementId, holderHeroId,
+                heldSinceDay: heldSinceDay));
         }
 
         return titles;
