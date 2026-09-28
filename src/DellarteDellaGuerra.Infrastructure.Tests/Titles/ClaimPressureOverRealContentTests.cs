@@ -589,7 +589,7 @@ public class ClaimPressureOverRealContentTests
         public string? Holder(string titleId) => _titles.GetTitle(titleId)?.HolderHeroId;
 
         public IReadOnlyList<SuccessionResult> ExecuteSuccession(string deceasedHeroId) =>
-            new ExecuteSuccessionUseCase(_titles, _genealogy, new SilentLoggerFactory()).Execute(deceasedHeroId);
+            new ExecuteSuccessionUseCase(_titles, _genealogy, new SilentLoggerFactory()).Execute(deceasedHeroId, 0f);
 
         public IOrderedEnumerable<string> TitlesHeldBy(string clanId) =>
             _titles.GetAllTitles()

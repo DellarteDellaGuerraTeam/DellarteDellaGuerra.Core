@@ -258,7 +258,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             if (winner?.Leader is null) return;
 
             WonClaimAward award = _awardWonClaimUseCase.Execute(
-                conclusion.TitleId, conclusion.AttackerClanId, conclusion.DefenderClanId);
+                conclusion.TitleId, conclusion.AttackerClanId, conclusion.DefenderClanId, (float)CampaignTime.Now.ToDays);
 
             foreach (string seatId in award.MovedSeatIds)
             {

@@ -26,7 +26,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 .AddHero("younger_son", "clan_holder", age: 30f)
                 .AddHero("daughter", "clan_holder", isFemale: true, age: 45f);
 
-            UseCase(titleRepository, genealogy).Execute("holder");
+            UseCase(titleRepository, genealogy).Execute("holder", 10f);
 
             Assert.Equal("eldest_son", titleRepository.GetTitle("county_a")!.HolderHeroId);
         }
@@ -40,7 +40,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 .AddHero("elder_daughter", "clan_holder", isFemale: true, age: 30f)
                 .AddHero("younger_daughter", "clan_holder", isFemale: true, age: 20f);
 
-            UseCase(titleRepository, genealogy).Execute("holder");
+            UseCase(titleRepository, genealogy).Execute("holder", 10f);
 
             Assert.Equal("elder_daughter", titleRepository.GetTitle("county_a")!.HolderHeroId);
         }
@@ -60,7 +60,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 .AddHero("elder_daughter", "clan_holder", isFemale: true, age: 22f)
                 .AddHero("younger_daughter", "clan_holder", isFemale: true, age: 18f);
 
-            UseCase(titleRepository, genealogy).Execute("holder");
+            UseCase(titleRepository, genealogy).Execute("holder", 10f);
 
             Assert.Equal("elder_daughter", titleRepository.GetTitle("county_a")!.HolderHeroId);
         }
@@ -79,7 +79,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 .AddHero("holder", "clan_holder", age: 40f, childIds: new[] { "holder", "son" })
                 .AddHero("son", "clan_holder", age: 20f);
 
-            UseCase(titleRepository, genealogy).Execute("holder");
+            UseCase(titleRepository, genealogy).Execute("holder", 10f);
 
             Assert.Equal("son", titleRepository.GetTitle("county_a")!.HolderHeroId);
         }
@@ -95,7 +95,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 .AddHero("elder_brother", "clan_holder", fatherId: "father", age: 50f)
                 .AddHero("younger_brother", "clan_holder", fatherId: "father", age: 35f);
 
-            UseCase(titleRepository, genealogy).Execute("holder");
+            UseCase(titleRepository, genealogy).Execute("holder", 10f);
 
             Assert.Equal("elder_brother", titleRepository.GetTitle("county_a")!.HolderHeroId);
         }
@@ -109,7 +109,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 .AddHero("holder", "clan_holder")
                 .AddHero("clan_head", "clan_holder");
 
-            UseCase(titleRepository, genealogy).Execute("holder");
+            UseCase(titleRepository, genealogy).Execute("holder", 10f);
 
             Assert.Equal("clan_head", titleRepository.GetTitle("county_a")!.HolderHeroId);
         }
@@ -122,7 +122,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 .WithLeader("clan_holder", "holder")
                 .AddHero("holder", "clan_holder", isAlive: false);
 
-            UseCase(titleRepository, genealogy).Execute("holder");
+            UseCase(titleRepository, genealogy).Execute("holder", 10f);
 
             Assert.Null(titleRepository.GetTitle("county_a")!.HolderHeroId);
         }
@@ -141,7 +141,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 .AddHero("grandson", "clan_holder", age: 18f)
                 .AddHero("younger_son", "clan_holder", age: 30f);
 
-            UseCase(titleRepository, genealogy).Execute("holder");
+            UseCase(titleRepository, genealogy).Execute("holder", 10f);
 
             Assert.Equal("grandson", titleRepository.GetTitle("county_a")!.HolderHeroId);
         }
@@ -156,7 +156,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 .AddHero("holder", "clan_holder", childIds: new[] { "son" })
                 .AddHero("son", "clan_holder", age: 25f);
 
-            var results = UseCase(titleRepository, genealogy).Execute("holder");
+            var results = UseCase(titleRepository, genealogy).Execute("holder", 10f);
 
             Assert.Equal("son", titleRepository.GetTitle("county_a")!.HolderHeroId);
             Assert.Equal("son", titleRepository.GetTitle("barony_b")!.HolderHeroId);
@@ -176,7 +176,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 .AddHero("commoner", "clan_holder", childIds: new[] { "son" })
                 .AddHero("son", "clan_holder");
 
-            var results = UseCase(titleRepository, genealogy).Execute("commoner");
+            var results = UseCase(titleRepository, genealogy).Execute("commoner", 10f);
 
             Assert.Empty(results);
             Assert.Equal("holder", titleRepository.GetTitle("county_a")!.HolderHeroId);

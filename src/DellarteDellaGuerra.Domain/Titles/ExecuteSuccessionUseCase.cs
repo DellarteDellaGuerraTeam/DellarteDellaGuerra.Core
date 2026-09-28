@@ -48,7 +48,7 @@ namespace DellarteDellaGuerra.Domain.Titles
             _logger = loggerFactory.CreateLogger<ExecuteSuccessionUseCase>();
         }
 
-        public IReadOnlyList<SuccessionResult> Execute(string deceasedHeroId)
+        public IReadOnlyList<SuccessionResult> Execute(string deceasedHeroId, float currentDay)
         {
             var vacatedTitles = _titleRepository.GetAllTitles()
                 .Where(title => title.HolderHeroId == deceasedHeroId)
@@ -60,7 +60,7 @@ namespace DellarteDellaGuerra.Domain.Titles
             var results = new List<SuccessionResult>(vacatedTitles.Count);
             foreach (var title in vacatedTitles)
             {
-                _titleRepository.SaveTitle(title.WithHolder(heirId));
+                _titleRepository.SaveTitle(title.InheritBy(heirId, currentDay));
                 results.Add(new SuccessionResult(title.Id, deceasedHeroId, heirId));
             }
 

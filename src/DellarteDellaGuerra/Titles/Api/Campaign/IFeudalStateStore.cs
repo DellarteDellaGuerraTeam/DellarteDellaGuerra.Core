@@ -23,9 +23,5 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         void InitialiseReattachments(IReadOnlyDictionary<string, string?> suzerainTitleIdByTitleId);
 
         IReadOnlyDictionary<string, string?> SnapshotReattachments();
-
-        void InitialisePrimaryTitles(IReadOnlyDictionary<string, string> primaryTitleIdByClanId);
-
-        IReadOnlyDictionary<string, string> SnapshotPrimaryTitles();
     }
 }
