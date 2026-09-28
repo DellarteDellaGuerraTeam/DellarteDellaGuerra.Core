@@ -26,6 +26,7 @@ using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Integration.SiegeTactics.Mission;
 using DellarteDellaGuerra.Integration.Tournament.Jousting;
+using DellarteDellaGuerra.Integration.Weather;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Utils;
 using Harmony.DependencyInjection;
@@ -103,6 +104,8 @@ namespace DellarteDellaGuerra.Integration
                 _serviceProvider,
                 campaignGameStarter.Models.OfType<HeroCreationModel>().Last()));
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgCampaignTimeModel>());
+            campaignGameStarter.AddModel(new DadgMapWeatherModel(
+                campaignGameStarter.Models.OfType<MapWeatherModel>().Last()));
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
             _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().InstallCampaign(campaignGameStarter);
 
