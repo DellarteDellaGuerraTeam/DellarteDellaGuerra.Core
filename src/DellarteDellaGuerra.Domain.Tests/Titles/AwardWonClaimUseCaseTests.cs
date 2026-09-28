@@ -48,8 +48,9 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, titles, _) = Setup();
 
-            useCase.Execute("county", "clan_winner", "clan_loser", 10f);
+            var award = useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
+            Assert.True(award.TitleWon);
             Assert.Equal("winner_lord", titles.GetTitle("county")!.HolderHeroId);
             Assert.Equal("winner_lord", titles.GetTitle("barony_a")!.HolderHeroId);
         }
@@ -134,6 +135,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
 
             var seats = useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
+            Assert.False(seats.TitleWon);
             Assert.Empty(seats.MovedSeatIds);
             Assert.Equal("loser_lord", titles.GetTitle("county")!.HolderHeroId);
         }
@@ -224,6 +226,20 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
 
             Assert.Equal("kingdom_scotland", structure.GetDeJureSuzerainTitleId("county"));
             Assert.Empty(award.ClansJoiningWinnersRealm);
+        }
+
+        [Fact]
+        public void Execute_LeavesTheTitleInItsRealm_WhenTheLoserNoLongerHoldsIt()
+        {
+            // The holder's line passed the title to another house while the war was fought.
+            var (useCase, structure, suzerain) = SetupAcrossTheBorder();
+
+            var award = useCase.Execute("county", "clan_winner", "clan_heir_married_out", 10f);
+
+            Assert.False(award.TitleWon);
+            Assert.Equal("kingdom_scotland", structure.GetDeJureSuzerainTitleId("county"));
+            Assert.Empty(award.ClansJoiningWinnersRealm);
+            Assert.Equal("clan_loser", suzerain.GetSuzerain("clan_third"));
         }
 
         [Fact]

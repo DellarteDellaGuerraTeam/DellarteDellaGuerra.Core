@@ -10,7 +10,7 @@ namespace DellarteDellaGuerra.Tests.Titles.Spi
         {
             var title = new Title("county", "County", TitleRank.Count, "s_c", "old_lord")
                 .GrantTo("lord", 12.5f)
-                .InheritBy(null, 30f)
+                .InheritBy(null, null, 30f)
                 .WithOccupant("clan_occupier", 31.25f);
 
             var restored = TitleStateSerialiser.DeserialiseTitles(TitleStateSerialiser.SerialiseTitles(new[] { title }));

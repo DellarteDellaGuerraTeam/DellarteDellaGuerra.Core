@@ -237,25 +237,26 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
         private void OnWarConcluded(PrivateWarConclusion conclusion)
         {
-            if (conclusion.AttackerWon) AwardTheClaim(conclusion);
+            bool titleWon = conclusion.AttackerWon && AwardTheClaim(conclusion);
 
             if (!_parentByCadetClanId.TryGetValue(conclusion.AttackerClanId, out string parentClanId)) return;
 
             _parentByCadetClanId.Remove(conclusion.AttackerClanId);
 
-            // Winning makes the branch a house in its own right, holding the dignity it fought
-            // for. Anything short of winning, a white peace included, leaves it nothing to be.
-            if (!conclusion.AttackerWon) _cadetBranch.Reabsorb(conclusion.AttackerClanId, parentClanId);
+            // Taking the title makes the branch a house in its own right, holding the dignity it
+            // fought for. Anything short of that, a white peace or a victory over a loser who no
+            // longer held it included, leaves it nothing to be.
+            if (!titleWon) _cadetBranch.Reabsorb(conclusion.AttackerClanId, parentClanId);
         }
 
         // The winner takes the title and the de jure titles the loser held, and the fortified
         // seats among them that the loser still owns. A village goes with its castle or town.
         // A title won across the border takes the clans whose primary title it carries into the
-        // winner's realm, fiefs and all.
-        private void AwardTheClaim(PrivateWarConclusion conclusion)
+        // winner's realm, fiefs and all. Returns whether the winner took the title fought for.
+        private bool AwardTheClaim(PrivateWarConclusion conclusion)
         {
             var winner = BannerlordCampaign.Current?.CampaignObjectManager.Find<Clan>(conclusion.AttackerClanId);
-            if (winner?.Leader is null) return;
+            if (winner?.Leader is null) return false;
 
             WonClaimAward award = _awardWonClaimUseCase.Execute(
                 conclusion.TitleId, conclusion.AttackerClanId, conclusion.DefenderClanId, (float)CampaignTime.Now.ToDays);
@@ -280,6 +281,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
             // The holders moved, and every blood claim on these titles descends from its holder.
             _generateBloodClaimsUseCase.Execute();
+
+            return award.TitleWon;
         }
 
         /**

@@ -52,19 +52,23 @@ namespace DellarteDellaGuerra.Domain.Titles
             var joiningClans = new List<string>();
 
             string? winnerLeaderId = _genealogy.GetClanLeaderId(winnerClanId);
-            if (winnerLeaderId is null) return new WonClaimAward(movedSeats, joiningClans);
+            if (winnerLeaderId is null) return new WonClaimAward(false, movedSeats, joiningClans);
 
             // Looked up before the award, so a won title of the same rank does not displace it.
             Title? winnerPrimaryTitle = _suzeraintyPolicy.GetPrimaryTitle(winnerClanId);
 
+            // The title fought for may have passed to an heir of another house while the war went
+            // on. Then it is not the loser's to give up, and it stays in its realm with its clans.
+            bool titleWon = _genealogy.GetHolderClanOf(_titleRepository.GetTitle(titleId)) == loserClanId;
+
             Award(titleId, winnerClanId, winnerLeaderId, loserClanId, currentDay, movedSeats);
 
-            if (winnerPrimaryTitle is not null && MoveIntoWinnersRealm(titleId, winnerPrimaryTitle))
+            if (titleWon && winnerPrimaryTitle is not null && MoveIntoWinnersRealm(titleId, winnerPrimaryTitle))
             {
                 joiningClans.AddRange(ClansWhosePrimaryTitleIsUnder(titleId, winnerClanId));
             }
 
-            return new WonClaimAward(movedSeats, joiningClans);
+            return new WonClaimAward(titleWon, movedSeats, joiningClans);
         }
 
         private bool MoveIntoWinnersRealm(string titleId, Title winnerPrimaryTitle)

@@ -24,7 +24,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             var title = original
                 .GrantTo("granted_lord", 1f)
                 .ConqueredBy("conqueror", 2f)
-                .InheritBy(null, 3f)
+                .InheritBy(null, null, 3f)
                 .AwardTo("claimant", "clan_claimant", 4f);
 
             Assert.Equal(new[]
@@ -49,10 +49,16 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         [Fact]
         public void Inheritance_KeepsTheOccupation()
         {
-            var title = County("clan_occupier").InheritBy("heir", 5f);
+            var title = County("clan_occupier").InheritBy("heir", "clan_heir", 5f);
 
             Assert.Equal("clan_occupier", title.OccupantClanId);
             Assert.Equal(3f, title.ContestedSinceDay);
+        }
+
+        [Fact]
+        public void Inheritance_EndsTheOccupation_WhenTheHeirsClanOccupiesTheSeat()
+        {
+            Assert.False(County("clan_heir").InheritBy("heir", "clan_heir", 5f).IsContested);
         }
 
         [Fact]
@@ -65,7 +71,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         [Fact]
         public void HeldSinceDay_CarriesTheTenureThroughInheritance()
         {
-            var title = County().GrantTo("lord", 7f).InheritBy("heir", 20f).InheritBy("grandson", 40f);
+            var title = County().GrantTo("lord", 7f).InheritBy("heir", "clan_lord", 20f).InheritBy("grandson", "clan_lord", 40f);
 
             Assert.Equal(7f, title.HeldSinceDay);
             Assert.Equal(50f, title.ConqueredBy("conqueror", 50f).HeldSinceDay);

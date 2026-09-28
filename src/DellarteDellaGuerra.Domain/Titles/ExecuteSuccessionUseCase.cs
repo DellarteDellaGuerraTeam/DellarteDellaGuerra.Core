@@ -56,11 +56,12 @@ namespace DellarteDellaGuerra.Domain.Titles
             if (vacatedTitles.Count == 0) return new List<SuccessionResult>();
 
             string? heirId = ResolveHeir(deceasedHeroId);
+            string? heirClanId = heirId is null ? null : _genealogy.GetClanOf(heirId);
 
             var results = new List<SuccessionResult>(vacatedTitles.Count);
             foreach (var title in vacatedTitles)
             {
-                _titleRepository.SaveTitle(title.InheritBy(heirId, currentDay));
+                _titleRepository.SaveTitle(title.InheritBy(heirId, heirClanId, currentDay));
                 results.Add(new SuccessionResult(title.Id, deceasedHeroId, heirId));
             }
 

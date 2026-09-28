@@ -347,8 +347,9 @@ Decided 2026-09-27:
   tenure of the holder they inherited from.
 - `SuzeraintyPolicy.GetPrimaryTitle` is a pure read: highest rank, then the lowest `HeldSinceDay`,
   then listing order. Nothing about the choice is stored, so it cannot go stale. Two known effects:
-  - Every title held since the campaign started ties at day 0, so the starting lieges are the same
-    as before the rule existed.
+  - A new campaign dates each starting holder from the title's `heldSince` year in
+    `titles.config.xml` (see `feudal-titles.md`), which moves two starting lieges. A save made
+    before those years existed keeps every starting title at day 0, so its lieges stay as they were.
   - An heir from another clan brings the old tenure into their own clan's tie-break.
 - `AwardWonClaimUseCase` reads the winner's primary title *before* the award, so a won title of the
   same rank does not displace it. After the award it moves the won title with `IFeudalStructure.Reattach`.
