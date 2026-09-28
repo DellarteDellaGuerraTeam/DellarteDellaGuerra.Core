@@ -44,7 +44,7 @@ namespace DellarteDellaGuerra.Domain.Titles
                 return ExecuteConquest(title, newClanId, currentDay);
             }
 
-            return ExecuteTransfer(title, newClanId);
+            return ExecuteTransfer(title, newClanId, transferKind, currentDay);
         }
 
         private AssignmentResult ExecuteConquest(Title title, string? occupantClanId, float currentDay)
@@ -75,7 +75,11 @@ namespace DellarteDellaGuerra.Domain.Titles
             return new AssignmentResult(title.Id, holderClanId, holderClanId, false, true);
         }
 
-        private AssignmentResult ExecuteTransfer(Title title, string? newHolderClanId)
+        private AssignmentResult ExecuteTransfer(
+            Title title,
+            string? newHolderClanId,
+            SeatTransferKind transferKind,
+            float currentDay)
         {
             string? previousHolderClanId = _genealogy.GetHolderClanOf(title);
             if (previousHolderClanId == newHolderClanId)
@@ -88,9 +92,10 @@ namespace DellarteDellaGuerra.Domain.Titles
                 return new AssignmentResult(title.Id, previousHolderClanId, newHolderClanId, false);
             }
 
-            _titleRepository.SaveTitle(title
-                .WithHolder(newHolderClanId is null ? null : _genealogy.GetClanLeaderId(newHolderClanId))
-                .WithOccupant(null, null));
+            string? newHolderId = newHolderClanId is null ? null : _genealogy.GetClanLeaderId(newHolderClanId);
+            _titleRepository.SaveTitle(transferKind == SeatTransferKind.Conquest
+                ? title.ConqueredBy(newHolderId, currentDay)
+                : title.GrantTo(newHolderId, currentDay));
             _logger.Info($"Title '{title.Id}' reassigned from '{previousHolderClanId ?? "<vacant>"}' to '{newHolderClanId ?? "<vacant>"}'");
 
             bool claimGenerated = false;

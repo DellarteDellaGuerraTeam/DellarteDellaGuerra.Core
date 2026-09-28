@@ -234,7 +234,7 @@ public class HolderDeathOverRealContentTests
 
         public IReadOnlyList<SuccessionResult> ExecuteSuccession(string deceasedHeroId) =>
             new ExecuteSuccessionUseCase(_titles, _genealogy, new SilentLoggerFactory())
-                .Execute(deceasedHeroId);
+                .Execute(deceasedHeroId, 0f);
 
         public IReadOnlyList<Claim> GenerateClaims() =>
             new GenerateBloodClaimsUseCase(_titles, new InMemoryClaimRegistry(), _genealogy).Execute();

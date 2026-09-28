@@ -45,7 +45,7 @@ namespace DellarteDellaGuerra.Domain.Titles
             _suzeraintyPolicy = suzeraintyPolicy;
         }
 
-        public WonClaimAward Execute(string titleId, string winnerClanId, string loserClanId)
+        public WonClaimAward Execute(string titleId, string winnerClanId, string loserClanId, float currentDay)
         {
             var movedSeats = new List<string>();
 
@@ -57,7 +57,7 @@ namespace DellarteDellaGuerra.Domain.Titles
             // Looked up before the award, so a won title of the same rank does not displace it.
             Title? winnerPrimaryTitle = _suzeraintyPolicy.GetPrimaryTitle(winnerClanId);
 
-            Award(titleId, winnerClanId, winnerLeaderId, loserClanId, movedSeats);
+            Award(titleId, winnerClanId, winnerLeaderId, loserClanId, currentDay, movedSeats);
 
             if (winnerPrimaryTitle is not null && MoveIntoWinnersRealm(titleId, winnerPrimaryTitle))
             {
@@ -122,21 +122,19 @@ namespace DellarteDellaGuerra.Domain.Titles
             string winnerClanId,
             string winnerLeaderId,
             string loserClanId,
+            float currentDay,
             List<string> movedSeats)
         {
             Title? title = _titleRepository.GetTitle(titleId);
             if (title is not null && _genealogy.GetHolderClanOf(title) == loserClanId)
             {
-                Title awarded = title.WithHolder(winnerLeaderId);
-                if (awarded.OccupantClanId == winnerClanId) awarded = awarded.WithOccupant(null, null);
-
-                _titleRepository.SaveTitle(awarded);
+                _titleRepository.SaveTitle(title.AwardTo(winnerLeaderId, winnerClanId, currentDay));
                 if (!string.IsNullOrEmpty(title.SeatSettlementId)) movedSeats.Add(title.SeatSettlementId);
             }
 
             foreach (string vassalTitleId in _feudalStructure.GetDeJureVassalTitleIds(titleId))
             {
-                Award(vassalTitleId, winnerClanId, winnerLeaderId, loserClanId, movedSeats);
+                Award(vassalTitleId, winnerClanId, winnerLeaderId, loserClanId, currentDay, movedSeats);
             }
         }
     }

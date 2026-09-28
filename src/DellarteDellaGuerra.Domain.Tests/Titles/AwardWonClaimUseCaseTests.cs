@@ -48,7 +48,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, titles, _) = Setup();
 
-            useCase.Execute("county", "clan_winner", "clan_loser");
+            useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Assert.Equal("winner_lord", titles.GetTitle("county")!.HolderHeroId);
             Assert.Equal("winner_lord", titles.GetTitle("barony_a")!.HolderHeroId);
@@ -59,7 +59,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, titles, _) = Setup();
 
-            useCase.Execute("county", "clan_winner", "clan_loser");
+            useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Assert.Equal("third_lord", titles.GetTitle("barony_b")!.HolderHeroId);
         }
@@ -70,7 +70,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             var (useCase, _, suzerain) = Setup();
             Assert.Equal("clan_loser", suzerain.GetSuzerain("clan_third"));
 
-            useCase.Execute("county", "clan_winner", "clan_loser");
+            useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Assert.Equal("clan_winner", suzerain.GetSuzerain("clan_third"));
         }
@@ -80,7 +80,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, _, suzerain) = Setup();
 
-            useCase.Execute("county", "clan_winner", "clan_loser");
+            useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Assert.Equal("clan_loser", suzerain.GetSuzerain("clan_fourth"));
         }
@@ -90,7 +90,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, titles, _) = Setup();
 
-            useCase.Execute("county", "clan_winner", "clan_loser");
+            useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Assert.Equal("loser_lord", titles.GetTitle("county_elsewhere")!.HolderHeroId);
         }
@@ -100,7 +100,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, _, _) = Setup();
 
-            var seats = useCase.Execute("county", "clan_winner", "clan_loser");
+            var seats = useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Assert.Equal(new[] { "seat_county", "seat_a" }, seats.MovedSeatIds);
         }
@@ -110,7 +110,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, titles, _) = Setup(countyOccupant: "clan_winner");
 
-            useCase.Execute("county", "clan_winner", "clan_loser");
+            useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Assert.False(titles.GetTitle("county")!.IsContested);
         }
@@ -120,7 +120,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, titles, _) = Setup(countyOccupant: "clan_third");
 
-            useCase.Execute("county", "clan_winner", "clan_loser");
+            useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Title county = titles.GetTitle("county")!;
             Assert.Equal("winner_lord", county.HolderHeroId);
@@ -132,7 +132,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, titles, _) = Setup(winnerHasLeader: false);
 
-            var seats = useCase.Execute("county", "clan_winner", "clan_loser");
+            var seats = useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Assert.Empty(seats.MovedSeatIds);
             Assert.Equal("loser_lord", titles.GetTitle("county")!.HolderHeroId);
@@ -187,7 +187,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, structure, suzerain) = SetupAcrossTheBorder(TitleRank.Count);
 
-            useCase.Execute("county", "clan_winner", "clan_loser");
+            useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Assert.Equal("kingdom_england", structure.GetDeJureSuzerainTitleId("county"));
             Assert.Equal("clan_england", suzerain.GetSuzerain("clan_winner"));
@@ -198,7 +198,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, structure, _) = SetupAcrossTheBorder(TitleRank.Duke);
 
-            useCase.Execute("county", "clan_winner", "clan_loser");
+            useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Assert.Equal("winner_title", structure.GetDeJureSuzerainTitleId("county"));
         }
@@ -208,7 +208,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, _, suzerain) = SetupAcrossTheBorder();
 
-            var award = useCase.Execute("county", "clan_winner", "clan_loser");
+            var award = useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Assert.Equal(new[] { "clan_third" }, award.ClansJoiningWinnersRealm);
             Assert.Equal("clan_winner", suzerain.GetSuzerain("clan_third"));
@@ -220,7 +220,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, structure, _) = SetupAcrossTheBorder(winnerRealm: "kingdom_scotland");
 
-            var award = useCase.Execute("county", "clan_winner", "clan_loser");
+            var award = useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Assert.Equal("kingdom_scotland", structure.GetDeJureSuzerainTitleId("county"));
             Assert.Empty(award.ClansJoiningWinnersRealm);
@@ -231,7 +231,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (useCase, structure, _) = SetupAcrossTheBorder();
 
-            var award = useCase.Execute("kingdom_scotland", "clan_winner", "clan_scots");
+            var award = useCase.Execute("kingdom_scotland", "clan_winner", "clan_scots", 10f);
 
             Assert.Null(structure.GetDeJureSuzerainTitleId("kingdom_scotland"));
             Assert.Empty(award.ClansJoiningWinnersRealm);

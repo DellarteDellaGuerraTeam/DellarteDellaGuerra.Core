@@ -328,7 +328,7 @@ Decided 2026-09-27:
   - So a clan's allegiance is decided by its **primary title**, and titles are resolved by holder,
     not only by the static tree.
 - **Primary title (a new domain concept).** A clan's primary title is its highest-ranked title. When
-  two titles tie on rank, the one it already serves under stays primary. So a baron who holds two
+  two titles tie on rank, the one held longest stays primary. So a baron who holds two
   baronies and already has another liege does not switch to the new count. This replaces the
   dictionary-order tiebreak in `GetSuzerainUseCase.GetHighestTitle` (S3), and step 4 introduces it.
 - **The title goes to the claimant who pressed it.** For now, the presser is always the claimant's own
@@ -340,19 +340,26 @@ Decided 2026-09-27:
 
 **Built in step 4 (2026-09-28):**
 
-- `SuzeraintyPolicy.GetPrimaryTitle` implements the primary title. The pin is kept through
-  `ITitleRepository.GetPrimaryTitleId`/`SavePrimaryTitleId` and is written the first time a clan's
-  primary title is looked up. So a tie decided before that first lookup still falls back to
-  dictionary order.
+- `Title` is an aggregate that keeps a ledger of its holders (`Title.Holders`, a list of
+  `TitleHolder(HeroId, SinceDay, Acquisition)`, oldest first). It changes hands only through
+  `GrantTo`, `ConqueredBy`, `InheritBy` and `AwardTo`, which also decide what happens to an occupation.
+  `Title.HeldSinceDay` is the day the current holder's line took the title: an heir continues the
+  tenure of the holder they inherited from.
+- `SuzeraintyPolicy.GetPrimaryTitle` is a pure read: highest rank, then the lowest `HeldSinceDay`,
+  then listing order. Nothing about the choice is stored, so it cannot go stale. Two known effects:
+  - Every title held since the campaign started ties at day 0, so the starting lieges are the same
+    as before the rule existed.
+  - An heir from another clan brings the old tenure into their own clan's tie-break.
 - `AwardWonClaimUseCase` reads the winner's primary title *before* the award, so a won title of the
   same rank does not displace it. After the award it moves the won title with `IFeudalStructure.Reattach`.
   It returns the clans whose primary title now lies under the moved title (`WonClaimAward.ClansJoiningWinnersRealm`).
   `ClaimPressureCampaignBehavior.AwardTheClaim` moves those clans with `ChangeKingdomAction.ApplyByJoinToKingdom`.
   It skips a clan that already serves the winner's kingdom and a clan that rules its own kingdom.
 - `XmlFeudalStructure` is the configured tree plus a record of reattachments. The record is saved as
-  `DadgTitleReattachments` (`titleId|suzerainId`, empty for a root) and the primary pins as
-  `DadgPrimaryTitles` (`clanId|titleId`). Both are reset on a new game. A save that has neither loads
-  with the configured realms.
+  `DadgTitleReattachments` (`titleId|suzerainId`, empty for a root). It is reset on a new game, and a
+  save without it loads with the configured realms. The ledger is saved in each `DadgFeudalTitles` line
+  as `heroId|sinceDay|acquisition` triples after the existing seven fields. A line from before the
+  ledger opens a ledger with its holder on day 0.
 - Assumptions: a title only migrates across realms, since a same-realm win leaves the tree alone. A King
   title never migrates, so a won kingdom stays a realm of its own (a personal union, see below).
 - Not covered yet:

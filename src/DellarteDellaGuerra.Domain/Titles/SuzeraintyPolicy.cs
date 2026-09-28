@@ -43,20 +43,14 @@ namespace DellarteDellaGuerra.Domain.Titles
             return null;
         }
 
-        // The title a clan serves under: its highest. On a tie it keeps the one it already
-        // served under, so gaining a title of the same rank does not change its liege.
+        // The title a clan serves under: its highest. On a tie it is the one held longest, so
+        // gaining a title of the same rank does not change its liege; then the listing order.
         public Title? GetPrimaryTitle(string clanId)
         {
-            var heldTitles = _titleRepository.GetTitlesByClan(clanId);
-            Title? highestTitle = heldTitles.OrderByDescending(title => title.Rank).FirstOrDefault();
-            if (highestTitle is null) return null;
-
-            string? pinnedTitleId = _titleRepository.GetPrimaryTitleId(clanId);
-            Title? pinnedTitle = heldTitles.FirstOrDefault(title => title.Id == pinnedTitleId);
-            if (pinnedTitle is not null && pinnedTitle.Rank >= highestTitle.Rank) return pinnedTitle;
-
-            _titleRepository.SavePrimaryTitleId(clanId, highestTitle.Id);
-            return highestTitle;
+            return _titleRepository.GetTitlesByClan(clanId)
+                .OrderByDescending(title => title.Rank)
+                .ThenBy(title => title.HeldSinceDay)
+                .FirstOrDefault();
         }
     }
 }

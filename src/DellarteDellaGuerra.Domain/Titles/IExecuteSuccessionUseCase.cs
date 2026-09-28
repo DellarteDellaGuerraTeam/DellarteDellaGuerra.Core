@@ -5,6 +5,6 @@ namespace DellarteDellaGuerra.Domain.Titles
 {
     public interface IExecuteSuccessionUseCase
     {
-        IReadOnlyList<SuccessionResult> Execute(string deceasedHeroId);
+        IReadOnlyList<SuccessionResult> Execute(string deceasedHeroId, float currentDay);
     }
 }

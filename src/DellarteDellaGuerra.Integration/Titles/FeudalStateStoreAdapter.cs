@@ -31,8 +31,5 @@ namespace DellarteDellaGuerra.Integration.Titles
         public void InitialiseReattachments(IReadOnlyDictionary<string, string?> suzerainTitleIdByTitleId) =>
             _feudalStructure.InitialiseReattachments(suzerainTitleIdByTitleId);
         public IReadOnlyDictionary<string, string?> SnapshotReattachments() => _feudalStructure.SnapshotReattachments();
-        public void InitialisePrimaryTitles(IReadOnlyDictionary<string, string> primaryTitleIdByClanId) =>
-            _titleRegistry.InitialisePrimaryTitles(primaryTitleIdByClanId);
-        public IReadOnlyDictionary<string, string> SnapshotPrimaryTitles() => _titleRegistry.SnapshotPrimaryTitles();
     }
 }

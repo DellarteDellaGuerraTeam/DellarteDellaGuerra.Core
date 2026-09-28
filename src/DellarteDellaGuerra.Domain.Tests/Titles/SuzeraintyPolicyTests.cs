@@ -99,16 +99,16 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             Assert.Null(policy.GetPrimaryTitle("clan_untitled"));
         }
 
-        // county_x (clan_other) ── barony_x, listed first so an unpinned tie would pick it
+        // county_x (clan_other) ── barony_a, listed first so only tenure can pass it over
         // county_c (clan_count) ── barony_b (clan_baron)
         private static (SuzeraintyPolicy Policy, FakeTitleRepository Titles) SetupTwoBaronies()
         {
             var genealogy = CreateGenealogy().AddHero("clan_other", "clan_other");
             var structure = CreateStructure()
                 .AddTitle("county_x", TitleRank.Count, "duchy_d")
-                .AddTitle("barony_x", TitleRank.Baron, "county_x");
+                .AddTitle("barony_a", TitleRank.Baron, "county_x");
             var titles = new FakeTitleRepository(
-                new Title("barony_x", "Barony X", TitleRank.Baron, "s_bx", null),
+                new Title("barony_a", "Barony A", TitleRank.Baron, "s_ba", null),
                 new Title("county_x", "County X", TitleRank.Count, "s_cx", "clan_other"),
                 new Title("duchy_d", "Duchy", TitleRank.Duke, "s_d", "clan_duke"),
                 new Title("county_c", "County", TitleRank.Count, "s_c", "clan_count"),
@@ -123,7 +123,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             var (policy, titles) = SetupTwoBaronies();
             Assert.Equal("clan_count", policy.GetSuzerain("clan_baron"));
 
-            titles.SaveTitle(titles.GetTitle("barony_x")!.WithHolder("clan_baron"));
+            titles.SaveTitle(titles.GetTitle("barony_a")!.GrantTo("clan_baron", 10f));
 
             Assert.Equal("clan_count", policy.GetSuzerain("clan_baron"));
         }
@@ -134,7 +134,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             var (policy, titles) = SetupTwoBaronies();
             Assert.Equal("clan_count", policy.GetSuzerain("clan_baron"));
 
-            titles.SaveTitle(titles.GetTitle("county_x")!.WithHolder("clan_baron"));
+            titles.SaveTitle(titles.GetTitle("county_x")!.GrantTo("clan_baron", 10f));
 
             Assert.Equal("clan_duke", policy.GetSuzerain("clan_baron"));
         }
@@ -144,11 +144,35 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var (policy, titles) = SetupTwoBaronies();
             Assert.Equal("clan_count", policy.GetSuzerain("clan_baron"));
-            titles.SaveTitle(titles.GetTitle("barony_x")!.WithHolder("clan_baron"));
+            titles.SaveTitle(titles.GetTitle("barony_a")!.GrantTo("clan_baron", 10f));
 
-            titles.SaveTitle(titles.GetTitle("barony_b")!.WithHolder(null));
+            titles.SaveTitle(titles.GetTitle("barony_b")!.ConqueredBy(null, 20f));
 
             Assert.Equal("clan_other", policy.GetSuzerain("clan_baron"));
+        }
+
+        [Fact]
+        public void GetSuzerain_KeepsTheLiegeItServes_WhenAnHeirInheritsBothTitles()
+        {
+            var (policy, titles) = SetupTwoBaronies();
+            titles.Genealogy.AddHero("baron_heir", "clan_baron");
+            titles.SaveTitle(titles.GetTitle("barony_a")!.GrantTo("clan_baron", 10f));
+
+            titles.SaveTitle(titles.GetTitle("barony_b")!.InheritBy("baron_heir", 20f));
+            titles.SaveTitle(titles.GetTitle("barony_a")!.InheritBy("baron_heir", 20f));
+
+            Assert.Equal("clan_count", policy.GetSuzerain("clan_baron"));
+        }
+
+        [Fact]
+        public void GetPrimaryTitle_FallsBackToTheListingOrder_WhenBothWereTakenTheSameDay()
+        {
+            var (policy, titles) = SetupTwoBaronies();
+
+            titles.SaveTitle(titles.GetTitle("barony_b")!.GrantTo("clan_baron", 10f));
+            titles.SaveTitle(titles.GetTitle("barony_a")!.GrantTo("clan_baron", 10f));
+
+            Assert.Equal("barony_a", policy.GetPrimaryTitle("clan_baron")?.Id);
         }
     }
 }

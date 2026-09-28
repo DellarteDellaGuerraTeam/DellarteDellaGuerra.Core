@@ -18,7 +18,6 @@ public class InMemoryTitleRegistry : ITitleRepository
     private readonly IGenealogy _genealogy;
     private readonly Dictionary<string, Title> _titlesByTitleId = new Dictionary<string, Title>();
     private readonly Dictionary<string, string> _titleIdBySeatSettlementId = new Dictionary<string, string>();
-    private readonly Dictionary<string, string> _primaryTitleIdByClanId = new Dictionary<string, string>();
 
     public InMemoryTitleRegistry(IGenealogy genealogy)
     {
@@ -48,40 +47,6 @@ public class InMemoryTitleRegistry : ITitleRepository
     public IReadOnlyList<Title> Snapshot()
     {
         return _titlesByTitleId.Values.ToList();
-    }
-
-    /**
-     * <summary>
-     * Replaces the primary titles the clans were found to serve under, typically on campaign start or save load.
-     * </summary>
-     */
-    public void InitialisePrimaryTitles(IReadOnlyDictionary<string, string> primaryTitleIdByClanId)
-    {
-        _primaryTitleIdByClanId.Clear();
-        foreach (KeyValuePair<string, string> primaryTitle in primaryTitleIdByClanId)
-        {
-            _primaryTitleIdByClanId[primaryTitle.Key] = primaryTitle.Value;
-        }
-    }
-
-    /**
-     * <summary>
-     * Returns a copy of the primary titles the clans were found to serve under, typically for save game serialisation.
-     * </summary>
-     */
-    public IReadOnlyDictionary<string, string> SnapshotPrimaryTitles()
-    {
-        return new Dictionary<string, string>(_primaryTitleIdByClanId);
-    }
-
-    public string? GetPrimaryTitleId(string clanId)
-    {
-        return _primaryTitleIdByClanId.TryGetValue(clanId, out string titleId) ? titleId : null;
-    }
-
-    public void SavePrimaryTitleId(string clanId, string titleId)
-    {
-        _primaryTitleIdByClanId[clanId] = titleId;
     }
 
     public Title? GetTitle(string titleId)
