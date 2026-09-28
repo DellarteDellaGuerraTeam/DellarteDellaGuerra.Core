@@ -73,12 +73,11 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         private void OnNewGameCreated(CampaignGameStarter campaignGameStarter)
         {
             // The structure and the registries outlive a campaign, so a new one starts from the
-            // configured realms rather than those an earlier campaign in this session redrew.
+            // configured realms, holders and claims rather than those an earlier campaign in this
+            // session left behind.
             _stateStore.InitialiseReattachments(new Dictionary<string, string?>());
-
-            if (_stateStore.SnapshotTitles().Count > 0) return;
-
             _stateStore.InitialiseTitles(_initialTitlesProvider());
+            _stateStore.InitialiseClaims(Array.Empty<Claim>());
             _generateBloodClaimsUseCase.Execute();
         }
 
@@ -88,14 +87,11 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             _stateStore.InitialiseReattachments(TitleStateSerialiser.DeserialiseLinks(_serialisedReattachments));
 
             // The save did not contain feudal state (mod added to an existing campaign):
-            // seed the de jure layout instead of restoring.
+            // seed the de jure layout instead of restoring, whatever an earlier campaign left.
             if (_serialisedTitles.Count == 0)
             {
-                if (_stateStore.SnapshotTitles().Count == 0)
-                {
-                    _stateStore.InitialiseTitles(_initialTitlesProvider());
-                }
-
+                _stateStore.InitialiseTitles(_initialTitlesProvider());
+                _stateStore.InitialiseClaims(Array.Empty<Claim>());
                 _generateBloodClaimsUseCase.Execute();
                 return;
             }

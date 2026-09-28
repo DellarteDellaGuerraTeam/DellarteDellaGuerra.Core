@@ -158,8 +158,8 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             titles.Genealogy.AddHero("baron_heir", "clan_baron");
             titles.SaveTitle(titles.GetTitle("barony_a")!.GrantTo("clan_baron", 10f));
 
-            titles.SaveTitle(titles.GetTitle("barony_b")!.InheritBy("baron_heir", 20f));
-            titles.SaveTitle(titles.GetTitle("barony_a")!.InheritBy("baron_heir", 20f));
+            titles.SaveTitle(titles.GetTitle("barony_b")!.InheritBy("baron_heir", "clan_baron", 20f));
+            titles.SaveTitle(titles.GetTitle("barony_a")!.InheritBy("baron_heir", "clan_baron", 20f));
 
             Assert.Equal("clan_count", policy.GetSuzerain("clan_baron"));
         }

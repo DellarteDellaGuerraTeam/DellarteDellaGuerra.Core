@@ -99,9 +99,17 @@ namespace DellarteDellaGuerra.Domain.Titles.Model
         public Title ConqueredBy(string? heroId, float day) =>
             PassTo(heroId, day, TitleAcquisition.Conquered).WithOccupant(null, null);
 
-        /// <summary>An inheritance: whoever occupies the seat goes on occupying it.</summary>
-        public Title InheritBy(string? heirId, float day) =>
-            PassTo(heirId, day, TitleAcquisition.Inherited);
+        /// <summary>
+        /// An inheritance: whoever occupies the seat goes on occupying it, unless the occupier is the
+        /// heir's own clan, which now holds it.
+        /// </summary>
+        public Title InheritBy(string? heirId, string? heirClanId, float day)
+        {
+            Title inherited = PassTo(heirId, day, TitleAcquisition.Inherited);
+            return heirClanId is not null && inherited.OccupantClanId == heirClanId
+                ? inherited.WithOccupant(null, null)
+                : inherited;
+        }
 
         /// <summary>
         /// A won claim: the occupation ends only when the winner's own clan occupies the seat. Another
