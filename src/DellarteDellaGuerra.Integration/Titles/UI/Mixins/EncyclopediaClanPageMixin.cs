@@ -40,7 +40,7 @@ namespace DellarteDellaGuerra.Integration.Titles.UI.Mixins
 
             IReadOnlyList<Title> titles =
                 FeudalUiServices.Titles?.GetTitlesByClan(clan.StringId) ?? new List<Title>();
-            string? suzerainClanId = FeudalUiServices.GetSuzerain?.Execute(clan.StringId);
+            string? suzerainClanId = FeudalUiServices.Suzerainty?.GetSuzerain(clan.StringId);
             Clan? suzerainClan = suzerainClanId is null
                 ? null
                 : Campaign.Current?.CampaignObjectManager.Find<Clan>(suzerainClanId);

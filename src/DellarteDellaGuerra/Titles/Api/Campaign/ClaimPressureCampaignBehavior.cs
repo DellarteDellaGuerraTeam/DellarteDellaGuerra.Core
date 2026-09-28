@@ -51,7 +51,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         private readonly ITitleRepository _titleRepository;
         private readonly IClaimRepository _claimRepository;
         private readonly IGenealogy _genealogy;
-        private readonly IGetSuzerainUseCase _getSuzerainUseCase;
+        private readonly SuzeraintyPolicy _suzeraintyPolicy;
         private readonly IGetDeJureSettlementsUseCase _getDeJureSettlementsUseCase;
         private readonly IAwardWonClaimUseCase _awardWonClaimUseCase;
         private readonly IGenerateBloodClaimsUseCase _generateBloodClaimsUseCase;
@@ -70,7 +70,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             ITitleRepository titleRepository,
             IClaimRepository claimRepository,
             IGenealogy genealogy,
-            IGetSuzerainUseCase getSuzerainUseCase,
+            SuzeraintyPolicy suzeraintyPolicy,
             IGetDeJureSettlementsUseCase getDeJureSettlementsUseCase,
             IAwardWonClaimUseCase awardWonClaimUseCase,
             IGenerateBloodClaimsUseCase generateBloodClaimsUseCase,
@@ -83,7 +83,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             _titleRepository = titleRepository;
             _claimRepository = claimRepository;
             _genealogy = genealogy;
-            _getSuzerainUseCase = getSuzerainUseCase;
+            _suzeraintyPolicy = suzeraintyPolicy;
             _getDeJureSettlementsUseCase = getDeJureSettlementsUseCase;
             _awardWonClaimUseCase = awardWonClaimUseCase;
             _generateBloodClaimsUseCase = generateBloodClaimsUseCase;
@@ -135,7 +135,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             // whole realm's chains to sum its side, so resolve them once for the tick.
             var suzerainByClanId = clansById.Keys.ToDictionary(
                 clanId => clanId,
-                clanId => _getSuzerainUseCase.Execute(clanId));
+                clanId => _suzeraintyPolicy.GetSuzerain(clanId));
 
             string? GetSuzerain(string clanId) =>
                 suzerainByClanId.TryGetValue(clanId, out string? suzerain) ? suzerain : null;

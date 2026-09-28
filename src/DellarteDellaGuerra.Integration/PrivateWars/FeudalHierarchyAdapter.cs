@@ -7,13 +7,13 @@ namespace DellarteDellaGuerra.Integration.PrivateWars
     // registry walks to resolve war sides, keeping the two domain features decoupled.
     public class FeudalHierarchyAdapter : ISuzerainProvider
     {
-        private readonly IGetSuzerainUseCase _getSuzerain;
+        private readonly SuzeraintyPolicy _suzeraintyPolicy;
 
-        public FeudalHierarchyAdapter(IGetSuzerainUseCase getSuzerain)
+        public FeudalHierarchyAdapter(SuzeraintyPolicy suzeraintyPolicy)
         {
-            _getSuzerain = getSuzerain;
+            _suzeraintyPolicy = suzeraintyPolicy;
         }
 
-        public string? GetSuzerain(string clanId) => _getSuzerain.Execute(clanId);
+        public string? GetSuzerain(string clanId) => _suzeraintyPolicy.GetSuzerain(clanId);
     }
 }

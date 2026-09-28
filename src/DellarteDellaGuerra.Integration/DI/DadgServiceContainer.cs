@@ -160,7 +160,6 @@ public class DadgServiceContainer
         // Domain use cases
         services.AddSingleton<IAssignTitleUseCase, AssignTitleUseCase>();
         services.AddSingleton<SuzeraintyPolicy>();
-        services.AddSingleton<IGetSuzerainUseCase, GetSuzerainUseCase>();
         services.AddSingleton<IGetDirectVassalsUseCase, GetDirectVassalsUseCase>();
         services.AddSingleton<IEvaluateClaimUseCase, EvaluateClaimUseCase>();
         services.AddSingleton<IGenerateBloodClaimsUseCase, GenerateBloodClaimsUseCase>();

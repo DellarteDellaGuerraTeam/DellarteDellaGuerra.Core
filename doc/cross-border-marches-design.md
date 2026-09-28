@@ -340,7 +340,7 @@ Decided 2026-09-27:
 
 **Built in step 4 (2026-09-28):**
 
-- `GetSuzerainUseCase.GetPrimaryTitle` implements the primary title. The pin is kept through
+- `SuzeraintyPolicy.GetPrimaryTitle` implements the primary title. The pin is kept through
   `ITitleRepository.GetPrimaryTitleId`/`SavePrimaryTitleId` and is written the first time a clan's
   primary title is looked up. So a tie decided before that first lookup still falls back to
   dictionary order.
