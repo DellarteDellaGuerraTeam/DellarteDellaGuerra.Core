@@ -20,7 +20,7 @@ namespace DellarteDellaGuerra.Integration.Titles.UI
     {
         public static ITitleRepository? Titles { get; private set; }
         public static IFeudalStructure? Structure { get; private set; }
-        public static IGetSuzerainUseCase? GetSuzerain { get; private set; }
+        public static SuzeraintyPolicy? Suzerainty { get; private set; }
         public static IGetDirectVassalsUseCase? GetDirectVassals { get; private set; }
         public static IBuildFeudalMapUseCase? BuildFeudalMap { get; private set; }
 
@@ -29,14 +29,14 @@ namespace DellarteDellaGuerra.Integration.Titles.UI
         public static void Initialise(
             ITitleRepository titles,
             IFeudalStructure structure,
-            IGetSuzerainUseCase getSuzerain,
+            SuzeraintyPolicy suzerainty,
             IGetDirectVassalsUseCase getDirectVassals,
             IBuildFeudalMapUseCase buildFeudalMap)
 
         {
             Titles = titles;
             Structure = structure;
-            GetSuzerain = getSuzerain;
+            Suzerainty = suzerainty;
             GetDirectVassals = getDirectVassals;
             BuildFeudalMap = buildFeudalMap;
             IsInitialised = true;
@@ -46,7 +46,7 @@ namespace DellarteDellaGuerra.Integration.Titles.UI
         {
             Titles = null;
             Structure = null;
-            GetSuzerain = null;
+            Suzerainty = null;
             GetDirectVassals = null;
             BuildFeudalMap = null;
             IsInitialised = false;

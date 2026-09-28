@@ -125,7 +125,7 @@ namespace DellarteDellaGuerra.Integration
             // patches by this point; DADG only feeds it the two consumer-provided collaborators.
             var privateWarsApi = _serviceProvider.GetRequiredService<IPrivateWarsApi>();
             privateWarsApi.SetSuzerainProvider(new FeudalHierarchyAdapter(
-                _serviceProvider.GetRequiredService<IGetSuzerainUseCase>()));
+                _serviceProvider.GetRequiredService<SuzeraintyPolicy>()));
             var privateWarConfig = _serviceProvider.GetRequiredService<DadgConfigWatcher>().Config?.PrivateWarConfig;
             privateWarsApi.SetNameplateColors(
                 privateWarConfig?.PrivateWarEnemyNameplateColorArgb,
@@ -157,7 +157,7 @@ namespace DellarteDellaGuerra.Integration
                 _serviceProvider.GetRequiredService<IClaimRepository>(),
                 _serviceProvider.GetRequiredService<IFeudalStructure>(),
                 _serviceProvider.GetRequiredService<IAssignTitleUseCase>(),
-                _serviceProvider.GetRequiredService<IGetSuzerainUseCase>(),
+                _serviceProvider.GetRequiredService<SuzeraintyPolicy>(),
                 _serviceProvider.GetRequiredService<IEvaluateClaimUseCase>());
 
             // Initialise the static service locator used by the feudal UI
@@ -166,7 +166,7 @@ namespace DellarteDellaGuerra.Integration
             FeudalUiServices.Initialise(
                 _serviceProvider.GetRequiredService<ITitleRepository>(),
                 _serviceProvider.GetRequiredService<IFeudalStructure>(),
-                _serviceProvider.GetRequiredService<IGetSuzerainUseCase>(),
+                _serviceProvider.GetRequiredService<SuzeraintyPolicy>(),
                 _serviceProvider.GetRequiredService<IGetDirectVassalsUseCase>(),
                 _serviceProvider.GetRequiredService<IBuildFeudalMapUseCase>());
 

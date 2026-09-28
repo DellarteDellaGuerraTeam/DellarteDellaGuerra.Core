@@ -22,7 +22,7 @@ namespace DellarteDellaGuerra.Titles.Api
         public static IClaimRepository? Claims { get; private set; }
         public static IFeudalStructure? Structure { get; private set; }
         public static IAssignTitleUseCase? AssignTitle { get; private set; }
-        public static IGetSuzerainUseCase? GetSuzerain { get; private set; }
+        public static SuzeraintyPolicy? Suzerainty { get; private set; }
         public static IEvaluateClaimUseCase? EvaluateClaim { get; private set; }
 
         public static bool IsInitialised { get; private set; }
@@ -32,14 +32,14 @@ namespace DellarteDellaGuerra.Titles.Api
             IClaimRepository claims,
             IFeudalStructure structure,
             IAssignTitleUseCase assignTitle,
-            IGetSuzerainUseCase getSuzerain,
+            SuzeraintyPolicy suzerainty,
             IEvaluateClaimUseCase evaluateClaim)
         {
             Titles = titles;
             Claims = claims;
             Structure = structure;
             AssignTitle = assignTitle;
-            GetSuzerain = getSuzerain;
+            Suzerainty = suzerainty;
             EvaluateClaim = evaluateClaim;
             IsInitialised = true;
         }
@@ -50,7 +50,7 @@ namespace DellarteDellaGuerra.Titles.Api
             Claims = null;
             Structure = null;
             AssignTitle = null;
-            GetSuzerain = null;
+            Suzerainty = null;
             EvaluateClaim = null;
             IsInitialised = false;
         }
