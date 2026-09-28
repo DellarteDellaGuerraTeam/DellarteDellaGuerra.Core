@@ -19,6 +19,12 @@
   - "seat" is the StringId of the settlement that is the title's seat; it must be unique and
     must match a settlement StringId defined in the game/module data. It is optional for kingdoms.
   - "kingClanId"/"holderClanId" is the StringId of the clan initially holding the title; optional.
+  - "heldSince" is the year the holder's house took the title; optional (year 0 when absent).
+    It only matters when a clan's top titles share a rank: the oldest one is its primary title
+    and so picks its liege. Years are historical where the house really held the dignity or
+    seat (e.g. de la Pole: Suffolk 1385 before Lincoln 1467, so they serve Norfolk), and
+    invented for the setting's own pairings, chosen to spread vassals evenly (Willoughby's
+    Donnington predates Tattershall, putting them under the otherwise vassal-less de Vere).
 
   Seats and holders mirror DellarteDellaGuerraMap\ModuleData\settlements.xml: every county is
   seated at one of the 28 towns, every barony at a castle, and each title's initial holder is
@@ -27,143 +33,143 @@
   change of dynasty on the throne (1471 Readeption: Henry VI of Lancaster).
 -->
 <Feudalism>
-  <Kingdom id="kingdom_england" name="England" kingClanId="clan_lancaster">
+  <Kingdom id="kingdom_england" name="England" kingClanId="clan_lancaster" heldSince="1399">
 
-    <Duchy id="duchy_york" name="Duchy of York" seat="dadg_Pontefract_castle" holderClanId="clan_york">
-      <County id="county_york" name="County of York" seat="York_town" holderClanId="clan_york">
-        <Barony id="barony_skipton" name="Barony of Skipton" seat="dadg_Skipton_castle" holderClanId="clan_clifford"/>
-        <Barony id="barony_middleham" name="Barony of Middleham" seat="dadg_Middleham_castle" holderClanId="clan_neville_of_middleham"/>
-        <Barony id="barony_richmond" name="Barony of Richmond" seat="dadg_Richmond_castle" holderClanId="clan_tudor"/>
-        <Barony id="barony_helmsley" name="Barony of Helmsley" seat="dadg_Helmsley_castle" holderClanId="clan_scrope_of_masham"/>
+    <Duchy id="duchy_york" name="Duchy of York" seat="dadg_Pontefract_castle" holderClanId="clan_york" heldSince="1385">
+      <County id="county_york" name="County of York" seat="York_town" holderClanId="clan_york" heldSince="1385">
+        <Barony id="barony_skipton" name="Barony of Skipton" seat="dadg_Skipton_castle" holderClanId="clan_clifford" heldSince="1310"/>
+        <Barony id="barony_middleham" name="Barony of Middleham" seat="dadg_Middleham_castle" holderClanId="clan_neville_of_middleham" heldSince="1270"/>
+        <Barony id="barony_richmond" name="Barony of Richmond" seat="dadg_Richmond_castle" holderClanId="clan_tudor" heldSince="1452"/>
+        <Barony id="barony_helmsley" name="Barony of Helmsley" seat="dadg_Helmsley_castle" holderClanId="clan_scrope_of_masham" heldSince="1420"/>
       </County>
-      <County id="county_hull" name="County of Hull" seat="Kingston_upon_Hull_town" holderClanId="clan_york">
-        <Barony id="barony_scarborough" name="Barony of Scarborough" seat="dadg_Scarborough_castle" holderClanId="clan_scrope_of_bolton"/>
+      <County id="county_hull" name="County of Hull" seat="Kingston_upon_Hull_town" holderClanId="clan_york" heldSince="1440">
+        <Barony id="barony_scarborough" name="Barony of Scarborough" seat="dadg_Scarborough_castle" holderClanId="clan_scrope_of_bolton" heldSince="1400"/>
       </County>
-      <County id="county_hallamshire" name="County of Hallamshire" seat="Sheffield_town" holderClanId="clan_talbot">
-        <Barony id="barony_conisbrough" name="Barony of Conisbrough" seat="dadg_Conisbrough_castle" holderClanId="clan_burgh"/>
-        <Barony id="barony_nottingham" name="Barony of Nottingham" seat="dadg_Nottingham_castle" holderClanId="clan_hastings"/>
+      <County id="county_hallamshire" name="County of Hallamshire" seat="Sheffield_town" holderClanId="clan_talbot" heldSince="1409">
+        <Barony id="barony_conisbrough" name="Barony of Conisbrough" seat="dadg_Conisbrough_castle" holderClanId="clan_burgh" heldSince="1450"/>
+        <Barony id="barony_nottingham" name="Barony of Nottingham" seat="dadg_Nottingham_castle" holderClanId="clan_hastings" heldSince="1461"/>
       </County>
-      <County id="county_lincoln" name="County of Lincoln" seat="Lincoln_town" holderClanId="clan_de_la_pole">
-        <Barony id="barony_tattershall" name="Barony of Tattershall" seat="dadg_Tattershall_castle" holderClanId="clan_willoughby"/>
-        <Barony id="barony_fotheringhay" name="Barony of Fotheringhay" seat="dadg_Fotheringhay_castle" holderClanId="clan_york"/>
+      <County id="county_lincoln" name="County of Lincoln" seat="Lincoln_town" holderClanId="clan_de_la_pole" heldSince="1467">
+        <Barony id="barony_tattershall" name="Barony of Tattershall" seat="dadg_Tattershall_castle" holderClanId="clan_willoughby" heldSince="1456"/>
+        <Barony id="barony_fotheringhay" name="Barony of Fotheringhay" seat="dadg_Fotheringhay_castle" holderClanId="clan_york" heldSince="1377"/>
       </County>
     </Duchy>
 
-    <Duchy id="duchy_northumberland" name="Duchy of Northumberland" seat="dadg_Dunstanburgh_castle" holderClanId="clan_percy">
-      <County id="county_warkworth" name="County of Warkworth" seat="Warkworth_town" holderClanId="clan_percy">
-        <Barony id="barony_bamburgh" name="Barony of Bamburgh" seat="dadg_Bamburgh_castle" holderClanId="clan_lumley"/>
+    <Duchy id="duchy_northumberland" name="Duchy of Northumberland" seat="dadg_Dunstanburgh_castle" holderClanId="clan_percy" heldSince="1377">
+      <County id="county_warkworth" name="County of Warkworth" seat="Warkworth_town" holderClanId="clan_percy" heldSince="1332">
+        <Barony id="barony_bamburgh" name="Barony of Bamburgh" seat="dadg_Bamburgh_castle" holderClanId="clan_lumley" heldSince="1430"/>
       </County>
-      <County id="county_durham" name="County of Durham" seat="Newcastle_upon_Tyne_town" holderClanId="clan_neville_of_raby">
-        <Barony id="barony_durham" name="Barony of Durham" seat="dadg_Durham_castle" holderClanId="clan_greystoke"/>
-        <Barony id="barony_barnard" name="Barony of Barnard" seat="dadg_Barnard_castle" holderClanId="clan_harrington"/>
-        <Barony id="barony_skelton" name="Barony of Skelton" seat="dadg_Skelton_castle" holderClanId="clan_fitzhugh"/>
+      <County id="county_durham" name="County of Durham" seat="Newcastle_upon_Tyne_town" holderClanId="clan_neville_of_raby" heldSince="1397">
+        <Barony id="barony_durham" name="Barony of Durham" seat="dadg_Durham_castle" holderClanId="clan_greystoke" heldSince="1420"/>
+        <Barony id="barony_barnard" name="Barony of Barnard" seat="dadg_Barnard_castle" holderClanId="clan_harrington" heldSince="1445"/>
+        <Barony id="barony_skelton" name="Barony of Skelton" seat="dadg_Skelton_castle" holderClanId="clan_fitzhugh" heldSince="1400"/>
       </County>
-      <County id="county_cumberland" name="County of Cumberland" seat="Carlisle_town" holderClanId="clan_clifford">
-        <Barony id="barony_penrith" name="Barony of Penrith" seat="dadg_Penrith_castle" holderClanId="clan_neville_of_raby"/>
-        <Barony id="barony_kendal" name="Barony of Kendal" seat="dadg_Kendal_castle" holderClanId="clan_parr"/>
-      </County>
-    </Duchy>
-
-    <Duchy id="duchy_lancaster" name="Duchy of Lancaster" seat="dadg_Peveril_castle" holderClanId="clan_lancaster">
-      <County id="county_lancashire" name="County of Lancashire" seat="Lancaster_town" holderClanId="clan_lancaster">
-        <Barony id="barony_piel" name="Barony of Piel" seat="dadg_Piel_castle" holderClanId="clan_stanley"/>
-        <Barony id="barony_liverpool" name="Barony of Liverpool" seat="dadg_Liverpool_castle" holderClanId="clan_hastings"/>
-      </County>
-      <County id="county_cheshire" name="County of Cheshire" seat="Chester_town" holderClanId="clan_woodville">
-        <Barony id="barony_beeston" name="Barony of Beeston" seat="dadg_Beeston_castle" holderClanId="clan_vernon"/>
-        <Barony id="barony_chirk" name="Barony of Chirk" seat="dadg_Chirk_castle" holderClanId="clan_york"/>
+      <County id="county_cumberland" name="County of Cumberland" seat="Carlisle_town" holderClanId="clan_clifford" heldSince="1269">
+        <Barony id="barony_penrith" name="Barony of Penrith" seat="dadg_Penrith_castle" holderClanId="clan_neville_of_raby" heldSince="1397"/>
+        <Barony id="barony_kendal" name="Barony of Kendal" seat="dadg_Kendal_castle" holderClanId="clan_parr" heldSince="1383"/>
       </County>
     </Duchy>
 
-    <Duchy id="duchy_norfolk" name="Duchy of Norfolk" seat="dadg_Framlingham_castle" holderClanId="clan_mowbray">
-      <County id="county_norwich" name="County of Norwich" seat="Norwich_town" holderClanId="clan_howard">
-        <Barony id="barony_baconsthorpe" name="Barony of Baconsthorpe" seat="dadg_Baconsthorpe_castle" holderClanId="clan_paston"/>
+    <Duchy id="duchy_lancaster" name="Duchy of Lancaster" seat="dadg_Peveril_castle" holderClanId="clan_lancaster" heldSince="1362">
+      <County id="county_lancashire" name="County of Lancashire" seat="Lancaster_town" holderClanId="clan_lancaster" heldSince="1362">
+        <Barony id="barony_piel" name="Barony of Piel" seat="dadg_Piel_castle" holderClanId="clan_stanley" heldSince="1385"/>
+        <Barony id="barony_liverpool" name="Barony of Liverpool" seat="dadg_Liverpool_castle" holderClanId="clan_hastings" heldSince="1464"/>
       </County>
-      <County id="county_lynn" name="County of Lynn" seat="Kings_Lynn_town" holderClanId="clan_mowbray"/>
-      <County id="county_suffolk" name="County of Suffolk" seat="Bury_St_Edmunds_town" holderClanId="clan_de_la_pole">
-        <Barony id="barony_clare" name="Barony of Clare" seat="dadg_Clare_castle" holderClanId="clan_morley"/>
-      </County>
-      <County id="county_essex" name="County of Essex" seat="Colchester_town" holderClanId="clan_bourchier">
-        <Barony id="barony_hedingham" name="Barony of Hedingham" seat="dadg_Hedingham_castle" holderClanId="clan_de_vere"/>
+      <County id="county_cheshire" name="County of Cheshire" seat="Chester_town" holderClanId="clan_woodville" heldSince="1466">
+        <Barony id="barony_beeston" name="Barony of Beeston" seat="dadg_Beeston_castle" holderClanId="clan_vernon" heldSince="1450"/>
+        <Barony id="barony_chirk" name="Barony of Chirk" seat="dadg_Chirk_castle" holderClanId="clan_york" heldSince="1440"/>
       </County>
     </Duchy>
 
-    <Duchy id="duchy_somerset" name="Duchy of Somerset" seat="dadg_Wardour_castle" holderClanId="clan_beaufort">
-      <County id="county_bristol" name="County of Bristol" seat="Bristol_town" holderClanId="clan_beaufort">
-        <Barony id="barony_chepstow" name="Barony of Chepstow" seat="dadg_Chepstow_castle" holderClanId="clan_berkeley"/>
-        <Barony id="barony_gloucester" name="Barony of Gloucester" seat="dadg_Gloucester_castle" holderClanId="clan_beauchamp"/>
-        <Barony id="barony_farleigh" name="Barony of Farleigh" seat="dadg_Farleigh_castle" holderClanId="clan_holland"/>
-        <Barony id="barony_sherborne" name="Barony of Sherborne" seat="dadg_Sherborne_castle" holderClanId="clan_holland"/>
+    <Duchy id="duchy_norfolk" name="Duchy of Norfolk" seat="dadg_Framlingham_castle" holderClanId="clan_mowbray" heldSince="1397">
+      <County id="county_norwich" name="County of Norwich" seat="Norwich_town" holderClanId="clan_howard" heldSince="1470">
+        <Barony id="barony_baconsthorpe" name="Barony of Baconsthorpe" seat="dadg_Baconsthorpe_castle" holderClanId="clan_paston" heldSince="1440"/>
       </County>
-      <County id="county_devon" name="County of Devon" seat="Exeter_town" holderClanId="clan_holland">
-        <Barony id="barony_dunster" name="Barony of Dunster" seat="dadg_Dunster_castle" holderClanId="clan_dynham"/>
-        <Barony id="barony_plymouth" name="Barony of Plymouth" seat="dadg_Plymouth_castle" holderClanId="clan_blount"/>
-        <Barony id="barony_totnes" name="Barony of Totnes" seat="dadg_Totnes_castle" holderClanId="clan_basset"/>
-        <Barony id="barony_taunton" name="Barony of Taunton" seat="dadg_Taunton_castle" holderClanId="clan_harrington"/>
+      <County id="county_lynn" name="County of Lynn" seat="Kings_Lynn_town" holderClanId="clan_mowbray" heldSince="1397"/>
+      <County id="county_suffolk" name="County of Suffolk" seat="Bury_St_Edmunds_town" holderClanId="clan_de_la_pole" heldSince="1385">
+        <Barony id="barony_clare" name="Barony of Clare" seat="dadg_Clare_castle" holderClanId="clan_morley" heldSince="1420"/>
       </County>
-      <County id="county_cornwall" name="County of Cornwall" seat="Launceston_town" holderClanId="clan_courtenay">
-        <Barony id="barony_okehampton" name="Barony of Okehampton" seat="dadg_Okehampton_castle" holderClanId="clan_courtenay"/>
-        <Barony id="barony_saint_michaels_mount" name="Barony of Saint Michael's Mount" seat="dadg_Saint_Michaels_Mount_castle" holderClanId="clan_courtenay"/>
+      <County id="county_essex" name="County of Essex" seat="Colchester_town" holderClanId="clan_bourchier" heldSince="1461">
+        <Barony id="barony_hedingham" name="Barony of Hedingham" seat="dadg_Hedingham_castle" holderClanId="clan_de_vere" heldSince="1086"/>
       </County>
     </Duchy>
 
-    <Duchy id="duchy_wales" name="Principality of Wales" seat="dadg_Harlech_castle" holderClanId="clan_lancaster">
-      <County id="county_glamorgan" name="County of Glamorgan" seat="Cardiff_town" holderClanId="clan_neville_of_middleham">
-        <Barony id="barony_swansea" name="Barony of Swansea" seat="dadg_Swansea_castle" holderClanId="clan_herbert"/>
-        <Barony id="barony_caerphilly" name="Barony of Caerphilly" seat="dadg_Caerphilly_castle" holderClanId="clan_neville_of_middleham"/>
+    <Duchy id="duchy_somerset" name="Duchy of Somerset" seat="dadg_Wardour_castle" holderClanId="clan_beaufort" heldSince="1443">
+      <County id="county_bristol" name="County of Bristol" seat="Bristol_town" holderClanId="clan_beaufort" heldSince="1443">
+        <Barony id="barony_chepstow" name="Barony of Chepstow" seat="dadg_Chepstow_castle" holderClanId="clan_berkeley" heldSince="1430"/>
+        <Barony id="barony_gloucester" name="Barony of Gloucester" seat="dadg_Gloucester_castle" holderClanId="clan_beauchamp" heldSince="1420"/>
+        <Barony id="barony_farleigh" name="Barony of Farleigh" seat="dadg_Farleigh_castle" holderClanId="clan_holland" heldSince="1440"/>
+        <Barony id="barony_sherborne" name="Barony of Sherborne" seat="dadg_Sherborne_castle" holderClanId="clan_holland" heldSince="1445"/>
       </County>
-      <County id="county_pembroke" name="County of Pembroke" seat="Pembroke_town" holderClanId="clan_herbert">
-        <Barony id="barony_carmarthen" name="Barony of Carmarthen" seat="dadg_Carmarthen_castle" holderClanId="clan_lancaster"/>
+      <County id="county_devon" name="County of Devon" seat="Exeter_town" holderClanId="clan_holland" heldSince="1444">
+        <Barony id="barony_dunster" name="Barony of Dunster" seat="dadg_Dunster_castle" holderClanId="clan_dynham" heldSince="1467"/>
+        <Barony id="barony_plymouth" name="Barony of Plymouth" seat="dadg_Plymouth_castle" holderClanId="clan_blount" heldSince="1465"/>
+        <Barony id="barony_totnes" name="Barony of Totnes" seat="dadg_Totnes_castle" holderClanId="clan_basset" heldSince="1430"/>
+        <Barony id="barony_taunton" name="Barony of Taunton" seat="dadg_Taunton_castle" holderClanId="clan_harrington" heldSince="1460"/>
       </County>
-      <County id="county_ceredigion" name="County of Ceredigion" seat="Aberystwyth_town" holderClanId="clan_tudor">
-        <Barony id="barony_cardigan" name="Barony of Cardigan" seat="dadg_Cardigan_castle" holderClanId="clan_tudor"/>
+      <County id="county_cornwall" name="County of Cornwall" seat="Launceston_town" holderClanId="clan_courtenay" heldSince="1335">
+        <Barony id="barony_okehampton" name="Barony of Okehampton" seat="dadg_Okehampton_castle" holderClanId="clan_courtenay" heldSince="1173"/>
+        <Barony id="barony_saint_michaels_mount" name="Barony of Saint Michael's Mount" seat="dadg_Saint_Michaels_Mount_castle" holderClanId="clan_courtenay" heldSince="1450"/>
       </County>
-      <County id="county_gwynedd" name="County of Gwynedd" seat="Caernarfon_town" holderClanId="clan_devereux">
-        <Barony id="barony_conwy" name="Barony of Conwy" seat="dadg_Conwy_castle" holderClanId="clan_woodville"/>
-        <Barony id="barony_beaumaris" name="Barony of Beaumaris" seat="dadg_Beaumaris_castle" holderClanId="clan_devereux"/>
-        <Barony id="barony_denbigh" name="Barony of Denbigh" seat="dadg_Denbigh_castle" holderClanId="clan_herbert"/>
+    </Duchy>
+
+    <Duchy id="duchy_wales" name="Principality of Wales" seat="dadg_Harlech_castle" holderClanId="clan_lancaster" heldSince="1454">
+      <County id="county_glamorgan" name="County of Glamorgan" seat="Cardiff_town" holderClanId="clan_neville_of_middleham" heldSince="1449">
+        <Barony id="barony_swansea" name="Barony of Swansea" seat="dadg_Swansea_castle" holderClanId="clan_herbert" heldSince="1469"/>
+        <Barony id="barony_caerphilly" name="Barony of Caerphilly" seat="dadg_Caerphilly_castle" holderClanId="clan_neville_of_middleham" heldSince="1449"/>
+      </County>
+      <County id="county_pembroke" name="County of Pembroke" seat="Pembroke_town" holderClanId="clan_herbert" heldSince="1468">
+        <Barony id="barony_carmarthen" name="Barony of Carmarthen" seat="dadg_Carmarthen_castle" holderClanId="clan_lancaster" heldSince="1399"/>
+      </County>
+      <County id="county_ceredigion" name="County of Ceredigion" seat="Aberystwyth_town" holderClanId="clan_tudor" heldSince="1452">
+        <Barony id="barony_cardigan" name="Barony of Cardigan" seat="dadg_Cardigan_castle" holderClanId="clan_tudor" heldSince="1452"/>
+      </County>
+      <County id="county_gwynedd" name="County of Gwynedd" seat="Caernarfon_town" holderClanId="clan_devereux" heldSince="1461">
+        <Barony id="barony_conwy" name="Barony of Conwy" seat="dadg_Conwy_castle" holderClanId="clan_woodville" heldSince="1466"/>
+        <Barony id="barony_beaumaris" name="Barony of Beaumaris" seat="dadg_Beaumaris_castle" holderClanId="clan_devereux" heldSince="1461"/>
+        <Barony id="barony_denbigh" name="Barony of Denbigh" seat="dadg_Denbigh_castle" holderClanId="clan_herbert" heldSince="1461"/>
       </County>
     </Duchy>
 
     <!-- Counties held directly of the crown -->
-    <County id="county_london" name="County of London" seat="town_V6" holderClanId="clan_lancaster">
-      <Barony id="barony_windsor" name="Barony of Windsor" seat="dadg_Windsor_castle" holderClanId="clan_bourchier"/>
-      <Barony id="barony_berkhamsted" name="Barony of Berkhamsted" seat="dadg_Berkhamsted_castle" holderClanId="clan_lancaster"/>
-      <Barony id="barony_hertford" name="Barony of Hertford" seat="dadg_Hertford_castle" holderClanId="clan_bourchier"/>
+    <County id="county_london" name="County of London" seat="town_V6" holderClanId="clan_lancaster" heldSince="1399">
+      <Barony id="barony_windsor" name="Barony of Windsor" seat="dadg_Windsor_castle" holderClanId="clan_bourchier" heldSince="1461"/>
+      <Barony id="barony_berkhamsted" name="Barony of Berkhamsted" seat="dadg_Berkhamsted_castle" holderClanId="clan_lancaster" heldSince="1399"/>
+      <Barony id="barony_hertford" name="Barony of Hertford" seat="dadg_Hertford_castle" holderClanId="clan_bourchier" heldSince="1461"/>
     </County>
-    <County id="county_kent" name="County of Kent" seat="Canterbury_town" holderClanId="clan_grey_of_ruthin">
-      <Barony id="barony_dover" name="Barony of Dover" seat="dadg_Dover_castle" holderClanId="clan_west"/>
-      <Barony id="barony_rochester" name="Barony of Rochester" seat="dadg_Rochester_castle" holderClanId="clan_grey_of_ruthin"/>
-      <Barony id="barony_tonbridge" name="Barony of Tonbridge" seat="dadg_Tonbridge_castle" holderClanId="clan_fiennes_of_saye_and_sele"/>
+    <County id="county_kent" name="County of Kent" seat="Canterbury_town" holderClanId="clan_grey_of_ruthin" heldSince="1465">
+      <Barony id="barony_dover" name="Barony of Dover" seat="dadg_Dover_castle" holderClanId="clan_west" heldSince="1427"/>
+      <Barony id="barony_rochester" name="Barony of Rochester" seat="dadg_Rochester_castle" holderClanId="clan_grey_of_ruthin" heldSince="1465"/>
+      <Barony id="barony_tonbridge" name="Barony of Tonbridge" seat="dadg_Tonbridge_castle" holderClanId="clan_fiennes_of_saye_and_sele" heldSince="1447"/>
     </County>
-    <County id="county_sussex" name="County of Sussex" seat="Chichester_town" holderClanId="clan_fitzalan">
-      <Barony id="barony_lewes" name="Barony of Lewes" seat="dadg_Lewes_castle" holderClanId="clan_fienne_of_dacre"/>
-      <Barony id="barony_rye" name="Barony of Rye" seat="dadg_Rye_castle" holderClanId="clan_neville_of_middleham"/>
-      <Barony id="barony_arundel" name="Barony of Arundel" seat="dadg_Arundel_castle" holderClanId="clan_fitzalan"/>
+    <County id="county_sussex" name="County of Sussex" seat="Chichester_town" holderClanId="clan_fitzalan" heldSince="1243">
+      <Barony id="barony_lewes" name="Barony of Lewes" seat="dadg_Lewes_castle" holderClanId="clan_fienne_of_dacre" heldSince="1458"/>
+      <Barony id="barony_rye" name="Barony of Rye" seat="dadg_Rye_castle" holderClanId="clan_neville_of_middleham" heldSince="1460"/>
+      <Barony id="barony_arundel" name="Barony of Arundel" seat="dadg_Arundel_castle" holderClanId="clan_fitzalan" heldSince="1243"/>
     </County>
-    <County id="county_hampshire" name="County of Hampshire" seat="Southampton_town" holderClanId="clan_stafford">
-      <Barony id="barony_corfe" name="Barony of Corfe" seat="dadg_Corfe_castle" holderClanId="clan_stourton"/>
-      <Barony id="barony_carisbrooke" name="Barony of Carisbrooke" seat="dadg_Carisbrooke_castle" holderClanId="clan_woodville"/>
-      <Barony id="barony_farnham" name="Barony of Farnham" seat="dadg_Farnham_castle" holderClanId="clan_st_leger"/>
-      <Barony id="barony_winchester" name="Barony of Winchester" seat="dadg_Winchester_castle" holderClanId="clan_stafford"/>
+    <County id="county_hampshire" name="County of Hampshire" seat="Southampton_town" holderClanId="clan_stafford" heldSince="1444">
+      <Barony id="barony_corfe" name="Barony of Corfe" seat="dadg_Corfe_castle" holderClanId="clan_stourton" heldSince="1448"/>
+      <Barony id="barony_carisbrooke" name="Barony of Carisbrooke" seat="dadg_Carisbrooke_castle" holderClanId="clan_woodville" heldSince="1467"/>
+      <Barony id="barony_farnham" name="Barony of Farnham" seat="dadg_Farnham_castle" holderClanId="clan_st_leger" heldSince="1460"/>
+      <Barony id="barony_winchester" name="Barony of Winchester" seat="dadg_Winchester_castle" holderClanId="clan_stafford" heldSince="1444"/>
     </County>
-    <County id="county_oxford" name="County of Oxford" seat="Oxford_town" holderClanId="clan_de_vere">
-      <Barony id="barony_donnington" name="Barony of Donnington" seat="dadg_Donnington_castle" holderClanId="clan_willoughby"/>
+    <County id="county_oxford" name="County of Oxford" seat="Oxford_town" holderClanId="clan_de_vere" heldSince="1142">
+      <Barony id="barony_donnington" name="Barony of Donnington" seat="dadg_Donnington_castle" holderClanId="clan_willoughby" heldSince="1440"/>
     </County>
-    <County id="county_warwick" name="County of Warwick" seat="Coventry_town" holderClanId="clan_lancaster">
-      <Barony id="barony_kenilworth" name="Barony of Kenilworth" seat="dadg_Kenilworth_castle" holderClanId="clan_clinton"/>
-      <Barony id="barony_warwick" name="Barony of Warwick" seat="dadg_Warwick_castle" holderClanId="clan_neville_of_middleham"/>
-      <Barony id="barony_northampton" name="Barony of Northampton" seat="dadg_Northampton_castle" holderClanId="clan_lovell"/>
+    <County id="county_warwick" name="County of Warwick" seat="Coventry_town" holderClanId="clan_lancaster" heldSince="1399">
+      <Barony id="barony_kenilworth" name="Barony of Kenilworth" seat="dadg_Kenilworth_castle" holderClanId="clan_clinton" heldSince="1440"/>
+      <Barony id="barony_warwick" name="Barony of Warwick" seat="dadg_Warwick_castle" holderClanId="clan_neville_of_middleham" heldSince="1449"/>
+      <Barony id="barony_northampton" name="Barony of Northampton" seat="dadg_Northampton_castle" holderClanId="clan_lovell" heldSince="1430"/>
     </County>
-    <County id="county_hereford" name="County of Hereford" seat="Hereford_town" holderClanId="clan_neville_of_bergavenny">
-      <Barony id="barony_brecon" name="Barony of Brecon" seat="dadg_Brecon_castle" holderClanId="clan_neville_of_bergavenny"/>
-      <Barony id="barony_painscastle" name="Barony of Painscastle" seat="dadg_Painscastle_castle" holderClanId="clan_grey_of_wilton"/>
-      <Barony id="barony_worcester" name="Barony of Worcester" seat="dadg_Worcester_castle" holderClanId="clan_sutton"/>
+    <County id="county_hereford" name="County of Hereford" seat="Hereford_town" holderClanId="clan_neville_of_bergavenny" heldSince="1450">
+      <Barony id="barony_brecon" name="Barony of Brecon" seat="dadg_Brecon_castle" holderClanId="clan_neville_of_bergavenny" heldSince="1450"/>
+      <Barony id="barony_painscastle" name="Barony of Painscastle" seat="dadg_Painscastle_castle" holderClanId="clan_grey_of_wilton" heldSince="1400"/>
+      <Barony id="barony_worcester" name="Barony of Worcester" seat="dadg_Worcester_castle" holderClanId="clan_sutton" heldSince="1440"/>
     </County>
-    <County id="county_shropshire" name="County of Shropshire" seat="Shrewsbury_town" holderClanId="clan_talbot">
-      <Barony id="barony_ludlow" name="Barony of Ludlow" seat="dadg_Ludlow_castle" holderClanId="clan_york"/>
-      <Barony id="barony_montgomery" name="Barony of Montgomery" seat="dadg_Montgomery_castle" holderClanId="clan_grey_of_codnor"/>
-      <Barony id="barony_stafford" name="Barony of Stafford" seat="dadg_Stafford_castle" holderClanId="clan_tuchet"/>
+    <County id="county_shropshire" name="County of Shropshire" seat="Shrewsbury_town" holderClanId="clan_talbot" heldSince="1442">
+      <Barony id="barony_ludlow" name="Barony of Ludlow" seat="dadg_Ludlow_castle" holderClanId="clan_york" heldSince="1425"/>
+      <Barony id="barony_montgomery" name="Barony of Montgomery" seat="dadg_Montgomery_castle" holderClanId="clan_grey_of_codnor" heldSince="1400"/>
+      <Barony id="barony_stafford" name="Barony of Stafford" seat="dadg_Stafford_castle" holderClanId="clan_tuchet" heldSince="1408"/>
     </County>
 
   </Kingdom>
@@ -175,64 +181,64 @@
     clan, crowns seatless. Scotland had no duchies in this period, so everything is held of the
     king through a county or directly. Houses that own no town or castle hold no title.
   -->
-  <Kingdom id="kingdom_scotland" name="Scotland" kingClanId="clan_stewart">
-    <County id="county_lothian" name="County of Lothian" seat="dadg_sco_edinburgh_town" holderClanId="clan_stewart">
-      <Barony id="barony_dunbar" name="Barony of Dunbar" seat="dadg_sco_dunbar_castle" holderClanId="clan_hepburn"/>
+  <Kingdom id="kingdom_scotland" name="Scotland" kingClanId="clan_stewart" heldSince="1371">
+    <County id="county_lothian" name="County of Lothian" seat="dadg_sco_edinburgh_town" holderClanId="clan_stewart" heldSince="1371">
+      <Barony id="barony_dunbar" name="Barony of Dunbar" seat="dadg_sco_dunbar_castle" holderClanId="clan_hepburn" heldSince="1430"/>
     </County>
-    <County id="county_stirling" name="County of Stirling" seat="dadg_sco_stirling_town" holderClanId="clan_hamilton"/>
-    <County id="county_lanark" name="County of Lanark" seat="dadg_sco_glasgow_town" holderClanId="clan_hamilton">
-      <Barony id="barony_rothesay" name="Barony of Rothesay" seat="dadg_sco_rothesay_castle" holderClanId="clan_hamilton"/>
+    <County id="county_stirling" name="County of Stirling" seat="dadg_sco_stirling_town" holderClanId="clan_hamilton" heldSince="1455"/>
+    <County id="county_lanark" name="County of Lanark" seat="dadg_sco_glasgow_town" holderClanId="clan_hamilton" heldSince="1445">
+      <Barony id="barony_rothesay" name="Barony of Rothesay" seat="dadg_sco_rothesay_castle" holderClanId="clan_hamilton" heldSince="1460"/>
     </County>
-    <County id="county_carrick" name="County of Carrick" seat="dadg_sco_ayr_town" holderClanId="clan_kennedy"/>
-    <County id="county_nithsdale" name="County of Nithsdale" seat="dadg_sco_dumfries_town" holderClanId="clan_maxwell">
-      <Barony id="barony_caerlaverock" name="Barony of Caerlaverock" seat="dadg_sco_caerlaverock_castle" holderClanId="clan_maxwell"/>
-      <Barony id="barony_threave" name="Barony of Threave" seat="dadg_sco_threave_castle" holderClanId="clan_maxwell"/>
-      <Barony id="barony_hermitage" name="Barony of Hermitage" seat="dadg_sco_hermitage_castle" holderClanId="clan_maxwell"/>
+    <County id="county_carrick" name="County of Carrick" seat="dadg_sco_ayr_town" holderClanId="clan_kennedy" heldSince="1372"/>
+    <County id="county_nithsdale" name="County of Nithsdale" seat="dadg_sco_dumfries_town" holderClanId="clan_maxwell" heldSince="1440">
+      <Barony id="barony_caerlaverock" name="Barony of Caerlaverock" seat="dadg_sco_caerlaverock_castle" holderClanId="clan_maxwell" heldSince="1220"/>
+      <Barony id="barony_threave" name="Barony of Threave" seat="dadg_sco_threave_castle" holderClanId="clan_maxwell" heldSince="1455"/>
+      <Barony id="barony_hermitage" name="Barony of Hermitage" seat="dadg_sco_hermitage_castle" holderClanId="clan_maxwell" heldSince="1455"/>
     </County>
-    <County id="county_fife" name="County of Fife" seat="dadg_sco_st_andrews_town" holderClanId="clan_lindsay">
-      <Barony id="barony_lochleven" name="Barony of Lochleven" seat="dadg_sco_lochleven_castle" holderClanId="clan_ruthven"/>
+    <County id="county_fife" name="County of Fife" seat="dadg_sco_st_andrews_town" holderClanId="clan_lindsay" heldSince="1440">
+      <Barony id="barony_lochleven" name="Barony of Lochleven" seat="dadg_sco_lochleven_castle" holderClanId="clan_ruthven" heldSince="1440"/>
     </County>
-    <County id="county_crawford" name="County of Crawford" seat="dadg_sco_dundee_town" holderClanId="clan_lindsay"/>
-    <County id="county_gowrie" name="County of Gowrie" seat="dadg_sco_perth_town" holderClanId="clan_ruthven">
-      <Barony id="barony_glenorchy" name="Barony of Glenorchy" seat="dadg_sco_kilchurn_castle" holderClanId="clan_campbell"/>
+    <County id="county_crawford" name="County of Crawford" seat="dadg_sco_dundee_town" holderClanId="clan_lindsay" heldSince="1398"/>
+    <County id="county_gowrie" name="County of Gowrie" seat="dadg_sco_perth_town" holderClanId="clan_ruthven" heldSince="1300">
+      <Barony id="barony_glenorchy" name="Barony of Glenorchy" seat="dadg_sco_kilchurn_castle" holderClanId="clan_campbell" heldSince="1432"/>
     </County>
-    <County id="county_aberdeen" name="County of Aberdeen" seat="dadg_sco_aberdeen_town" holderClanId="clan_keith">
-      <Barony id="barony_dunnottar" name="Barony of Dunnottar" seat="dadg_sco_dunnottar_castle" holderClanId="clan_keith"/>
-      <Barony id="barony_mar" name="Barony of Mar" seat="dadg_sco_kildrummy_castle" holderClanId="clan_erskine"/>
+    <County id="county_aberdeen" name="County of Aberdeen" seat="dadg_sco_aberdeen_town" holderClanId="clan_keith" heldSince="1458">
+      <Barony id="barony_dunnottar" name="Barony of Dunnottar" seat="dadg_sco_dunnottar_castle" holderClanId="clan_keith" heldSince="1392"/>
+      <Barony id="barony_mar" name="Barony of Mar" seat="dadg_sco_kildrummy_castle" holderClanId="clan_erskine" heldSince="1438"/>
     </County>
-    <County id="county_moray" name="County of Moray" seat="dadg_sco_elgin_town" holderClanId="clan_dunbar_moray">
-      <Barony id="barony_strathbogie" name="Barony of Strathbogie" seat="dadg_sco_huntly_castle" holderClanId="clan_gordon"/>
+    <County id="county_moray" name="County of Moray" seat="dadg_sco_elgin_town" holderClanId="clan_dunbar_moray" heldSince="1372">
+      <Barony id="barony_strathbogie" name="Barony of Strathbogie" seat="dadg_sco_huntly_castle" holderClanId="clan_gordon" heldSince="1318"/>
     </County>
-    <County id="county_inverness" name="County of Inverness" seat="dadg_sco_inverness_town" holderClanId="clan_dunbar_moray">
-      <Barony id="barony_urquhart" name="Barony of Urquhart" seat="dadg_sco_urquhart_castle" holderClanId="clan_dunbar_moray"/>
+    <County id="county_inverness" name="County of Inverness" seat="dadg_sco_inverness_town" holderClanId="clan_dunbar_moray" heldSince="1430">
+      <Barony id="barony_urquhart" name="Barony of Urquhart" seat="dadg_sco_urquhart_castle" holderClanId="clan_dunbar_moray" heldSince="1430"/>
     </County>
-    <County id="county_orkney" name="County of Orkney" seat="dadg_sco_kirkevaag_village" holderClanId="clan_sinclair">
-      <Barony id="barony_caithness" name="Barony of Caithness" seat="dadg_sco_wick_town" holderClanId="clan_sinclair"/>
-      <Barony id="barony_sutherland" name="Barony of Sutherland" seat="dadg_sco_dornoch_town" holderClanId="clan_sinclair"/>
-      <Barony id="barony_dirlot" name="Barony of Dirlot" seat="dadg_sco_dirlot_castle" holderClanId="clan_stewart"/>
+    <County id="county_orkney" name="County of Orkney" seat="dadg_sco_kirkevaag_village" holderClanId="clan_sinclair" heldSince="1379">
+      <Barony id="barony_caithness" name="Barony of Caithness" seat="dadg_sco_wick_town" holderClanId="clan_sinclair" heldSince="1455"/>
+      <Barony id="barony_sutherland" name="Barony of Sutherland" seat="dadg_sco_dornoch_town" holderClanId="clan_sinclair" heldSince="1455"/>
+      <Barony id="barony_dirlot" name="Barony of Dirlot" seat="dadg_sco_dirlot_castle" holderClanId="clan_stewart" heldSince="1440"/>
     </County>
   </Kingdom>
 
-  <Kingdom id="kingdom_isles" name="Lordship of the Isles" kingClanId="clan_macdonald_isles">
-    <County id="county_islay" name="County of Islay" seat="dadg_sco_finlaggan_town" holderClanId="clan_macdonald_isles">
-      <Barony id="barony_dunyvaig" name="Barony of Dunyvaig" seat="dadg_sco_dunyvaig_castle" holderClanId="clan_macdonald_isles"/>
-      <Barony id="barony_knapdale" name="Barony of Knapdale" seat="dadg_sco_tarbert_castle" holderClanId="clan_macdonald_isles"/>
-      <Barony id="barony_duart" name="Barony of Duart" seat="dadg_sco_duart_castle" holderClanId="clan_maclean"/>
+  <Kingdom id="kingdom_isles" name="Lordship of the Isles" kingClanId="clan_macdonald_isles" heldSince="1336">
+    <County id="county_islay" name="County of Islay" seat="dadg_sco_finlaggan_town" holderClanId="clan_macdonald_isles" heldSince="1336">
+      <Barony id="barony_dunyvaig" name="Barony of Dunyvaig" seat="dadg_sco_dunyvaig_castle" holderClanId="clan_macdonald_isles" heldSince="1336"/>
+      <Barony id="barony_knapdale" name="Barony of Knapdale" seat="dadg_sco_tarbert_castle" holderClanId="clan_macdonald_isles" heldSince="1376"/>
+      <Barony id="barony_duart" name="Barony of Duart" seat="dadg_sco_duart_castle" holderClanId="clan_maclean" heldSince="1390"/>
     </County>
-    <County id="county_lewis" name="County of Lewis" seat="dadg_sco_stornoway_town" holderClanId="clan_macleod_lewis">
-      <Barony id="barony_dunvegan" name="Barony of Dunvegan" seat="dadg_sco_dunvegan_castle" holderClanId="clan_macleod"/>
-      <Barony id="barony_barra" name="Barony of Barra" seat="dadg_sco_kisimul_castle" holderClanId="clan_macneil_barra"/>
+    <County id="county_lewis" name="County of Lewis" seat="dadg_sco_stornoway_town" holderClanId="clan_macleod_lewis" heldSince="1343">
+      <Barony id="barony_dunvegan" name="Barony of Dunvegan" seat="dadg_sco_dunvegan_castle" holderClanId="clan_macleod" heldSince="1343"/>
+      <Barony id="barony_barra" name="Barony of Barra" seat="dadg_sco_kisimul_castle" holderClanId="clan_macneil_barra" heldSince="1427"/>
     </County>
-    <County id="county_ross" name="County of Ross" seat="dadg_sco_dingwall_town" holderClanId="clan_munro">
-      <Barony id="barony_balnagowan" name="Barony of Balnagowan" seat="dadg_sco_balnagowan_castle" holderClanId="clan_ross"/>
-      <Barony id="barony_foulis" name="Barony of Foulis" seat="dadg_sco_foulis_castle" holderClanId="clan_munro"/>
-      <Barony id="barony_kintail" name="Barony of Kintail" seat="dadg_sco_eilean_donan_castle" holderClanId="clan_mackenzie"/>
-      <Barony id="barony_sleat" name="Barony of Sleat" seat="dadg_sco_dunscaith_castle" holderClanId="clan_macdonald_sleat"/>
-      <Barony id="barony_cawdor" name="Barony of Cawdor" seat="dadg_sco_cawdor_castle" holderClanId="clan_calder"/>
+    <County id="county_ross" name="County of Ross" seat="dadg_sco_dingwall_town" holderClanId="clan_munro" heldSince="1437">
+      <Barony id="barony_balnagowan" name="Barony of Balnagowan" seat="dadg_sco_balnagowan_castle" holderClanId="clan_ross" heldSince="1370"/>
+      <Barony id="barony_foulis" name="Barony of Foulis" seat="dadg_sco_foulis_castle" holderClanId="clan_munro" heldSince="1350"/>
+      <Barony id="barony_kintail" name="Barony of Kintail" seat="dadg_sco_eilean_donan_castle" holderClanId="clan_mackenzie" heldSince="1463"/>
+      <Barony id="barony_sleat" name="Barony of Sleat" seat="dadg_sco_dunscaith_castle" holderClanId="clan_macdonald_sleat" heldSince="1469"/>
+      <Barony id="barony_cawdor" name="Barony of Cawdor" seat="dadg_sco_cawdor_castle" holderClanId="clan_calder" heldSince="1405"/>
     </County>
-    <County id="county_lochaber" name="County of Lochaber" seat="dadg_sco_inverlochy_town" holderClanId="clan_cameron">
-      <Barony id="barony_moidart" name="Barony of Moidart" seat="dadg_sco_tioram_castle" holderClanId="clan_clanranald"/>
-      <Barony id="barony_ardnamurchan" name="Barony of Ardnamurchan" seat="dadg_sco_mingary_castle" holderClanId="clan_maclain"/>
+    <County id="county_lochaber" name="County of Lochaber" seat="dadg_sco_inverlochy_town" holderClanId="clan_cameron" heldSince="1461">
+      <Barony id="barony_moidart" name="Barony of Moidart" seat="dadg_sco_tioram_castle" holderClanId="clan_clanranald" heldSince="1373"/>
+      <Barony id="barony_ardnamurchan" name="Barony of Ardnamurchan" seat="dadg_sco_mingary_castle" holderClanId="clan_maclain" heldSince="1341"/>
     </County>
   </Kingdom>
 </Feudalism>

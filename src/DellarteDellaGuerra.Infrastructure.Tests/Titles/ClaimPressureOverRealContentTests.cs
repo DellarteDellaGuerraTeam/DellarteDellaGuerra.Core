@@ -71,20 +71,20 @@ public class ClaimPressureOverRealContentTests
         // Sides are resolved by walking each house up to the first belligerent it meets, so what
         // a war costs depends on where in the hierarchy it is fought. Against the crown the whole
         // realm is on the board — Warwick alone against the other fifty-two, or York with the
-        // eleven houses of his affinity against the crown's forty-two. Two northern houses
+        // eight houses of his affinity against the crown's forty-five. Two northern houses
         // fighting each other put eight on the board and leave the other forty-five out of it.
         Content content = Content.Load();
 
         Assert.Equal((1f, 52f), content.Sides("clan_neville_of_middleham", "clan_lancaster"));
-        Assert.Equal((11f, 42f), content.Sides("clan_york", "clan_lancaster"));
+        Assert.Equal((8f, 45f), content.Sides("clan_york", "clan_lancaster"));
 
         Assert.Equal((7f, 1f), content.Sides("clan_percy", "clan_lumley"));
         Assert.Equal((1f, 7f), content.Sides("clan_lumley", "clan_percy"));
 
         // Nearest ancestor wins, so a liege who attacks his own vassal loses that vassal's whole
-        // branch: York musters eleven against the crown but only six against Talbot, because the
+        // branch: York musters eight against the crown but only three against Talbot, because the
         // five houses that answer to Talbot answer to York only through him.
-        Assert.Equal((6f, 5f), content.Sides("clan_york", "clan_talbot"));
+        Assert.Equal((3f, 5f), content.Sides("clan_york", "clan_talbot"));
     }
 
     [Fact]
@@ -124,8 +124,8 @@ public class ClaimPressureOverRealContentTests
         // pressed against one, so only the three strong claims between houses survive the filters.
         //
         // Were every holder a minor, ninety-four claimant-title pairs would survive them;
-        // seventy-two of them are priced at nothing because the claimant cannot field 1.25 times
-        // the defender, and the twenty-two
+        // sixty-seven of them are priced at nothing because the claimant cannot field 1.25 times
+        // the defender, and the twenty-seven
         // that do score top out at 0.6625 against a threshold of 0.8. So on a quiet day nobody
         // declares, which is the intended shape: ambition alone does not start a war.
         //
@@ -144,14 +144,14 @@ public class ClaimPressureOverRealContentTests
         Assert.Equal(3, quiet.Count(o => o.Strength == ClaimStrength.Strong));
         Assert.Equal(91, quiet.Count(o => o.Strength == ClaimStrength.Weak));
 
-        Assert.Equal(22, quiet.Count(o => content.Score(o) > 0f));
+        Assert.Equal(27, quiet.Count(o => content.Score(o) > 0f));
         Assert.Equal(0, quiet.Count(o => content.Score(o) >= DeclarationThreshold));
         Assert.Equal(0.6625f, quiet.Max(content.Score), 0.0001f);
 
         Assert.Equal(14, quiet.Count(o => content.Score(o with { DefenderDistracted = true }) >= DeclarationThreshold));
         Assert.Equal(14, quiet.Count(o => content.Score(o with { Relation = -100f }) >= DeclarationThreshold));
         Assert.Equal(
-            22,
+            27,
             quiet.Count(o =>
                 content.Score(o with { DefenderDistracted = true, Relation = -100f }) >= DeclarationThreshold));
         Assert.Equal(0, quiet.Count(o => content.Score(o with { Relation = 100f }) >= DeclarationThreshold));
@@ -163,7 +163,7 @@ public class ClaimPressureOverRealContentTests
     {
         // The ratio is capped at 2.25:1, and the real hierarchy produces mismatches far past it.
         // The crown could bring fifty-two houses against Warwick's one and would price that claim
-        // at exactly what Mowbray prices three-against-one at, because both saturate the cap and
+        // at exactly what Mowbray prices five-against-one at, because both saturate the cap and
         // both claims are weak. How good the claim is decides the rest: Stafford's strong claim on
         // Cheshire outscores both on a bare three-to-two advantage. A weak claim is only pressed
         // against a woman or a child, so the holders here are minors.
@@ -174,7 +174,7 @@ public class ClaimPressureOverRealContentTests
         ClaimOpportunity staffordAgainstWoodville = content.Opportunity("county_cheshire", "clan_stafford");
 
         Assert.Equal((52f, 1f), (crownAgainstWarwick.AttackerStrength, crownAgainstWarwick.DefenderStrength));
-        Assert.Equal((3f, 1f), (mowbrayAgainstBourchier.AttackerStrength, mowbrayAgainstBourchier.DefenderStrength));
+        Assert.Equal((5f, 1f), (mowbrayAgainstBourchier.AttackerStrength, mowbrayAgainstBourchier.DefenderStrength));
         Assert.Equal((3f, 2f), (staffordAgainstWoodville.AttackerStrength, staffordAgainstWoodville.DefenderStrength));
 
         Assert.Equal(ClaimStrength.Weak, crownAgainstWarwick.Strength);
