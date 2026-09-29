@@ -10,6 +10,7 @@ using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Heraldry;
+using DellarteDellaGuerra.Integration.Visor.Mission;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.Campaign;
 using DellarteDellaGuerra.Infrastructure.Events;
@@ -37,9 +38,10 @@ using DellarteDellaGuerra.Integration.Titles;
 using DellarteDellaGuerra.Integration.Titles.UI;
 using DellarteDellaGuerra.Titles.Api;
 using DellarteDellaGuerra.Titles.Api.Campaign;
-using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
+using DellarteDellaGuerra.Integration.SiegeTactics.Mission;
+using DellarteDellaGuerra.Integration.Tournament.Jousting;
+using DellarteDellaGuerra.Integration.Weather;
 using DellarteDellaGuerra.Tournament.Api;
-using DellarteDellaGuerra.Tournament.Jousting.Api.Campaign;
 using DellarteDellaGuerra.Utils;
 using Harmony.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
@@ -82,6 +84,8 @@ namespace DellarteDellaGuerra.Integration
 
         protected override void OnBeforeInitialModuleScreenSetAsRoot()
         {
+            // Deferred until here so that the brush factory and the sprite categories are loaded.
+            _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().RegisterNameplateBrush();
             InfoPrinter.Display("DADG loaded");
             var currentModule = TaleWorlds.MountAndBlade.Module.CurrentModule;
             _serviceProvider.GetRequiredService<DadgCampaignStartButtonAdder>().AddDadgCampaignStartButton(currentModule);
@@ -98,6 +102,9 @@ namespace DellarteDellaGuerra.Integration
                 .RegisterLoadedDadgTypes();
 
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
+
+            _serviceProvider.GetRequiredService<DadgUIExtenderRegistrar>().RegisterAndEnable();
+            _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().InstallOnSubModuleLoad();
 
             // UIExtenderEx discovers the feudal encyclopedia mixins and prefab
             // patches in this assembly by attribute
@@ -131,12 +138,15 @@ namespace DellarteDellaGuerra.Integration
                 privateWarConfig?.PrivateWarEnemyNameplateColorArgb,
                 privateWarConfig?.PrivateWarAllyNameplateColorArgb);
 
+            campaignGameStarter.AddModel(new DadgMapWeatherModel(
+                campaignGameStarter.Models.OfType<MapWeatherModel>().Last()));
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
             var joustRequirementsProvider = _serviceProvider.GetRequiredService<IJoustRequirementsProvider>();
             SettlementAccessModel settlementAccessModel = new TournamentSettlementAccessModel(
                 campaignGameStarter.Models.OfType<SettlementAccessModel>().Last(),
                 joustRequirementsProvider);
             campaignGameStarter.AddModel(settlementAccessModel);
+            _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().InstallCampaign(campaignGameStarter);
 
             var loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
             campaignGameStarter.AddModel(new DadgSiegeStrategyActionModel(
@@ -172,8 +182,6 @@ namespace DellarteDellaGuerra.Integration
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();
-
-            campaignGameStarter.AddBehavior(new JoustTournamentCampaignBehavior(joustRequirementsProvider));
         }
 
         public override void OnGameInitializationFinished(Game game)
@@ -190,8 +198,11 @@ namespace DellarteDellaGuerra.Integration
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmReloadMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<FirearmSmokeMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<RemoveSiegeTowerSpawnersMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<SiegeAssaultDiagnosticsMissionLogic>());
+        mission.AddMissionBehavior(_serviceProvider.GetRequiredService<CapacityWeightedAssaultMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<BannerSurcoatMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<TournamentRecapBannerMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<VisorToggleMissionLogic>());
         }
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)

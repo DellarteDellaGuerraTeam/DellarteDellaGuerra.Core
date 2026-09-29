@@ -12,9 +12,12 @@ using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
+using DellarteDellaGuerra.Domain.Visor;
+using DellarteDellaGuerra.Domain.Visor.Port;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Reload;
 using DellarteDellaGuerra.Heraldry;
+using DellarteDellaGuerra.Integration.Visor.Mission;
 using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
 using DellarteDellaGuerra.Infrastructure.Configuration.Models;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
@@ -26,8 +29,8 @@ using DellarteDellaGuerra.Infrastructure.Firearm.Patches;
 using DellarteDellaGuerra.Infrastructure.Heraldry.Patches;
 using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
-using DellarteDellaGuerra.Infrastructure.Poc.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
+using DellarteDellaGuerra.Infrastructure.Visor.Spi;
 using DellarteDellaGuerra.Integration.CampaignTime;
 using DellarteDellaGuerra.Infrastructure.Titles;
 using DellarteDellaGuerra.Integration.Initialisation;
@@ -35,11 +38,15 @@ using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
+using DellarteDellaGuerra.Integration.SiegeTactics.Mission;
 using DellarteDellaGuerra.Integration.Titles;
 using DellarteDellaGuerra.Titles.Api.Campaign;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Infrastructure.Tournament.Jousting;
+using DellarteDellaGuerra.Integration.Tournament.Jousting;
+using DellarteDellaGuerra.Integration.Tournament.Jousting.UI;
 using DellarteDellaGuerra.Tournament.Api;
+using DellarteDellaGuerra.Tournament.Jousting.Api.Missions;
 using DellarteDellaGuerra.Tournament.Reward.Spi;
 using DellarteDellaGuerra.Tournament.Reward.Spi.Mapper;
 using Harmony.DependencyInjection;
@@ -92,6 +99,7 @@ public class DadgServiceContainer
         services.AddSingleton<IConfigurationProvider<DadgConfig>>(sp => sp.GetRequiredService<DadgConfigWatcher>());
         RegisterEvent<SubModuleLoadEvent>(services);
         services.AddSingleton<DadgScriptComponentRegistrar>();
+        services.AddSingleton<DadgUIExtenderRegistrar>();
         services.AddSingleton<CampaignBehaviourDisabler>();
         services.AddSingleton<DadgCampaignTimeModel>();
         services.AddSingleton<DadgCampaignStartButtonAdder>();
@@ -118,7 +126,12 @@ public class DadgServiceContainer
         services.AddSingleton<IGetTournamentRewardUseCase, GetTournamentRewardUseCase>();
         services.AddSingleton<IJoustRequirementsProvider>(sp =>
             new JoustRequirementsConfig(sp.GetRequiredService<DadgConfigWatcher>()));
+        services.AddSingleton<IJoustingFeatureToggle>(sp =>
+            new JoustingFeatureToggleConfig(sp.GetRequiredService<DadgConfigWatcher>()));
+        services.AddSingleton<JoustingMissionManager>();
         services.AddTransient<DadgTournamentModel>();
+        services.AddSingleton<JoustTournamentNameplateBrushRegistrar>();
+        services.AddSingleton<JoustingFeatureInstaller>();
     }
 
     private static void RegisterDisplayServices(IServiceCollection services)
@@ -136,8 +149,13 @@ public class DadgServiceContainer
         services.AddTransient<FirearmReloadMissionLogic>();
         services.AddTransient<FirearmSmokeMissionLogic>();
         services.AddTransient<RemoveSiegeTowerSpawnersMissionLogic>();
+        services.AddTransient<SiegeAssaultDiagnosticsMissionLogic>();
+        services.AddTransient<CapacityWeightedAssaultMissionLogic>();
         services.AddTransient<BannerSurcoatMissionLogic>();
         services.AddTransient<TournamentRecapBannerMissionLogic>();
+        services.AddSingleton<IVisorVariantRepository, VisorVariantXmlRepository>();
+        services.AddSingleton<VisorVariantCatalog>();
+        services.AddTransient<VisorToggleMissionLogic>();
     }
 
     private static void RegisterTitleServices(IServiceCollection services)
@@ -199,11 +217,8 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, GetHolsterImageForBuIletsInInventoryPatch>();
         // Steam
         services.AddSingleton<IPatch, FixSettlementFilePathPatch>();
-        services.AddSingleton<IPatch, FixSettlementDistanceCacheFilePathPatch>();
-        // Music
+            // Music
         services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
-        // POC
-        services.AddSingleton<IPatch, PocConfigReaderOverriderPatch>();
         // Siege engines
         services.AddSingleton<IPatch, CannonballTrailCleanupPatch>();
     }

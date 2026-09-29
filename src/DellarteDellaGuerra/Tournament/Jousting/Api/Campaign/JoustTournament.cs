@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Tournament.Api;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Missions;
@@ -15,16 +14,12 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Campaign
 {
     public class JoustTournament : DadgFightingTournament
     {
-        private const string SceneName = "dadg_joust_v2";
+        private const string SceneName = "dadg_joust_v3";
 
-        public JoustTournament(Town town, IGetTournamentRewardUseCase getTournamentRewardUseCase,
-            ILoggerFactory loggerFactory)
+        public JoustTournament(Town town, IGetTournamentRewardUseCase getTournamentRewardUseCase)
             : base(town, getTournamentRewardUseCase)
         {
-            LoggerFactory = loggerFactory;
         }
-
-        internal ILoggerFactory LoggerFactory { get; }
 
         public override int MaxTeamSize => 1;
         public override int MaxTeamNumberPerMatch => 2;
@@ -65,7 +60,8 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Campaign
 
         public override void OpenMission(Settlement settlement, bool isPlayerParticipating)
         {
-            JoustingMissionManager.OpenJoustingFightMission(SceneName, this, settlement, settlement.Culture,
+            JoustingMissionManagerProvider.Instance.OpenJoustingFightMission(SceneName, this, settlement,
+                settlement.Culture,
                 isPlayerParticipating && CanBeAParticipant(CharacterObject.PlayerCharacter, true));
         }
 
