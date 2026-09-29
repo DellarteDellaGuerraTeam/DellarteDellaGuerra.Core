@@ -184,8 +184,8 @@ public class HolderDeathOverRealContentTests
         afterDeath.ExecuteSuccession(warwick);
         IReadOnlyList<Claim> after = afterDeath.GenerateClaims();
 
-        Assert.Equal(399, before.Count);
-        Assert.Equal(339, after.Count);
+        Assert.Equal(449, before.Count);
+        Assert.Equal(389, after.Count);
 
         Assert.Equal(60, Key(before).Except(Key(after)).Count());
         Assert.Equal(

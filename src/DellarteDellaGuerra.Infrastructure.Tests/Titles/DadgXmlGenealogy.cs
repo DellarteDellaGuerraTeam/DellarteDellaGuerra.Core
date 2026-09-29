@@ -138,20 +138,6 @@ internal sealed class DadgXmlGenealogy : IGenealogy
         return new DadgXmlGenealogy(heroesById, _leaderIdByClanId);
     }
 
-    /// <summary>A view of the same content in which a hero has a daughter the content does not author.</summary>
-    public DadgXmlGenealogy WithDaughter(string fatherId, string daughterId, float age)
-    {
-        HeroNode father = RequiredHero(fatherId);
-
-        var heroesById = new Dictionary<string, HeroNode>(_heroesById)
-        {
-            [fatherId] = father with { ChildIds = father.ChildIds.Append(daughterId).ToList() },
-            [daughterId] = new HeroNode(daughterId, true, true, father.ClanId, Array.Empty<string>(), fatherId, age)
-        };
-
-        return new DadgXmlGenealogy(heroesById, _leaderIdByClanId);
-    }
-
     /// <summary>A view of the same content in which some heroes are of another age.</summary>
     public DadgXmlGenealogy WithAge(IEnumerable<string> heroIds, float age)
     {
