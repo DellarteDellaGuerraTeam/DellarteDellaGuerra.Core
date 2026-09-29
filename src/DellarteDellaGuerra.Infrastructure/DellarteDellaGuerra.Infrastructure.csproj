@@ -72,6 +72,8 @@
         <Copy
                 SourceFiles="@(ClientFiles)"
                 DestinationFolder="$(MSBuildThisFileDirectory)..\..\bin\Win64_Shipping_wEditor\%(RecursiveDir)"
-                SkipUnchangedFiles="true" />
+                SkipUnchangedFiles="true"
+                Retries="0"
+                ContinueOnError="WarnAndContinue" />
     </Target>
 </Project>
