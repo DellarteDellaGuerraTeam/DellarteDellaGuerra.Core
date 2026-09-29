@@ -5,7 +5,7 @@
       "hooks": [
         {
           "type": "command",
-          "command": "pwsh -NoProfile -File \"${PLUGIN_ROOT}/.apm/hooks/scripts/jb-pause-guard.ps1\""
+          "command": "pwsh -NoProfile -Command '& \"${PLUGIN_ROOT}/.apm/hooks/scripts/jb-pause-guard.ps1\"'"
         }
       ]
     }

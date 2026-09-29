@@ -37,7 +37,6 @@ Inventory of every gameplay feature, where the C# code lives, and key implementa
 ## POC Integration
 - POC = Bannerlord POC mod (banner & heraldry customisation)
 - Custom banners for all English clans/kingdoms; randomised armour colours
-- `Infrastructure/Poc/Patches/PocConfigReaderOverriderPatch` redirects POC's config read path → `../config/poc.config.json`
 - Works whether POC is bundled inside DADG or is an external module (Steam Workshop compatible)
 - Full docs: `doc/poc.integration.md`
 

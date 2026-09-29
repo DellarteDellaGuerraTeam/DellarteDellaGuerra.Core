@@ -106,3 +106,4 @@ src/apm_modules/
 src/.agents/
 src/.claude/
 src/.codex/
+src/doc
