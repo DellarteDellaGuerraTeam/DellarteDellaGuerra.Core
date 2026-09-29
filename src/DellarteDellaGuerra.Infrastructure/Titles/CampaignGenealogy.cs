@@ -3,7 +3,6 @@ using System.Linq;
 using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.ObjectSystem;
 
 namespace DellarteDellaGuerra.Infrastructure.Titles;
 
@@ -16,7 +15,7 @@ public class CampaignGenealogy : IGenealogy
 {
     public HeroNode? GetHero(string heroId)
     {
-        var hero = MBObjectManager.Instance?.GetObject<Hero>(heroId);
+        var hero = TaleWorlds.CampaignSystem.Campaign.Current?.CampaignObjectManager.Find<Hero>(heroId);
         if (hero is null) return null;
 
         return new HeroNode(
@@ -32,9 +31,9 @@ public class CampaignGenealogy : IGenealogy
 
     public string? GetClanLeaderId(string clanId)
     {
-        return MBObjectManager.Instance?.GetObject<Clan>(clanId)?.Leader?.StringId;
+        return TaleWorlds.CampaignSystem.Campaign.Current?.CampaignObjectManager.Find<Clan>(clanId)?.Leader?.StringId;
     }
 
     public string? GetClanOf(string heroId)
-        => MBObjectManager.Instance?.GetObject<Hero>(heroId)?.Clan?.StringId;
+        => TaleWorlds.CampaignSystem.Campaign.Current?.CampaignObjectManager.Find<Hero>(heroId)?.Clan?.StringId;
 }
