@@ -7,9 +7,12 @@ using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders.Ports;
 using DellarteDellaGuerra.Domain.Tournament.Reward;
 using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
+using DellarteDellaGuerra.Domain.Visor;
+using DellarteDellaGuerra.Domain.Visor.Port;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Reload;
 using DellarteDellaGuerra.Heraldry;
+using DellarteDellaGuerra.Integration.Visor.Mission;
 using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
 using DellarteDellaGuerra.Infrastructure.Configuration.Models;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
@@ -21,6 +24,7 @@ using DellarteDellaGuerra.Infrastructure.Firearm.Patches;
 using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
+using DellarteDellaGuerra.Infrastructure.Visor.Spi;
 using DellarteDellaGuerra.Integration.CampaignTime;
 using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.Music.Patches;
@@ -123,6 +127,9 @@ public class DadgServiceContainer
         services.AddTransient<CapacityWeightedAssaultMissionLogic>();
         services.AddTransient<BannerSurcoatMissionLogic>();
         services.AddTransient<TournamentRecapBannerMissionLogic>();
+        services.AddSingleton<IVisorVariantRepository, VisorVariantXmlRepository>();
+        services.AddSingleton<VisorVariantCatalog>();
+        services.AddTransient<VisorToggleMissionLogic>();
     }
 
     private static void RegisterPatches(IServiceCollection services)
