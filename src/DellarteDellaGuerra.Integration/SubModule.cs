@@ -9,6 +9,7 @@ using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Heraldry;
+using DellarteDellaGuerra.Integration.Visor.Mission;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.Campaign;
 using DellarteDellaGuerra.Infrastructure.Events;
@@ -140,6 +141,7 @@ namespace DellarteDellaGuerra.Integration
         mission.AddMissionBehavior(_serviceProvider.GetRequiredService<CapacityWeightedAssaultMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<BannerSurcoatMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<TournamentRecapBannerMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<VisorToggleMissionLogic>());
         }
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)
