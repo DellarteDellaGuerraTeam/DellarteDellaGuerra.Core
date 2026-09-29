@@ -32,11 +32,11 @@ public class ClaimPressureOverRealContentTests
     public void EveryClaimTheContentDerivesIsOneTheEvaluatorWillActOn()
     {
         // Derivation and evaluation have to agree or the daily tick spends its time on claims it
-        // will never press. They do, on all 399: derivation bars the holder himself and nobody
+        // will never press. They do, on all 449: derivation bars the holder himself and nobody
         // else, and that is the same bar evaluation applies.
         Content content = Content.Load();
 
-        Assert.Equal(399, content.Claims().Count);
+        Assert.Equal(449, content.Claims().Count);
         Assert.All(content.Claims(), claim => Assert.True(content.IsActionable(claim)));
     }
 
@@ -123,8 +123,8 @@ public class ClaimPressureOverRealContentTests
         // Every dignity the content authors is held by a grown man, and a weak claim cannot be
         // pressed against one, so only the three strong claims between houses survive the filters.
         //
-        // Were every holder a minor, ninety-four claimant-title pairs would survive them;
-        // sixty-seven of them are priced at nothing because the claimant cannot field 1.25 times
+        // Were every holder a minor, ninety-nine claimant-title pairs would survive them;
+        // seventy-two of them are priced at nothing because the claimant cannot field 1.25 times
         // the defender, and the twenty-seven
         // that do score top out at 0.6625 against a threshold of 0.8. So on a quiet day nobody
         // declares, which is the intended shape: ambition alone does not start a war.
@@ -140,9 +140,9 @@ public class ClaimPressureOverRealContentTests
         Content content = adults.WithMinorHolders();
         IReadOnlyList<ClaimOpportunity> quiet = content.Opportunities();
 
-        Assert.Equal(94, quiet.Count);
+        Assert.Equal(99, quiet.Count);
         Assert.Equal(3, quiet.Count(o => o.Strength == ClaimStrength.Strong));
-        Assert.Equal(91, quiet.Count(o => o.Strength == ClaimStrength.Weak));
+        Assert.Equal(96, quiet.Count(o => o.Strength == ClaimStrength.Weak));
 
         Assert.Equal(27, quiet.Count(o => content.Score(o) > 0f));
         Assert.Equal(0, quiet.Count(o => content.Score(o) >= DeclarationThreshold));
@@ -206,24 +206,24 @@ public class ClaimPressureOverRealContentTests
     public void EveryClaimAHouseHoldsOnItsOwnDignityHasAPretenderToPressIt()
     {
         // The spinoff is what makes a claim on one's own house actionable, and it needs a living
-        // member of that house who is not the holder to found the branch with. All eighty-six of
-        // them have one, across forty-seven houses, so nothing the content authors goes unpressed
+        // member of that house who is not the holder to found the branch with. All hundred and sixteen
+        // of them have one, across sixty-six houses, so nothing the content authors goes unpressed
         // for want of a claimant — the eight crown dignities the inter-clan pass has to leave out
-        // among them. Nine of the eighty-six are weak and wait for the holder to be a woman or a
-        // child: against the grown men who hold them today, seventy-seven can be pressed.
+        // among them. Nine of the hundred and sixteen are weak and wait for the holder to be a woman
+        // or a child: against the grown men who hold them today, a hundred and seven can be pressed.
         Content adults = Content.Load();
         Content content = adults.WithMinorHolders();
         IReadOnlyList<Claim> sameClan = content.SameClanBestClaims();
         IReadOnlyList<ClaimOpportunity> internals = content.InternalOpportunities();
 
-        Assert.Equal(86, sameClan.Count);
+        Assert.Equal(116, sameClan.Count);
         Assert.All(sameClan, claim => Assert.NotNull(content.Pretender(claim)));
 
-        Assert.Equal(77, adults.InternalOpportunities().Count);
+        Assert.Equal(107, adults.InternalOpportunities().Count);
         Assert.All(adults.InternalOpportunities(), o => Assert.Equal(ClaimStrength.Strong, o.Strength));
 
-        Assert.Equal(86, internals.Count);
-        Assert.Equal(47, internals.Select(o => o.DefenderClanId).Distinct().Count());
+        Assert.Equal(116, internals.Count);
+        Assert.Equal(66, internals.Select(o => o.DefenderClanId).Distinct().Count());
         Assert.Equal(
             content.TitlesHeldBy("clan_lancaster"),
             internals.Where(o => o.DefenderClanId == "clan_lancaster").Select(o => o.TitleId).OrderBy(id => id));
@@ -235,7 +235,7 @@ public class ClaimPressureOverRealContentTests
     {
         // A branch that does not exist yet has no vassals, so the chain walk hands the pretender
         // nothing while it hands the holder the whole house and everything sworn under it. Not one
-        // of the eighty-six prices above zero, which is the intended shape: a war inside a house is
+        // of the hundred and sixteen prices above zero, which is the intended shape: a war inside a house is
         // fought with the retinue its claimant rides out with and the friends he can talk round,
         // never on the strength of the house he is leaving.
         Content content = Content.Load().WithMinorHolders();
@@ -254,7 +254,7 @@ public class ClaimPressureOverRealContentTests
         // runtime state, so every house here is indifferent and answers on the claim and the odds
         // alone. Against odds of nothing to one those odds alone would send the uncommitted houses
         // to the holder — except that a strong claim's legitimacy is worth just enough to keep them
-        // home. So the seventy-seven strong claims move nobody, and the nine weak ones put all
+        // home. So the hundred and seven strong claims move nobody, and the nine weak ones put all
         // fifty-three houses of England behind the holder.
         //
         // Nobody ever answers the pretender, which is the same finding from the other side: with
@@ -269,7 +269,7 @@ public class ClaimPressureOverRealContentTests
         ClaimOpportunity[] strong = internals.Where(o => o.Strength == ClaimStrength.Strong).ToArray();
         ClaimOpportunity[] weak = internals.Where(o => o.Strength == ClaimStrength.Weak).ToArray();
 
-        Assert.Equal(77, strong.Length);
+        Assert.Equal(107, strong.Length);
         Assert.Equal(9, weak.Length);
 
         Assert.All(internals, o => Assert.Empty(content.Solicit(o).AttackerSupporters));
@@ -287,7 +287,7 @@ public class ClaimPressureOverRealContentTests
     [Trait("Category", "DADG content integration")]
     public void OnlyARoutDrawsAnAnswerWhileNoHouseHasAGrievance()
     {
-        // The same indifferent realm asked about the ninety-four inter-clan pairs. Only claimants
+        // The same indifferent realm asked about the ninety-nine inter-clan pairs. Only claimants
         // with no affinity at all draw an answer, and what they draw is the whole uncommitted realm
         // onto the holder: hopeless odds are the one thing that moves a house with no grievance to
         // trade on.
@@ -358,28 +358,28 @@ public class ClaimPressureOverRealContentTests
     [Trait("Category", "DADG content integration")]
     public void AnEnglishLadyWhoWedsAScottishLordCallsHisHouseToHerFathersFeuds()
     {
-        // Courtenay's eldest daughter marries the lord of Maxwell. She joins his house, which
-        // makes Courtenay his father-in-law: Maxwell is now asked each time Clifford presses
-        // a claim on a Courtenay seat, though with no relation in play he answers neither side.
-        // Kinship gets him asked; it does not make him fight. He is still not asked into
+        // Courtenay's eldest daughter marries the lord of Ruthven, who has no wife. She joins his
+        // house, which makes Courtenay his father-in-law: Ruthven is now asked each time Clifford
+        // presses a claim on a Courtenay seat, though with no relation in play he answers neither
+        // side. Kinship gets him asked; it does not make him fight. He is still not asked into
         // English feuds that Courtenay has no part in. Clifford's claims are weak, so all of this
         // waits for Courtenay's seats to be held by a woman or a child: here the holders are minors.
         //
-        // Her blood claims go with her, so Maxwell now holds her three claims on Courtenay's
-        // seats. They are weak too, so while Courtenay's grown lord holds the seats none can be
-        // pressed. Against a minor they could be, and it is then the shared-kingdom check in
+        // Her blood claims go with her, so Ruthven, which held none, now holds her three claims on
+        // Courtenay's seats. They are weak too, so while Courtenay's grown lord holds the seats none
+        // can be pressed. Against a minor they could be, and it is then the shared-kingdom check in
         // ClaimPressureCampaignBehavior, which this harness leaves out, that still drops them.
-        const string maxwell = "clan_maxwell";
+        const string ruthven = "clan_ruthven";
         const string courtenay = "clan_courtenay";
         string[] courtenaySeats = { "barony_okehampton", "barony_saint_michaels_mount", "county_cornwall" };
 
         Content content = Content.Load();
-        Content married = content.WithMarriage("dadg_sco_lord_clan_maxwell", "dadg_lord_16_2");
+        Content married = content.WithMarriage("dadg_sco_lord_clan_ruthven", "dadg_lord_16_2");
         Content contentMinors = content.WithMinorHolders();
         Content marriedMinors = married.WithMinorHolders();
 
-        Assert.False(content.IsBonded(maxwell, courtenay, 0f));
-        Assert.True(married.IsBonded(maxwell, courtenay, 0f));
+        Assert.False(content.IsBonded(ruthven, courtenay, 0f));
+        Assert.True(married.IsBonded(ruthven, courtenay, 0f));
 
         Assert.DoesNotContain(
             married.Opportunities(), o => o.AttackerClanId == "clan_clifford" && o.DefenderClanId == courtenay);
@@ -391,27 +391,27 @@ public class ClaimPressureOverRealContentTests
         Assert.All(cliffordsFeuds, o =>
         {
             Assert.DoesNotContain(
-                maxwell, contentMinors.Candidates(contentMinors.Opportunity(o.TitleId, "clan_clifford")));
-            Assert.Contains(maxwell, marriedMinors.Candidates(o));
+                ruthven, contentMinors.Candidates(contentMinors.Opportunity(o.TitleId, "clan_clifford")));
+            Assert.Contains(ruthven, marriedMinors.Candidates(o));
 
             SupportDecision support = marriedMinors.Solicit(o);
-            Assert.DoesNotContain(maxwell, support.AttackerSupporters);
-            Assert.DoesNotContain(maxwell, support.DefenderSupporters);
+            Assert.DoesNotContain(ruthven, support.AttackerSupporters);
+            Assert.DoesNotContain(ruthven, support.DefenderSupporters);
         });
-        Assert.DoesNotContain(maxwell, married.Candidates(married.Opportunity("county_cheshire", "clan_stafford")));
+        Assert.DoesNotContain(ruthven, married.Candidates(married.Opportunity("county_cheshire", "clan_stafford")));
 
-        Assert.Empty(content.Claims().Where(c => c.ClaimantClanId == maxwell));
+        Assert.Empty(content.Claims().Where(c => c.ClaimantClanId == ruthven));
         Assert.Equal(
             courtenaySeats,
-            married.Claims().Where(c => c.ClaimantClanId == maxwell).Select(c => c.TitleId).OrderBy(id => id));
+            married.Claims().Where(c => c.ClaimantClanId == ruthven).Select(c => c.TitleId).OrderBy(id => id));
         Assert.All(
-            married.Claims().Where(c => c.ClaimantClanId == maxwell),
+            married.Claims().Where(c => c.ClaimantClanId == ruthven),
             c => Assert.Equal(ClaimStrength.Weak, c.Strength));
-        Assert.DoesNotContain(married.Opportunities(), o => o.AttackerClanId == maxwell);
+        Assert.DoesNotContain(married.Opportunities(), o => o.AttackerClanId == ruthven);
         Assert.Equal(
             courtenaySeats,
-            marriedMinors.Opportunities().Where(o => o.AttackerClanId == maxwell).Select(o => o.TitleId).OrderBy(id => id));
-        Assert.Contains(maxwell, married.Realms()["clan_stewart"]);
+            marriedMinors.Opportunities().Where(o => o.AttackerClanId == ruthven).Select(o => o.TitleId).OrderBy(id => id));
+        Assert.Contains(ruthven, married.Realms()["clan_stewart"]);
         Assert.Contains(courtenay, married.Realms()["clan_lancaster"]);
     }
 
@@ -419,49 +419,45 @@ public class ClaimPressureOverRealContentTests
     [Trait("Category", "DADG content integration")]
     public void AScottishLadyWhoWedsAnEnglishLordCallsHerFathersHouseToHisFeuds()
     {
-        // The other way round: the lord of Percy marries a daughter of the lord of Maxwell. The
-        // Scottish houses do not author their families yet, so she is a stand-in, as a daughter
-        // born in play would be. She joins Percy's house, which makes Maxwell his father-in-law:
-        // Maxwell is now asked each time De Vere presses a claim on a Percy seat, and again, with
-        // no relation in play, he answers neither side.
+        // The other way round: the lord of Percy marries Katherine, the unwed daughter of the lord
+        // of Kennedy. She joins Percy's house, which makes Kennedy his father-in-law: Kennedy is
+        // now asked each time De Vere presses a claim on a Percy seat, and again, with no relation
+        // in play, he answers neither side.
         //
-        // Her blood claims go with her, as the English bride's do: she is heir to every seat her
-        // father holds, so Percy now has a claim on each of Maxwell's Scottish dignities. A
-        // daughter's claim is weak, so while Maxwell's grown lord holds those seats none can be
-        // pressed. Against a minor they could be, and would then be dropped by the same
-        // shared-kingdom check, which this harness leaves out.
+        // Her blood claim goes with her, as the English bride's do: Percy now has her claim on
+        // Carrick, her father's seat, and Kennedy keeps only her brother's. A daughter's claim is
+        // weak, so while Kennedy's grown lord holds the seat it cannot be pressed. Against a minor
+        // it could be, and would then be dropped by the same shared-kingdom check, which this
+        // harness leaves out.
         //
-        // De Vere's claims on Percy's seats are weak as well, so Maxwell's call to them is also
+        // De Vere's claims on Percy's seats are weak as well, so Kennedy's call to them is also
         // shown with the holders as minors.
-        const string maxwell = "clan_maxwell";
+        const string kennedy = "clan_kennedy";
         const string percy = "clan_percy";
-        const string daughter = "stand_in_maxwell_daughter";
+        const string bride = "dadg_sco_family_kennedy_katherine";
 
         Content content = Content.Load();
-        Content married = content
-            .WithDaughter("dadg_sco_lord_clan_maxwell", daughter, 18f)
-            .WithMarriage("dadg_lord_10_1", daughter);
+        Content married = content.WithMarriage("dadg_lord_10_1", bride);
         Content contentMinors = content.WithMinorHolders();
         Content marriedMinors = married.WithMinorHolders();
 
-        Assert.False(content.IsBonded(maxwell, percy, 0f));
-        Assert.True(married.IsBonded(maxwell, percy, 0f));
+        Assert.False(content.IsBonded(kennedy, percy, 0f));
+        Assert.True(married.IsBonded(kennedy, percy, 0f));
 
         Assert.Empty(contentMinors.Opportunities().Where(o => o.AttackerClanId == percy));
-        Assert.NotEmpty(married.Claims().Where(c => c.ClaimantClanId == percy));
         Assert.Empty(married.Opportunities().Where(o => o.AttackerClanId == percy));
         Assert.Equal(
-            content.TitlesHeldBy(maxwell),
+            content.TitlesHeldBy(kennedy),
             marriedMinors.Opportunities()
                 .Where(o => o.AttackerClanId == percy)
                 .Select(o =>
                 {
-                    Assert.Equal(maxwell, o.DefenderClanId);
+                    Assert.Equal(kennedy, o.DefenderClanId);
                     return o.TitleId;
                 })
                 .OrderBy(id => id));
         Assert.Contains(percy, married.Realms()["clan_lancaster"]);
-        Assert.Contains(maxwell, married.Realms()["clan_stewart"]);
+        Assert.Contains(kennedy, married.Realms()["clan_stewart"]);
 
         Assert.Empty(married.Opportunities().Where(o => o.DefenderClanId == percy));
         ClaimOpportunity[] percysFeuds = marriedMinors.Opportunities()
@@ -473,15 +469,22 @@ public class ClaimPressureOverRealContentTests
         Assert.All(percysFeuds, o =>
         {
             Assert.DoesNotContain(
-                maxwell, contentMinors.Candidates(contentMinors.Opportunity(o.TitleId, o.AttackerClanId)));
-            Assert.Contains(maxwell, marriedMinors.Candidates(o));
+                kennedy, contentMinors.Candidates(contentMinors.Opportunity(o.TitleId, o.AttackerClanId)));
+            Assert.Contains(kennedy, marriedMinors.Candidates(o));
 
             SupportDecision support = marriedMinors.Solicit(o);
-            Assert.DoesNotContain(maxwell, support.AttackerSupporters);
-            Assert.DoesNotContain(maxwell, support.DefenderSupporters);
+            Assert.DoesNotContain(kennedy, support.AttackerSupporters);
+            Assert.DoesNotContain(kennedy, support.DefenderSupporters);
         });
 
-        Assert.Empty(married.Claims().Where(c => c.ClaimantClanId == maxwell));
+        Claim hers = Assert.Single(content.Claims(), c => c.ClaimantHeroId == bride);
+        Assert.Equal((kennedy, "county_carrick", ClaimStrength.Weak), (hers.ClaimantClanId, hers.TitleId, hers.Strength));
+        Assert.Equal(
+            new[] { "county_carrick" },
+            married.Claims().Where(c => c.ClaimantClanId == percy && c.ClaimantHeroId == bride).Select(c => c.TitleId));
+        Assert.Equal(
+            content.Claims().Where(c => c.ClaimantClanId == kennedy && c.ClaimantHeroId != bride),
+            married.Claims().Where(c => c.ClaimantClanId == kennedy));
     }
 
     [Fact]
@@ -567,9 +570,6 @@ public class ClaimPressureOverRealContentTests
 
         public Content WithMarriage(string husbandId, string wifeId) =>
             new(_genealogy.WithMarriage(husbandId, wifeId), _structure, _titles.GetAllTitles());
-
-        public Content WithDaughter(string fatherId, string daughterId, float age) =>
-            new(_genealogy.WithDaughter(fatherId, daughterId, age), _structure, _titles.GetAllTitles());
 
         /// <summary>
         /// The same content with every holder a boy of seventeen. Every holder the content

@@ -26,11 +26,12 @@
     invented for the setting's own pairings, chosen to spread vassals evenly (Willoughby's
     Donnington predates Tattershall, putting them under the otherwise vassal-less de Vere).
 
-  Seats and holders mirror DellarteDellaGuerraMap\ModuleData\settlements.xml: every county is
-  seated at one of the 28 towns, every barony at a castle, and each title's initial holder is
-  its seat settlement's owner clan. The six duchies are seated at castles held by the duke's
-  clan. The crown is seatless: London is held as a county so its de jure status survives a
-  change of dynasty on the throne (1471 Readeption: Henry VI of Lancaster).
+  Seats mirror DellarteDellaGuerraMap\ModuleData\settlements.xml: every county is seated at one
+  of the 28 towns and every barony at a castle. Holders normally mirror the settlement owner,
+  but historically attested Scottish dignities use their de jure holder in 1471 even where the
+  campaign-map owner is a gameplay abstraction. The six English duchies are seated at castles
+  held by the duke's clan. The English crown is seatless: London is held as a county so its de
+  jure status survives a change of dynasty on the throne (1471 Readeption: Henry VI of Lancaster).
 -->
 <Feudalism>
   <Kingdom id="kingdom_england" name="England" kingClanId="clan_lancaster" heldSince="1399">
@@ -202,17 +203,17 @@
     <County id="county_gowrie" name="County of Gowrie" seat="dadg_sco_perth_town" holderClanId="clan_ruthven" heldSince="1300">
       <Barony id="barony_glenorchy" name="Barony of Glenorchy" seat="dadg_sco_kilchurn_castle" holderClanId="clan_campbell" heldSince="1432"/>
     </County>
-    <County id="county_aberdeen" name="County of Aberdeen" seat="dadg_sco_aberdeen_town" holderClanId="clan_keith" heldSince="1458">
+    <County id="county_aberdeen" name="Earldom Marischal" seat="dadg_sco_aberdeen_town" holderClanId="clan_keith" heldSince="1458">
       <Barony id="barony_dunnottar" name="Barony of Dunnottar" seat="dadg_sco_dunnottar_castle" holderClanId="clan_keith" heldSince="1392"/>
       <Barony id="barony_mar" name="Barony of Mar" seat="dadg_sco_kildrummy_castle" holderClanId="clan_erskine" heldSince="1438"/>
     </County>
-    <County id="county_moray" name="County of Moray" seat="dadg_sco_elgin_town" holderClanId="clan_dunbar_moray" heldSince="1372">
+    <County id="county_moray" name="Earldom of Moray" seat="dadg_sco_elgin_town" holderClanId="clan_stewart" heldSince="1455">
       <Barony id="barony_strathbogie" name="Barony of Strathbogie" seat="dadg_sco_huntly_castle" holderClanId="clan_gordon" heldSince="1318"/>
     </County>
     <County id="county_inverness" name="County of Inverness" seat="dadg_sco_inverness_town" holderClanId="clan_dunbar_moray" heldSince="1430">
       <Barony id="barony_urquhart" name="Barony of Urquhart" seat="dadg_sco_urquhart_castle" holderClanId="clan_dunbar_moray" heldSince="1430"/>
     </County>
-    <County id="county_orkney" name="County of Orkney" seat="dadg_sco_kirkevaag_village" holderClanId="clan_sinclair" heldSince="1379">
+    <County id="county_orkney" name="Earldom of Orkney" seat="dadg_sco_kirkevaag_village" holderClanId="clan_stewart" heldSince="1470">
       <Barony id="barony_caithness" name="Barony of Caithness" seat="dadg_sco_wick_town" holderClanId="clan_sinclair" heldSince="1455"/>
       <Barony id="barony_sutherland" name="Barony of Sutherland" seat="dadg_sco_dornoch_town" holderClanId="clan_sinclair" heldSince="1455"/>
       <Barony id="barony_dirlot" name="Barony of Dirlot" seat="dadg_sco_dirlot_castle" holderClanId="clan_stewart" heldSince="1440"/>
@@ -229,7 +230,7 @@
       <Barony id="barony_dunvegan" name="Barony of Dunvegan" seat="dadg_sco_dunvegan_castle" holderClanId="clan_macleod" heldSince="1343"/>
       <Barony id="barony_barra" name="Barony of Barra" seat="dadg_sco_kisimul_castle" holderClanId="clan_macneil_barra" heldSince="1427"/>
     </County>
-    <County id="county_ross" name="County of Ross" seat="dadg_sco_dingwall_town" holderClanId="clan_munro" heldSince="1437">
+    <County id="county_ross" name="Earldom of Ross" seat="dadg_sco_dingwall_town" holderClanId="clan_macdonald_isles" heldSince="1449">
       <Barony id="barony_balnagowan" name="Barony of Balnagowan" seat="dadg_sco_balnagowan_castle" holderClanId="clan_ross" heldSince="1370"/>
       <Barony id="barony_foulis" name="Barony of Foulis" seat="dadg_sco_foulis_castle" holderClanId="clan_munro" heldSince="1350"/>
       <Barony id="barony_kintail" name="Barony of Kintail" seat="dadg_sco_eilean_donan_castle" holderClanId="clan_mackenzie" heldSince="1463"/>
