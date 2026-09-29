@@ -24,6 +24,8 @@ namespace DellarteDellaGuerra.Integration.Visor.Mission
         private static readonly ActionIndexCache VisorOpenLeftStance = ActionIndexCache.Create("act_visor_open_leftstance");
         private static readonly ActionIndexCache VisorClose = ActionIndexCache.Create("act_visor_close");
         private static readonly ActionIndexCache VisorCloseLeftStance = ActionIndexCache.Create("act_visor_close_leftstance");
+        private static readonly ActionIndexCache VisorOpenHorseback = ActionIndexCache.Create("act_visor_open_horseback");
+        private static readonly ActionIndexCache VisorCloseHorseback = ActionIndexCache.Create("act_visor_close_horseback");
 
         private readonly ILogger _logger;
         private readonly VisorVariantCatalog _catalog;
@@ -70,7 +72,7 @@ namespace DellarteDellaGuerra.Integration.Visor.Mission
                 return;
             }
 
-            var action = GetVisorAction(result.IsOpen, agent.GetIsLeftStance());
+            var action = GetVisorAction(result.IsOpen, agent.HasMount, agent.GetIsLeftStance());
             if (action == ActionIndexCache.act_none)
             {
                 _logger.Error(
@@ -165,8 +167,9 @@ namespace DellarteDellaGuerra.Integration.Visor.Mission
                 agent.TryToWieldWeaponInSlot(slot, Agent.WeaponWieldActionType.Instant, false);
         }
 
-        private static ActionIndexCache GetVisorAction(bool isOpening, bool isLeftStance)
+        private static ActionIndexCache GetVisorAction(bool isOpening, bool isMounted, bool isLeftStance)
         {
+            if (isMounted) return isOpening ? VisorOpenHorseback : VisorCloseHorseback;
             if (isOpening) return isLeftStance ? VisorOpenLeftStance : VisorOpen;
             return isLeftStance ? VisorCloseLeftStance : VisorClose;
         }
@@ -177,7 +180,9 @@ namespace DellarteDellaGuerra.Integration.Visor.Mission
             return currentAction == VisorOpen
                    || currentAction == VisorOpenLeftStance
                    || currentAction == VisorClose
-                   || currentAction == VisorCloseLeftStance;
+                   || currentAction == VisorCloseLeftStance
+                   || currentAction == VisorOpenHorseback
+                   || currentAction == VisorCloseHorseback;
         }
     }
 }
