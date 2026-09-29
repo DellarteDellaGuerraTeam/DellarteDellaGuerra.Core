@@ -33,6 +33,7 @@ using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using Bannerlord.PrivateWars.Api;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Domain.Titles;
+using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Infrastructure.Titles;
 using DellarteDellaGuerra.Integration.Titles;
 using DellarteDellaGuerra.Integration.Titles.UI;
