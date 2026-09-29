@@ -1,6 +1,5 @@
 using DellarteDellaGuerra.Domain.Titles.Model;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.ObjectSystem;
 
 namespace DellarteDellaGuerra.Titles.Api
 {
@@ -34,7 +33,7 @@ namespace DellarteDellaGuerra.Titles.Api
         }
 
         private static Clan? HolderClan(string? heroId) =>
-            heroId is not null && MBObjectManager.Instance?.GetObject<Hero>(heroId)?.Clan is { IsEliminated: false } clan
+            heroId is not null && TaleWorlds.CampaignSystem.Campaign.Current?.CampaignObjectManager.Find<Hero>(heroId)?.Clan is { IsEliminated: false } clan
                 ? clan
                 : null;
     }
