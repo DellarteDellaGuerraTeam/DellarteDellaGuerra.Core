@@ -35,7 +35,13 @@
       "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_wEditor\\Bannerlord.exe",
       "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Bannerlord.UIExtenderEx*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*DellarteDellaGuerra.Core*DellarteDellaGuerra*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*_MODULES_",
       "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_wEditor"
-    },    
+    },
+    "Standalone.Editor.WarSails": {
+      "commandName": "Executable",
+      "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_wEditor\\Bannerlord.exe",
+      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Bannerlord.UIExtenderEx*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*NavalDLC*DellarteDellaGuerra.Core*DellarteDellaGuerra*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*_MODULES_",
+      "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_wEditor"
+    },
     "Standalone.BLSE": {
       "commandName": "Executable",
       "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_Client\\Bannerlord.BLSE.Standalone.exe",

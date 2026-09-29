@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bannerlord Modding Tools"
+  short_description: "Operate the scene editor through computer use"
+  default_prompt: "Use $bannerlord-modding-tools to inspect or edit the requested scene in Bannerlord Modding Tools through computer use and verify the result."
