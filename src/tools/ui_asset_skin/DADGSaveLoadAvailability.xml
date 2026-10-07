@@ -1,4 +1,34 @@
 <Brushes>
+  <!-- Enabled rows share their sprite with unavailable rows: dim only this
+       brush so the accepted unavailable tone and selected highlight stay put. -->
+  <Brush Name="SaveLoad.Tuple">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="SaveLoad\load_tuple" />
+      <BrushLayer Name="Selected" Sprite="SaveLoad\load_tuple_selected" />
+    </Layers>
+    <Styles>
+      <Style Name="Default">
+        <BrushLayer Name="Default" ColorFactor="0.90" />
+        <BrushLayer Name="Selected" IsHidden="true" />
+      </Style>
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" ColorFactor="1.08" />
+        <BrushLayer Name="Selected" IsHidden="true" />
+      </Style>
+      <Style Name="Pressed">
+        <BrushLayer Name="Default" ColorFactor="0.72" />
+        <BrushLayer Name="Selected" IsHidden="true" />
+      </Style>
+      <Style Name="Selected">
+        <BrushLayer Name="Default" IsHidden="true" />
+        <BrushLayer Name="Selected" />
+      </Style>
+      <Style Name="Disabled">
+        <BrushLayer Name="Default" AlphaFactor="0.6" SaturationFactor="-80" ValueFactor="-20" />
+        <BrushLayer Name="Selected" IsHidden="true" />
+      </Style>
+    </Styles>
+  </Brush>
   <!-- Opaque charcoal avoids the blue parent bleeding through unavailable rows.
        Keep native visibility/selection behavior and the selected outline. -->
   <Brush Name="SaveLoad.Tuple.Invalid">

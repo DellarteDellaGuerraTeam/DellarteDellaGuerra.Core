@@ -26,6 +26,10 @@ Unavailable backgrounds use saturation -60 and brightness 0.62, bringing back
 the charcoal reference tone without the original 0.42 heavy dimming. Enabled
 and selected source pixels, typography and C# are unchanged by this revision.
 
+Revision 04: another roughly 10% reduction for campaign headers and enabled
+backgrounds. Enabled rows are dimmed in `SaveLoad.Tuple` only, not in their
+shared PNG, so unavailable rows and selected highlights remain unchanged.
+
 ## Read-only recruitment audit
 
 `RecruitmentFrameSkin` alone can be replaced by a native-name `Recruitment.Frame`

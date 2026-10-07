@@ -14,6 +14,14 @@ MODULES = HERE.parents[3]
 
 
 class SaveLoadAvailabilityTests(unittest.TestCase):
+    def test_enabled_brush_only_dims_unselected_background(self):
+        native = ET.parse(MODULES / 'SandBox/GUI/Brushes/SaveLoad.xml')
+        expected = copy.deepcopy(native.find("Brush[@Name='SaveLoad.Tuple']"))
+        for state, factor in [('Default', '0.90'), ('Hovered', '1.08'), ('Pressed', '0.72')]:
+            expected.find(f"Styles/Style[@Name='{state}']/BrushLayer").set('ColorFactor', factor)
+        actual = ET.parse(HERE / 'DADGSaveLoadAvailability.xml').find("Brush[@Name='SaveLoad.Tuple']")
+        self.assertEqual(tree(expected), tree(actual))
+
     def test_text_overrides_only_add_disabled_colours(self):
         native = ET.parse(MODULES / 'SandBox/GUI/Brushes/SaveLoad.xml')
         overrides = ET.parse(HERE / 'DADGSaveLoadText.xml').getroot()
@@ -50,10 +58,12 @@ class SaveLoadAvailabilityTests(unittest.TestCase):
         mean = lambda image: ImageStat.Stat(ImageOps.grayscale(image.crop((4, 4, 116, 60)))).mean[0]
         self.assertGreater(mean(results[0]), mean(old_header) * 1.5)
         # Campaign headings must read as a distinct medium-blue band, not black.
-        self.assertGreater(mean(results[0]), mean(results[1]) * 1.15)
-        brighter_header = paint(source, dict(recipe['parts'][0], blue_palette=['#244761', '#3b647f']), source, source)
-        self.assertGreater(mean(results[0]), mean(brighter_header) * 0.8)
-        self.assertLess(mean(results[0]), mean(brighter_header) * 0.9)
+        brushes = ET.parse(HERE / 'DADGSaveLoadAvailability.xml')
+        enabled_factor = float(brushes.find("Brush[@Name='SaveLoad.Tuple']/Styles/Style[@Name='Default']/BrushLayer").get('ColorFactor'))
+        self.assertGreater(mean(results[0]), mean(results[1]) * enabled_factor * 1.15)
+        brighter_header = paint(source, dict(recipe['parts'][0], blue_palette=['#1e3c53', '#32566e']), source, source)
+        self.assertGreater(mean(results[0]), mean(brighter_header) * 0.85)
+        self.assertLess(mean(results[0]), mean(brighter_header) * 0.95)
         self.assertEqual([b['source'] for b in recipe['brush_overrides']], ['DADGSaveLoadAvailability.xml'])
         self.assertEqual(recipe['parts'][2], previous['parts'][2])
         self.assertEqual(len(results), 3)
