@@ -17,7 +17,7 @@ class SaveLoadAvailabilityTests(unittest.TestCase):
     def test_enabled_brush_only_dims_unselected_background(self):
         native = ET.parse(MODULES / 'SandBox/GUI/Brushes/SaveLoad.xml')
         expected = copy.deepcopy(native.find("Brush[@Name='SaveLoad.Tuple']"))
-        for state, factor in [('Default', '0.90'), ('Hovered', '1.08'), ('Pressed', '0.72')]:
+        for state, factor in [('Default', '0.81'), ('Hovered', '0.972'), ('Pressed', '0.648')]:
             expected.find(f"Styles/Style[@Name='{state}']/BrushLayer").set('ColorFactor', factor)
         actual = ET.parse(HERE / 'DADGSaveLoadAvailability.xml').find("Brush[@Name='SaveLoad.Tuple']")
         self.assertEqual(tree(expected), tree(actual))
@@ -41,7 +41,7 @@ class SaveLoadAvailabilityTests(unittest.TestCase):
             layer.set('SaturationFactor', '-60')
             layer.set('ValueFactor', '0')
             layer.set('AlphaFactor', '1')
-        for state, factor in [('Default', '0.62'), ('Hovered', '0.72'), ('Pressed', '0.52')]:
+        for state, factor in [('Default', '0.558'), ('Hovered', '0.648'), ('Pressed', '0.468')]:
             expected.find(f"Styles/Style[@Name='{state}']/BrushLayer").set('ColorFactor', factor)
         selected = expected.find("Styles/Style[@Name='Selected']/BrushLayer[@Name='Selected']")
         selected.set('SaturationFactor', '-60')

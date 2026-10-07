@@ -1,6 +1,5 @@
 <Brushes>
-  <!-- Enabled rows share their sprite with unavailable rows: dim only this
-       brush so the accepted unavailable tone and selected highlight stay put. -->
+  <!-- Per-state brightness keeps the shared PNG and selected highlights intact. -->
   <Brush Name="SaveLoad.Tuple">
     <Layers>
       <BrushLayer Name="Default" Sprite="SaveLoad\load_tuple" />
@@ -8,15 +7,15 @@
     </Layers>
     <Styles>
       <Style Name="Default">
-        <BrushLayer Name="Default" ColorFactor="0.90" />
+        <BrushLayer Name="Default" ColorFactor="0.81" />
         <BrushLayer Name="Selected" IsHidden="true" />
       </Style>
       <Style Name="Hovered">
-        <BrushLayer Name="Default" ColorFactor="1.08" />
+        <BrushLayer Name="Default" ColorFactor="0.972" />
         <BrushLayer Name="Selected" IsHidden="true" />
       </Style>
       <Style Name="Pressed">
-        <BrushLayer Name="Default" ColorFactor="0.72" />
+        <BrushLayer Name="Default" ColorFactor="0.648" />
         <BrushLayer Name="Selected" IsHidden="true" />
       </Style>
       <Style Name="Selected">
@@ -38,15 +37,15 @@
     </Layers>
     <Styles>
       <Style Name="Default">
-        <BrushLayer Name="Default" ColorFactor="0.62" />
+        <BrushLayer Name="Default" ColorFactor="0.558" />
         <BrushLayer Name="Selected" IsHidden="true" />
       </Style>
       <Style Name="Hovered">
-        <BrushLayer Name="Default" ColorFactor="0.72" />
+        <BrushLayer Name="Default" ColorFactor="0.648" />
         <BrushLayer Name="Selected" IsHidden="true" />
       </Style>
       <Style Name="Pressed">
-        <BrushLayer Name="Default" ColorFactor="0.52" />
+        <BrushLayer Name="Default" ColorFactor="0.468" />
         <BrushLayer Name="Selected" IsHidden="true" />
       </Style>
       <Style Name="Selected">

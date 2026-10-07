@@ -30,6 +30,10 @@ Revision 04: another roughly 10% reduction for campaign headers and enabled
 backgrounds. Enabled rows are dimmed in `SaveLoad.Tuple` only, not in their
 shared PNG, so unavailable rows and selected highlights remain unchanged.
 
+Revision 05 (brush-only): reduce enabled and unavailable Default/Hovered/Pressed
+brightness by 10% relative to revision 04. Campaign artwork, selected states,
+text and all PNGs remain unchanged. Reload brush XML; no atlas reimport required.
+
 ## Read-only recruitment audit
 
 `RecruitmentFrameSkin` alone can be replaced by a native-name `Recruitment.Frame`
