@@ -19,6 +19,13 @@ continues to identify unavailable saves without near-black backgrounds.
 At this revision the installed TPAC still predates the revision-01 source PNG;
 source deployment alone does not activate atlas colours. Reimport is required.
 
+Revision 03 supersedes the text treatment above: user removed the text patches.
+Keep that removal intact and omit DADGSaveLoadText.xml from batch deployment.
+Header palette now #1e3c53 -> #32566e (roughly 15% darker than revision 02).
+Unavailable backgrounds use saturation -60 and brightness 0.62, bringing back
+the charcoal reference tone without the original 0.42 heavy dimming. Enabled
+and selected source pixels, typography and C# are unchanged by this revision.
+
 ## Read-only recruitment audit
 
 `RecruitmentFrameSkin` alone can be replaced by a native-name `Recruitment.Frame`

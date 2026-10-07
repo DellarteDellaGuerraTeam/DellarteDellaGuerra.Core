@@ -30,14 +30,14 @@ class SaveLoadAvailabilityTests(unittest.TestCase):
         native = ET.parse(MODULES / 'SandBox/GUI/Brushes/SaveLoad.xml')
         expected = copy.deepcopy(native.find("Brush[@Name='SaveLoad.Tuple.Invalid']"))
         for layer in expected.findall('Layers/BrushLayer'):
-            layer.set('SaturationFactor', '-30')
+            layer.set('SaturationFactor', '-60')
             layer.set('ValueFactor', '0')
             layer.set('AlphaFactor', '1')
-        for state, factor in [('Default', '0.80'), ('Hovered', '0.90'), ('Pressed', '0.70')]:
+        for state, factor in [('Default', '0.62'), ('Hovered', '0.72'), ('Pressed', '0.52')]:
             expected.find(f"Styles/Style[@Name='{state}']/BrushLayer").set('ColorFactor', factor)
         selected = expected.find("Styles/Style[@Name='Selected']/BrushLayer[@Name='Selected']")
-        selected.set('SaturationFactor', '-30')
-        selected.set('ColorFactor', '0.85')
+        selected.set('SaturationFactor', '-60')
+        selected.set('ColorFactor', '0.70')
         actual = ET.parse(HERE / 'DADGSaveLoadAvailability.xml').find("Brush[@Name='SaveLoad.Tuple.Invalid']")
         self.assertEqual(tree(expected), tree(actual))
 
@@ -50,7 +50,11 @@ class SaveLoadAvailabilityTests(unittest.TestCase):
         mean = lambda image: ImageStat.Stat(ImageOps.grayscale(image.crop((4, 4, 116, 60)))).mean[0]
         self.assertGreater(mean(results[0]), mean(old_header) * 1.5)
         # Campaign headings must read as a distinct medium-blue band, not black.
-        self.assertGreater(mean(results[0]), mean(results[1]) * 1.4)
+        self.assertGreater(mean(results[0]), mean(results[1]) * 1.15)
+        brighter_header = paint(source, dict(recipe['parts'][0], blue_palette=['#244761', '#3b647f']), source, source)
+        self.assertGreater(mean(results[0]), mean(brighter_header) * 0.8)
+        self.assertLess(mean(results[0]), mean(brighter_header) * 0.9)
+        self.assertEqual([b['source'] for b in recipe['brush_overrides']], ['DADGSaveLoadAvailability.xml'])
         self.assertEqual(recipe['parts'][2], previous['parts'][2])
         self.assertEqual(len(results), 3)
         for image in results:

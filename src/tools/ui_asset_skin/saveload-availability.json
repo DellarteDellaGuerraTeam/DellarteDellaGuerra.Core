@@ -1,19 +1,18 @@
 {
-  "batch": "saveload-availability-02",
+  "batch": "saveload-availability-03",
   "sheet": "ui_saveload_1",
   "module": "SandBox",
   "size": [4096, 1024],
   "native_atlas_sha256": "7da398f6b55df778a9ee46d64d9702742770b8d197330db398e4aa8dc209d03a",
   "native_sprite_data_sha256": "3b29243ddb48868b37ce7734ae71122158ec1d9acc325e081a8e4541fb07dc44",
   "brush_overrides": [
-    {"source": "DADGSaveLoadAvailability.xml", "native": "SandBox/GUI/Brushes/SaveLoad.xml"},
-    {"source": "DADGSaveLoadText.xml", "native": "SandBox/GUI/Brushes/SaveLoad.xml"}
+    {"source": "DADGSaveLoadAvailability.xml", "native": "SandBox/GUI/Brushes/SaveLoad.xml"}
   ],
   "parts": [
-    {"name": "SaveLoad\\load_collapser", "profile": "header", "blue_palette": ["#244761", "#3b647f"], "border_style": "underline", "border": 1, "border_color": "#b7964e"},
+    {"name": "SaveLoad\\load_collapser", "profile": "header", "blue_palette": ["#1e3c53", "#32566e"], "border_style": "underline", "border": 1, "border_color": "#b7964e"},
     {"name": "SaveLoad\\load_tuple", "profile": "row", "blue_palette": ["#222e39", "#364653"], "border_style": "underline", "border": 1, "border_color": "#40505c"},
     {"name": "SaveLoad\\load_tuple_selected", "profile": "row", "selected": true, "blue_palette": ["#17476b", "#2873a0"], "border_style": "frame", "border": 2, "border_color": "#e7bc50"}
   ],
   "protected": ["SaveLoad\\load_button_canvas"],
-  "scope_note": "Brighter navy campaign headings, muted slate enabled saves and dark desaturated unavailable saves. Preserve native alpha, dimensions, click commands and unavailable-save rules. Separate minimal SavedGameTuple patches offset the banner and bind text disabled state; no copied prefab."
+  "scope_note": "Slightly subdued navy campaign headings, unchanged slate enabled saves and desaturated charcoal unavailable backgrounds. Preserve native alpha, dimensions, click commands and unavailable-save rules. Background-only revision: do not deploy text overrides or restore removed text patches."
 }
