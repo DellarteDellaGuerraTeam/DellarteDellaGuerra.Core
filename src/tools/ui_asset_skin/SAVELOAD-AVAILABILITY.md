@@ -13,6 +13,12 @@ and a restarted session. No compiled TPAC or cache is written by these tools.
 
 The existing HTML preview is a visual approximation, not runtime validation.
 
+Revision 02: medium-navy header palette (#244761 -> #3b647f), unavailable-row
+brightness 0.80 instead of 0.42 and saturation -30 instead of -65. Muted text
+continues to identify unavailable saves without near-black backgrounds.
+At this revision the installed TPAC still predates the revision-01 source PNG;
+source deployment alone does not activate atlas colours. Reimport is required.
+
 ## Read-only recruitment audit
 
 `RecruitmentFrameSkin` alone can be replaced by a native-name `Recruitment.Frame`

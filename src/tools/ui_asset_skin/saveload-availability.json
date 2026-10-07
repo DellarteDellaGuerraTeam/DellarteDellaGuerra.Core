@@ -1,5 +1,5 @@
 {
-  "batch": "saveload-availability-01",
+  "batch": "saveload-availability-02",
   "sheet": "ui_saveload_1",
   "module": "SandBox",
   "size": [4096, 1024],
@@ -10,7 +10,7 @@
     {"source": "DADGSaveLoadText.xml", "native": "SandBox/GUI/Brushes/SaveLoad.xml"}
   ],
   "parts": [
-    {"name": "SaveLoad\\load_collapser", "profile": "header", "blue_palette": ["#102a40", "#25475f"], "border_style": "underline", "border": 1, "border_color": "#b7964e"},
+    {"name": "SaveLoad\\load_collapser", "profile": "header", "blue_palette": ["#244761", "#3b647f"], "border_style": "underline", "border": 1, "border_color": "#b7964e"},
     {"name": "SaveLoad\\load_tuple", "profile": "row", "blue_palette": ["#222e39", "#364653"], "border_style": "underline", "border": 1, "border_color": "#40505c"},
     {"name": "SaveLoad\\load_tuple_selected", "profile": "row", "selected": true, "blue_palette": ["#17476b", "#2873a0"], "border_style": "frame", "border": 2, "border_color": "#e7bc50"}
   ],

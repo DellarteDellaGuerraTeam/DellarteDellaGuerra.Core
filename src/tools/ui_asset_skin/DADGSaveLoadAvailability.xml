@@ -1,27 +1,27 @@
 <Brushes>
-  <!-- Opaque dark slate avoids the blue parent bleeding through unavailable rows.
+  <!-- Opaque muted slate avoids the blue parent bleeding through unavailable rows.
        Keep native visibility/selection behavior and the selected outline. -->
   <Brush Name="SaveLoad.Tuple.Invalid">
     <Layers>
-      <BrushLayer Name="Default" Sprite="SaveLoad\load_tuple" SaturationFactor="-65" ValueFactor="0" AlphaFactor="1" />
-      <BrushLayer Name="Selected" Sprite="SaveLoad\load_tuple_selected" SaturationFactor="-65" ValueFactor="0" AlphaFactor="1" />
+      <BrushLayer Name="Default" Sprite="SaveLoad\load_tuple" SaturationFactor="-30" ValueFactor="0" AlphaFactor="1" />
+      <BrushLayer Name="Selected" Sprite="SaveLoad\load_tuple_selected" SaturationFactor="-30" ValueFactor="0" AlphaFactor="1" />
     </Layers>
     <Styles>
       <Style Name="Default">
-        <BrushLayer Name="Default" ColorFactor="0.42" />
+        <BrushLayer Name="Default" ColorFactor="0.80" />
         <BrushLayer Name="Selected" IsHidden="true" />
       </Style>
       <Style Name="Hovered">
-        <BrushLayer Name="Default" ColorFactor="0.50" />
+        <BrushLayer Name="Default" ColorFactor="0.90" />
         <BrushLayer Name="Selected" IsHidden="true" />
       </Style>
       <Style Name="Pressed">
-        <BrushLayer Name="Default" ColorFactor="0.35" />
+        <BrushLayer Name="Default" ColorFactor="0.70" />
         <BrushLayer Name="Selected" IsHidden="true" />
       </Style>
       <Style Name="Selected">
         <BrushLayer Name="Default" IsHidden="true" />
-        <BrushLayer Name="Selected" SaturationFactor="-65" ColorFactor="0.55" />
+        <BrushLayer Name="Selected" SaturationFactor="-30" ColorFactor="0.85" />
       </Style>
     </Styles>
   </Brush>

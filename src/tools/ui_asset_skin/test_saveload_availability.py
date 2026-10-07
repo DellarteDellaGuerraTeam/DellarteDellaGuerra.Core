@@ -30,14 +30,14 @@ class SaveLoadAvailabilityTests(unittest.TestCase):
         native = ET.parse(MODULES / 'SandBox/GUI/Brushes/SaveLoad.xml')
         expected = copy.deepcopy(native.find("Brush[@Name='SaveLoad.Tuple.Invalid']"))
         for layer in expected.findall('Layers/BrushLayer'):
-            layer.set('SaturationFactor', '-65')
+            layer.set('SaturationFactor', '-30')
             layer.set('ValueFactor', '0')
             layer.set('AlphaFactor', '1')
-        for state, factor in [('Default', '0.42'), ('Hovered', '0.50'), ('Pressed', '0.35')]:
+        for state, factor in [('Default', '0.80'), ('Hovered', '0.90'), ('Pressed', '0.70')]:
             expected.find(f"Styles/Style[@Name='{state}']/BrushLayer").set('ColorFactor', factor)
         selected = expected.find("Styles/Style[@Name='Selected']/BrushLayer[@Name='Selected']")
-        selected.set('SaturationFactor', '-65')
-        selected.set('ColorFactor', '0.55')
+        selected.set('SaturationFactor', '-30')
+        selected.set('ColorFactor', '0.85')
         actual = ET.parse(HERE / 'DADGSaveLoadAvailability.xml').find("Brush[@Name='SaveLoad.Tuple.Invalid']")
         self.assertEqual(tree(expected), tree(actual))
 
@@ -49,6 +49,8 @@ class SaveLoadAvailabilityTests(unittest.TestCase):
         old_header = paint(source, previous['parts'][0], source, source)
         mean = lambda image: ImageStat.Stat(ImageOps.grayscale(image.crop((4, 4, 116, 60)))).mean[0]
         self.assertGreater(mean(results[0]), mean(old_header) * 1.5)
+        # Campaign headings must read as a distinct medium-blue band, not black.
+        self.assertGreater(mean(results[0]), mean(results[1]) * 1.4)
         self.assertEqual(recipe['parts'][2], previous['parts'][2])
         self.assertEqual(len(results), 3)
         for image in results:
