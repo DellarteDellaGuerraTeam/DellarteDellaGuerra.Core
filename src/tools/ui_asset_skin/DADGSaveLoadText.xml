@@ -1,0 +1,22 @@
+<Brushes>
+  <!-- Native typography and enabled styles; availability is bound only to text.
+       Corrupted names keep their separate native red brush. -->
+  <Brush Name="SaveLoad.Tuple.Title.Text" Font="Galahad" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#EFC083CC" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0" TextGlowRadius="0" TextBlur="0" FontSize="36" />
+      <Style Name="Hovered" />
+      <Style Name="Pressed" />
+      <Style Name="Selected" FontColor="#EFC083FF" />
+      <Style Name="Disabled" FontColor="#AAA59AFF" />
+    </Styles>
+  </Brush>
+  <Brush Name="SaveLoad.Tuple.RealTime.Text" Font="FiraSansExtraCondensed-Regular" TextHorizontalAlignment="Justify">
+    <Styles>
+      <Style Name="Default" FontColor="#D1C2AFB3" TextGlowColor="#000000FF" TextOutlineColor="#000000FF" TextOutlineAmount="0.3" TextGlowRadius="0" TextBlur="0.1" FontSize="20" />
+      <Style Name="Hovered" />
+      <Style Name="Pressed" />
+      <Style Name="Selected" FontColor="#D1C2AFFF" />
+      <Style Name="Disabled" FontColor="#999A96FF" />
+    </Styles>
+  </Brush>
+</Brushes>
