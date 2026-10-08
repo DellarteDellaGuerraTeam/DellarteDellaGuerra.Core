@@ -1,0 +1,127 @@
+lockfile_version: '1'
+apm_version: 0.33.0
+dependencies: []
+deployments:
+- kind: uri
+  target: mcp
+  value: bannerlord-game-controller
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: bannerlord-search-1_2_12
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: bannerlord-search-1_3_15
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: bannerlord-search-1_4_6
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: jetbrains-debugger
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: music-analysis
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+mcp_servers:
+- bannerlord-game-controller
+- bannerlord-search-1_2_12
+- bannerlord-search-1_3_15
+- bannerlord-search-1_4_6
+- jetbrains-debugger
+- music-analysis
+mcp_configs:
+  bannerlord-game-controller:
+    name: bannerlord-game-controller
+    transport: stdio
+    args:
+    - .apm/mcp/mcp-http-stdio-bridge.py
+    - --url
+    - http://localhost:8080/mcp
+    registry: false
+    command: python
+  bannerlord-search-1_2_12:
+    name: bannerlord-search-1_2_12
+    transport: stdio
+    args:
+    - .apm/mcp/mcp-http-stdio-bridge.py
+    - --url
+    - http://localhost:5000
+    registry: false
+    command: python
+  bannerlord-search-1_3_15:
+    name: bannerlord-search-1_3_15
+    transport: stdio
+    args:
+    - .apm/mcp/mcp-http-stdio-bridge.py
+    - --url
+    - http://localhost:5001
+    registry: false
+    command: python
+  bannerlord-search-1_4_6:
+    name: bannerlord-search-1_4_6
+    transport: stdio
+    args:
+    - .apm/mcp/mcp-http-stdio-bridge.py
+    - --url
+    - http://localhost:5002
+    registry: false
+    command: python
+  jetbrains-debugger:
+    name: jetbrains-debugger
+    transport: stdio
+    args:
+    - .apm/mcp/mcp-http-stdio-bridge.py
+    - --url
+    - http://localhost:29202/debugger-mcp/streamable-http
+    registry: false
+    command: python
+  music-analysis:
+    name: music-analysis
+    transport: stdio
+    args:
+    - -n
+    - mcp_local_music_analysis
+    registry: false
+    command: uvx
+mcp_target_servers:
+  claude:
+  - bannerlord-game-controller
+  - bannerlord-search-1_2_12
+  - bannerlord-search-1_3_15
+  - bannerlord-search-1_4_6
+  - jetbrains-debugger
+  - music-analysis
