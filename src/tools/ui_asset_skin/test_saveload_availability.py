@@ -81,6 +81,74 @@ class SaveLoadAvailabilityTests(unittest.TestCase):
         self.assertIn('new Attribute("MarginTop", "6")', patch)
         self.assertNotIn('Command.', patch)
 
+    def test_panel_patch_is_saveload_specific(self):
+        native = ET.parse(MODULES / 'SandBox/GUI/Prefabs/SaveLoad/SaveLoadScreen.xml')
+        panels = native.findall(
+            ".//Widget[@Sprite='General\\CharacterCreation\\character_creation_panel']"
+        )
+        self.assertEqual(len(panels), 1)
+        patch = (
+            HERE.parents[1]
+            / 'DellarteDellaGuerra.Integration/UI/SaveLoad/SaveLoadSkinPrefabExtensions.cs'
+        ).read_text()
+        self.assertIn('[PrefabExtension("SaveLoadScreen"', patch)
+        self.assertIn(
+            "descendant::Widget[@Sprite='General\\CharacterCreation\\character_creation_panel']",
+            patch,
+        )
+        self.assertIn('new Attribute("Sprite", @"DADG\\SaveLoad\\panel_no_frame")', patch)
+
+    def test_panel_variant_preserves_geometry_and_has_registered_space(self):
+        map_gui = MODULES / 'DellarteDellaGuerraMap/GUI'
+        root = ET.parse(map_gui / 'DadgMainUISpriteData.xml').getroot()
+        parts = root.findall('.//SpritePart')
+        panel = next(
+            part
+            for part in parts
+            if part.findtext('Name') == 'DADG\\SaveLoad\\panel_no_frame'
+        )
+        self.assertEqual(
+            [panel.findtext(name) for name in ('Width', 'Height', 'CategoryName')],
+            ['694', '1080', 'DADG_customui3'],
+        )
+        image = Image.open(
+            map_gui
+            / 'DadgMainUISpriteParts/DADG_customui3/DADG/SaveLoad/panel_no_frame.png'
+        ).convert('RGBA')
+        shared = Image.open(
+            map_gui
+            / 'DadgMainUISpriteParts/DADG_customui2/General/CharacterCreation/character_creation_panel.png'
+        ).convert('RGBA')
+        self.assertEqual(image.size, (694, 1080))
+        self.assertEqual(image.getchannel('A').tobytes(), shared.getchannel('A').tobytes())
+
+        atlas = Image.open(
+            MODULES / 'DellarteDellaGuerraMap/AssetSources/GauntletUI/DADG_customui3_1.png'
+        ).convert('RGBA')
+        packed = atlas.crop((4, 132, 698, 1212))
+        self.assertEqual(packed.getchannel('A').tobytes(), image.getchannel('A').tobytes())
+        black = Image.new('RGBA', image.size, '#000000ff')
+        self.assertEqual(
+            Image.alpha_composite(black, packed).tobytes(),
+            Image.alpha_composite(black, image).tobytes(),
+        )
+
+        x = int(panel.findtext('SheetX'))
+        y = int(panel.findtext('SheetY'))
+        for other in parts:
+            if other is panel or other.findtext('CategoryName') != 'DADG_customui3':
+                continue
+            ox = int(other.findtext('SheetX'))
+            oy = int(other.findtext('SheetY'))
+            ow = int(other.findtext('Width'))
+            oh = int(other.findtext('Height'))
+            self.assertTrue(
+                x + image.width <= ox
+                or x >= ox + ow
+                or y + image.height <= oy
+                or y >= oy + oh
+            )
+
 
 if __name__ == '__main__':
     unittest.main()

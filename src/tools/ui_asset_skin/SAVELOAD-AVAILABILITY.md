@@ -34,6 +34,12 @@ Revision 05 (brush-only): reduce enabled and unavailable Default/Hovered/Pressed
 brightness by 10% relative to revision 04. Campaign artwork, selected states,
 text and all PNGs remain unchanged. Reload brush XML; no atlas reimport required.
 
+Revision 06: remove the gold rectangle around the Save/Load list without altering
+the shared character-creation panel. `SaveLoadScreen` alone redirects to
+`DADG\SaveLoad\panel_no_frame`, packed into the existing `DADG_customui3_1`
+atlas at (4,132). Reimport `DADG_customui3_1_tex` and restart the editor/game so
+the rebuilt Core DLL can apply the sprite redirect.
+
 ## Read-only recruitment audit
 
 `RecruitmentFrameSkin` alone can be replaced by a native-name `Recruitment.Frame`
