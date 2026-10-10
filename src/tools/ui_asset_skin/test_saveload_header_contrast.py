@@ -17,7 +17,7 @@ class SaveLoadHeaderContrastTests(unittest.TestCase):
         self.assertIn('SaveLoad\\load_tuple', recipe['protected'])
         self.assertIn('SaveLoad\\load_tuple_selected', recipe['protected'])
 
-    def test_palette_preserves_alpha_and_uses_antique_gold(self):
+    def test_palette_preserves_alpha_and_uses_dadg_frame_gradient(self):
         native = Image.new('RGBA', (120, 64), '#756450')
         source = Image.new('RGBA', (80, 80), '#e7bc50')
         entry = json.loads((HERE / 'saveload-header-contrast.json').read_text())['parts'][0]
@@ -25,10 +25,13 @@ class SaveLoadHeaderContrastTests(unittest.TestCase):
         new = paint(native, entry, source, source)
         self.assertEqual(new.size, old.size)
         self.assertEqual(new.getchannel('A').tobytes(), old.getchannel('A').tobytes())
-        center = new.getpixel((60, 32))
+        left, center, right = (new.getpixel((x, 32)) for x in (2, 60, 117))
+        self.assertGreater(center[1], left[1] + 40)
+        self.assertGreater(center[1], right[1] + 40)
+        self.assertLess(abs(left[1] - right[1]), 4)
         self.assertGreater(center[0], center[1])
         self.assertGreater(center[1], center[2] * 2)
-        self.assertEqual(new.getpixel((60, 63))[:3], (240, 199, 90))
+        self.assertEqual(new.getpixel((60, 63))[:3], (255, 227, 90))
 
     def test_default_palette_remains_identical(self):
         native = Image.new('RGBA', (120, 64), '#756450')
