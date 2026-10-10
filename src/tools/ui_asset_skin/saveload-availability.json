@@ -9,10 +9,10 @@
     {"source": "DADGSaveLoadAvailability.xml", "native": "SandBox/GUI/Brushes/SaveLoad.xml"}
   ],
   "parts": [
-    {"name": "SaveLoad\\load_collapser", "profile": "header", "blue_palette": ["#1b364b", "#2d4d63"], "border_style": "frame", "border": 1, "border_color": "#e7bc50"},
+    {"name": "SaveLoad\\load_collapser", "profile": "header", "blue_palette": ["#1b364b", "#2d4d63"], "border_style": "frame", "border": 4, "border_color": "#e7bc50"},
     {"name": "SaveLoad\\load_tuple", "profile": "row", "blue_palette": ["#222e39", "#364653"], "border_style": "underline", "border": 1, "border_color": "#40505c"},
     {"name": "SaveLoad\\load_tuple_selected", "profile": "row", "selected": true, "blue_palette": ["#17476b", "#2873a0"], "border_style": "frame", "border": 2, "border_color": "#e7bc50"}
   ],
   "protected": ["SaveLoad\\load_button_canvas"],
-  "scope_note": "Campaign headings use restrained blue relief with a thin muted-gold contour while enabled saves remain dark blue and unavailable saves charcoal. Enabled brightness changes only in its brush, preserving the shared PNG and unavailable appearance. Selected highlight, text, native alpha, dimensions and loadability unchanged. Do not deploy text overrides or restore removed text patches."
+  "scope_note": "Campaign headings use restrained blue relief with a strong four-pixel DADG-gold contour while enabled saves remain dark blue and unavailable saves charcoal. Enabled brightness changes only in its brush, preserving the shared PNG and unavailable appearance. Selected highlight, text, native alpha, dimensions and loadability unchanged. Do not deploy text overrides or restore removed text patches."
 }

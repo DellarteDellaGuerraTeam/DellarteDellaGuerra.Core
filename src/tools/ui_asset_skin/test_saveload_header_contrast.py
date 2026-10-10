@@ -29,7 +29,9 @@ class SaveLoadHeaderContrastTests(unittest.TestCase):
         self.assertGreater(center[2], center[1])
         self.assertGreater(center[1], center[0])
         self.assertEqual(new.getpixel((60, 0))[:3], (231, 188, 80))
+        self.assertEqual(new.getpixel((60, 3))[:3], (231, 188, 80))
         self.assertEqual(new.getpixel((0, 32))[:3], (231, 188, 80))
+        self.assertEqual(new.getpixel((3, 32))[:3], (231, 188, 80))
         self.assertEqual(new.getpixel((60, 63))[:3], (231, 188, 80))
 
     def test_default_palette_remains_identical(self):

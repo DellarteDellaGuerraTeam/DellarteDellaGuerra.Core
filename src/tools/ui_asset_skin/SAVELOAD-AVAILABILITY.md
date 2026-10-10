@@ -40,10 +40,10 @@ the shared character-creation panel. `SaveLoadScreen` alone redirects to
 atlas at (4,132). Reimport `DADG_customui3_1_tex` and restart the editor/game so
 the rebuilt Core DLL can apply the sprite redirect.
 
-Revision 10 returns `SaveLoad\load_collapser` to its restrained blue relief and
-uses gold only for a thin full contour. Save rows remain dark blue or charcoal,
-and selection keeps its existing DADG blue/gold treatment. Reimport
-`ui_saveload_1_tex` after deploying the rebuilt atlas.
+Revision 11 retains the restrained blue relief on `SaveLoad\load_collapser` and
+increases its full DADG-gold contour to four pixels. Save rows remain dark blue
+or charcoal, and selection keeps its existing DADG blue/gold treatment.
+Reimport `ui_saveload_1_tex` after deploying the rebuilt atlas.
 
 ## Read-only recruitment audit
 
