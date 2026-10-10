@@ -19,6 +19,7 @@ using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.Integration.CampaignTime;
 using DellarteDellaGuerra.Integration.DI;
 using DellarteDellaGuerra.Integration.Music.Patches;
+using DellarteDellaGuerra.Integration.Naval;
 using DellarteDellaGuerra.Integration.PrivateWars;
 using HarmonyLib;
 using DellarteDellaGuerra.Integration.ExpandedTemplateApi.Logging;
@@ -182,6 +183,7 @@ namespace DellarteDellaGuerra.Integration
             if (game.GameType is not Campaign) return;
             _serviceProvider.GetRequiredService<CampaignBehaviourDisabler>()
                 .Disable(Campaign.Current.CampaignBehaviorManager);
+            DadgFigureheadCultures.ReattributeSturgianFigureheads();
             LoadDadgBattleScenes();
         }
 
