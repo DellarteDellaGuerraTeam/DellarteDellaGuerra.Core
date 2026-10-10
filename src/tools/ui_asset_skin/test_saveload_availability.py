@@ -57,13 +57,13 @@ class SaveLoadAvailabilityTests(unittest.TestCase):
         old_header = paint(source, previous['parts'][0], source, source)
         mean = lambda image: ImageStat.Stat(ImageOps.grayscale(image.crop((4, 4, 116, 60)))).mean[0]
         self.assertGreater(mean(results[0]), mean(old_header) * 1.5)
-        # Campaign headings must read as a distinct medium-blue band, not black.
+        # Campaign headings must read as antique gold, not another blue save row.
         brushes = ET.parse(HERE / 'DADGSaveLoadAvailability.xml')
         enabled_factor = float(brushes.find("Brush[@Name='SaveLoad.Tuple']/Styles/Style[@Name='Default']/BrushLayer").get('ColorFactor'))
         self.assertGreater(mean(results[0]), mean(results[1]) * enabled_factor * 1.15)
-        brighter_header = paint(source, dict(recipe['parts'][0], blue_palette=['#1e3c53', '#32566e']), source, source)
-        self.assertGreater(mean(results[0]), mean(brighter_header) * 0.85)
-        self.assertLess(mean(results[0]), mean(brighter_header) * 0.95)
+        header_pixel = results[0].getpixel((60, 32))
+        self.assertGreater(header_pixel[0], header_pixel[1])
+        self.assertGreater(header_pixel[1], header_pixel[2] * 2)
         self.assertEqual([b['source'] for b in recipe['brush_overrides']], ['DADGSaveLoadAvailability.xml'])
         self.assertEqual(recipe['parts'][2], previous['parts'][2])
         self.assertEqual(len(results), 3)
@@ -107,6 +107,16 @@ class SaveLoadAvailabilityTests(unittest.TestCase):
             for part in parts
             if part.findtext('Name') == 'DADG\\SaveLoad\\panel_no_frame'
         )
+        sprites = list(root.find('Sprites'))
+        panel_sprite_index = next(
+            index
+            for index, sprite in enumerate(sprites)
+            if sprite.findtext('Name') == 'DADG\\SaveLoad\\panel_no_frame'
+        )
+        first_nine_region_index = next(
+            index for index, sprite in enumerate(sprites) if sprite.tag == 'NineRegionSprite'
+        )
+        self.assertLess(panel_sprite_index, first_nine_region_index)
         self.assertEqual(
             [panel.findtext(name) for name in ('Width', 'Height', 'CategoryName')],
             ['694', '1080', 'DADG_customui3'],

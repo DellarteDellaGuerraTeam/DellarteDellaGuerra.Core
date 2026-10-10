@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DADG · Save/load colour study</title>
+<style>
+  :root { color-scheme: dark; --gold: #e7bc50; --ink: #19374c; --row: #364653; --selected: #225f8a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #0c121a; color: #e7e9ed; font: 15px/1.5 system-ui, sans-serif; }
+  main { max-width: 1420px; margin: auto; padding: 30px; }
+  .eyebrow { color: #c9a960; text-transform: uppercase; letter-spacing: .18em; font-size: 11px; }
+  h1 { font: 32px/1.2 Georgia, serif; margin: 8px 0 12px; }
+  .intro { color: #aebbc9; max-width: 840px; margin: 0 0 20px; }
+  .toolbar { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; padding: 14px 18px; background: #141e2a; border: 1px solid #28384b; border-radius: 6px; }
+  .toolbar label { display: flex; gap: 8px; align-items: center; }
+  input[type=checkbox] { accent-color: var(--gold); }
+  select, .reset { font: inherit; color: #e7e9ed; background: #101823; border: 1px solid #496078; padding: 5px 10px; border-radius: 4px; }
+  .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; margin-top: 26px; }
+  h2 { margin: 0 0 5px; font-size: 18px; font-weight: 500; }
+  .caption { margin: 0 0 14px; color: #98aabd; font-size: 13px; }
+  .reference { display: block; width: 100%; height: auto; border: 1px solid #3a4b5d; }
+  .screen { padding: 18px 15px 25px; background: linear-gradient(110deg, #164a70a6, #143b60b8), url('../../.codex-work/ui-asset-skin/review/preview/panel-dadg.png') center/cover; color: #efc083; font-family: Georgia, 'Times New Roman', serif; }
+  .screen-title { margin: 0 0 42px; text-align: center; color: #d8bd92; font-size: clamp(26px, 2.8vw, 40px); text-shadow: 0 2px 2px #000, 1px 0 #000; }
+  .search { margin: 0 auto 42px; width: 76%; display: block; border: 1px solid #66605a; background: linear-gradient(110deg, #1b1a18, #101316); color: #f4e1c4; padding: 10px; font: 25px Georgia, serif; height: 52px; }
+  .search::placeholder { color: #e0d6c6; opacity: .8; }
+  .frame { padding: 9px; border: 1px solid #29475d; box-shadow: inset 0 0 0 1px #071521; background: #0a2035; }
+  .list { height: 738px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #d7b567 #091827; }
+  .group { margin: 0; }
+  .campaign { width: 100%; min-height: 72px; padding: 16px 10px; display: flex; justify-content: center; align-items: center; gap: 13px; background: linear-gradient(100deg, #57340a, #b8872d); color: #f5e4c5; border: 0; border-bottom: 1px solid #f0c75a; font: bold 29px Georgia, serif; cursor: pointer; text-shadow: 0 2px 2px #291500; }
+  .campaign:hover { background: linear-gradient(100deg, #69410c, #c99b3a); }
+  .arrow { color: #f6cd63; font-size: 19px; display: inline-block; text-shadow: 0 1px 1px #2b1700; }
+  .campaign[aria-expanded=false] .arrow { transform: rotate(-90deg); }
+  button:focus-visible, input:focus-visible { outline: 2px solid #fff1bb; outline-offset: -3px; }
+  .save { position: relative; width: 100%; min-height: 88px; display: grid; grid-template-columns: 65px minmax(0, 1fr) 92px; align-items: center; gap: 12px; border: 0; border-bottom: 1px solid #40505c; background: linear-gradient(115deg, var(--row), #222e39); color: #efc083; text-align: left; padding: 5px 7px; cursor: pointer; }
+  .save { background: linear-gradient(115deg, #2c3944, #1c252e); }
+  .save:hover { background: linear-gradient(110deg, #344451, #212d37); }
+  .save[aria-pressed=true] { z-index: 1; background: linear-gradient(110deg, var(--selected), #17476b); box-shadow: inset 0 0 0 2px var(--gold), inset 5px 0 0 var(--gold); }
+  .save:active { filter: brightness(.9); }
+  .name { font: 30px/1.04 Georgia, serif; overflow-wrap: anywhere; text-shadow: 0 1px 1px #06111c; }
+  .date { text-align: right; font: 17px/1.3 Georgia, serif; color: #e0d4be; text-shadow: 0 1px 1px #000; }
+  .banner { width: 57px; height: 60px; align-self: start; margin-top: 6px; background-image: url('../../.codex-work/ui-asset-skin/review/saveload-current-reference.png'); background-repeat: no-repeat; background-size: 650px 1043px; background-position: -30px -289px; }
+  .banner.eagle { background-position: -30px -449px; }
+  .save.unavailable { background: linear-gradient(115deg, #212529, #171a1f); border-bottom-color: #2b3135; cursor: not-allowed; }
+  .save.unavailable:hover { background: linear-gradient(115deg, #272b30, #1a1f23); }
+  .actions { display: flex; justify-content: center; gap: 26px; padding-top: 18px; }
+  .actions button { min-width: 38%; border: 2px solid #82765a; border-radius: 8px; padding: 7px 12px; color: #f1e6ce; background: linear-gradient(#433d29, #292b22); font: 24px Georgia, serif; box-shadow: 0 2px 5px #000; cursor: pointer; }
+  .actions button:last-child { background: linear-gradient(#4d502c, #30381e); }
+  .notes { color: #9eadbf; padding-top: 12px; font-size: 12px; }
+  .palette { margin-top: 26px; display: flex; gap: 20px; flex-wrap: wrap; padding: 18px 0; border-top: 1px solid #273648; }
+  .palette span { display: flex; align-items: center; gap: 9px; color: #bdc9d7; font-size: 13px; }
+  .swatch { width: 22px; height: 22px; border: 1px solid #748393; border-radius: 3px; }
+  #status { color: #e7c784; min-height: 24px; margin: 12px 0 0; }
+  .proposal-only .comparison { grid-template-columns: minmax(0, 650px); justify-content: center; }
+  .proposal-only .reference-column { display: none; }
+  [hidden] { display: none !important; }
+  @media(max-width: 950px) { main { padding: 18px; } .comparison { grid-template-columns: 1fr; } .column { max-width: 650px; width: 100%; margin: auto; } }
+  @media(max-width: 500px) { .screen { padding: 12px 8px; } .save { grid-template-columns: 43px minmax(0,1fr) 72px; gap: 7px; } .banner { width: 40px; } .name { font-size: 23px; } .date { font-size: 13px; } .campaign { font-size: 25px; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">DADG / interface studies / save & load</div>
+  <h1>A blue ledger, not a stack of gold boxes.</h1>
+  <p class="intro">Antique-gold campaign headings, slate enabled saves, and charcoal unavailable backgrounds. The gold heading separates campaign groups from individual save rows while preserving the existing ledger structure. Browser approximation, not a game-rendered preview.</p>
+  <div class="toolbar">
+    <label><input id="compare" type="checkbox" checked> Show current screenshot</label>
+    <label>Selection <select id="selection"><option value="none">None</option><option value="1">Campaign 10 · first save</option><option value="4">Campaign 11 · second save</option></select></label>
+    <label><input id="unavailable" type="checkbox"> Show unavailable-save sample</label>
+    <button class="reset" id="reset" type="button">Reset preview</button>
+  </div>
+  <div class="comparison">
+    <section class="column reference-column">
+      <h2>Current · in-game reference</h2>
+      <p class="caption">Your screenshot, unchanged. Bright campaign blocks and outlined rows.</p>
+      <img class="reference" src="../../.codex-work/ui-asset-skin/review/saveload-current-reference.png" alt="Current DADG save screen with bright blue campaign headers and dark save rows.">
+    </section>
+    <section class="column">
+      <h2>Proposed · gilded campaign ledger</h2>
+      <p class="caption">Hover a save, click to select, or click a campaign to collapse it.</p>
+      <div class="screen">
+        <h3 class="screen-title">Saved Campaigns</h3>
+        <input class="search" placeholder="Search…" aria-label="Filter example saves" id="search">
+        <div class="frame"><div class="list" id="saves"></div></div>
+        <div class="actions"><button type="button" id="cancel">Cancel</button><button type="button" id="load">Load</button></div>
+      </div>
+      <p id="status" role="status">No save selected · preview only.</p>
+      <p class="notes">Native list structure retained conceptually; browser dimensions and serif font are approximations, not Gauntlet rendering. Banner samples are clipped from your screenshot. Hover, selection and unavailable styling are illustrative; no real save is loaded or modified.</p>
+    </section>
+  </div>
+  <div class="palette">
+    <span><i class="swatch" style="background:#a57525"></i>Campaign / antique gold</span>
+    <span><i class="swatch" style="background:#242e38"></i>Enabled / muted slate</span>
+    <span><i class="swatch" style="background:#1d2024"></i>Unavailable / charcoal</span>
+    <span><i class="swatch" style="background:#225f8a"></i>Selected / DADG blue</span>
+    <span><i class="swatch" style="background:#e7bc50"></i>Structure & selection / gold</span>
+  </div>
+</main>
+<script>
+const groups = [
+  { name: 'Campaign 9', saves: [['cawbesiegebehaviour', '05/09/2026', '01:38', 'stag']] },
+  { name: 'Campaign 10', saves: [['agent_disguise_take_a_after_20260904_2112', '04/09/2026', '21:23', 'eagle'], ['agent_disguise_naked_before_20260904_2107', '04/09/2026', '21:07', 'eagle']] },
+  { name: 'Campaign 11', saves: [['pielattack', '03/09/2026', '22:35', 'stag'], ['corgieattack', '03/09/2026', '22:21', 'stag'], ['attackcarkisbrook', '03/09/2026', '22:11', 'stag']] }
+];
+const saves = document.querySelector('#saves');
+let index = 0;
+groups.forEach(group => {
+  const section = document.createElement('section'); section.className = 'group';
+  const toggle = document.createElement('button'); toggle.type = 'button'; toggle.className = 'campaign'; toggle.setAttribute('aria-expanded', 'true');
+  toggle.innerHTML = '<span class="arrow" aria-hidden="true">▼</span><span>' + group.name + '</span>';
+  const rows = document.createElement('div'); rows.id = 'group-' + index; toggle.setAttribute('aria-controls', rows.id);
+  toggle.addEventListener('click', () => { rows.hidden = !rows.hidden; toggle.setAttribute('aria-expanded', String(!rows.hidden)); });
+  group.saves.forEach(([name, date, time, banner]) => {
+    const id = String(index++), row = document.createElement('button'); row.type = 'button'; row.className = 'save'; row.dataset.id = id; row.dataset.name = name; row.setAttribute('aria-pressed', 'false');
+    row.innerHTML = '<span class="banner '+ banner +'" aria-hidden="true"></span><span class="name">'+name+'</span><span class="date">'+date+'<br>'+time+'</span>';
+    row.addEventListener('click', () => { if (!row.classList.contains('unavailable')) selectSave(id); }); rows.append(row);
+  });
+  section.append(toggle, rows); saves.append(section);
+});
+function selectSave(id) {
+  document.querySelectorAll('.save').forEach(row => row.setAttribute('aria-pressed', String(row.dataset.id === id)));
+  const row = Array.from(document.querySelectorAll('.save')).find(row => row.dataset.id === id);
+  document.querySelector('#status').textContent = row ? 'Selected: ' + row.dataset.name + ' · preview only.' : 'No save selected · preview only.';
+  const select = document.querySelector('#selection');
+  select.querySelectorAll('[data-dynamic]').forEach(option => option.remove());
+  if (row && !Array.from(select.options).some(option => option.value === id)) { const option = new Option('Clicked save', id); option.dataset.dynamic = 'true'; select.add(option); }
+  select.value = row ? id : 'none';
+}
+document.querySelector('#selection').addEventListener('change', event => selectSave(event.target.value));
+document.querySelector('#compare').addEventListener('change', event => document.body.classList.toggle('proposal-only', !event.target.checked));
+document.querySelector('#unavailable').addEventListener('change', event => {
+  const row = document.querySelector('.save[data-id="5"]'); row.classList.toggle('unavailable', event.target.checked); row.setAttribute('aria-disabled', String(event.target.checked));
+  if (event.target.checked && row.getAttribute('aria-pressed') === 'true') selectSave('none');
+});
+document.querySelector('#search').addEventListener('input', event => {
+  const query = event.target.value.toLowerCase();
+  document.querySelectorAll('.group').forEach(group => {
+    const rows = [...group.querySelectorAll('.save')]; rows.forEach(row => row.hidden = !row.dataset.name.toLowerCase().includes(query)); group.hidden = rows.every(row => row.hidden);
+  });
+});
+document.querySelector('#cancel').addEventListener('click', () => selectSave('none'));
+document.querySelector('#load').addEventListener('click', () => document.querySelector('#status').textContent = 'Preview only — no game action was performed.');
+document.querySelector('#reset').addEventListener('click', () => {
+  document.querySelector('#search').value = ''; document.querySelector('#unavailable').checked = false;
+  document.querySelectorAll('.group, .group > div, .save').forEach(element => element.hidden = false);
+  document.querySelectorAll('.campaign').forEach(button => button.setAttribute('aria-expanded', 'true'));
+  document.querySelectorAll('.save').forEach(row => { row.classList.remove('unavailable'); row.setAttribute('aria-disabled', 'false'); }); selectSave('none');
+});
+</script>
+</body>
+</html>
