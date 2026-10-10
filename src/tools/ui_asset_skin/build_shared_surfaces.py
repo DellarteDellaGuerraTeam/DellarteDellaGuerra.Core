@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
-from PIL import Image, ImageChops, ImageColor, ImageDraw, ImageOps
+from PIL import Image, ImageChops, ImageDraw, ImageOps
 
 
 def sha(path):
@@ -51,21 +51,7 @@ def paint(native, entry, panel, inner):
     elif entry['profile'] in ('row', 'header', 'recolor_blue', 'recolor_gold'):
         # Retain native relief/shading without retaining its brown pigment.
         grey = ImageOps.grayscale(native)
-        if entry.get('horizontal_gradient'):
-            colors = [ImageColor.getrgb(color) for color in entry['horizontal_gradient']]
-            if len(colors) != 3:
-                raise ValueError('Horizontal gradient requires left, centre and right colours')
-            strip = Image.new('RGB', (native.width, 1))
-            pixels = strip.load()
-            midpoint = max(1, native.width // 2)
-            for x in range(native.width):
-                if x <= midpoint:
-                    start, end, amount = colors[0], colors[1], x / midpoint
-                else:
-                    start, end, amount = colors[1], colors[2], (x - midpoint) / max(1, native.width - midpoint - 1)
-                pixels[x, 0] = tuple(round(a + (b-a) * amount) for a, b in zip(start, end))
-            result = strip.resize(native.size).convert('RGBA')
-        elif entry['profile'] == 'recolor_gold':
+        if entry['profile'] == 'recolor_gold':
             result = ImageOps.colorize(grey, '#603907', '#fff2a2').convert('RGBA')
         else:
             bright = entry.get('selected', False) or entry['profile'] == 'header'

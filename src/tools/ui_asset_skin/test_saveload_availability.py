@@ -57,13 +57,14 @@ class SaveLoadAvailabilityTests(unittest.TestCase):
         old_header = paint(source, previous['parts'][0], source, source)
         mean = lambda image: ImageStat.Stat(ImageOps.grayscale(image.crop((4, 4, 116, 60)))).mean[0]
         self.assertGreater(mean(results[0]), mean(old_header) * 1.5)
-        # Campaign headings must read as antique gold, not another blue save row.
+        # Campaign headings return to blue but retain a visible gold contour.
         brushes = ET.parse(HERE / 'DADGSaveLoadAvailability.xml')
         enabled_factor = float(brushes.find("Brush[@Name='SaveLoad.Tuple']/Styles/Style[@Name='Default']/BrushLayer").get('ColorFactor'))
         self.assertGreater(mean(results[0]), mean(results[1]) * enabled_factor * 1.15)
         header_pixel = results[0].getpixel((60, 32))
-        self.assertGreater(header_pixel[0], header_pixel[1])
-        self.assertGreater(header_pixel[1], header_pixel[2] * 2)
+        self.assertGreater(header_pixel[2], header_pixel[1])
+        self.assertGreater(header_pixel[1], header_pixel[0])
+        self.assertEqual(results[0].getpixel((60, 0))[:3], (231, 188, 80))
         self.assertEqual([b['source'] for b in recipe['brush_overrides']], ['DADGSaveLoadAvailability.xml'])
         self.assertEqual(recipe['parts'][2], previous['parts'][2])
         self.assertEqual(len(results), 3)
