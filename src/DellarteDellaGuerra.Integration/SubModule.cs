@@ -183,7 +183,7 @@ namespace DellarteDellaGuerra.Integration
             if (game.GameType is not Campaign) return;
             _serviceProvider.GetRequiredService<CampaignBehaviourDisabler>()
                 .Disable(Campaign.Current.CampaignBehaviorManager);
-            DadgFigureheadCultures.ReattributeSturgianFigureheads();
+            OrphanedFigureheads.Remove();
             LoadDadgBattleScenes();
         }
 
