@@ -1,5 +1,5 @@
 {
-  "batch": "saveload-header-gold-02",
+  "batch": "saveload-header-gold-03",
   "sheet": "ui_saveload_1",
   "module": "SandBox",
   "size": [4096, 1024],
@@ -9,5 +9,5 @@
     {"name": "SaveLoad\\load_collapser", "profile": "header", "horizontal_gradient": ["#ff9826", "#ffdf4b", "#ff9826"], "border_style": "underline", "border": 1, "border_color": "#ffe35a"}
   ],
   "protected": ["SaveLoad\\load_tuple", "SaveLoad\\load_tuple_selected", "SaveLoad\\load_button_canvas"],
-  "scope_note": "Campaign expander only: the orange-side, yellow-centre gradient matches the DADG character-panel frame while existing dark navy save rows remain unchanged. Native relief, alpha, geometry and all other atlas pixels are retained. No brush or layout edits."
+  "scope_note": "Campaign expander only: the smooth orange-side, yellow-centre gradient matches the DADG character-panel frame while existing dark navy save rows remain unchanged. Native alpha, geometry and all other atlas pixels are retained; the native relief is intentionally omitted to avoid banding. No brush or layout edits."
 }

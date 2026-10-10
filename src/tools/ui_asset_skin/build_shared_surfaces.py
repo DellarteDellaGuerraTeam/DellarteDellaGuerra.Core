@@ -64,9 +64,7 @@ def paint(native, entry, panel, inner):
                 else:
                     start, end, amount = colors[1], colors[2], (x - midpoint) / max(1, native.width - midpoint - 1)
                 pixels[x, 0] = tuple(round(a + (b-a) * amount) for a, b in zip(start, end))
-            result = strip.resize(native.size)
-            relief = ImageOps.autocontrast(grey).point(lambda value: 224 + value * 31 // 255)
-            result = ImageChops.multiply(result, Image.merge('RGB', (relief, relief, relief))).convert('RGBA')
+            result = strip.resize(native.size).convert('RGBA')
         elif entry['profile'] == 'recolor_gold':
             result = ImageOps.colorize(grey, '#603907', '#fff2a2').convert('RGBA')
         else:

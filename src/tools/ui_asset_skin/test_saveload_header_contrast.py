@@ -1,4 +1,4 @@
-"""The gold campaign expander must not restyle save rows or alter its geometry."""
+"""The smooth gold campaign expander must not restyle save rows or alter geometry."""
 import json
 from pathlib import Path
 import unittest
@@ -31,6 +31,7 @@ class SaveLoadHeaderContrastTests(unittest.TestCase):
         self.assertLess(abs(left[1] - right[1]), 4)
         self.assertGreater(center[0], center[1])
         self.assertGreater(center[1], center[2] * 2)
+        self.assertEqual(len({new.getpixel((60, y))[:3] for y in range(1, 63)}), 1)
         self.assertEqual(new.getpixel((60, 63))[:3], (255, 227, 90))
 
     def test_default_palette_remains_identical(self):
