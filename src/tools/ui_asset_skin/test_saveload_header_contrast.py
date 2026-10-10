@@ -1,4 +1,4 @@
-"""The blue-and-gold campaign expander must not restyle rows or alter geometry."""
+"""The unframed blue campaign expander must not restyle rows or alter geometry."""
 import json
 from pathlib import Path
 import unittest
@@ -17,7 +17,7 @@ class SaveLoadHeaderContrastTests(unittest.TestCase):
         self.assertIn('SaveLoad\\load_tuple', recipe['protected'])
         self.assertIn('SaveLoad\\load_tuple_selected', recipe['protected'])
 
-    def test_palette_preserves_alpha_and_uses_gold_contour(self):
+    def test_palette_preserves_alpha_and_has_no_frame(self):
         native = Image.new('RGBA', (120, 64), '#756450')
         source = Image.new('RGBA', (80, 80), '#e7bc50')
         entry = json.loads((HERE / 'saveload-header-contrast.json').read_text())['parts'][0]
@@ -28,11 +28,9 @@ class SaveLoadHeaderContrastTests(unittest.TestCase):
         center = new.getpixel((60, 32))
         self.assertGreater(center[2], center[1])
         self.assertGreater(center[1], center[0])
-        self.assertEqual(new.getpixel((60, 0))[:3], (231, 188, 80))
-        self.assertEqual(new.getpixel((60, 3))[:3], (231, 188, 80))
-        self.assertEqual(new.getpixel((0, 32))[:3], (231, 188, 80))
-        self.assertEqual(new.getpixel((3, 32))[:3], (231, 188, 80))
-        self.assertEqual(new.getpixel((60, 63))[:3], (231, 188, 80))
+        for pixel in (new.getpixel((60, 0)), new.getpixel((0, 32)), new.getpixel((60, 63))):
+            self.assertGreater(pixel[2], pixel[1])
+            self.assertGreater(pixel[1], pixel[0])
 
     def test_default_palette_remains_identical(self):
         native = Image.new('RGBA', (120, 64), '#756450')

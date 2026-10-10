@@ -1,13 +1,13 @@
 {
-  "batch": "saveload-header-blue-frame-02",
+  "batch": "saveload-header-blue-no-frame-01",
   "sheet": "ui_saveload_1",
   "module": "SandBox",
   "size": [4096, 1024],
   "native_atlas_sha256": "7da398f6b55df778a9ee46d64d9702742770b8d197330db398e4aa8dc209d03a",
   "native_sprite_data_sha256": "3b29243ddb48868b37ce7734ae71122158ec1d9acc325e081a8e4541fb07dc44",
   "parts": [
-    {"name": "SaveLoad\\load_collapser", "profile": "header", "blue_palette": ["#1b364b", "#2d4d63"], "border_style": "frame", "border": 4, "border_color": "#e7bc50"}
+    {"name": "SaveLoad\\load_collapser", "profile": "recolor_blue", "blue_palette": ["#1b364b", "#2d4d63"]}
   ],
   "protected": ["SaveLoad\\load_tuple", "SaveLoad\\load_tuple_selected", "SaveLoad\\load_button_canvas"],
-  "scope_note": "Campaign expander only: retain the restrained blue relief and add a strong four-pixel DADG-gold contour. Existing save rows, native alpha, geometry and all other atlas pixels remain unchanged. No brush or layout edits."
+  "scope_note": "Campaign expander only: retain the restrained blue relief without a contour or underline. Existing save rows, native alpha, geometry and all other atlas pixels remain unchanged. No brush or layout edits."
 }
