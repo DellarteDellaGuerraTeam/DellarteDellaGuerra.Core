@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Equipment;
+using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Missions;
 using DellarteDellaGuerra.Tournament.Jousting.Equipment.Spi;
 using SandBox;
@@ -44,6 +45,7 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
 
         private readonly IGetJoustEquipmentUtil _getJoustEquipmentUtil;
         private readonly IEquipmentMapper _equipmentMapper;
+        private readonly IRandomProvider _randomProvider;
         private readonly JoustingLanceUtil _joustingLanceUtil;
         private readonly IList<Action> _matchEndListeners;
 
@@ -66,12 +68,14 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
             CultureObject culture,
             IGetJoustEquipmentUtil getJoustEquipmentUtil,
             IEquipmentMapper equipmentMapper,
+            IRandomProvider randomProvider,
             ILoggerFactory loggerFactory)
         {
             _match = null;
             _culture = culture;
             _getJoustEquipmentUtil = getJoustEquipmentUtil;
             _equipmentMapper = equipmentMapper;
+            _randomProvider = randomProvider;
             _joustingLanceUtil = new JoustingLanceUtil(loggerFactory);
             _cheerStarted = false;
             _currentTournamentAgents = new List<Agent>();
@@ -647,7 +651,7 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic
                 TournamentParticipant tournamentParticipant5;
                 do
                 {
-                    num2 = MBRandom.RandomInt(_aliveParticipants.Count);
+                    num2 = _randomProvider.NextInt(_aliveParticipants.Count);
                     tournamentParticipant5 = _aliveParticipants[num2];
                 } while (tournamentParticipant4 == tournamentParticipant5 ||
                          tournamentParticipant4.Team == tournamentParticipant5.Team);
