@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Equipment;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Equipment.Model;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Equipment.Port;
+using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using Xunit;
 using DomainEquipment = DellarteDellaGuerra.Domain.Tournament.Jousting.Equipment.Model.Equipment;
 
@@ -22,7 +23,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Tournament.Jousting.Equipment
             public IReadOnlyList<IReadOnlyList<EquipmentSlot>> GetJoustingEquipmentTemplates() => _templates;
         }
 
-        private sealed class FakeRandom : Random
+        private sealed class FakeRandom : IRandomProvider
         {
             private readonly int _value;
 
@@ -31,7 +32,9 @@ namespace DellarteDellaGuerra.Domain.Tests.Tournament.Jousting.Equipment
                 _value = value;
             }
 
-            public override int Next(int maxValue) => _value % maxValue;
+            public float NextDouble() => 0f;
+
+            public int NextInt(int maxExclusive) => _value % maxExclusive;
         }
 
 		[Fact]

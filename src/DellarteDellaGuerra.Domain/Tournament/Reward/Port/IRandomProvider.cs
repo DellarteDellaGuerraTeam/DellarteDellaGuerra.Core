@@ -3,5 +3,6 @@
     public interface IRandomProvider
     {
         float NextDouble();
+        int NextInt(int maxExclusive);
     }
 }
