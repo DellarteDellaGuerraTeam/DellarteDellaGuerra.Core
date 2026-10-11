@@ -1,0 +1,37 @@
+<Brushes>
+  <!-- No idle tint over the navy artwork; neutral highlights retain input feedback. -->
+  <Brush Name="DADG.Recruitment.Highlight">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#FFFFFF00" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" Color="#FFFFFF00" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" Color="#FFFFFF22" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" Color="#FFFFFF18" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" Color="#FFFFFF00" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" Color="#FFFFFF18" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="DADG.Recruitment.Frame">
+    <Layers><BrushLayer Name="Default" Sprite="DADG\Recruitment\panel" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Default" /></Style></Styles>
+  </Brush>
+  <Brush Name="DADG.Recruitment.Troop" BaseBrush="Recruitment.Troop.Brush">
+    <Layers>
+      <BrushLayer Name="Available" Sprite="DADG\Recruitment\troop" IsHidden="true" />
+      <BrushLayer Name="Unavailable" Sprite="DADG\Recruitment\troop" IsHidden="true" Color="#8794A8FF" />
+      <BrushLayer Name="EmptyNoRelation" Sprite="DADG\Recruitment\troop" IsHidden="true" Color="#8794A8FF" />
+      <BrushLayer Name="EmptyEnoughRelation" Sprite="DADG\Recruitment\troop" IsHidden="true" />
+    </Layers>
+    <Styles>
+      <Style Name="Available"><BrushLayer Name="Available" IsHidden="false" /></Style>
+      <Style Name="Unavailable"><BrushLayer Name="Unavailable" IsHidden="false" /></Style>
+      <Style Name="EmptyNoRelation"><BrushLayer Name="EmptyNoRelation" IsHidden="false" /></Style>
+      <Style Name="EmptyEnoughRelation"><BrushLayer Name="EmptyEnoughRelation" IsHidden="false" /></Style>
+    </Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="transfer" /></EventSounds></SoundProperties>
+  </Brush>
+  <Brush Name="DADG.Recruitment.Cart" BaseBrush="Recruitment.Troop.Cart.Brush">
+    <Layers><BrushLayer Name="Default" Sprite="DADG\Recruitment\cart" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Default" IsHidden="false" ValueFactor="0" SaturationFactor="0" /></Style></Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="transfer" /></EventSounds></SoundProperties>
+  </Brush>
+</Brushes>

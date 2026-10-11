@@ -1,0 +1,186 @@
+<section id="visual-preview">
+  <h2>DADG · reuse-first visual pilot</h2>
+  <p>Existing artwork assembled in HTML. This is a styling preview, not a Gauntlet layout reproduction or a deployment.</p>
+  <div class="preview-controls">
+    <label>Artwork <select id="art-mode"><option value="dadg">Existing DADG blue / gold</option><option value="native">Native reference</option></select></label>
+    <label>Preview canvas <select id="canvas-width"><option>1920</option><option>1536</option><option>2560</option></select> px</label>
+    <label><input type="checkbox" id="fit-preview" checked> Fit full bar</label>
+    <label><input type="checkbox" id="sample-disabled"> Dim sample controls</label>
+  </div>
+  <p class="preview-note">Canvas width changes this browser mockup only. Hover/dimming below are illustrative—not validated game states. Uncheck “Fit full bar” for a scrollable 1:1 view.</p>
+  <div class="mapbar-scroll">
+    <div class="mapbar-preview" id="mapbar-preview">
+      <span class="mock-label">Campaign mapbar · source-art composition · example values</span>
+      <div class="nav-sample">
+        <img class="surface" data-sprite="mapbar_left_frame" alt="Campaign navigation frame">
+        <nav id="sample-navigation" aria-label="Preview campaign navigation"></nav>
+      </div>
+      <div class="time-sample">
+        <img class="surface" data-sprite="mapbar_center_frame" alt="Campaign time frame">
+        <div class="clock-sample">
+          <img class="clock-base" data-sprite="mapbar_center_circle_canvas" alt="Clock canvas">
+          <div class="daynight"><img src="preview/mapbar_center_circle_daynight-native.png" alt="Native day/night artwork"></div>
+          <img class="clock-frame" data-sprite="mapbar_center_circle_frame" alt="Gold clock ring">
+        </div>
+        <div class="time-content"><span>Summer 1, 1471</span><span>Ⅱ　▶　▶▶</span></div>
+      </div>
+      <div class="stats-sample">
+        <img class="surface" data-sprite="mapbar_right_frame" alt="Campaign statistics frame">
+        <div class="stats-content"><span>Gold　1,000</span><span>Party　66</span><span>Food　42.4</span></div>
+      </div>
+    </div>
+  </div>
+  <p id="preview-selection" role="status">Existing DADG atlas sources selected.</p>
+  <h3>First offline test · Recruit Troops</h3>
+  <p class="preview-note"><strong>Inner-frame revision: thicker, brighter encyclopedia gold.</strong> Both inner panels reuse the existing <code>gold_frame_9</code> artwork at twice its original trim scale, with a brighter gold highlight and amber bevel. Panel geometry and individual troop-card borders are unchanged.</p>
+  <p class="preview-note">Native 1500×960 popup and panel sizes. In the DADG preview only, the right panel is raised 5px to align both columns; the native reference retains its original offset. Switch Artwork above to compare. DADG uses blue → darker blue → deep navy surfaces, with a 6px textured outer gold edge, approximately 4px inner-panel gold bands and 2px recruit-slot outlines. The outer edge repeats a straight section of the title rim with the same gold tint, without repeating its ornaments. The title retains its native silhouette, with a CSS gold treatment inspired by <code>DADG\Nameplates\army_track_frame_square</code> and a dark-blue centre.</p>
+  <div class="recruitment-viewport">
+    <div class="recruitment-stage">
+      <div class="panel-sample" id="panel-sample">
+        <svg class="outer-gilding" viewBox="0 0 1500 960" aria-hidden="true">
+          <defs>
+            <pattern id="title-rim-texture" patternUnits="userSpaceOnUse" width="256" height="6">
+              <svg width="256" height="6" viewBox="160 93 256 8" preserveAspectRatio="none" overflow="hidden">
+                <image href="preview/recruit-title-native.png" width="592" height="161"/>
+              </svg>
+            </pattern>
+          </defs>
+          <g fill="url(#title-rim-texture)">
+            <rect width="1500" height="6"/>
+            <rect width="1500" height="6" transform="translate(0 954)"/>
+            <rect width="960" height="6" transform="translate(6 0) rotate(90)"/>
+            <rect width="960" height="6" transform="translate(1500 0) rotate(90)"/>
+          </g>
+        </svg>
+        <div class="recruit-title"><span>Recruit Troops</span></div>
+        <div class="recruit-left">
+          <p class="fixture-label">Volunteer list · placeholder content</p>
+          <div class="fixture-row"><span>Notable A</span><span>Recruit</span><span>Recruit</span><span>Recruit</span><span>Recruit</span></div>
+          <div class="fixture-row"><span>Notable B</span><span>Recruit</span><span>Recruit</span><span>Recruit</span><span>Locked</span></div>
+          <div class="fixture-row"><span>Notable C</span><span>Recruit</span><span>Recruit</span><span>Locked</span><span>Locked</span></div>
+        </div>
+        <div class="recruit-right"><p class="fixture-label">Selected troops</p><p>No selection</p><small>Placeholder cart</small></div>
+        <div class="recruit-summary">Speed 4.8　 ·　 Wage 0　 ·　 Party 66 / 100　 ·　 Gold 1,000</div>
+      </div>
+      <div class="sample-controls recruit-actions"><button type="button">Cancel · sample</button><button type="button">Reset · sample</button><button type="button">Done · sample</button></div>
+    </div>
+  </div>
+  <p id="recruit-status" class="preview-note" role="status">Browser-only fixture: troop rows, values and footer buttons are illustrative, not a functional recruitment screen.</p>
+  <p class="preview-note">Source: <code>RecruitmentPopup.xml</code> and <code>Recruitment.Frame</code>. The native frame uses <code>Frame1_frame</code> (28px left/right, 29px top, 30px bottom), not the earlier gold-frame sprite. Native saturation/stone overlays are not reproduced. DADG surface darkening, source-edge compensation and gold trim are browser-only CSS/SVG proposals; no source PNG, prefab or atlas has been changed.</p>
+  <h3>Protected squared-banner artwork</h3>
+  <p>These existing overrides stay in place, including their sprite names, slicing and nameplate/army bindings. Shown without runtime heraldry tint.</p>
+  <div class="protected-banners"><!-- BANNER_CARDS --></div>
+  <h3>Selection decisions</h3>
+  <ul>
+    <li>Use the blue atlas version of the mapbar frames, not the older red loose PNG.</li>
+    <li>Reuse the existing 75×75 gold centre-circle frame. Do not generate another ring.</li>
+    <li>Keep the seven native navigation glyphs for this pilot; none are repainted.</li>
+    <li>Hold the left canvas: DADG is 587×55, native is 497×55. No automatic resize or layout change.</li>
+    <li>Leave scene illustrations and completed encyclopedia styling unchanged.</li>
+  </ul>
+</section>
+<style>
+  #visual-preview{border:1px solid #806d44;border-radius:8px;padding:24px;background:#101923}
+  .preview-controls{display:flex;gap:24px;flex-wrap:wrap;align-items:center}
+  select,.sample-controls button{font:inherit;color:#f2e1b8;background:#172f4a;border:1px solid #b3934e;border-radius:3px;padding:8px}
+  .preview-note{font-size:13px;color:#b8c2cc;max-width:1000px}
+  .mapbar-scroll{overflow-x:auto;border:1px solid #506071;margin-top:20px;background:#263943}
+  .mapbar-preview{position:relative;width:1920px;height:180px;transform-origin:top left;background:linear-gradient(130deg,#1b2a32,#344443)}
+  .mock-label{position:absolute;top:20px;left:24px;color:#b7c7cc;font-size:13px}
+  .nav-sample,.time-sample,.stats-sample{position:absolute;bottom:0}
+  .nav-sample{left:0;width:554px;height:77px}.time-sample{left:50%;transform:translateX(-50%);width:430px;height:59px}
+  .stats-sample{right:0;width:541px;height:99px}
+  #visual-preview .surface{position:absolute;width:100%;height:100%;max-height:none;background:none;object-fit:fill}
+  #sample-navigation{position:absolute;inset:15px 13px 0 8px;display:flex;gap:0;align-items:end}
+  #sample-navigation button{position:relative;padding:0;border:0;background:transparent;flex:none;height:52px;cursor:pointer}
+  #sample-navigation img{display:block;height:52px;width:auto;background:none}
+  #sample-navigation .nav-icon{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:50px;height:36px;object-fit:contain}
+  #sample-navigation button:first-child .nav-icon{width:13px}
+  #sample-navigation button:hover{filter:brightness(1.3)}
+  #sample-navigation button:focus-visible{outline:2px solid #ffda69;outline-offset:-2px}
+  .clock-sample{position:absolute;width:78px;height:79px;left:176px;top:-35px}
+  #visual-preview .clock-base,#visual-preview .clock-frame{position:absolute;inset:0;background:none;max-height:none}
+  #visual-preview .clock-frame{width:75px;height:75px;left:1px;top:2px}
+  .daynight{position:absolute;left:14px;top:14px;width:50px;height:50px;overflow:hidden;border-radius:50%}
+  #visual-preview .daynight img{width:190px;max-width:none;height:52px;background:none}
+  .time-content{position:absolute;inset:27px 20px 0;display:flex;justify-content:space-between;font-family:Georgia,serif;color:#f2dfb6}
+  .stats-content{position:absolute;inset:45px 20px 0 35px;display:flex;gap:30px;font-family:Georgia,serif;color:#f2dfb6}
+  .recruitment-viewport{overflow:hidden;margin-top:28px;background:#18232c}
+  .recruitment-stage{width:1520px;height:1090px;padding:25px 10px 0;box-sizing:border-box;transform-origin:top left}
+  .panel-sample{position:relative;box-sizing:border-box;width:1500px;height:960px;padding:0;background-size:100% 100%;font-family:Georgia,serif;color:#eee5cf}
+  .panel-sample[data-artwork="native"]::after{content:"";position:absolute;inset:-8px 0 -7px -5px;pointer-events:none;border-style:solid;border-width:29px 28px 30px;border-image:url('preview/recruit-frame-native.png') 29 28 30 28 stretch}
+  .recruit-title{position:absolute;left:462px;top:-17px;width:576px;height:150px;background:url('preview/recruit-title-native.png') center/100% 100%;box-sizing:border-box;text-align:center;padding-top:24px;font-size:48px}
+  .recruit-title span{position:relative;z-index:1}
+  .panel-sample[data-artwork="dadg"] .recruit-title{background:none;z-index:2}
+  .panel-sample[data-artwork="dadg"] .recruit-title::before,.panel-sample[data-artwork="dadg"] .recruit-title::after{content:"";position:absolute;inset:0;pointer-events:none;background:url('preview/recruit-title-native.png') center/100% 100%}
+  .panel-sample[data-artwork="dadg"] .recruit-title::before,.panel-sample[data-artwork="dadg"] .outer-gilding{filter:sepia(1) saturate(2.5) brightness(2.1)}
+  .panel-sample[data-artwork="dadg"] .recruit-title::after{filter:sepia(1) saturate(3) hue-rotate(165deg) brightness(.8);clip-path:polygon(18% 17%,82% 17%,80.5% 32%,79% 43%,77% 51%,75% 56%,25% 56%,23% 51%,21% 43%,19.5% 32%)}
+  .recruit-left{position:absolute;left:55px;top:85px;width:1122px;height:780px;background:url('preview/recruit-left-native.png') center/100% 100%;box-sizing:border-box;padding:31px 24px 24px}
+  .recruit-right{position:absolute;left:1191.5px;top:90px;width:248px;height:780px;background:url('preview/recruit-right-native.png') center/100% 100%;box-sizing:border-box;padding:22px;text-align:center}
+  .fixture-label{font:20px system-ui;color:#eee5cf}.fixture-row{height:135px;display:flex;align-items:center;gap:15px;border-bottom:1px solid #ffffff20}
+  .fixture-row span{display:grid;place-items:center;width:124px;height:91px;border:1px dashed #e7dcc266;color:#eee5cf;font-size:20px;background:#12203350}
+  .fixture-row span:first-child{width:180px;border:0;background:none}
+  .recruit-summary{position:absolute;left:35px;bottom:40px;font-size:28px}
+  .recruit-actions{justify-content:center;padding-top:30px}.recruit-actions button{font-size:24px;min-width:180px}
+  .panel-sample[data-artwork="dadg"]{position:relative;border-image-source:none!important;border-color:transparent;background-origin:border-box;background-color:#1c4e79;background-size:calc(100% + 36px) calc(100% + 36px);background-position:center}
+  .panel-sample[data-artwork="dadg"] .recruit-left,.panel-sample[data-artwork="dadg"] .recruit-right{background-image:linear-gradient(#03172c99,#03172c99),url('preview/panel-dadg.png');background-color:#102c49;background-size:calc(100% + 36px) calc(100% + 36px);background-position:center}
+  /* Same sprite and nine-slice dimensions as the encyclopedia's squared clan-banner frame.
+     Compensate its transparent/shadow margins so the gold meets the blue panel edge. */
+  .panel-sample[data-artwork="dadg"] .recruit-left::after,.panel-sample[data-artwork="dadg"] .recruit-right::after{content:"";position:absolute;inset:-10px -10px -12px;pointer-events:none;border-style:solid;border-width:26px 26px 28px;border-image:url('preview/gold-frame-dadg.png') 13 13 14 13 stretch;filter:brightness(1.12) saturate(1.1)}
+  .panel-sample[data-artwork="dadg"] .recruit-right{top:85px}
+  .panel-sample[data-artwork="dadg"] .fixture-row{border-bottom-color:#c49b4c30}
+  .panel-sample[data-artwork="dadg"] .fixture-row span:not(:first-child){background:linear-gradient(145deg,#0b2038,#061426);border:1px solid #d19a32;box-shadow:inset 0 0 0 1px #f5d675}
+  .outer-gilding{display:none;position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+  .panel-sample[data-artwork="dadg"] .outer-gilding{display:block}
+  .sample-controls{display:flex;gap:15px}.sample-controls button:hover{filter:brightness(1.15)}
+  .preview-dim #sample-navigation,.preview-dim .sample-controls{filter:brightness(.4)}
+  .protected-banners{display:flex;gap:25px;flex-wrap:wrap;padding:20px;background:#35404d}
+  .protected-banners figure{flex:0 0 150px}.protected-banners img{max-height:173px;max-width:140px;background:none}
+  .protected-banners figcaption{font-size:12px;overflow-wrap:anywhere;margin-top:10px}
+  summary{cursor:pointer;color:#d8bc77;padding:24px 0;font-size:20px}
+</style>
+<script>
+(() => {
+  const root = document.getElementById('visual-preview');
+  const labels = ['Exit', 'Character', 'Inventory', 'Party', 'Quests', 'Clan', 'Kingdom'];
+  const names = ['exit', 'character', 'inventory', 'party', 'quest', 'clan', 'kingdom'];
+  const nav = document.getElementById('sample-navigation');
+  names.forEach((name, i) => {
+    const button = document.createElement('button');
+    button.type = 'button'; button.title = labels[i]; button.setAttribute('aria-label', labels[i] + ' preview');
+    const img = document.createElement('img');
+    img.src = `preview/bottom_left_button${i + 1}_${name}-native.png`; img.alt = labels[i];
+    button.append(img);
+    const icon = document.createElement('img');
+    icon.src = `preview/mapbar_icon${[1, 2, 3, 4, 5, 7, 6][i]}-native.png`;
+    icon.alt = ''; icon.className = 'nav-icon'; button.append(icon);
+    button.addEventListener('click', () => document.getElementById('preview-selection').textContent = labels[i] + ' selected in this mockup only; no game action.');
+    nav.append(button);
+  });
+  function update() {
+    const mode = document.getElementById('art-mode').value;
+    document.getElementById('panel-sample').dataset.artwork = mode;
+    root.querySelectorAll('[data-sprite]').forEach(img => img.src = `preview/${img.dataset.sprite}-${mode}.png`);
+    document.getElementById('panel-sample').style.backgroundImage = `url('preview/panel-${mode}.png')`;
+    const panelViewport = root.querySelector('.recruitment-viewport');
+    const panelScale = Math.min(1, panelViewport.clientWidth / 1520);
+    root.querySelector('.recruitment-stage').style.transform = `scale(${panelScale})`;
+    panelViewport.style.height = (1090 * panelScale) + 'px';
+    const bar = document.getElementById('mapbar-preview');
+    const viewport = root.querySelector('.mapbar-scroll');
+    const width = Number(document.getElementById('canvas-width').value);
+    const fit = document.getElementById('fit-preview').checked;
+    const scale = fit ? Math.min(1, viewport.clientWidth / width) : 1;
+    bar.style.width = width + 'px'; bar.style.transform = `scale(${scale})`;
+    viewport.style.height = (180 * scale) + 'px'; viewport.style.overflowX = fit ? 'hidden' : 'auto';
+    root.classList.toggle('preview-dim', document.getElementById('sample-disabled').checked);
+    document.getElementById('preview-selection').textContent = mode === 'dadg' ? 'Existing DADG atlas sources selected; native navigation glyphs preserved.' : 'Native reference artwork selected.';
+  }
+  root.querySelectorAll('select,input').forEach(control => control.addEventListener('change', update));
+  root.querySelectorAll('.recruit-actions button').forEach(button => button.addEventListener('click', () => {
+    document.getElementById('recruit-status').textContent = button.textContent + ' clicked in the browser fixture only; no game action.';
+  }));
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>

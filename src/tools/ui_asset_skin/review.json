@@ -1,0 +1,139 @@
+{
+  "phase": "reuse-first source-art review; no artwork edited or deployed",
+  "illustration_policy": "Leave illustrations unchanged. Only consider existing DADG art after proving it is unused and a good thematic fit; no new illustrations.",
+  "protected_existing_work": [
+    "GUI/DadgBannerUISpriteData.xml and its ui_dadg_group1 atlas: preserve the existing squared-banner artwork, names and slicing.",
+    "GUI/Brushes/DADG.Nameplate.xml and existing army/nameplate prefabs: preserve their squared-banner and tracker bindings.",
+    "Completed encyclopedia illustrations and blue/gold styling remain unchanged."
+  ],
+  "user_reference_baseline": [
+    {
+      "path": "C:/Users/Joe/AppData/Local/Temp/codex-clipboard-270a2c4f-3690-4404-8031-b8575ce87923.png",
+      "note": "User DADG mapbar reference: blue surfaces, gold framing and established navigation. Preserve this appearance; do not substitute an older red loose frame. Capture date/build and exact loaded asset provenance are unknown."
+    },
+    {
+      "path": "C:/Users/Joe/AppData/Local/Temp/codex-clipboard-e1f179d7-de62-4dc4-8737-c6e6c3da1cb9.png",
+      "note": "User encyclopedia reference: textured blue header, dark blue body, gold edging and existing illustrated cards. Preserve the artwork and layout."
+    }
+  ],
+  "reuse_findings": [
+    "The expanded inventory includes 688 loose PNGs and 328 registered source-atlas regions; these are not 1016 distinct designs or proof of runtime usage.",
+    "All ten pilot targets have existing same-name DADG candidates. They are gap/provenance review targets, not ten repaint jobs.",
+    "MapBar\\mapbar_center_circle_frame exists as a 75x75 gold loose PNG and a registered DADG_customui2 atlas region; a TPAC is present. Check what is loaded before classifying it as undeployed.",
+    "MapBar\\mapbar_left_canvas differs from native dimensions, and most pilot alternatives differ in alpha. Do not blindly copy or repack them into native sheets.",
+    "Shared-panel loose sources are dark clean canvases; their existence resolves missing-source assumptions but does not establish the final blue palette choice.",
+    "Among 121 loose fullbackground PNGs, two names are absent from the checked Native/SandBox/SandBoxCore/NavalDLC/Map GUI XML: InventoryBackground1 and encounter_desert_bandits. They show a plain background and native-looking desert-bandit art, not a convincing unused DADG scene illustration. Absence from XML does not prove no dynamic use."
+  ],
+  "limitations": [
+    "Sheet overview and the existing paint-detector contact sheets were visually reviewed; this is not an exhaustive per-pixel audit.",
+    "Twenty-two sheets are candidates, not a confirmed minimum or an instruction to replace all of them.",
+    "Other native-only sheets still need visual and runtime-consumer review before inclusion.",
+    "War Sails sheets and loading-art priority are separate checks; base-UI independence does not establish whole-mod compatibility without the DLC."
+  ],
+  "sheet_reviews": {
+    "ui_group1_1": "Mixed. Keep completed blue canvases and gold detailing; finish marked regions selectively. Narrow edge regions still need detailed review.",
+    "ui_armymanagement_1": "Keep blue/gold rows and army symbols. Finish the marked tab bar only.",
+    "ui_barter_1": "Keep existing blue panels and functional handshake states; no obvious paint marks in the overview. Detail review still required.",
+    "ui_conversation_1": "Keep gold frames, symbols and transparency; no obvious paint marks in the overview. Detail review still required.",
+    "ui_encyclopedia_1": "Keep existing blue panels, gold details and manuscript illustrations. Do not repaint grey regions merely for consistency.",
+    "ui_launcher_1": "Defer. Contains native-looking branding and imagery; establish whether these assets are consumed by the in-game menus before doing work.",
+    "ui_fullbackgrounds_1": "Leave illustrations unchanged, including the four REPLACE-marked scenes. Only reconsider if unused existing DADG artwork fits the theme.",
+    "ui_fullbackgrounds_2": "Leave illustrations unchanged, including the eight REPLACE-marked scenes. The guards-stop temp mark also exists in the native reference."
+  },
+  "region_groups": [
+    {
+      "sheet": "ui_group1_1",
+      "decision": "finish_marked_surface",
+      "note": "Marked in the native-named DADG atlas; check loose PNGs and registered DADG atlas alternatives before creating any art. Preserve sprite contracts and functional content.",
+      "parts": [
+        "SPGeneral\\GameMenu\\troop_selection_panel",
+        "SPGeneral\\MapNotification\\marriage_offer_background",
+        "General\\CharacterCreation\\character_creation_panel",
+        "StdAssets\\Popup\\order_popup_canvas",
+        "SPGeneral\\SPRecruitment\\left_dent",
+        "SPGeneral\\Frame1\\canvas",
+        "StdAssets\\Popup\\canvas_dark",
+        "SPGeneral\\MapOverlay\\army_bar",
+        "SPGeneral\\OverlayPopup\\settlement_popup",
+        "SPGeneral\\SPScoreboard\\tournament_canvas",
+        "SPGeneral\\Frame1.Broken\\canvas",
+        "StdAssets\\single_button_bottom_frame",
+        "General\\InitialMenu\\main_menu_texture",
+        "StdAssets\\triple_button_frame",
+        "StdAssets\\Popup\\popper",
+        "General\\Button\\main_button_regular_big",
+        "StdAssets\\Popup\\scene_popup_selection_card",
+        "General\\Button\\main_button_regular_big_hover",
+        "SPGeneral\\MapNotification\\notification_ring_extension_large",
+        "SPGeneral\\SPRecruitment\\portrait_relation"
+      ]
+    },
+    {
+      "sheet": "ui_group1_1",
+      "decision": "protect_existing_banner_work",
+      "note": "Do not repaint from the marked native-named sheet. Preserve squared-banner overrides and verify the effective source first. Keep runtime heraldry tint behaviour.",
+      "parts": ["SPGeneral\\SPScoreboard\\banner", "clan_banner"]
+    },
+    {
+      "sheet": "ui_group1_1",
+      "decision": "defer_outside_campaign_pilot",
+      "note": "Marked artwork, but custom battle is outside the campaign/menu pilot and credits branding needs a separate decision.",
+      "parts": ["StdAssets\\custom_battle_troop_management_panel", "credits_logo"]
+    },
+    {
+      "sheet": "ui_group1_1",
+      "decision": "keep_functional_icon",
+      "note": "Normal red warning exclamation, also present in the native reference. Paint-detector false positive.",
+      "parts": ["General\\Mission\\Detection\\exclamation"]
+    },
+    {
+      "sheet": "ui_armymanagement_1",
+      "decision": "finish_marked_surface",
+      "note": "Blue WIP stroke across the tab-bar surface; missed by the earlier candidate list.",
+      "parts": ["ArmyManagement\\panel_tabbar"]
+    },
+    {
+      "sheet": "ui_fullbackgrounds_1",
+      "decision": "leave_illustration_unchanged",
+      "note": "Visible REPLACE stamp, but outside the requested work. Only reconsider with an existing unused DADG illustration that fits this scene.",
+      "parts": ["wait_ambush", "vlandia_alley", "sturgia_alley", "retirement_wait"]
+    },
+    {
+      "sheet": "ui_fullbackgrounds_2",
+      "decision": "leave_illustration_unchanged",
+      "note": "Visible REPLACE stamp, but leave unchanged under the reuse-only illustration policy.",
+      "parts": ["wait_hideout_forest", "empire_alley", "aserai_alley", "khuzait_alley", "battania_alley", "wait_hideout_mountain", "wait_hideout_desert", "wait_hideout_seaside"]
+    },
+    {
+      "sheet": "ui_fullbackgrounds_2",
+      "decision": "defer_inherited_placeholder",
+      "note": "The red temp lettering exists in both native and DADG sources; not evidence of a DADG paint mark.",
+      "parts": ["wait_guards_stop"]
+    }
+  ],
+  "pilot": {
+    "ui_mapbar_1": [
+      "MapBar\\army_button_background",
+      "MapBar\\mapbar_center_circle_canvas",
+      "MapBar\\mapbar_center_circle_frame",
+      "MapBar\\mapbar_center_frame",
+      "MapBar\\mapbar_left_canvas",
+      "MapBar\\mapbar_left_frame",
+      "MapBar\\mapbar_right_frame"
+    ],
+    "ui_group1_1": [
+      "SPGeneral\\Frame1\\canvas",
+      "StdAssets\\Popup\\canvas_dark",
+      "SPGeneral\\SPScoreboard\\tournament_canvas"
+    ]
+  },
+  "pilot_constraints": [
+    "The ten pilot regions are review targets, not ten new assets to paint. Prefer verified existing DADG art, including the registered gold mapbar center-circle frame.",
+    "Every non-selected sprite remains byte-identical in decoded pixels to the chosen source baseline.",
+    "Preserve native dimensions, coordinates and slice/stretch contracts for new native-sheet substitutions. Existing DADG designs with different dimensions or alpha require review, not automatic resizing or overwriting.",
+    "Keep the other 21 mapbar sprites, including all seven navigation glyphs, day/night artwork, glow overlays and functional icons.",
+    "No prefab, widget, hit-box, binding or layout changes. No speculative brush overrides.",
+    "Compare native-named DADG sheets, loose SpriteParts, DadgMainUISpriteParts and registered custom atlases; do not assume one source is the latest. Verify compiled/runtime provenance before deployment.",
+    "Do not deploy until staged art passes contract checks and a separate runtime test proves navigation, hover/disabled states and scaling, with and without War Sails."
+  ]
+}

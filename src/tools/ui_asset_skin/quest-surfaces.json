@@ -1,0 +1,51 @@
+{
+  "batch": "quest-surfaces-01",
+  "sheet": "ui_quest_1",
+  "module": "SandBox",
+  "size": [4096, 1024],
+  "recruitment_map_commit": "18074ad",
+  "native_atlas_sha256": "92aa6904f1105bdf1dd4ea4d6c66788280c6c820d9bc1446602b342a22f1406b",
+  "native_sprite_data_sha256": "3b29243ddb48868b37ce7734ae71122158ec1d9acc325e081a8e4541fb07dc44",
+  "brush_overrides": [{"source": "DADGQuestSurface.xml", "native": "SandBox/GUI/Brushes/Quest.xml"}],
+  "parts": [
+    {
+      "name": "Quest\\header left",
+      "profile": "header",
+      "note": "Quest journal header; preserve native rounded silhouette, shadow and dimensions."
+    },
+    {
+      "name": "Quest\\questlist_header",
+      "profile": "header",
+      "note": "Quest list header; native brush extensions remain unchanged."
+    },
+    {
+      "name": "Quest\\quest_collapser_default",
+      "profile": "header",
+      "note": "Active/old quest section header; DADGQuestSurface.xml removes the native warm tint."
+    },
+    {
+      "name": "Quest\\quest_screen_tuple_default",
+      "profile": "row",
+      "note": "Quest list rows; retain hover/press/selected brightness and main/naval storyline saturation distinctions in the companion brushes."
+    },
+    {
+      "name": "Quest\\twoway_frame",
+      "profile": "recolor_gold",
+      "note": "Recolour the existing shaped progress surround, not its semantic green/red fill or indicator."
+    }
+  ],
+  "protected": [
+    "Quest\\background_quest",
+    "Quest\\big_canvas",
+    "Quest\\scroll_hide",
+    "Quest\\valuefix_mapbar",
+    "Quest\\valuefix_questlist",
+    "Quest\\valuefix_tabbar",
+    "Quest\\right_info_valuefix",
+    "Quest\\twoway_fill",
+    "Quest\\twoway_progress_bar_indicator",
+    "Quest\\icon_quest_failed_mark",
+    "Quest\\icon_quest_done_checkmark"
+  ],
+  "scope_note": "Only currently referenced structural surfaces; preserve all unselected pixels, including illustrations, masking overlays, semantic progress colours, icons and presently unused info-box art."
+}

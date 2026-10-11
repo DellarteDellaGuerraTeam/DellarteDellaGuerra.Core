@@ -1,0 +1,39 @@
+{
+  "batch": "party-surfaces-04",
+  "sheet": "ui_partyscreen_1",
+  "module": "SandBox",
+  "size": [4096, 1024],
+  "native_atlas_sha256": "5eef66bfd86b15fbd4c152049b749ba9bb83dc823e90f60b52682b73e05ad4e3",
+  "native_sprite_data_sha256": "3b29243ddb48868b37ce7734ae71122158ec1d9acc325e081a8e4541fb07dc44",
+  "protected": [
+    "PartyScreen\\button_collapser_shadow", "PartyScreen\\health_bar",
+    "PartyScreen\\health_bar_fill", "PartyScreen\\health_bar_frame",
+    "PartyScreen\\icon_troop_type_bow", "PartyScreen\\icon_troop_type_cavalry",
+    "PartyScreen\\icon_troop_type_horse_archer", "PartyScreen\\icon_troop_type_infantry",
+    "PartyScreen\\mariner_troop_icon", "PartyScreen\\portrait",
+    "PartyScreen\\progress_bar_canvas", "PartyScreen\\progress_bar_frame",
+    "PartyScreen\\progress_bar_divider", "PartyScreen\\progress_stone",
+    "PartyScreen\\formation_flag", "PartyScreen\\formation_square",
+    "PartyScreen\\recruit_prisoner", "PartyScreen\\talk_icon", "PartyScreen\\upgrade_icon",
+    "PartyScreen\\FormationIcons\\1", "PartyScreen\\FormationIcons\\2",
+    "PartyScreen\\FormationIcons\\3", "PartyScreen\\FormationIcons\\4",
+    "PartyScreen\\FormationIcons\\5", "PartyScreen\\FormationIcons\\6",
+    "PartyScreen\\FormationIcons\\7", "PartyScreen\\FormationIcons\\8",
+    "PartyScreen\\FormationIcons\\9"
+  ],
+  "parts": [
+    {"name": "PartyScreen\\header_left", "profile": "header"},
+    {"name": "PartyScreen\\header_right", "profile": "header"},
+    {"name": "PartyScreen\\button_collapser", "profile": "row"},
+    {"name": "PartyScreen\\button_collapser_hover", "profile": "header"},
+    {"name": "PartyScreen\\button_collapser_pressed", "profile": "row"},
+    {"name": "PartyScreen\\button_left", "profile": "row"},
+    {"name": "PartyScreen\\button_left_hover", "profile": "row", "selected": true, "border": 2},
+    {"name": "PartyScreen\\button_left_pressed", "profile": "row"},
+    {"name": "PartyScreen\\button_left_selected", "profile": "row", "selected": true},
+    {"name": "PartyScreen\\button_right", "profile": "row"},
+    {"name": "PartyScreen\\button_right_hover", "profile": "row", "selected": true, "border": 2},
+    {"name": "PartyScreen\\button_right_pressed", "profile": "row"},
+    {"name": "PartyScreen\\button_right_selected", "profile": "row", "selected": true}
+  ]
+}

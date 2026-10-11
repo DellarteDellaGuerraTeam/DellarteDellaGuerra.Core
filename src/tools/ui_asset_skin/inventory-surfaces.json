@@ -1,0 +1,20 @@
+{
+  "batch": "inventory-surfaces-04",
+  "sheet": "ui_inventory_1",
+  "module": "SandBox",
+  "size": [4096, 1024],
+  "native_atlas_sha256": "9948b6e8fcfbc4a5d92b2cf6a9ecdca7a08d44f1269357510aa431fb049c6fff",
+  "native_sprite_data_sha256": "3b29243ddb48868b37ce7734ae71122158ec1d9acc325e081a8e4541fb07dc44",
+  "protected": [
+    "Inventory\\tuple_left", "Inventory\\tuple_left_pressed",
+    "Inventory\\tuple_right", "Inventory\\tuple_right_pressed",
+    "Inventory\\armorSlot", "Inventory\\armorSlotHighlight",
+    "Inventory\\bannerSlot", "Inventory\\bannerSlotHighlight",
+    "Inventory\\filterAll", "Inventory\\filterArmors", "Inventory\\filterFood",
+    "Inventory\\filterMounts", "Inventory\\filterShields", "Inventory\\filterWeapons"
+  ],
+  "parts": [
+    {"name": "Inventory\\header_left", "profile": "header"},
+    {"name": "Inventory\\header_right", "profile": "header"}
+  ]
+}

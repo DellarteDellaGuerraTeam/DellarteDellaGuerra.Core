@@ -1,0 +1,11 @@
+{
+  "batch": "army-surfaces-03",
+  "sheet": "ui_armymanagement_1",
+  "module": "SandBox",
+  "size": [4096, 256],
+  "native_atlas_sha256": "e38825c535b67c668d42061bdbac1caf2a33a81a918f5a652217f5599ab97996",
+  "native_sprite_data_sha256": "3b29243ddb48868b37ce7734ae71122158ec1d9acc325e081a8e4541fb07dc44",
+  "parts": [
+    {"name": "ArmyManagement\\panel_tabbar", "profile": "header"}
+  ]
+}

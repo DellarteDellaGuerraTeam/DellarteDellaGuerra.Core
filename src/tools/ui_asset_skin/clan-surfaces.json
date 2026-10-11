@@ -1,0 +1,39 @@
+{
+  "batch": "clan-surfaces-01",
+  "sheet": "ui_clan_1",
+  "module": "SandBox",
+  "size": [4096, 1024],
+  "recruitment_map_commit": "18074ad",
+  "native_atlas_sha256": "bfb1c0b9f959d15ad2d21dec0b545cdd5ba82731afb7db186243ce58ab793603",
+  "native_sprite_data_sha256": "3b29243ddb48868b37ce7734ae71122158ec1d9acc325e081a8e4541fb07dc44",
+  "brush_overrides": [{"source": "DADGClanSurface.xml", "native": "SandBox/GUI/Brushes/Clan.xml"}],
+  "parts": [
+    {"name": "Clan\\header", "profile": "header"},
+    {"name": "Clan\\clan_collapser", "profile": "header"},
+    {"name": "Clan\\finance_collapser", "profile": "header"},
+    {"name": "Clan\\finance_collapser_hover", "profile": "header"},
+    {"name": "Clan\\finance_collapser_pressed", "profile": "header"},
+    {"name": "Clan\\clan_tuple", "profile": "row"},
+    {"name": "Clan\\clan_tuple_selected", "profile": "row", "selected": true},
+    {"name": "Clan\\clan_tuple_tip", "profile": "row"},
+    {"name": "Clan\\finance_tuple", "profile": "row"},
+    {"name": "Clan\\fiefs_sort_header_fief_name", "profile": "header"},
+    {"name": "Clan\\fiefs_sort_header_governor", "profile": "header"},
+    {"name": "Clan\\fiefs_sort_header_profit", "profile": "header"},
+    {"name": "Clan\\members_sort_header_location", "profile": "header"},
+    {"name": "Clan\\members_sort_header_name", "profile": "header"},
+    {"name": "Clan\\other_sort_header_income", "profile": "header"},
+    {"name": "Clan\\other_sort_header_location", "profile": "header"},
+    {"name": "Clan\\other_sort_header_workshop_name", "profile": "header"},
+    {"name": "Clan\\parties_sort_header_location", "profile": "header"},
+    {"name": "Clan\\parties_sort_header_name", "profile": "header"},
+    {"name": "Clan\\parties_sort_header_size", "profile": "header"},
+    {"name": "Clan\\progress_bar_frame", "profile": "recolor_gold"}
+  ],
+  "protected": [
+    "Clan\\progress_bar", "Clan\\progress_bar_glow", "Clan\\clan_portrait_shadow",
+    "Clan\\portrait_slot_little", "Clan\\portrait_slot_right_panel", "Clan\\leader_slot",
+    "Clan\\party_leader_crown", "Clan\\panel_header", "Clan\\clan_collapser_pressed", "Clan\\flat_header"
+  ],
+  "scope_note": "Live management/finance rows and headers only, preserving native relief and alpha. Progress surround becomes gold. The already gold-lined shaped family header is retained: a whole-sprite gold recolour would turn its dark interior brown. All portraits, heraldry, icons, progress fills and unreferenced art remain unchanged. Two palette-only brush overrides preserve geometry, sounds and interaction/disabled factors."
+}

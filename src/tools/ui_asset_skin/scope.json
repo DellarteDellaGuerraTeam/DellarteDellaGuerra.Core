@@ -1,0 +1,30 @@
+{
+  "approach": "Artwork-only reskin; preserve native layouts and sprite contracts",
+  "candidate_sheets": {
+    "Native": [
+      "ui_group1_1", "ui_group1_2", "ui_group1_3",
+      "ui_fullbackgrounds_1", "ui_fullbackgrounds_2", "ui_fullscreens_1",
+      "ui_launcher_1", "ui_options_1",
+      "ui_barter_1", "ui_conversation_1", "ui_encyclopedia_1"
+    ],
+    "SandBox": [
+      "ui_armymanagement_1", "ui_mapbar_1", "ui_clan_1", "ui_kingdom_1",
+      "ui_inventory_1", "ui_partyscreen_1", "ui_quest_1",
+      "ui_town_management_1", "ui_characterdeveloper_1", "ui_crafting_1", "ui_saveload_1"
+    ]
+  },
+  "optional_war_sails_review": ["ui_port_1", "ui_naval_common_1"],
+  "pilot": ["ui_mapbar_1", "ui_group1_1"],
+  "rules": [
+    "Candidates are review targets, not instructions to repaint every sprite.",
+    "Keep finished DADG art; classify unfinished regions before editing.",
+    "Search GUI/SpriteParts, GUI/DadgMainUISpriteParts and registered DADG atlases before proposing new artwork.",
+    "Leave illustrations unchanged unless an existing, demonstrably unused DADG illustration fits the native scene theme; no newly commissioned or generated scene art.",
+    "Do not add full-screen prefab copies or decorative layout children.",
+    "Preserve sheet size, sprite coordinates, names, slicing and alpha silhouettes.",
+    "Preserve functional symbols, portraits, heraldry and semantic colours.",
+    "Keep loading-art priority fixes separate from the visual skin.",
+    "Compile assets through the supported editor workflow; do not hand-edit TPAC or RuntimeDataCache.",
+    "Do not deploy the pilot until native navigation and scaling have been verified."
+  ]
+}

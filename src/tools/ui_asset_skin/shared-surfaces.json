@@ -1,0 +1,26 @@
+{
+  "batch": "shared-surfaces-01",
+  "sheet": "ui_group1_1",
+  "module": "Native",
+  "recruitment_map_commit": "18074ad",
+  "native_atlas_sha256": "2f7161c053a4b7bde0a7cf6944c6c523e631b6e91b6b76ebcaaaee844bda0001",
+  "native_sprite_data_sha256": "9c1159dcebf04b6128110feb4973f40d5f8b5fadb9087a62a9c4010f48ae8875",
+  "parts": [
+    {
+      "name": "StdAssets\\Popup\\order_popup_canvas",
+      "profile": "inner_surface",
+      "note": "Shared crafting, clan selection and heir selection background; separate native frame and gradients remain."
+    },
+    {
+      "name": "General\\CharacterCreation\\character_creation_panel",
+      "profile": "character_panel",
+      "inner_box": [72, 188, 668, 966],
+      "note": "Keep the original inset location and outer alpha silhouette; used by creation, banner editor, save/load, education and character developer."
+    },
+    {
+      "name": "General\\InitialMenu\\main_menu_texture",
+      "profile": "inner_surface",
+      "note": "Menu backing only; preserve the original irregular alpha silhouette and existing opacity."
+    }
+  ]
+}
