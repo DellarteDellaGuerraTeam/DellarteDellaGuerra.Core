@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Infrastructure.Titles.Model;
@@ -13,6 +14,8 @@ namespace DellarteDellaGuerra.Infrastructure.Titles;
  */
 public class XmlFeudalStructure : IFeudalStructure
 {
+    private long _revision;
+    public long Revision => Interlocked.Read(ref _revision);
     private static readonly IReadOnlyList<string> NoVassals = new List<string>();
 
     // The default campaign calendar (4 seasons of 21 days), on which campaign days are counted
@@ -80,6 +83,7 @@ public class XmlFeudalStructure : IFeudalStructure
         }
 
         _reattachedSuzerainByTitleId[titleId] = suzerainTitleId;
+        Interlocked.Increment(ref _revision);
     }
 
     /**
@@ -115,6 +119,7 @@ public class XmlFeudalStructure : IFeudalStructure
             if (reattachment.Value is not null && !_nodesByTitleId.ContainsKey(reattachment.Value)) continue;
             Reattach(reattachment.Key, reattachment.Value);
         }
+        Interlocked.Increment(ref _revision);
     }
 
     /**

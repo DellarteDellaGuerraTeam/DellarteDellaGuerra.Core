@@ -126,8 +126,12 @@ namespace DellarteDellaGuerra.Integration
             // tints. The Bannerlord.PrivateWars module has self-wired its own behaviours, models, and
             // patches by this point; DADG only feeds it the two consumer-provided collaborators.
             var privateWarsApi = _serviceProvider.GetRequiredService<IPrivateWarsApi>();
-            privateWarsApi.SetSuzerainProvider(new FeudalHierarchyAdapter(
-                _serviceProvider.GetRequiredService<SuzeraintyPolicy>()));
+            var feudalHierarchy = new FeudalHierarchyAdapter(
+                _serviceProvider.GetRequiredService<SuzeraintyPolicy>(),
+                _serviceProvider.GetRequiredService<InMemoryTitleRegistry>(),
+                _serviceProvider.GetRequiredService<XmlFeudalStructure>());
+            campaignGameStarter.AddBehavior(feudalHierarchy);
+            privateWarsApi.SetSuzerainProvider(feudalHierarchy);
             var privateWarConfig = _serviceProvider.GetRequiredService<DadgConfigWatcher>().Config?.PrivateWarConfig;
             privateWarsApi.SetNameplateColors(
                 privateWarConfig?.PrivateWarEnemyNameplateColorArgb,

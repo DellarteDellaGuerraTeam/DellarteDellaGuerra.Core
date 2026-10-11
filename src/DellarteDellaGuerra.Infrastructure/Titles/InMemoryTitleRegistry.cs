@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
 
@@ -16,6 +17,8 @@ namespace DellarteDellaGuerra.Infrastructure.Titles;
 public class InMemoryTitleRegistry : ITitleRepository
 {
     private readonly IGenealogy _genealogy;
+    private long _revision;
+    public long Revision => Interlocked.Read(ref _revision);
     private readonly Dictionary<string, Title> _titlesByTitleId = new Dictionary<string, Title>();
     private readonly Dictionary<string, string> _titleIdBySeatSettlementId = new Dictionary<string, string>();
 
@@ -33,6 +36,7 @@ public class InMemoryTitleRegistry : ITitleRepository
     {
         _titlesByTitleId.Clear();
         _titleIdBySeatSettlementId.Clear();
+        Interlocked.Increment(ref _revision);
         foreach (Title title in titles)
         {
             SaveTitle(title);
@@ -85,5 +89,6 @@ public class InMemoryTitleRegistry : ITitleRepository
         {
             _titleIdBySeatSettlementId[title.SeatSettlementId] = title.Id;
         }
+        Interlocked.Increment(ref _revision);
     }
 }
