@@ -66,6 +66,9 @@ namespace DellarteDellaGuerra.Integration.Titles
             // DestroyClanAction kills whoever it still calls that. The shell has to be
             // leaderless before it is destroyed or the reabsorbed claimant dies with it.
             cadet.SetLeader(null);
+            // A leaderless shell left in Clan.All still gets the daily clan tick, which reads
+            // its Leader; vanilla only removes destroyed clans from the campaign if they are rebels.
+            cadet.IsRebelClan = true;
             DestroyClanAction.Apply(cadet);
         }
 
