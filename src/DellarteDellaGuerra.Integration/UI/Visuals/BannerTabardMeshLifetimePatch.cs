@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using TaleWorlds.DotNet;
@@ -28,7 +28,8 @@ internal static class BannerTabardMeshLifetimePatch
     {
         return new CodeMatcher(instructions)
             .MatchEndForward(
-                new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(BannerVisual), nameof(BannerVisual.GetTableauTextureLarge))),
+                new CodeMatch(i => i.operand is MethodInfo { Name: nameof(BannerVisual.GetTableauTextureLarge) } m
+                                   && m.DeclaringType == typeof(BannerVisual)),
                 new CodeMatch(OpCodes.Pop),
                 new CodeMatch(OpCodes.Ldloc_S),
                 new CodeMatch(OpCodes.Ldfld),
