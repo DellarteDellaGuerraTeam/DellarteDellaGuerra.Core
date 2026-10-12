@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
-from PIL import Image, ImageChops, ImageDraw, ImageOps
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageOps
 
 
 def sha(path):
@@ -68,7 +68,7 @@ def paint(native, entry, panel, inner):
             if border < 1 or border * 2 >= min(x2-x1, y2-y1):
                 raise ValueError('Invalid row border')
             border_style = entry.get('border_style', 'frame')
-            if border_style not in ('frame', 'underline'):
+            if border_style not in ('frame', 'silhouette', 'underline'):
                 raise ValueError('Invalid row border style')
             for i in range(border):
                 color = entry.get('border_color', inner.getpixel((inner.width//2, min(i+1, 3))))
@@ -76,6 +76,19 @@ def paint(native, entry, panel, inner):
                     draw.line((x1, y2-i-1, x2-1, y2-i-1), fill=color)
                 else:
                     draw.rectangle((x1+i, y1+i, x2-i-1, y2-i-1), outline=color)
+            if border_style == 'silhouette':
+                # Large headers can have a curved alpha edge inside their rectangular
+                # sprite bounds. Add matching inner rings so that edge receives the
+                # same gold treatment as the straight frame without changing alpha.
+                threshold = entry.get('alpha_border_threshold', 128)
+                opaque = native.getchannel('A').point(lambda a: 255 if a >= threshold else 0)
+                previous = opaque
+                for i in range(border):
+                    eroded = opaque.filter(ImageFilter.MinFilter(2 * (i + 1) + 1))
+                    ring = ImageChops.subtract(previous, eroded)
+                    color = entry.get('border_color', inner.getpixel((inner.width//2, min(i+1, 3))))
+                    result.paste(Image.new('RGBA', result.size, color), (0, 0), ring)
+                    previous = eroded
     elif entry['profile'] == 'character_panel':
         outer = panel.crop((16, 16, panel.width-16, panel.height-16))
         result = outer.resize(native.size, Image.Resampling.LANCZOS)

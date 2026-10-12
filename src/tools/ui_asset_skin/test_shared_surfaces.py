@@ -1,6 +1,6 @@
 """Small deterministic tests; no game/editor/browser required."""
 import unittest
-from PIL import Image
+from PIL import Image, ImageDraw
 from build_shared_surfaces import check_selection, nine_slice, paint
 
 
@@ -42,6 +42,18 @@ class SharedSurfacesTests(unittest.TestCase):
         self.assertNotEqual(normal.tobytes(), selected.tobytes())
         self.assertEqual(normal.getchannel('A').tobytes(), selected.getchannel('A').tobytes())
         self.assertGreater(selected.getpixel((60, 32))[2], normal.getpixel((60, 32))[2])
+
+    def test_silhouette_border_follows_a_rounded_alpha_edge(self):
+        source = Image.new('RGBA', (80, 80), '#e7bc50')
+        native = Image.new('RGBA', (80, 80), '#304d68')
+        alpha = Image.new('L', native.size, 0)
+        ImageDraw.Draw(alpha).rounded_rectangle((4, 4, 75, 75), radius=20, fill=255)
+        native.putalpha(alpha)
+        result = paint(native, {'profile': 'header', 'border_style': 'silhouette',
+                                'border': 3, 'border_color': '#E7BC50FF'}, source, source)
+        self.assertEqual(result.getpixel((4, 24))[:3], (231, 188, 80))
+        self.assertNotEqual(result.getpixel((24, 24))[:3], (231, 188, 80))
+        self.assertEqual(result.getchannel('A').tobytes(), alpha.tobytes())
 
     def test_rejects_invalid_geometry_and_unknown_profile(self):
         source = Image.new('RGBA', (80, 80))

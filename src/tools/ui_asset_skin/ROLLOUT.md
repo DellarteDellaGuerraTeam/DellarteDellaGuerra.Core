@@ -150,6 +150,8 @@ structural sprites across the shared Native sheets:
 
 - `ui_group1_2_tex`: the settlement information header and the
   party/notable-portrait header, recoloured navy with a restrained gold edge.
+  The portrait header uses its alpha silhouette so the large rounded left corner
+  receives the same gold treatment as its straight edges.
 - `ui_group1_1_tex`: the existing curved party/notable group frame, recoloured
   gold while preserving its native shape and alpha.
 
