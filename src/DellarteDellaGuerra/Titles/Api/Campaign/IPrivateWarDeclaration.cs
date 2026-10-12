@@ -25,6 +25,21 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
         /**
          * <summary>
+         *  Whether the attacker's side could besiege the main goal today: someone on it can raise
+         *  an army that beats the goal's walled defence. A war it could not fight would sit declared
+         *  and unprosecuted. The attacker may be a house not founded yet, in which case only the
+         *  supporters count.
+         * </summary>
+         */
+        bool CanProsecute(
+            string attackerClanId,
+            string defenderClanId,
+            string mainGoalSettlementId,
+            IReadOnlyCollection<string> attackerSupporters,
+            IReadOnlyCollection<string> defenderSupporters);
+
+        /**
+         * <summary>
          *  Opens the war. The supporter sets name the clans that pledged to a side against what the
          *  feudal hierarchy alone would put them on — a vassal defecting from its liege, or an
          *  uninvolved clan rallying to a principal. Empty sets leave every side to the hierarchy.

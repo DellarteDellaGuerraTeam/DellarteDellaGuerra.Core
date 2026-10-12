@@ -53,6 +53,46 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         }
 
         [Fact]
+        public void Measure_SmallWinAgainstLargeSide_ScoresSmallBump()
+        {
+            // Regression: a 200-strength party routed while its side fields 1800 elsewhere is 10% of
+            // the side, not the full weight (old normalization used only the battle's losing parties).
+            var outcome = BattleOutcome.Measure(WarSide.Attacker, defeatedInBattle: 200f, new[]
+            {
+                (WarSide.Defender, 1000f),
+                (WarSide.Defender, 800f),
+            });
+
+            var result = _useCase.Execute(PrivateWarTestData.War(battleScore: 0f), outcome);
+
+            Assert.Equal(2000f, outcome.LosingSideTotalStrength);
+            Assert.Equal(5f, result.BattleScore);
+        }
+
+        [Fact]
+        public void Measure_IgnoresWinningSideParties()
+        {
+            var outcome = BattleOutcome.Measure(WarSide.Defender, defeatedInBattle: 300f, new[]
+            {
+                (WarSide.Defender, 5000f),
+                (WarSide.Attacker, 300f),
+            });
+
+            Assert.Equal(600f, outcome.LosingSideTotalStrength);
+        }
+
+        [Fact]
+        public void Measure_LosingSideWipedOut_ScoresFullWeight()
+        {
+            var outcome = BattleOutcome.Measure(
+                WarSide.Attacker, defeatedInBattle: 700f, new (WarSide, float)[0]);
+
+            var result = _useCase.Execute(PrivateWarTestData.War(battleScore: 0f), outcome);
+
+            Assert.Equal(ApplyBattleOutcomeUseCase.BattleWeight, result.BattleScore);
+        }
+
+        [Fact]
         public void Execute_NonPositiveLosingStrength_IsNoOp()
         {
             var war = PrivateWarTestData.War(battleScore: 12f);

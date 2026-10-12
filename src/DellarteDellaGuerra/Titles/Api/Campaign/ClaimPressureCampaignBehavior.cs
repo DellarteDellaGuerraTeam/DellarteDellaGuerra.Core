@@ -212,6 +212,18 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                     if (_evaluatePressClaimUseCase.Execute(Price(support)) < DeclarationThreshold) continue;
                     if (MBRandom.RandomFloat >= DeclarationChance) continue;
 
+                    // Strength on paper is not an army in the field. A house whose lords are broke,
+                    // starving or spent would declare and then never march, so the war has to be one
+                    // its side could start fighting today. A pretender's branch is asked for before it
+                    // is founded: it starts with no influence to raise an army on, so only the houses
+                    // that pledged to him can lead his war.
+                    if (!_privateWarDeclaration.CanProsecute(
+                            attackerSideId,
+                            defenderClanId,
+                            mainGoalSettlementId,
+                            support.AttackerSupporters,
+                            support.DefenderSupporters)) continue;
+
                     string attackerClanId = claim.ClaimantClanId;
 
                     if (pretender is not null)
