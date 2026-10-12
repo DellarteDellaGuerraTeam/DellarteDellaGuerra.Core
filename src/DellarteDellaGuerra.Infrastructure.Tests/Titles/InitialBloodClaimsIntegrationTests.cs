@@ -479,10 +479,10 @@ public class InitialBloodClaimsIntegrationTests
 
         IReadOnlyList<Claim> claims = useCase.Execute();
         Assert.Equal(ExpectedClaims.ReplaceLineEndings("\n"), Project(claims));
-        // England's 97 titles and 53 houses, plus Scotland's 27 and 13 and the Isles' 17 and 13.
+        // England's 97 titles and 53 houses, plus Scotland's 28 and 13 and the Isles' 17 and 13.
         // Nineteen Scottish and Isles houses now author their 1471 wives and heirs, which adds
         // fifty claims on thirty-four of their dignities and leaves England's 399 untouched.
-        Assert.Equal(141, titleRepository.GetAllTitles().Count);
+        Assert.Equal(142, titleRepository.GetAllTitles().Count);
         Assert.Equal(
             79,
             titleRepository.GetAllTitles()

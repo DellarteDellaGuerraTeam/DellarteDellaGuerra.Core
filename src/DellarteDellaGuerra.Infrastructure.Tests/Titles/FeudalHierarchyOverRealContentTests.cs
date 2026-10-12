@@ -169,12 +169,12 @@ public class FeudalHierarchyOverRealContentTests
         // What a war is actually fought over. A barony is worth its own castle; a county gathers
         // its baronies; a duchy gathers the counties and their baronies in turn. The crown's
         // dignity gathers the realm — all ninety-six of England's seats, one per title save the
-        // kingdom itself. Scotland's crown gathers twenty-six and the Isles' sixteen the same way.
+        // kingdom itself. Scotland's crown gathers twenty-seven and the Isles' sixteen the same way.
         // The three kingdoms are the only titles authored without a seat of their own, and the
         // three realms between them account for every seat in the content, none twice.
         Content content = Content.Load();
 
-        Assert.Equal(141, content.AllTitles().Count);
+        Assert.Equal(142, content.AllTitles().Count);
         Assert.Equal(
             new[] { "kingdom_england", "kingdom_isles", "kingdom_scotland" },
             content.AllTitles()
@@ -188,8 +188,8 @@ public class FeudalHierarchyOverRealContentTests
 
         Assert.Equal(96, realm.Count);
         Assert.Equal(96, realm.Distinct().Count());
-        Assert.Equal(26, scotland.Count);
-        Assert.Equal(26, scotland.Distinct().Count());
+        Assert.Equal(27, scotland.Count);
+        Assert.Equal(27, scotland.Distinct().Count());
         Assert.Equal(16, isles.Count);
         Assert.Equal(16, isles.Distinct().Count());
 
