@@ -186,6 +186,7 @@
     <County id="county_lothian" name="County of Lothian" seat="dadg_sco_edinburgh_town" holderClanId="clan_stewart" heldSince="1371">
       <Barony id="barony_dunbar" name="Barony of Dunbar" seat="dadg_sco_dunbar_castle" holderClanId="clan_hepburn" heldSince="1430"/>
     </County>
+    <County id="county_berwick" name="County of Berwick" seat="dadg_sco_berwick_upon_tweed_town" holderClanId="clan_stewart" heldSince="1461"/>
     <County id="county_stirling" name="County of Stirling" seat="dadg_sco_stirling_town" holderClanId="clan_hamilton" heldSince="1455"/>
     <County id="county_lanark" name="County of Lanark" seat="dadg_sco_glasgow_town" holderClanId="clan_hamilton" heldSince="1445">
       <Barony id="barony_rothesay" name="Barony of Rothesay" seat="dadg_sco_rothesay_castle" holderClanId="clan_hamilton" heldSince="1460"/>
