@@ -1,0 +1,16 @@
+{
+  "batch": "settlement-frame-surfaces-01",
+  "sheet": "ui_group1_1",
+  "module": "Native",
+  "size": [4096, 4096],
+  "native_atlas_sha256": "2f7161c053a4b7bde0a7cf6944c6c523e631b6e91b6b76ebcaaaee844bda0001",
+  "native_sprite_data_sha256": "9c1159dcebf04b6128110feb4973f40d5f8b5fadb9087a62a9c4010f48ae8875",
+  "protected": [
+    "SPGeneral\\MapOverlay\\Settlement\\parties_characters_group_background",
+    "SPGeneral\\MapOverlay\\Settlement\\plus_button"
+  ],
+  "parts": [
+    {"name": "SPGeneral\\MapOverlay\\Settlement\\parties_characters_group_frame", "profile": "recolor_gold"}
+  ],
+  "scope_note": "Gold refinement for the settlement party/notable group frame only. All other ui_group1_1 pixels, including existing DADG surfaces, remain byte-identical."
+}

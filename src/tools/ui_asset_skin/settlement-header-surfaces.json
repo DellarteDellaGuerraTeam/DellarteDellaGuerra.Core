@@ -1,0 +1,33 @@
+{
+  "batch": "settlement-header-surfaces-01",
+  "sheet": "ui_group1_2",
+  "module": "Native",
+  "size": [4096, 4096],
+  "native_atlas_sha256": "8124787d5036687bc03029f6d120e2a586feb19c998a677ffec588507ddca375",
+  "native_sprite_data_sha256": "9c1159dcebf04b6128110feb4973f40d5f8b5fadb9087a62a9c4010f48ae8875",
+  "brush_overrides": [
+    {"source": "DADGSettlementSurface.xml", "native": "SandBox/GUI/Brushes/Settlement.xml"},
+    {"source": "DADGGameMenuTableau.xml", "native": "Native/GUI/Brushes/GameMenu.xml"}
+  ],
+  "protected": [
+    "SPGeneral\\MapOverlay\\Settlement\\garrison_toggle_pressed",
+    "SPGeneral\\MapOverlay\\Settlement\\icon_garrison_big",
+    "SPGeneral\\MapOverlay\\Settlement\\icon_militia_big",
+    "SPGeneral\\MapOverlay\\Settlement\\icon_morale_big",
+    "SPGeneral\\MapOverlay\\Settlement\\icon_prosperity_big",
+    "SPGeneral\\MapOverlay\\Settlement\\icon_security",
+    "SPGeneral\\MapOverlay\\Settlement\\icon_tax_big",
+    "SPGeneral\\MapOverlay\\Settlement\\icon_village_big",
+    "SPGeneral\\MapOverlay\\Settlement\\icon_walls_lvl1",
+    "SPGeneral\\MapOverlay\\Settlement\\icon_walls_lvl3",
+    "SPGeneral\\MapOverlay\\Settlement\\icon_wall_big",
+    "SPGeneral\\MapOverlay\\Settlement\\marble_bot",
+    "SPGeneral\\MapOverlay\\Settlement\\marble_top",
+    "SPGeneral\\MapOverlay\\Settlement\\parties_characters_group_background"
+  ],
+  "parts": [
+    {"name": "SPGeneral\\MapOverlay\\Settlement\\settlement_info_header", "profile": "header"},
+    {"name": "SPGeneral\\MapOverlay\\Settlement\\settlement_parties_characters_header", "profile": "header"}
+  ],
+  "scope_note": "Settlement-only chrome pass. Preserve the settlement illustration, layout, stat icons, toggles, portrait data, action list, quest markers and every interaction command. Recolour only the top structural headers plus exact palette-only party/character background brush overrides."
+}

@@ -1,0 +1,47 @@
+<Brushes>
+  <!-- Shared portrait cards keep native behavior; only the translucent category pigments change. -->
+  <Brush Name="GameMenu.Tableau.Background.Party">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#2870A922"/>
+    </Layers>
+    <Styles>
+      <Style Name="Default">
+        <BrushLayer Name="Default" />
+      </Style>
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" ColorFactor="2" />
+      </Style>
+      <Style Name="Pressed">
+        <BrushLayer Name="Default" ColorFactor="0.8" />
+      </Style>
+      <Style Name="Disabled">
+        <BrushLayer Name="Default" ColorFactor="0.2" />
+      </Style>
+      <Style Name="Selected">
+        <BrushLayer Name="Default" ColorFactor="0.6" />
+      </Style>
+    </Styles>
+  </Brush>
+  <Brush Name="GameMenu.Tableau.Background.Character">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#E7BC5022"/>
+    </Layers>
+    <Styles>
+      <Style Name="Default">
+        <BrushLayer Name="Default" />
+      </Style>
+      <Style Name="Hovered">
+        <BrushLayer Name="Default" ColorFactor="2" />
+      </Style>
+      <Style Name="Pressed">
+        <BrushLayer Name="Default" ColorFactor="0.8" />
+      </Style>
+      <Style Name="Disabled">
+        <BrushLayer Name="Default" ColorFactor="0.2" />
+      </Style>
+      <Style Name="Selected">
+        <BrushLayer Name="Default" ColorFactor="0.6" />
+      </Style>
+    </Styles>
+  </Brush>
+</Brushes>

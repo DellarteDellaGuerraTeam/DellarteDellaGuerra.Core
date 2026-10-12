@@ -142,6 +142,39 @@ These assets/brushes rely only on SandBox; DLC-on/off runtime checks remain pend
 Next: editor imports, then spot-check inventory headers, party interaction states,
 clan finance/members and kingdom diplomacy/selection before broadening coverage.
 
+### Settlement overlay source batch deployed 2026-10-12
+
+The settlement pass continues the inventory/party palette without replacing the
+settlement illustration or copying the native layout. It changes exactly three
+structural sprites across the shared Native sheets:
+
+- `ui_group1_2_tex`: the settlement information header and the
+  party/notable-portrait header, recoloured navy with a restrained gold edge.
+- `ui_group1_1_tex`: the existing curved party/notable group frame, recoloured
+  gold while preserving its native shape and alpha.
+
+Two exact palette-only brush overrides change the party category from orange to
+blue and the character/notable category from olive to gold. Their native default,
+hovered, pressed, disabled and selected factors remain byte-for-byte equivalent.
+The portrait click, encyclopedia, tooltip and quest-marker bindings are unchanged.
+
+The left settlement action list already uses the native navy `GameMenu.Button`.
+It is deliberately not overridden: `ExecuteAction`, enabled/disabled handling,
+text-state selection, hints and navigation remain native. Settlement artwork,
+stat icons, toggles, marble decoration, banners and the unselected atlas pixels
+are explicitly outside the batch.
+
+Four source files were deployed and hash-verified in Map: two atlas PNGs and two
+brush XMLs. Backups: `shared-backup-20261012-141708` and
+`shared-backup-20261012-141721`. The source comparisons are staged under
+`.codex-work/ui-asset-skin/settlement-header-surfaces-01` and
+`settlement-frame-surfaces-01`. All 39 Bannerlord-free UI asset tests pass.
+
+No prefab, C#, registration, TPAC or RuntimeDataCache file was changed. Import
+`ui_group1_2_tex` for the first time and re-import `ui_group1_1_tex` in the Map
+editor before runtime review. Then spot-check town/castle/village variants,
+portrait hover/selection, the party/notable toggle and action disabled states.
+
 ### Crafting source batch deployed 2026-10-04
 
 `crafting-surfaces-01` changes 25 regions in `ui_crafting_1`: two sculpted side
