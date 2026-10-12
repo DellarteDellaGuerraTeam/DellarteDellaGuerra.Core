@@ -89,6 +89,29 @@ def paint(native, entry, panel, inner):
                     color = entry.get('border_color', inner.getpixel((inner.width//2, min(i+1, 3))))
                     result.paste(Image.new('RGBA', result.size, color), (0, 0), ring)
                     previous = eroded
+                native_contour = entry.get('native_contour')
+                if native_contour:
+                    cx1, cy1, cx2, cy2 = native_contour['box']
+                    if not (0 <= cx1 < cx2 <= native.width and 0 <= cy1 < cy2 <= native.height):
+                        raise ValueError('Native contour box outside original sprite')
+                    contour_threshold = native_contour.get('luminance_threshold', 128)
+                    if not 0 <= contour_threshold <= 255:
+                        raise ValueError('Invalid native contour luminance threshold')
+                    contour_mask = grey.point(
+                        lambda value: 255 if value >= contour_threshold else 0)
+                    max_depth = native_contour.get('max_depth')
+                    if max_depth is not None:
+                        if max_depth < 1 or max_depth * 2 >= min(native.size):
+                            raise ValueError('Invalid native contour maximum depth')
+                        eroded = opaque.filter(ImageFilter.MinFilter(2 * max_depth + 1))
+                        contour_mask = ImageChops.multiply(
+                            contour_mask, ImageChops.subtract(opaque, eroded))
+                    clip = Image.new('L', native.size, 0)
+                    ImageDraw.Draw(clip).rectangle((cx1, cy1, cx2-1, cy2-1), fill=255)
+                    contour_mask = ImageChops.multiply(contour_mask, clip)
+                    contour_mask = ImageChops.multiply(contour_mask, native.getchannel('A'))
+                    gold = ImageOps.colorize(grey, '#603907', '#fff2a2').convert('RGBA')
+                    result.paste(gold, (0, 0), contour_mask)
     elif entry['profile'] == 'character_panel':
         outer = panel.crop((16, 16, panel.width-16, panel.height-16))
         result = outer.resize(native.size, Image.Resampling.LANCZOS)
