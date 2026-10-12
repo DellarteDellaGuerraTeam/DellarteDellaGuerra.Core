@@ -49,6 +49,14 @@ namespace DellarteDellaGuerra.Integration.PrivateWars
             return _mainGoalSelector.Select(settlements, defenderClanId);
         }
 
+        public bool CanProsecute(
+            string attackerClanId,
+            string defenderClanId,
+            string mainGoalSettlementId,
+            IReadOnlyCollection<string> attackerSupporters,
+            IReadOnlyCollection<string> defenderSupporters) =>
+            _privateWars.CanProsecute(attackerClanId, defenderClanId, mainGoalSettlementId, attackerSupporters, defenderSupporters);
+
         public void Declare(
             string attackerClanId,
             string defenderClanId,
