@@ -27,7 +27,7 @@
   ],
   "parts": [
     {"name": "SPGeneral\\MapOverlay\\Settlement\\settlement_info_header", "profile": "header"},
-    {"name": "SPGeneral\\MapOverlay\\Settlement\\settlement_parties_characters_header", "profile": "header", "border_style": "silhouette", "native_contour": {"box": [0, 70, 68, 168], "luminance_threshold": 120, "max_depth": 24}}
+    {"name": "SPGeneral\\MapOverlay\\Settlement\\settlement_parties_characters_header", "profile": "header", "border_style": "silhouette", "silhouette_feather_radius": 0.55, "native_contour": {"box": [0, 70, 68, 168], "luminance_threshold": 120, "max_depth": 24, "feather_radius": 0.55}}
   ],
   "scope_note": "Settlement-only chrome pass. Preserve the settlement illustration, layout, stat icons, toggles, portrait data, action list, quest markers and every interaction command. Recolour only the top structural headers plus exact palette-only party/character background brush overrides."
 }

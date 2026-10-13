@@ -78,14 +78,21 @@ def paint(native, entry, panel, inner):
                     draw.rectangle((x1+i, y1+i, x2-i-1, y2-i-1), outline=color)
             if border_style == 'silhouette':
                 # Large headers can have a curved alpha edge inside their rectangular
-                # sprite bounds. Add matching inner rings so that edge receives the
+                # sprite bounds. Add matching soft rings so that edge receives the
                 # same gold treatment as the straight frame without changing alpha.
                 threshold = entry.get('alpha_border_threshold', 128)
-                opaque = native.getchannel('A').point(lambda a: 255 if a >= threshold else 0)
-                previous = opaque
+                native_alpha = native.getchannel('A')
+                opaque = native_alpha.point(lambda a: 255 if a >= threshold else 0)
+                silhouette_feather = entry.get('silhouette_feather_radius', 0)
+                if not 0 <= silhouette_feather <= 2:
+                    raise ValueError('Invalid silhouette feather radius')
+                previous = native_alpha
                 for i in range(border):
-                    eroded = opaque.filter(ImageFilter.MinFilter(2 * (i + 1) + 1))
+                    eroded = native_alpha.filter(ImageFilter.MinFilter(2 * (i + 1) + 1))
                     ring = ImageChops.subtract(previous, eroded)
+                    if silhouette_feather:
+                        ring = ring.filter(ImageFilter.GaussianBlur(silhouette_feather))
+                        ring = ImageChops.multiply(ring, native_alpha)
                     color = entry.get('border_color', inner.getpixel((inner.width//2, min(i+1, 3))))
                     result.paste(Image.new('RGBA', result.size, color), (0, 0), ring)
                     previous = eroded
@@ -109,7 +116,13 @@ def paint(native, entry, panel, inner):
                     clip = Image.new('L', native.size, 0)
                     ImageDraw.Draw(clip).rectangle((cx1, cy1, cx2-1, cy2-1), fill=255)
                     contour_mask = ImageChops.multiply(contour_mask, clip)
-                    contour_mask = ImageChops.multiply(contour_mask, native.getchannel('A'))
+                    contour_feather = native_contour.get('feather_radius', 0)
+                    if not 0 <= contour_feather <= 2:
+                        raise ValueError('Invalid native contour feather radius')
+                    if contour_feather:
+                        contour_mask = contour_mask.filter(ImageFilter.GaussianBlur(contour_feather))
+                        contour_mask = ImageChops.multiply(contour_mask, clip)
+                    contour_mask = ImageChops.multiply(contour_mask, native_alpha)
                     gold = ImageOps.colorize(grey, '#603907', '#fff2a2').convert('RGBA')
                     result.paste(gold, (0, 0), contour_mask)
     elif entry['profile'] == 'character_panel':

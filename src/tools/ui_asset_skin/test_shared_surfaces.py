@@ -49,9 +49,14 @@ class SharedSurfacesTests(unittest.TestCase):
         alpha = Image.new('L', native.size, 0)
         ImageDraw.Draw(alpha).rounded_rectangle((4, 4, 75, 75), radius=20, fill=255)
         native.putalpha(alpha)
+        baseline = paint(native, {'profile': 'recolor_blue'}, source, source)
         result = paint(native, {'profile': 'header', 'border_style': 'silhouette',
-                                'border': 3, 'border_color': '#E7BC50FF'}, source, source)
-        self.assertEqual(result.getpixel((4, 24))[:3], (231, 188, 80))
+                                'border': 3, 'border_color': '#E7BC50FF',
+                                'silhouette_feather_radius': 0.55}, source, source)
+        transitions = [result.getpixel((x, 24))[:3] for x in range(4, 12)]
+        baseline_pixels = [baseline.getpixel((x, 24))[:3] for x in range(4, 12)]
+        self.assertTrue(any(pixel != original and pixel != (231, 188, 80)
+                            for pixel, original in zip(transitions, baseline_pixels)))
         self.assertNotEqual(result.getpixel((24, 24))[:3], (231, 188, 80))
         self.assertEqual(result.getchannel('A').tobytes(), alpha.tobytes())
 
@@ -63,15 +68,21 @@ class SharedSurfacesTests(unittest.TestCase):
         alpha = Image.new('L', native.size, 0)
         ImageDraw.Draw(alpha).rounded_rectangle((4, 4, 75, 75), radius=20, fill=255)
         native.putalpha(alpha)
-        result = paint(native, {'profile': 'header', 'border_style': 'silhouette',
-                                'border': 3, 'border_color': '#E7BC50FF',
-                                'native_contour': {'box': [8, 24, 50, 68],
-                                                   'luminance_threshold': 100,
-                                                   'max_depth': 20}},
+        entry = {'profile': 'header', 'border_style': 'silhouette',
+                 'border': 3, 'border_color': '#E7BC50FF',
+                 'native_contour': {'box': [8, 24, 50, 68],
+                                    'luminance_threshold': 100,
+                                    'max_depth': 20,
+                                    'feather_radius': 0.55}}
+        baseline = paint(native, {key: value for key, value in entry.items()
+                                  if key != 'native_contour'}, source, source)
+        result = paint(native, entry,
                        source, source)
         self.assertGreater(result.getpixel((14, 40))[0], result.getpixel((14, 40))[2])
         self.assertGreater(result.getpixel((20, 40))[2], result.getpixel((20, 40))[0])
         self.assertGreater(result.getpixel((40, 40))[2], result.getpixel((40, 40))[0])
+        self.assertGreater(result.getpixel((13, 40))[0], baseline.getpixel((13, 40))[0])
+        self.assertLess(result.getpixel((13, 40))[0], result.getpixel((14, 40))[0])
         self.assertEqual(result.getchannel('A').tobytes(), alpha.tobytes())
 
     def test_rejects_invalid_geometry_and_unknown_profile(self):

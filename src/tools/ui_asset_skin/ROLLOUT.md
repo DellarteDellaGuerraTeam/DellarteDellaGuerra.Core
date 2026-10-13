@@ -153,6 +153,7 @@ structural sprites across the shared Native sheets:
   The portrait header uses its alpha silhouette so the large rounded left corner
   receives the same gold treatment as its straight edges, then reuses the native
   highlight geometry to gold the two inset corner contours without flattening them.
+  Both curved masks use a half-pixel feather to avoid stair-stepping at runtime scale.
 - `ui_group1_1_tex`: the existing curved party/notable group frame, recoloured
   gold while preserving its native shape and alpha.
 
@@ -169,7 +170,8 @@ are explicitly outside the batch.
 
 Four source files were deployed and hash-verified in Map: two atlas PNGs and two
 brush XMLs. Backups: `shared-backup-20261012-141708`,
-`shared-backup-20261012-141721`, and `shared-backup-20261012-224612`. The source comparisons are staged under
+`shared-backup-20261012-141721`, `shared-backup-20261012-224612`, and
+`shared-backup-20261013-170534`. The source comparisons are staged under
 `.codex-work/ui-asset-skin/settlement-header-surfaces-01` and
 `settlement-frame-surfaces-01`. All 41 Bannerlord-free UI asset tests pass.
 

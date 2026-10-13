@@ -50,9 +50,10 @@ class SettlementSurfaceContracts(unittest.TestCase):
         portrait_header = next(entry for entry in self.header['parts']
                                if entry['name'].endswith('settlement_parties_characters_header'))
         self.assertEqual(portrait_header.get('border_style'), 'silhouette')
+        self.assertEqual(portrait_header.get('silhouette_feather_radius'), 0.55)
         self.assertEqual(portrait_header.get('native_contour'),
                          {'box': [0, 70, 68, 168], 'luminance_threshold': 120,
-                          'max_depth': 24})
+                          'max_depth': 24, 'feather_radius': 0.55})
         for recipe in (self.header, self.frame):
             check_selection(recipe)
         for name, (category, sheet_id) in expected.items():
