@@ -88,6 +88,24 @@ class SharedSurfacesTests(unittest.TestCase):
         self.assertLess(result.getpixel((13, 40))[0], result.getpixel((14, 40))[0])
         self.assertEqual(result.getchannel('A').tobytes(), alpha.tobytes())
 
+    def test_silhouette_can_remove_a_long_native_shadow_tail(self):
+        source = Image.new('RGBA', (80, 80), '#e7bc50')
+        native = Image.new('RGBA', (80, 80), '#304d68')
+        alpha = Image.new('L', native.size, 32)
+        ImageDraw.Draw(alpha).rounded_rectangle((8, 8, 71, 71), radius=20, fill=255)
+        native.putalpha(alpha)
+        result = paint(native, {'profile': 'header', 'border_style': 'silhouette',
+                                'border': 3, 'border_color': '#E7BC50FF',
+                                'silhouette_feather_radius': 0.55,
+                                'alpha_cleanup': {'threshold': 128,
+                                                  'feather_radius': 0.55}},
+                       source, source)
+        cleaned_alpha = result.getchannel('A')
+        self.assertNotEqual(cleaned_alpha.tobytes(), alpha.tobytes())
+        self.assertEqual(cleaned_alpha.getpixel((0, 40)), 0)
+        self.assertEqual(cleaned_alpha.getpixel((40, 40)), 255)
+        self.assertTrue(any(0 < value < 255 for value in cleaned_alpha.tobytes()))
+
     def test_rejects_invalid_geometry_and_unknown_profile(self):
         source = Image.new('RGBA', (80, 80))
         with self.assertRaises(ValueError):
@@ -96,6 +114,9 @@ class SharedSurfacesTests(unittest.TestCase):
             paint(source, {'profile': 'character_panel', 'inner_box': [-1, 0, 40, 40]}, source, source)
         with self.assertRaises(ValueError):
             paint(source, {'profile': 'unreviewed'}, source, source)
+        with self.assertRaises(ValueError):
+            paint(source, {'profile': 'header', 'alpha_cleanup': {'threshold': 128}},
+                  source, source)
 
 
 if __name__ == '__main__':

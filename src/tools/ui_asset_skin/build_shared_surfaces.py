@@ -1,7 +1,7 @@
 """Reuse approved recruitment PNGs in selected native atlas rectangles, without HTML.
 
 No layout/registration/compiled-file writes. Outputs are isolated for inspection
-and editor import; all unselected pixels and each native alpha mask are checked.
+and editor import; all unselected pixels and each declared alpha contract are checked.
 """
 import argparse
 import hashlib
@@ -44,6 +44,22 @@ def nine_slice(image, size, edge=12):
 def paint(native, entry, panel, inner):
     # The PNGs are the already approved code-rendered art, not newly generated art.
     surface = inner.crop((16, 16, inner.width-16, inner.height-16))
+    native_alpha = native.getchannel('A')
+    result_alpha = native_alpha
+    alpha_cleanup = entry.get('alpha_cleanup')
+    if alpha_cleanup:
+        if entry.get('border_style') != 'silhouette':
+            raise ValueError('Alpha cleanup requires a silhouette border')
+        cleanup_threshold = alpha_cleanup.get('threshold', 128)
+        cleanup_feather = alpha_cleanup.get('feather_radius', 0)
+        if not 0 <= cleanup_threshold <= 255:
+            raise ValueError('Invalid alpha cleanup threshold')
+        if not 0 <= cleanup_feather <= 2:
+            raise ValueError('Invalid alpha cleanup feather radius')
+        result_alpha = native_alpha.point(
+            lambda value: 255 if value >= cleanup_threshold else 0)
+        if cleanup_feather:
+            result_alpha = result_alpha.filter(ImageFilter.GaussianBlur(cleanup_feather))
     if entry['profile'] == 'inner_surface':
         result = surface.resize(native.size, Image.Resampling.LANCZOS)
     elif entry['profile'] == 'framed_surface':
@@ -59,7 +75,7 @@ def paint(native, entry, panel, inner):
             result = ImageOps.colorize(grey, shadow, highlight).convert('RGBA')
         if entry['profile'] in ('row', 'header'):
             # Draw within the opaque silhouette, not the native shadow padding.
-            box = native.getchannel('A').point(lambda a: 255 if a >= 240 else 0).getbbox()
+            box = result_alpha.point(lambda a: 255 if a >= 240 else 0).getbbox()
             if box is None:
                 raise ValueError('Row has no opaque frame region')
             x1, y1, x2, y2 = box
@@ -81,14 +97,13 @@ def paint(native, entry, panel, inner):
                 # sprite bounds. Add matching soft rings so that edge receives the
                 # same gold treatment as the straight frame without changing alpha.
                 threshold = entry.get('alpha_border_threshold', 128)
-                native_alpha = native.getchannel('A')
-                opaque = native_alpha.point(lambda a: 255 if a >= threshold else 0)
+                opaque = result_alpha.point(lambda a: 255 if a >= threshold else 0)
                 silhouette_feather = entry.get('silhouette_feather_radius', 0)
                 if not 0 <= silhouette_feather <= 2:
                     raise ValueError('Invalid silhouette feather radius')
-                previous = native_alpha
+                previous = result_alpha
                 for i in range(border):
-                    eroded = native_alpha.filter(ImageFilter.MinFilter(2 * (i + 1) + 1))
+                    eroded = result_alpha.filter(ImageFilter.MinFilter(2 * (i + 1) + 1))
                     ring = ImageChops.subtract(previous, eroded)
                     if silhouette_feather:
                         ring = ring.filter(ImageFilter.GaussianBlur(silhouette_feather))
@@ -134,9 +149,9 @@ def paint(native, entry, panel, inner):
         result.paste(nine_slice(inner, (x2-x1, y2-y1)), (x1, y1))
     else:
         raise ValueError(entry['profile'])
-    result.putalpha(native.getchannel('A'))
+    result.putalpha(result_alpha)
     assert result.size == native.size
-    assert result.getchannel('A').tobytes() == native.getchannel('A').tobytes()
+    assert result.getchannel('A').tobytes() == result_alpha.tobytes()
     return result
 
 
@@ -194,7 +209,12 @@ def main():
         mask.rectangle((x, y, x+w-1, y+h-1), fill=255)
         loose_relative = Path('GUI/DadgMainUISpriteParts/DADG_customui2') / (entry['name'].replace('\\', '/') + '.png')
         loose = map_root / loose_relative
-        record = dict(entry, rectangle=[x, y, w, h], native_alpha_sha256=hashlib.sha256(native.getchannel('A').tobytes()).hexdigest())
+        native_alpha_bytes = native.getchannel('A').tobytes()
+        output_alpha_bytes = replacement.getchannel('A').tobytes()
+        record = dict(entry, rectangle=[x, y, w, h],
+                      native_alpha_sha256=hashlib.sha256(native_alpha_bytes).hexdigest(),
+                      output_alpha_sha256=hashlib.sha256(output_alpha_bytes).hexdigest(),
+                      alpha_changed=native_alpha_bytes != output_alpha_bytes)
         if loose.is_file():
             assert Image.open(loose).size == (w, h)
             target = output / loose_relative
@@ -262,7 +282,7 @@ def main():
     report = dict(batch=recipe['batch'], atlas_relative=str(atlas_path.relative_to(map_root)), source_atlas=str(atlas_path), source_sha256=source_hash,
                   output_atlas=str(target_atlas), output_sha256=sha(target_atlas), native_reference_sha256=sha(native_path),
                   sprite_data=str(xml), sprite_data_sha256=contract_hash, parts=records, consumers=consumers, brush_overrides=overrides,
-                  checks={'native_alpha_preserved': True, 'unselected_pixels_identical': True, 'layout_and_registration_unchanged': True},
+                  checks={'selected_alpha_contracts_honoured': True, 'unselected_pixels_identical': True, 'layout_and_registration_unchanged': True},
                   deployed=False, runtime_verified=False, editor_reimport=recipe['sheet'] + '_tex')
     (output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps({'output': str(output), 'parts': len(records), 'direct_xml_consumers': len(consumers), 'checks': report['checks']}, indent=2))

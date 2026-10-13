@@ -155,6 +155,8 @@ structural sprites across the shared Native sheets:
   highlight geometry to gold the two inset corner contours without flattening them.
   Both curved masks use a half-pixel feather to avoid stair-stepping at runtime scale,
   clipped to the visible silhouette so the rounded transparent cutout stays colour-free.
+  The portrait header alone rebuilds its alpha from the solid silhouette with the
+  same feather, removing the native long shadow tail outside the rounded corner.
 - `ui_group1_1_tex`: the existing curved party/notable group frame, recoloured
   gold while preserving its native shape and alpha.
 
@@ -173,9 +175,10 @@ Four source files were deployed and hash-verified in Map: two atlas PNGs and two
 brush XMLs. Backups: `shared-backup-20261012-141708`,
 `shared-backup-20261012-141721`, `shared-backup-20261012-224612`, and
 `shared-backup-20261013-170534`. The rounded-cutout correction was deployed from
-the same batch with backup `shared-backup-20261013-181756`. The source comparisons
-are staged under `.codex-work/ui-asset-skin/settlement-header-surfaces-01` and
-`settlement-frame-surfaces-01`. All 41 Bannerlord-free UI asset tests pass.
+the same batch with backups `shared-backup-20261013-181756` and
+`shared-backup-20261013-182953`. The source comparisons are staged under
+`.codex-work/ui-asset-skin/settlement-header-surfaces-01` and
+`settlement-frame-surfaces-01`. All 42 Bannerlord-free UI asset tests pass.
 
 No prefab, C#, registration, TPAC or RuntimeDataCache file was changed. Import
 `ui_group1_2_tex` for the first time and re-import `ui_group1_1_tex` in the Map

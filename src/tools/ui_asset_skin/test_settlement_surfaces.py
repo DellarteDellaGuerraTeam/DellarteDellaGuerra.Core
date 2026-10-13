@@ -51,6 +51,8 @@ class SettlementSurfaceContracts(unittest.TestCase):
                                if entry['name'].endswith('settlement_parties_characters_header'))
         self.assertEqual(portrait_header.get('border_style'), 'silhouette')
         self.assertEqual(portrait_header.get('silhouette_feather_radius'), 0.55)
+        self.assertEqual(portrait_header.get('alpha_cleanup'),
+                         {'threshold': 128, 'feather_radius': 0.55})
         self.assertEqual(portrait_header.get('native_contour'),
                          {'box': [0, 70, 68, 168], 'luminance_threshold': 120,
                           'max_depth': 24, 'feather_radius': 0.55})
@@ -73,7 +75,7 @@ class SettlementSurfaceContracts(unittest.TestCase):
         self.assertNotIn('GameMenu.Button', {brush.get('Name') for root in
                          (self.settlement_override, self.tableau_override) for brush in root.findall('Brush')})
 
-    def test_atlas_rendering_preserves_native_geometry_and_alpha(self):
+    def test_atlas_rendering_honours_declared_geometry_and_alpha_contracts(self):
         approved = MODULES / 'DellarteDellaGuerraMap/GUI/DadgRecruitmentSpriteParts/ui_dadg_recruitment/DADG/Recruitment'
         panel = Image.open(approved / 'panel.png').convert('RGBA')
         inner = Image.open(approved / 'left.png').convert('RGBA')
@@ -86,7 +88,16 @@ class SettlementSurfaceContracts(unittest.TestCase):
                     native = atlas.crop((x, y, x + w, y + h))
                     rendered = paint(native, entry, panel, inner)
                     self.assertEqual(rendered.size, (w, h))
-                    self.assertEqual(rendered.getchannel('A').tobytes(), native.getchannel('A').tobytes())
+                    rendered_alpha = rendered.getchannel('A')
+                    native_alpha = native.getchannel('A')
+                    if entry.get('alpha_cleanup'):
+                        self.assertNotEqual(rendered_alpha.tobytes(), native_alpha.tobytes())
+                        self.assertEqual(rendered_alpha.getpixel((4, 110)), 0)
+                        self.assertEqual(rendered_alpha.getpixel((30, 155)), 0)
+                        self.assertTrue(0 < rendered_alpha.getpixel((11, 110)) < 255)
+                        self.assertEqual(rendered_alpha.getpixel((100, 100)), 255)
+                    else:
+                        self.assertEqual(rendered_alpha.tobytes(), native_alpha.tobytes())
                     self.assertNotEqual(rendered.tobytes(), native.tobytes())
 
     def test_palette_overrides_are_exact_native_brushes_other_than_colour(self):
