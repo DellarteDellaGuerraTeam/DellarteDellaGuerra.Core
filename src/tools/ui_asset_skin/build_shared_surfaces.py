@@ -74,7 +74,7 @@ def paint(native, entry, panel, inner):
                 color = entry.get('border_color', inner.getpixel((inner.width//2, min(i+1, 3))))
                 if border_style == 'underline':
                     draw.line((x1, y2-i-1, x2-1, y2-i-1), fill=color)
-                else:
+                elif border_style == 'frame':
                     draw.rectangle((x1+i, y1+i, x2-i-1, y2-i-1), outline=color)
             if border_style == 'silhouette':
                 # Large headers can have a curved alpha edge inside their rectangular
@@ -92,7 +92,7 @@ def paint(native, entry, panel, inner):
                     ring = ImageChops.subtract(previous, eroded)
                     if silhouette_feather:
                         ring = ring.filter(ImageFilter.GaussianBlur(silhouette_feather))
-                        ring = ImageChops.multiply(ring, native_alpha)
+                    ring = ImageChops.multiply(ring, opaque)
                     color = entry.get('border_color', inner.getpixel((inner.width//2, min(i+1, 3))))
                     result.paste(Image.new('RGBA', result.size, color), (0, 0), ring)
                     previous = eroded
@@ -122,7 +122,7 @@ def paint(native, entry, panel, inner):
                     if contour_feather:
                         contour_mask = contour_mask.filter(ImageFilter.GaussianBlur(contour_feather))
                         contour_mask = ImageChops.multiply(contour_mask, clip)
-                    contour_mask = ImageChops.multiply(contour_mask, native_alpha)
+                    contour_mask = ImageChops.multiply(contour_mask, opaque)
                     gold = ImageOps.colorize(grey, '#603907', '#fff2a2').convert('RGBA')
                     result.paste(gold, (0, 0), contour_mask)
     elif entry['profile'] == 'character_panel':

@@ -46,10 +46,12 @@ class SharedSurfacesTests(unittest.TestCase):
     def test_silhouette_border_follows_a_rounded_alpha_edge(self):
         source = Image.new('RGBA', (80, 80), '#e7bc50')
         native = Image.new('RGBA', (80, 80), '#304d68')
-        alpha = Image.new('L', native.size, 0)
+        alpha = Image.new('L', native.size, 32)
         ImageDraw.Draw(alpha).rounded_rectangle((4, 4, 75, 75), radius=20, fill=255)
         native.putalpha(alpha)
-        baseline = paint(native, {'profile': 'recolor_blue'}, source, source)
+        baseline = paint(native, {'profile': 'recolor_blue',
+                                  'blue_palette': ['#07172a', '#2870a9']},
+                         source, source)
         result = paint(native, {'profile': 'header', 'border_style': 'silhouette',
                                 'border': 3, 'border_color': '#E7BC50FF',
                                 'silhouette_feather_radius': 0.55}, source, source)
@@ -58,6 +60,7 @@ class SharedSurfacesTests(unittest.TestCase):
         self.assertTrue(any(pixel != original and pixel != (231, 188, 80)
                             for pixel, original in zip(transitions, baseline_pixels)))
         self.assertNotEqual(result.getpixel((24, 24))[:3], (231, 188, 80))
+        self.assertEqual(result.getpixel((4, 4))[:3], baseline.getpixel((4, 4))[:3])
         self.assertEqual(result.getchannel('A').tobytes(), alpha.tobytes())
 
     def test_silhouette_can_recolor_a_native_inset_contour(self):
