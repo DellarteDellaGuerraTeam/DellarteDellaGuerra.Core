@@ -190,6 +190,15 @@ portrait hover/selection, the party/notable toggle and action disabled states.
 The later opaque portrait-fill refinement is brush-only and requires no atlas
 re-import; reload the UI/editor after deploying `DADGGameMenuTableau.xml`.
 
+The 2026-10-14 portrait follow-up darkens the character/notable brush from
+`#0B2038` to `#030B16` and recolours the shared native
+`army_bar_portrait_slot` surface to the same near-black navy range. This makes
+occupied and empty cards visually continuous without changing either of the two
+native settlement lists or their commands. Because that empty-slot sprite is
+also reused by the encounter overlay, its empty portrait slots receive the same
+neutral DADG treatment. Re-import `ui_group1_2_tex`, then reload the UI/editor
+for the brush change.
+
 ### Inventory interaction-surface completion 2026-10-14
 
 `inventory-surfaces-05` extends the earlier two-header inventory pass with 42

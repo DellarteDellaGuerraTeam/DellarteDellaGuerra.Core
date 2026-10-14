@@ -35,11 +35,12 @@ class SettlementSurfaceContracts(unittest.TestCase):
         cls.settlement_override = ET.parse(HERE / 'DADGSettlementSurface.xml').getroot()
         cls.tableau_override = ET.parse(HERE / 'DADGGameMenuTableau.xml').getroot()
 
-    def test_scope_is_only_three_structural_sprites(self):
+    def test_scope_is_only_four_settlement_surface_sprites(self):
         expected = {
             'SPGeneral\\MapOverlay\\Settlement\\settlement_info_header': ('ui_group1', '2'),
             'SPGeneral\\MapOverlay\\Settlement\\settlement_parties_characters_header': ('ui_group1', '2'),
             'SPGeneral\\MapOverlay\\Settlement\\parties_characters_group_frame': ('ui_group1', '1'),
+            'SPGeneral\\MapOverlay\\army_bar_portrait_slot': ('ui_group1', '2'),
         }
         selected = {
             entry['name']
@@ -56,6 +57,12 @@ class SettlementSurfaceContracts(unittest.TestCase):
         self.assertEqual(portrait_header.get('native_contour'),
                          {'box': [0, 70, 68, 168], 'luminance_threshold': 120,
                           'max_depth': 24, 'feather_radius': 0.55})
+        portrait_slot = next(entry for entry in self.header['parts']
+                             if entry['name'].endswith('army_bar_portrait_slot'))
+        self.assertEqual(portrait_slot,
+                         {'name': 'SPGeneral\\MapOverlay\\army_bar_portrait_slot',
+                          'profile': 'portrait_slot',
+                          'blue_palette': ['#01040A', '#0B284B']})
         for recipe in (self.header, self.frame):
             check_selection(recipe)
         for name, (category, sheet_id) in expected.items():
@@ -99,6 +106,13 @@ class SettlementSurfaceContracts(unittest.TestCase):
                     else:
                         self.assertEqual(rendered_alpha.tobytes(), native_alpha.tobytes())
                     self.assertNotEqual(rendered.tobytes(), native.tobytes())
+                    if entry['profile'] == 'portrait_slot':
+                        red, green, blue, alpha = rendered.getpixel((w // 2, h // 2))
+                        self.assertEqual(alpha, 255)
+                        self.assertLessEqual(red, 8)
+                        self.assertLessEqual(green, 18)
+                        self.assertLessEqual(blue, 36)
+                        self.assertGreater(blue, green)
 
     def test_palette_overrides_are_exact_native_brushes_other_than_colour(self):
         cases = (
@@ -109,7 +123,7 @@ class SettlementSurfaceContracts(unittest.TestCase):
             (self.native_game_menu, self.tableau_override,
              'GameMenu.Tableau.Background.Party', '#c6700022', '#2870A922'),
             (self.native_game_menu, self.tableau_override,
-             'GameMenu.Tableau.Background.Character', '#A9A10022', '#0B2038FF'),
+             'GameMenu.Tableau.Background.Character', '#A9A10022', '#030B16FF'),
         )
         for native_root, override_root, name, before, after in cases:
             with self.subTest(brush=name):
@@ -124,7 +138,7 @@ class SettlementSurfaceContracts(unittest.TestCase):
             "Brush[@Name='GameMenu.Tableau.Background.Character']")
         party = self.tableau_override.find(
             "Brush[@Name='GameMenu.Tableau.Background.Party']")
-        self.assertEqual(character.find('Layers/BrushLayer').get('Color'), '#0B2038FF')
+        self.assertEqual(character.find('Layers/BrushLayer').get('Color'), '#030B16FF')
         self.assertEqual(party.find('Layers/BrushLayer').get('Color'), '#2870A922')
         self.assertEqual(
             [style.get('Name') for style in character.findall('Styles/Style')],
@@ -150,6 +164,11 @@ class SettlementSurfaceContracts(unittest.TestCase):
         self.assertEqual(portrait.get('Command.HoverEnd'), 'ExecuteCloseTooltip')
         self.assertEqual(portrait.get('PartyBackgroundBrush'), 'GameMenu.Tableau.Background.Party')
         self.assertEqual(portrait.get('CharacterBackgroundBrush'), 'GameMenu.Tableau.Background.Character')
+
+        overlay = ET.parse(MODULES / 'SandBox/GUI/Prefabs/Map/SettlementOverlay.xml')
+        empty_slots = [widget for widget in overlay.iter('Widget')
+                       if widget.get('Sprite') == 'SPGeneral\\MapOverlay\\army_bar_portrait_slot']
+        self.assertEqual(len(empty_slots), 12)
 
 
 if __name__ == '__main__':

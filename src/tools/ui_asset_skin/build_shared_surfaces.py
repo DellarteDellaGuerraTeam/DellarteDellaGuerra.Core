@@ -67,7 +67,7 @@ def paint(native, entry, panel, inner):
     elif entry['profile'] == 'framed_surface':
         result = nine_slice(inner, native.size)
     elif entry['profile'] in ('row', 'header', 'recolor_blue', 'recolor_gold',
-                              'card_selected'):
+                              'card_selected', 'portrait_slot'):
         # Retain native relief/shading without retaining its brown pigment.
         grey = ImageOps.grayscale(native)
         if entry['profile'] == 'recolor_gold':
