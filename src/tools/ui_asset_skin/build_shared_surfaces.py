@@ -60,7 +60,9 @@ def paint(native, entry, panel, inner):
             lambda value: 255 if value >= cleanup_threshold else 0)
         if cleanup_feather:
             result_alpha = result_alpha.filter(ImageFilter.GaussianBlur(cleanup_feather))
-    if entry['profile'] == 'inner_surface':
+    if entry['profile'] == 'native_restore':
+        result = native.copy()
+    elif entry['profile'] == 'inner_surface':
         result = surface.resize(native.size, Image.Resampling.LANCZOS)
     elif entry['profile'] == 'framed_surface':
         result = nine_slice(inner, native.size)

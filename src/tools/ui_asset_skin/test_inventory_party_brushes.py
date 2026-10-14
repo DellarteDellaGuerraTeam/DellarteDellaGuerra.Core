@@ -1,4 +1,5 @@
-"""Contract checks for the PNG-only inventory/party header and troop-row pass."""
+"""Contract checks for the inventory/party surface pass."""
+import copy
 import json
 from pathlib import Path
 import unittest
@@ -14,6 +15,11 @@ MODULES = ROOT.parent.parent
 RECIPES = Path(__file__).parent
 
 
+def tree(element):
+    return (element.tag, dict(element.attrib), (element.text or '').strip(),
+            tuple(tree(child) for child in element))
+
+
 class InventoryPartySurfaceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -24,7 +30,7 @@ class InventoryPartySurfaceTests(unittest.TestCase):
         cls.inner = Image.open(approved / 'left.png').convert('RGBA')
         cls.parts = {p.findtext('Name'): p for p in ET.parse(MODULES / 'SandBox/GUI/SandBoxSpriteData.xml').findall('./SpriteParts/SpritePart')}
 
-    def test_inventory_scope_is_exact_and_has_no_brush_override(self):
+    def test_inventory_scope_and_tuple_brush_override_are_exact(self):
         names = {p['name'] for p in self.inventory['parts']}
         expected = {'Inventory\\header_left', 'Inventory\\header_right'}
         expected.update({
@@ -40,7 +46,10 @@ class InventoryPartySurfaceTests(unittest.TestCase):
                 expected.update({stem, stem + '_hover', stem + '_pressed', stem + '_selected'})
         self.assertEqual(names, expected)
         self.assertEqual(len(names), 44)
-        self.assertFalse(self.inventory.get('brush_overrides'))
+        self.assertEqual(self.inventory.get('brush_overrides'), [{
+            'source': 'DADGInventoryTuple.xml',
+            'native': 'SandBox/GUI/Brushes/Inventory.xml',
+        }])
         for name in ('Inventory\\armorSlot', 'Inventory\\armorSlotHighlight',
                      'Inventory\\bannerSlot', 'Inventory\\bannerSlotHighlight',
                      'Inventory\\filterAll', 'Inventory\\filterArmors',
@@ -66,8 +75,11 @@ class InventoryPartySurfaceTests(unittest.TestCase):
         self.assertFalse(self.party.get('brush_overrides'))
 
     def test_inventory_native_warning_and_interaction_semantics_remain_in_place(self):
-        brushes = {brush.get('Name'): brush for brush in ET.parse(
-            MODULES / 'SandBox/GUI/Brushes/Inventory.xml').findall('Brush')}
+        native_root = ET.parse(MODULES / 'SandBox/GUI/Brushes/Inventory.xml').getroot()
+        brushes = {brush.get('Name'): brush for brush in native_root.findall('Brush')}
+        override_root = ET.parse(RECIPES / 'DADGInventoryTuple.xml').getroot()
+        self.assertEqual({brush.get('Name') for brush in override_root.findall('Brush')},
+                         {'Inventory.Tuple.Left', 'Inventory.Tuple.Right'})
         for side in ('Left', 'Right'):
             warning = brushes[f'Inventory.Tuple.CharacterCantUse.{side}']
             layer = warning.find('./Layers/BrushLayer')
@@ -75,6 +87,10 @@ class InventoryPartySurfaceTests(unittest.TestCase):
             self.assertEqual(layer.get('Sprite'), f'Inventory\\tuple_{side.lower()}')
 
             ordinary = brushes[f'Inventory.Tuple.{side}']
+            expected = copy.deepcopy(ordinary)
+            expected.find('./Layers/BrushLayer').set('Color', '#2870A9FF')
+            self.assertEqual(tree(expected), tree(override_root.find(
+                f"Brush[@Name='Inventory.Tuple.{side}']")))
             styles = {style.get('Name'): style.find('BrushLayer') for style in ordinary.findall('./Styles/Style')}
             self.assertEqual(styles['Default'].get('Sprite'), f'Inventory\\tuple_{side.lower()}')
             self.assertEqual(styles['Pressed'].get('Sprite'), f'Inventory\\tuple_{side.lower()}_pressed')
@@ -98,6 +114,10 @@ class InventoryPartySurfaceTests(unittest.TestCase):
             self.assertEqual(result.size, native.size)
             self.assertEqual(result.getchannel('A').tobytes(), native.getchannel('A').tobytes())
             rendered[entry['name']] = result
+
+            if entry['name'].startswith('Inventory\\tuple_'):
+                self.assertEqual(entry['profile'], 'native_restore')
+                self.assertEqual(result.tobytes(), native.tobytes())
 
         for side in ('left', 'right'):
             variants = [rendered[f'Inventory\\tuple_{side}'], rendered[f'Inventory\\tuple_{side}_pressed']]

@@ -213,6 +213,17 @@ The source PNG was deployed and hash-verified on 2026-10-14. Staging and
 comparisons: `.codex-work/ui-asset-skin/inventory-surfaces-05`; rollback backup
 and journal: `.codex-work/ui-asset-skin/shared-backup-20261014-215934`.
 
+Runtime review showed that recolouring the tuple PNGs blue prevented the native
+`CharacterCantUse` red multiplier from producing its intended warning surface,
+and the added one-pixel underline made the item contour unnecessarily prominent.
+The corrective `inventory-surfaces-06` batch restores the four tuple sprites
+byte-for-byte to their neutral native pixels, then applies DADG navy only to the
+ordinary `Inventory.Tuple.Left` and `Inventory.Tuple.Right` brushes. The two
+native warning brushes, all interaction styles and layout files remain untouched.
+The source atlas and `DADGInventoryTuple.xml` were deployed and hash-verified on
+2026-10-14; rollback backup and journal:
+`.codex-work/ui-asset-skin/shared-backup-20261014-233412`.
+
 ### Crafting source batch deployed 2026-10-04
 
 `crafting-surfaces-01` changes 25 regions in `ui_crafting_1`: two sculpted side
