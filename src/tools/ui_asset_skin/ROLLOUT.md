@@ -323,3 +323,29 @@ Each batch should have a short explicit manifest, source/alpha/unaffected-region
 checks, source backups and a precise editor re-import list. Runtime spot checks
 must cover scaling, navigation and shared-brush side effects; recruitment approval
 does not establish those for every consumer.
+
+### Banner Editor shared-control source batch
+
+`banner-editor-surfaces-01` keeps the native Banner Editor prefab and changes four
+shared `ui_group1_2` primitives only: the normal and selected `FaceGen.Card`
+surfaces, the standard slider trough, and its carved frame. Cards are navy; the
+selected card retains a gold surround and glow with a navy interior. The slider
+keeps its native gold fill and steel handle, while its trough becomes navy and
+its frame becomes muted gold. Heraldry, colour swatches, selection art, scroll
+gradient, commands, navigation and geometry are protected.
+
+`DADGBannerEditorSurface.xml` preserves the native card and scrollbar brush
+structure, sounds and state set. It only reduces the very strong native card
+hover/selected brightness for the new palette and changes the scrollbar handle
+from brown to gold. The primitives are also used by character creation and
+campaign options; those consumers must be included in the runtime spot check.
+
+Deploy the generated `ui_group1_2.png` and brush XML to Map, then re-import
+`ui_group1_2_tex` in the editor and reload the UI. No prefab, registration, C#,
+TPAC or RuntimeDataCache file is authored by this batch. All 47 Bannerlord-free
+UI asset tests pass before deployment.
+
+The two source files were deployed and hash-verified on 2026-10-14. Backup and
+journal: `.codex-work/ui-asset-skin/shared-backup-20261014-213307/manifest.json`.
+The existing compiled package is deliberately excluded; re-import
+`ui_group1_2_tex` before runtime review.

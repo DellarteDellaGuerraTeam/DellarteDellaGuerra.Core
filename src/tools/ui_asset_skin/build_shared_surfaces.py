@@ -64,15 +64,34 @@ def paint(native, entry, panel, inner):
         result = surface.resize(native.size, Image.Resampling.LANCZOS)
     elif entry['profile'] == 'framed_surface':
         result = nine_slice(inner, native.size)
-    elif entry['profile'] in ('row', 'header', 'recolor_blue', 'recolor_gold'):
+    elif entry['profile'] in ('row', 'header', 'recolor_blue', 'recolor_gold',
+                              'card_selected'):
         # Retain native relief/shading without retaining its brown pigment.
         grey = ImageOps.grayscale(native)
         if entry['profile'] == 'recolor_gold':
-            result = ImageOps.colorize(grey, '#603907', '#fff2a2').convert('RGBA')
+            shadow, highlight = entry.get('gold_palette', ['#603907', '#fff2a2'])
+            result = ImageOps.colorize(grey, shadow, highlight).convert('RGBA')
         else:
             bright = entry.get('selected', False) or entry['profile'] == 'header'
             shadow, highlight = entry.get('blue_palette', ['#07172a', '#2870a9' if bright else '#174467'])
             result = ImageOps.colorize(grey, shadow, highlight).convert('RGBA')
+        if entry['profile'] == 'card_selected':
+            margin = entry.get('gold_edge_margin', 22)
+            if margin < 1 or margin * 2 >= min(native.size):
+                raise ValueError('Invalid selected-card edge margin')
+            threshold = entry.get('gold_luminance_threshold', 78)
+            if not 0 <= threshold <= 254:
+                raise ValueError('Invalid selected-card gold threshold')
+            edge = Image.new('L', native.size, 255)
+            ImageDraw.Draw(edge).rectangle(
+                (margin, margin, native.width-margin-1, native.height-margin-1), fill=0)
+            luminance = grey.point(
+                lambda value: max(0, min(255, (value-threshold) * 5)))
+            gold_mask = ImageChops.multiply(edge, luminance)
+            gold_shadow, gold_highlight = entry.get(
+                'gold_palette', ['#5a3105', '#ffe58a'])
+            gold = ImageOps.colorize(grey, gold_shadow, gold_highlight).convert('RGBA')
+            result.paste(gold, (0, 0), gold_mask)
         if entry['profile'] in ('row', 'header'):
             # Draw within the opaque silhouette, not the native shadow padding.
             box = result_alpha.point(lambda a: 255 if a >= 240 else 0).getbbox()

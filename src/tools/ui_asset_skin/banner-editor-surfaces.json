@@ -1,0 +1,49 @@
+{
+  "batch": "banner-editor-surfaces-01",
+  "sheet": "ui_group1_2",
+  "module": "Native",
+  "size": [4096, 4096],
+  "native_atlas_sha256": "8124787d5036687bc03029f6d120e2a586feb19c998a677ffec588507ddca375",
+  "native_sprite_data_sha256": "9c1159dcebf04b6128110feb4973f40d5f8b5fadb9087a62a9c4010f48ae8875",
+  "brush_overrides": [
+    {"source": "DADGBannerEditorSurface.xml", "native": "Native/GUI/Brushes/FaceGen.xml"}
+  ],
+  "parts": [
+    {
+      "name": "General\\CharacterCreation\\facegen_card",
+      "profile": "recolor_blue",
+      "blue_palette": ["#07182B", "#34789A"],
+      "note": "Shared sigil/face card: retain native rounded relief and alpha while replacing the brown surface with DADG navy."
+    },
+    {
+      "name": "General\\CharacterCreation\\facegen_card_selected",
+      "profile": "card_selected",
+      "blue_palette": ["#07182B", "#34789A"],
+      "gold_palette": ["#5A3105", "#FFE58A"],
+      "gold_edge_margin": 22,
+      "gold_luminance_threshold": 78,
+      "note": "Keep a gold selected surround and glow, with a navy interior so the heraldry remains legible."
+    },
+    {
+      "name": "SPGeneral\\SPOptions\\standart_slider_canvas",
+      "profile": "recolor_blue",
+      "blue_palette": ["#040C16", "#245577"],
+      "note": "Shared slider trough: replace the brown leather pigment while retaining native texture and silhouette."
+    },
+    {
+      "name": "SPGeneral\\SPOptions\\standart_slider_frame",
+      "profile": "recolor_gold",
+      "gold_palette": ["#65400B", "#F1D06A"],
+      "note": "Shared slider frame: recolour its carved relief to muted DADG gold; fill and steel knob remain native."
+    }
+  ],
+  "protected": [
+    "SPGeneral\\SPOptions\\standart_slider_fill",
+    "SPGeneral\\SPOptions\\standart_slider_knob",
+    "SPGeneral\\SPOptions\\standart_slider_knob_hover",
+    "General\\CharacterCreation\\color_box",
+    "General\\CharacterCreation\\color_box_selection",
+    "General\\CharacterCreation\\character_creation_scroll_gradient"
+  ],
+  "scope_note": "Four shared ui_group1_2 primitives used by the Banner Editor. No heraldry, swatch, layout, prefab, TPAC or RuntimeDataCache change."
+}
