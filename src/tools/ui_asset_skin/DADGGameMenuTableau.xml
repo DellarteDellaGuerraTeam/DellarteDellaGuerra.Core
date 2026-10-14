@@ -1,5 +1,6 @@
 <Brushes>
-  <!-- Shared portrait cards keep native behavior; only the translucent category pigments change. -->
+  <!-- Shared portrait cards keep native behavior. Party retains its translucent
+       category tint; character/notable slots use an opaque DADG navy fill. -->
   <Brush Name="GameMenu.Tableau.Background.Party">
     <Layers>
       <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#2870A922"/>
@@ -24,7 +25,7 @@
   </Brush>
   <Brush Name="GameMenu.Tableau.Background.Character">
     <Layers>
-      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#E7BC5022"/>
+      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#0B2038FF"/>
     </Layers>
     <Styles>
       <Style Name="Default">

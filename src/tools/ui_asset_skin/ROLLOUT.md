@@ -160,10 +160,13 @@ structural sprites across the shared Native sheets:
 - `ui_group1_1_tex`: the existing curved party/notable group frame, recoloured
   gold while preserving its native shape and alpha.
 
-Two exact palette-only brush overrides change the party category from orange to
-blue and the character/notable category from olive to gold. Their native default,
-hovered, pressed, disabled and selected factors remain byte-for-byte equivalent.
-The portrait click, encyclopedia, tooltip and quest-marker bindings are unchanged.
+Two exact palette-only selector overrides change the party category from orange
+to blue and the character/notable category from olive to gold. The portrait-card
+brushes remain separate: party cards retain their translucent blue tint, while
+character/notable slots now use an opaque dark DADG navy fill instead of the
+native translucent olive/grey-brown appearance. Their native default, hovered,
+pressed, disabled and selected factors remain byte-for-byte equivalent. The
+portrait click, encyclopedia, tooltip and quest-marker bindings are unchanged.
 
 The left settlement action list already uses the native navy `GameMenu.Button`.
 It is deliberately not overridden: `ExecuteAction`, enabled/disabled handling,
@@ -178,12 +181,14 @@ brush XMLs. Backups: `shared-backup-20261012-141708`,
 the same batch with backups `shared-backup-20261013-181756` and
 `shared-backup-20261013-182953`. The source comparisons are staged under
 `.codex-work/ui-asset-skin/settlement-header-surfaces-01` and
-`settlement-frame-surfaces-01`. All 42 Bannerlord-free UI asset tests pass.
+`settlement-frame-surfaces-01`. All 43 Bannerlord-free UI asset tests pass.
 
 No prefab, C#, registration, TPAC or RuntimeDataCache file was changed. Import
 `ui_group1_2_tex` for the first time and re-import `ui_group1_1_tex` in the Map
 editor before runtime review. Then spot-check town/castle/village variants,
 portrait hover/selection, the party/notable toggle and action disabled states.
+The later opaque portrait-fill refinement is brush-only and requires no atlas
+re-import; reload the UI/editor after deploying `DADGGameMenuTableau.xml`.
 
 ### Crafting source batch deployed 2026-10-04
 

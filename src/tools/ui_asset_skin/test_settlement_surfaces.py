@@ -109,7 +109,7 @@ class SettlementSurfaceContracts(unittest.TestCase):
             (self.native_game_menu, self.tableau_override,
              'GameMenu.Tableau.Background.Party', '#c6700022', '#2870A922'),
             (self.native_game_menu, self.tableau_override,
-             'GameMenu.Tableau.Background.Character', '#A9A10022', '#E7BC5022'),
+             'GameMenu.Tableau.Background.Character', '#A9A10022', '#0B2038FF'),
         )
         for native_root, override_root, name, before, after in cases:
             with self.subTest(brush=name):
@@ -118,6 +118,20 @@ class SettlementSurfaceContracts(unittest.TestCase):
                 self.assertEqual(layer.get('Color'), before)
                 layer.set('Color', after)
                 self.assertEqual(tree(expected), tree(override_root.find(f"Brush[@Name='{name}']")))
+
+    def test_character_portrait_fill_is_opaque_dadg_navy(self):
+        character = self.tableau_override.find(
+            "Brush[@Name='GameMenu.Tableau.Background.Character']")
+        party = self.tableau_override.find(
+            "Brush[@Name='GameMenu.Tableau.Background.Party']")
+        self.assertEqual(character.find('Layers/BrushLayer').get('Color'), '#0B2038FF')
+        self.assertEqual(party.find('Layers/BrushLayer').get('Color'), '#2870A922')
+        self.assertEqual(
+            [style.get('Name') for style in character.findall('Styles/Style')],
+            ['Default', 'Hovered', 'Pressed', 'Disabled', 'Selected'])
+        self.assertEqual(
+            [layer.get('ColorFactor') for layer in character.findall('Styles/Style/BrushLayer')],
+            [None, '2', '0.8', '0.2', '0.6'])
 
     def test_settlement_actions_and_portrait_commands_remain_native(self):
         game_menu_item = ET.parse(MODULES / 'Native/GUI/Prefabs/GameMenu/GameMenuItem.xml')
