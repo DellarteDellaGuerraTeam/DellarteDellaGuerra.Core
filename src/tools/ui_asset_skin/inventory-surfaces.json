@@ -56,12 +56,12 @@
     {"name": "Inventory\\header_button_right_4_pressed", "profile": "recolor_blue"},
     {"name": "Inventory\\header_button_right_4_selected", "profile": "recolor_gold"},
 
-    {"name": "Inventory\\mode_center", "profile": "recolor_blue"},
-    {"name": "Inventory\\mode_center_highlighted", "profile": "recolor_gold"},
-    {"name": "Inventory\\mode_left", "profile": "recolor_blue"},
-    {"name": "Inventory\\mode_left_highlighted", "profile": "recolor_gold"},
-    {"name": "Inventory\\mode_right", "profile": "recolor_blue"},
-    {"name": "Inventory\\mode_right_highlighted", "profile": "recolor_gold"}
+    {"name": "Inventory\\mode_center", "profile": "recolor_blue", "native_detail": {"box": [25, 10, 87, 73], "luminance_threshold": 82, "contrast": 5}},
+    {"name": "Inventory\\mode_center_highlighted", "profile": "recolor_gold", "native_detail": {"box": [25, 10, 87, 73], "high_pass_radius": 3, "contrast": 10}},
+    {"name": "Inventory\\mode_left", "profile": "recolor_blue", "native_detail": {"box": [38, 8, 98, 54], "luminance_threshold": 82, "contrast": 5}},
+    {"name": "Inventory\\mode_left_highlighted", "profile": "recolor_gold", "native_detail": {"box": [38, 8, 98, 54], "high_pass_radius": 3, "contrast": 10}},
+    {"name": "Inventory\\mode_right", "profile": "recolor_blue", "native_detail": {"box": [20, 8, 82, 55], "luminance_threshold": 82, "contrast": 5}},
+    {"name": "Inventory\\mode_right_highlighted", "profile": "recolor_gold", "native_detail": {"box": [20, 8, 82, 55], "high_pass_radius": 3, "contrast": 10}}
   ],
-  "scope_note": "Keeps the approved structural headers, all 32 left/right sort-header states and six equipment-mode states. The four item-row sprites are restored byte-for-byte to their neutral native artwork so Bannerlord's warning-red tint remains functional; exact ordinary tuple brush overrides apply the DADG navy while retaining native hover, pressed and selected state mappings. Native dimensions, alpha, warning brushes, icons, filters and equipment slots remain unchanged."
+  "scope_note": "Keeps the approved structural headers, all 32 left/right sort-header states and six equipment-mode states. The four item-row sprites are restored byte-for-byte to their neutral native artwork so Bannerlord's warning-red tint remains functional; exact ordinary tuple brush overrides apply the DADG navy while retaining native hover, pressed and selected state mappings. Equipment-mode button surfaces use the DADG palette while preserving the native high-resolution pictogram detail. Native dimensions, alpha, warning brushes, filters and equipment slots remain unchanged."
 }

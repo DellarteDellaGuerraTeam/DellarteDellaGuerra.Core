@@ -94,6 +94,32 @@ def paint(native, entry, panel, inner):
                 'gold_palette', ['#5a3105', '#ffe58a'])
             gold = ImageOps.colorize(grey, gold_shadow, gold_highlight).convert('RGBA')
             result.paste(gold, (0, 0), gold_mask)
+        native_detail = entry.get('native_detail')
+        if native_detail:
+            x1, y1, x2, y2 = native_detail['box']
+            if not (0 <= x1 < x2 <= native.width and 0 <= y1 < y2 <= native.height):
+                raise ValueError('Native detail box outside original sprite')
+            contrast = native_detail.get('contrast', 4)
+            if not 1 <= contrast <= 12:
+                raise ValueError('Invalid native detail contrast')
+            high_pass_radius = native_detail.get('high_pass_radius')
+            if high_pass_radius is not None:
+                if not 1 <= high_pass_radius <= 8:
+                    raise ValueError('Invalid native detail high-pass radius')
+                detail_mask = ImageChops.subtract(
+                    grey, grey.filter(ImageFilter.GaussianBlur(high_pass_radius))).point(
+                        lambda value: min(255, value * contrast))
+            else:
+                threshold = native_detail.get('luminance_threshold', 96)
+                if not 0 <= threshold <= 254:
+                    raise ValueError('Invalid native detail luminance threshold')
+                detail_mask = grey.point(
+                    lambda value: max(0, min(255, (value-threshold) * contrast)))
+            clip = Image.new('L', native.size, 0)
+            ImageDraw.Draw(clip).rectangle((x1, y1, x2-1, y2-1), fill=255)
+            detail_mask = ImageChops.multiply(detail_mask, clip)
+            detail_mask = ImageChops.multiply(detail_mask, native_alpha)
+            result.paste(native, (0, 0), detail_mask)
         if entry['profile'] in ('row', 'header'):
             # Draw within the opaque silhouette, not the native shadow padding.
             box = result_alpha.point(lambda a: 255 if a >= 240 else 0).getbbox()

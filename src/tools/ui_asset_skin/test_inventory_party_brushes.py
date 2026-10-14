@@ -130,6 +130,9 @@ class InventoryPartySurfaceTests(unittest.TestCase):
                 self.assertGreater(selected_light, ImageStat.Stat(states[0].convert('L')).mean[0], stem)
 
         for stem in ('center', 'left', 'right'):
+            entries = {entry['name']: entry for entry in self.inventory['parts']}
+            self.assertIn('native_detail', entries[f'Inventory\\mode_{stem}'])
+            self.assertIn('native_detail', entries[f'Inventory\\mode_{stem}_highlighted'])
             normal = rendered[f'Inventory\\mode_{stem}']
             highlighted = rendered[f'Inventory\\mode_{stem}_highlighted']
             self.assertNotEqual(normal.tobytes(), highlighted.tobytes(), stem + ' mode')

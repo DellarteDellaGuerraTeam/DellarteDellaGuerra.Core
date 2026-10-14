@@ -43,6 +43,37 @@ class SharedSurfacesTests(unittest.TestCase):
         self.assertEqual(normal.getchannel('A').tobytes(), selected.getchannel('A').tobytes())
         self.assertGreater(selected.getpixel((60, 32))[2], normal.getpixel((60, 32))[2])
 
+    def test_recolour_can_preserve_bright_native_detail_inside_a_declared_box(self):
+        source = Image.new('RGBA', (80, 80), '#e7bc50')
+        native = Image.new('RGBA', (40, 30), '#554433')
+        native.putpixel((12, 12), (240, 235, 225, 255))
+        native.putpixel((32, 12), (240, 235, 225, 255))
+        baseline = paint(native, {'profile': 'recolor_blue'}, source, source)
+        result = paint(native, {
+            'profile': 'recolor_blue',
+            'native_detail': {'box': [5, 5, 20, 25],
+                              'luminance_threshold': 82,
+                              'contrast': 5},
+        }, source, source)
+        self.assertEqual(result.getpixel((12, 12)), native.getpixel((12, 12)))
+        self.assertEqual(result.getpixel((32, 12)), baseline.getpixel((32, 12)))
+        self.assertEqual(result.getchannel('A').tobytes(), native.getchannel('A').tobytes())
+
+    def test_recolour_can_preserve_edges_without_copying_a_bright_background(self):
+        source = Image.new('RGBA', (80, 80), '#e7bc50')
+        native = Image.new('RGBA', (40, 30), '#b08a45')
+        ImageDraw.Draw(native).line((10, 8, 10, 22), fill='#fff7dc', width=2)
+        baseline = paint(native, {'profile': 'recolor_gold'}, source, source)
+        result = paint(native, {
+            'profile': 'recolor_gold',
+            'native_detail': {'box': [5, 5, 20, 25],
+                              'high_pass_radius': 3,
+                              'contrast': 10},
+        }, source, source)
+        self.assertEqual(result.getpixel((16, 12)), baseline.getpixel((16, 12)))
+        self.assertNotEqual(result.getpixel((10, 12)), baseline.getpixel((10, 12)))
+        self.assertEqual(result.getchannel('A').tobytes(), native.getchannel('A').tobytes())
+
     def test_silhouette_border_follows_a_rounded_alpha_edge(self):
         source = Image.new('RGBA', (80, 80), '#e7bc50')
         native = Image.new('RGBA', (80, 80), '#304d68')
