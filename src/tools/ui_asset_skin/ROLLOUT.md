@@ -190,6 +190,29 @@ portrait hover/selection, the party/notable toggle and action disabled states.
 The later opaque portrait-fill refinement is brush-only and requires no atlas
 re-import; reload the UI/editor after deploying `DADGGameMenuTableau.xml`.
 
+### Inventory interaction-surface completion 2026-10-14
+
+`inventory-surfaces-05` extends the earlier two-header inventory pass with 42
+atlas-only regions in `ui_inventory_1`: the four left/right item-row canvases,
+all 32 left/right sort-header states, and the six equipment-mode states. The
+ordinary surfaces are navy, selected sort and mode states are gold, and item
+rows use a restrained one-pixel gold underline rather than boxed gold frames.
+
+The native inventory prefab and brush XML remain unchanged. Hover, pressed,
+selected, unavailable and character-cannot-use semantics still come from their
+original Gauntlet state mappings; in particular, the warning-red tuple tint is
+preserved. Filters, equipment slots, item icons and the existing full-screen
+`InventoryBackground` are outside this slice. All selected sprites preserve
+their native dimensions and alpha, and every unselected atlas pixel is checked
+byte-identical.
+
+Deploy only Map `AssetSources/GauntletUI/ui_inventory_1.png`, then re-import
+**`ui_inventory_1_tex`** in the editor. No new panel, prefab, UIExtender patch,
+sprite registration, C#, TPAC or RuntimeDataCache change is part of this batch.
+The source PNG was deployed and hash-verified on 2026-10-14. Staging and
+comparisons: `.codex-work/ui-asset-skin/inventory-surfaces-05`; rollback backup
+and journal: `.codex-work/ui-asset-skin/shared-backup-20261014-215934`.
+
 ### Crafting source batch deployed 2026-10-04
 
 `crafting-surfaces-01` changes 25 regions in `ui_crafting_1`: two sculpted side

@@ -24,18 +24,37 @@ class InventoryPartySurfaceTests(unittest.TestCase):
         cls.inner = Image.open(approved / 'left.png').convert('RGBA')
         cls.parts = {p.findtext('Name'): p for p in ET.parse(MODULES / 'SandBox/GUI/SandBoxSpriteData.xml').findall('./SpriteParts/SpritePart')}
 
-    def test_inventory_warning_rows_are_out_of_scope(self):
+    def test_inventory_scope_is_exact_and_has_no_brush_override(self):
         names = {p['name'] for p in self.inventory['parts']}
-        self.assertEqual(names, {'Inventory\\header_left', 'Inventory\\header_right'})
+        expected = {'Inventory\\header_left', 'Inventory\\header_right'}
+        expected.update({
+            'Inventory\\tuple_left', 'Inventory\\tuple_left_pressed',
+            'Inventory\\tuple_right', 'Inventory\\tuple_right_pressed',
+            'Inventory\\mode_center', 'Inventory\\mode_center_highlighted',
+            'Inventory\\mode_left', 'Inventory\\mode_left_highlighted',
+            'Inventory\\mode_right', 'Inventory\\mode_right_highlighted',
+        })
+        for side in ('left', 'right'):
+            for column in range(1, 5):
+                stem = f'Inventory\\header_button_{side}_{column}'
+                expected.update({stem, stem + '_hover', stem + '_pressed', stem + '_selected'})
+        self.assertEqual(names, expected)
+        self.assertEqual(len(names), 44)
         self.assertFalse(self.inventory.get('brush_overrides'))
-        for name in ('Inventory\\tuple_left', 'Inventory\\tuple_left_pressed',
-                     'Inventory\\tuple_right', 'Inventory\\tuple_right_pressed'):
+        for name in ('Inventory\\armorSlot', 'Inventory\\armorSlotHighlight',
+                     'Inventory\\bannerSlot', 'Inventory\\bannerSlotHighlight',
+                     'Inventory\\filterAll', 'Inventory\\filterArmors',
+                     'Inventory\\filterFood', 'Inventory\\filterMounts',
+                     'Inventory\\filterShields', 'Inventory\\filterWeapons'):
             self.assertIn(name, self.inventory['protected'])
 
-    def test_selected_brush_families_have_no_pigment_tints(self):
+    def test_structural_headers_have_no_pigment_tints(self):
         # If native consumers acquire a tint, the PNG-only assumption needs review.
-        for filename, recipe in [('Inventory.xml', self.inventory), ('PartyScreen.xml', self.party)]:
-            names = {p['name'] for p in recipe['parts']}
+        families = [
+            ('Inventory.xml', {'Inventory\\header_left', 'Inventory\\header_right'}, 2),
+            ('PartyScreen.xml', {p['name'] for p in self.party['parts']}, 6),
+        ]
+        for filename, names, expected_count in families:
             consumers = []
             for brush in ET.parse(MODULES / 'SandBox/GUI/Brushes' / filename).findall('Brush'):
                 if any(layer.get('Sprite') in names for layer in brush.iter('BrushLayer')):
@@ -43,8 +62,59 @@ class InventoryPartySurfaceTests(unittest.TestCase):
                     for layer in brush.iter('BrushLayer'):
                         for key in ('Color', 'HueFactor', 'SaturationFactor'):
                             self.assertNotIn(key, layer.attrib, (brush.get('Name'), key))
-            self.assertEqual(len(consumers), 2 if filename == 'Inventory.xml' else 6)
+            self.assertEqual(len(consumers), expected_count)
         self.assertFalse(self.party.get('brush_overrides'))
+
+    def test_inventory_native_warning_and_interaction_semantics_remain_in_place(self):
+        brushes = {brush.get('Name'): brush for brush in ET.parse(
+            MODULES / 'SandBox/GUI/Brushes/Inventory.xml').findall('Brush')}
+        for side in ('Left', 'Right'):
+            warning = brushes[f'Inventory.Tuple.CharacterCantUse.{side}']
+            layer = warning.find('./Layers/BrushLayer')
+            self.assertEqual(layer.get('Color'), '#FF4239FF')
+            self.assertEqual(layer.get('Sprite'), f'Inventory\\tuple_{side.lower()}')
+
+            ordinary = brushes[f'Inventory.Tuple.{side}']
+            styles = {style.get('Name'): style.find('BrushLayer') for style in ordinary.findall('./Styles/Style')}
+            self.assertEqual(styles['Default'].get('Sprite'), f'Inventory\\tuple_{side.lower()}')
+            self.assertEqual(styles['Pressed'].get('Sprite'), f'Inventory\\tuple_{side.lower()}_pressed')
+            self.assertEqual(styles['Hovered'].get('ValueFactor'), '10')
+            self.assertEqual(styles['Selected'].get('ValueFactor'), '5')
+
+        for position, stem in [('Center', 'center'), ('Side.Left', 'left'), ('Side.Right', 'right')]:
+            brush = brushes[f'Inventory.Mode.Button.{position}']
+            layers = {layer.get('Name'): layer for layer in brush.findall('./Layers/BrushLayer')}
+            self.assertEqual(layers['Default'].get('Sprite'), f'Inventory\\mode_{stem}')
+            self.assertEqual(layers['Highlighted'].get('Sprite'), f'Inventory\\mode_{stem}_highlighted')
+
+    def test_inventory_states_remain_distinct_with_native_alpha(self):
+        atlas = Image.open(ROOT / '.codex-work/ui-migration/compiled/SandBox/ui_inventory_1.png').convert('RGBA')
+        rendered = {}
+        for entry in self.inventory['parts']:
+            part = self.parts[entry['name']]
+            x, y, w, h = [int(part.findtext(k)) for k in ('SheetX', 'SheetY', 'Width', 'Height')]
+            native = atlas.crop((x, y, x+w, y+h))
+            result = paint(native, entry, self.panel, self.inner)
+            self.assertEqual(result.size, native.size)
+            self.assertEqual(result.getchannel('A').tobytes(), native.getchannel('A').tobytes())
+            rendered[entry['name']] = result
+
+        for side in ('left', 'right'):
+            variants = [rendered[f'Inventory\\tuple_{side}'], rendered[f'Inventory\\tuple_{side}_pressed']]
+            self.assertEqual(len({image.tobytes() for image in variants}), 2, side + ' tuple')
+            for column in range(1, 5):
+                stem = f'Inventory\\header_button_{side}_{column}'
+                states = [rendered[stem + suffix] for suffix in ('', '_hover', '_pressed', '_selected')]
+                self.assertEqual(len({image.tobytes() for image in states}), 4, stem)
+                selected_light = ImageStat.Stat(states[-1].convert('L')).mean[0]
+                self.assertGreater(selected_light, ImageStat.Stat(states[0].convert('L')).mean[0], stem)
+
+        for stem in ('center', 'left', 'right'):
+            normal = rendered[f'Inventory\\mode_{stem}']
+            highlighted = rendered[f'Inventory\\mode_{stem}_highlighted']
+            self.assertNotEqual(normal.tobytes(), highlighted.tobytes(), stem + ' mode')
+            self.assertGreater(ImageStat.Stat(highlighted.convert('L')).mean[0],
+                               ImageStat.Stat(normal.convert('L')).mean[0], stem + ' mode')
 
     def test_party_states_remain_distinct_with_native_alpha(self):
         atlas = Image.open(ROOT / '.codex-work/ui-migration/compiled/SandBox/ui_partyscreen_1.png').convert('RGBA')
