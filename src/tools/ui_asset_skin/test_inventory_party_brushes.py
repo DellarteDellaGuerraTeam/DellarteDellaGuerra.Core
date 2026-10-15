@@ -131,13 +131,19 @@ class InventoryPartySurfaceTests(unittest.TestCase):
 
         for stem in ('center', 'left', 'right'):
             entries = {entry['name']: entry for entry in self.inventory['parts']}
-            self.assertIn('native_detail', entries[f'Inventory\\mode_{stem}'])
-            self.assertIn('native_detail', entries[f'Inventory\\mode_{stem}_highlighted'])
             normal = rendered[f'Inventory\\mode_{stem}']
             highlighted = rendered[f'Inventory\\mode_{stem}_highlighted']
             self.assertNotEqual(normal.tobytes(), highlighted.tobytes(), stem + ' mode')
             self.assertGreater(ImageStat.Stat(highlighted.convert('L')).mean[0],
                                ImageStat.Stat(normal.convert('L')).mean[0], stem + ' mode')
+
+            for suffix in ('', '_highlighted'):
+                name = f'Inventory\\mode_{stem}{suffix}'
+                self.assertEqual(entries[name]['profile'], 'native_restore')
+                part = self.parts[name]
+                x, y, w, h = [int(part.findtext(k)) for k in ('SheetX', 'SheetY', 'Width', 'Height')]
+                self.assertEqual(rendered[name].tobytes(),
+                                 atlas.crop((x, y, x+w, y+h)).tobytes(), name)
 
     def test_party_states_remain_distinct_with_native_alpha(self):
         atlas = Image.open(ROOT / '.codex-work/ui-migration/compiled/SandBox/ui_partyscreen_1.png').convert('RGBA')
