@@ -85,7 +85,11 @@ def paint(native, entry, panel, inner):
         grey = ImageOps.grayscale(native)
         if entry['profile'] == 'recolor_gold':
             shadow, highlight = entry.get('gold_palette', ['#603907', '#fff2a2'])
-            result = ImageOps.colorize(grey, shadow, highlight).convert('RGBA')
+            black, white = entry.get('gold_luminance_range', [0, 255])
+            if not 0 <= black < white <= 255:
+                raise ValueError('Invalid gold luminance range')
+            result = ImageOps.colorize(grey, shadow, highlight,
+                                      blackpoint=black, whitepoint=white).convert('RGBA')
         else:
             bright = entry.get('selected', False) or entry['profile'] == 'header'
             shadow, highlight = entry.get('blue_palette', ['#07172a', '#2870a9' if bright else '#174467'])

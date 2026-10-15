@@ -88,6 +88,13 @@ class BannerEditorSurfaceContracts(unittest.TestCase):
         frame_mean = ImageStat.Stat(frame, frame.getchannel('A')).mean[:3]
         self.assertGreater(frame_mean[0], frame_mean[2] * 1.2)
         self.assertGreater(frame_mean[1], frame_mean[2])
+        # Gold hue alone also admits the old muddy brown. Require a bright
+        # body/highlight range while retaining the carved relief and alpha.
+        opaque = frame.getchannel('A').point(lambda value: 255 if value > 230 else 0)
+        opaque_mean = ImageStat.Stat(frame, opaque).mean[:3]
+        self.assertGreater(opaque_mean[0], 195)
+        self.assertGreater(opaque_mean[1], 155)
+        self.assertGreater(ImageStat.Stat(frame, opaque).stddev[0], 15)
 
     def test_brush_overrides_only_change_palette_brightness(self):
         scrollbar = copy.deepcopy(
