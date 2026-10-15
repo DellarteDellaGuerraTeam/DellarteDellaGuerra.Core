@@ -1,5 +1,5 @@
 {
-  "batch": "banner-editor-surfaces-03",
+  "batch": "banner-editor-surfaces-04",
   "sheet": "ui_group1_2",
   "module": "Native",
   "size": [4096, 4096],
@@ -32,10 +32,8 @@
     },
     {
       "name": "SPGeneral\\SPOptions\\standart_slider_frame",
-      "profile": "recolor_gold",
-      "gold_palette": ["#A16B19", "#FFF0AD"],
-      "gold_luminance_range": [10, 90],
-      "note": "Shared slider frame: lift the native dark relief (opaque luminance mostly 16–82) into shaded DADG gold; preserve alpha, fill and steel knob."
+      "profile": "gold_slider_frame",
+      "note": "Redraw the rails and pointed ends in antialiased shaded gold; remove the native translucent haze. Keep the 400x65 footprint, fill, steel knob and atlas registration."
     }
   ],
   "protected": [

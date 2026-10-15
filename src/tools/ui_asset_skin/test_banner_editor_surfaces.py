@@ -64,7 +64,11 @@ class BannerEditorSurfaceContracts(unittest.TestCase):
                           for key in ('SheetX', 'SheetY', 'Width', 'Height')]
             native = atlas.crop((x, y, x + w, y + h))
             result = paint(native, entry, panel, inner)
-            self.assertEqual(result.getchannel('A').tobytes(), native.getchannel('A').tobytes())
+            if entry['profile'] != 'gold_slider_frame':
+                self.assertEqual(result.getchannel('A').tobytes(), native.getchannel('A').tobytes())
+            else:
+                self.assertEqual(result.size, native.size)
+                self.assertNotEqual(result.getchannel('A').tobytes(), native.getchannel('A').tobytes())
             self.assertNotEqual(result.tobytes(), native.tobytes())
             rendered[entry['name']] = result
 
@@ -114,12 +118,29 @@ class BannerEditorSurfaceContracts(unittest.TestCase):
         self.assertGreater(frame_mean[0], frame_mean[2] * 1.2)
         self.assertGreater(frame_mean[1], frame_mean[2])
         # Gold hue alone also admits the old muddy brown. Require a bright
-        # body/highlight range while retaining the carved relief and alpha.
+        # body/highlight range while retaining shaded relief.
         opaque = frame.getchannel('A').point(lambda value: 255 if value > 230 else 0)
         opaque_mean = ImageStat.Stat(frame, opaque).mean[:3]
         self.assertGreater(opaque_mean[0], 195)
         self.assertGreater(opaque_mean[1], 155)
         self.assertGreater(ImageStat.Stat(frame, opaque).stddev[0], 15)
+
+    def test_redrawn_slider_has_crisp_rails_and_no_gold_haze_in_track(self):
+        from slider_surfaces import gold_slider_frame
+        frame = gold_slider_frame(Image.new('RGBA', (400, 65)))
+        alpha = frame.getchannel('A')
+        self.assertIsNone(alpha.crop((60, 24, 340, 42)).getbbox())
+        self.assertIsNone(alpha.crop((60, 0, 340, 11)).getbbox())
+        for x in (80, 160, 240, 320):
+            self.assertEqual(frame.crop((x, 0, x+1, 65)).tobytes(),
+                             frame.crop((200, 0, 201, 65)).tobytes())
+            for rail in (17, 49):
+                self.assertGreater(alpha.getpixel((x, rail)), 245)
+                self.assertGreater(frame.getpixel((x, rail))[0], 230)
+                transition = [alpha.getpixel((x, y)) for y in range(rail-6, rail+7)]
+                self.assertLessEqual(sum(16 < value < 240 for value in transition), 2)
+        with self.assertRaises(ValueError):
+            gold_slider_frame(Image.new('RGBA', (800, 130)))
 
     def test_brush_overrides_only_change_palette_brightness(self):
         scrollbar = copy.deepcopy(

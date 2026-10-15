@@ -11,6 +11,7 @@ import xml.etree.ElementTree as ET
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageOps
 from settlement_surfaces import group_frame, info_header, recruitment_portrait, rounded_header
+from slider_surfaces import gold_slider_frame
 
 
 def sha(path):
@@ -44,6 +45,8 @@ def nine_slice(image, size, edge=12):
 
 def paint(native, entry, panel, inner):
     # The PNGs are the already approved code-rendered art, not newly generated art.
+    if entry['profile'] == 'gold_slider_frame':
+        return gold_slider_frame(native)
     if entry['profile'] == 'settlement_rounded_header':
         baseline = paint(native, {'profile': 'header', 'border_style': 'silhouette',
                                  'silhouette_feather_radius': 0.55,
