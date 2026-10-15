@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Bannerlord.PrivateWars.Domain;
 using Bannerlord.PrivateWars.Domain.Model;
 
@@ -50,7 +51,19 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         }
 
         [Fact]
-        public void GetLosingSide_RejectsInactiveWarOrDifferentSettlement()
+        public void GetLosingSide_ApprovesCaptureOfSnapshottedNonGoalFief()
+        {
+            var war = PrivateWarTestData.War(mainGoal: "goal",
+                fiefSnapshot: new Dictionary<string, string> { ["castle_a"] = "clan_attacker" });
+
+            var losingSide = _policy.GetLosingSide(
+                war, "castle_a", true, false, true, WarSide.Defender, WarSide.Attacker);
+
+            Assert.Equal(WarSide.Attacker, losingSide);
+        }
+
+        [Fact]
+        public void GetLosingSide_RejectsInactiveWarOrUnsnapshottedSettlement()
         {
             var inactive = PrivateWarTestData.War(mainGoal: "goal") with
             {

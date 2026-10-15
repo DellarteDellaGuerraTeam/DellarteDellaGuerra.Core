@@ -55,6 +55,21 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
         public IReadOnlyList<PrivateWar> Snapshot() => _wars.Values.ToList();
     }
 
+    internal sealed class FakePrivateWarSidesProvider : IPrivateWarSidesProvider
+    {
+        private readonly IReadOnlyDictionary<string, string> _suzerains;
+
+        public FakePrivateWarSidesProvider(IReadOnlyDictionary<string, string>? suzerains = null)
+        {
+            _suzerains = suzerains ?? new Dictionary<string, string>();
+        }
+
+        public WarSide? ResolveSide(string clanId, PrivateWar war) =>
+            new WarSideResolver().ResolveSide(clanId, war, GetSuzerain);
+
+        public string? GetSuzerain(string clanId) => _suzerains.TryGetValue(clanId, out var suzerain) ? suzerain : null;
+    }
+
     /// <summary>Shared builders so tests state only the fields they care about.</summary>
     internal static class PrivateWarTestData
     {

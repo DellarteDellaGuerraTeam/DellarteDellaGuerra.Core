@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
@@ -8,7 +9,6 @@ using DellarteDellaGuerra.Titles.Spi;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Settlements;
-using TaleWorlds.Core;
 using BannerlordCampaign = TaleWorlds.CampaignSystem.Campaign;
 
 namespace DellarteDellaGuerra.Titles.Api.Campaign
@@ -39,7 +39,6 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
     public class ClaimPressureCampaignBehavior : CampaignBehaviorBase
     {
         private const float DeclarationThreshold = 0.8f;
-        private const float DeclarationChance = 0.25f;
         private const float EvaluationIntervalDays = 30f;
 
         // No clan carries the empty id, so pricing a war against it puts on the attacker's side
@@ -60,6 +59,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         private readonly IPrivateWarDeclaration _privateWarDeclaration;
         private readonly ICadetBranch _cadetBranch;
         private readonly IPersonalBondPolicy _personalBondPolicy;
+        private readonly ILogger _logger;
 
         private Dictionary<string, float> _nextEvaluationDayByPair = new();
         private List<string> _serialisedCooldowns = new();
@@ -78,7 +78,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             ISolicitSupportUseCase solicitSupportUseCase,
             IPrivateWarDeclaration privateWarDeclaration,
             ICadetBranch cadetBranch,
-            IPersonalBondPolicy personalBondPolicy)
+            IPersonalBondPolicy personalBondPolicy,
+            ILoggerFactory loggerFactory)
         {
             _titleRepository = titleRepository;
             _claimRepository = claimRepository;
@@ -92,6 +93,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             _privateWarDeclaration = privateWarDeclaration;
             _cadetBranch = cadetBranch;
             _personalBondPolicy = personalBondPolicy;
+            _logger = loggerFactory.CreateLogger<ClaimPressureCampaignBehavior>();
 
             // Subscribed here and not in RegisterEvents, which runs once per campaign started
             // while this behaviour is a container singleton: loading a save, quitting to the
@@ -127,6 +129,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
         private void OnDailyTick()
         {
+            EndVoidClaimWars();
+
             float today = (float)CampaignTime.Now.ToDays;
             var clansById = Clan.All.ToDictionary(clan => clan.StringId);
             var strengthByClanId = clansById.ToDictionary(entry => entry.Key, entry => entry.Value.CurrentTotalStrength);
@@ -177,6 +181,14 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
                     string attackerSideId = pretender is null ? claim.ClaimantClanId : UnfoundedCadetBranch;
 
+                    // A house that rallies from another realm answers for itself: its vassals owe
+                    // service to a liege abroad, not to this quarrel.
+                    IReadOnlyCollection<string> Foreign(SupportDecision support) =>
+                        support.AttackerSupporters
+                            .Concat(support.DefenderSupporters)
+                            .Where(clanId => clansById.TryGetValue(clanId, out var clan) && clan.Kingdom != kingdom)
+                            .ToList();
+
                     ClaimOpportunity Price(SupportDecision support)
                     {
                         var (attackerStrength, defenderStrength) = WarSideStrength.Sum(
@@ -185,7 +197,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                             attackerSideId,
                             defenderClanId,
                             support.AttackerSupporters,
-                            support.DefenderSupporters);
+                            support.DefenderSupporters,
+                            Foreign(support));
 
                         // A cadet branch's whole army is the men its founder leads, and the house
                         // he is leaving is still counting them among its own.
@@ -210,7 +223,6 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                         Candidates(clansById, kingdom, attackerClan, defenderClan, pretender, attackerSideId, GetSuzerain));
 
                     if (_evaluatePressClaimUseCase.Execute(Price(support)) < DeclarationThreshold) continue;
-                    if (MBRandom.RandomFloat >= DeclarationChance) continue;
 
                     // Strength on paper is not an army in the field. A house whose lords are broke,
                     // starving or spent would declare and then never march, so the war has to be one
@@ -242,8 +254,26 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                         mainGoalSettlementId,
                         today,
                         support.AttackerSupporters,
-                        support.DefenderSupporters);
+                        support.DefenderSupporters,
+                        Foreign(support));
                 }
+            }
+        }
+
+        // A claim war is fought against the house holding the title. Once the dignity has passed to
+        // another, there is nothing left to take from it: the war ends in a white peace, which
+        // reverts what was taken and folds a cadet branch back in. The claimant is free to press
+        // the claim against the new holder once the pair's cooldown has run.
+        private void EndVoidClaimWars()
+        {
+            foreach (var war in _privateWarDeclaration.GetActiveClaimWars())
+            {
+                var title = _titleRepository.GetTitle(war.TitleId);
+                string? holderClanId = _genealogy.GetHolderClanOf(title);
+                if (!ClaimWarValidity.IsVoid(war.DefenderClanId, holderClanId)) continue;
+
+                _logger.Debug($"[PW] {war.WarId} cancelled: title {war.TitleId} no longer held by {war.DefenderClanId}; holder now {title?.HolderHeroId ?? "none"}({holderClanId ?? "none"})");
+                _privateWarDeclaration.EndInWhitePeace(war.WarId);
             }
         }
 
@@ -262,7 +292,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         }
 
         // The winner takes the title and the de jure titles the loser held, and the fortified
-        // seats among them that the loser still owns. A village goes with its castle or town.
+        // seats among them that the loser still owns or that his own side took during the war;
+        // a house outside the war keeps what it holds. A village goes with its castle or town.
         // A title won across the border takes the clans whose primary title it carries into the
         // winner's realm, fiefs and all. Returns whether the winner took the title fought for.
         private bool AwardTheClaim(PrivateWarConclusion conclusion)
@@ -276,7 +307,12 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             foreach (string seatId in award.MovedSeatIds)
             {
                 var seat = Settlement.Find(seatId);
-                if (seat is null || !seat.IsFortification || seat.OwnerClan?.StringId != conclusion.DefenderClanId)
+                if (seat is null || !seat.IsFortification || seat.OwnerClan is null || seat.OwnerClan == winner)
+                    continue;
+
+                string ownerId = seat.OwnerClan.StringId;
+                if (ownerId != conclusion.DefenderClanId
+                    && !_privateWarDeclaration.IsOnAttackerSide(conclusion.WarId, ownerId))
                     continue;
 
                 ChangeOwnerOfSettlementAction.ApplyByDefault(winner.Leader, seat);

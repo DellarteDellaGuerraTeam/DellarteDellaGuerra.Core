@@ -113,5 +113,35 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             Assert.Equal(100f, attacker);
             Assert.Equal(95f, defender);
         }
+
+        [Fact]
+        public void Sum_CountsAForeignSupporterAloneWithoutItsSubtree()
+        {
+            var strengths = new Dictionary<string, float>
+            {
+                ["attacker"] = 100f, ["defender"] = 50f, ["foreigner"] = 40f, ["its_vassal"] = 5f
+            };
+            string? GetSuzerain(string clanId) => clanId == "its_vassal" ? "foreigner" : null;
+
+            var (attacker, defender) = WarSideStrength.Sum(
+                strengths, GetSuzerain, "attacker", "defender", None, new[] { "foreigner" }, new[] { "foreigner" });
+
+            Assert.Equal(100f, attacker);
+            Assert.Equal(90f, defender);
+        }
+
+        [Fact]
+        public void ResolveSide_WalksAForeignSupportersVassalOnToTheNextBelligerent()
+        {
+            // The foreigner pledged to the defender but is himself the attacker's vassal.
+            string? GetSuzerain(string clanId) =>
+                clanId == "its_vassal" ? "foreigner" : clanId == "foreigner" ? "attacker" : null;
+            string[] foreign = { "foreigner" };
+
+            Assert.Equal("defender", WarSideStrength.ResolveSide(
+                "foreigner", GetSuzerain, "attacker", "defender", None, foreign, foreign));
+            Assert.Equal("attacker", WarSideStrength.ResolveSide(
+                "its_vassal", GetSuzerain, "attacker", "defender", None, foreign, foreign));
+        }
     }
 }
