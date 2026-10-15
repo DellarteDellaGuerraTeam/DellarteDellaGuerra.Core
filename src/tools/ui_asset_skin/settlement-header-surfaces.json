@@ -26,8 +26,8 @@
     "SPGeneral\\MapOverlay\\Settlement\\parties_characters_group_background"
   ],
   "parts": [
-    {"name": "SPGeneral\\MapOverlay\\Settlement\\settlement_info_header", "profile": "header"},
-    {"name": "SPGeneral\\MapOverlay\\Settlement\\settlement_parties_characters_header", "profile": "settlement_rounded_header"},
+    {"name": "SPGeneral\\MapOverlay\\Settlement\\settlement_info_header", "profile": "settlement_info_header"},
+    {"name": "SPGeneral\\MapOverlay\\Settlement\\settlement_parties_characters_header", "profile": "settlement_rounded_header", "gold_bevel": true},
     {"name": "SPGeneral\\MapOverlay\\army_bar_portrait_slot", "profile": "recruitment_portrait"}
   ],
   "scope_note": "Settlement chrome only: smooth the native rounded header contours and reuse recruitment owner.png interior for occupied and empty notable portrait fills. Native layout, icons, illustrations, commands and interaction factors are preserved. The portrait background brush uses the same existing army_bar_portrait_slot sprite as empty slots."

@@ -10,7 +10,7 @@
     "SPGeneral\\MapOverlay\\Settlement\\plus_button"
   ],
   "parts": [
-    {"name": "SPGeneral\\MapOverlay\\Settlement\\parties_characters_group_frame", "profile": "recolor_gold"}
+    {"name": "SPGeneral\\MapOverlay\\Settlement\\parties_characters_group_frame", "profile": "settlement_group_frame"}
   ],
   "scope_note": "Gold refinement for the settlement party/notable group frame only. All other ui_group1_1 pixels, including existing DADG surfaces, remain byte-identical."
 }

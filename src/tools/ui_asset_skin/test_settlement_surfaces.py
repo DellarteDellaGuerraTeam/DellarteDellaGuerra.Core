@@ -108,8 +108,8 @@ class SettlementSurfaceContracts(unittest.TestCase):
                                                   'silhouette_feather_radius': 0.55,
                                                   'alpha_cleanup': {'threshold': 128, 'feather_radius': 0.55}},
                                          panel, inner)
-                        self.assertEqual(rendered.crop((100, 0, w, h)).tobytes(),
-                                         baseline.crop((100, 0, w, h)).tobytes())
+                        self.assertEqual(rendered.crop((100, 0, w-5, 148)).tobytes(),
+                                         baseline.crop((100, 0, w-5, 148)).tobytes())
                     else:
                         self.assertEqual(rendered_alpha.tobytes(), native_alpha.tobytes())
                     self.assertNotEqual(rendered.tobytes(), native.tobytes())
@@ -120,6 +120,17 @@ class SettlementSurfaceContracts(unittest.TestCase):
                         self.assertLessEqual(green, 32)
                         self.assertLessEqual(blue, 56)
                         self.assertGreater(blue, green)
+                    if entry['profile'] == 'settlement_info_header':
+                        baseline = paint(native, {'profile': 'header'}, panel, inner)
+                        self.assertEqual(rendered.crop((9, 9, w-9, 78)).tobytes(),
+                                         baseline.crop((9, 9, w-9, 78)).tobytes())
+                    if entry['profile'] in ('settlement_info_header', 'settlement_group_frame'):
+                        row = 85 if entry['profile'] == 'settlement_info_header' else 61
+                        cross_section = [rendered.getpixel((w//2, row+offset))[:3]
+                                         for offset in (-2, -1, 0, 1, 2)]
+                        self.assertGreater(len(set(cross_section)), 3, 'Gold bevel must contain shaded relief')
+                        self.assertTrue(any(red > 220 and green > 175 and blue < green
+                                            for red, green, blue in cross_section))
 
     def test_palette_overrides_are_exact_native_brushes_other_than_colour(self):
         cases = (

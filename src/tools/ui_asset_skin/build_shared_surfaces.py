@@ -10,7 +10,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageOps
-from settlement_surfaces import recruitment_portrait, rounded_header
+from settlement_surfaces import group_frame, info_header, recruitment_portrait, rounded_header
 
 
 def sha(path):
@@ -49,7 +49,11 @@ def paint(native, entry, panel, inner):
                                  'silhouette_feather_radius': 0.55,
                                  'alpha_cleanup': {'threshold': 128, 'feather_radius': 0.55}},
                          panel, inner)
-        return rounded_header(native, baseline)
+        return rounded_header(native, baseline, gilded=entry.get('gold_bevel', False))
+    if entry['profile'] == 'settlement_info_header':
+        return info_header(native, paint(native, {'profile': 'header'}, panel, inner))
+    if entry['profile'] == 'settlement_group_frame':
+        return group_frame(native)
     if entry['profile'] == 'recruitment_portrait':
         return recruitment_portrait(native)
     surface = inner.crop((16, 16, inner.width-16, inner.height-16))

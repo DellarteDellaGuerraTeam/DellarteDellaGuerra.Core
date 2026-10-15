@@ -11,7 +11,39 @@ def _curve(start, control1, control2, end, steps=96):
                   for axis in (0, 1)) for t in (i/steps for i in range(steps+1))]
 
 
-def rounded_header(native, baseline):
+def _metallic_path(image, points, width=4.8):
+    """Antialiased bronze edge, warm gold body and narrow pale highlight."""
+    scale = 4
+    overlay = Image.new('RGBA', (image.width*scale, image.height*scale))
+    draw = ImageDraw.Draw(overlay)
+    coordinates = [(round(x*scale), round(y*scale)) for x, y in points]
+    for thickness, color in ((width, '#69400E'), (width-0.8, '#B47A21'),
+                             (width-1.7, '#E5AE3F'), (width-2.8, '#F5D47B')):
+        draw.line(coordinates, fill=color, width=max(1, round(thickness*scale)), joint='curve')
+    draw.line([(round((x-0.45)*scale), round((y-0.45)*scale)) for x, y in points],
+              fill='#FFF0AB', width=2, joint='curve')
+    alpha = image.getchannel('A')
+    image.alpha_composite(overlay.resize(image.size, Image.Resampling.LANCZOS))
+    image.putalpha(alpha)
+    return image
+
+
+def info_header(native, baseline):
+    if native.size != (999, 100):
+        raise ValueError('Re-audit settlement info header geometry after native changes')
+    return _metallic_path(baseline.copy(), [(2, 2), (996, 2), (996, 85), (2, 85), (2, 2)])
+
+
+def group_frame(native):
+    if native.size != (375, 87):
+        raise ValueError('Re-audit settlement category frame geometry after native changes')
+    result = ImageOps.colorize(ImageOps.grayscale(native), '#1E160A', '#F1D17C').convert('RGBA')
+    result.putalpha(native.getchannel('A'))
+    contour = [(25, -1), (25, 12)] + _curve((25, 12), (25, 40), (45, 61), (75, 61))[1:]
+    return _metallic_path(result, contour + [(375, 61)])
+
+
+def rounded_header(native, baseline, gilded=False):
     """Replace the thresholded native corner with smooth, continuous gold strokes."""
     if native.size != (967, 168):
         raise ValueError('Re-audit settlement header geometry after native changes')
@@ -60,6 +92,9 @@ def rounded_header(native, baseline):
     result.putalpha(alpha)
     baseline = baseline.copy()
     baseline.paste(result.crop((0, 0, 100, native.height)), (0, 0))
+    if gilded:
+        contour = [(11, -1), (11, 94)] + _curve((11, 94), (11, 131), (31, 154), (65, 154))[1:]
+        _metallic_path(baseline, contour + [(967, 154)])
     return baseline
 
 
