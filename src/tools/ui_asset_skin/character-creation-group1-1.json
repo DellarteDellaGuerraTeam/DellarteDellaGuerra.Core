@@ -1,5 +1,5 @@
 {
-  "batch": "character-creation-group1-1-01",
+  "batch": "character-creation-group1-1-02",
   "sheet": "ui_group1_1",
   "module": "Native",
   "size": [4096, 4096],
@@ -11,8 +11,7 @@
       "profile": "row",
       "blue_palette": ["#061421", "#173F5D"],
       "border": 2,
-      "border_color": "#D8AB45FF",
-      "note": "Replace the remaining brown clan-name field with a compact navy field and a restrained gold edge."
+      "note": "Retain the navy name field and use the approved recruitment inner-frame gold bands instead of a flat muted ochre. Shared by the clan-name and review-name inputs."
     }
   ],
   "protected": [
