@@ -45,6 +45,8 @@ def nine_slice(image, size, edge=12):
 
 def paint(native, entry, panel, inner):
     # The PNGs are the already approved code-rendered art, not newly generated art.
+    if entry['profile'] == 'transparent_decoration':
+        return Image.new('RGBA', native.size)
     if entry['profile'] == 'gold_slider_frame':
         return gold_slider_frame(native)
     if entry['profile'] == 'settlement_rounded_header':

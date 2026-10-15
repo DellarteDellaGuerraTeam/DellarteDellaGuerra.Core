@@ -3,6 +3,8 @@ import json
 from pathlib import Path
 import unittest
 import xml.etree.ElementTree as ET
+from PIL import Image
+from build_shared_surfaces import paint
 
 HERE = Path(__file__).resolve().parent
 MODULES = HERE.parents[3]
@@ -12,7 +14,7 @@ class CraftingTownContracts(unittest.TestCase):
     def test_live_scope_and_protected_art(self):
         recipe = json.loads((HERE / 'crafting-surfaces.json').read_text())
         selected = {entry['name'] for entry in recipe['parts']}
-        self.assertEqual(len(selected), 25)
+        self.assertEqual(len(selected), 29)
         self.assertFalse(selected.intersection(recipe['protected']))
         self.assertFalse(recipe.get('brush_overrides'))
         docs = [p.read_text(encoding='utf-8-sig') for folder in ('Brushes', 'Prefabs')
@@ -34,7 +36,20 @@ class CraftingTownContracts(unittest.TestCase):
             self.assertTrue(entries[prefix + '_selected']['selected'])
         self.assertTrue(entries['tuple_refine_selected']['selected'])
         gold = {name for name, e in entries.items() if e['profile'] == 'recolor_gold'}
-        self.assertTrue(all('frame' in name or name == 'bottom_crafting' for name in gold))
+        self.assertTrue(all('frame' in name or name == 'bottom_crafting' or name.startswith('main_tab_') for name in gold))
+
+    def test_header_art_only_removed_and_all_tab_states_gold(self):
+        recipe = json.loads((HERE / 'crafting-surfaces.json').read_text())
+        entries = {e['name'].split('\\')[-1]: e for e in recipe['parts']}
+        header = entries['refine_panel_header']
+        native = Image.new('RGBA', (575, 51), '#FFFFFFFF')
+        cleared = paint(native, header, None, None)
+        self.assertEqual(cleared.size, native.size)
+        self.assertIsNone(cleared.getbbox())
+        prefab = ET.parse(MODULES / 'SandBox/GUI/Prefabs/Crafting/RefinementCategory.xml')
+        self.assertIsNotNone(prefab.find(".//*[@Sprite='Crafting\\refine_panel_header']/Children/TextWidget[@Text='@RefinementText']"))
+        for state in ('default', 'hovered', 'pressed', 'selected'):
+            self.assertEqual(entries['main_tab_' + state]['profile'], 'recolor_gold')
 
     def test_town_sheet_is_illustration_only(self):
         parts = [p for p in ET.parse(MODULES / 'SandBox/GUI/SandBoxSpriteData.xml').findall('./SpriteParts/SpritePart')
