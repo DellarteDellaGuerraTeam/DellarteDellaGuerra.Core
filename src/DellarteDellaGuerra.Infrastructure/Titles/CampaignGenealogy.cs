@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using DellarteDellaGuerra.Domain.Titles.Model;
@@ -13,9 +14,12 @@ namespace DellarteDellaGuerra.Infrastructure.Titles;
  */
 public class CampaignGenealogy : IGenealogy
 {
+    private readonly ConcurrentDictionary<string, Hero> _heroesById = new();
+    private TaleWorlds.CampaignSystem.Campaign? _heroesCampaign;
+
     public HeroNode? GetHero(string heroId)
     {
-        var hero = TaleWorlds.CampaignSystem.Campaign.Current?.CampaignObjectManager.Find<Hero>(heroId);
+        var hero = FindHero(heroId);
         if (hero is null) return null;
 
         return new HeroNode(
@@ -35,5 +39,26 @@ public class CampaignGenealogy : IGenealogy
     }
 
     public string? GetClanOf(string heroId)
-        => TaleWorlds.CampaignSystem.Campaign.Current?.CampaignObjectManager.Find<Hero>(heroId)?.Clan?.StringId;
+        => FindHero(heroId)?.Clan?.StringId;
+
+    // CampaignObjectManager.Find scans every dead and alive hero, and title queries resolve a holder per
+    // title. A found hero is reused while the manager still lists it: only UnregisterDeadHero drops a
+    // hero, and it clears IsReady, so a cleared flag falls back to the scan.
+    private Hero? FindHero(string heroId)
+    {
+        var campaign = TaleWorlds.CampaignSystem.Campaign.Current;
+        if (campaign is null) return null;
+        if (!ReferenceEquals(campaign, _heroesCampaign))
+        {
+            _heroesById.Clear();
+            _heroesCampaign = campaign;
+        }
+
+        if (_heroesById.TryGetValue(heroId, out var hero) && hero.IsReady) return hero;
+
+        hero = campaign.CampaignObjectManager.Find<Hero>(heroId);
+        if (hero is null) _heroesById.TryRemove(heroId, out _);
+        else _heroesById[heroId] = hero;
+        return hero;
+    }
 }
