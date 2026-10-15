@@ -98,6 +98,15 @@ class SettlementSurfaceContracts(unittest.TestCase):
                         self.assertTrue(any(0 < value < 255 for value in
                                             rendered_alpha.crop((8, 95, 70, 158)).getdata()))
                         self.assertEqual(rendered_alpha.getpixel((100, 100)), 255)
+                        # The inset motif must retain a bright gold core, not
+                        # disappear into a single muted antialiased pixel.
+                        for row in range(92, 104):
+                            cross_section = [rendered.getpixel((column, row))[:3]
+                                             for column in range(23, 28)]
+                            self.assertGreaterEqual(sum(red > 180 and green > 130 and red > blue
+                                                        for red, green, blue in cross_section), 2)
+                            self.assertTrue(any(red > 230 and green > 190
+                                                for red, green, blue in cross_section))
                         before_mask = native_alpha.point(lambda value: 255 if value >= 128 else 0)
                         after_mask = rendered_alpha.point(lambda value: 255 if value >= 128 else 0)
                         for first, second in ((before_mask, after_mask), (after_mask, before_mask)):

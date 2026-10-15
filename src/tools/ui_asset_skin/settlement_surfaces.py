@@ -80,7 +80,11 @@ def rounded_header(native, baseline, gilded=False):
     lower = [(16, 109)] + _curve((16, 109), (24, 113), (27, 112), (27, 121))[1:] + [(27, 132)]
     tail = [(32, 120)] + _curve((32, 120), (40, 138), (54, 148), (71, 150))[1:]
     for contour in (upper, lower, tail):
-        line(contour, 1.3, '#C5A352')
+        # Keep a solid gold core after UI downscaling, with the same warm edge
+        # and pale highlight as the outer bevel rather than a faint flat line.
+        line(contour, 3.2, '#69400E')
+        line(contour, 2.4, '#E5AE3F')
+        line([(x-0.3, y-0.3) for x, y in contour], 1.1, '#FFF0AB')
     strokes = strokes.resize(native.size, Image.Resampling.LANCZOS)
     result.alpha_composite(strokes)
     # Keep the opposite end and native straight-edge silhouette. Only the
