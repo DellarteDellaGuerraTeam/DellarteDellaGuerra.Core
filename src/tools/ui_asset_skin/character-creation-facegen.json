@@ -1,0 +1,36 @@
+{
+  "batch": "character-creation-facegen-01",
+  "sheet": "ui_facegen_1",
+  "module": "Native",
+  "size": [4096, 1024],
+  "native_atlas_sha256": "b1563c989f438a8a6027cc3f39193699bbda7c63d8a42816ae754cde59bd3da2",
+  "native_sprite_data_sha256": "9c1159dcebf04b6128110feb4973f40d5f8b5fadb9087a62a9c4010f48ae8875",
+  "parts": [
+    {"name": "FaceGen\\BodyBtn1", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18},
+    {"name": "FaceGen\\BodyBtn2", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#6B4208", "#FFE58A"]},
+    {"name": "FaceGen\\BodyBtn3", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#754A09", "#FFF0A0"]},
+    {"name": "FaceGen\\EyesBtn1", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18},
+    {"name": "FaceGen\\EyesBtn2", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#6B4208", "#FFE58A"]},
+    {"name": "FaceGen\\EyesBtn3", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#754A09", "#FFF0A0"]},
+    {"name": "FaceGen\\FaceBtn1", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18},
+    {"name": "FaceGen\\FaceBtn2", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#6B4208", "#FFE58A"]},
+    {"name": "FaceGen\\FaceBtn3", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#754A09", "#FFF0A0"]},
+    {"name": "FaceGen\\HairBtn1", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18},
+    {"name": "FaceGen\\HairBtn2", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#6B4208", "#FFE58A"]},
+    {"name": "FaceGen\\HairBtn3", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#754A09", "#FFF0A0"]},
+    {"name": "FaceGen\\MouthBtn1", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18},
+    {"name": "FaceGen\\MouthBtn2", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#6B4208", "#FFE58A"]},
+    {"name": "FaceGen\\MouthBtn3", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#754A09", "#FFF0A0"]},
+    {"name": "FaceGen\\NoseBtn1", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18},
+    {"name": "FaceGen\\NoseBtn2", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#6B4208", "#FFE58A"]},
+    {"name": "FaceGen\\NoseBtn3", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#754A09", "#FFF0A0"]},
+    {"name": "FaceGen\\TaintBtn1", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18},
+    {"name": "FaceGen\\TaintBtn2", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#6B4208", "#FFE58A"]},
+    {"name": "FaceGen\\TaintBtn3", "profile": "medallion", "gold_edge_width": 8, "native_center_inset": 18, "gold_palette": ["#754A09", "#FFF0A0"]}
+  ],
+  "protected": [
+    "FaceGen\\VoiceSampleButton",
+    "FaceGen\\property_slider_knob"
+  ],
+  "scope_note": "The seven three-state FaceGen category medallions receive navy centers and gold rims while their native semantic face/body artwork and alpha remain intact."
+}

@@ -1,0 +1,83 @@
+{
+  "batch": "character-creation-group1-2-01",
+  "sheet": "ui_group1_2",
+  "module": "Native",
+  "size": [4096, 4096],
+  "native_atlas_sha256": "8124787d5036687bc03029f6d120e2a586feb19c998a677ffec588507ddca375",
+  "native_sprite_data_sha256": "9c1159dcebf04b6128110feb4973f40d5f8b5fadb9087a62a9c4010f48ae8875",
+  "brush_overrides": [
+    {
+      "source": "DADGCharacterCreationSurface.xml",
+      "native": "Native/GUI/Brushes/CharacterCreation.xml"
+    },
+    {
+      "source": "DADGFaceGenCreationSurface.xml",
+      "native": "Native/GUI/Brushes/FaceGen.xml"
+    }
+  ],
+  "parts": [
+    {
+      "name": "General\\CharacterCreation\\card_large_gender",
+      "profile": "recolor_blue",
+      "blue_palette": ["#040D17", "#1D4E70"],
+      "note": "Retain the native large-card relief and alpha while replacing its brown surface with DADG navy."
+    },
+    {
+      "name": "General\\CharacterCreation\\card_large_gender_selected",
+      "profile": "card_selected",
+      "blue_palette": ["#061421", "#286C91"],
+      "gold_palette": ["#5A3105", "#FFE58A"],
+      "gold_edge_margin": 24,
+      "gold_luminance_threshold": 72,
+      "note": "Selected large cards keep a navy face and a brighter gold surround without altering the card geometry."
+    },
+    {
+      "name": "General\\CharacterCreation\\character_creation_panel_extension",
+      "profile": "header",
+      "blue_palette": ["#040D17", "#1B4D70"],
+      "border": 3,
+      "border_color": "#D8AB45FF",
+      "border_style": "silhouette",
+      "silhouette_feather_radius": 0.55,
+      "note": "Match the FaceGen extension strip to the navy panel and follow its native silhouette with gold."
+    },
+    {
+      "name": "General\\CharacterCreation\\character_creation_panel_extension_button",
+      "profile": "row",
+      "blue_palette": ["#061421", "#255F82"],
+      "border": 2,
+      "border_color": "#D8AB45FF",
+      "note": "Restyle the extension toggle as a small navy-and-gold control while retaining its dimensions."
+    },
+    {
+      "name": "General\\CharacterCreation\\focus_amount_frame",
+      "profile": "recolor_gold",
+      "gold_palette": ["#65400B", "#F1D06A"],
+      "note": "Bring the focus meter outline into the established DADG gold family."
+    },
+    {
+      "name": "General\\CharacterCreation\\stone_divider",
+      "profile": "recolor_gold",
+      "gold_palette": ["#4F3008", "#DDBB55"],
+      "note": "Replace the heavy brown divider pigment with muted gold while retaining the carved relief."
+    },
+    {
+      "name": "General\\CharacterCreation\\stone_divider_thin",
+      "profile": "recolor_gold",
+      "gold_palette": ["#4F3008", "#DDBB55"],
+      "note": "Use the same restrained gold treatment for the thin divider."
+    }
+  ],
+  "protected": [
+    "General\\CharacterCreation\\culture_flag_small",
+    "General\\CharacterCreation\\gender_symbol_female",
+    "General\\CharacterCreation\\facegen_card",
+    "General\\CharacterCreation\\facegen_card_selected",
+    "General\\CharacterCreation\\color_box",
+    "General\\CharacterCreation\\character_creation_scroll_gradient",
+    "SPGeneral\\SPOptions\\standart_slider_canvas",
+    "SPGeneral\\SPOptions\\standart_slider_fill",
+    "SPGeneral\\SPOptions\\standart_slider_frame"
+  ],
+  "scope_note": "Seven character-creation-only surfaces plus exact culture/FaceGen brush overrides. Culture art, swatches, gender symbols, layouts, TPAC and RuntimeDataCache remain untouched."
+}

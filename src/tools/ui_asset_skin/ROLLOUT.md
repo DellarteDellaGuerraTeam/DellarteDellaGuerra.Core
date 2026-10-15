@@ -392,3 +392,36 @@ The two source files were deployed and hash-verified on 2026-10-14. Backup and
 journal: `.codex-work/ui-asset-skin/shared-backup-20261014-213307/manifest.json`.
 The existing compiled package is deliberately excluded; re-import
 `ui_group1_2_tex` before runtime review.
+
+### Character Creation source batch
+
+The character-creation overhaul keeps every native prefab, binding, command,
+navigation target and sprite registration. It composes the previously deployed
+blue-and-gold outer panel, face-card and slider primitives with three focused
+source batches:
+
+- `ui_group1_1`: the remaining brown clan-name field becomes navy with a thin
+  gold edge.
+- `ui_group1_2`: large choice cards, the FaceGen extension strip and button,
+  focus frame and stone dividers adopt the DADG navy/gold palette. Exact brush
+  overrides give culture choices and generic FaceGen buttons the same stateful
+  treatment without copying any prefab.
+- `ui_facegen_1`: the seven three-state category medallions gain navy centres
+  and gold rims while retaining their native body/face/eyes/hair/mouth/nose/
+  taint artwork and native alpha.
+
+Culture illustrations, banners, gender symbols, colour swatches, action icons,
+voice artwork and the property-slider knob are explicitly protected. The source
+batch has no NavalDLC dependency, so it works with or without War Sails. All 52
+Bannerlord-free UI tests pass and every generated atlas verifies unchanged
+unselected pixels, preserved geometry/registration and declared alpha contracts.
+
+Deployed source-only on 2026-10-15. Backups:
+
+- `.codex-work/ui-asset-skin/shared-backup-20261015-001125/manifest.json`
+- `.codex-work/ui-asset-skin/shared-backup-20261015-001142/manifest.json`
+- `.codex-work/ui-asset-skin/shared-backup-20261015-001154/manifest.json`
+
+Re-import `ui_group1_1_tex`, `ui_group1_2_tex` and `ui_facegen_1_tex` in the
+Bannerlord editor before runtime review. TPAC and RuntimeDataCache files are not
+authored or committed by this source slice.

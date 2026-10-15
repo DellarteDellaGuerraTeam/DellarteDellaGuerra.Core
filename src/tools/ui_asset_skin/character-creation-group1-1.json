@@ -1,0 +1,25 @@
+{
+  "batch": "character-creation-group1-1-01",
+  "sheet": "ui_group1_1",
+  "module": "Native",
+  "size": [4096, 4096],
+  "native_atlas_sha256": "2f7161c053a4b7bde0a7cf6944c6c523e631b6e91b6b76ebcaaaee844bda0001",
+  "native_sprite_data_sha256": "9c1159dcebf04b6128110feb4973f40d5f8b5fadb9087a62a9c4010f48ae8875",
+  "parts": [
+    {
+      "name": "General\\CharacterCreation\\name_input_area",
+      "profile": "row",
+      "blue_palette": ["#061421", "#173F5D"],
+      "border": 2,
+      "border_color": "#D8AB45FF",
+      "note": "Replace the remaining brown clan-name field with a compact navy field and a restrained gold edge."
+    }
+  ],
+  "protected": [
+    "General\\CharacterCreation\\character_creation_panel",
+    "General\\CharacterCreation\\character_creation_background_gradient",
+    "General\\CharacterCreation\\gender_symbol_male",
+    "General\\CharacterCreation\\increasing_icon"
+  ],
+  "scope_note": "One character-creation-only field on the already deployed ui_group1_1 source atlas. No layout, semantic icon, TPAC or RuntimeDataCache change."
+}

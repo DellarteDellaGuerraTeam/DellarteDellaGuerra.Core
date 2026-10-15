@@ -1,0 +1,27 @@
+<Brushes>
+  <Brush Name="CharacterCreation.Culture.Button" TransitionDuration="0.22">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="rounded_canvas_9" Color="#0A2942FF" />
+    </Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.85" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.2" AlphaFactor="1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.8" AlphaFactor="0.8" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" ColorFactor="1.1" AlphaFactor="1" /></Style>
+    </Styles>
+    <SoundProperties>
+      <EventSounds><EventSound EventName="Click" Audio="choice" /></EventSounds>
+    </SoundProperties>
+  </Brush>
+  <Brush Name="CharacterCreation.Culture.Button.Frame" TransitionDuration="0.22">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="rounded_frame_9" Color="#D8AB45FF" />
+    </Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.75" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.15" AlphaFactor="1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.8" AlphaFactor="0.8" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" ColorFactor="1.25" AlphaFactor="1" /></Style>
+    </Styles>
+  </Brush>
+</Brushes>

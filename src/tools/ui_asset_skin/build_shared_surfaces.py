@@ -67,7 +67,7 @@ def paint(native, entry, panel, inner):
     elif entry['profile'] == 'framed_surface':
         result = nine_slice(inner, native.size)
     elif entry['profile'] in ('row', 'header', 'recolor_blue', 'recolor_gold',
-                              'card_selected', 'portrait_slot'):
+                              'card_selected', 'portrait_slot', 'medallion'):
         # Retain native relief/shading without retaining its brown pigment.
         grey = ImageOps.grayscale(native)
         if entry['profile'] == 'recolor_gold':
@@ -77,6 +77,30 @@ def paint(native, entry, panel, inner):
             bright = entry.get('selected', False) or entry['profile'] == 'header'
             shadow, highlight = entry.get('blue_palette', ['#07172a', '#2870a9' if bright else '#174467'])
             result = ImageOps.colorize(grey, shadow, highlight).convert('RGBA')
+        if entry['profile'] == 'medallion':
+            edge = entry.get('gold_edge_width', 8)
+            center_inset = entry.get('native_center_inset', 18)
+            if edge < 1 or center_inset <= edge or center_inset * 2 >= min(native.size):
+                raise ValueError('Invalid medallion geometry')
+            rim = Image.new('L', native.size, 0)
+            rim_draw = ImageDraw.Draw(rim)
+            bounds = (1, 1, native.width - 2, native.height - 2)
+            rim_draw.ellipse(bounds, fill=255)
+            rim_draw.ellipse((edge, edge, native.width - edge - 1,
+                              native.height - edge - 1), fill=0)
+            rim = ImageChops.multiply(rim, native_alpha)
+            gold_shadow, gold_highlight = entry.get(
+                'gold_palette', ['#65400B', '#F1D06A'])
+            gold = ImageOps.colorize(grey, gold_shadow, gold_highlight).convert('RGBA')
+            result.paste(gold, (0, 0), rim)
+            center = Image.new('L', native.size, 0)
+            ImageDraw.Draw(center).ellipse(
+                (center_inset, center_inset,
+                 native.width - center_inset - 1, native.height - center_inset - 1),
+                fill=255)
+            center = center.filter(ImageFilter.GaussianBlur(0.55))
+            center = ImageChops.multiply(center, native_alpha)
+            result.paste(native, (0, 0), center)
         if entry['profile'] == 'card_selected':
             margin = entry.get('gold_edge_margin', 22)
             if margin < 1 or margin * 2 >= min(native.size):

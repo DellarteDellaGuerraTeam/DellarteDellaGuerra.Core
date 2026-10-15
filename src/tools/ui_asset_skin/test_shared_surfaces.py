@@ -29,8 +29,9 @@ class SharedSurfacesTests(unittest.TestCase):
         alpha.putdata([i % 256 for i in range(64 * 64)])
         native.putalpha(alpha)
         source = Image.new('RGBA', (80, 80), '#123456')
-        for profile in ('inner_surface', 'character_panel', 'framed_surface', 'row', 'header', 'recolor_blue', 'recolor_gold'):
-            result = paint(native, {'profile': profile, 'inner_box': [12, 12, 52, 52]}, source, source)
+        for profile in ('inner_surface', 'character_panel', 'framed_surface', 'row', 'header', 'recolor_blue', 'recolor_gold', 'medallion'):
+            result = paint(native, {'profile': profile, 'inner_box': [12, 12, 52, 52],
+                                    'gold_edge_width': 6, 'native_center_inset': 16}, source, source)
             self.assertEqual(result.size, native.size)
             self.assertEqual(result.getchannel('A').tobytes(), alpha.tobytes())
 
@@ -42,6 +43,22 @@ class SharedSurfacesTests(unittest.TestCase):
         self.assertNotEqual(normal.tobytes(), selected.tobytes())
         self.assertEqual(normal.getchannel('A').tobytes(), selected.getchannel('A').tobytes())
         self.assertGreater(selected.getpixel((60, 32))[2], normal.getpixel((60, 32))[2])
+
+    def test_medallion_recolors_rim_and_preserves_semantic_center(self):
+        source = Image.new('RGBA', (80, 80), '#e7bc50')
+        native = Image.new('RGBA', (84, 84), '#56391f')
+        ImageDraw.Draw(native).ellipse((1, 1, 82, 82), fill='#4a4038')
+        ImageDraw.Draw(native).ellipse((22, 22, 61, 61), fill='#ef7b12')
+        alpha = Image.new('L', native.size, 0)
+        ImageDraw.Draw(alpha).ellipse((1, 1, 82, 82), fill=255)
+        native.putalpha(alpha)
+        result = paint(native, {'profile': 'medallion',
+                                'gold_edge_width': 8,
+                                'native_center_inset': 18}, source, source)
+        self.assertGreater(result.getpixel((42, 3))[0], result.getpixel((42, 3))[2])
+        self.assertGreater(result.getpixel((42, 14))[2], result.getpixel((42, 14))[0])
+        self.assertEqual(result.getpixel((42, 42)), native.getpixel((42, 42)))
+        self.assertEqual(result.getchannel('A').tobytes(), alpha.tobytes())
 
     def test_recolour_can_preserve_bright_native_detail_inside_a_declared_box(self):
         source = Image.new('RGBA', (80, 80), '#e7bc50')
@@ -148,6 +165,9 @@ class SharedSurfacesTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             paint(source, {'profile': 'header', 'alpha_cleanup': {'threshold': 128}},
                   source, source)
+        with self.assertRaises(ValueError):
+            paint(source, {'profile': 'medallion', 'gold_edge_width': 20,
+                           'native_center_inset': 18}, source, source)
 
 
 if __name__ == '__main__':
