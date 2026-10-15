@@ -1,13 +1,15 @@
 <Brushes>
   <Brush Name="FaceGen.Generic.Button">
     <Layers>
-      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#0A2942FF" />
-      <BrushLayer Name="DADGFrame" Sprite="gold_frame_9" Color="#D8AB45FF" />
+      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#071C2EFF" />
+      <!-- The existing gold artwork has 5px outer padding (6px at the bottom).
+           Compensate in the brush, keeping the native button/text layout intact. -->
+      <BrushLayer Name="DADGFrame" Sprite="gold_frame_9" Color="#FFFFFFFF" ExtendLeft="5" ExtendTop="5" ExtendRight="5" ExtendBottom="6" />
     </Layers>
     <Styles>
       <Style Name="Default">
         <BrushLayer Name="Default" AlphaFactor="0.9" />
-        <BrushLayer Name="DADGFrame" ColorFactor="0.9" />
+        <BrushLayer Name="DADGFrame" ColorFactor="1" />
       </Style>
       <Style Name="Hovered">
         <BrushLayer Name="Default" ColorFactor="1.2" AlphaFactor="1" />
