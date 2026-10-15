@@ -1,0 +1,16 @@
+{
+  "batch": "list-canvas-surfaces-01",
+  "sheet": "ui_group1_1",
+  "module": "Native",
+  "native_atlas_sha256": "2f7161c053a4b7bde0a7cf6944c6c523e631b6e91b6b76ebcaaaee844bda0001",
+  "native_sprite_data_sha256": "9c1159dcebf04b6128110feb4973f40d5f8b5fadb9087a62a9c4010f48ae8875",
+  "parts": [
+    {
+      "name": "SPGeneral\\Frame1.Broken\\canvas",
+      "profile": "recolor_blue",
+      "blue_palette": ["#030A12", "#10283C"]
+    }
+  ],
+  "protected": ["SPGeneral\\Frame1.Broken\\frame"],
+  "scope_note": "Restore the shared party/inventory/character-list canvas from pristine native texture, removing source red markings. Near-black navy preserves subtle native texture and alpha. Separate gold frame and all rows are untouched."
+}
