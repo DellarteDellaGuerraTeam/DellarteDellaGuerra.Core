@@ -44,8 +44,17 @@ class ClanNamingBannerTests(unittest.TestCase):
         reference = encyclopedia.find("Brush[@Name='Encyclopedia.Clan.SubElement.Banner']/Layers/BrushLayer")
         self.assertEqual(layer.get('Sprite'), reference.get('Sprite'))
         self.assertEqual(layer.get('Color'), '#FFFFFFFF')
-        self.assertEqual(layer.get('ColorFactor'), '1')
+        self.assertEqual(layer.get('ColorFactor'), '0.5')
         self.assertEqual((layer.get('OverlayXOffset'), layer.get('OverlayYOffset')), ('0', '0'))
+
+    def test_overlay_base_preserves_dynamic_banner_channels_instead_of_turning_white(self):
+        # Native Shaders/Sources/two_dimensional_ui.rs: blendOverlay2.
+        # The white mask is multiplied by ColorFactor before this blend.
+        base = float(self.brushes.find('Brush/Layers/BrushLayer').get('ColorFactor'))
+        for channel in (0.0, 0.08, 0.25, 0.5, 0.8, 1.0):
+            result = (2 * base * channel if base < 0.5
+                      else 1 - 2 * (1 - base) * (1 - channel))
+            self.assertAlmostEqual(result, channel)
 
 
 if __name__ == '__main__':

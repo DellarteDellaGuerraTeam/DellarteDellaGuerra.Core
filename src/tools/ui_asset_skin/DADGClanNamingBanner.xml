@@ -1,8 +1,8 @@
 <Brushes>
-  <!-- Same scalable square mask as DADG's encyclopedia banners, without their row dimming. -->
+  <!-- Overlay blending needs a mid-grey base: white erases the dynamic banner colours. -->
   <Brush Name="DADG.ClanNaming.SquareBanner">
     <Layers>
-      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" OverlayXOffset="0" OverlayYOffset="0" Color="#FFFFFFFF" ColorFactor="1" />
+      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" OverlayXOffset="0" OverlayYOffset="0" Color="#FFFFFFFF" ColorFactor="0.5" />
     </Layers>
   </Brush>
 </Brushes>
