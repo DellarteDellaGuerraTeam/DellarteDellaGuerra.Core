@@ -1,6 +1,7 @@
 <Brushes>
   <!-- Shared portrait cards keep native behavior. Party retains its translucent
-       category tint; character/notable slots use an opaque DADG navy fill. -->
+       category tint; character/notable slots share the recruitment gradient
+       with the existing empty portrait-slot sprite. -->
   <Brush Name="GameMenu.Tableau.Background.Party">
     <Layers>
       <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#2870A922"/>
@@ -25,7 +26,7 @@
   </Brush>
   <Brush Name="GameMenu.Tableau.Background.Character">
     <Layers>
-      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#030B16FF"/>
+      <BrushLayer Name="Default" Sprite="SPGeneral\MapOverlay\army_bar_portrait_slot" Color="#FFFFFFFF"/>
     </Layers>
     <Styles>
       <Style Name="Default">

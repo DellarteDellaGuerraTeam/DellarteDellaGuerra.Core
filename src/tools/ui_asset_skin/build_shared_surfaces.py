@@ -10,6 +10,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageOps
+from settlement_surfaces import recruitment_portrait, rounded_header
 
 
 def sha(path):
@@ -43,6 +44,14 @@ def nine_slice(image, size, edge=12):
 
 def paint(native, entry, panel, inner):
     # The PNGs are the already approved code-rendered art, not newly generated art.
+    if entry['profile'] == 'settlement_rounded_header':
+        baseline = paint(native, {'profile': 'header', 'border_style': 'silhouette',
+                                 'silhouette_feather_radius': 0.55,
+                                 'alpha_cleanup': {'threshold': 128, 'feather_radius': 0.55}},
+                         panel, inner)
+        return rounded_header(native, baseline)
+    if entry['profile'] == 'recruitment_portrait':
+        return recruitment_portrait(native)
     surface = inner.crop((16, 16, inner.width-16, inner.height-16))
     native_alpha = native.getchannel('A')
     result_alpha = native_alpha

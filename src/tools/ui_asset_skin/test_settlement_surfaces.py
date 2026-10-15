@@ -5,9 +5,10 @@ from pathlib import Path
 import unittest
 import xml.etree.ElementTree as ET
 
-from PIL import Image
+from PIL import Image, ImageChops, ImageFilter
 
 from build_shared_surfaces import check_selection, paint
+from settlement_surfaces import recruitment_portrait
 
 
 HERE = Path(__file__).resolve().parent
@@ -50,19 +51,12 @@ class SettlementSurfaceContracts(unittest.TestCase):
         self.assertEqual(selected, set(expected))
         portrait_header = next(entry for entry in self.header['parts']
                                if entry['name'].endswith('settlement_parties_characters_header'))
-        self.assertEqual(portrait_header.get('border_style'), 'silhouette')
-        self.assertEqual(portrait_header.get('silhouette_feather_radius'), 0.55)
-        self.assertEqual(portrait_header.get('alpha_cleanup'),
-                         {'threshold': 128, 'feather_radius': 0.55})
-        self.assertEqual(portrait_header.get('native_contour'),
-                         {'box': [0, 70, 68, 168], 'luminance_threshold': 120,
-                          'max_depth': 24, 'feather_radius': 0.55})
+        self.assertEqual(portrait_header['profile'], 'settlement_rounded_header')
         portrait_slot = next(entry for entry in self.header['parts']
                              if entry['name'].endswith('army_bar_portrait_slot'))
         self.assertEqual(portrait_slot,
                          {'name': 'SPGeneral\\MapOverlay\\army_bar_portrait_slot',
-                          'profile': 'portrait_slot',
-                          'blue_palette': ['#01040A', '#0B284B']})
+                          'profile': 'recruitment_portrait'})
         for recipe in (self.header, self.frame):
             check_selection(recipe)
         for name, (category, sheet_id) in expected.items():
@@ -97,21 +91,34 @@ class SettlementSurfaceContracts(unittest.TestCase):
                     self.assertEqual(rendered.size, (w, h))
                     rendered_alpha = rendered.getchannel('A')
                     native_alpha = native.getchannel('A')
-                    if entry.get('alpha_cleanup'):
+                    if entry['profile'] == 'settlement_rounded_header':
                         self.assertNotEqual(rendered_alpha.tobytes(), native_alpha.tobytes())
                         self.assertEqual(rendered_alpha.getpixel((4, 110)), 0)
                         self.assertEqual(rendered_alpha.getpixel((30, 155)), 0)
-                        self.assertTrue(0 < rendered_alpha.getpixel((11, 110)) < 255)
+                        self.assertTrue(any(0 < value < 255 for value in
+                                            rendered_alpha.crop((8, 95, 70, 158)).getdata()))
                         self.assertEqual(rendered_alpha.getpixel((100, 100)), 255)
+                        before_mask = native_alpha.point(lambda value: 255 if value >= 128 else 0)
+                        after_mask = rendered_alpha.point(lambda value: 255 if value >= 128 else 0)
+                        for first, second in ((before_mask, after_mask), (after_mask, before_mask)):
+                            outside = ImageChops.multiply(
+                                first, ImageChops.invert(second.filter(ImageFilter.MaxFilter(5))))
+                            self.assertIsNone(outside.getbbox(), 'Silhouette moved more than two native pixels')
+                        baseline = paint(native, {'profile': 'header', 'border_style': 'silhouette',
+                                                  'silhouette_feather_radius': 0.55,
+                                                  'alpha_cleanup': {'threshold': 128, 'feather_radius': 0.55}},
+                                         panel, inner)
+                        self.assertEqual(rendered.crop((100, 0, w, h)).tobytes(),
+                                         baseline.crop((100, 0, w, h)).tobytes())
                     else:
                         self.assertEqual(rendered_alpha.tobytes(), native_alpha.tobytes())
                     self.assertNotEqual(rendered.tobytes(), native.tobytes())
-                    if entry['profile'] == 'portrait_slot':
+                    if entry['profile'] == 'recruitment_portrait':
                         red, green, blue, alpha = rendered.getpixel((w // 2, h // 2))
                         self.assertEqual(alpha, 255)
-                        self.assertLessEqual(red, 8)
-                        self.assertLessEqual(green, 18)
-                        self.assertLessEqual(blue, 36)
+                        self.assertLessEqual(red, 12)
+                        self.assertLessEqual(green, 32)
+                        self.assertLessEqual(blue, 56)
                         self.assertGreater(blue, green)
 
     def test_palette_overrides_are_exact_native_brushes_other_than_colour(self):
@@ -123,7 +130,7 @@ class SettlementSurfaceContracts(unittest.TestCase):
             (self.native_game_menu, self.tableau_override,
              'GameMenu.Tableau.Background.Party', '#c6700022', '#2870A922'),
             (self.native_game_menu, self.tableau_override,
-             'GameMenu.Tableau.Background.Character', '#A9A10022', '#030B16FF'),
+             'GameMenu.Tableau.Background.Character', '#A9A10022', '#FFFFFFFF'),
         )
         for native_root, override_root, name, before, after in cases:
             with self.subTest(brush=name):
@@ -131,6 +138,8 @@ class SettlementSurfaceContracts(unittest.TestCase):
                 layer = expected.find('Layers/BrushLayer')
                 self.assertEqual(layer.get('Color'), before)
                 layer.set('Color', after)
+                if name == 'GameMenu.Tableau.Background.Character':
+                    layer.set('Sprite', 'SPGeneral\\MapOverlay\\army_bar_portrait_slot')
                 self.assertEqual(tree(expected), tree(override_root.find(f"Brush[@Name='{name}']")))
 
     def test_character_portrait_fill_is_opaque_dadg_navy(self):
@@ -138,7 +147,9 @@ class SettlementSurfaceContracts(unittest.TestCase):
             "Brush[@Name='GameMenu.Tableau.Background.Character']")
         party = self.tableau_override.find(
             "Brush[@Name='GameMenu.Tableau.Background.Party']")
-        self.assertEqual(character.find('Layers/BrushLayer').get('Color'), '#030B16FF')
+        self.assertEqual(character.find('Layers/BrushLayer').get('Color'), '#FFFFFFFF')
+        self.assertEqual(character.find('Layers/BrushLayer').get('Sprite'),
+                         'SPGeneral\\MapOverlay\\army_bar_portrait_slot')
         self.assertEqual(party.find('Layers/BrushLayer').get('Color'), '#2870A922')
         self.assertEqual(
             [style.get('Name') for style in character.findall('Styles/Style')],
@@ -146,6 +157,16 @@ class SettlementSurfaceContracts(unittest.TestCase):
         self.assertEqual(
             [layer.get('ColorFactor') for layer in character.findall('Styles/Style/BrushLayer')],
             [None, '2', '0.8', '0.2', '0.6'])
+
+    def test_portrait_pixels_are_the_approved_recruitment_gradient_without_gold(self):
+        owner = Image.open(MODULES / 'DellarteDellaGuerraMap/GUI/DadgRecruitmentSpriteParts/'
+                           'ui_dadg_recruitment/DADG/Recruitment/owner.png').convert('RGBA')
+        native = Image.new('RGBA', (141, 102), 'white')
+        expected = owner.crop((2, 2, owner.width-2, owner.height-2)).resize(
+            native.size, Image.Resampling.LANCZOS)
+        actual = recruitment_portrait(native)
+        self.assertEqual(actual.tobytes(), expected.tobytes())
+        self.assertTrue(all(blue > green > red for red, green, blue, alpha in actual.getdata()))
 
     def test_settlement_actions_and_portrait_commands_remain_native(self):
         game_menu_item = ET.parse(MODULES / 'Native/GUI/Prefabs/GameMenu/GameMenuItem.xml')
