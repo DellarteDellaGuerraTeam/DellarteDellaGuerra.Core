@@ -1,0 +1,8 @@
+<Brushes>
+  <!-- Same scalable square mask as DADG's encyclopedia banners, without their row dimming. -->
+  <Brush Name="DADG.ClanNaming.SquareBanner">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" OverlayXOffset="0" OverlayYOffset="0" Color="#FFFFFFFF" ColorFactor="1" />
+    </Layers>
+  </Brush>
+</Brushes>
