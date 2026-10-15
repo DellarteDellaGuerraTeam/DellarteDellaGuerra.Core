@@ -89,6 +89,7 @@ class InventoryPartySurfaceTests(unittest.TestCase):
             ordinary = brushes[f'Inventory.Tuple.{side}']
             expected = copy.deepcopy(ordinary)
             expected.find('./Layers/BrushLayer').set('Color', '#2870A9FF')
+            expected.find("./Styles/Style[@Name='Default']/BrushLayer").set('Color', '#2E81C2FF')
             self.assertEqual(tree(expected), tree(override_root.find(
                 f"Brush[@Name='Inventory.Tuple.{side}']")))
             styles = {style.get('Name'): style.find('BrushLayer') for style in ordinary.findall('./Styles/Style')}
@@ -102,6 +103,17 @@ class InventoryPartySurfaceTests(unittest.TestCase):
             layers = {layer.get('Name'): layer for layer in brush.findall('./Layers/BrushLayer')}
             self.assertEqual(layers['Default'].get('Sprite'), f'Inventory\\mode_{stem}')
             self.assertEqual(layers['Highlighted'].get('Sprite'), f'Inventory\\mode_{stem}_highlighted')
+
+    def test_normal_row_tint_is_about_fifteen_percent_brighter(self):
+        brushes = ET.parse(RECIPES / 'DADGInventoryTuple.xml')
+        for brush in brushes.findall('Brush'):
+            base = brush.find('./Layers/BrushLayer').get('Color')
+            normal = brush.find("./Styles/Style[@Name='Default']/BrushLayer").get('Color')
+            for offset in (1, 3, 5):
+                ratio = int(normal[offset:offset + 2], 16) / int(base[offset:offset + 2], 16)
+                self.assertAlmostEqual(ratio, 1.15, delta=0.01)
+            for state in ('Hovered', 'Pressed', 'Selected'):
+                self.assertIsNone(brush.find(f"./Styles/Style[@Name='{state}']/BrushLayer").get('Color'))
 
     def test_inventory_states_remain_distinct_with_native_alpha(self):
         atlas = Image.open(ROOT / '.codex-work/ui-migration/compiled/SandBox/ui_inventory_1.png').convert('RGBA')
