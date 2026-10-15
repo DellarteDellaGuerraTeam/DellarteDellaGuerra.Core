@@ -1,5 +1,5 @@
 {
-  "batch": "banner-editor-surfaces-02",
+  "batch": "banner-editor-surfaces-03",
   "sheet": "ui_group1_2",
   "module": "Native",
   "size": [4096, 4096],
@@ -12,13 +12,13 @@
     {
       "name": "General\\CharacterCreation\\facegen_card",
       "profile": "recolor_blue",
-      "blue_palette": ["#07182B", "#34789A"],
-      "note": "Shared sigil/face card: retain native rounded relief and alpha while replacing the brown surface with DADG navy."
+      "blue_palette": ["#040F1D", "#234E69"],
+      "note": "Shared sigil/face card: darker DADG navy separates the heraldry from the surrounding blue panel. Retain native rounded relief and alpha; also affects FaceGen card consumers."
     },
     {
       "name": "General\\CharacterCreation\\facegen_card_selected",
       "profile": "card_selected",
-      "blue_palette": ["#07182B", "#34789A"],
+      "blue_palette": ["#040F1D", "#234E69"],
       "gold_palette": ["#5A3105", "#FFE58A"],
       "gold_edge_margin": 22,
       "gold_luminance_threshold": 78,

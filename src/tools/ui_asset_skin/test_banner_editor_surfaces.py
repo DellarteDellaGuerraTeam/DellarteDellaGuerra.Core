@@ -68,6 +68,31 @@ class BannerEditorSurfaceContracts(unittest.TestCase):
             self.assertNotEqual(result.tobytes(), native.tobytes())
             rendered[entry['name']] = result
 
+            if entry['name'].startswith('General\\CharacterCreation\\facegen_card'):
+                previous = dict(entry, blue_palette=['#07182B', '#34789A'])
+                before = paint(native, previous, panel, inner)
+                # Both card states keep a visibly navy interior but separate it
+                # from the lighter blue surrounding panel. Do not dim heraldry.
+                box = (45, 45, 95, 95)
+                before_mean = ImageStat.Stat(before.crop(box)).mean[:3]
+                after_mean = ImageStat.Stat(result.crop(box)).mean[:3]
+                self.assertLess(after_mean[2], before_mean[2] * 0.75)
+                self.assertGreater(after_mean[2], 25)
+                self.assertGreater(after_mean[2], after_mean[0] * 2)
+                if entry['profile'] == 'card_selected':
+                    # Solid bright rim stays exact; the soft transition can
+                    # blend with the newly darker blue underneath it.
+                    grey = native.convert('L')
+                    margin = entry['gold_edge_margin']
+                    gold_pixels = [(before.getpixel((x, y)), result.getpixel((x, y)))
+                                   for y in range(native.height) for x in range(native.width)
+                                   if (x < margin or x >= native.width - margin or
+                                       y < margin or y >= native.height - margin)
+                                   and grey.getpixel((x, y)) >=
+                                   entry['gold_luminance_threshold'] + 51]
+                    self.assertGreater(len(gold_pixels), 100)
+                    self.assertTrue(all(old == new for old, new in gold_pixels))
+
         card = rendered['General\\CharacterCreation\\facegen_card']
         card_mean = ImageStat.Stat(card, card.getchannel('A')).mean[:3]
         self.assertGreater(card_mean[2], card_mean[0] * 1.35)
