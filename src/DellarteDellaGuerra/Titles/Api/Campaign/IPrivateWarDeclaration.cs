@@ -43,6 +43,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
          *  Opens the war. The supporter sets name the clans that pledged to a side against what the
          *  feudal hierarchy alone would put them on — a vassal defecting from its liege, or an
          *  uninvolved clan rallying to a principal. Empty sets leave every side to the hierarchy.
+         *  The foreign supporters, those of either set from outside the principals' kingdom, fight
+         *  alone: their vassals are not brought in with them.
          * </summary>
          */
         void Declare(
@@ -52,7 +54,31 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             string mainGoalSettlementId,
             float day,
             IReadOnlyCollection<string> attackerSupporters,
-            IReadOnlyCollection<string> defenderSupporters);
+            IReadOnlyCollection<string> defenderSupporters,
+            IReadOnlyCollection<string> foreignSupporters);
+
+        /**
+         * <summary>
+         *  Whether the clan fought on the attacker's side of the war, by pledge or through its
+         *  liege. Answers for a war that has already ended.
+         * </summary>
+         */
+        bool IsOnAttackerSide(string warId, string clanId);
+
+        /**
+         * <summary>
+         *  Every claim war still being fought, with the clan it was declared against.
+         * </summary>
+         */
+        IReadOnlyList<ActiveClaimWar> GetActiveClaimWars();
+
+        /**
+         * <summary>
+         *  Ends the war in a white peace through the mechanism's own resolution, so captured fiefs
+         *  revert and <see cref="WarConcluded"/> is raised as for any other ending.
+         * </summary>
+         */
+        void EndInWhitePeace(string warId);
 
         /**
          * <summary>
@@ -68,5 +94,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
      *  defender victory and for a white peace alike: in both the claim went unwon.
      * </summary>
      */
-    public record PrivateWarConclusion(string AttackerClanId, string DefenderClanId, string TitleId, bool AttackerWon);
+    public record PrivateWarConclusion(string WarId, string AttackerClanId, string DefenderClanId, string TitleId, bool AttackerWon);
+
+    public record ActiveClaimWar(string WarId, string DefenderClanId, string TitleId);
 }

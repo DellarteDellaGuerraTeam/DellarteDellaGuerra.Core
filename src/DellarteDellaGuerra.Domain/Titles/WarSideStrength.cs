@@ -17,7 +17,8 @@ namespace DellarteDellaGuerra.Domain.Titles
      *  the defender further up fights for the attacker. A clan under neither counts for
      *  neither. Supporters are checked at every step of that walk, so a clan that pledged
      *  to a side brings its own vassals with it, and a defecting vassal takes its subtree
-     *  out of its liege's total.
+     *  out of its liege's total. A foreign supporter, from outside the principals' kingdom,
+     *  counts only for itself: its vassals walk on past it.
      * </remarks>
      */
     public static class WarSideStrength
@@ -28,7 +29,8 @@ namespace DellarteDellaGuerra.Domain.Titles
             string attackerClanId,
             string defenderClanId,
             IReadOnlyCollection<string> attackerSupporters,
-            IReadOnlyCollection<string> defenderSupporters)
+            IReadOnlyCollection<string> defenderSupporters,
+            IReadOnlyCollection<string>? foreignSupporters = null)
         {
             float attacker = 0f;
             float defender = 0f;
@@ -36,7 +38,7 @@ namespace DellarteDellaGuerra.Domain.Titles
             foreach (var entry in strengthByClanId)
             {
                 string? side = ResolveSide(
-                    entry.Key, getSuzerain, attackerClanId, defenderClanId, attackerSupporters, defenderSupporters);
+                    entry.Key, getSuzerain, attackerClanId, defenderClanId, attackerSupporters, defenderSupporters, foreignSupporters);
                 if (side == attackerClanId) attacker += entry.Value;
                 else if (side == defenderClanId) defender += entry.Value;
             }
@@ -56,7 +58,8 @@ namespace DellarteDellaGuerra.Domain.Titles
             string attackerClanId,
             string defenderClanId,
             IReadOnlyCollection<string> attackerSupporters,
-            IReadOnlyCollection<string> defenderSupporters)
+            IReadOnlyCollection<string> defenderSupporters,
+            IReadOnlyCollection<string>? foreignSupporters = null)
         {
             var visited = new HashSet<string>();
             string? current = clanId;
@@ -64,8 +67,9 @@ namespace DellarteDellaGuerra.Domain.Titles
             // The chain is authored data, so it can loop; Add() failing ends the walk.
             while (current != null && visited.Add(current))
             {
-                if (current == attackerClanId || attackerSupporters.Contains(current)) return attackerClanId;
-                if (current == defenderClanId || defenderSupporters.Contains(current)) return defenderClanId;
+                bool supports = current == clanId || foreignSupporters == null || !foreignSupporters.Contains(current);
+                if (current == attackerClanId || supports && attackerSupporters.Contains(current)) return attackerClanId;
+                if (current == defenderClanId || supports && defenderSupporters.Contains(current)) return defenderClanId;
                 current = getSuzerain(current);
             }
 

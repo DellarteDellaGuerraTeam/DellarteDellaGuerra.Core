@@ -58,6 +58,48 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             var revert = Assert.Single(plan.Reverts);
             Assert.Equal("town_a", revert.SettlementId);
             Assert.Equal("A", revert.RevertToClanId);
+            Assert.False(plan.Prize.HandOverSettlement); // A already holds it
+        }
+
+        [Fact]
+        public void Execute_AttackerVictory_GoalHeldByAttackerSideClan_IsHandedToThePrincipal()
+        {
+            // S, an ally or vassal of A, took the goal. A fought the war for it, so it moves to A.
+            var snapshot = new Dictionary<string, string> { ["settlement_goal"] = "D" };
+            var war = PrivateWarTestData.War(attacker: "A", defender: "D", mainGoal: "settlement_goal", fiefSnapshot: snapshot);
+            var currentOwners = new Dictionary<string, string> { ["settlement_goal"] = "S" };
+            Func<string, WarSide?> sides = clan => clan == "S" ? WarSide.Attacker : TwoSides()(clan);
+
+            var plan = _useCase.Execute(war, PrivateWarOutcome.AttackerVictory, currentOwners, sides);
+
+            Assert.True(plan.Prize!.HandOverSettlement);
+            Assert.Equal("A", plan.Prize.NewHolderClanId);
+            Assert.Empty(plan.Reverts);
+        }
+
+        [Fact]
+        public void Execute_AttackerVictory_GoalHeldByThirdParty_IsNotHandedOver()
+        {
+            var snapshot = new Dictionary<string, string> { ["settlement_goal"] = "D" };
+            var war = PrivateWarTestData.War(attacker: "A", defender: "D", mainGoal: "settlement_goal", fiefSnapshot: snapshot);
+            var currentOwners = new Dictionary<string, string> { ["settlement_goal"] = "B" };
+
+            var plan = _useCase.Execute(war, PrivateWarOutcome.AttackerVictory, currentOwners, TwoSides());
+
+            Assert.False(plan.Prize!.HandOverSettlement);
+            Assert.Empty(plan.Reverts);
+        }
+
+        [Fact]
+        public void Execute_AttackerVictory_GoalStillHeldByDefender_IsNotHandedOver()
+        {
+            var snapshot = new Dictionary<string, string> { ["settlement_goal"] = "D" };
+            var war = PrivateWarTestData.War(attacker: "A", defender: "D", mainGoal: "settlement_goal", fiefSnapshot: snapshot);
+            var currentOwners = new Dictionary<string, string> { ["settlement_goal"] = "D" };
+
+            var plan = _useCase.Execute(war, PrivateWarOutcome.AttackerVictory, currentOwners, TwoSides());
+
+            Assert.False(plan.Prize!.HandOverSettlement);
         }
 
         [Fact]
@@ -72,6 +114,33 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             var plan = _useCase.Execute(war, PrivateWarOutcome.WhitePeace, currentOwners, TwoSides());
 
             Assert.Empty(plan.Reverts);
+        }
+
+        [Fact]
+        public void Execute_FiefMovedWithinOneSide_IsNotReverted()
+        {
+            // S, a vassal of A, was granted A's castle mid-war; nobody captured it.
+            var snapshot = new Dictionary<string, string> { ["castle_a"] = "A" };
+            var war = PrivateWarTestData.War(attacker: "A", defender: "D", fiefSnapshot: snapshot);
+            var currentOwners = new Dictionary<string, string> { ["castle_a"] = "S" };
+            Func<string, WarSide?> sides = clan => clan == "S" ? WarSide.Attacker : TwoSides()(clan);
+
+            var plan = _useCase.Execute(war, PrivateWarOutcome.WhitePeace, currentOwners, sides);
+
+            Assert.Empty(plan.Reverts);
+        }
+
+        [Fact]
+        public void Execute_DefenderCaptureOfAttackerFief_IsReverted()
+        {
+            var snapshot = new Dictionary<string, string> { ["settlement_goal"] = "D", ["castle_a"] = "A" };
+            var war = PrivateWarTestData.War(attacker: "A", defender: "D", mainGoal: "settlement_goal", fiefSnapshot: snapshot);
+            var currentOwners = new Dictionary<string, string> { ["settlement_goal"] = "D", ["castle_a"] = "D" };
+
+            var plan = _useCase.Execute(war, PrivateWarOutcome.DefenderVictory, currentOwners, TwoSides());
+
+            var revert = Assert.Single(plan.Reverts);
+            Assert.Equal(("castle_a", "A"), (revert.SettlementId, revert.RevertToClanId));
         }
 
         [Fact]

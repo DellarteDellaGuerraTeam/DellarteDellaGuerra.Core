@@ -75,6 +75,46 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             Assert.Equal(WarSide.Defender, resolver.ResolveSide("X_vassal", war, getSuzerain));
         }
 
+        [Fact]
+        public void ResolveSide_ForeignSupporter_FightsAloneWithoutItsVassals()
+        {
+            // F rallied to the attacker from another realm; its vassal stays out of the war.
+            var war = PrivateWarTestData.War(attacker: "A", defender: "D", attackerSupporters: new[] { "F" })
+                with { ForeignSupporters = new[] { "F" } };
+            var resolver = new WarSideResolver();
+            var getSuzerain = Suzerain(("F_vassal", "F"));
+
+            Assert.Equal(WarSide.Attacker, resolver.ResolveSide("F", war, getSuzerain));
+            Assert.Null(resolver.ResolveSide("F_vassal", war, getSuzerain));
+        }
+
+        [Fact]
+        public void ResolveSide_ForeignSupportersVassal_WalksOnToItsNextBelligerentAncestor()
+        {
+            // F is foreign and pledged to the defender, but F's own liege is the attacker: F's vassal
+            // passes F by and follows the attacker.
+            var war = PrivateWarTestData.War(attacker: "A", defender: "D", defenderSupporters: new[] { "F" })
+                with { ForeignSupporters = new[] { "F" } };
+            var resolver = new WarSideResolver();
+            var getSuzerain = Suzerain(("F", "A"), ("F_vassal", "F"));
+
+            Assert.Equal(WarSide.Defender, resolver.ResolveSide("F", war, getSuzerain));
+            Assert.Equal(WarSide.Attacker, resolver.ResolveSide("F_vassal", war, getSuzerain));
+        }
+
+        [Fact]
+        public void ResolveSide_DomesticSupporterBesideAForeignOne_StillBringsItsSubtree()
+        {
+            var war = PrivateWarTestData.War(attacker: "A", defender: "D", defenderSupporters: new[] { "X", "F" })
+                with { ForeignSupporters = new[] { "F" } };
+            var resolver = new WarSideResolver();
+            var getSuzerain = Suzerain(("X_vassal", "X"), ("F_vassal", "F"));
+
+            Assert.Equal(WarSide.Defender, resolver.ResolveSide("X_vassal", war, getSuzerain));
+            Assert.Equal(WarSide.Defender, resolver.ResolveSide("F", war, getSuzerain));
+            Assert.Null(resolver.ResolveSide("F_vassal", war, getSuzerain));
+        }
+
         private static Func<string, string?> Suzerain(params (string clan, string suzerain)[] links)
             => new MapSuzerainProvider(links).GetSuzerain;
     }

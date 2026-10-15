@@ -28,6 +28,7 @@ namespace DellarteDellaGuerra.Integration.PrivateWars
             // it makes, including the ones its own daily tick decides on score.
             _privateWars.WarResolved += (war, outcome) => WarConcluded?.Invoke(
                 new PrivateWarConclusion(
+                    war.Id,
                     war.AttackerClanId,
                     war.DefenderClanId,
                     war.TitleId,
@@ -64,14 +65,13 @@ namespace DellarteDellaGuerra.Integration.PrivateWars
             string mainGoalSettlementId,
             float day,
             IReadOnlyCollection<string> attackerSupporters,
-            IReadOnlyCollection<string> defenderSupporters)
+            IReadOnlyCollection<string> defenderSupporters,
+            IReadOnlyCollection<string> foreignSupporters)
         {
-            Clan? defender = Campaign.Current?.CampaignObjectManager.Find<Clan>(defenderClanId);
-            IReadOnlyDictionary<string, string> fiefSnapshot = defender == null
-                ? new Dictionary<string, string>()
-                : defender.Settlements
-                    .Where(s => s.OwnerClan != null)
-                    .ToDictionary(s => s.StringId, s => s.OwnerClan.StringId);
+            // Every held town and castle; the war keeps those of either side.
+            IReadOnlyDictionary<string, string> fiefSnapshot = Settlement.All
+                .Where(s => (s.IsTown || s.IsCastle) && s.OwnerClan != null)
+                .ToDictionary(s => s.StringId, s => s.OwnerClan.StringId);
 
             _privateWars.DeclareWar(
                 attackerClanId,
@@ -82,7 +82,20 @@ namespace DellarteDellaGuerra.Integration.PrivateWars
                 fiefSnapshot,
                 day,
                 attackerSupporters,
-                defenderSupporters);
+                defenderSupporters,
+                foreignSupporters);
         }
+
+        public bool IsOnAttackerSide(string warId, string clanId) =>
+            _privateWars.IsOnAttackerSide(warId, clanId);
+
+        public IReadOnlyList<ActiveClaimWar> GetActiveClaimWars() =>
+            _privateWars.GetAllWars()
+                .Where(w => w.Status == PrivateWarStatus.Active && w.CasusBelliType == ClaimCasusBelli.ClaimType)
+                .Select(w => new ActiveClaimWar(w.Id, w.DefenderClanId, w.TitleId))
+                .ToList();
+
+        public void EndInWhitePeace(string warId) =>
+            _privateWars.ResolveWar(warId, PrivateWarOutcome.WhitePeace);
     }
 }
