@@ -88,6 +88,7 @@ namespace DellarteDellaGuerra.Integration
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
 
             _serviceProvider.GetRequiredService<DadgUIExtenderRegistrar>().RegisterAndEnable();
+            BannerTabardMeshLifetimeCrashPatch.Apply();
             _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().InstallOnSubModuleLoad();
         }
 
