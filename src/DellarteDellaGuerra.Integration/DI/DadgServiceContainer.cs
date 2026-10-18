@@ -212,6 +212,8 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, AllowSingleplayerExtendedBannerCodeParsingPatch>();
         services.AddSingleton<IPatch, AllowSingleplayerExtendedBannerAppendLayerPatch>();
         services.AddSingleton<IPatch, AllowSingleplayerExtendedBannerInsertLayerPatch>();
+        services.AddSingleton<IPatch, KeepBannerTabardMeshUntilTextureAppliedPatch>();
+        services.AddSingleton<IPatch, ReleaseBannerTabardMeshAfterTextureAppliedPatch>();
         // Firearm
         services.AddSingleton<IPatch, AddFirearmSkillAsRelevantSkillPatch>();
         services.AddSingleton<IPatch, GetHolsterImageForBuIletsInInventoryPatch>();

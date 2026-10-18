@@ -1,30 +1,30 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using TaleWorlds.DotNet;
 using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade.View;
 
-namespace DellarteDellaGuerra.Integration.UI.Visuals;
+namespace DellarteDellaGuerra.Infrastructure.Heraldry.Patches;
 
 /// <summary>
 /// Vanilla AgentVisuals releases a banner_replacement_mesh right after requesting its banner texture.
 /// When that banner is still rendering the texture callback is deferred, then runs against a freed
 /// mesh and throws (or faults natively). DADG tabards carry that tag, so keep the reference until applied.
 /// </summary>
-internal static class BannerTabardMeshLifetimePatch
+public class KeepBannerTabardMeshUntilTextureAppliedPatch : IPatch
 {
-    internal static void Apply()
-    {
-        var harmony = new HarmonyLib.Harmony("com.dadg.banner-tabard-mesh-lifetime");
-        harmony.Patch(AccessTools.DeclaredMethod(typeof(AgentVisuals), "AddArmorMultiMeshesToAgentEntity"),
-            transpiler: new HarmonyMethod(typeof(BannerTabardMeshLifetimePatch), nameof(KeepMeshUntilTextureApplied)));
-        harmony.Patch(AccessTools.DeclaredMethod(typeof(AgentVisuals), "ApplyBannerTextureToMesh"),
-            postfix: new HarmonyMethod(typeof(BannerTabardMeshLifetimePatch), nameof(ReleaseMesh)));
-    }
+    public MethodInfo? TargetMethod =>
+        AccessTools.DeclaredMethod(typeof(AgentVisuals), "AddArmorMultiMeshesToAgentEntity");
 
-    private static IEnumerable<CodeInstruction> KeepMeshUntilTextureApplied(IEnumerable<CodeInstruction> instructions)
+    public MethodInfo? PatchMethod =>
+        AccessTools.Method(typeof(KeepBannerTabardMeshUntilTextureAppliedPatch), nameof(Transpiler));
+
+    public PatchType PatchType => PatchType.Transpiler;
+
+    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         return new CodeMatcher(instructions)
             .MatchEndForward(
@@ -38,7 +38,18 @@ internal static class BannerTabardMeshLifetimePatch
             .Set(OpCodes.Pop, null)
             .InstructionEnumeration();
     }
+}
+
+public class ReleaseBannerTabardMeshAfterTextureAppliedPatch : IPatch
+{
+    public MethodInfo? TargetMethod =>
+        AccessTools.DeclaredMethod(typeof(AgentVisuals), "ApplyBannerTextureToMesh");
+
+    public MethodInfo? PatchMethod =>
+        AccessTools.Method(typeof(ReleaseBannerTabardMeshAfterTextureAppliedPatch), nameof(Postfix));
+
+    public PatchType PatchType => PatchType.Postfix;
 
     // The deferred path never reaches this when the mesh is collected first; its finalizer releases it then.
-    private static void ReleaseMesh(Mesh armorMesh) => armorMesh?.ManualInvalidate();
+    private static void Postfix(Mesh armorMesh) => armorMesh?.ManualInvalidate();
 }
