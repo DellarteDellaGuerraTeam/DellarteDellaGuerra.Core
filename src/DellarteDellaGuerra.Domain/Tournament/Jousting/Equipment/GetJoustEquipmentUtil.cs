@@ -1,19 +1,19 @@
-using System;
 using System.Collections.Generic;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Equipment.Model;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Equipment.Port;
+using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 
 namespace DellarteDellaGuerra.Domain.Tournament.Jousting.Equipment
 {
 	public class GetJoustEquipmentUtil : IGetJoustEquipmentUtil
 	{
 		private readonly IJoustingEquipmentTemplatesRepository _templatesRepository;
-		private readonly Random _random;
+		private readonly IRandomProvider _randomProvider;
 
-		public GetJoustEquipmentUtil(IJoustingEquipmentTemplatesRepository templatesRepository, Random? random = null)
+		public GetJoustEquipmentUtil(IJoustingEquipmentTemplatesRepository templatesRepository, IRandomProvider randomProvider)
 		{
 			_templatesRepository = templatesRepository;
-			_random = random ?? new Random();
+			_randomProvider = randomProvider;
 		}
 
 		public Model.Equipment GetJoustEquipment(Model.Equipment originalEquipment)
@@ -23,7 +23,7 @@ namespace DellarteDellaGuerra.Domain.Tournament.Jousting.Equipment
 				return originalEquipment;
 
 			// Pick a template at random.
-			var templateIndex = _random.Next(templates.Count);
+			var templateIndex = _randomProvider.NextInt(templates.Count);
 			var selectedTemplate = templates[templateIndex];
 
 			// Clone original slots into a mutable list so we can overlay the template.
