@@ -9,5 +9,10 @@ namespace DellarteDellaGuerra.Tournament.Reward.Spi
         {
             return MBRandom.RandomFloat;
         }
+
+        public int NextInt(int maxExclusive)
+        {
+            return MBRandom.RandomInt(maxExclusive);
+        }
     }
 }

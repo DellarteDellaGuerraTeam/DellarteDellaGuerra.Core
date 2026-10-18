@@ -106,6 +106,7 @@ namespace DellarteDellaGuerra.Integration
             _serviceProvider.GetRequiredService<DadgUIExtenderRegistrar>().RegisterAndEnable();
             UI.Loading.DadgLoadingArtworkPatch.Apply();
             UI.Visuals.BannerTabardMeshLifetimePatch.Apply();
+            BannerTabardMeshLifetimeCrashPatch.Apply();
             _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().InstallOnSubModuleLoad();
         }
 

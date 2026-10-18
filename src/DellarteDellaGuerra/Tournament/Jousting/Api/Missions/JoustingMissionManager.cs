@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Equipment;
+using DellarteDellaGuerra.Domain.Tournament.Reward.Port;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Campaign;
 using DellarteDellaGuerra.Tournament.Jousting.Api.Missions.MissionLogic;
 using DellarteDellaGuerra.Tournament.Jousting.Equipment.Spi;
@@ -35,10 +36,12 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions
     public class JoustingMissionManager
     {
         private readonly ILoggerFactory _loggerFactory;
+        private readonly IRandomProvider _randomProvider;
 
-        public JoustingMissionManager(ILoggerFactory loggerFactory)
+        public JoustingMissionManager(ILoggerFactory loggerFactory, IRandomProvider randomProvider)
         {
             _loggerFactory = loggerFactory;
+            _randomProvider = randomProvider;
         }
 
         public Mission OpenJoustingFightMission(string scene, JoustTournament tournamentGame,
@@ -51,12 +54,13 @@ namespace DellarteDellaGuerra.Tournament.Jousting.Api.Missions
                      var slotMapper = new EquipmentSlotMapper(MBObjectManager.Instance);
                      var equipmentMapper = new EquipmentMapper(slotMapper);
                      var templatesRepository = new JoustingEquipmentTemplatesRepository(MBObjectManager.Instance);
-                     var getJoustEquipmentUtil = new GetJoustEquipmentUtil(templatesRepository);
+                     var getJoustEquipmentUtil = new GetJoustEquipmentUtil(templatesRepository, _randomProvider);
 
                      var joustFightMissionController = new JoustFightMissionController(
                          culture,
                          getJoustEquipmentUtil,
                          equipmentMapper,
+                         _randomProvider,
                          _loggerFactory);
 
                      return new MissionBehavior[]
