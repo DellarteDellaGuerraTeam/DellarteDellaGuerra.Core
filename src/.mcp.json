@@ -4,7 +4,7 @@
       "type": "stdio",
       "command": "python",
       "args": [
-        ".apm/mcp/mcp-http-stdio-bridge.py",
+        "apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py",
         "--url",
         "http://localhost:5000"
       ]
@@ -13,7 +13,7 @@
       "type": "stdio",
       "command": "python",
       "args": [
-        ".apm/mcp/mcp-http-stdio-bridge.py",
+        "apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py",
         "--url",
         "http://localhost:5001"
       ]
@@ -22,7 +22,7 @@
       "type": "stdio",
       "command": "python",
       "args": [
-        ".apm/mcp/mcp-http-stdio-bridge.py",
+        "apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py",
         "--url",
         "http://localhost:5002"
       ]
@@ -31,7 +31,7 @@
       "type": "stdio",
       "command": "python",
       "args": [
-        ".apm/mcp/mcp-http-stdio-bridge.py",
+        "apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py",
         "--url",
         "http://localhost:8080/mcp"
       ]
@@ -40,7 +40,7 @@
       "type": "stdio",
       "command": "python",
       "args": [
-        ".apm/mcp/mcp-http-stdio-bridge.py",
+        "apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py",
         "--url",
         "http://localhost:29202/debugger-mcp/streamable-http"
       ]
@@ -57,7 +57,7 @@
       "type": "stdio",
       "command": "python",
       "args": [
-        ".apm/mcp/mcp-http-stdio-bridge.py",
+        "apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py",
         "--url",
         "http://localhost:5003"
       ]

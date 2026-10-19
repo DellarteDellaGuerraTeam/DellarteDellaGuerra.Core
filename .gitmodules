@@ -10,3 +10,9 @@
 [submodule "src/submodules/PrivateWars"]
 	path = src/submodules/PrivateWars
 	url = https://github.com/JoeFwd/Bannerlord.PrivateWars.git
+[submodule "src/submodules/dadg-agent"]
+	path = src/submodules/dadg-agent
+	url = https://github.com/JoeFwd/dadg-agent.git
+[submodule "src/submodules/bannerlord-agent"]
+	path = src/submodules/bannerlord-agent
+	url = https://github.com/JoeFwd/bannerlord-agent.git

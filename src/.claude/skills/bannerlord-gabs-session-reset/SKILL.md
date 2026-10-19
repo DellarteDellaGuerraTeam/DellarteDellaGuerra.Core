@@ -26,7 +26,7 @@ unless the server is found to be unreachable.
 
 ### 1. Read current GABS state
 
-Read `C:/Users/Joe/.gabs/bannerlord/runtime.json` to get:
+Read `~/.gabs/bannerlord/runtime.json` to get:
 - `ownerPid` -- the GABS session that owns the game
 - `gamePid` -- the actual Bannerlord process
 
@@ -45,8 +45,17 @@ If still alive:
 
 ### 3. Clean the GABS bridge files
 
-Delete stale files via WSL bash (PowerShell path protection blocks this):
-  rm -f /mnt/c/Users/Joe/.gabs/bannerlord/bridge.json /mnt/c/Users/Joe/.gabs/bannerlord/runtime.json
+Delete stale files with PowerShell:
+
+```powershell
+$dir = Join-Path $HOME ".gabs\bannerlord"
+foreach ($name in @("bridge.json", "runtime.json")) {
+    $path = Join-Path $dir $name
+    if (Test-Path -LiteralPath $path) {
+        Remove-Item -LiteralPath $path -Force
+    }
+}
+```
 
 ### 4. Verify the GABS server is reachable
 
@@ -59,7 +68,8 @@ Call `mcp__bannerlord-game-controller__games_status`.
 ```powershell
 Get-Process -Name "gabs" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
 Start-Sleep -Seconds 1
-Start-Process -FilePath "D:\Bannerlord\GABS-release\gabs.exe" -ArgumentList "server --http localhost:8080" -WindowStyle Hidden
+$gabs = if ($env:GABS_EXE) { $env:GABS_EXE } else { (Get-Command gabs).Source }
+Start-Process -FilePath $gabs -ArgumentList "server --http localhost:8080" -WindowStyle Hidden
 Start-Sleep -Seconds 3
 ```
 
