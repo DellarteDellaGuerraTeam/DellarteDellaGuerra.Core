@@ -1,19 +1,19 @@
-name: dadg-bannerlord-agent-context
+name: dellarte-della-guerra
 version: 0.1.0
-description: Agent instructions, skills, hooks, and MCP dependencies for DellarteDellaGuerra Bannerlord development.
-type: hybrid
+description: DellarteDellaGuerra agent setup; the harness lives in the dadg-agent submodule, which depends on bannerlord-agent.
 targets:
   - claude
   - codex
-includes: auto
 dependencies:
+  apm:
+    - ./submodules/dadg-agent
   mcp:
     - name: bannerlord-search-1_2_12
       registry: false
       transport: stdio
       command: python
       args:
-        - .apm/mcp/mcp-http-stdio-bridge.py
+        - apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py
         - --url
         - http://localhost:5000
     - name: bannerlord-search-1_3_15
@@ -21,23 +21,31 @@ dependencies:
       transport: stdio
       command: python
       args:
-        - .apm/mcp/mcp-http-stdio-bridge.py
+        - apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py
         - --url
         - http://localhost:5001
+    - name: bannerlord-search-1_4_8
+      registry: false
+      transport: stdio
+      command: python
+      args:
+        - apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py
+        - --url
+        - http://localhost:5002
     - name: bannerlord-search-1_4_6
       registry: false
       transport: stdio
       command: python
       args:
-        - .apm/mcp/mcp-http-stdio-bridge.py
+        - apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py
         - --url
-        - http://localhost:5002
+        - http://localhost:5003
     - name: bannerlord-game-controller
       registry: false
       transport: stdio
       command: python
       args:
-        - .apm/mcp/mcp-http-stdio-bridge.py
+        - apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py
         - --url
         - http://localhost:8080/mcp
     - name: jetbrains-debugger
@@ -45,7 +53,7 @@ dependencies:
       transport: stdio
       command: python
       args:
-        - .apm/mcp/mcp-http-stdio-bridge.py
+        - apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py
         - --url
         - http://localhost:29202/debugger-mcp/streamable-http
     - name: music-analysis
@@ -55,19 +63,3 @@ dependencies:
       args:
         - "-n"
         - mcp_local_music_analysis
-lifecycle:
-  post-install:
-    - type: command
-      description: >-
-        Workaround for an apm-cli bug where ${PLUGIN_ROOT} sometimes resolves
-        to the invalid $env:CLAUDE_PROJECT_DIR instead of $CLAUDE_PROJECT_DIR
-        in .claude/settings.json hook commands. Claude Code runs hooks through
-        a POSIX shell, which mangles the PowerShell env: syntax and breaks
-        SessionStart/PreToolUse.
-      command: pwsh -NoProfile -File ".apm/hooks/scripts/fix-claude-hook-vars.ps1"
-      timeoutSec: 30
-  post-update:
-    - type: command
-      description: Same fixup, re-applied after apm update.
-      command: pwsh -NoProfile -File ".apm/hooks/scripts/fix-claude-hook-vars.ps1"
-      timeoutSec: 30
