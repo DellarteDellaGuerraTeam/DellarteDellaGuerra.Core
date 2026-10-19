@@ -1,0 +1,1627 @@
+lockfile_version: '1'
+generated_at: '2026-10-19T11:35:36.973587+00:00'
+apm_version: 0.33.0
+dependencies:
+- repo_url: _local/dadg-agent
+  name: dadg-agent
+  version: 0.2.0
+  package_type: apm_package
+  deployed_files:
+  - .agents/skills/bannerlord-scotland-settlement-placement
+  - .agents/skills/bannerlord-scotland-settlement-placement/SKILL.md
+  - .agents/skills/bannerlord-scotland-settlement-placement/agents/openai.yaml
+  - .agents/skills/bannerlord-scotland-settlement-placement/assets/crown-of-scotland-locations.kmz
+  - .agents/skills/bannerlord-scotland-settlement-placement/assets/lordship-of-the-isles-locations.kmz
+  - .agents/skills/bannerlord-scotland-settlement-placement/assets/scotland-calibration-reference.png
+  - .agents/skills/bannerlord-scotland-settlement-placement/assets/scotland-calibration.json
+  - .agents/skills/bannerlord-scotland-settlement-placement/references/calibration.md
+  - .agents/skills/bannerlord-scotland-settlement-placement/scripts/place_settlements.py
+  - .agents/skills/dadg-project-context
+  - .agents/skills/dadg-project-context/SKILL.md
+  - .agents/skills/dadg-project-context/references/case-study-settlement-visual-crash.md
+  - .agents/skills/dadg-project-context/references/dadg-feature-domains.md
+  - .agents/skills/dadg-project-context/references/dadg-module-structure.md
+  - .agents/skills/dadg-project-context/references/dadg-project-overview.md
+  - .agents/skills/dadg-project-context/references/lord-hall-battle-london-example.md
+  - .agents/skills/dadg-project-context/references/navmesh-setup-and-repair.md
+  - .agents/skills/dadg-project-context/references/war-sails-ships.md
+  - .claude/rules/dadg-agent-guidelines.md
+  - .claude/rules/dadg-bannerlord-agent-settings.md
+  - .claude/rules/dadg-project-overview.md
+  - .claude/skills/bannerlord-scotland-settlement-placement
+  - .claude/skills/bannerlord-scotland-settlement-placement/SKILL.md
+  - .claude/skills/bannerlord-scotland-settlement-placement/agents/openai.yaml
+  - .claude/skills/bannerlord-scotland-settlement-placement/assets/crown-of-scotland-locations.kmz
+  - .claude/skills/bannerlord-scotland-settlement-placement/assets/lordship-of-the-isles-locations.kmz
+  - .claude/skills/bannerlord-scotland-settlement-placement/assets/scotland-calibration-reference.png
+  - .claude/skills/bannerlord-scotland-settlement-placement/assets/scotland-calibration.json
+  - .claude/skills/bannerlord-scotland-settlement-placement/references/calibration.md
+  - .claude/skills/bannerlord-scotland-settlement-placement/scripts/place_settlements.py
+  - .claude/skills/dadg-project-context
+  - .claude/skills/dadg-project-context/SKILL.md
+  - .claude/skills/dadg-project-context/references/case-study-settlement-visual-crash.md
+  - .claude/skills/dadg-project-context/references/dadg-feature-domains.md
+  - .claude/skills/dadg-project-context/references/dadg-module-structure.md
+  - .claude/skills/dadg-project-context/references/dadg-project-overview.md
+  - .claude/skills/dadg-project-context/references/lord-hall-battle-london-example.md
+  - .claude/skills/dadg-project-context/references/navmesh-setup-and-repair.md
+  - .claude/skills/dadg-project-context/references/war-sails-ships.md
+  deployed_file_hashes:
+    .agents/skills/bannerlord-scotland-settlement-placement/SKILL.md: sha256:be0ba883d87fce6a0c9f9d22531cd133223e738a5c858f12aaa183315692343f
+    .agents/skills/bannerlord-scotland-settlement-placement/agents/openai.yaml: sha256:76cd2ad72a4cfebe5aa92231d0a67d3320672178916e6ca0b4b818d048a948be
+    .agents/skills/bannerlord-scotland-settlement-placement/assets/crown-of-scotland-locations.kmz: sha256:783f86376a636e8e6e7309548a31761b25827173ccbc1019f218dad0f12e0b49
+    .agents/skills/bannerlord-scotland-settlement-placement/assets/lordship-of-the-isles-locations.kmz: sha256:4c2544159e319ad486f8dbfc061c572a8c31d636d046d45b1357ca0b58275c5e
+    .agents/skills/bannerlord-scotland-settlement-placement/assets/scotland-calibration-reference.png: sha256:1cd498ed21a8d948020a59a004ed7a319bde802d19adb69a1c3a45ea9dd78b38
+    .agents/skills/bannerlord-scotland-settlement-placement/assets/scotland-calibration.json: sha256:36284ebafff5da9c44b77cff650e292f699b34079d19c91f0af27c32766d801c
+    .agents/skills/bannerlord-scotland-settlement-placement/references/calibration.md: sha256:be8f22cf45cb70b72b74a3576f352fd84011f0055fef41951769e2e1c5aa2c42
+    .agents/skills/bannerlord-scotland-settlement-placement/scripts/place_settlements.py: sha256:514bc3b865a6272f23e14544cd31901d2fabd46adb7cbbcb0bd64aa147c3014a
+    .agents/skills/dadg-project-context/SKILL.md: sha256:db9769d471d0fdcec2620cd83850a0dafa10f2c4e7ea9a850ec6757e5880cd5f
+    .agents/skills/dadg-project-context/references/case-study-settlement-visual-crash.md: sha256:77885d58b38bef536034e9bf34d0408af5182e2f645b8c2c3490ce0674df86e2
+    .agents/skills/dadg-project-context/references/dadg-feature-domains.md: sha256:a93013118a173ef2a8351d831c39fba7892b62c03de2c78248dee0d0bf48315d
+    .agents/skills/dadg-project-context/references/dadg-module-structure.md: sha256:3fd5b1ebe54e58a11dc60565afd84a33e6c85a95552a63ee9103e370ad345b3e
+    .agents/skills/dadg-project-context/references/dadg-project-overview.md: sha256:84ef35fe89880237ac4b8ce1d5e32c279bd1a9177b6715ac44cef34a2aed3c44
+    .agents/skills/dadg-project-context/references/lord-hall-battle-london-example.md: sha256:f1262340272100c00dd7732eccf9e6db8fad5a2ad531ed0909f950bdb5c3ff95
+    .agents/skills/dadg-project-context/references/navmesh-setup-and-repair.md: sha256:e400d72264d61c0cb36161ca17070df4927da1cf2152769a3c62f38886c16090
+    .agents/skills/dadg-project-context/references/war-sails-ships.md: sha256:979cfb68d40630ad7b43025185800165fce3f6d4f6534a38c38e770d698f0e4c
+    .claude/rules/dadg-agent-guidelines.md: sha256:4712e4513b02e431f900214ba191aa13bfc54c5707f135cc34c6ec4b879d1748
+    .claude/rules/dadg-bannerlord-agent-settings.md: sha256:bbac08acda66926909ba86027f2ad4df9fad4a02b43a3b871a96eec1a781fda3
+    .claude/rules/dadg-project-overview.md: sha256:4dde1c4166c81942f6299d71022799500a94804049d50cc835382de3664f3590
+    .claude/skills/bannerlord-scotland-settlement-placement/SKILL.md: sha256:be0ba883d87fce6a0c9f9d22531cd133223e738a5c858f12aaa183315692343f
+    .claude/skills/bannerlord-scotland-settlement-placement/agents/openai.yaml: sha256:76cd2ad72a4cfebe5aa92231d0a67d3320672178916e6ca0b4b818d048a948be
+    .claude/skills/bannerlord-scotland-settlement-placement/assets/crown-of-scotland-locations.kmz: sha256:783f86376a636e8e6e7309548a31761b25827173ccbc1019f218dad0f12e0b49
+    .claude/skills/bannerlord-scotland-settlement-placement/assets/lordship-of-the-isles-locations.kmz: sha256:4c2544159e319ad486f8dbfc061c572a8c31d636d046d45b1357ca0b58275c5e
+    .claude/skills/bannerlord-scotland-settlement-placement/assets/scotland-calibration-reference.png: sha256:1cd498ed21a8d948020a59a004ed7a319bde802d19adb69a1c3a45ea9dd78b38
+    .claude/skills/bannerlord-scotland-settlement-placement/assets/scotland-calibration.json: sha256:36284ebafff5da9c44b77cff650e292f699b34079d19c91f0af27c32766d801c
+    .claude/skills/bannerlord-scotland-settlement-placement/references/calibration.md: sha256:be8f22cf45cb70b72b74a3576f352fd84011f0055fef41951769e2e1c5aa2c42
+    .claude/skills/bannerlord-scotland-settlement-placement/scripts/place_settlements.py: sha256:514bc3b865a6272f23e14544cd31901d2fabd46adb7cbbcb0bd64aa147c3014a
+    .claude/skills/dadg-project-context/SKILL.md: sha256:db9769d471d0fdcec2620cd83850a0dafa10f2c4e7ea9a850ec6757e5880cd5f
+    .claude/skills/dadg-project-context/references/case-study-settlement-visual-crash.md: sha256:77885d58b38bef536034e9bf34d0408af5182e2f645b8c2c3490ce0674df86e2
+    .claude/skills/dadg-project-context/references/dadg-feature-domains.md: sha256:a93013118a173ef2a8351d831c39fba7892b62c03de2c78248dee0d0bf48315d
+    .claude/skills/dadg-project-context/references/dadg-module-structure.md: sha256:3fd5b1ebe54e58a11dc60565afd84a33e6c85a95552a63ee9103e370ad345b3e
+    .claude/skills/dadg-project-context/references/dadg-project-overview.md: sha256:84ef35fe89880237ac4b8ce1d5e32c279bd1a9177b6715ac44cef34a2aed3c44
+    .claude/skills/dadg-project-context/references/lord-hall-battle-london-example.md: sha256:f1262340272100c00dd7732eccf9e6db8fad5a2ad531ed0909f950bdb5c3ff95
+    .claude/skills/dadg-project-context/references/navmesh-setup-and-repair.md: sha256:e400d72264d61c0cb36161ca17070df4927da1cf2152769a3c62f38886c16090
+    .claude/skills/dadg-project-context/references/war-sails-ships.md: sha256:979cfb68d40630ad7b43025185800165fce3f6d4f6534a38c38e770d698f0e4c
+  source: local
+  local_path: ./submodules/dadg-agent
+- repo_url: joefwd/bannerlord-agent
+  materialization_repo_url: JoeFwd/bannerlord-agent
+  name: bannerlord-agent
+  host: github.com
+  resolved_commit: 47fe3793967de028d97124296f0064d1305d5084
+  resolved_ref: v0.1.1
+  version: 0.1.1
+  depth: 2
+  resolved_by: _local/dadg-agent
+  package_type: apm_package
+  deployed_files:
+  - .agents/skills/bannerlord-crafting-offsets
+  - .agents/skills/bannerlord-crafting-offsets/SKILL.md
+  - .agents/skills/bannerlord-crafting-offsets/agents/openai.yaml
+  - .agents/skills/bannerlord-crafting-offsets/references/diagnostic-patterns.md
+  - .agents/skills/bannerlord-debug
+  - .agents/skills/bannerlord-debug/SKILL.md
+  - .agents/skills/bannerlord-debug/references/bannerlord-debugging-workflow.md
+  - .agents/skills/bannerlord-debug/references/gabs-protocol.md
+  - .agents/skills/bannerlord-debug/references/gabs-runtime-workarounds.md
+  - .agents/skills/bannerlord-debug/references/jetbrains-debugger-tips.md
+  - .agents/skills/bannerlord-gabs-battle-manager
+  - .agents/skills/bannerlord-gabs-battle-manager/SKILL.md
+  - .agents/skills/bannerlord-gabs-session-reset
+  - .agents/skills/bannerlord-gabs-session-reset/SKILL.md
+  - .agents/skills/bannerlord-gabs-start
+  - .agents/skills/bannerlord-gabs-start/SKILL.md
+  - .agents/skills/bannerlord-lord-hall-battle
+  - .agents/skills/bannerlord-lord-hall-battle/SKILL.md
+  - .agents/skills/bannerlord-lord-hall-battle/agents/openai.yaml
+  - .agents/skills/bannerlord-lord-hall-battle/references/native-contract.md
+  - .agents/skills/bannerlord-lord-hall-battle/references/navmesh.md
+  - .agents/skills/bannerlord-modding-tools
+  - .agents/skills/bannerlord-modding-tools/SKILL.md
+  - .agents/skills/bannerlord-modding-tools/agents/openai.yaml
+  - .agents/skills/bannerlord-modding-tools/references/navmesh.md
+  - .agents/skills/bannerlord-music-classify
+  - .agents/skills/bannerlord-music-classify/SKILL.md
+  - .agents/skills/bannerlord-navmesh-preview
+  - .agents/skills/bannerlord-navmesh-preview/SKILL.md
+  - .agents/skills/bannerlord-navmesh-preview/scripts/render_navmesh_preview.py
+  - .agents/skills/bannerlord-navmesh-studio
+  - .agents/skills/bannerlord-navmesh-studio/SKILL.md
+  - .agents/skills/bannerlord-sprite-analyze
+  - .agents/skills/bannerlord-sprite-analyze/SKILL.md
+  - .agents/skills/bannerlord-sprite-extract
+  - .agents/skills/bannerlord-sprite-extract/SKILL.md
+  - .agents/skills/bannerlord-sprite-inject
+  - .agents/skills/bannerlord-sprite-inject/SKILL.md
+  - .agents/skills/bannerlord-sprite-list
+  - .agents/skills/bannerlord-sprite-list/SKILL.md
+  - .claude/agents/bannerlord-debug-playtester.md
+  - .claude/hooks/bannerlord-agent/.apm/hooks/scripts/jb-pause-guard.ps1
+  - .claude/hooks/bannerlord-agent/.apm/hooks/scripts/session-start.ps1
+  - .claude/rules/bannerlord-agent.md
+  - .claude/skills/bannerlord-crafting-offsets
+  - .claude/skills/bannerlord-crafting-offsets/SKILL.md
+  - .claude/skills/bannerlord-crafting-offsets/agents/openai.yaml
+  - .claude/skills/bannerlord-crafting-offsets/references/diagnostic-patterns.md
+  - .claude/skills/bannerlord-debug
+  - .claude/skills/bannerlord-debug/SKILL.md
+  - .claude/skills/bannerlord-debug/references/bannerlord-debugging-workflow.md
+  - .claude/skills/bannerlord-debug/references/gabs-protocol.md
+  - .claude/skills/bannerlord-debug/references/gabs-runtime-workarounds.md
+  - .claude/skills/bannerlord-debug/references/jetbrains-debugger-tips.md
+  - .claude/skills/bannerlord-gabs-battle-manager
+  - .claude/skills/bannerlord-gabs-battle-manager/SKILL.md
+  - .claude/skills/bannerlord-gabs-session-reset
+  - .claude/skills/bannerlord-gabs-session-reset/SKILL.md
+  - .claude/skills/bannerlord-gabs-start
+  - .claude/skills/bannerlord-gabs-start/SKILL.md
+  - .claude/skills/bannerlord-lord-hall-battle
+  - .claude/skills/bannerlord-lord-hall-battle/SKILL.md
+  - .claude/skills/bannerlord-lord-hall-battle/agents/openai.yaml
+  - .claude/skills/bannerlord-lord-hall-battle/references/native-contract.md
+  - .claude/skills/bannerlord-lord-hall-battle/references/navmesh.md
+  - .claude/skills/bannerlord-modding-tools
+  - .claude/skills/bannerlord-modding-tools/SKILL.md
+  - .claude/skills/bannerlord-modding-tools/agents/openai.yaml
+  - .claude/skills/bannerlord-modding-tools/references/navmesh.md
+  - .claude/skills/bannerlord-music-classify
+  - .claude/skills/bannerlord-music-classify/SKILL.md
+  - .claude/skills/bannerlord-navmesh-preview
+  - .claude/skills/bannerlord-navmesh-preview/SKILL.md
+  - .claude/skills/bannerlord-navmesh-preview/scripts/render_navmesh_preview.py
+  - .claude/skills/bannerlord-navmesh-studio
+  - .claude/skills/bannerlord-navmesh-studio/SKILL.md
+  - .claude/skills/bannerlord-sprite-analyze
+  - .claude/skills/bannerlord-sprite-analyze/SKILL.md
+  - .claude/skills/bannerlord-sprite-extract
+  - .claude/skills/bannerlord-sprite-extract/SKILL.md
+  - .claude/skills/bannerlord-sprite-inject
+  - .claude/skills/bannerlord-sprite-inject/SKILL.md
+  - .claude/skills/bannerlord-sprite-list
+  - .claude/skills/bannerlord-sprite-list/SKILL.md
+  - .codex/agents/bannerlord-debug-playtester.toml
+  - .codex/hooks/bannerlord-agent/.apm/hooks/scripts/jb-pause-guard.ps1
+  - .codex/hooks/bannerlord-agent/.apm/hooks/scripts/session-start.ps1
+  deployed_file_hashes:
+    .agents/skills/bannerlord-crafting-offsets/SKILL.md: sha256:b6906a00e525766c167c0aa8855ce120d4d7726c76d47c41e7a4865154baface
+    .agents/skills/bannerlord-crafting-offsets/agents/openai.yaml: sha256:ca1bc42e1ae500347dfe1938d4c0244d6f10bcdaed34a1f8f46cd40aac0bb6e8
+    .agents/skills/bannerlord-crafting-offsets/references/diagnostic-patterns.md: sha256:fb98fb6faa2b6a61a0ded2187e1e945fc77fac19519bf42a98cce23374210cee
+    .agents/skills/bannerlord-debug/SKILL.md: sha256:b26e9eb5c841c371b5e5438035ee55e52f10069c482894a60d1cec71b4410e70
+    .agents/skills/bannerlord-debug/references/bannerlord-debugging-workflow.md: sha256:41b3fbea358e2aacd5c5a5a978ebf139b79b8b7f3c863280a7c0a601cb168b66
+    .agents/skills/bannerlord-debug/references/gabs-protocol.md: sha256:c97cd2823522edf5e63f06a6677b78d2a332719bbae64c5a1a0a9ad5a2820d3f
+    .agents/skills/bannerlord-debug/references/gabs-runtime-workarounds.md: sha256:d66149dd9d006bc5c5f934ca473f28511ec7a0b7f75971f39e74708bc22bb198
+    .agents/skills/bannerlord-debug/references/jetbrains-debugger-tips.md: sha256:99925a81583b5b61ba191b67c904059ae7ff2964da71afed82c919f7018a54a6
+    .agents/skills/bannerlord-gabs-battle-manager/SKILL.md: sha256:a3de17a74a2c5f1f76cbfd5b303a7d34e1a1b5ddc48fe2fd8d184207c5907855
+    .agents/skills/bannerlord-gabs-session-reset/SKILL.md: sha256:bdf65713c4047a87d8f5d3f52fdcd28fb92f2a6cddf0691a5abf2389dbe9479a
+    .agents/skills/bannerlord-gabs-start/SKILL.md: sha256:15a7eea4d5a1c2e8cc6a89cf0bc912f1bd4ea664f4d4d26c1d8d97bf765fa639
+    .agents/skills/bannerlord-lord-hall-battle/SKILL.md: sha256:aa0c81a6be11e8ce5407e22a648ed798c72fb85a1a579db8e034b60070cd732a
+    .agents/skills/bannerlord-lord-hall-battle/agents/openai.yaml: sha256:26357ddcbd7753158c304ad41ec7dd7e90470bb66a700d98101eb7aa0c9adc0b
+    .agents/skills/bannerlord-lord-hall-battle/references/native-contract.md: sha256:05553333bb00eef6120a86c16758f23074072383154149c45f2e5c01b7583210
+    .agents/skills/bannerlord-lord-hall-battle/references/navmesh.md: sha256:44790f57f90497b260a4651fabd3eaa6204051881a239b6ac93dc74d0ae6f65f
+    .agents/skills/bannerlord-modding-tools/SKILL.md: sha256:dcaaeb1b5cddccfe952f75c0007e140f848bd2f3808caa40f4ecd8d9b0bdeba7
+    .agents/skills/bannerlord-modding-tools/agents/openai.yaml: sha256:f2f4feaac03ac1ba5b7c03c1b32a71d2c8f8fd6e40afab183fd2863d89c2bd0a
+    .agents/skills/bannerlord-modding-tools/references/navmesh.md: sha256:c7cc391e3abb863dae8e5fcc54fa5ed88eedb0583e7f28117ce07f908b7904ce
+    .agents/skills/bannerlord-music-classify/SKILL.md: sha256:f2d2ff6a5916a768f5cb40f903ee949da72f182e6b78a8acdd23fa51c6f5fb00
+    .agents/skills/bannerlord-navmesh-preview/SKILL.md: sha256:d885ac3217fc33653578cf6e1ee015b3acdcd13ef75b213433a3e31f578ab76b
+    .agents/skills/bannerlord-navmesh-preview/scripts/render_navmesh_preview.py: sha256:f93a4dfaa9acdf06f5fb74711f34392ee56744142930b63d7704fefec20ffd49
+    .agents/skills/bannerlord-navmesh-studio/SKILL.md: sha256:25c25f22b7aea9b6bed3975bdd83e22850969e988cf209b945e73e8787e4ea6f
+    .agents/skills/bannerlord-sprite-analyze/SKILL.md: sha256:a4e009b12a8ab6fbb792ec0e2aea44541b837854f0f3b1664a67e2422752f635
+    .agents/skills/bannerlord-sprite-extract/SKILL.md: sha256:78a27ee04fd86680bce9a60d49248bbc5c0b856e234400852e2e5a098bb6c9c4
+    .agents/skills/bannerlord-sprite-inject/SKILL.md: sha256:4a7f860db9e982d8dad3547764cf3b063542eaf4173ff94b5b4fd03c35349384
+    .agents/skills/bannerlord-sprite-list/SKILL.md: sha256:9979bc6767a8bd86ac194d33b32a125f56cee07f622e031230c58f785363d813
+    .claude/agents/bannerlord-debug-playtester.md: sha256:4fc1cbee26b019b23c6afab49463ece4eed767f3f20f1f62dba4ae4c97fa9143
+    .claude/hooks/bannerlord-agent/.apm/hooks/scripts/jb-pause-guard.ps1: sha256:b9b0cd0323fef3f8fad1b1a2b720583772b99f466ae251c259cd3d1358e657c3
+    .claude/hooks/bannerlord-agent/.apm/hooks/scripts/session-start.ps1: sha256:06be0872cd6c01f172522dc3ab1591cc54101ea0f9e9d3f5a61cd2e109170d08
+    .claude/rules/bannerlord-agent.md: sha256:9b2fb2cc263e7980f9f020c15dfd0bd77b5fa3c1f3fae28b1aab31b8cec31a7e
+    .claude/skills/bannerlord-crafting-offsets/SKILL.md: sha256:b6906a00e525766c167c0aa8855ce120d4d7726c76d47c41e7a4865154baface
+    .claude/skills/bannerlord-crafting-offsets/agents/openai.yaml: sha256:ca1bc42e1ae500347dfe1938d4c0244d6f10bcdaed34a1f8f46cd40aac0bb6e8
+    .claude/skills/bannerlord-crafting-offsets/references/diagnostic-patterns.md: sha256:fb98fb6faa2b6a61a0ded2187e1e945fc77fac19519bf42a98cce23374210cee
+    .claude/skills/bannerlord-debug/SKILL.md: sha256:b26e9eb5c841c371b5e5438035ee55e52f10069c482894a60d1cec71b4410e70
+    .claude/skills/bannerlord-debug/references/bannerlord-debugging-workflow.md: sha256:41b3fbea358e2aacd5c5a5a978ebf139b79b8b7f3c863280a7c0a601cb168b66
+    .claude/skills/bannerlord-debug/references/gabs-protocol.md: sha256:c97cd2823522edf5e63f06a6677b78d2a332719bbae64c5a1a0a9ad5a2820d3f
+    .claude/skills/bannerlord-debug/references/gabs-runtime-workarounds.md: sha256:d66149dd9d006bc5c5f934ca473f28511ec7a0b7f75971f39e74708bc22bb198
+    .claude/skills/bannerlord-debug/references/jetbrains-debugger-tips.md: sha256:99925a81583b5b61ba191b67c904059ae7ff2964da71afed82c919f7018a54a6
+    .claude/skills/bannerlord-gabs-battle-manager/SKILL.md: sha256:a3de17a74a2c5f1f76cbfd5b303a7d34e1a1b5ddc48fe2fd8d184207c5907855
+    .claude/skills/bannerlord-gabs-session-reset/SKILL.md: sha256:bdf65713c4047a87d8f5d3f52fdcd28fb92f2a6cddf0691a5abf2389dbe9479a
+    .claude/skills/bannerlord-gabs-start/SKILL.md: sha256:15a7eea4d5a1c2e8cc6a89cf0bc912f1bd4ea664f4d4d26c1d8d97bf765fa639
+    .claude/skills/bannerlord-lord-hall-battle/SKILL.md: sha256:aa0c81a6be11e8ce5407e22a648ed798c72fb85a1a579db8e034b60070cd732a
+    .claude/skills/bannerlord-lord-hall-battle/agents/openai.yaml: sha256:26357ddcbd7753158c304ad41ec7dd7e90470bb66a700d98101eb7aa0c9adc0b
+    .claude/skills/bannerlord-lord-hall-battle/references/native-contract.md: sha256:05553333bb00eef6120a86c16758f23074072383154149c45f2e5c01b7583210
+    .claude/skills/bannerlord-lord-hall-battle/references/navmesh.md: sha256:44790f57f90497b260a4651fabd3eaa6204051881a239b6ac93dc74d0ae6f65f
+    .claude/skills/bannerlord-modding-tools/SKILL.md: sha256:dcaaeb1b5cddccfe952f75c0007e140f848bd2f3808caa40f4ecd8d9b0bdeba7
+    .claude/skills/bannerlord-modding-tools/agents/openai.yaml: sha256:f2f4feaac03ac1ba5b7c03c1b32a71d2c8f8fd6e40afab183fd2863d89c2bd0a
+    .claude/skills/bannerlord-modding-tools/references/navmesh.md: sha256:c7cc391e3abb863dae8e5fcc54fa5ed88eedb0583e7f28117ce07f908b7904ce
+    .claude/skills/bannerlord-music-classify/SKILL.md: sha256:f2d2ff6a5916a768f5cb40f903ee949da72f182e6b78a8acdd23fa51c6f5fb00
+    .claude/skills/bannerlord-navmesh-preview/SKILL.md: sha256:d885ac3217fc33653578cf6e1ee015b3acdcd13ef75b213433a3e31f578ab76b
+    .claude/skills/bannerlord-navmesh-preview/scripts/render_navmesh_preview.py: sha256:f93a4dfaa9acdf06f5fb74711f34392ee56744142930b63d7704fefec20ffd49
+    .claude/skills/bannerlord-navmesh-studio/SKILL.md: sha256:25c25f22b7aea9b6bed3975bdd83e22850969e988cf209b945e73e8787e4ea6f
+    .claude/skills/bannerlord-sprite-analyze/SKILL.md: sha256:a4e009b12a8ab6fbb792ec0e2aea44541b837854f0f3b1664a67e2422752f635
+    .claude/skills/bannerlord-sprite-extract/SKILL.md: sha256:78a27ee04fd86680bce9a60d49248bbc5c0b856e234400852e2e5a098bb6c9c4
+    .claude/skills/bannerlord-sprite-inject/SKILL.md: sha256:4a7f860db9e982d8dad3547764cf3b063542eaf4173ff94b5b4fd03c35349384
+    .claude/skills/bannerlord-sprite-list/SKILL.md: sha256:9979bc6767a8bd86ac194d33b32a125f56cee07f622e031230c58f785363d813
+    .codex/agents/bannerlord-debug-playtester.toml: sha256:c3263042411007e47e6dc5ef3854919c92102ceaea8a86c8f4c4b6ec87bc1fcc
+    .codex/hooks/bannerlord-agent/.apm/hooks/scripts/jb-pause-guard.ps1: sha256:b9b0cd0323fef3f8fad1b1a2b720583772b99f466ae251c259cd3d1358e657c3
+    .codex/hooks/bannerlord-agent/.apm/hooks/scripts/session-start.ps1: sha256:06be0872cd6c01f172522dc3ab1591cc54101ea0f9e9d3f5a61cd2e109170d08
+  content_hash: sha256:036507b513d87a90fc08b6b3ed479ffe6c1bed853ba8ca4258d0187b38b6d886
+deployments:
+- kind: project-relative
+  target: claude
+  value: .claude/agents/bannerlord-debug-playtester.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  - .
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:4fc1cbee26b019b23c6afab49463ece4eed767f3f20f1f62dba4ae4c97fa9143
+- kind: project-relative
+  target: claude
+  value: .claude/hooks/bannerlord-agent/.apm/hooks/scripts/jb-pause-guard.ps1
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:b9b0cd0323fef3f8fad1b1a2b720583772b99f466ae251c259cd3d1358e657c3
+- kind: project-relative
+  target: claude
+  value: .claude/hooks/bannerlord-agent/.apm/hooks/scripts/session-start.ps1
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:06be0872cd6c01f172522dc3ab1591cc54101ea0f9e9d3f5a61cd2e109170d08
+- kind: project-relative
+  target: claude
+  value: .claude/rules/bannerlord-agent.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:9b2fb2cc263e7980f9f020c15dfd0bd77b5fa3c1f3fae28b1aab31b8cec31a7e
+- kind: project-relative
+  target: claude
+  value: .claude/rules/dadg-agent-guidelines.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:4712e4513b02e431f900214ba191aa13bfc54c5707f135cc34c6ec4b879d1748
+- kind: project-relative
+  target: claude
+  value: .claude/rules/dadg-bannerlord-agent-settings.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:bbac08acda66926909ba86027f2ad4df9fad4a02b43a3b871a96eec1a781fda3
+- kind: project-relative
+  target: claude
+  value: .claude/rules/dadg-project-overview.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:4dde1c4166c81942f6299d71022799500a94804049d50cc835382de3664f3590
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-crafting-offsets
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-crafting-offsets/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:b6906a00e525766c167c0aa8855ce120d4d7726c76d47c41e7a4865154baface
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-crafting-offsets/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:ca1bc42e1ae500347dfe1938d4c0244d6f10bcdaed34a1f8f46cd40aac0bb6e8
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-crafting-offsets/references/diagnostic-patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:fb98fb6faa2b6a61a0ded2187e1e945fc77fac19519bf42a98cce23374210cee
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-debug
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  - .
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-debug/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  - .
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:b26e9eb5c841c371b5e5438035ee55e52f10069c482894a60d1cec71b4410e70
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-debug/references/bannerlord-debugging-workflow.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:41b3fbea358e2aacd5c5a5a978ebf139b79b8b7f3c863280a7c0a601cb168b66
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-debug/references/gabs-protocol.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:c97cd2823522edf5e63f06a6677b78d2a332719bbae64c5a1a0a9ad5a2820d3f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-debug/references/gabs-runtime-workarounds.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:d66149dd9d006bc5c5f934ca473f28511ec7a0b7f75971f39e74708bc22bb198
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-debug/references/jetbrains-debugger-tips.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:99925a81583b5b61ba191b67c904059ae7ff2964da71afed82c919f7018a54a6
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-gabs-battle-manager
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-gabs-battle-manager/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:a3de17a74a2c5f1f76cbfd5b303a7d34e1a1b5ddc48fe2fd8d184207c5907855
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-gabs-session-reset
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-gabs-session-reset/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:bdf65713c4047a87d8f5d3f52fdcd28fb92f2a6cddf0691a5abf2389dbe9479a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-gabs-start
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-gabs-start/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:15a7eea4d5a1c2e8cc6a89cf0bc912f1bd4ea664f4d4d26c1d8d97bf765fa639
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-lord-hall-battle
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-lord-hall-battle/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:aa0c81a6be11e8ce5407e22a648ed798c72fb85a1a579db8e034b60070cd732a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-lord-hall-battle/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:26357ddcbd7753158c304ad41ec7dd7e90470bb66a700d98101eb7aa0c9adc0b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-lord-hall-battle/references/native-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:05553333bb00eef6120a86c16758f23074072383154149c45f2e5c01b7583210
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-lord-hall-battle/references/navmesh.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:44790f57f90497b260a4651fabd3eaa6204051881a239b6ac93dc74d0ae6f65f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-modding-tools
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-modding-tools/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:dcaaeb1b5cddccfe952f75c0007e140f848bd2f3808caa40f4ecd8d9b0bdeba7
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-modding-tools/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:f2f4feaac03ac1ba5b7c03c1b32a71d2c8f8fd6e40afab183fd2863d89c2bd0a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-modding-tools/references/navmesh.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:c7cc391e3abb863dae8e5fcc54fa5ed88eedb0583e7f28117ce07f908b7904ce
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-music-classify
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-music-classify/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:f2d2ff6a5916a768f5cb40f903ee949da72f182e6b78a8acdd23fa51c6f5fb00
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-navmesh-preview
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  - .
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-navmesh-preview/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:d885ac3217fc33653578cf6e1ee015b3acdcd13ef75b213433a3e31f578ab76b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-navmesh-preview/scripts/render_navmesh_preview.py
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:f93a4dfaa9acdf06f5fb74711f34392ee56744142930b63d7704fefec20ffd49
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-navmesh-studio
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-navmesh-studio/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:25c25f22b7aea9b6bed3975bdd83e22850969e988cf209b945e73e8787e4ea6f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-scotland-settlement-placement
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-scotland-settlement-placement/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:be0ba883d87fce6a0c9f9d22531cd133223e738a5c858f12aaa183315692343f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-scotland-settlement-placement/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:76cd2ad72a4cfebe5aa92231d0a67d3320672178916e6ca0b4b818d048a948be
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-scotland-settlement-placement/assets/crown-of-scotland-locations.kmz
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:783f86376a636e8e6e7309548a31761b25827173ccbc1019f218dad0f12e0b49
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-scotland-settlement-placement/assets/lordship-of-the-isles-locations.kmz
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:4c2544159e319ad486f8dbfc061c572a8c31d636d046d45b1357ca0b58275c5e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-scotland-settlement-placement/assets/scotland-calibration-reference.png
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:1cd498ed21a8d948020a59a004ed7a319bde802d19adb69a1c3a45ea9dd78b38
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-scotland-settlement-placement/assets/scotland-calibration.json
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:36284ebafff5da9c44b77cff650e292f699b34079d19c91f0af27c32766d801c
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-scotland-settlement-placement/references/calibration.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:be8f22cf45cb70b72b74a3576f352fd84011f0055fef41951769e2e1c5aa2c42
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-scotland-settlement-placement/scripts/place_settlements.py
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:514bc3b865a6272f23e14544cd31901d2fabd46adb7cbbcb0bd64aa147c3014a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-sprite-analyze
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-sprite-analyze/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:a4e009b12a8ab6fbb792ec0e2aea44541b837854f0f3b1664a67e2422752f635
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-sprite-extract
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-sprite-extract/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:78a27ee04fd86680bce9a60d49248bbc5c0b856e234400852e2e5a098bb6c9c4
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-sprite-inject
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-sprite-inject/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:4a7f860db9e982d8dad3547764cf3b063542eaf4173ff94b5b4fd03c35349384
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-sprite-list
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/bannerlord-sprite-list/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:9979bc6767a8bd86ac194d33b32a125f56cee07f622e031230c58f785363d813
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dadg-project-context
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dadg-project-context/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:db9769d471d0fdcec2620cd83850a0dafa10f2c4e7ea9a850ec6757e5880cd5f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dadg-project-context/references/case-study-settlement-visual-crash.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:77885d58b38bef536034e9bf34d0408af5182e2f645b8c2c3490ce0674df86e2
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dadg-project-context/references/dadg-feature-domains.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:a93013118a173ef2a8351d831c39fba7892b62c03de2c78248dee0d0bf48315d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dadg-project-context/references/dadg-module-structure.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:3fd5b1ebe54e58a11dc60565afd84a33e6c85a95552a63ee9103e370ad345b3e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dadg-project-context/references/dadg-project-overview.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:84ef35fe89880237ac4b8ce1d5e32c279bd1a9177b6715ac44cef34a2aed3c44
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dadg-project-context/references/lord-hall-battle-london-example.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:f1262340272100c00dd7732eccf9e6db8fad5a2ad531ed0909f950bdb5c3ff95
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dadg-project-context/references/navmesh-setup-and-repair.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:e400d72264d61c0cb36161ca17070df4927da1cf2152769a3c62f38886c16090
+- kind: project-relative
+  target: claude
+  value: .claude/skills/dadg-project-context/references/war-sails-ships.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:979cfb68d40630ad7b43025185800165fce3f6d4f6534a38c38e770d698f0e4c
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-crafting-offsets
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-crafting-offsets/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:b6906a00e525766c167c0aa8855ce120d4d7726c76d47c41e7a4865154baface
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-crafting-offsets/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:ca1bc42e1ae500347dfe1938d4c0244d6f10bcdaed34a1f8f46cd40aac0bb6e8
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-crafting-offsets/references/diagnostic-patterns.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:fb98fb6faa2b6a61a0ded2187e1e945fc77fac19519bf42a98cce23374210cee
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-debug
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  - .
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-debug/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  - .
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:b26e9eb5c841c371b5e5438035ee55e52f10069c482894a60d1cec71b4410e70
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-debug/references/bannerlord-debugging-workflow.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:41b3fbea358e2aacd5c5a5a978ebf139b79b8b7f3c863280a7c0a601cb168b66
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-debug/references/gabs-protocol.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:c97cd2823522edf5e63f06a6677b78d2a332719bbae64c5a1a0a9ad5a2820d3f
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-debug/references/gabs-runtime-workarounds.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:d66149dd9d006bc5c5f934ca473f28511ec7a0b7f75971f39e74708bc22bb198
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-debug/references/jetbrains-debugger-tips.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:99925a81583b5b61ba191b67c904059ae7ff2964da71afed82c919f7018a54a6
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-gabs-battle-manager
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-gabs-battle-manager/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:a3de17a74a2c5f1f76cbfd5b303a7d34e1a1b5ddc48fe2fd8d184207c5907855
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-gabs-session-reset
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-gabs-session-reset/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:bdf65713c4047a87d8f5d3f52fdcd28fb92f2a6cddf0691a5abf2389dbe9479a
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-gabs-start
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-gabs-start/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:15a7eea4d5a1c2e8cc6a89cf0bc912f1bd4ea664f4d4d26c1d8d97bf765fa639
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-lord-hall-battle
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-lord-hall-battle/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:aa0c81a6be11e8ce5407e22a648ed798c72fb85a1a579db8e034b60070cd732a
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-lord-hall-battle/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:26357ddcbd7753158c304ad41ec7dd7e90470bb66a700d98101eb7aa0c9adc0b
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-lord-hall-battle/references/native-contract.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:05553333bb00eef6120a86c16758f23074072383154149c45f2e5c01b7583210
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-lord-hall-battle/references/navmesh.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:44790f57f90497b260a4651fabd3eaa6204051881a239b6ac93dc74d0ae6f65f
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-modding-tools
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-modding-tools/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:dcaaeb1b5cddccfe952f75c0007e140f848bd2f3808caa40f4ecd8d9b0bdeba7
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-modding-tools/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:f2f4feaac03ac1ba5b7c03c1b32a71d2c8f8fd6e40afab183fd2863d89c2bd0a
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-modding-tools/references/navmesh.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:c7cc391e3abb863dae8e5fcc54fa5ed88eedb0583e7f28117ce07f908b7904ce
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-music-classify
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-music-classify/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:f2d2ff6a5916a768f5cb40f903ee949da72f182e6b78a8acdd23fa51c6f5fb00
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-navmesh-preview
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  - .
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-navmesh-preview/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:d885ac3217fc33653578cf6e1ee015b3acdcd13ef75b213433a3e31f578ab76b
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-navmesh-preview/scripts/render_navmesh_preview.py
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:f93a4dfaa9acdf06f5fb74711f34392ee56744142930b63d7704fefec20ffd49
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-navmesh-studio
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-navmesh-studio/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:25c25f22b7aea9b6bed3975bdd83e22850969e988cf209b945e73e8787e4ea6f
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-scotland-settlement-placement
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-scotland-settlement-placement/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:be0ba883d87fce6a0c9f9d22531cd133223e738a5c858f12aaa183315692343f
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-scotland-settlement-placement/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:76cd2ad72a4cfebe5aa92231d0a67d3320672178916e6ca0b4b818d048a948be
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-scotland-settlement-placement/assets/crown-of-scotland-locations.kmz
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:783f86376a636e8e6e7309548a31761b25827173ccbc1019f218dad0f12e0b49
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-scotland-settlement-placement/assets/lordship-of-the-isles-locations.kmz
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:4c2544159e319ad486f8dbfc061c572a8c31d636d046d45b1357ca0b58275c5e
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-scotland-settlement-placement/assets/scotland-calibration-reference.png
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:1cd498ed21a8d948020a59a004ed7a319bde802d19adb69a1c3a45ea9dd78b38
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-scotland-settlement-placement/assets/scotland-calibration.json
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:36284ebafff5da9c44b77cff650e292f699b34079d19c91f0af27c32766d801c
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-scotland-settlement-placement/references/calibration.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:be8f22cf45cb70b72b74a3576f352fd84011f0055fef41951769e2e1c5aa2c42
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-scotland-settlement-placement/scripts/place_settlements.py
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:514bc3b865a6272f23e14544cd31901d2fabd46adb7cbbcb0bd64aa147c3014a
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-sprite-analyze
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-sprite-analyze/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:a4e009b12a8ab6fbb792ec0e2aea44541b837854f0f3b1664a67e2422752f635
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-sprite-extract
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-sprite-extract/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:78a27ee04fd86680bce9a60d49248bbc5c0b856e234400852e2e5a098bb6c9c4
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-sprite-inject
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-sprite-inject/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:4a7f860db9e982d8dad3547764cf3b063542eaf4173ff94b5b4fd03c35349384
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-sprite-list
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/bannerlord-sprite-list/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:9979bc6767a8bd86ac194d33b32a125f56cee07f622e031230c58f785363d813
+- kind: project-relative
+  target: codex
+  value: .agents/skills/dadg-project-context
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/dadg-project-context/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:db9769d471d0fdcec2620cd83850a0dafa10f2c4e7ea9a850ec6757e5880cd5f
+- kind: project-relative
+  target: codex
+  value: .agents/skills/dadg-project-context/references/case-study-settlement-visual-crash.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:77885d58b38bef536034e9bf34d0408af5182e2f645b8c2c3490ce0674df86e2
+- kind: project-relative
+  target: codex
+  value: .agents/skills/dadg-project-context/references/dadg-feature-domains.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:a93013118a173ef2a8351d831c39fba7892b62c03de2c78248dee0d0bf48315d
+- kind: project-relative
+  target: codex
+  value: .agents/skills/dadg-project-context/references/dadg-module-structure.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:3fd5b1ebe54e58a11dc60565afd84a33e6c85a95552a63ee9103e370ad345b3e
+- kind: project-relative
+  target: codex
+  value: .agents/skills/dadg-project-context/references/dadg-project-overview.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:84ef35fe89880237ac4b8ce1d5e32c279bd1a9177b6715ac44cef34a2aed3c44
+- kind: project-relative
+  target: codex
+  value: .agents/skills/dadg-project-context/references/lord-hall-battle-london-example.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:f1262340272100c00dd7732eccf9e6db8fad5a2ad531ed0909f950bdb5c3ff95
+- kind: project-relative
+  target: codex
+  value: .agents/skills/dadg-project-context/references/navmesh-setup-and-repair.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:e400d72264d61c0cb36161ca17070df4927da1cf2152769a3c62f38886c16090
+- kind: project-relative
+  target: codex
+  value: .agents/skills/dadg-project-context/references/war-sails-ships.md
+  runtime: null
+  scope: project
+  owners:
+  - ./submodules/dadg-agent
+  active_owner: ./submodules/dadg-agent
+  content_hash: sha256:979cfb68d40630ad7b43025185800165fce3f6d4f6534a38c38e770d698f0e4c
+- kind: project-relative
+  target: codex
+  value: .codex/agents/bannerlord-debug-playtester.toml
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  - .
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:c3263042411007e47e6dc5ef3854919c92102ceaea8a86c8f4c4b6ec87bc1fcc
+- kind: project-relative
+  target: codex
+  value: .codex/hooks/bannerlord-agent/.apm/hooks/scripts/jb-pause-guard.ps1
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:b9b0cd0323fef3f8fad1b1a2b720583772b99f466ae251c259cd3d1358e657c3
+- kind: project-relative
+  target: codex
+  value: .codex/hooks/bannerlord-agent/.apm/hooks/scripts/session-start.ps1
+  runtime: null
+  scope: project
+  owners:
+  - joefwd/bannerlord-agent
+  active_owner: joefwd/bannerlord-agent
+  content_hash: sha256:06be0872cd6c01f172522dc3ab1591cc54101ea0f9e9d3f5a61cd2e109170d08
+- kind: project-relative
+  target: legacy
+  value: .agents/skills/bannerlord-navmesh-preview/references/navmesh-setup-and-repair.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:17a4f404ce04d866650de1d5b4f8c92ade98fbe57492486a77c3e9f83efcc9f8
+- kind: uri
+  target: mcp
+  value: bannerlord-game-controller
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: bannerlord-search-1_2_12
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: bannerlord-search-1_3_15
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: bannerlord-search-1_4_6
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: bannerlord-search-1_4_8
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: jetbrains-debugger
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: music-analysis
+  runtime: claude
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: bannerlord-game-controller
+  runtime: codex
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: bannerlord-search-1_2_12
+  runtime: codex
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: bannerlord-search-1_3_15
+  runtime: codex
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: bannerlord-search-1_4_6
+  runtime: codex
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: bannerlord-search-1_4_8
+  runtime: codex
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: jetbrains-debugger
+  runtime: codex
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: uri
+  target: mcp
+  value: music-analysis
+  runtime: codex
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+mcp_servers:
+- bannerlord-game-controller
+- bannerlord-search-1_2_12
+- bannerlord-search-1_3_15
+- bannerlord-search-1_4_6
+- bannerlord-search-1_4_8
+- jetbrains-debugger
+- music-analysis
+mcp_configs:
+  bannerlord-game-controller:
+    name: bannerlord-game-controller
+    transport: stdio
+    args:
+    - apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py
+    - --url
+    - http://localhost:8080/mcp
+    registry: false
+    command: python
+  bannerlord-search-1_2_12:
+    name: bannerlord-search-1_2_12
+    transport: stdio
+    args:
+    - apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py
+    - --url
+    - http://localhost:5000
+    registry: false
+    command: python
+  bannerlord-search-1_3_15:
+    name: bannerlord-search-1_3_15
+    transport: stdio
+    args:
+    - apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py
+    - --url
+    - http://localhost:5001
+    registry: false
+    command: python
+  bannerlord-search-1_4_6:
+    name: bannerlord-search-1_4_6
+    transport: stdio
+    args:
+    - apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py
+    - --url
+    - http://localhost:5003
+    registry: false
+    command: python
+  bannerlord-search-1_4_8:
+    name: bannerlord-search-1_4_8
+    transport: stdio
+    args:
+    - apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py
+    - --url
+    - http://localhost:5002
+    registry: false
+    command: python
+  jetbrains-debugger:
+    name: jetbrains-debugger
+    transport: stdio
+    args:
+    - apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py
+    - --url
+    - http://localhost:29202/debugger-mcp/streamable-http
+    registry: false
+    command: python
+  music-analysis:
+    name: music-analysis
+    transport: stdio
+    args:
+    - -n
+    - mcp_local_music_analysis
+    registry: false
+    command: uvx
+mcp_target_servers:
+  claude:
+  - bannerlord-game-controller
+  - bannerlord-search-1_2_12
+  - bannerlord-search-1_3_15
+  - bannerlord-search-1_4_6
+  - bannerlord-search-1_4_8
+  - jetbrains-debugger
+  - music-analysis
+  codex:
+  - bannerlord-game-controller
+  - bannerlord-search-1_2_12
+  - bannerlord-search-1_3_15
+  - bannerlord-search-1_4_6
+  - bannerlord-search-1_4_8
+  - jetbrains-debugger
+  - music-analysis
+local_deployed_files:
+- .agents/skills/bannerlord-debug
+- .agents/skills/bannerlord-debug/SKILL.md
+- .agents/skills/bannerlord-navmesh-preview
+- .agents/skills/bannerlord-navmesh-preview/references/navmesh-setup-and-repair.md
+- .claude/agents/bannerlord-debug-playtester.md
+- .claude/skills/bannerlord-debug
+- .claude/skills/bannerlord-debug/SKILL.md
+- .claude/skills/bannerlord-navmesh-preview
+- .codex/agents/bannerlord-debug-playtester.toml
+local_deployed_file_hashes:
+  .agents/skills/bannerlord-debug/SKILL.md: sha256:b26e9eb5c841c371b5e5438035ee55e52f10069c482894a60d1cec71b4410e70
+  .agents/skills/bannerlord-navmesh-preview/references/navmesh-setup-and-repair.md: sha256:17a4f404ce04d866650de1d5b4f8c92ade98fbe57492486a77c3e9f83efcc9f8
+  .claude/agents/bannerlord-debug-playtester.md: sha256:4fc1cbee26b019b23c6afab49463ece4eed767f3f20f1f62dba4ae4c97fa9143
+  .claude/skills/bannerlord-debug/SKILL.md: sha256:b26e9eb5c841c371b5e5438035ee55e52f10069c482894a60d1cec71b4410e70
+  .codex/agents/bannerlord-debug-playtester.toml: sha256:c3263042411007e47e6dc5ef3854919c92102ceaea8a86c8f4c4b6ec87bc1fcc
