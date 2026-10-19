@@ -15,9 +15,9 @@ Place a custom PNG sprite into a mod's SpriteParts folder and register it in the
 
 - `<sprite name>` — e.g. `SPGeneral\Siege\culverin` (backslash-separated namespace path)
 - `--png` — path to the custom source PNG (must already exist at the correct pixel dimensions)
-- `--spritedata` — path to the mod's SpriteData XML (e.g. `DadgCannonsSpriteData.xml`)
+- `--spritedata` — path to the mod's SpriteData XML (e.g. `MyModSpriteData.xml`)
 - `--spriteparts` — path to the mod's SpriteParts root folder (e.g. `GUI\SpriteParts`)
-- `--category` — sprite category name (e.g. `dadg_ui_cannon`); if omitted, reads the first category from the SpriteData XML
+- `--category` — sprite category name (e.g. `mymod_ui_icons`); if omitted, reads the first category from the SpriteData XML
 
 ## After This Skill Runs
 
@@ -39,12 +39,12 @@ Parse the arguments to extract:
 - `--category` value (optional)
 
 First verify Python 3 and Pillow are available:
-```bash
+```powershell
 python --version
 python -c "from PIL import Image; print('Pillow OK')"
 ```
 If Pillow is missing, install it:
-```bash
+```powershell
 pip install Pillow
 ```
 
@@ -183,5 +183,5 @@ print(f"\nUpdated: {spritedata}")
 print(f"\nNext step: run SpriteSheetGenerator.exe to repack the atlas into a .tpac")
 ```
 
-Pass the script to Python via the Bash tool.
+Pass the script to Python via PowerShell.
 Show the user the output, confirm what was changed, and remind them of the manual repack step.

@@ -1,36 +1,37 @@
 ---
 name: bannerlord-gabs-start
 description: >
-  Launch the DellarteDellaGuerra Bannerlord mod under the JetBrains debugger AND
-  make it a fully GABS-managed instance so all GABP tools work. Use this skill
-  whenever the user wants to start Bannerlord for debugging, says things like
-  "launch the debug config", "start dadg debug", "start bannerlord with debugger",
-  "launch dadg standalone", "debug bannerlord", "start bannerlord for v1.2",
-  "start bannerlord for v1.3", or "start the jetbrains debug config".
+  Launch the current Bannerlord mod under the JetBrains debugger AND make it a
+  fully GABS-managed instance so all GABP tools work. Use this skill whenever the
+  user wants to start Bannerlord for debugging, says things like "launch the debug
+  config", "start bannerlord with debugger", "launch standalone", "debug bannerlord",
+  "start bannerlord for v1.4", or "start the jetbrains debug config".
   Also use it when the user wants to both have the debugger attached AND be able to
   control the game via GABS tools. This skill handles the full setup — bridge.json,
   runtime state, JetBrains session, and GABS connection — in one go.
-  Pass "v1.2" or "v1.3" as an argument to target a specific game version (default: v1.3).
+  Pass a game version as an argument when the project has several installs.
 ---
 
-# DellarteDellaGuerra Debug Launch
+# Bannerlord Debug Launch
 
-Launches Bannerlord via the JetBrains "DellarteDellaGuerra.Integration: Standalone"
-debug config and connects GABS to the running instance. By the end the debugger is
-attached and all GABP tools are live.
+Launches Bannerlord via the mod's JetBrains debug run configuration and connects
+GABS to the running instance. By the end the debugger is attached and all GABP
+tools are live.
 
 ---
 
-## Version resolution
+## Project resolution
 
-Determine the target game version from ARGUMENTS (default: v1.3):
+Take these from the project's Bannerlord agent settings (an instructions/rules file
+shipped by the mod's own agent package):
 
-| ARGUMENTS contains | `project_path` |
-|--------------------|----------------|
-| `v1.2`             | `D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.2/Modules/DellarteDellaGuerra.Core/src` |
-| `v1.3` or (empty)  | `D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.3/Modules/DellarteDellaGuerra.Core/src` |
+- the JetBrains debug run configuration name (Step 3)
+- `project_path` — the folder Rider opened, per game version when ARGUMENTS names one
 
-Use this `project_path` in Step 3. All other steps are version-independent.
+If there are no settings, `project_path` is the project folder holding `apm.yml`,
+and the run configuration is the launch profile in `**/Properties/launchSettings.json`
+that loads `Bannerlord.GABS`; ask the user if several match. Write `project_path` with
+forward slashes. All other steps are version-independent.
 
 ---
 
@@ -44,10 +45,9 @@ Call `mcp__bannerlord-game-controller__games_status` with `gameId: "bannerlord"`
 
 ---
 
-## Step 2 — Prepare the GABS files and ensure AssertAutoIgnore is running (PowerShell only)
+## Step 2 — Prepare the GABS files and ensure AssertAutoIgnore is running
 
-The Read/Write/Edit tools operate on the Linux side of this environment. These files
-live on Windows where GABS reads them — use the `PowerShell` tool for both.
+These files live on Windows where GABS reads them. Use PowerShell for the setup steps.
 
 First, ensure Steam is running — Bannerlord requires Steam and will fail without it:
 
@@ -63,22 +63,30 @@ if (-not (Get-Process -Name "steam" -ErrorAction SilentlyContinue)) {
 If the output is `STEAM_STARTED`, wait 10 seconds for Steam to initialise before continuing.
 
 Rewrite bridge.json (always — GABS may have overwritten it with a random port/token
-from a previous managed session):
+from a previous managed session). The port and token must match the
+`GABP_SERVER_PORT` and `GABP_TOKEN` environment variables of the debug profile in
+the mod's `launchSettings.json`; read them from there, never invent a token:
 
 ```powershell
+$port  = <GABP_SERVER_PORT from the launch profile>
+$token = '<GABP_TOKEN from the launch profile>'
 $dir = Join-Path $HOME ".gabs\bannerlord"
 New-Item -ItemType Directory -Force -Path $dir | Out-Null
 $bridgePath = Join-Path $dir "bridge.json"
-$content = '{"port": 4825, "token": "80c93be27f02d35bedbe46493ce7a12f3d9976cc195cce2ece727cfdd0f09f9d", "gameId": "bannerlord"}'
+$content = @{ port = $port; token = $token; gameId = "bannerlord" } | ConvertTo-Json -Compress
 Set-Content -Path $bridgePath -Value $content -NoNewline
 Write-Host "GABS files ready"
 ```
 
-Then ensure AssertAutoIgnore is running (it auto-dismisses Bannerlord popups including Safe Mode):
+Then ensure AssertAutoIgnore is running (it auto-dismisses Bannerlord popups including
+Safe Mode). Its path comes from the `ASSERT_AUTO_IGNORE_EXE` environment variable; if
+it is unset, skip this and expect to dismiss popups yourself:
 
 ```powershell
-$exe = "D:\Bannerlord\Tools\AssertAutoIgnore\AssertAutoIgnore\AssertAutoIgnore.exe"
-if (-not (Get-Process -Name "AssertAutoIgnore" -ErrorAction SilentlyContinue)) {
+$exe = $env:ASSERT_AUTO_IGNORE_EXE
+if (-not $exe) {
+    Write-Host "ASSERT_AUTO_IGNORE_EXE not set - skipping"
+} elseif (-not (Get-Process -Name "AssertAutoIgnore" -ErrorAction SilentlyContinue)) {
     Start-Process -FilePath $exe -WindowStyle Hidden
     Write-Host "AssertAutoIgnore started"
 } else {
@@ -91,15 +99,15 @@ if (-not (Get-Process -Name "AssertAutoIgnore" -ErrorAction SilentlyContinue)) {
 ## Step 3 — Start the JetBrains debug session
 
 Call `mcp__jetbrains-debugger__start_debug_session`:
-- `configuration_name`: `"DellarteDellaGuerra.Integration: Standalone"`
-- `project_path`: the path resolved in the Version resolution section above
+- `configuration_name`: the debug run configuration resolved in Project resolution
+- `project_path`: the path resolved in Project resolution
 
 Note the session ID from the response — report it to the user.
 
-The launchSettings.json Standalone profile already includes `Bannerlord.GABS` in the
-module list and sets `GABP_SERVER_PORT=4825`, `GABP_TOKEN`, `GABS_GAME_ID`, and
-`GABS_BRIDGE_PATH` as env vars — so the game will start the GABP bridge on port 4825
-with the token written in Step 2. No further configuration needed.
+The debug launch profile is expected to include `Bannerlord.GABS` in the module list
+and set `GABP_SERVER_PORT`, `GABP_TOKEN`, `GABS_GAME_ID`, and `GABS_BRIDGE_PATH` as env
+vars — so the game starts the GABP bridge on that port with the token written in Step 2.
+If the profile lacks them, stop and tell the user; GABS cannot connect without them.
 
 ---
 
@@ -109,12 +117,20 @@ Poll `games_connect` with `gameId: "bannerlord"`, `timeout: 15` every ~15 second
 it succeeds. AssertAutoIgnore (started in Step 2) handles any Safe Mode popups in the
 background — no special handling needed here.
 
+**Readiness rule:** `games_connect` is the authoritative GABP-readiness check. A Rider
+session with zero threads/frames and `games_status == stopped` do **not** prove that the
+Bannerlord window has not reached the main menu; they can simply mean GABP has not
+registered yet. If the user reports that the game is at the menu, retry `games_connect`
+immediately before diagnosing a launch failure. `games_connect` confirms only the bridge;
+Step 5 confirms the UI state.
+
 - **Connected** → follow immediately with `games_status` to confirm, then go to Step 5.
 - **Timeout / connection refused** → game is still loading. Wait 15 s and retry.
-- **Game process gone** (check via `games_status` returning `stopped`) → game crashed
-  during loading. Call `mcp__jetbrains-debugger__get_debug_session_status` immediately
-  (50 frames, include variables). Act fast — the JetBrains session closes when the
-  process exits.
+- **`games_status` returns `stopped`** → GABP is unavailable, not necessarily that the
+  game exited. Verify that the Bannerlord process or debugger session has actually ended
+  before treating it as a crash. If it has ended, call
+  `mcp__jetbrains-debugger__get_debug_session_status` immediately (50 frames, include
+  variables). Act fast — the JetBrains session closes when the process exits.
 
 ---
 

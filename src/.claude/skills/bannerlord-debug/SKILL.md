@@ -1,37 +1,43 @@
 ---
 name: bannerlord-debug
 description: >
-  Debugging guide for DADG / Bannerlord issues — crashes, exceptions, wrong game
+  Debugging guide for Bannerlord mod issues — crashes, exceptions, wrong game
   behaviour. Read this skill whenever the task involves debugging a crash, analysing
   a CLR exception, investigating unexpected game behaviour, tracing a bug through
   mod code or game data, or iterating fix → relaunch → verify cycles.
 ---
 
-# DADG Bannerlord Debugging Workflow
+# Bannerlord Debugging Workflow
 
 ---
 
-## 0 — Read ALL knowledge bases before writing a single line of code
+## 0 — Load project context and debug references before changing behavior
 
-**Stop. Read them all first.** Many "obvious" fixes turn out to be wrong or already handled
-once you understand the full picture. This step has saved (and cost) hours.
+**Stop. Read the relevant context first.** Many "obvious" fixes turn out to be
+wrong or already handled once you understand the full picture.
 
-- `.claude/knowledge/dadg-project-overview.md` — architecture, build commands, MCP tools, DI pattern
-- `.claude/knowledge/dadg-feature-domains.md` — every feature domain and where the C# lives
-- `.claude/knowledge/dadg-module-structure.md` — multi-module layout (Core, Map, Scenes, Content)
-- `.claude/knowledge/dadg-gabs-protocol.md` — GABS/GABP bridge details
-- `.claude/knowledge/bannerlord-debugging-workflow.md` — CLR exception strategy (critical)
+For the mod's layout and feature ownership, read the project's own context skill
+and its Bannerlord agent settings (shipped by the mod's agent package), if any. The
+settings also name project-specific debugging notes and case studies.
 
-DADG is **multi-module**. The bug you're chasing may not be in C# at all — it could be in:
-- XML data (`../DellarteDellaGuerra/ModuleData/`)
-- Scene entities (`../DellarteDellaGuerraScenes/SceneObj/<scene>/scene.xscene`)
-- Campaign map entities (`../DellarteDellaGuerraMap/SceneObj/Main_map/scene.xscene`)
+For live runtime debugging, read:
+
+- `references/bannerlord-debugging-workflow.md` — CLR exception strategy
+- `references/gabs-protocol.md` — GABS/GABP bridge **setup** (bridge.json, ports, session lifecycle)
+- `references/gabs-runtime-workarounds.md` — **using** GABS once it is up: tool discovery, argument shapes, and the known runtime traps (invisible global inquiries, paused-debugger timeouts, campaign-init crashes). Read this before any live playtest.
+- `references/jetbrains-debugger-tips.md` — Rider debugger gotchas
+
+Mods are usually **multi-module**. The bug you're chasing may not be in C# at all — it
+could be in any of the mod's modules:
+- XML data (`<module>/ModuleData/`)
+- Scene entities (`<module>/SceneObj/<scene>/scene.xscene`)
+- Campaign map entities (`<map module>/SceneObj/Main_map/scene.xscene`)
 
 ---
 
 ## 1 — CLR exception strategy (critical)
 
-See `.claude/knowledge/bannerlord-debugging-workflow.md` for full detail. Summary:
+See `references/bannerlord-debugging-workflow.md` for full detail. Summary:
 
 **During loading** — resume immediately. These are handled engine exceptions (e.g. `MBObjectManager.cs:993` XML parsing). They are noise.
 
@@ -40,7 +46,7 @@ See `.claude/knowledge/bannerlord-debugging-workflow.md` for full detail. Summar
 When paused on a campaign/mission exception:
 1. Read the full stack trace and current source location
 2. Inspect variables via `mcp__jetbrains-debugger__get_variables` or `evaluate_expression`
-3. Search Bannerlord source (`mcp__bannerlord-search-1_3_1__search_bannerlord_code`) for context
+3. Search Bannerlord source (`mcp__bannerlord-search-<version>__search_bannerlord_code`, matching the running game) for context
 4. Reason about root cause before acting
 5. Only resume when you have a diagnosis and intend to write a fix, or are deliberately discarding the session
 
@@ -63,11 +69,11 @@ Use the **`bannerlord-gabs-session-reset`** skill to kill Bannerlord and clean G
 ### 2c. Launch with debugger
 
 Use the **`bannerlord-gabs-start`** skill (with optional save name argument). This:
-- Writes `bridge.json` with the fixed port/token
+- Writes `bridge.json` with the launch profile's port/token
 - Ensures `AssertAutoIgnore.exe` is running (auto-dismisses Bannerlord popups)
-- Starts the JetBrains debug session (`DellarteDellaGuerra.Integration: Standalone`)
+- Starts the mod's JetBrains debug session
   - The debug config triggers a build automatically — if the session fails to start, check the Rider build output for compile errors
-- Waits for `runtime.json` via `Bash run_in_background` (handles any load time, fast or slow)
+- Waits for `runtime.json` with a non-blocking PowerShell polling command (handles any load time, fast or slow)
 - Connects GABP and reports blockers
 
 ### 2d. Resume loading-phase exceptions
@@ -110,16 +116,15 @@ After a breakpoint fires, inspect variables and evaluate expressions before resu
 
 ### Logging
 
-DADG uses NLog. Log file: `../log/` (relative to `src/`). Add calls via the injected `ILogger`:
+Use the mod's own logger; the project settings name the log file. For example:
 
 ```csharp
 _logger.Info($"Defender cache length: {cache.Length}, slotIndex: {slotIndex}");
-_logger.Warn($"Settlement {settlement.Name} has no defender engine slots at wall level {wallLevel}");
 ```
 
-Rebuild (or let the debug config build on launch), then grep the log to observe behaviour:
-```bash
-grep -i "defender cache" "../log/dadg.log" | tail -20
+Rebuild (or let the debug config build on launch), then search the log to observe behaviour:
+```powershell
+Select-String -Path "<mod log file>" -Pattern "defender cache" | Select-Object -Last 20
 ```
 
 Logging is especially useful in mission code where interactive breakpoints are awkward (battles move fast).
@@ -128,27 +133,26 @@ Logging is especially useful in mission code where interactive breakpoints are a
 
 ## 5 — Investigating data bugs
 
-Many DADG bugs are not C# bugs — they are data bugs.
+Many mod bugs are not C# bugs — they are data bugs.
 
 ### XML data
 
 Grep the XML directly across all modules:
 ```
-../DellarteDellaGuerra/ModuleData/
-../DellarteDellaGuerraMap/ModuleData/
+<mod module>/ModuleData/       ← each of the mod's modules
 ../Native/ModuleData/          ← vanilla reference
 ../SandBox/ModuleData/         ← vanilla reference
 ../SandBoxCore/ModuleData/     ← vanilla reference
 ```
 
-Compare DADG XML against vanilla to find missing entries, wrong IDs, or misconfigured values.
+Compare the mod's XML against vanilla to find missing entries, wrong IDs, or misconfigured values.
 
 ### Scene files (xscene)
 
 Scene files live in:
 ```
-../DellarteDellaGuerraScenes/SceneObj/<scene_name>/scene.xscene   ← mission scenes
-../DellarteDellaGuerraMap/SceneObj/Main_map/scene.xscene          ← campaign map
+<mod module>/SceneObj/<scene_name>/scene.xscene                    ← mission scenes
+<map module>/SceneObj/Main_map/scene.xscene                        ← campaign map
 ../SandBox/SceneObj/Main_map/scene.xscene                         ← vanilla map reference
 ```
 
@@ -157,8 +161,8 @@ Scene files live in:
 Grep pattern="map_defensive_engine" path="...scene.xscene" context=5
 ```
 
-Compare DADG scenes against vanilla to find missing entity types, wrong tags, or missing
-upgrade level masks. Example from this codebase: DADG was missing `defender_ranged_l1` and
+Compare the mod's scenes against vanilla to find missing entity types, wrong tags, or missing
+upgrade level masks. Real example: a mod's campaign map was missing `defender_ranged_l1` and
 `defender_ranged_l2` entities entirely — every settlement only had `l3`, so any settlement
 with wall level 1 or 2 had an empty visual cache → crash.
 

@@ -32,7 +32,7 @@ Regardless of the input format, convert the file to OGG (Opus) using ffmpeg. Thi
 
 Derive `ogg_path` by replacing the extension of `--file` with `.ogg` (same directory, same basename):
 
-```bash
+```powershell
 ffmpeg -i "<input_file>" -vn -c:a libopus -b:a 128k "<ogg_path>"
 ```
 
