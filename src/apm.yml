@@ -62,4 +62,6 @@ dependencies:
       command: uvx
       args:
         - "-n"
-        - mcp_local_music_analysis
+        - --with
+        - mcp==1.30.0
+        - mcp_local_music_analysis@0.1.0
