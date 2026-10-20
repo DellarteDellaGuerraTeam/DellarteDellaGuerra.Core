@@ -6,4 +6,4 @@ targets:
   - codex
 dependencies:
   apm:
-    - JoeFwd/dadg-agent#v0.2.0
+    - JoeFwd/dadg-agent#v0.3.0
