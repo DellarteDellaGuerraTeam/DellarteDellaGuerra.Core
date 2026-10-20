@@ -1,8 +1,12 @@
 lockfile_version: '1'
 apm_version: 0.33.0
 dependencies:
-- repo_url: _local/dadg-agent
+- repo_url: joefwd/dadg-agent
+  materialization_repo_url: JoeFwd/dadg-agent
   name: dadg-agent
+  host: github.com
+  resolved_commit: 5db3b440dd61a7c00ef27d28b975eb7e483c1db4
+  resolved_ref: v0.2.0
   version: 0.2.0
   package_type: apm_package
   deployed_files:
@@ -81,8 +85,7 @@ dependencies:
     .claude/skills/dadg-project-context/references/lord-hall-battle-london-example.md: sha256:f1262340272100c00dd7732eccf9e6db8fad5a2ad531ed0909f950bdb5c3ff95
     .claude/skills/dadg-project-context/references/navmesh-setup-and-repair.md: sha256:e400d72264d61c0cb36161ca17070df4927da1cf2152769a3c62f38886c16090
     .claude/skills/dadg-project-context/references/war-sails-ships.md: sha256:979cfb68d40630ad7b43025185800165fce3f6d4f6534a38c38e770d698f0e4c
-  source: local
-  local_path: ./submodules/dadg-agent
+  content_hash: sha256:c41df5e464e6499eedbfc9153782d3f69dc3fbaf994432ae4215bc9ec9035163
 - repo_url: joefwd/bannerlord-agent
   materialization_repo_url: JoeFwd/bannerlord-agent
   name: bannerlord-agent
@@ -91,7 +94,7 @@ dependencies:
   resolved_ref: v0.1.9
   version: 0.1.9
   depth: 2
-  resolved_by: _local/dadg-agent
+  resolved_by: JoeFwd/dadg-agent
   package_type: apm_package
   deployed_files:
   - .agents/skills/bannerlord-crafting-offsets
@@ -289,8 +292,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:4712e4513b02e431f900214ba191aa13bfc54c5707f135cc34c6ec4b879d1748
 - kind: project-relative
   target: claude
@@ -298,8 +301,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:b8f286f0293fa9805cc7d87d30398b20edbe85c51cd8640bf7edc1bdf1627217
 - kind: project-relative
   target: claude
@@ -307,8 +310,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:4dde1c4166c81942f6299d71022799500a94804049d50cc835382de3664f3590
 - kind: project-relative
   target: claude
@@ -613,8 +616,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: null
 - kind: project-relative
   target: claude
@@ -622,8 +625,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:be0ba883d87fce6a0c9f9d22531cd133223e738a5c858f12aaa183315692343f
 - kind: project-relative
   target: claude
@@ -631,8 +634,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:76cd2ad72a4cfebe5aa92231d0a67d3320672178916e6ca0b4b818d048a948be
 - kind: project-relative
   target: claude
@@ -640,8 +643,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:783f86376a636e8e6e7309548a31761b25827173ccbc1019f218dad0f12e0b49
 - kind: project-relative
   target: claude
@@ -649,8 +652,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:4c2544159e319ad486f8dbfc061c572a8c31d636d046d45b1357ca0b58275c5e
 - kind: project-relative
   target: claude
@@ -658,8 +661,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:1cd498ed21a8d948020a59a004ed7a319bde802d19adb69a1c3a45ea9dd78b38
 - kind: project-relative
   target: claude
@@ -667,8 +670,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:36284ebafff5da9c44b77cff650e292f699b34079d19c91f0af27c32766d801c
 - kind: project-relative
   target: claude
@@ -676,8 +679,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:be8f22cf45cb70b72b74a3576f352fd84011f0055fef41951769e2e1c5aa2c42
 - kind: project-relative
   target: claude
@@ -685,8 +688,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:514bc3b865a6272f23e14544cd31901d2fabd46adb7cbbcb0bd64aa147c3014a
 - kind: project-relative
   target: claude
@@ -766,8 +769,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: null
 - kind: project-relative
   target: claude
@@ -775,8 +778,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:db9769d471d0fdcec2620cd83850a0dafa10f2c4e7ea9a850ec6757e5880cd5f
 - kind: project-relative
   target: claude
@@ -784,8 +787,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:77885d58b38bef536034e9bf34d0408af5182e2f645b8c2c3490ce0674df86e2
 - kind: project-relative
   target: claude
@@ -793,8 +796,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:a93013118a173ef2a8351d831c39fba7892b62c03de2c78248dee0d0bf48315d
 - kind: project-relative
   target: claude
@@ -802,8 +805,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:3fd5b1ebe54e58a11dc60565afd84a33e6c85a95552a63ee9103e370ad345b3e
 - kind: project-relative
   target: claude
@@ -811,8 +814,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:84ef35fe89880237ac4b8ce1d5e32c279bd1a9177b6715ac44cef34a2aed3c44
 - kind: project-relative
   target: claude
@@ -820,8 +823,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:f1262340272100c00dd7732eccf9e6db8fad5a2ad531ed0909f950bdb5c3ff95
 - kind: project-relative
   target: claude
@@ -829,8 +832,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:e400d72264d61c0cb36161ca17070df4927da1cf2152769a3c62f38886c16090
 - kind: project-relative
   target: claude
@@ -838,8 +841,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:979cfb68d40630ad7b43025185800165fce3f6d4f6534a38c38e770d698f0e4c
 - kind: project-relative
   target: codex
@@ -1144,8 +1147,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: null
 - kind: project-relative
   target: codex
@@ -1153,8 +1156,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:be0ba883d87fce6a0c9f9d22531cd133223e738a5c858f12aaa183315692343f
 - kind: project-relative
   target: codex
@@ -1162,8 +1165,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:76cd2ad72a4cfebe5aa92231d0a67d3320672178916e6ca0b4b818d048a948be
 - kind: project-relative
   target: codex
@@ -1171,8 +1174,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:783f86376a636e8e6e7309548a31761b25827173ccbc1019f218dad0f12e0b49
 - kind: project-relative
   target: codex
@@ -1180,8 +1183,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:4c2544159e319ad486f8dbfc061c572a8c31d636d046d45b1357ca0b58275c5e
 - kind: project-relative
   target: codex
@@ -1189,8 +1192,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:1cd498ed21a8d948020a59a004ed7a319bde802d19adb69a1c3a45ea9dd78b38
 - kind: project-relative
   target: codex
@@ -1198,8 +1201,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:36284ebafff5da9c44b77cff650e292f699b34079d19c91f0af27c32766d801c
 - kind: project-relative
   target: codex
@@ -1207,8 +1210,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:be8f22cf45cb70b72b74a3576f352fd84011f0055fef41951769e2e1c5aa2c42
 - kind: project-relative
   target: codex
@@ -1216,8 +1219,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:514bc3b865a6272f23e14544cd31901d2fabd46adb7cbbcb0bd64aa147c3014a
 - kind: project-relative
   target: codex
@@ -1297,8 +1300,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: null
 - kind: project-relative
   target: codex
@@ -1306,8 +1309,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:db9769d471d0fdcec2620cd83850a0dafa10f2c4e7ea9a850ec6757e5880cd5f
 - kind: project-relative
   target: codex
@@ -1315,8 +1318,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:77885d58b38bef536034e9bf34d0408af5182e2f645b8c2c3490ce0674df86e2
 - kind: project-relative
   target: codex
@@ -1324,8 +1327,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:a93013118a173ef2a8351d831c39fba7892b62c03de2c78248dee0d0bf48315d
 - kind: project-relative
   target: codex
@@ -1333,8 +1336,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:3fd5b1ebe54e58a11dc60565afd84a33e6c85a95552a63ee9103e370ad345b3e
 - kind: project-relative
   target: codex
@@ -1342,8 +1345,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:84ef35fe89880237ac4b8ce1d5e32c279bd1a9177b6715ac44cef34a2aed3c44
 - kind: project-relative
   target: codex
@@ -1351,8 +1354,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:f1262340272100c00dd7732eccf9e6db8fad5a2ad531ed0909f950bdb5c3ff95
 - kind: project-relative
   target: codex
@@ -1360,8 +1363,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:e400d72264d61c0cb36161ca17070df4927da1cf2152769a3c62f38886c16090
 - kind: project-relative
   target: codex
@@ -1369,8 +1372,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./submodules/dadg-agent
-  active_owner: ./submodules/dadg-agent
+  - joefwd/dadg-agent
+  active_owner: joefwd/dadg-agent
   content_hash: sha256:979cfb68d40630ad7b43025185800165fce3f6d4f6534a38c38e770d698f0e4c
 - kind: project-relative
   target: codex
