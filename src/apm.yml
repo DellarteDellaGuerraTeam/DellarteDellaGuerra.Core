@@ -1,9 +1,9 @@
 name: dellarte-della-guerra
 version: 0.1.0
-description: DellarteDellaGuerra agent setup; the harness lives in the dadg-agent submodule, which depends on bannerlord-agent.
+description: DellarteDellaGuerra agent setup; installs the dadg-agent release, which depends on bannerlord-agent. submodules/dadg-agent is only the editing checkout.
 targets:
   - claude
   - codex
 dependencies:
   apm:
-    - ./submodules/dadg-agent
+    - JoeFwd/dadg-agent#v0.2.0
