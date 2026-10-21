@@ -23,6 +23,7 @@ using DellarteDellaGuerra.Infrastructure.Firearm;
 using DellarteDellaGuerra.Infrastructure.Firearm.Patches;
 using DellarteDellaGuerra.Infrastructure.Logging;
 using DellarteDellaGuerra.Infrastructure.MbObjects;
+using DellarteDellaGuerra.Infrastructure.MainMenu.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Visor.Spi;
 using DellarteDellaGuerra.Integration.CampaignTime;
@@ -144,6 +145,8 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, GetHolsterImageForBuIletsInInventoryPatch>();
         // Steam
         services.AddSingleton<IPatch, FixSettlementFilePathPatch>();
+        // Main menu
+        services.AddSingleton<IPatch, MainMenuSkipVideoPatch>();
             // Music
         services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
         // Siege engines
