@@ -67,6 +67,14 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
         /**
          * <summary>
+         *  The clan that held the town or castle when the war was declared, or null if the war or
+         *  the settlement is unknown. Answers for a war that has already ended.
+         * </summary>
+         */
+        string? GetPreWarOwnerClanId(string warId, string settlementId);
+
+        /**
+         * <summary>
          *  Every claim war still being fought, with the clan it was declared against.
          * </summary>
          */

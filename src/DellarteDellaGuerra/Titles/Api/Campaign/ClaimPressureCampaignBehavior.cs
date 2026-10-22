@@ -311,9 +311,15 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                     continue;
 
                 string ownerId = seat.OwnerClan.StringId;
-                if (ownerId != conclusion.DefenderClanId
-                    && !_privateWarDeclaration.IsOnAttackerSide(conclusion.WarId, ownerId))
-                    continue;
+                if (ownerId != conclusion.DefenderClanId)
+                {
+                    // A seat an attacker-side clan already held before the war stays with it.
+                    string? preWarOwnerId = _privateWarDeclaration.GetPreWarOwnerClanId(conclusion.WarId, seatId);
+                    if (!_privateWarDeclaration.IsOnAttackerSide(conclusion.WarId, ownerId)
+                        || preWarOwnerId is null
+                        || _privateWarDeclaration.IsOnAttackerSide(conclusion.WarId, preWarOwnerId))
+                        continue;
+                }
 
                 ChangeOwnerOfSettlementAction.ApplyByDefault(winner.Leader, seat);
             }

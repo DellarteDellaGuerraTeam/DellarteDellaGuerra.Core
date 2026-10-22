@@ -89,6 +89,9 @@ namespace DellarteDellaGuerra.Integration.PrivateWars
         public bool IsOnAttackerSide(string warId, string clanId) =>
             _privateWars.IsOnAttackerSide(warId, clanId);
 
+        public string? GetPreWarOwnerClanId(string warId, string settlementId) =>
+            _privateWars.GetPreWarOwnerClanId(warId, settlementId);
+
         public IReadOnlyList<ActiveClaimWar> GetActiveClaimWars() =>
             _privateWars.GetAllWars()
                 .Where(w => w.Status == PrivateWarStatus.Active && w.CasusBelliType == ClaimCasusBelli.ClaimType)

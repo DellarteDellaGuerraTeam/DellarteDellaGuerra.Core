@@ -22,16 +22,6 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
                             && w.DefenderPrincipalClanId == defenderPrincipalClanId)
                 .ToList();
 
-        public IReadOnlyList<PrivateWar> GetByDefender(string defenderPrincipalClanId) =>
-            _wars.Values
-                .Where(w => w.DefenderPrincipalClanId == defenderPrincipalClanId)
-                .ToList();
-
-        public IReadOnlyList<PrivateWar> GetByTitle(string titleId) =>
-            _wars.Values
-                .Where(w => w.TitleId == titleId)
-                .ToList();
-
         public IReadOnlyList<PrivateWar> GetByClan(string principalClanId) =>
             _wars.Values
                 .Where(w => w.AttackerPrincipalClanId == principalClanId
@@ -51,8 +41,6 @@ namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
             _wars.Clear();
             foreach (var war in wars) _wars[war.Id] = war;
         }
-
-        public IReadOnlyList<PrivateWar> Snapshot() => _wars.Values.ToList();
     }
 
     internal sealed class FakePrivateWarSidesProvider : IPrivateWarSidesProvider
