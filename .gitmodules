@@ -16,3 +16,6 @@
 [submodule "src/submodules/bannerlord-agent"]
 	path = src/submodules/bannerlord-agent
 	url = https://github.com/JoeFwd/bannerlord-agent.git
+[submodule "src/submodules/CampaignAudit"]
+	path = src/submodules/CampaignAudit
+	url = https://github.com/JoeFwd/Bannerlord.CampaignAudit.git
