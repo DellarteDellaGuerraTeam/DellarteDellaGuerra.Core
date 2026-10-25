@@ -1,6 +1,7 @@
 using System;
 using Bannerlord.PrivateWars.Api;
 using Bannerlord.PrivateWars.Domain;
+using DellarteDellaGuerra.Integration.Naval;
 using DellarteDellaGuerra.Integration.PrivateWars;
 using DellarteDellaGuerra.DisableNativeBehaviour.MissionBehaviours;
 using DellarteDellaGuerra.MainMenu;
@@ -157,6 +158,7 @@ public class DadgServiceContainer
         services.AddSingleton<IVisorVariantRepository, VisorVariantXmlRepository>();
         services.AddSingleton<VisorVariantCatalog>();
         services.AddTransient<VisorToggleMissionLogic>();
+        services.AddTransient<ShipSwivelGunCrewMissionLogic>();
     }
 
     private static void RegisterTitleServices(IServiceCollection services)

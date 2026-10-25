@@ -203,6 +203,7 @@ namespace DellarteDellaGuerra.Integration
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<BannerSurcoatMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<TournamentRecapBannerMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<VisorToggleMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<ShipSwivelGunCrewMissionLogic>());
         }
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)
