@@ -193,7 +193,17 @@ The enum (verified):
 | `ByRebellion` | Rebel clan seizes seat | **Contested** — rebels are illegitimate until regularised (free historicity) |
 | `ByKingDecision` | Claimant-election outcome / royal grant | **Full transfer** — this *is* the royal/ducal decision (§5.2) |
 | `ByGift`, `ByBarter` | Consensual conveyance | **Full transfer** (historically would need royal licence; not worth modelling) |
-| `ByLeaveFaction`, `ByClanDestruction`, `Default` | Administrative | **Full transfer** — self-healing fallback, keeps hierarchy matching the map |
+| `ByLeaveFaction`, `ByClanDestruction`, `Default` | Administrative | **Full transfer, no claim** — self-healing fallback, keeps hierarchy matching the map. *2026-10-26:* the former holder keeps no conquest claim: a departing clan forfeits its land, a destroyed clan leaves no one to press it. |
+
+> **2026-10-26 — the claimant election no longer runs after a capture.**
+> `DadgSettlementClaimantCampaignBehavior` (PrivateWars submodule) replaces vanilla
+> `SettlementClaimantCampaignBehavior` and never flags `Town.IsOwnerUnassigned`, so no
+> `SettlementClaimantDecision` follows a siege, a clan leaving, or a clan's destruction: the fief stays
+> with the king (`KingdomManager.SiegeCompleted` makes the king the new owner; a private-war siege is
+> redirected to the war's interim owner instead). The two-step "siege → election → `ByKingDecision`"
+> flow described below, and step 1 of §1, therefore no longer happen after captures; they still apply
+> to explicitly raised votes (a relinquished fief, a passed annexation). A future behaviour will have
+> the king grant open fiefs to clans. See `feudal-private-wars-design.md` §19.
 
 The vanilla flow already produces the two-step pattern we want: a siege fires `BySiege`
 (→ contested), the kingdom then runs the claimant election, and *its* outcome fires

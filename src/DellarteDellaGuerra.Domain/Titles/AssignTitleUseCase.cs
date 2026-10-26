@@ -98,8 +98,9 @@ namespace DellarteDellaGuerra.Domain.Titles
                 : title.GrantTo(newHolderId, currentDay));
             _logger.Info($"Title '{title.Id}' reassigned from '{previousHolderClanId ?? "<vacant>"}' to '{newHolderClanId ?? "<vacant>"}'");
 
+            // A clan that left the realm forfeits the land; a destroyed clan leaves no one to press it.
             bool claimGenerated = false;
-            if (previousHolderClanId != null)
+            if (previousHolderClanId != null && transferKind != SeatTransferKind.Administrative)
             {
                 string claimId = $"{title.Id}:{previousHolderClanId}:conquest";
                 bool claimExists = _claimRepository

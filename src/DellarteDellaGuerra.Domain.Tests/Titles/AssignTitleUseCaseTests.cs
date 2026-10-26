@@ -203,5 +203,14 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             Assert.Equal("clan_heir", _genealogy.GetHolderClanOf(title));
             Assert.Null(title.OccupantClanId);
         }
+
+        [Fact]
+        public void Execute_LeavesNoClaim_OnAdministrativeChange()
+        {
+            var result = _useCase.Execute("settlement_a", "clan_new", SeatTransferKind.Administrative, 10f);
+
+            Assert.False(result!.ClaimGenerated);
+            Assert.Empty(_claimRepository.GetClaimsOn("county_a"));
+        }
     }
 }

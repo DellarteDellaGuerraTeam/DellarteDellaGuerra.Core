@@ -54,6 +54,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         private readonly IGetDeJureSettlementsUseCase _getDeJureSettlementsUseCase;
         private readonly IAwardWonClaimUseCase _awardWonClaimUseCase;
         private readonly IGenerateBloodClaimsUseCase _generateBloodClaimsUseCase;
+        private readonly IScreenClaimUseCase _screenClaimUseCase;
         private readonly IEvaluatePressClaimUseCase _evaluatePressClaimUseCase;
         private readonly ISolicitSupportUseCase _solicitSupportUseCase;
         private readonly IPrivateWarDeclaration _privateWarDeclaration;
@@ -74,6 +75,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             IGetDeJureSettlementsUseCase getDeJureSettlementsUseCase,
             IAwardWonClaimUseCase awardWonClaimUseCase,
             IGenerateBloodClaimsUseCase generateBloodClaimsUseCase,
+            IScreenClaimUseCase screenClaimUseCase,
             IEvaluatePressClaimUseCase evaluatePressClaimUseCase,
             ISolicitSupportUseCase solicitSupportUseCase,
             IPrivateWarDeclaration privateWarDeclaration,
@@ -88,6 +90,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             _getDeJureSettlementsUseCase = getDeJureSettlementsUseCase;
             _awardWonClaimUseCase = awardWonClaimUseCase;
             _generateBloodClaimsUseCase = generateBloodClaimsUseCase;
+            _screenClaimUseCase = screenClaimUseCase;
             _evaluatePressClaimUseCase = evaluatePressClaimUseCase;
             _solicitSupportUseCase = solicitSupportUseCase;
             _privateWarDeclaration = privateWarDeclaration;
@@ -130,7 +133,25 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         private void OnDailyTick()
         {
             EndVoidClaimWars();
+            PressClaims(onlyClaimantClanId: null, trace: null);
+        }
 
+        /// <summary>
+        ///  Debug: evaluates one house's claims today, ignoring their cooldown, through the same gates
+        ///  as the daily sweep. Returns why each claim was or was not pressed.
+        /// </summary>
+        public IReadOnlyList<string> PressClaimsNow(string claimantClanId)
+        {
+            foreach (string pair in _nextEvaluationDayByPair.Keys.Where(pair => pair.EndsWith(":" + claimantClanId)).ToList())
+                _nextEvaluationDayByPair.Remove(pair);
+
+            var trace = new List<string>();
+            PressClaims(claimantClanId, trace);
+            return trace;
+        }
+
+        private void PressClaims(string? onlyClaimantClanId, List<string>? trace)
+        {
             float today = (float)CampaignTime.Now.ToDays;
             var clansById = Clan.All.ToDictionary(clan => clan.StringId);
             var strengthByClanId = clansById.ToDictionary(entry => entry.Key, entry => entry.Value.CurrentTotalStrength);
@@ -155,20 +176,31 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
                 foreach (var claim in BestClaimPerClaimant(title.Id))
                 {
-                    if (!WeakClaimPolicy.IsPressable(claim.Strength, holder)) continue;
-                    if (!clansById.TryGetValue(claim.ClaimantClanId, out var attackerClan)) continue;
-                    if (attackerClan == Clan.PlayerClan || defenderClan == Clan.PlayerClan) continue;
+                    if (onlyClaimantClanId is not null && claim.ClaimantClanId != onlyClaimantClanId) continue;
 
-                    // A clan still cannot go to war with itself, so a claim on its own dignity
-                    // is only actionable if a hero of the house is behind it to leave with.
+                    bool Skip(string reason)
+                    {
+                        trace?.Add($"{title.Id} (held by {defenderClanId}): {reason}");
+                        return true;
+                    }
+
+                    if (!clansById.TryGetValue(claim.ClaimantClanId, out var attackerClan)) continue;
+
                     bool isInternal = claim.ClaimantClanId == defenderClanId;
                     Hero? pretender = isInternal ? Pretender(claim, title) : null;
-                    if (isInternal && pretender is null) continue;
-
-                    var kingdom = attackerClan.Kingdom;
-                    if (kingdom is null || kingdom != defenderClan.Kingdom) continue;
-
-                    if (_privateWarDeclaration.IsBelligerent(claim.ClaimantClanId)) continue;
+                    var rejection = _screenClaimUseCase.Execute(new ClaimCandidacy(
+                        claim.ClaimantClanId,
+                        defenderClanId,
+                        claim.Strength,
+                        holder,
+                        Clan.PlayerClan?.StringId,
+                        attackerClan.Kingdom?.RulingClan?.StringId,
+                        attackerClan.Kingdom?.StringId,
+                        defenderClan.Kingdom?.StringId,
+                        HasPretender: pretender is not null,
+                        ClaimantAtPrivateWar: _privateWarDeclaration.IsBelligerent(claim.ClaimantClanId)));
+                    if (rejection is not null && Skip(rejection == ClaimRejection.TooWeak ? $"claim too weak ({claim.Strength})" : rejection.ToString())) continue;
+                    var kingdom = attackerClan.Kingdom!;
 
                     string pair = $"{title.Id}:{claim.ClaimantClanId}";
                     if (_nextEvaluationDayByPair.TryGetValue(pair, out float nextDay) && today < nextDay) continue;
@@ -177,7 +209,11 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                     string? mainGoalSettlementId = _privateWarDeclaration.SelectMainGoal(
                         defenderClanId,
                         _getDeJureSettlementsUseCase.Execute(title.Id));
-                    if (mainGoalSettlementId is null) continue;
+                    if (mainGoalSettlementId is null)
+                    {
+                        Skip("no main goal");
+                        continue;
+                    }
 
                     string attackerSideId = pretender is null ? claim.ClaimantClanId : UnfoundedCadetBranch;
 
@@ -222,7 +258,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                         Price(NoSupport),
                         Candidates(clansById, kingdom, attackerClan, defenderClan, pretender, attackerSideId, GetSuzerain));
 
-                    if (_evaluatePressClaimUseCase.Execute(Price(support)) < DeclarationThreshold) continue;
+                    float pressScore = _evaluatePressClaimUseCase.Execute(Price(support));
+                    if (pressScore < DeclarationThreshold && Skip($"press score {pressScore:0.##} < {DeclarationThreshold}")) continue;
 
                     // Strength on paper is not an army in the field. A house whose lords are broke,
                     // starving or spent would declare and then never march, so the war has to be one
@@ -234,14 +271,19 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                             defenderClanId,
                             mainGoalSettlementId,
                             support.AttackerSupporters,
-                            support.DefenderSupporters)) continue;
+                            support.DefenderSupporters)
+                        && Skip($"cannot prosecute (score {pressScore:0.##}, goal {mainGoalSettlementId})")) continue;
 
                     string attackerClanId = claim.ClaimantClanId;
 
                     if (pretender is not null)
                     {
                         string? cadetClanId = _cadetBranch.Split(pretender.StringId, defenderClanId, title.SeatSettlementId);
-                        if (cadetClanId is null) continue;
+                        if (cadetClanId is null)
+                        {
+                            Skip("cadet branch split failed");
+                            continue;
+                        }
 
                         _parentByCadetClanId[cadetClanId] = defenderClanId;
                         attackerClanId = cadetClanId;
@@ -256,6 +298,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                         support.AttackerSupporters,
                         support.DefenderSupporters,
                         Foreign(support));
+                    trace?.Add($"{title.Id} (held by {defenderClanId}): DECLARED by {attackerClanId}, score {pressScore:0.##}, goal {mainGoalSettlementId}, "
+                               + $"supporters {support.AttackerSupporters.Count}/{support.DefenderSupporters.Count}");
                 }
             }
         }
@@ -307,8 +351,12 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             foreach (string seatId in award.MovedSeatIds)
             {
                 var seat = Settlement.Find(seatId);
-                if (seat is null || !seat.IsFortification || seat.OwnerClan is null || seat.OwnerClan == winner)
+                if (seat is null || !seat.IsFortification || seat.OwnerClan is null) continue;
+                if (seat.OwnerClan == winner)
+                {
+                    _logger.Info($"[PW] {conclusion.WarId} award: seat {seatId} (title {conclusion.TitleId}) skipped, already held by winner {winner.StringId}");
                     continue;
+                }
 
                 string ownerId = seat.OwnerClan.StringId;
                 if (ownerId != conclusion.DefenderClanId)
@@ -318,10 +366,14 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                     if (!_privateWarDeclaration.IsOnAttackerSide(conclusion.WarId, ownerId)
                         || preWarOwnerId is null
                         || _privateWarDeclaration.IsOnAttackerSide(conclusion.WarId, preWarOwnerId))
+                    {
+                        _logger.Info($"[PW] {conclusion.WarId} award: seat {seatId} (title {conclusion.TitleId}) skipped, kept by {ownerId} (pre-war owner {preWarOwnerId ?? "unknown"})");
                         continue;
+                    }
                 }
 
                 ChangeOwnerOfSettlementAction.ApplyByDefault(winner.Leader, seat);
+                _logger.Info($"[PW] {conclusion.WarId} award: seat {seatId} (title {conclusion.TitleId}) owner {ownerId} -> winner {winner.StringId}");
             }
 
             foreach (string clanId in award.ClansJoiningWinnersRealm)

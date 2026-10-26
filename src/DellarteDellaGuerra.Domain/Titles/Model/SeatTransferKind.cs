@@ -12,7 +12,8 @@ namespace DellarteDellaGuerra.Domain.Titles.Model
         /// <summary>Conveyed by decision (king's grant, gift, barter): the dignity follows.</summary>
         Grant,
 
-        /// <summary>Bookkeeping change (clan destroyed, faction left): the dignity follows.</summary>
+        /// <summary>Bookkeeping change (clan destroyed, faction left): the dignity follows and the
+        /// former holder keeps no claim.</summary>
         Administrative
     }
 }

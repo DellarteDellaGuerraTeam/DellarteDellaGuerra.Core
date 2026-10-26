@@ -49,7 +49,6 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             CampaignEvents.OnGameLoadedEvent.AddNonSerializedListener(this, OnGameLoaded);
             CampaignEvents.OnSettlementOwnerChangedEvent.AddNonSerializedListener(this, OnSettlementOwnerChanged);
             CampaignEvents.HeroKilledEvent.AddNonSerializedListener(this, OnHeroKilled);
-            CampaignEvents.MakePeace.AddNonSerializedListener(this, OnMakePeace);
         }
 
         public override void SyncData(IDataStore dataStore)
@@ -140,37 +139,6 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
             // Dispossession moves the holder every blood claim on this title descends from.
             _generateBloodClaimsUseCase.Execute();
-        }
-
-        // A peace treaty cedes occupied titles: when the title's kingdom makes peace with the
-        // faction holding the seat, the occupation is regularised as a grant (uti possidetis).
-        private void OnMakePeace(
-            IFaction side1Faction,
-            IFaction side2Faction,
-            MakePeaceAction.MakePeaceDetail detail)
-        {
-            bool cededAnyTitle = false;
-            foreach (var title in _stateStore.SnapshotTitles().Where(t => t.IsContested).ToList())
-            {
-                var settlement = TaleWorlds.CampaignSystem.Settlements.Settlement.Find(title.SeatSettlementId);
-                var ownerFaction = settlement?.OwnerClan?.MapFaction;
-                var titleKingdom = FeudalTitleKingdoms.GetTitleKingdom(title.Id);
-                if (ownerFaction is null || titleKingdom is null || ownerFaction == titleKingdom) continue;
-
-                bool peaceCoversTitle =
-                    (side1Faction == titleKingdom && side2Faction == ownerFaction)
-                    || (side2Faction == titleKingdom && side1Faction == ownerFaction);
-                if (!peaceCoversTitle) continue;
-
-                _assignTitleUseCase.Execute(
-                    title.SeatSettlementId,
-                    settlement!.OwnerClan.StringId,
-                    SeatTransferKind.Grant,
-                    (float)CampaignTime.Now.ToDays);
-                cededAnyTitle = true;
-            }
-
-            if (cededAnyTitle) _generateBloodClaimsUseCase.Execute();
         }
 
         // Any death can change the claims: the dead hero's own claims lapse, and a clan

@@ -192,6 +192,7 @@ public class DadgServiceContainer
         services.AddSingleton<ISolicitSupportUseCase, SolicitSupportUseCase>();
         services.AddSingleton<IPersonalBondPolicy, PersonalBondPolicy>();
 
+        services.AddSingleton<IScreenClaimUseCase, ScreenClaimUseCase>();
         // Campaign behaviour (resolved lazily in SubModule)
         services.AddSingleton<FeudalTitleCampaignBehavior>(sp => new FeudalTitleCampaignBehavior(
             sp.GetRequiredService<IAssignTitleUseCase>(),
