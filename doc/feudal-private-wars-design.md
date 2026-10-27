@@ -1092,7 +1092,7 @@ at war with each other (no score between attackers — no CB):
 ## 19. Amendments — real siege assaults, interim owner, no post-capture vote (2026-10-26)
 
 Supersedes every "synthetic capture" / "prep-complete capture" statement above (§4.1 evidence,
-§4.2 rows, §15 item 6, §17.2). Status: built and unit-tested; **live runtime verification pending**.
+§4.2 rows, §15 item 6, §17.2). Status: built, unit-tested and verified live (see the end of this section).
 
 **A. Private-war sieges are fought.** A same-kingdom private-war siege ends in a real wall-assault
 `MapEvent` with live casualties, which the player can watch or join. Nothing transfers a fief because
@@ -1131,6 +1131,17 @@ raised explicitly (a relinquished fief, a passed annexation) stay vanilla.
 **E. Leaving or destroyed clans keep no claim.** `ByLeaveFaction` and `ByClanDestruction` map to
 `SeatTransferKind.Administrative`, which moves the title without the former holder's conquest claim:
 a departing clan forfeits its land, and a destroyed clan leaves no one to press it.
+
+**F. Sally-out needs morale (2026-10-27).** `PrivateWarSallyOutPolicy.ShouldSally` also requires the
+sallying parties' strength-weighted morale >= 1: vanilla `MapEvent.CalculateWinner` routs a mobile-led
+side at ~0 morale before any blow, and a lost sally hands the besieger the fief. Live: a 3152-man
+garrison at morale 0 was held back, then sallied at morale 4.9 and won (`[PW] <castle> sallies:` line).
+
+**Verified live 2026-10-27:** A (assault, casualties, player join), B (capture to capturer, non-royal
+player clan included; war stays Active), D (no vote after capture or a clan leaving), E (leaving clan
+keeps no claim), F. E for clan destruction too: `DestroyClanAction` on clan_macneil_barra
+handed its 4 fiefs and barony_barra to the ruler clan, no claims kept, 0 unresolved decisions in every
+kingdom after 2 days.
 
 **Open:** AI lords passing by still cannot join a private-war siege (player only); runtime checks for
 the assault, casualties, player join, interim owner and the absent vote.

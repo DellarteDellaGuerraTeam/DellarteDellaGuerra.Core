@@ -47,6 +47,6 @@ public class SallyOutPolicyTests
     {
         Assert.Equal(
             expected,
-            _policy.ShouldSally(settlementStrength, besiegerStrength, reliefBattleActive));
+            _policy.ShouldSally(settlementStrength, besiegerStrength, reliefBattleActive, sallyMorale: 50f));
     }
 }
