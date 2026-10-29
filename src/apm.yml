@@ -1,9 +1,13 @@
 name: dellarte-della-guerra
 version: 0.1.0
-description: DellarteDellaGuerra agent setup; installs the dadg-agent release, which depends on bannerlord-agent. submodules/dadg-agent is only the editing checkout.
+description: DellarteDellaGuerra agent setup; installs the dadg-agent release, 
+  which depends on bannerlord-agent. submodules/dadg-agent is only the editing 
+  checkout.
 targets:
   - claude
   - codex
 dependencies:
   apm:
-    - JoeFwd/dadg-agent#v0.3.0
+    - JoeFwd/dadg-agent#v0.3.1
+    - DietrichGebert/ponytail/skills/ponytail
+    - alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
