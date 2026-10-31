@@ -17,6 +17,16 @@ public class DadgInitialScreen : GauntletInitialScreen
 {
     private const string SceneName = "main_menu_a";
     private const string CameraTag = "camera_instance";
+    // 1.2's MBInitialScreenBase values: a few frames past ReadyToRender so the first visible frame is lit.
+    private const int FramesToWaitAfterReadyToRender = 8;
+    // Never strand the player behind the loading screen if the view somehow never reports ready.
+    private const float MaxLoadingWindowHoldSeconds = 30f;
+
+    /// <summary>Read by MainMenuHoldLoadingWindowPatch to veto the base class's per-frame loading-window drop.</summary>
+    internal static bool IsHoldingLoadingWindow { get; private set; }
+
+    private int _framesSinceReadyToRender;
+    private float _loadingWindowHeldFor;
 
     private EngineScene? _scene;
     private SceneLayer? _sceneLayer;
@@ -44,6 +54,31 @@ public class DadgInitialScreen : GauntletInitialScreen
         _sceneLayer.SetCamera(_sceneCamera);
         SoundManager.SetListenerFrame(_sceneCamera.Frame);
         _scene.Tick(dt);
+
+        if (IsHoldingLoadingWindow)
+            TickLoadingWindowHold(dt);
+    }
+
+    private void TickLoadingWindowHold(float dt)
+    {
+        _loadingWindowHeldFor += dt;
+        if (_sceneLayer!.SceneView.ReadyToRender())
+            _framesSinceReadyToRender++;
+
+        if (_framesSinceReadyToRender <= FramesToWaitAfterReadyToRender &&
+            _loadingWindowHeldFor < MaxLoadingWindowHoldSeconds)
+            return;
+
+        ReleaseLoadingWindow();
+    }
+
+    private static void ReleaseLoadingWindow()
+    {
+        if (!IsHoldingLoadingWindow)
+            return;
+
+        IsHoldingLoadingWindow = false;
+        LoadingWindow.DisableGlobalLoadingWindow();
     }
 
     // Pre-1.4 behaviour: an options screen pushed on top silences the scene's ambience.
@@ -55,6 +90,7 @@ public class DadgInitialScreen : GauntletInitialScreen
 
     protected override void OnFinalize()
     {
+        ReleaseLoadingWindow();
         if (_sceneLayer != null)
             RemoveLayer(_sceneLayer);
         _scene?.ManualInvalidate();
@@ -101,5 +137,10 @@ public class DadgInitialScreen : GauntletInitialScreen
         _scene = scene;
         _sceneLayer = layer;
         _sceneCamera = camera;
+
+        _framesSinceReadyToRender = 0;
+        _loadingWindowHeldFor = 0f;
+        IsHoldingLoadingWindow = true;
+        LoadingWindow.EnableGlobalLoadingWindow();
     }
 }
