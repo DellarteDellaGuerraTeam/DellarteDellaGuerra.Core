@@ -27,6 +27,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
      *  (<see cref="PoliticalMapOverlayCampaignBehavior.DisplayedOwnerLevel"/>). The owners view can switch
      *  its labels between the holder's highest title and the holder clan (<see cref="Modes"/>):
      *  only the text changes.
+     *  A continuing holder keeps the pole of its own detailed land at both Owners levels.
      * </summary>
      * <remarks>
      *  <para>
@@ -81,7 +82,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         private PoliticalMapView _keysView = PoliticalMapView.Off;
         private PoliticalMapOwnerLevel _keysLevel;
         private readonly PoliticalMapLabelRegionCache _regionCache = new();
-        private Task<IReadOnlyList<PoliticalMapRegion>[]>? _finding;
+        private Task<(IReadOnlyList<PoliticalMapRegion>[] Regions, IReadOnlyList<PoliticalMapRegion>[]? Detailed)>? _finding;
         private CancellationTokenSource? _findingCancellation;
         private PoliticalMapView _findingView;
         private PoliticalMapOwnerLevel _findingLevel;
@@ -172,7 +173,10 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
                 _findingCancellation = null;
                 if (finding.Status == TaskStatus.RanToCompletion)
                 {
-                    _regionCache.Store(_findingView, _findingLevel, _findingKeys, finding.Result);
+                    _regionCache.Store(_findingView, _findingLevel, _findingKeys, finding.Result.Regions);
+                    if (finding.Result.Detailed is { } detailed)
+                        _regionCache.Store(PoliticalMapView.Owners, PoliticalMapOwnerLevel.SubVassals,
+                            new[] { _findingKeys[1] }, detailed);
                 }
                 else if (finding.Exception is not null) throw finding.Exception;
                 _findingKeys = Array.Empty<string?[]>();
@@ -283,7 +287,11 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             PoliticalMapGrid grid = _grid!;
             IReadOnlyList<PoliticalMapLabelTier> tiers = PoliticalMapLabelTiers.Of(view);
             IReadOnlyList<string?>? ownerRegionKeys = tiers.Contains(PoliticalMapLabelTier.Owner) ? OwnerRegionKeys(grid, level) : null;
-            return tiers.Select(tier => PoliticalMapLabelTiers.KeysOf(tier, grid.SettlementIds, ownerRegionKeys, _world)).ToArray();
+            string?[][] keys = tiers.Select(tier => PoliticalMapLabelTiers.KeysOf(tier, grid.SettlementIds, ownerRegionKeys, _world)).ToArray();
+            // A holder's own detailed land can change without changing any coarse grouping key.
+            return view == PoliticalMapView.Owners && level == PoliticalMapOwnerLevel.Vassals
+                ? keys.Concat(new[] { OwnerRegionKeys(grid, PoliticalMapOwnerLevel.SubVassals).ToArray() }).ToArray()
+                : keys;
         }
 
         private static PoliticalMapOwnerLevel OtherOwnerLevel(PoliticalMapOwnerLevel level) =>
@@ -304,6 +312,9 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             CancelFinding();
             PoliticalMapGrid grid = _grid!;
             IReadOnlyList<PoliticalMapLabelTier> tiers = PoliticalMapLabelTiers.Of(view);
+            bool anchorOwners = view == PoliticalMapView.Owners && level == PoliticalMapOwnerLevel.Vassals;
+            IReadOnlyList<PoliticalMapRegion>[]? cachedDetailed = anchorOwners
+                ? _regionCache.Get(PoliticalMapView.Owners, PoliticalMapOwnerLevel.SubVassals, new[] { keys[1] }) : null;
             _findingView = view;
             _findingLevel = level;
             _findingKeys = keys;
@@ -311,14 +322,25 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             CancellationToken cancellation = _findingCancellation.Token;
             _finding = Task.Run(() =>
             {
-                var regions = new IReadOnlyList<PoliticalMapRegion>[keys.Length];
-                for (int index = 0; index < keys.Length; index++)
+                var regions = new IReadOnlyList<PoliticalMapRegion>[tiers.Count];
+                for (int index = 0; index < tiers.Count; index++)
                 {
                     cancellation.ThrowIfCancellationRequested();
                     regions[index] = PoliticalMapRegions.Find(grid, keys[index], PoliticalMapLabelTiers.MinCells(tiers[index]));
                 }
+                IReadOnlyList<PoliticalMapRegion>[]? detailed = null;
+                if (anchorOwners)
+                {
+                    cancellation.ThrowIfCancellationRequested();
+                    detailed = cachedDetailed ?? new[]
+                    {
+                        PoliticalMapRegions.Find(grid, keys[1], PoliticalMapLabelTiers.MinCells(PoliticalMapLabelTier.Owner))
+                    };
+                    cancellation.ThrowIfCancellationRequested();
+                    regions[0] = PoliticalMapOwnerLabelAnchors.Apply(grid, keys[0], regions[0], detailed[0]);
+                }
                 cancellation.ThrowIfCancellationRequested();
-                return regions;
+                return (regions, detailed);
             }, cancellation);
         }
 

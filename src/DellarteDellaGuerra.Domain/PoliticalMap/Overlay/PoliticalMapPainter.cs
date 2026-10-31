@@ -19,7 +19,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
     /// kingdomless palette.</item>
     /// <item>Owners: each region a lighter or darker shade of its holder's kingdom's map colour,
     /// touching regions different shades; a kingdomless clan's region a colour from the
-    /// kingdomless palette. Each level remembers its own colours.</item>
+    /// kingdomless palette. Local rulers keep their zoomed-out shade when their vassals appear.</item>
     /// </list>
     /// A settlement with no owner and land under no faction are left unfilled. The keys are not
     /// drawn; the region labels group by them. In the owners view the region key is the clan
@@ -153,16 +153,18 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         {
             PoliticalMapVassalHierarchy hierarchy = HierarchyOf(world);
             var holders = new Dictionary<string, string>(StringComparer.Ordinal);
+            var parentRegions = new string?[settlementIds.Count];
             for (int index = 0; index < regionKeys.Length; index++)
             {
                 if (world.OwnerClanOf(settlementIds[index]) is not { } owner) continue;
                 if (!holders.TryGetValue(owner, out string? holder)) holders[owner] = holder = hierarchy.RegionHolderOf(owner, level);
                 regionKeys[index] = holder;
+                parentRegions[index] = hierarchy.RegionHolderOf(owner, PoliticalMapOwnerLevel.Vassals);
             }
 
             var kingdomBase = new Dictionary<string, uint>();
             var kingdomOfHolder = new Dictionary<string, string>();
-            foreach (string holder in holders.Values.Distinct())
+            foreach (string holder in holders.Values.Concat(parentRegions.OfType<string>()).Distinct())
             {
                 if (world.KingdomOfClan(holder) is not { } kingdom) continue;
                 if (!kingdomBase.ContainsKey(kingdom))
@@ -174,13 +176,27 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
                 kingdomOfHolder[holder] = kingdom;
             }
 
-            string tier = "Owners:" + level;
-            IReadOnlyDictionary<string, uint> colours = PoliticalMapColouring.Assign(
-                Weights(regionKeys), Touching(regionKeys, neighbours),
-                holder => kingdomOfHolder.TryGetValue(holder, out string? kingdom)
+            // Always assign the parent level first, regardless of which level was requested first.
+            IReadOnlyList<uint> PaletteOf(string holder) =>
+                kingdomOfHolder.TryGetValue(holder, out string? kingdom)
                     ? PoliticalMapColouring.Shades(kingdomBase[kingdom])
-                    : PoliticalMapColouring.KingdomlessPalette,
-                NoColours, Previous(tier, remember), PoliticalMapColouring.ShadeMinDistance);
+                    : PoliticalMapColouring.KingdomlessPalette;
+            const string parentTier = "Owners:Vassals";
+            IReadOnlyDictionary<string, uint> parentColours = PoliticalMapColouring.Assign(
+                Weights(parentRegions), Touching(parentRegions, neighbours), PaletteOf,
+                NoColours, Previous(parentTier, remember), PoliticalMapColouring.ShadeMinDistance);
+            if (remember) _previous[parentTier] = parentColours;
+
+            string tier = "Owners:" + level;
+            IReadOnlyDictionary<string, uint> colours = parentColours;
+            if (level == PoliticalMapOwnerLevel.SubVassals)
+            {
+                Dictionary<string, int> weights = Weights(regionKeys);
+                var kept = parentColours.Where(pair => weights.ContainsKey(pair.Key))
+                    .ToDictionary(pair => pair.Key, pair => pair.Value);
+                colours = PoliticalMapColouring.Assign(weights, Touching(regionKeys, neighbours), PaletteOf,
+                    kept, Previous(tier, remember), PoliticalMapColouring.ShadeMinDistance);
+            }
             Fill(regionKeys, colours, fills);
             if (!remember) return;
 

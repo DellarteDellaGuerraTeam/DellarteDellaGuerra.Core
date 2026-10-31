@@ -186,6 +186,50 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             Assert.Equal(near, Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.SubVassals));
         }
 
+        [Theory]
+        [InlineData(PoliticalMapOwnerLevel.Vassals)]
+        [InlineData(PoliticalMapOwnerLevel.SubVassals)]
+        public void LocalRulersKeepTheirShadeAcrossZoomLevelsRegardlessOfWhichWasPreparedFirst(PoliticalMapOwnerLevel first)
+        {
+            PoliticalMapPainter painter = Painter();
+            Paint(PoliticalMapView.Owners, painter, level: first);
+            PoliticalMapSettlementPaint[] far = Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.Vassals);
+            PoliticalMapSettlementPaint[] near = Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.SubVassals);
+
+            // Beaufort, Neville and the king remain visible at both depths; Stanley appears close in.
+            foreach (int index in new[] { 2, 3, 4 }) Assert.Equal(far[index].Fill, near[index].Fill);
+            Assert.NotEqual(near[2].Fill, near[0].Fill);
+            Assert.Equal(far, Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.Vassals));
+        }
+
+        [Fact]
+        public void ALocalRulersShadeStillTracksTheirCurrentKingdom()
+        {
+            PoliticalMapPainter painter = Painter();
+            uint oldShade = Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.Vassals)[2].Fill;
+            _world.Kingdoms["clan_beaufort"] = "khuzait";
+
+            PoliticalMapSettlementPaint[] near = Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.SubVassals);
+            PoliticalMapSettlementPaint[] far = Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.Vassals);
+
+            Assert.NotEqual(oldShade, near[2].Fill);
+            Assert.Equal(far[2].Fill, near[2].Fill);
+            Assert.Contains(Opaque(near[2].Fill), PoliticalMapColouring.Shades(PoliticalMapPalette.KingdomColor("khuzait", null)!.Value));
+        }
+
+        [Fact]
+        public void ALocalRulerWithOnlyVassalLandStillUsesTheirKingdomPalette()
+        {
+            _world.Owners["castle_pontefract"] = "clan_stanley";
+            PoliticalMapPainter painter = Painter();
+            Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.SubVassals);
+
+            PoliticalMapSettlementPaint[] far = Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.Vassals);
+
+            Assert.Equal("clan_beaufort", far[2].RegionKey);
+            Assert.Contains(Opaque(far[2].Fill), PoliticalMapColouring.Shades(KingdomOfLancaster));
+        }
+
         [Fact]
         public void ZoomingOutAndBackChangesThePaintOnlyOutsideTheHysteresisBand()
         {
