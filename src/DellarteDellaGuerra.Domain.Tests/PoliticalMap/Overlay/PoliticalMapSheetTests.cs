@@ -78,5 +78,21 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             Assert.Equal(terrain.HeightAt(3, 17), sheet.HeightAt(3, 17), 4);
             Assert.Equal(terrain.HeightAt(20, 20), sheet.HeightAt(20, 20), 4);
         }
+
+        [Fact]
+        public void HalfCellEndpointsMeetPackedEdgesAtTheSameHeight()
+        {
+            var sheet = new PoliticalMapSheet(Hills(), Grid());
+            for (int row = 0; row <= Cells; row++)
+            {
+                for (int column = 0; column < Cells; column++)
+                {
+                    Assert.Equal((sheet.HeightAt(column, row) + sheet.HeightAt(column + 1, row)) / 2,
+                        sheet.HeightAt(column + 0.5f, row), 0.0001);
+                    Assert.Equal((sheet.HeightAt(row, column) + sheet.HeightAt(row, column + 1)) / 2,
+                        sheet.HeightAt(row, column + 0.5f), 0.0001);
+                }
+            }
+        }
     }
 }

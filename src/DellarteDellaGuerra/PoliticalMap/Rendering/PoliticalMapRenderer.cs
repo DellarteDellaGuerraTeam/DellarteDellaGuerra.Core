@@ -8,11 +8,11 @@ using TaleWorlds.Library;
 namespace DellarteDellaGuerra.PoliticalMap.Rendering
 {
     /// <summary>
-    /// Draws the political map's quads on the campaign map scene: one entity per territory, its
+    /// Draws the political map's geometry on the campaign map scene: one entity per territory, its
     /// meshes draped over the terrain on the <see cref="PoliticalMapSheet"/> in a copy of
     /// <c>vertex_color_mat</c> switched to real alpha blending. A territory is rebuilt into a new
-    /// hidden entity a chunk at a time and swapped in whole when its last chunk is in, so the old
-    /// colours stay on screen until the new ones are complete.
+    /// hidden entity a chunk at a time. Affected territories swap together after the batch finishes,
+    /// so both sides of a smoothed frontier always use the same geometry.
     /// </summary>
     /// <remarks>
     /// The stock material blends <c>AddAlpha</c> (logged by the 2026-10-28 mesh spike): the vertex
@@ -89,7 +89,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             entity.SetReadyToRender(true);
         }
 
-        private void Discard(string territory)
+        /// <summary>Discards an unfinished replacement; the currently shown territory is kept.</summary>
+        public void Discard(string territory)
         {
             if (!_building.TryGetValue(territory, out GameEntity? entity)) return;
             entity.Remove(0);
@@ -109,6 +110,15 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
                 mesh.AddTriangleWithVertexColors(a, c, d, Vec2.Zero, Vec2.Zero, Vec2.Zero, colour, colour, colour, handle);
             }
 
+            foreach (PoliticalMapTriangle triangle in chunk.Triangles)
+            {
+                Vec3 a = Corner(triangle.A.Column, triangle.A.Row);
+                Vec3 b = Corner(triangle.B.Column, triangle.B.Row);
+                Vec3 c = Corner(triangle.C.Column, triangle.C.Row);
+                uint colour = triangle.Color;
+                mesh.AddTriangleWithVertexColors(a, b, c, Vec2.Zero, Vec2.Zero, Vec2.Zero, colour, colour, colour, handle);
+            }
+
             mesh.SetMaterial(_material);
             mesh.CullingMode = MBMeshCullingMode.None;
             mesh.RecomputeBoundingBox();
@@ -117,7 +127,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         }
 
         // A cell corner on the sheet over the terrain.
-        private Vec3 Corner(int column, int row) =>
+        private Vec3 Corner(float column, float row) =>
             new(column * _grid.CellSize, row * _grid.CellSize, _sheet.HeightAt(column, row) + Lift);
     }
 }

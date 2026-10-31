@@ -47,26 +47,47 @@ public class PoliticalMapOverlayOverRealContentTests
 
     [Fact]
     [Trait("Category", "DADG content integration")]
-    public void TheOwnersViewMeshesTheWholeMapInAFewThousandQuads()
+    public void TheOwnersViewMeshesTheWholeMapWithSmoothFrontiersWithinTheTerrainAndTriangleBudgets()
     {
         Fixture fixture = Built.Value;
         PoliticalMapSettlementPaint[] paints = fixture.Painter.Paint(
             PoliticalMapView.Owners, fixture.Grid.SettlementIds, fixture.Territories, fixture.Folds, fixture.World);
         var mesher = new PoliticalMapMesher(fixture.Grid, fixture.Territories);
+        var sheet = new PoliticalMapSheet(fixture.Terrain, fixture.Grid);
+        var watch = System.Diagnostics.Stopwatch.StartNew();
 
-        int quads = 0, chunks = 0;
+        int quads = 0, chunks = 0, triangles = 0;
         foreach (string territory in mesher.Territories)
         {
             IReadOnlyList<PoliticalMapMeshChunk> built = mesher.Build(territory, paints);
             chunks += built.Count;
             quads += built.Sum(chunk => chunk.Quads.Count);
+            triangles += built.Sum(chunk => chunk.TriangleCount);
+            Assert.All(built, chunk => Assert.InRange(chunk.TriangleCount, 1, PoliticalMapMesher.MaxTrianglesPerChunk));
+            foreach (PoliticalMapTriangle triangle in built.SelectMany(chunk => chunk.Triangles))
+            {
+                PoliticalMapPoint a = triangle.A, b = triangle.B, c = triangle.C;
+                Assert.True((b.Column - a.Column) * (c.Row - a.Row) - (b.Row - a.Row) * (c.Column - a.Column) > 0);
+                float minX = Math.Min(a.Column, Math.Min(b.Column, c.Column)), maxX = Math.Max(a.Column, Math.Max(b.Column, c.Column));
+                float minY = Math.Min(a.Row, Math.Min(b.Row, c.Row)), maxY = Math.Max(a.Row, Math.Max(b.Row, c.Row));
+                Assert.True(float.IsFinite(minX) && float.IsFinite(maxX) && float.IsFinite(minY) && float.IsFinite(maxY));
+                // A block's sheet corners are all above that block's maximum terrain height.
+                Assert.True(maxX <= (Math.Floor(minX / 8) + 1) * 8 + 0.00001);
+                Assert.True(maxY <= (Math.Floor(minY / 8) + 1) * 8 + 0.00001);
+                foreach ((float wa, float wb, float wc) in new[] { (0.333f, 0.333f, 0.334f), (0.7f, 0.1f, 0.2f) })
+                {
+                    float x = a.Column * wa + b.Column * wb + c.Column * wc;
+                    float y = a.Row * wa + b.Row * wb + c.Row * wc;
+                    float height = sheet.HeightAt(a.Column, a.Row) * wa + sheet.HeightAt(b.Column, b.Row) * wb + sheet.HeightAt(c.Column, c.Row) * wc;
+                    Assert.True(height + 0.0001f >= fixture.Terrain.HeightAt(x * fixture.Grid.CellSize, y * fixture.Grid.CellSize));
+                }
+            }
         }
 
-        // About 20,000 quads in 54 territories (2026-10-30, block-aligned): some half a second of mesh building at
-        // 9 µs a triangle, which the scheduler spreads over a second or two of frames.
-        _output.WriteLine($"{mesher.Territories.Count()} territories, {chunks} chunks, {quads} quads");
+        _output.WriteLine($"{mesher.Territories.Count()} territories, {chunks} chunks, {quads} quads, {triangles} triangles; planning and geometry checks {watch.ElapsedMilliseconds} ms");
         Assert.Equal(54, mesher.Territories.Count());
         Assert.InRange(quads, 1, 40_000);
+        Assert.InRange(triangles, 1, 250_000);
     }
 
     [Fact]
@@ -114,6 +135,7 @@ public class PoliticalMapOverlayOverRealContentTests
 
     private sealed record Fixture(
         PoliticalMapGrid Grid,
+        PoliticalMapHeightField Terrain,
         PoliticalMapPainter Painter,
         ContentWorld World,
         string[] Territories,
@@ -140,7 +162,8 @@ public class PoliticalMapOverlayOverRealContentTests
             .Select(settlement => new PoliticalMapSeed(
                 (string)settlement.Attribute("id")!, (float)settlement.Attribute("posX")!, (float)settlement.Attribute("posY")!))
             .ToList();
-        PoliticalMapGrid grid = PoliticalMapGridBuilder.Build(MainMapTerrain.Load(Path.Combine(mapModule, "SceneObj", "Main_map")), seeds);
+        PoliticalMapHeightField terrain = MainMapTerrain.Load(Path.Combine(mapModule, "SceneObj", "Main_map"));
+        PoliticalMapGrid grid = PoliticalMapGridBuilder.Build(terrain, seeds);
 
         var owners = settlements
             .Where(settlement => settlement.Attribute("owner") is not null)
@@ -148,7 +171,7 @@ public class PoliticalMapOverlayOverRealContentTests
 
         var world = new ContentWorld(seats, owners);
         string[] territories = grid.SettlementIds.Select(id => painter.TerritoryOf(id, world)).ToArray();
-        return new Fixture(grid, painter, world, territories, painter.Fold(grid, territories));
+        return new Fixture(grid, terrain, painter, world, territories, painter.Fold(grid, territories));
     }
 
     // The starting owners from settlements.xml (a village answers to its bound seat's owner); no factions or colours.

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
 {
-    /// <summary>Packs a territory's same-coloured cells into quads and the quads into mesh-sized chunks.</summary>
+    /// <summary>Packs same-coloured cells into quads, then quads and corner triangles into mesh-sized chunks.</summary>
     internal static class PoliticalMapQuadPacker
     {
         // Greedy rectangles: from each uncovered cell, run right, then grow down while the whole run matches.
@@ -53,11 +53,20 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
 
         private static bool OnBlockLine(int gridLine) => gridLine % PoliticalMapMesher.MaxQuadSide == 0;
 
-        internal static void AddChunks(List<PoliticalMapMeshChunk> chunks, List<PoliticalMapQuad> quads)
+        internal static void AddChunks(List<PoliticalMapMeshChunk> chunks, List<PoliticalMapQuad> quads,
+            List<PoliticalMapTriangle> triangles)
         {
-            for (int start = 0; start < quads.Count; start += PoliticalMapMesher.MaxQuadsPerChunk)
+            int quadIndex = 0, triangleIndex = 0;
+            while (quadIndex < quads.Count || triangleIndex < triangles.Count)
             {
-                chunks.Add(new PoliticalMapMeshChunk(quads.GetRange(start, Math.Min(PoliticalMapMesher.MaxQuadsPerChunk, quads.Count - start))));
+                int quadCount = Math.Min(PoliticalMapMesher.MaxQuadsPerChunk, quads.Count - quadIndex);
+                int triangleCount = Math.Min(PoliticalMapMesher.MaxTrianglesPerChunk - quadCount * 2, triangles.Count - triangleIndex);
+                chunks.Add(new PoliticalMapMeshChunk(quads.GetRange(quadIndex, quadCount))
+                {
+                    Triangles = triangles.GetRange(triangleIndex, triangleCount)
+                });
+                quadIndex += quadCount;
+                triangleIndex += triangleCount;
             }
         }
     }

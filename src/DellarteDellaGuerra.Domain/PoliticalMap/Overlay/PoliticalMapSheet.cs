@@ -64,11 +64,11 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
             }
         }
 
-        /// <summary>The sheet's height at a cell corner.</summary>
-        public float HeightAt(int column, int row)
+        /// <summary>The sheet's height in cell coordinates, including fractional boundary points.</summary>
+        public float HeightAt(float column, float row)
         {
-            int nodeColumn = Math.Min(column / _step, _nodesWide - 2);
-            int nodeRow = Math.Min(row / _step, _nodesHigh - 2);
+            int nodeColumn = Math.Min((int)(column / _step), _nodesWide - 2);
+            int nodeRow = Math.Min((int)(row / _step), _nodesHigh - 2);
             float dx = (column - nodeColumn * _step) / (float)_step;
             float dy = (row - nodeRow * _step) / (float)_step;
 

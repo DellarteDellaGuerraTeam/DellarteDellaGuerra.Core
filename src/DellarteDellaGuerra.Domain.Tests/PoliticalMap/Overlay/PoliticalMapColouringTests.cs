@@ -217,5 +217,26 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
 
             Assert.Equal(new[] { (0, 1), (0, 2), (1, 3), (2, 3) }, PoliticalMapSettlementAdjacency.Of(grid));
         }
+
+        [Fact]
+        public void CornerNeighboursAreIncludedForBoundaryRefreshWithoutWrappingRows()
+        {
+            var grid = new PoliticalMapGrid(2, 2, 1f, new[] { "one", "two" }, new ushort[] { 1, 0, 0, 2 });
+            Assert.Empty(PoliticalMapSettlementAdjacency.Of(grid));
+            Assert.Equal(new[] { (0, 1) }, PoliticalMapSettlementAdjacency.Of(grid, includeCorners: true));
+
+            var separated = new PoliticalMapGrid(3, 2, 1f, new[] { "one", "two" }, new ushort[] { 0, 0, 1, 2, 0, 0 });
+            Assert.Empty(PoliticalMapSettlementAdjacency.Of(separated, includeCorners: true));
+        }
+
+        [Fact]
+        public void SharedBlocksIncludeDistantPaintsButNotTheNextBlock()
+        {
+            var grid = new PoliticalMapGrid(6, 1, 1f, new[] { "one", "two", "three" }, new ushort[] { 1, 0, 2, 3, 0, 0 });
+            Assert.Equal(new[] { (0, 1) }, PoliticalMapSettlementAdjacency.InSharedBlocks(grid, 3));
+            Assert.Contains((0, 2), PoliticalMapSettlementAdjacency.InSharedBlocks(grid, 3, halo: 3));
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => PoliticalMapSettlementAdjacency.InSharedBlocks(grid, 3, halo: -1));
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => PoliticalMapSettlementAdjacency.InSharedBlocks(grid, 0));
+        }
     }
 }

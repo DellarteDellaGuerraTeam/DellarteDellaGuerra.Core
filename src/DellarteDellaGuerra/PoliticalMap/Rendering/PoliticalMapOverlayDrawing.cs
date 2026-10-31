@@ -25,9 +25,11 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         private readonly string[] _territories;
         private readonly PoliticalMapMesher _mesher;
         private readonly IReadOnlyList<(int A, int B)> _neighbours;
+        private readonly IReadOnlyList<(int A, int B)> _boundaryNeighbours;
         private readonly PoliticalMapRenderer _renderer;
         private readonly ILogger _logger;
         private readonly Dictionary<string, IReadOnlyList<PoliticalMapMeshChunk>> _chunksInBuild = new();
+        private readonly HashSet<string> _readyToCommit = new();
         private PoliticalMapSettlementPaint[] _paints = new PoliticalMapSettlementPaint[0];
 
         // The rebuild in flight, timed from its first chunk to its last, to log what a view switch costs.
@@ -53,6 +55,9 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             Folds = painter.Fold(grid, _territories);
             _mesher = new PoliticalMapMesher(grid, _territories);
             _neighbours = PoliticalMapSettlementAdjacency.Of(grid);
+            _boundaryNeighbours = PoliticalMapSettlementAdjacency.Of(grid, includeCorners: true)
+                .Concat(PoliticalMapSettlementAdjacency.InSharedBlocks(grid, PoliticalMapMesher.MaxQuadSide, PoliticalMapMesher.SmoothingReach))
+                .Distinct().ToArray();
             _renderer = new PoliticalMapRenderer(scene, grid, sheet);
             _logger = logger;
         }
@@ -75,6 +80,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         {
             PoliticalMapSettlementPaint[] paints = _painter.Paint(view, _grid.SettlementIds, _territories, Folds, _world, _neighbours, level);
             var dirty = new HashSet<string>();
+            var changed = new bool[paints.Length];
             for (int index = 0; index < paints.Length; index++)
             {
                 PoliticalMapSettlementPaint? old = index < _paints.Length ? _paints[index] : null;
@@ -83,6 +89,14 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
                 if (old is not null && old.Fill == paint.Fill && old.Hatch == paint.Hatch) continue;
 
                 dirty.Add(_territories[index]);
+                changed[index] = true;
+            }
+
+            // Relaxation can carry a paint change along a frontier into neighbouring territories.
+            foreach ((int a, int b) in _boundaryNeighbours)
+            {
+                if (changed[a]) dirty.Add(_territories[b]);
+                if (changed[b]) dirty.Add(_territories[a]);
             }
 
             _paints = paints;
@@ -114,10 +128,17 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
                     _renderer.AddChunk(chunk.TerritoryId, chunk.ChunkIndex, meshChunks[chunk.ChunkIndex]);
                     if (chunk.ChunkIndex == chunk.ChunkCount - 1)
                     {
-                        _renderer.Commit(chunk.TerritoryId);
+                        _readyToCommit.Add(chunk.TerritoryId);
                         _chunksInBuild.Remove(chunk.TerritoryId);
                     }
                 }
+            }
+
+            // Both sides of a moved frontier become visible in the same frame.
+            if (!_scheduler.HasWork)
+            {
+                foreach (string territory in _readyToCommit) _renderer.Commit(territory);
+                _readyToCommit.Clear();
             }
 
             _rebuildSlowestFrameMs = Math.Max(_rebuildSlowestFrameMs, budget.Elapsed.TotalMilliseconds);
@@ -139,7 +160,15 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         {
             if (_paints.Length == 0) return 0;
 
+            _readyToCommit.Remove(territory);
             IReadOnlyList<PoliticalMapMeshChunk> chunks = _mesher.Build(territory, _paints);
+            if (chunks.Count == 0)
+            {
+                _renderer.Discard(territory);
+                _readyToCommit.Add(territory);
+                _chunksInBuild.Remove(territory);
+                return 0;
+            }
             _chunksInBuild[territory] = chunks;
             return chunks.Count;
         }
