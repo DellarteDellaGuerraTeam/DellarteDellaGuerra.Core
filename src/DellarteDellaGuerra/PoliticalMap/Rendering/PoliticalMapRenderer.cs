@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DellarteDellaGuerra.Domain.PoliticalMap.Grid;
 using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
@@ -31,6 +30,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         private readonly PoliticalMapGrid _grid;
         private readonly PoliticalMapSheet _sheet;
         private readonly Material _material;
+        private readonly MeshBuilder _meshBuilder = new();
         private readonly Dictionary<string, GameEntity> _shown = new();
         private readonly Dictionary<string, GameEntity> _building = new();
 
@@ -99,32 +99,36 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
 
         private Mesh BuildMesh(PoliticalMapMeshChunk chunk)
         {
-            Mesh mesh = Mesh.CreateMesh();
-            UIntPtr handle = mesh.LockEditDataWrite();
+            // MeshBuilder collects indexed faces in managed memory and uploads them in one call.
+            // AddTriangleWithVertexColors crosses into the engine and edits its mesh for every face.
             foreach (PoliticalMapQuad quad in chunk.Quads)
             {
                 int left = quad.Column, right = quad.Column + quad.Width, bottom = quad.Row, top = quad.Row + quad.Height;
-                Vec3 a = Corner(left, bottom), b = Corner(right, bottom), c = Corner(right, top), d = Corner(left, top);
                 uint colour = quad.Color;
-                mesh.AddTriangleWithVertexColors(a, b, c, Vec2.Zero, Vec2.Zero, Vec2.Zero, colour, colour, colour, handle);
-                mesh.AddTriangleWithVertexColors(a, c, d, Vec2.Zero, Vec2.Zero, Vec2.Zero, colour, colour, colour, handle);
+                int a = AddCorner(left, bottom, colour), b = AddCorner(right, bottom, colour);
+                int c = AddCorner(right, top, colour), d = AddCorner(left, top, colour);
+                _meshBuilder.AddFace(a, b, c);
+                _meshBuilder.AddFace(a, c, d);
             }
 
             foreach (PoliticalMapTriangle triangle in chunk.Triangles)
             {
-                Vec3 a = Corner(triangle.A.Column, triangle.A.Row);
-                Vec3 b = Corner(triangle.B.Column, triangle.B.Row);
-                Vec3 c = Corner(triangle.C.Column, triangle.C.Row);
                 uint colour = triangle.Color;
-                mesh.AddTriangleWithVertexColors(a, b, c, Vec2.Zero, Vec2.Zero, Vec2.Zero, colour, colour, colour, handle);
+                int a = AddCorner(triangle.A.Column, triangle.A.Row, colour);
+                int b = AddCorner(triangle.B.Column, triangle.B.Row, colour);
+                int c = AddCorner(triangle.C.Column, triangle.C.Row, colour);
+                _meshBuilder.AddFace(a, b, c);
             }
 
+            Mesh mesh = _meshBuilder.Finalize();
             mesh.SetMaterial(_material);
             mesh.CullingMode = MBMeshCullingMode.None;
             mesh.RecomputeBoundingBox();
-            mesh.UnlockEditDataWrite(handle);
             return mesh;
         }
+
+        private int AddCorner(float column, float row, uint colour) =>
+            _meshBuilder.AddFaceCorner(Corner(column, row), Vec3.Up, Vec2.Zero, colour);
 
         // A cell corner on the sheet over the terrain.
         private Vec3 Corner(float column, float row) =>

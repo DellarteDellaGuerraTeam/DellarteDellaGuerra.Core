@@ -27,15 +27,17 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
      *  is paused. Nothing is rebuilt in an event handler: once a second the paint of every
      *  settlement is recomputed (cheap: title lookups, no meshes) and compared with what is drawn,
      *  and the territories that changed, with their neighbours when a border moved, are marked in
-     *  the shared scheduler, which is drained for a few milliseconds a frame
-     *  (<see cref="PoliticalMapOverlayDrawing"/>): a view switch is spread over a second or two.
+     *  cached map levels. Geometry planning runs on workers; engine uploads are budgeted over frames
+     *  (<see cref="PoliticalMapOverlayDrawing"/>). Idle frames prepare the other levels, so a warmed
+     *  view or zoom switch only changes visibility.
      *  </para>
      *  <para>
      *  The chosen view is saved with the campaign; a new campaign starts on the kingdom view.
      *  </para>
      *  <para>
      *  The owners view's level follows the camera (<see cref="PoliticalMapZoom.OwnerLevelFor"/>):
-     *  the map repaints at once when the level changes, and only then, never per frame.
+     *  the requested level is checked against live paints before its cached meshes are shown.
+     *  The last completed level stays visible until a cold or invalidated level is ready.
      *  </para>
      *  <para>
      *  While a view is drawn it also keeps the map bar's legend (the factions holding land) and a
@@ -96,6 +98,10 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
 
         /// <summary>How deep the owners view splits each kingdom at the camera's distance; the labels follow it.</summary>
         public PoliticalMapOwnerLevel OwnerLevel => _ownerLevel;
+
+        /// <summary>The completed mesh level actually visible while a requested cold cache is preparing.</summary>
+        public PoliticalMapView DisplayedView => _view == PoliticalMapView.Off ? PoliticalMapView.Off : _drawing?.DisplayedView ?? PoliticalMapView.Off;
+        public PoliticalMapOwnerLevel DisplayedOwnerLevel => _drawing?.DisplayedOwnerLevel ?? _ownerLevel;
 
         /// <summary>
         /// The factions holding land, in the current view's swatch colours (kingdom colours in the

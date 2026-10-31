@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.PoliticalMap;
@@ -10,167 +9,134 @@ using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
 namespace DellarteDellaGuerra.PoliticalMap.Rendering
 {
     /// <summary>
-    /// The political map drawn on one campaign map scene: works out what each settlement should be
-    /// painted, marks the territories whose paint changed in the shared scheduler, and feeds the
-    /// scheduler's chunks to the renderer within a per-frame budget.
+    /// Retains the kingdom map and both owner levels as scene-local mesh caches. Idle frames prepare
+    /// the next level. A cached zoom switch changes visibility; paint changes rebuild only affected
+    /// territories and their smoothing neighbours before that level can be activated again.
     /// </summary>
     public sealed class PoliticalMapOverlayDrawing
     {
         private const double FrameBudgetMs = 6.0;
-
+        private const double PrewarmBudgetMs = 2.0;
         private readonly PoliticalMapPainter _painter;
-        private readonly PoliticalMapRefreshScheduler _scheduler;
+        private readonly PoliticalMapRefreshScheduler _events;
         private readonly IPoliticalMapWorld _world;
-        private readonly PoliticalMapGrid _grid;
         private readonly string[] _territories;
-        private readonly PoliticalMapMesher _mesher;
+        private readonly PoliticalMapSheet _sheet;
         private readonly IReadOnlyList<(int A, int B)> _neighbours;
         private readonly IReadOnlyList<(int A, int B)> _boundaryNeighbours;
-        private readonly PoliticalMapRenderer _renderer;
         private readonly ILogger _logger;
-        private readonly Dictionary<string, IReadOnlyList<PoliticalMapMeshChunk>> _chunksInBuild = new();
-        private readonly HashSet<string> _readyToCommit = new();
-        private PoliticalMapSettlementPaint[] _paints = new PoliticalMapSettlementPaint[0];
+        private readonly Dictionary<(PoliticalMapView View, PoliticalMapOwnerLevel Level), PoliticalMapCachedLayer> _layers = new();
+        private (PoliticalMapView View, PoliticalMapOwnerLevel Level)? _requested;
+        private (PoliticalMapView View, PoliticalMapOwnerLevel Level)? _shown;
+        private PoliticalMapOwnerLevel _cameraLevel;
+        private PoliticalMapZoomBand _band = PoliticalMapZoomBand.Mid;
+        private bool _visible;
+        private readonly Dictionary<(PoliticalMapView View, PoliticalMapOwnerLevel Level), double> _lastValidation = new();
 
-        // The rebuild in flight, timed from its first chunk to its last, to log what a view switch costs.
-        private Stopwatch? _rebuild;
-        private int _rebuildFrames;
-        private int _rebuildChunks;
-        private double _rebuildSlowestFrameMs;
-
-        public PoliticalMapOverlayDrawing(
-            TaleWorlds.Engine.Scene scene,
-            PoliticalMapGrid grid,
-            PoliticalMapSheet sheet,
-            PoliticalMapPainter painter,
-            PoliticalMapRefreshScheduler scheduler,
-            IPoliticalMapWorld world,
-            ILogger logger)
+        public PoliticalMapOverlayDrawing(TaleWorlds.Engine.Scene scene, PoliticalMapGrid grid, PoliticalMapSheet sheet,
+            PoliticalMapPainter painter, PoliticalMapRefreshScheduler scheduler, IPoliticalMapWorld world, ILogger logger)
         {
+            Scene = scene;
+            Grid = grid;
+            _sheet = sheet;
             _painter = painter;
-            _scheduler = scheduler;
+            _events = scheduler;
             _world = world;
-            _grid = grid;
+            _logger = logger;
             _territories = grid.SettlementIds.Select(id => painter.TerritoryOf(id, world)).ToArray();
             Folds = painter.Fold(grid, _territories);
-            _mesher = new PoliticalMapMesher(grid, _territories);
+            TerritoryCount = _territories.Distinct().Count();
             _neighbours = PoliticalMapSettlementAdjacency.Of(grid);
             _boundaryNeighbours = PoliticalMapSettlementAdjacency.Of(grid, includeCorners: true)
                 .Concat(PoliticalMapSettlementAdjacency.InSharedBlocks(grid, PoliticalMapMesher.MaxQuadSide, PoliticalMapMesher.SmoothingReach))
                 .Distinct().ToArray();
-            _renderer = new PoliticalMapRenderer(scene, grid, sheet);
-            _logger = logger;
         }
 
-        public TaleWorlds.Engine.Scene Scene => _renderer.Scene;
-
+        public TaleWorlds.Engine.Scene Scene { get; }
+        public PoliticalMapGrid Grid { get; }
         public IReadOnlyDictionary<string, string> Folds { get; }
+        public int TerritoryCount { get; }
+        public PoliticalMapView DisplayedView => _visible && _shown is { } shown ? shown.View : PoliticalMapView.Off;
+        public PoliticalMapOwnerLevel DisplayedOwnerLevel => _shown?.Level ?? _cameraLevel;
 
-        public int TerritoryCount => _mesher.Territories.Count();
+        public void SetVisibility(PoliticalMapZoomBand band, bool visible)
+        {
+            _band = band;
+            _visible = visible;
+            if (_shown is { } shown) _layers[shown].SetVisibility(band, visible);
+        }
 
-        public PoliticalMapGrid Grid => _grid;
-
-        public void SetVisibility(PoliticalMapZoomBand band, bool visible) => _renderer.SetVisibility(band, visible);
-
-        /// <summary>
-        /// Recomputes every settlement's paint, the owners view at <paramref name="level"/>, and
-        /// marks what changed since it was drawn.
-        /// </summary>
         public void Repaint(PoliticalMapView view, PoliticalMapOwnerLevel level)
         {
-            PoliticalMapSettlementPaint[] paints = _painter.Paint(view, _grid.SettlementIds, _territories, Folds, _world, _neighbours, level);
-            var dirty = new HashSet<string>();
-            var changed = new bool[paints.Length];
-            for (int index = 0; index < paints.Length; index++)
-            {
-                PoliticalMapSettlementPaint? old = index < _paints.Length ? _paints[index] : null;
-                PoliticalMapSettlementPaint paint = paints[index];
-                // Only the colours are meshed: a key change alone redraws nothing.
-                if (old is not null && old.Fill == paint.Fill && old.Hatch == paint.Hatch) continue;
-
-                dirty.Add(_territories[index]);
-                changed[index] = true;
-            }
-
-            // Relaxation can carry a paint change along a frontier into neighbouring territories.
-            foreach ((int a, int b) in _boundaryNeighbours)
-            {
-                if (changed[a]) dirty.Add(_territories[b]);
-                if (changed[b]) dirty.Add(_territories[a]);
-            }
-
-            _paints = paints;
-            _scheduler.MarkDirty(dirty);
+            if (view == PoliticalMapView.Off) return;
+            _cameraLevel = level;
+            _requested = Key(view, level);
+            Validate(_requested.Value);
+            ShowIfReady();
         }
 
-        /// <summary>Builds the scheduled chunks for at most <see cref="FrameBudgetMs"/>.</summary>
         public void Drain(double clock)
         {
-            if (!_scheduler.HasWork)
+            if (_requested is not { } requested) return;
+            // Campaign events invalidate paints; each cached layer owns its separate upload queue.
+            if (_events.HasWork)
             {
-                if (_rebuild is not null) LogRebuild();
+                _events.Clear();
+                Validate(requested);
+                _lastValidation.Clear();
+            }
+            if (!_visible) return;
+
+            PoliticalMapCachedLayer layer = _layers[requested];
+            if (!layer.IsReady)
+            {
+                layer.Drain(clock, FrameBudgetMs);
+                ShowIfReady();
                 return;
             }
+            ShowIfReady();
 
-            _rebuild ??= Stopwatch.StartNew();
-            _rebuildFrames++;
-            var budget = Stopwatch.StartNew();
-            while (budget.Elapsed.TotalMilliseconds < FrameBudgetMs)
+            foreach (var candidate in WarmOrder(requested))
             {
-                IReadOnlyList<PoliticalMapChunk> chunks = _scheduler.Tick(clock, StartBuild);
-                if (chunks.Count == 0) break;
-
-                _rebuildChunks += chunks.Count;
-                foreach (PoliticalMapChunk chunk in chunks)
+                PoliticalMapCachedLayer warm = Layer(candidate);
+                if (!_lastValidation.TryGetValue(candidate, out double last) || clock - last >= 1.0)
                 {
-                    if (!_chunksInBuild.TryGetValue(chunk.TerritoryId, out IReadOnlyList<PoliticalMapMeshChunk>? meshChunks)) continue;
-
-                    _renderer.AddChunk(chunk.TerritoryId, chunk.ChunkIndex, meshChunks[chunk.ChunkIndex]);
-                    if (chunk.ChunkIndex == chunk.ChunkCount - 1)
-                    {
-                        _readyToCommit.Add(chunk.TerritoryId);
-                        _chunksInBuild.Remove(chunk.TerritoryId);
-                    }
+                    Validate(candidate);
+                    _lastValidation[candidate] = clock;
                 }
+                if (warm.IsReady) continue;
+                warm.Drain(clock, PrewarmBudgetMs);
+                break;
             }
-
-            // Both sides of a moved frontier become visible in the same frame.
-            if (!_scheduler.HasWork)
-            {
-                foreach (string territory in _readyToCommit) _renderer.Commit(territory);
-                _readyToCommit.Clear();
-            }
-
-            _rebuildSlowestFrameMs = Math.Max(_rebuildSlowestFrameMs, budget.Elapsed.TotalMilliseconds);
         }
 
-        private void LogRebuild()
+        private void Validate((PoliticalMapView View, PoliticalMapOwnerLevel Level) key) =>
+            Layer(key).Repaint(_painter.Paint(key.View, Grid.SettlementIds, _territories, Folds, _world, _neighbours, key.Level));
+
+        private PoliticalMapCachedLayer Layer((PoliticalMapView View, PoliticalMapOwnerLevel Level) key)
         {
-            _logger.Info(
-                $"Political map redrawn: {_rebuildChunks} chunks in {_rebuild!.ElapsedMilliseconds} ms over {_rebuildFrames} frames, "
-                + $"slowest frame {_rebuildSlowestFrameMs:F1} ms.");
-            _rebuild = null;
-            _rebuildFrames = 0;
-            _rebuildChunks = 0;
-            _rebuildSlowestFrameMs = 0;
+            if (!_layers.TryGetValue(key, out PoliticalMapCachedLayer? layer))
+                _layers[key] = layer = new PoliticalMapCachedLayer(Scene, Grid, _sheet, _territories, _boundaryNeighbours, _logger, $"{key.View}/{key.Level}");
+            return layer;
         }
 
-        // Asked once as a territory's rebuild starts: plan its chunks from the paints of this moment.
-        private int StartBuild(string territory)
+        private void ShowIfReady()
         {
-            if (_paints.Length == 0) return 0;
+            if (_requested is not { } requested || _shown == requested || !_layers[requested].IsReady) return;
+            if (_shown is { } shown) _layers[shown].SetVisibility(_band, false);
+            _shown = requested;
+            _layers[requested].SetVisibility(_band, _visible);
+        }
 
-            _readyToCommit.Remove(territory);
-            IReadOnlyList<PoliticalMapMeshChunk> chunks = _mesher.Build(territory, _paints);
-            if (chunks.Count == 0)
-            {
-                _renderer.Discard(territory);
-                _readyToCommit.Add(territory);
-                _chunksInBuild.Remove(territory);
-                return 0;
-            }
-            _chunksInBuild[territory] = chunks;
-            return chunks.Count;
+        private static (PoliticalMapView View, PoliticalMapOwnerLevel Level) Key(PoliticalMapView view, PoliticalMapOwnerLevel level) =>
+            (view, view == PoliticalMapView.Kingdom ? PoliticalMapOwnerLevel.SubVassals : level);
+
+        private IEnumerable<(PoliticalMapView View, PoliticalMapOwnerLevel Level)> WarmOrder((PoliticalMapView View, PoliticalMapOwnerLevel Level) requested)
+        {
+            PoliticalMapOwnerLevel opposite = _cameraLevel == PoliticalMapOwnerLevel.Vassals ? PoliticalMapOwnerLevel.SubVassals : PoliticalMapOwnerLevel.Vassals;
+            if (requested.View == PoliticalMapView.Kingdom) yield return Key(PoliticalMapView.Owners, _cameraLevel);
+            yield return Key(PoliticalMapView.Owners, opposite);
+            if (requested.View == PoliticalMapView.Owners) yield return Key(PoliticalMapView.Kingdom, _cameraLevel);
         }
     }
 }

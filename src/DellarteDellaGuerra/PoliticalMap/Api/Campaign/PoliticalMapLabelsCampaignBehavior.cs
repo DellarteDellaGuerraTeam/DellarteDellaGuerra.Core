@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.PoliticalMap.Grid;
@@ -23,7 +24,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
      *  Names the political map's regions on the campaign map while a view is drawn, in place of
      *  the settlement nameplates: kingdoms in the kingdom view, the vassal-hierarchy regions in the
      *  owners view, one label per region at the owners view's current level
-     *  (<see cref="PoliticalMapOverlayCampaignBehavior.OwnerLevel"/>). The owners view can switch
+     *  (<see cref="PoliticalMapOverlayCampaignBehavior.DisplayedOwnerLevel"/>). The owners view can switch
      *  its labels between the holder's highest title and the holder clan (<see cref="Modes"/>):
      *  only the text changes.
      * </summary>
@@ -31,8 +32,9 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
      *  <para>
      *  Once a second, and as soon as the view or the owners level changes, every settlement's key
      *  in each of the view's label tiers is recomputed (cheap: the painter's keys, no geometry) and
-     *  compared with the last; only when they differ are the regions found again
-     *  (<see cref="PoliticalMapRegions"/>), on a worker thread. The names and the terrain height
+     *  compared with the three cached layouts; only a cache miss finds regions again
+     *  (<see cref="PoliticalMapRegions"/>), on a worker thread. Once current labels are ready,
+     *  missing Owners levels are warmed on that worker. The names and the terrain height
      *  under each pole are then read on the main thread. Labels are shown only while they were
      *  built for the view and level drawn, so the two levels never mix and none go stale.
      *  </para>
@@ -78,16 +80,17 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
 
         private PoliticalMapView _keysView = PoliticalMapView.Off;
         private PoliticalMapOwnerLevel _keysLevel;
-        private string?[][] _keys = Array.Empty<string?[]>();
+        private readonly PoliticalMapLabelRegionCache _regionCache = new();
         private Task<IReadOnlyList<PoliticalMapRegion>[]>? _finding;
+        private CancellationTokenSource? _findingCancellation;
         private PoliticalMapView _findingView;
         private PoliticalMapOwnerLevel _findingLevel;
-        private IReadOnlyList<PoliticalMapLabelTier> _findingTiers = Array.Empty<PoliticalMapLabelTier>();
+        private string?[][] _findingKeys = Array.Empty<string?[]>();
         private IReadOnlyList<PoliticalMapRegion>[]? _regionsByTier;
         private IReadOnlyList<PoliticalMapLabelTier> _regionTiers = Array.Empty<PoliticalMapLabelTier>();
-        private PoliticalMapLabelMode _namedIn;
         private bool _renameNow;
         private readonly List<Label> _labels = new();
+        private readonly Dictionary<(PoliticalMapLabelTier Tier, string Key), string?> _resolvedNames = new();
         private readonly List<PoliticalMapLabelCandidate> _candidates = new();
         private float _sinceRecompute;
         private bool _failed;
@@ -157,35 +160,33 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             if (grid != _grid) Initialise(grid);
             if (_screen != mapScreen) AttachTo(mapScreen);
 
-            PoliticalMapView view = _overlay.View;
+            PoliticalMapView view = _overlay.DisplayedView;
             PoliticalMapOwnerLevel level = LevelOf(view);
             PoliticalMapNameplates.HideSettlementNameplates = view != PoliticalMapView.Off;
 
-            _sinceRecompute += realDt;
-            if (_finding is null && (view != _keysView || level != _keysLevel || _sinceRecompute >= RecomputeIntervalSeconds))
-            {
-                _sinceRecompute = 0f;
-                RecomputeKeys(view, level);
-            }
-
+            bool completed = false;
             if (_finding is { IsCompleted: true } finding)
             {
                 _finding = null;
-                if (finding.Status == TaskStatus.RanToCompletion && _findingView == view && _findingLevel == level)
+                _findingCancellation!.Dispose();
+                _findingCancellation = null;
+                if (finding.Status == TaskStatus.RanToCompletion)
                 {
-                    _regionsByTier = finding.Result;
-                    _regionTiers = _findingTiers;
-                    BuildLabels(mapScreen, view, level);
+                    _regionCache.Store(_findingView, _findingLevel, _findingKeys, finding.Result);
                 }
                 else if (finding.Exception is not null) throw finding.Exception;
-                // Found for a view or level no longer drawn: find again from scratch.
-                else _keys = Array.Empty<string?[]>();
+                _findingKeys = Array.Empty<string?[]>();
+                completed = true;
             }
 
-            // A label mode switch only renames: the regions stay.
-            if ((_renameNow || Modes.Of(view) != _namedIn) && _keysView == view && _keysLevel == level && _regionsByTier is not null)
+            _sinceRecompute += realDt;
+            if (completed || _renameNow || view != _keysView || level != _keysLevel || _sinceRecompute >= RecomputeIntervalSeconds)
             {
-                BuildLabels(mapScreen, view, level);
+                _sinceRecompute = 0f;
+                RecomputeKeys(mapScreen, view, level);
+                if (view != PoliticalMapView.Off && _regionsByTier is not null && _finding is null)
+                    PrecomputeOwnerLevels(view == PoliticalMapView.Owners ? OtherOwnerLevel(level) : _overlay.OwnerLevel,
+                        view == PoliticalMapView.Kingdom);
             }
 
             _renameNow = false;
@@ -193,6 +194,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             bool shown = view != PoliticalMapView.Off
                          && _keysView == view
                          && _keysLevel == level
+                         && _regionsByTier is not null
                          && TaleWorlds.CampaignSystem.Campaign.Current?.ConversationManager?.IsConversationInProgress != true;
             _vm!.IsVisible = shown;
             if (shown) Layout(mapScreen);
@@ -205,11 +207,13 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             _screen = null;
             _layer = null;
             _vm = null;
-            _finding = null;
+            CancelFinding();
+            _regionCache.Clear();
             _regionsByTier = null;
-            _keys = Array.Empty<string?[]>();
             _keysView = PoliticalMapView.Off;
+            _sinceRecompute = RecomputeIntervalSeconds;
             _labels.Clear();
+            _resolvedNames.Clear();
             PoliticalMapNameplates.HideSettlementNameplates = false;
         }
 
@@ -218,12 +222,14 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             _grid = grid;
             _territories = grid.SettlementIds.Select(id => _painter.TerritoryOf(id, _world)).ToArray();
             _folds = _painter.Fold(grid, _territories);
-            _finding = null;
+            CancelFinding();
+            _regionCache.Clear();
             _regionsByTier = null;
-            _keys = Array.Empty<string?[]>();
             _keysView = PoliticalMapView.Off;
+            _sinceRecompute = RecomputeIntervalSeconds;
             _vm?.Labels.Clear();
             _labels.Clear();
+            _resolvedNames.Clear();
         }
 
         private void AttachTo(MapScreen mapScreen)
@@ -236,30 +242,96 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             // The labels belonged to the old screen's movie: build them again.
             _labels.Clear();
             _regionsByTier = null;
-            _keys = Array.Empty<string?[]>();
             _keysView = PoliticalMapView.Off;
+            _sinceRecompute = RecomputeIntervalSeconds;
         }
 
         // The level the labels group the owners view by; the other views have one level.
         private PoliticalMapOwnerLevel LevelOf(PoliticalMapView view) =>
-            view == PoliticalMapView.Owners ? _overlay.OwnerLevel : PoliticalMapOwnerLevel.SubVassals;
+            view == PoliticalMapView.Owners ? _overlay.DisplayedOwnerLevel : PoliticalMapOwnerLevel.SubVassals;
 
-        private void RecomputeKeys(PoliticalMapView view, PoliticalMapOwnerLevel level)
+        private void RecomputeKeys(MapScreen mapScreen, PoliticalMapView view, PoliticalMapOwnerLevel level)
+        {
+            _keysView = view;
+            _keysLevel = level;
+            if (view == PoliticalMapView.Off)
+            {
+                CancelFinding();
+                _regionsByTier = null;
+                return;
+            }
+
+            IReadOnlyList<PoliticalMapLabelTier> tiers = PoliticalMapLabelTiers.Of(view);
+            string?[][] keys = KeysOf(view, level);
+            _regionsByTier = _regionCache.Get(view, level, keys);
+            if (_regionsByTier is not null)
+            {
+                _regionTiers = tiers;
+                // Names can change without changing any region key (titles, clans, localisation).
+                BuildLabels(mapScreen, view, level);
+                return;
+            }
+
+            if (_finding is not null && _findingView == view && _findingLevel == level
+                && PoliticalMapLabelRegionCache.SameKeys(keys, _findingKeys)) return;
+
+            StartFinding(view, level, keys);
+        }
+
+        private string?[][] KeysOf(PoliticalMapView view, PoliticalMapOwnerLevel level)
         {
             PoliticalMapGrid grid = _grid!;
             IReadOnlyList<PoliticalMapLabelTier> tiers = PoliticalMapLabelTiers.Of(view);
             IReadOnlyList<string?>? ownerRegionKeys = tiers.Contains(PoliticalMapLabelTier.Owner) ? OwnerRegionKeys(grid, level) : null;
-            string?[][] keys = tiers.Select(tier => PoliticalMapLabelTiers.KeysOf(tier, grid.SettlementIds, ownerRegionKeys, _world)).ToArray();
+            return tiers.Select(tier => PoliticalMapLabelTiers.KeysOf(tier, grid.SettlementIds, ownerRegionKeys, _world)).ToArray();
+        }
 
-            if (view == _keysView && level == _keysLevel && SameKeys(keys, _keys)) return;
+        private static PoliticalMapOwnerLevel OtherOwnerLevel(PoliticalMapOwnerLevel level) =>
+            level == PoliticalMapOwnerLevel.Vassals ? PoliticalMapOwnerLevel.SubVassals : PoliticalMapOwnerLevel.Vassals;
 
+        private void PrecomputeOwnerLevels(PoliticalMapOwnerLevel first, bool includeOther)
+        {
+            string?[][] keys = KeysOf(PoliticalMapView.Owners, first);
+            if (_regionCache.Get(PoliticalMapView.Owners, first, keys) is null)
+                StartFinding(PoliticalMapView.Owners, first, keys);
+            else if (includeOther)
+                PrecomputeOwnerLevels(OtherOwnerLevel(first), false);
+        }
+
+        private void StartFinding(PoliticalMapView view, PoliticalMapOwnerLevel level, string?[][] keys)
+        {
+            // A foreground miss must not wait for an obsolete find or a speculative other level.
+            CancelFinding();
+            PoliticalMapGrid grid = _grid!;
+            IReadOnlyList<PoliticalMapLabelTier> tiers = PoliticalMapLabelTiers.Of(view);
             _findingView = view;
             _findingLevel = level;
-            _findingTiers = tiers;
-            _keys = keys;
-            _finding = Task.Run(() => keys
-                .Select((tierKeys, index) => PoliticalMapRegions.Find(grid, tierKeys, PoliticalMapLabelTiers.MinCells(tiers[index])))
-                .ToArray());
+            _findingKeys = keys;
+            _findingCancellation = new CancellationTokenSource();
+            CancellationToken cancellation = _findingCancellation.Token;
+            _finding = Task.Run(() =>
+            {
+                var regions = new IReadOnlyList<PoliticalMapRegion>[keys.Length];
+                for (int index = 0; index < keys.Length; index++)
+                {
+                    cancellation.ThrowIfCancellationRequested();
+                    regions[index] = PoliticalMapRegions.Find(grid, keys[index], PoliticalMapLabelTiers.MinCells(tiers[index]));
+                }
+                cancellation.ThrowIfCancellationRequested();
+                return regions;
+            }, cancellation);
+        }
+
+        private void CancelFinding()
+        {
+            if (_finding is null) return;
+            _findingCancellation!.Cancel();
+            _ = _finding.ContinueWith(task => { _ = task.Exception; }, CancellationToken.None,
+                TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+            _finding = null;
+            _findingCancellation.Dispose();
+            _findingCancellation = null;
+            _findingKeys = Array.Empty<string?[]>();
         }
 
         // The owners view's own regions at a level (each the clan they belong to), so labels group as the colours do.
@@ -268,32 +340,42 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
                 .Select(paint => paint.RegionKey)
                 .ToArray();
 
-        private static bool SameKeys(string?[][] a, string?[][] b)
-        {
-            if (a.Length != b.Length) return false;
-            for (int index = 0; index < a.Length; index++)
-            {
-                if (!a[index].SequenceEqual(b[index], StringComparer.Ordinal)) return false;
-            }
-
-            return true;
-        }
-
         private void BuildLabels(MapScreen mapScreen, PoliticalMapView view, PoliticalMapOwnerLevel level)
         {
             IReadOnlyList<PoliticalMapRegion>[] regionsByTier = _regionsByTier!;
             PoliticalMapLabelMode mode = Modes.Of(view);
-            PoliticalMapVassalHierarchy hierarchy = _painter.HierarchyOf(_world);
-            var names = new Dictionary<string, string?>(StringComparer.Ordinal);
+            PoliticalMapVassalHierarchy? hierarchy = view == PoliticalMapView.Owners && mode == PoliticalMapLabelMode.Titles
+                ? _painter.HierarchyOf(_world) : null;
+            _resolvedNames.Clear();
+            int labelIndex = 0;
+            bool changed = false;
+            for (int index = 0; index < regionsByTier.Length; index++)
+            {
+                PoliticalMapLabelTier tier = _regionTiers[index];
+                foreach (PoliticalMapRegion region in regionsByTier[index])
+                {
+                    var key = (tier, region.Key);
+                    if (!_resolvedNames.TryGetValue(key, out string? name))
+                        _resolvedNames[key] = name = NameOf(tier, mode, region.Key, hierarchy);
+                    if (string.IsNullOrWhiteSpace(name)) continue;
+
+                    if (labelIndex >= _labels.Count || !ReferenceEquals(_labels[labelIndex].Region, region)
+                        || _labels[labelIndex].Tier != tier || _labels[labelIndex].Text != name) changed = true;
+                    labelIndex++;
+                }
+            }
+
+            // Live names are cheap to check; leave the Gauntlet collection and terrain reads alone when unchanged.
+            if (!changed && labelIndex == _labels.Count) return;
+
             _labels.Clear();
             _vm!.Labels.Clear();
             for (int index = 0; index < regionsByTier.Length; index++)
             {
                 PoliticalMapLabelTier tier = _regionTiers[index];
-                names.Clear();
                 foreach (PoliticalMapRegion region in regionsByTier[index])
                 {
-                    if (!names.TryGetValue(region.Key, out string? name)) names[region.Key] = name = NameOf(tier, mode, region.Key, hierarchy);
+                    string? name = _resolvedNames[(tier, region.Key)];
                     if (string.IsNullOrWhiteSpace(name)) continue;
 
                     float height = mapScreen.MapScene.GetTerrainHeight(new Vec2(region.X, region.Y)) + HeightOffset;
@@ -305,12 +387,11 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
 
             _keysView = view;
             _keysLevel = level;
-            _namedIn = mode;
         }
 
         // A region's label in a mode. An owners region is named after its holder clan, or its
         // holder's highest title (a ruler's: the realm's); a clan holding no title keeps its name.
-        private string? NameOf(PoliticalMapLabelTier tier, PoliticalMapLabelMode mode, string key, PoliticalMapVassalHierarchy hierarchy)
+        private string? NameOf(PoliticalMapLabelTier tier, PoliticalMapLabelMode mode, string key, PoliticalMapVassalHierarchy? hierarchy)
         {
             switch (tier)
             {
@@ -319,7 +400,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
                            ?? ClanNameOf(key);
                 case PoliticalMapLabelTier.Owner:
                     return mode == PoliticalMapLabelMode.Titles
-                        ? TitleNameOf(hierarchy.HighestTitleOf(key)?.Id) ?? ClanNameOf(key)
+                        ? TitleNameOf(hierarchy?.HighestTitleOf(key)?.Id) ?? ClanNameOf(key)
                         : ClanNameOf(key);
                 default:
                     return null;
