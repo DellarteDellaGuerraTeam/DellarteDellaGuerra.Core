@@ -19,13 +19,16 @@ namespace DellarteDellaGuerra.Infrastructure.Titles;
  *   &lt;Kingdom id="..." name="..." seat="..." kingClanId="..." heldSince="..."&gt;
  *     &lt;Duchy id="..." name="..." seat="..." holderClanId="..." heldSince="..."&gt;
  *       &lt;County id="..." name="..." seat="..." holderClanId="..." heldSince="..."&gt;
+ *         &lt;Claim clanId="..." strength="..."/&gt;
  *         &lt;Barony id="..." name="..." seat="..." holderClanId="..." heldSince="..."/&gt;
  *       &lt;/County&gt;
  *     &lt;/Duchy&gt;
  *   &lt;/Kingdom&gt;
  * &lt;/Feudalism&gt;
  * </code>
- * heldSince is the optional year the holder's house took the title.
+ * heldSince is the optional year the holder's house took the title. A Claim element gives a
+ * clan a claim on its parent title from the start of the campaign; strength is Weak, Strong
+ * or DeJure, Strong when absent.
  * </summary>
  */
 public static class FeudalStructureParser
@@ -36,6 +39,9 @@ public static class FeudalStructureParser
     private const string HolderClanIdAttribute = "holderClanId";
     private const string KingClanIdAttribute = "kingClanId";
     private const string HeldSinceAttribute = "heldSince";
+    private const string ClaimElement = "Claim";
+    private const string ClanIdAttribute = "clanId";
+    private const string StrengthAttribute = "strength";
 
     internal static IReadOnlyList<FeudalTitleNode> Parse(string xml)
     {
@@ -91,13 +97,42 @@ public static class FeudalStructureParser
         int? initialHeldSinceYear = ParseHeldSinceYear(element, titleId);
 
         var children = new List<FeudalTitleNode>();
+        var claims = new List<FeudalClaimNode>();
         foreach (XElement child in element.Elements())
         {
+            if (child.Name.LocalName == ClaimElement)
+            {
+                claims.Add(ParseClaimElement(child, titleId, initialHolderClanId));
+                continue;
+            }
+
             children.Add(ParseTitleElement(child, seenTitleIds, seenSeats));
         }
 
         return new FeudalTitleNode(
-            titleId, name, rank, seatSettlementId, initialHolderClanId, children, initialHeldSinceYear);
+            titleId, name, rank, seatSettlementId, initialHolderClanId, children, initialHeldSinceYear, claims);
+    }
+
+    private static FeudalClaimNode ParseClaimElement(XElement element, string titleId, string? holderClanId)
+    {
+        string clanId = GetRequiredAttribute(element, ClanIdAttribute);
+        if (clanId == holderClanId)
+        {
+            throw new InvalidOperationException(
+                $"Clan '{clanId}' claims title '{titleId}', which it already holds, in the feudal titles configuration");
+        }
+
+        string? value = element.Attribute(StrengthAttribute)?.Value;
+        ClaimStrength strength = ClaimStrength.Strong;
+        if (value is not null
+            && (!Enum.TryParse(value, false, out strength) || !Enum.IsDefined(typeof(ClaimStrength), strength)))
+        {
+            throw new InvalidOperationException(
+                $"Invalid claim '{StrengthAttribute}' '{value}' on title '{titleId}' in the feudal titles configuration. " +
+                "Expected one of: Weak, Strong, DeJure");
+        }
+
+        return new FeudalClaimNode(clanId, strength);
     }
 
     private static int? ParseHeldSinceYear(XElement element, string titleId)

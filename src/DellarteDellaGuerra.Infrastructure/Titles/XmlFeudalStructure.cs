@@ -17,6 +17,7 @@ public class XmlFeudalStructure : IFeudalStructure
     private long _revision;
     public long Revision => Interlocked.Read(ref _revision);
     private static readonly IReadOnlyList<string> NoVassals = new List<string>();
+    private static readonly IReadOnlyList<FeudalClaimNode> NoClaims = new List<FeudalClaimNode>();
 
     // The default campaign calendar (4 seasons of 21 days), on which campaign days are counted
     // from year 0, so a configured year lands on the same scale as CampaignTime.Now.ToDays.
@@ -145,6 +146,28 @@ public class XmlFeudalStructure : IFeudalStructure
         }
 
         return titles;
+    }
+
+    /**
+     * <summary>
+     * Builds the claims the configuration gives clans on titles they do not hold at the start
+     * of the campaign: a house dispossessed before 1471 presses its claim like one that lost the
+     * title in play, so each is a clan-level conquest claim with the id that loss would mint.
+     * </summary>
+     */
+    public IReadOnlyList<Claim> BuildInitialClaims()
+    {
+        var claims = new List<Claim>();
+        foreach (string titleId in _allTitleIds)
+        {
+            foreach (FeudalClaimNode claim in _nodesByTitleId[titleId].InitialClaims ?? NoClaims)
+            {
+                claims.Add(new Claim(
+                    $"{titleId}:{claim.ClanId}:conquest", claim.ClanId, titleId, claim.Strength, ClaimOrigin.Conquest));
+            }
+        }
+
+        return claims;
     }
 
     private void IndexForest()

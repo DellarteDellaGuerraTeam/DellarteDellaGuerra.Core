@@ -1,0 +1,25 @@
+<Prefab>
+  <!-- The political map's region labels. Each item is a 2x2 anchor at the region's projected pole; the
+       text widget of its font step is centred on it (font sizes cannot be bound, so each step is its own widget). -->
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" IsVisible="@IsVisible">
+      <Children>
+        <Widget DataSource="{Labels}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+          <ItemTemplate>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="2" SuggestedHeight="2" HorizontalAlignment="Left" VerticalAlignment="Top" ScaledPositionXOffset="@PositionX" ScaledPositionYOffset="@PositionY" IsVisible="@IsShown" DoNotAcceptEvents="true">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="DADG.PoliticalMap.Label" Brush.FontSize="13" Text="@Text" IsVisible="@IsSize0" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="DADG.PoliticalMap.Label" Brush.FontSize="16" Text="@Text" IsVisible="@IsSize1" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="DADG.PoliticalMap.Label" Brush.FontSize="20" Text="@Text" IsVisible="@IsSize2" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="DADG.PoliticalMap.Label" Brush.FontSize="25" Text="@Text" IsVisible="@IsSize3" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="DADG.PoliticalMap.Label" Brush.FontSize="31" Text="@Text" IsVisible="@IsSize4" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="DADG.PoliticalMap.Label" Brush.FontSize="39" Text="@Text" IsVisible="@IsSize5" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="DADG.PoliticalMap.Label" Brush.FontSize="48" Text="@Text" IsVisible="@IsSize6" DoNotAcceptEvents="true" />
+              </Children>
+            </Widget>
+          </ItemTemplate>
+        </Widget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

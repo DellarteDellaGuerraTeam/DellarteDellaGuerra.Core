@@ -181,6 +181,9 @@ Feature: Feudal title ledger, historical tenure and won-claim awards
   # == Awarded; GetDeJureSuzerainTitleId("county_gowrie") == "duchy_northumberland"; Clan("clan_campbell").
   # Kingdom == Clan("clan_percy").Kingdom ("vlandia"); the county's seat settlement dadg_sco_perth_town's
   # OwnerClan.StringId == "clan_percy". PASS, debugger-driven (see header).
+  # STALE since the 1471 hierarchy (doc/feudal-hierarchy-1471-proposal.md): duchy_northumberland and
+  # barony_glenorchy no longer exist, Percy's primary title is county_warkworth directly under the crown,
+  # and county_gowrie has no baronies. Re-pick the fixture titles and replay before trusting this PASS.
   Scenario: A won claim on a title the loser still holds carries it and its vassal houses into the winner's realm
     Given `clan_ruthven` holds `county_gowrie`, under `kingdom_scotland`
     And `clan_campbell`'s primary title is `barony_glenorchy`, a barony of `county_gowrie`

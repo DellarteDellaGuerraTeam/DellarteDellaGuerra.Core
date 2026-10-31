@@ -442,7 +442,8 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                               || IsBonded(clansById[clanId].Leader, defenderClan.Leader),
                     getSuzerain,
                     attackerSideId,
-                    defenderClan.StringId)
+                    defenderClan.StringId,
+                    kingdom.RulingClan?.StringId)
                 .Select(candidate =>
                 {
                     Hero leader = clansById[candidate.ClanId].Leader;

@@ -21,12 +21,12 @@ public class HolderDeathOverRealContentTests
 {
     [Fact]
     [Trait("Category", "DADG content integration")]
-    public void AnEarlsFiveDignitiesPassToHisOnlyDaughterRatherThanToHisBrother()
+    public void AnEarlsEightDignitiesPassToHisOnlyDaughterRatherThanToHisBrother()
     {
         // Warwick's only child is a daughter of fourteen who married into Lancaster; his brother
         // is forty and heads a cadet branch of six. Male preference asks for a son, not for a man:
         // with no son's line left, the girl takes precedence over her uncle whatever their ages,
-        // and five dignities leave the clan with her.
+        // and eight dignities leave the clan with her.
         const string warwick = "dadg_lord_9_1";
         const string daughter = "dadg_lord_2_4";
         const string brother = "dadg_lord_9_2";
@@ -39,8 +39,8 @@ public class HolderDeathOverRealContentTests
         Assert.Equal(
             new[]
             {
-                "barony_caerphilly", "barony_middleham", "barony_rye", "barony_warwick",
-                "county_glamorgan"
+                "barony_barnard", "barony_caerphilly", "barony_middleham", "barony_penrith", "barony_rye",
+                "county_glamorgan", "county_warwick", "duchy_warwick"
             },
             results.Select(result => result.TitleId).OrderBy(id => id));
         Assert.All(results, result => Assert.Equal(daughter, result.NewHolderHeroId));
@@ -102,10 +102,10 @@ public class HolderDeathOverRealContentTests
     [Theory]
     [Trait("Category", "DADG content integration")]
     [InlineData("dadg_lord_23_1", "county_lynn", "duchy_norfolk")]
-    [InlineData("dadg_lord_26_1", "barony_penrith", "county_durham")]
-    [InlineData("dadg_lord_49_1", "barony_northampton")]
+    [InlineData("dadg_lord_26_1", "county_durham")]
+    [InlineData("dadg_lord_49_1", "barony_northampton", "barony_wardour")]
     [InlineData("dadg_lord_52_1", "barony_montgomery")]
-    [InlineData("dadg_lord_8_1", "barony_skipton", "county_cumberland")]
+    [InlineData("dadg_lord_8_1", "county_cumberland")]
     public void ATitleIsLeftVacantWhenTheLineDiesOutWithItsHolder(
         string holderId,
         params string[] expectedTitleIds)
@@ -130,14 +130,14 @@ public class HolderDeathOverRealContentTests
     public void EveryHolderInTheContentCanDieWithoutOrphaningOrMisplacingHisDignities()
     {
         // The sweep that matters: a death is the one event this system cannot decline to handle,
-        // and it fires for all 79 holders over bloodlines authored by hand — England's 53 and the
-        // 26 of Scotland and the Isles. It is what caught a
+        // and it fires for all 72 holders over bloodlines authored by hand — England's 47 and the
+        // 25 of Scotland and the Isles. It is what caught a
         // duke listed as his own mother, whose cycle overflowed the descent walk's stack; the
         // record has since been corrected, and the walk's guard is unit-tested against a fake.
         Content content = Content.Load();
         IReadOnlyList<string> holderIds = content.HolderIds();
 
-        Assert.Equal(79, holderIds.Count);
+        Assert.Equal(72, holderIds.Count);
 
         foreach (string holderId in holderIds)
         {
@@ -166,15 +166,16 @@ public class HolderDeathOverRealContentTests
     [Trait("Category", "DADG content integration")]
     public void TheClaimsAreRederivedFromTheNewHolderOnceTheSuccessionHasRun()
     {
-        // The whole OnHeroKilled chain. Warwick's five dignities pass to his only child and every
+        // The whole OnHeroKilled chain. Warwick's eight dignities pass to his only child and every
         // claim on them lapses: she was a claimant and is now the holder, she has neither children
         // nor a brother or sister, and the aunts and cousins who held claims through Warwick's
         // father now stand two levels above her — out of reach of the collateral rule derivation
-        // mirrors. Sixty claims go, none appear, and no other title is touched.
+        // mirrors. Ninety-six claims go, none appear, and no other title is touched.
         const string warwick = "dadg_lord_9_1";
         string[] warwicksTitles =
         {
-            "barony_caerphilly", "barony_middleham", "barony_rye", "barony_warwick", "county_glamorgan"
+            "barony_barnard", "barony_caerphilly", "barony_middleham", "barony_penrith", "barony_rye",
+            "county_glamorgan", "county_warwick", "duchy_warwick"
         };
 
         Content content = Content.Load();
@@ -184,10 +185,10 @@ public class HolderDeathOverRealContentTests
         afterDeath.ExecuteSuccession(warwick);
         IReadOnlyList<Claim> after = afterDeath.GenerateClaims();
 
-        Assert.Equal(449, before.Count);
-        Assert.Equal(389, after.Count);
+        Assert.Equal(483, before.Count);
+        Assert.Equal(387, after.Count);
 
-        Assert.Equal(60, Key(before).Except(Key(after)).Count());
+        Assert.Equal(96, Key(before).Except(Key(after)).Count());
         Assert.Equal(
             warwicksTitles,
             Key(before).Except(Key(after)).Select(key => key.Split('|')[0]).Distinct().OrderBy(id => id));

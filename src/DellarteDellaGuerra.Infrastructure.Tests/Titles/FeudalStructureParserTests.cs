@@ -66,6 +66,45 @@ public class FeudalStructureParserTests
     }
 
     [Fact]
+    public void ShouldParseClaimsOnTheirParentTitleRatherThanAsVassals()
+    {
+        var forest = FeudalStructureParser.Parse(
+            """
+            <Feudalism>
+              <Kingdom id="kingdom_england" kingClanId="clan_lancaster">
+                <Claim clanId="clan_york"/>
+                <Barony id="barony_skipton" seat="castle_skipton" holderClanId="clan_stanley">
+                  <Claim clanId="clan_clifford" strength="Weak"/>
+                </Barony>
+              </Kingdom>
+            </Feudalism>
+            """);
+
+        var kingdom = Assert.Single(forest);
+        var barony = Assert.Single(kingdom.Children);
+        Assert.Equal(new FeudalClaimNode("clan_york", ClaimStrength.Strong), Assert.Single(kingdom.InitialClaims!));
+        Assert.Equal(new FeudalClaimNode("clan_clifford", ClaimStrength.Weak), Assert.Single(barony.InitialClaims!));
+        Assert.Empty(barony.Children);
+    }
+
+    [Theory]
+    [InlineData("<Claim clanId=\"clan_york\" strength=\"Huge\"/>", "Huge")]
+    [InlineData("<Claim clanId=\"clan_york\" strength=\"7\"/>", "7")]
+    [InlineData("<Claim clanId=\"clan_lancaster\"/>", "already holds")]
+    [InlineData("<Claim strength=\"Weak\"/>", "clanId")]
+    public void ShouldThrowOnAnInvalidClaim(string claim, string expectedInMessage)
+    {
+        var exception = Assert.Throws<InvalidOperationException>(() => FeudalStructureParser.Parse(
+            $"""
+            <Feudalism>
+              <Kingdom id="kingdom_england" kingClanId="clan_lancaster">{claim}</Kingdom>
+            </Feudalism>
+            """));
+
+        Assert.Contains(expectedInMessage, exception.Message);
+    }
+
+    [Fact]
     public void ShouldBuildParentChildHierarchy()
     {
         IReadOnlyList<FeudalTitleNode> forest = FeudalStructureParser.Parse(SampleXml);

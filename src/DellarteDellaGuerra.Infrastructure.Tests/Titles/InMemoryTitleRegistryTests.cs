@@ -72,6 +72,33 @@ public class InMemoryTitleRegistryTests
     }
 
     [Fact]
+    public void ShouldAnnounceAChangeOfHolderOrOccupantButNotAnUnchangedSave()
+    {
+        _registry.SaveTitle(YorkDuchy());
+        var changed = new List<string>();
+        _registry.HolderOrOccupantChanged += changed.Add;
+
+        _registry.SaveTitle(YorkDuchy());
+        _registry.SaveTitle(YorkDuchy(holderClanId: "clan_neville"));
+        _registry.SaveTitle(_registry.GetTitle("duchy_york")!.WithOccupant("clan_percy", 10f));
+        _registry.SaveTitle(new Title("county_kent", "County of Kent", TitleRank.Count, "town_kent", null));
+
+        Assert.Equal(new[] { "duchy_york", "duchy_york", "county_kent" }, changed);
+    }
+
+    [Fact]
+    public void ShouldNotAnnounceTheTitlesItIsInitialisedWith()
+    {
+        var changed = new List<string>();
+        _registry.HolderOrOccupantChanged += changed.Add;
+
+        _registry.Initialise([YorkDuchy()]);
+        _registry.SaveTitle(YorkDuchy(holderClanId: "clan_neville"));
+
+        Assert.Equal(new[] { "duchy_york" }, changed);
+    }
+
+    [Fact]
     public void ShouldSnapshotAllTitles()
     {
         _registry.SaveTitle(YorkDuchy());

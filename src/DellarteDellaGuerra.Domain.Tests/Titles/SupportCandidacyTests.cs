@@ -60,6 +60,20 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         }
 
         [Fact]
+        public void Select_NeverAsksTheRoyalHouse()
+        {
+            var candidates = SupportCandidacy.Select(
+                new[] { "crown", "neighbour" },
+                _ => true,
+                _ => null,
+                "attacker",
+                "defender",
+                rulingClanId: "crown").ToList();
+
+            Assert.Equal(new[] { ("neighbour", FeudalAllegiance.Uncommitted) }, candidates);
+        }
+
+        [Fact]
         public void Select_CountsNobodyForAnUnfoundedCadetBranch()
         {
             // An internal war's claimant side is a house that does not exist yet, so nobody can be

@@ -16,7 +16,8 @@ namespace DellarteDellaGuerra.Domain.Titles
      *  is asked only if it belongs to the realm the war is fought in, or if its leader has a
      *  personal bond with one of the principals (see <see cref="PersonalBondPolicy"/>): a foreign ally
      *  may ride to a friend's quarrel, but an uncommitted stranger cannot rally to one that is
-     *  none of his.
+     *  none of his. The royal house is never asked: the crown settles its vassals' quarrels
+     *  as king, it does not take a side in them.
      * </remarks>
      */
     public static class SupportCandidacy
@@ -28,10 +29,13 @@ namespace DellarteDellaGuerra.Domain.Titles
             Func<string, bool> mayRally,
             Func<string, string?> getSuzerain,
             string attackerSideId,
-            string defenderClanId)
+            string defenderClanId,
+            string? rulingClanId = null)
         {
             foreach (string clanId in clanIds)
             {
+                if (clanId == rulingClanId) continue;
+
                 string? side = WarSideStrength.ResolveSide(
                     clanId, getSuzerain, attackerSideId, defenderClanId, NoSupporters, NoSupporters);
 

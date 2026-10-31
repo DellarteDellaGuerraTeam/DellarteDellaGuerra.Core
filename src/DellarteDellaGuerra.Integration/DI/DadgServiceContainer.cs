@@ -9,6 +9,9 @@ using DellarteDellaGuerra.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders;
 using DellarteDellaGuerra.Domain.DisplayCompilingShaders.Ports;
+using DellarteDellaGuerra.Domain.PoliticalMap;
+using DellarteDellaGuerra.Domain.PoliticalMap.Port;
+using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
 using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.Domain.Tournament.Reward;
@@ -34,6 +37,7 @@ using DellarteDellaGuerra.Infrastructure.MainMenu.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Visor.Spi;
 using DellarteDellaGuerra.Integration.CampaignTime;
+using DellarteDellaGuerra.Infrastructure.PoliticalMap;
 using DellarteDellaGuerra.Infrastructure.Titles;
 using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.Music.Patches;
@@ -42,6 +46,8 @@ using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission.Patches;
 using DellarteDellaGuerra.Integration.SiegeTactics.Mission;
 using DellarteDellaGuerra.Integration.Titles;
+using DellarteDellaGuerra.Integration.PoliticalMap;
+using DellarteDellaGuerra.PoliticalMap.Api.Campaign;
 using DellarteDellaGuerra.Titles.Api.Campaign;
 using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Infrastructure.Tournament.Jousting;
@@ -83,6 +89,7 @@ public class DadgServiceContainer
         RegisterCoreServices(services);
         services.AddDadgInfrastructure();
         RegisterTitleServices(services);
+        RegisterPoliticalMapServices(services);
         RegisterTournamentServices(services);
         RegisterDisplayServices(services);
         RegisterMissionServices(services);
@@ -188,11 +195,11 @@ public class DadgServiceContainer
         services.AddSingleton<IBuildFeudalMapUseCase, BuildFeudalMapUseCase>();
         services.AddSingleton<IGetDeJureSettlementsUseCase, GetDeJureSettlementsUseCase>();
         services.AddSingleton<IAwardWonClaimUseCase, AwardWonClaimUseCase>();
+        services.AddSingleton<IScreenClaimUseCase, ScreenClaimUseCase>();
         services.AddSingleton<IEvaluatePressClaimUseCase, EvaluatePressClaimUseCase>();
         services.AddSingleton<ISolicitSupportUseCase, SolicitSupportUseCase>();
         services.AddSingleton<IPersonalBondPolicy, PersonalBondPolicy>();
 
-        services.AddSingleton<IScreenClaimUseCase, ScreenClaimUseCase>();
         // Campaign behaviour (resolved lazily in SubModule)
         services.AddSingleton<FeudalTitleCampaignBehavior>(sp => new FeudalTitleCampaignBehavior(
             sp.GetRequiredService<IAssignTitleUseCase>(),
@@ -200,10 +207,34 @@ public class DadgServiceContainer
             sp.GetRequiredService<IExecuteSuccessionUseCase>(),
             sp.GetRequiredService<IFeudalStateStore>(),
             () => sp.GetRequiredService<XmlFeudalStructure>()
-                    .BuildInitialTitles(sp.GetRequiredService<IGenealogy>())));
+                    .BuildInitialTitles(sp.GetRequiredService<IGenealogy>()),
+            () => sp.GetRequiredService<XmlFeudalStructure>().BuildInitialClaims()));
         services.AddSingleton<ClaimPressureCampaignBehavior>();
     }
 
+
+    private static void RegisterPoliticalMapServices(IServiceCollection services)
+    {
+        services.AddSingleton<PoliticalMapTerritories>();
+        services.AddSingleton(_ => new PoliticalMapRefreshScheduler());
+        services.AddSingleton<PoliticalMapPaintLedger>();
+        // The settlement grid is built from the shipped map terrain at session launch, off the main thread.
+        services.AddSingleton<IPoliticalMapTerrain, MainMapTerrain>();
+        services.AddSingleton<PoliticalMapGridCampaignBehavior>();
+        // Every title change is saved through the registry, so the behaviour hears them all there.
+        services.AddSingleton(sp =>
+        {
+            var behavior = ActivatorUtilities.CreateInstance<PoliticalMapRefreshCampaignBehavior>(sp);
+            sp.GetRequiredService<InMemoryTitleRegistry>().HolderOrOccupantChanged += behavior.OnTitleChanged;
+            return behavior;
+        });
+        services.AddSingleton<PoliticalMapPainter>();
+        services.AddSingleton<PoliticalMapHoverDescriber>();
+        // Draws the overlay; ticked every frame from SubModule.OnApplicationTick.
+        services.AddSingleton<PoliticalMapOverlayCampaignBehavior>();
+        // Names the regions over the overlay; ticked right after it.
+        services.AddSingleton<PoliticalMapLabelsCampaignBehavior>();
+    }
 
     private static void RegisterPatches(IServiceCollection services)
     {
@@ -225,9 +256,12 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, FixSettlementFilePathPatch>();
         // Main menu
         services.AddSingleton<IPatch, MainMenuSkipVideoPatch>();
+        services.AddSingleton<IPatch, MainMenuHoldLoadingWindowPatch>();
             // Music
         services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
         // Siege engines
         services.AddSingleton<IPatch, CannonballTrailCleanupPatch>();
+        // Political map: settlement nameplates give way to the region labels
+        services.AddSingleton<IPatch, HideSettlementNameplatesPatch>();
     }
 }

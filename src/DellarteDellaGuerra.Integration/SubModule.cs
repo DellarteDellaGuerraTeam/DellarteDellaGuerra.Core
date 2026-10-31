@@ -37,6 +37,7 @@ using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
 using DellarteDellaGuerra.Infrastructure.Titles;
 using DellarteDellaGuerra.Integration.Titles;
 using DellarteDellaGuerra.Integration.Titles.UI;
+using DellarteDellaGuerra.PoliticalMap.Api.Campaign;
 using DellarteDellaGuerra.Titles.Api;
 using DellarteDellaGuerra.Titles.Api.Campaign;
 using DellarteDellaGuerra.Integration.SiegeTactics.Mission;
@@ -160,6 +161,13 @@ namespace DellarteDellaGuerra.Integration
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleCampaignBehavior>());
             campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<ClaimPressureCampaignBehavior>());
 
+            // Political map: the refresh behaviour marks the territories campaign events repaint, the
+            // grid behaviour builds the settlement grid, and the overlay draws it and drains the marks
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<PoliticalMapRefreshCampaignBehavior>());
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<PoliticalMapGridCampaignBehavior>());
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<PoliticalMapOverlayCampaignBehavior>());
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<PoliticalMapLabelsCampaignBehavior>());
+
             // Initialise the static service locator used by the feudal campaign layer
             FeudalServices.Initialise(
                 _serviceProvider.GetRequiredService<ITitleRepository>(),
@@ -181,6 +189,13 @@ namespace DellarteDellaGuerra.Integration
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();
+        }
+
+        // The political map overlay is ticked here rather than on the campaign tick, which stops while paused.
+        protected override void OnApplicationTick(float dt)
+        {
+            Campaign.Current?.GetCampaignBehavior<PoliticalMapOverlayCampaignBehavior>()?.Tick(dt);
+            Campaign.Current?.GetCampaignBehavior<PoliticalMapLabelsCampaignBehavior>()?.Tick(dt);
         }
 
         public override void OnGameInitializationFinished(Game game)

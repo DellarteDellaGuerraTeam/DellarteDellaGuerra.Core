@@ -15,4 +15,12 @@ internal sealed record FeudalTitleNode(
     string SeatSettlementId,
     string? InitialHolderClanId,
     IReadOnlyList<FeudalTitleNode> Children,
-    int? InitialHeldSinceYear = null);
+    int? InitialHeldSinceYear = null,
+    IReadOnlyList<FeudalClaimNode>? InitialClaims = null);
+
+/**
+ * <summary>
+ * A claim the configuration says a clan already has on a title when the campaign starts.
+ * </summary>
+ */
+internal sealed record FeudalClaimNode(string ClanId, ClaimStrength Strength);

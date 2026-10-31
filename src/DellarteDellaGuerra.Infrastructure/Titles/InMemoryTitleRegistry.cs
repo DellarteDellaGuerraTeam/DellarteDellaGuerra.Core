@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -21,6 +22,16 @@ public class InMemoryTitleRegistry : ITitleRepository
     public long Revision => Interlocked.Read(ref _revision);
     private readonly Dictionary<string, Title> _titlesByTitleId = new Dictionary<string, Title>();
     private readonly Dictionary<string, string> _titleIdBySeatSettlementId = new Dictionary<string, string>();
+    private bool _initialising;
+
+    /**
+     * <summary>
+     * Raised with the title id after a save changes a title's holder or occupant, which is how the
+     * political map learns which county to repaint. Not raised by Initialise, which replaces the
+     * whole state at once.
+     * </summary>
+     */
+    public event Action<string>? HolderOrOccupantChanged;
 
     public InMemoryTitleRegistry(IGenealogy genealogy)
     {
@@ -37,9 +48,17 @@ public class InMemoryTitleRegistry : ITitleRepository
         _titlesByTitleId.Clear();
         _titleIdBySeatSettlementId.Clear();
         Interlocked.Increment(ref _revision);
-        foreach (Title title in titles)
+        _initialising = true;
+        try
         {
-            SaveTitle(title);
+            foreach (Title title in titles)
+            {
+                SaveTitle(title);
+            }
+        }
+        finally
+        {
+            _initialising = false;
         }
     }
 
@@ -77,7 +96,12 @@ public class InMemoryTitleRegistry : ITitleRepository
 
     public void SaveTitle(Title title)
     {
-        if (_titlesByTitleId.TryGetValue(title.Id, out Title existingTitle)
+        bool existed = _titlesByTitleId.TryGetValue(title.Id, out Title existingTitle);
+        bool holderOrOccupantChanged = !existed
+                                       || existingTitle.HolderHeroId != title.HolderHeroId
+                                       || existingTitle.OccupantClanId != title.OccupantClanId;
+
+        if (existed
             && existingTitle.SeatSettlementId.Length > 0
             && existingTitle.SeatSettlementId != title.SeatSettlementId)
         {
@@ -90,5 +114,7 @@ public class InMemoryTitleRegistry : ITitleRepository
             _titleIdBySeatSettlementId[title.SeatSettlementId] = title.Id;
         }
         Interlocked.Increment(ref _revision);
+
+        if (holderOrOccupantChanged && !_initialising) HolderOrOccupantChanged?.Invoke(title.Id);
     }
 }

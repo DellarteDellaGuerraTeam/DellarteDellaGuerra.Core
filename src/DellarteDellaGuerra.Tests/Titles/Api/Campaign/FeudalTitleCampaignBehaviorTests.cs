@@ -16,8 +16,11 @@ namespace DellarteDellaGuerra.Tests.Titles.Api.Campaign
         private static readonly Claim EarlierCampaignClaim =
             new Claim("claim_1", "clan_percy", "duchy_york", ClaimStrength.Weak, ClaimOrigin.Conquest);
 
+        private static readonly Claim ConfiguredClaim =
+            new Claim("duchy_york:clan_lancaster:conquest", "clan_lancaster", "duchy_york", ClaimStrength.Strong, ClaimOrigin.Conquest);
+
         [Fact]
-        public void ANewCampaignStartsFromTheConfiguredTitlesWhateverAnEarlierOneLeftBehind()
+        public void ANewCampaignStartsFromTheConfiguredTitlesAndClaimsWhateverAnEarlierOneLeftBehind()
         {
             var store = new FakeStateStore();
             store.InitialiseTitles(new[] { WonYork });
@@ -27,12 +30,12 @@ namespace DellarteDellaGuerra.Tests.Titles.Api.Campaign
             Invoke(NewBehavior(store, bloodClaims), "OnNewGameCreated");
 
             Assert.Equal("york_richard", Assert.Single(store.SnapshotTitles()).HolderHeroId);
-            Assert.Empty(store.SnapshotClaims());
+            Assert.Equal(ConfiguredClaim, Assert.Single(store.SnapshotClaims()));
             Assert.Equal(1, bloodClaims.Runs);
         }
 
         [Fact]
-        public void ASaveWithoutFeudalStateStartsFromTheConfiguredTitlesWhateverAnEarlierOneLeftBehind()
+        public void ASaveWithoutFeudalStateStartsFromTheConfiguredTitlesAndClaimsWhateverAnEarlierOneLeftBehind()
         {
             var store = new FakeStateStore();
             store.InitialiseTitles(new[] { WonYork });
@@ -42,12 +45,12 @@ namespace DellarteDellaGuerra.Tests.Titles.Api.Campaign
             Invoke(NewBehavior(store, bloodClaims), "OnGameLoaded");
 
             Assert.Equal("york_richard", Assert.Single(store.SnapshotTitles()).HolderHeroId);
-            Assert.Empty(store.SnapshotClaims());
+            Assert.Equal(ConfiguredClaim, Assert.Single(store.SnapshotClaims()));
             Assert.Equal(1, bloodClaims.Runs);
         }
 
         private static FeudalTitleCampaignBehavior NewBehavior(FakeStateStore store, CountingBloodClaims bloodClaims) =>
-            new FeudalTitleCampaignBehavior(null!, bloodClaims, null!, store, () => new[] { ConfiguredYork });
+            new FeudalTitleCampaignBehavior(null!, bloodClaims, null!, store, () => new[] { ConfiguredYork }, () => new[] { ConfiguredClaim });
 
         // The handlers are private campaign-event listeners; the campaign starter argument is unused.
         private static void Invoke(FeudalTitleCampaignBehavior behavior, string handler) =>

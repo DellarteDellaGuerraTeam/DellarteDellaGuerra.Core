@@ -32,11 +32,11 @@ public class ClaimPressureOverRealContentTests
     public void EveryClaimTheContentDerivesIsOneTheEvaluatorWillActOn()
     {
         // Derivation and evaluation have to agree or the daily tick spends its time on claims it
-        // will never press. They do, on all 449: derivation bars the holder himself and nobody
+        // will never press. They do, on all 483: derivation bars the holder himself and nobody
         // else, and that is the same bar evaluation applies.
         Content content = Content.Load();
 
-        Assert.Equal(449, content.Claims().Count);
+        Assert.Equal(483, content.Claims().Count);
         Assert.All(content.Claims(), claim => Assert.True(content.IsActionable(claim)));
     }
 
@@ -44,9 +44,9 @@ public class ClaimPressureOverRealContentTests
     [Trait("Category", "DADG content integration")]
     public void AClaimantsClaimsLapseTheMomentSheBecomesTheHolder()
     {
-        // The other side of the same rule, over the one succession in the content that moves five
+        // The other side of the same rule, over the one succession in the content that moves eight
         // dignities at once. Warwick's daughter holds a claim on each of them while her father
-        // lives; when they pass to her the evaluator rejects all five, because a claimant cannot
+        // lives; when they pass to her the evaluator rejects all eight, because a claimant cannot
         // press a claim against herself.
         const string warwick = "dadg_lord_9_1";
         const string daughter = "dadg_lord_2_4";
@@ -54,7 +54,7 @@ public class ClaimPressureOverRealContentTests
         Content content = Content.Load();
         Claim[] hers = content.Claims().Where(claim => claim.ClaimantHeroId == daughter).ToArray();
 
-        Assert.Equal(5, hers.Length);
+        Assert.Equal(8, hers.Length);
         Assert.All(hers, claim => Assert.True(content.IsActionable(claim)));
 
         Content afterDeath = content.WithDeceased(warwick);
@@ -70,21 +70,20 @@ public class ClaimPressureOverRealContentTests
     {
         // Sides are resolved by walking each house up to the first belligerent it meets, so what
         // a war costs depends on where in the hierarchy it is fought. Against the crown the whole
-        // realm is on the board — Warwick alone against the other fifty-two, or York with the
-        // eight houses of his affinity against the crown's forty-five. Two northern houses
-        // fighting each other put eight on the board and leave the other forty-five out of it.
+        // realm is on the board — Warwick with the six houses of his northern affinity against the
+        // crown's forty-one, and York with the six of his against the same forty-one. Percy and
+        // Lumley fighting Warwick put eight on the board and leave the other thirty-nine out of it.
         Content content = Content.Load();
 
-        Assert.Equal((1f, 52f), content.Sides("clan_neville_of_middleham", "clan_lancaster"));
-        Assert.Equal((8f, 45f), content.Sides("clan_york", "clan_lancaster"));
+        Assert.Equal((6f, 41f), content.Sides("clan_neville_of_middleham", "clan_lancaster"));
+        Assert.Equal((6f, 41f), content.Sides("clan_york", "clan_lancaster"));
 
-        Assert.Equal((7f, 1f), content.Sides("clan_percy", "clan_lumley"));
-        Assert.Equal((1f, 7f), content.Sides("clan_lumley", "clan_percy"));
+        Assert.Equal((2f, 6f), content.Sides("clan_percy", "clan_neville_of_middleham"));
 
         // Nearest ancestor wins, so a liege who attacks his own vassal loses that vassal's whole
-        // branch: York musters eight against the crown but only three against Talbot, because the
-        // five houses that answer to Talbot answer to York only through him.
-        Assert.Equal((3f, 5f), content.Sides("clan_york", "clan_talbot"));
+        // branch: York musters six against the crown but only two against Talbot, because the
+        // four houses that answer to Talbot answer to York only through him.
+        Assert.Equal((2f, 4f), content.Sides("clan_york", "clan_talbot"));
     }
 
     [Fact]
@@ -92,14 +91,14 @@ public class ClaimPressureOverRealContentTests
     public void NoHouseHoldsAClaimOnACrownDignitySoTheCrownIsNeverTheDefender()
     {
         // The system models baronial feuds, not usurpation, and the content is authored to match:
-        // each of the eight dignities Lancaster holds carries exactly one claim, and it is
+        // each of the twelve dignities Lancaster holds carries exactly one claim, and it is
         // Lancaster's own. So no inter-clan pair in the realm has the crown on the defending side;
-        // the eight are contested from inside the house instead, by a pretender. Lancaster still
+        // the twelve are contested from inside the house instead, by a pretender. Lancaster still
         // appears as an attacker once the holders it has claims on can be pressed with a weak claim.
         Content content = Content.Load();
         string[] crownTitles = content.TitlesHeldBy("clan_lancaster").ToArray();
 
-        Assert.Equal(8, crownTitles.Length);
+        Assert.Equal(12, crownTitles.Length);
         Assert.All(
             crownTitles,
             titleId =>
@@ -123,14 +122,14 @@ public class ClaimPressureOverRealContentTests
         // Every dignity the content authors is held by a grown man, and a weak claim cannot be
         // pressed against one, so only the three strong claims between houses survive the filters.
         //
-        // Were every holder a minor, ninety-nine claimant-title pairs would survive them;
-        // seventy-two of them are priced at nothing because the claimant cannot field 1.25 times
-        // the defender, and the twenty-seven
-        // that do score top out at 0.6625 against a threshold of 0.8. So on a quiet day nobody
-        // declares, which is the intended shape: ambition alone does not start a war.
+        // Were every holder a minor, a hundred and seventeen claimant-title pairs would survive
+        // them; ninety-five of them are priced at nothing because the claimant cannot field 1.25
+        // times the defender, and the twenty-two that do score top out at 0.7875 against a
+        // threshold of 0.8. So on a quiet day nobody declares, which is the intended shape:
+        // ambition alone does not start a war.
         //
-        // What starts one is opportunity or bad blood. Fourteen pairs cross the moment the holder
-        // is committed elsewhere, the same fourteen cross on maximum hatred alone, and together
+        // What starts one is opportunity or bad blood. Seventeen pairs cross the moment the holder
+        // is committed elsewhere, the same seventeen cross on maximum hatred alone, and together
         // the two tip every pair that scores at all. Nothing tips on friendship: relation can only
         // ever move a score by 0.2 either way.
         Content adults = Content.Load();
@@ -140,18 +139,18 @@ public class ClaimPressureOverRealContentTests
         Content content = adults.WithMinorHolders();
         IReadOnlyList<ClaimOpportunity> quiet = content.Opportunities();
 
-        Assert.Equal(99, quiet.Count);
+        Assert.Equal(117, quiet.Count);
         Assert.Equal(3, quiet.Count(o => o.Strength == ClaimStrength.Strong));
-        Assert.Equal(96, quiet.Count(o => o.Strength == ClaimStrength.Weak));
+        Assert.Equal(114, quiet.Count(o => o.Strength == ClaimStrength.Weak));
 
-        Assert.Equal(27, quiet.Count(o => content.Score(o) > 0f));
+        Assert.Equal(22, quiet.Count(o => content.Score(o) > 0f));
         Assert.Equal(0, quiet.Count(o => content.Score(o) >= DeclarationThreshold));
-        Assert.Equal(0.6625f, quiet.Max(content.Score), 0.0001f);
+        Assert.Equal(0.7875f, quiet.Max(content.Score), 0.0001f);
 
-        Assert.Equal(14, quiet.Count(o => content.Score(o with { DefenderDistracted = true }) >= DeclarationThreshold));
-        Assert.Equal(14, quiet.Count(o => content.Score(o with { Relation = -100f }) >= DeclarationThreshold));
+        Assert.Equal(17, quiet.Count(o => content.Score(o with { DefenderDistracted = true }) >= DeclarationThreshold));
+        Assert.Equal(17, quiet.Count(o => content.Score(o with { Relation = -100f }) >= DeclarationThreshold));
         Assert.Equal(
-            27,
+            22,
             quiet.Count(o =>
                 content.Score(o with { DefenderDistracted = true, Relation = -100f }) >= DeclarationThreshold));
         Assert.Equal(0, quiet.Count(o => content.Score(o with { Relation = 100f }) >= DeclarationThreshold));
@@ -162,10 +161,10 @@ public class ClaimPressureOverRealContentTests
     public void MoreMenStopBuyingAppetiteLongBeforeTheRealmsWorstMismatch()
     {
         // The ratio is capped at 2.25:1, and the real hierarchy produces mismatches far past it.
-        // The crown could bring fifty-two houses against Warwick's one and would price that claim
+        // The crown could bring forty-one houses against Warwick's six and would price that claim
         // at exactly what Mowbray prices five-against-one at, because both saturate the cap and
         // both claims are weak. How good the claim is decides the rest: Stafford's strong claim on
-        // Cheshire outscores both on a bare three-to-two advantage. A weak claim is only pressed
+        // Cheshire outscores both on a bare two-to-one advantage. A weak claim is only pressed
         // against a woman or a child, so the holders here are minors.
         Content content = Content.Load().WithMinorHolders();
 
@@ -173,9 +172,9 @@ public class ClaimPressureOverRealContentTests
         ClaimOpportunity mowbrayAgainstBourchier = content.Opportunity("county_essex", "clan_mowbray");
         ClaimOpportunity staffordAgainstWoodville = content.Opportunity("county_cheshire", "clan_stafford");
 
-        Assert.Equal((52f, 1f), (crownAgainstWarwick.AttackerStrength, crownAgainstWarwick.DefenderStrength));
+        Assert.Equal((41f, 6f), (crownAgainstWarwick.AttackerStrength, crownAgainstWarwick.DefenderStrength));
         Assert.Equal((5f, 1f), (mowbrayAgainstBourchier.AttackerStrength, mowbrayAgainstBourchier.DefenderStrength));
-        Assert.Equal((3f, 2f), (staffordAgainstWoodville.AttackerStrength, staffordAgainstWoodville.DefenderStrength));
+        Assert.Equal((4f, 2f), (staffordAgainstWoodville.AttackerStrength, staffordAgainstWoodville.DefenderStrength));
 
         Assert.Equal(ClaimStrength.Weak, crownAgainstWarwick.Strength);
         Assert.Equal(ClaimStrength.Weak, mowbrayAgainstBourchier.Strength);
@@ -183,15 +182,18 @@ public class ClaimPressureOverRealContentTests
 
         Assert.Equal(0.6f, content.Score(crownAgainstWarwick), 0.0001f);
         Assert.Equal(0.6f, content.Score(mowbrayAgainstBourchier), 0.0001f);
-        Assert.Equal(0.6625f, content.Score(staffordAgainstWoodville), 0.0001f);
+        Assert.Equal(0.7875f, content.Score(staffordAgainstWoodville), 0.0001f);
 
         // Below the cap the ratio still counts, and below the floor nothing counts at all.
-        // Clifford is twice Courtenay's size and so prices his weak claim under both of those.
+        // Mowbray is half again Talbot's size and so prices his weak claim on Hallamshire under
+        // both of those.
         // Fitzalan holds a weak claim on the same Cheshire, but musters exactly what Woodville
         // musters: an even match buys nothing, because the floor asks for a 1.25-to-1 advantage
         // and parity is not one. He still scores nothing with the holder distracted and the two
         // houses at maximum hatred — the floor is a gate, not a term the bonuses can outweigh.
-        Assert.Equal(0.5375f, content.Score(content.Opportunity("county_cornwall", "clan_clifford")), 0.0001f);
+        ClaimOpportunity mowbrayAgainstTalbot = content.Opportunity("county_hallamshire", "clan_mowbray");
+        Assert.Equal((6f, 4f), (mowbrayAgainstTalbot.AttackerStrength, mowbrayAgainstTalbot.DefenderStrength));
+        Assert.Equal(0.4125f, content.Score(mowbrayAgainstTalbot), 0.0001f);
 
         ClaimOpportunity fitzalanAgainstWoodville = content.Opportunity("county_cheshire", "clan_fitzalan");
         Assert.Equal((2f, 2f), (fitzalanAgainstWoodville.AttackerStrength, fitzalanAgainstWoodville.DefenderStrength));
@@ -207,10 +209,10 @@ public class ClaimPressureOverRealContentTests
     {
         // The spinoff is what makes a claim on one's own house actionable, and it needs a living
         // member of that house who is not the holder to found the branch with. All hundred and sixteen
-        // of them have one, across sixty-six houses, so nothing the content authors goes unpressed
-        // for want of a claimant — the eight crown dignities the inter-clan pass has to leave out
-        // among them. Nine of the hundred and sixteen are weak and wait for the holder to be a woman
-        // or a child: against the grown men who hold them today, a hundred and seven can be pressed.
+        // of them have one, across fifty-nine houses, so nothing the content authors goes unpressed
+        // for want of a claimant — the twelve crown dignities the inter-clan pass has to leave out
+        // among them. Seven of the hundred and sixteen are weak and wait for the holder to be a woman
+        // or a child: against the grown men who hold them today, a hundred and nine can be pressed.
         Content adults = Content.Load();
         Content content = adults.WithMinorHolders();
         IReadOnlyList<Claim> sameClan = content.SameClanBestClaims();
@@ -219,11 +221,11 @@ public class ClaimPressureOverRealContentTests
         Assert.Equal(116, sameClan.Count);
         Assert.All(sameClan, claim => Assert.NotNull(content.Pretender(claim)));
 
-        Assert.Equal(107, adults.InternalOpportunities().Count);
+        Assert.Equal(109, adults.InternalOpportunities().Count);
         Assert.All(adults.InternalOpportunities(), o => Assert.Equal(ClaimStrength.Strong, o.Strength));
 
         Assert.Equal(116, internals.Count);
-        Assert.Equal(66, internals.Select(o => o.DefenderClanId).Distinct().Count());
+        Assert.Equal(59, internals.Select(o => o.DefenderClanId).Distinct().Count());
         Assert.Equal(
             content.TitlesHeldBy("clan_lancaster"),
             internals.Where(o => o.DefenderClanId == "clan_lancaster").Select(o => o.TitleId).OrderBy(id => id));
@@ -254,13 +256,13 @@ public class ClaimPressureOverRealContentTests
         // runtime state, so every house here is indifferent and answers on the claim and the odds
         // alone. Against odds of nothing to one those odds alone would send the uncommitted houses
         // to the holder — except that a strong claim's legitimacy is worth just enough to keep them
-        // home. So the hundred and seven strong claims move nobody, and the nine weak ones put all
-        // fifty-three houses of England behind the holder.
+        // home. So the hundred and nine strong claims move nobody, and the seven weak ones put all
+        // forty-seven houses of England behind the holder.
         //
         // Nobody ever answers the pretender, which is the same finding from the other side: with
         // no grievance in play, a claim inside a house draws men only against it.
         //
-        // The nine weak claims can only be pressed against a woman or a child, so the holders here
+        // The seven weak claims can only be pressed against a woman or a child, so the holders here
         // are minors; against the grown men of the content there are none to press.
         Assert.DoesNotContain(Content.Load().InternalOpportunities(), o => o.Strength == ClaimStrength.Weak);
 
@@ -269,8 +271,8 @@ public class ClaimPressureOverRealContentTests
         ClaimOpportunity[] strong = internals.Where(o => o.Strength == ClaimStrength.Strong).ToArray();
         ClaimOpportunity[] weak = internals.Where(o => o.Strength == ClaimStrength.Weak).ToArray();
 
-        Assert.Equal(107, strong.Length);
-        Assert.Equal(9, weak.Length);
+        Assert.Equal(109, strong.Length);
+        Assert.Equal(7, weak.Length);
 
         Assert.All(internals, o => Assert.Empty(content.Solicit(o).AttackerSupporters));
 
@@ -280,22 +282,22 @@ public class ClaimPressureOverRealContentTests
             o => Assert.Equal((o.AttackerStrength, o.DefenderStrength), content.SidesAfter(o, content.Solicit(o))));
 
         Assert.All(weak, o => Assert.NotEmpty(content.Solicit(o).DefenderSupporters));
-        Assert.All(weak, o => Assert.Equal((0f, 53f), content.SidesAfter(o, content.Solicit(o))));
+        Assert.All(weak, o => Assert.Equal((0f, 47f), content.SidesAfter(o, content.Solicit(o))));
     }
 
     [Fact]
     [Trait("Category", "DADG content integration")]
     public void OnlyARoutDrawsAnAnswerWhileNoHouseHasAGrievance()
     {
-        // The same indifferent realm asked about the ninety-nine inter-clan pairs. Only claimants
-        // with no affinity at all draw an answer, and what they draw is the whole uncommitted realm
-        // onto the holder: hopeless odds are the one thing that moves a house with no grievance to
-        // trade on.
+        // The same indifferent realm asked about the hundred and seventeen inter-clan pairs. Only
+        // claimants facing hopeless odds draw an answer — no affinity at all, or a lone house against
+        // Somerset's nine — and what they draw is the whole uncommitted realm onto the holder:
+        // hopeless odds are the one thing that moves a house with no grievance to trade on.
         //
-        // The crown's claims against Warwick draw nobody, though fifty-one houses would fight for
-        // the crown if it came to it. They are already mustering for it down the chain, so there is
+        // The crown's claims against Warwick draw nobody, though forty houses would fight for the
+        // crown if it came to it. They are already mustering for it down the chain, so there is
         // no pledge for them to make: only a house that ends up somewhere the hierarchy would not
-        // have put it is named, which is what keeps fifty-one needless ids out of the war.
+        // have put it is named, which is what keeps forty needless ids out of the war.
         //
         // These are weak claims, so the holders here are minors: against the grown men of the
         // content, none of them is pressed at all.
@@ -305,8 +307,10 @@ public class ClaimPressureOverRealContentTests
             .Where(pair => pair.Support.AttackerSupporters.Count > 0 || pair.Support.DefenderSupporters.Count > 0)
             .ToArray();
 
-        Assert.Equal(5, answered.Length);
-        Assert.All(answered, pair => Assert.Equal(0f, pair.Opportunity.AttackerStrength));
+        Assert.Equal(10, answered.Length);
+        Assert.All(
+            answered,
+            pair => Assert.True(pair.Opportunity.AttackerStrength * 4f <= pair.Opportunity.DefenderStrength));
         Assert.All(answered, pair => Assert.Empty(pair.Support.AttackerSupporters));
 
         ClaimOpportunity middleham = content.Opportunity("barony_middleham", "clan_lancaster");
@@ -315,9 +319,9 @@ public class ClaimPressureOverRealContentTests
         Assert.Empty(crownsCall.AttackerSupporters);
         Assert.Empty(crownsCall.DefenderSupporters);
         Assert.Equal(
-            51,
+            40,
             content.Candidates(middleham).Count(clanId => content.SideOf(middleham, clanId) == "clan_lancaster"));
-        Assert.Equal((52f, 1f), content.SidesAfter(middleham, crownsCall));
+        Assert.Equal((41f, 6f), content.SidesAfter(middleham, crownsCall));
     }
 
     [Fact]
@@ -335,7 +339,7 @@ public class ClaimPressureOverRealContentTests
         ILookup<string, string> realms = content.Realms();
 
         Assert.Equal(
-            new[] { ("clan_lancaster", 53), ("clan_macdonald_isles", 13), ("clan_stewart", 13) },
+            new[] { ("clan_lancaster", 47), ("clan_macdonald_isles", 12), ("clan_stewart", 13) },
             realms.Select(realm => (realm.Key, realm.Count())).OrderBy(realm => realm.Key));
 
         Assert.True(content.IsBonded("clan_york", "clan_woodville", 0f));
@@ -371,7 +375,7 @@ public class ClaimPressureOverRealContentTests
         // ClaimPressureCampaignBehavior, which this harness leaves out, that still drops them.
         const string ruthven = "clan_ruthven";
         const string courtenay = "clan_courtenay";
-        string[] courtenaySeats = { "barony_okehampton", "barony_saint_michaels_mount", "county_cornwall" };
+        string[] courtenaySeats = { "barony_okehampton", "barony_saint_michaels_mount", "county_devon" };
 
         Content content = Content.Load();
         Content married = content.WithMarriage("dadg_sco_lord_clan_ruthven", "dadg_lord_16_2");
@@ -464,7 +468,7 @@ public class ClaimPressureOverRealContentTests
             .Where(o => o.DefenderClanId == percy)
             .ToArray();
         Assert.Equal(
-            new[] { ("clan_de_vere", "county_warkworth"), ("clan_de_vere", "duchy_northumberland") },
+            new[] { ("clan_de_vere", "county_warkworth") },
             percysFeuds.Select(o => (o.AttackerClanId, o.TitleId)).OrderBy(pair => pair.TitleId));
         Assert.All(percysFeuds, o =>
         {
@@ -491,10 +495,10 @@ public class ClaimPressureOverRealContentTests
     [Trait("Category", "DADG content integration")]
     public void AScottishFriendOfTheClaimantRidesToAnEnglishFeud()
     {
-        // Stafford presses his strong claim on Cheshire against Woodville, three houses against
+        // Stafford presses his strong claim on Cheshire against Woodville, four houses against
         // two. Maxwell is a Border house under the Stewart crown and has no part in it, until
         // his leader counts Stafford's leader a firm friend: then he is asked, he answers for the
-        // claimant, and the claimant rides with four. At a relation of exactly 50, one short of
+        // claimant, and the claimant rides with five. At a relation of exactly 50, one short of
         // friendship, he is not even asked, because a house of another crown is nobody's to call on.
         const string maxwell = "clan_maxwell";
 
@@ -508,7 +512,7 @@ public class ClaimPressureOverRealContentTests
 
         Assert.Equal(new[] { maxwell }, support.AttackerSupporters);
         Assert.DoesNotContain(maxwell, support.DefenderSupporters);
-        Assert.Equal((4f, 2f), content.SidesAfter(cheshire, support));
+        Assert.Equal((5f, 2f), content.SidesAfter(cheshire, support));
     }
 
     private static Relations Befriended(string clanId, float toClaimant) =>

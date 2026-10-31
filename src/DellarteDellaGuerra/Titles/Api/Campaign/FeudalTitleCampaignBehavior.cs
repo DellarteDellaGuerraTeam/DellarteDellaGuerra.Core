@@ -24,6 +24,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         private readonly IExecuteSuccessionUseCase _executeSuccessionUseCase;
         private readonly IFeudalStateStore _stateStore;
         private readonly Func<IReadOnlyList<Title>> _initialTitlesProvider;
+        private readonly Func<IReadOnlyList<Claim>> _initialClaimsProvider;
 
         private List<string> _serialisedTitles = new();
         private List<string> _serialisedClaims = new();
@@ -34,13 +35,15 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             IGenerateBloodClaimsUseCase generateBloodClaimsUseCase,
             IExecuteSuccessionUseCase executeSuccessionUseCase,
             IFeudalStateStore stateStore,
-            Func<IReadOnlyList<Title>> initialTitlesProvider)
+            Func<IReadOnlyList<Title>> initialTitlesProvider,
+            Func<IReadOnlyList<Claim>> initialClaimsProvider)
         {
             _assignTitleUseCase = assignTitleUseCase;
             _generateBloodClaimsUseCase = generateBloodClaimsUseCase;
             _executeSuccessionUseCase = executeSuccessionUseCase;
             _stateStore = stateStore;
             _initialTitlesProvider = initialTitlesProvider;
+            _initialClaimsProvider = initialClaimsProvider;
         }
 
         public override void RegisterEvents()
@@ -76,7 +79,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             // session left behind.
             _stateStore.InitialiseReattachments(new Dictionary<string, string?>());
             _stateStore.InitialiseTitles(_initialTitlesProvider());
-            _stateStore.InitialiseClaims(Array.Empty<Claim>());
+            _stateStore.InitialiseClaims(_initialClaimsProvider());
             _generateBloodClaimsUseCase.Execute();
         }
 
@@ -90,7 +93,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             if (_serialisedTitles.Count == 0)
             {
                 _stateStore.InitialiseTitles(_initialTitlesProvider());
-                _stateStore.InitialiseClaims(Array.Empty<Claim>());
+                _stateStore.InitialiseClaims(_initialClaimsProvider());
                 _generateBloodClaimsUseCase.Execute();
                 return;
             }
