@@ -40,7 +40,6 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap.UI
         private readonly PoliticalMapLabelsCampaignBehavior? _labels;
         private bool _isLabelModeVisible;
         private string _labelModeText = string.Empty;
-        private string _labelModeCaption = string.Empty;
         private bool _isPanelOpen;
         private PoliticalMapView _shownView = (PoliticalMapView)(-1);
         private IReadOnlyList<PoliticalMapLegendEntry>? _shownLegend;
@@ -79,17 +78,14 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap.UI
         [DataSourceProperty]
         public string LabelModeText { get => _labelModeText; private set => Set(ref _labelModeText, value, nameof(LabelModeText)); }
 
-        [DataSourceProperty]
-        public string LabelModeCaption { get => _labelModeCaption; private set => Set(ref _labelModeCaption, value, nameof(LabelModeCaption)); }
-
-        /// <summary>Switches the owners view's region labels between titles and clans; only the text changes.</summary>
+        /// <summary>Switches the current view's region labels between titles and clans; only the text changes.</summary>
         [DataSourceMethod]
         public void ExecuteTogglePoliticalMapLabelMode()
         {
             if (_overlay is not null) _labels?.Modes.Toggle(_overlay.View);
         }
 
-        // The label row: shown in the owners view, naming what the labels show now.
+        // The label button beside the map button names what the active view's labels show now.
         private void RefreshLabelMode()
         {
             PoliticalMapView view = _overlay?.View ?? PoliticalMapView.Off;
@@ -100,9 +96,6 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap.UI
             LabelModeText = titles
                 ? new TextObject("{=dadg_polmap_labels_titles}Labels: Titles").ToString()
                 : new TextObject("{=dadg_polmap_labels_clans}Labels: Clans").ToString();
-            LabelModeCaption = titles
-                ? new TextObject("{=dadg_polmap_labels_to_clans}Click to name each region by its clan instead.").ToString()
-                : new TextObject("{=dadg_polmap_labels_to_titles}Click to name each region by its highest title instead.").ToString();
         }
 
         [DataSourceProperty] public string PoliticalMapButtonText { get; }

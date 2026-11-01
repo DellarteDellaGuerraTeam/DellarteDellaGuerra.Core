@@ -12,11 +12,28 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Labels
         }
 
         [Fact]
-        public void OnlyTheOwnersViewOffersTheChoice()
+        public void BothMapViewsOfferTheChoice()
         {
             Assert.True(PoliticalMapLabelModes.HasChoice(PoliticalMapView.Owners));
-            Assert.False(PoliticalMapLabelModes.HasChoice(PoliticalMapView.Kingdom));
+            Assert.True(PoliticalMapLabelModes.HasChoice(PoliticalMapView.Kingdom));
             Assert.False(PoliticalMapLabelModes.HasChoice(PoliticalMapView.Off));
+        }
+
+        [Fact]
+        public void TheKingdomViewStartsOnTitlesAndKeepsItsOwnChoice()
+        {
+            var modes = new PoliticalMapLabelModes();
+            Assert.Equal(PoliticalMapLabelMode.Titles, modes.Of(PoliticalMapView.Kingdom));
+
+            modes.Toggle(PoliticalMapView.Kingdom);
+            Assert.Equal(PoliticalMapLabelMode.Clans, modes.Of(PoliticalMapView.Kingdom));
+            modes.Toggle(PoliticalMapView.Owners);
+            Assert.Equal(PoliticalMapLabelMode.Titles, modes.Of(PoliticalMapView.Owners));
+            Assert.Equal(PoliticalMapLabelMode.Clans, modes.Of(PoliticalMapView.Kingdom));
+
+            modes.Toggle(PoliticalMapView.Kingdom);
+            Assert.Equal(PoliticalMapLabelMode.Titles, modes.Of(PoliticalMapView.Kingdom));
+            Assert.Equal(PoliticalMapLabelMode.Titles, modes.Of(PoliticalMapView.Owners));
         }
 
         [Fact]
@@ -47,7 +64,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Labels
             modes.Toggle(PoliticalMapView.Off);
 
             Assert.Equal(0, changes);
-            Assert.Equal(PoliticalMapLabelMode.Clans, modes.Of(PoliticalMapView.Kingdom));
+            Assert.Equal(PoliticalMapLabelMode.Titles, modes.Of(PoliticalMapView.Kingdom));
         }
 
         [Theory]

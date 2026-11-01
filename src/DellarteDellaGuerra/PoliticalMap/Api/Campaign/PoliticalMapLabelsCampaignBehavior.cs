@@ -112,7 +112,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         }
 
         /// <summary>
-        /// What the owners view's labels name, titles or clans; for the map bar's label row and
+        /// What each view's labels name, titles or clans; for the map bar's label button and
         /// <c>polmap.labels</c>. Session only, not saved.
         /// </summary>
         public PoliticalMapLabelModes Modes { get; } = new();
@@ -418,8 +418,10 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             switch (tier)
             {
                 case PoliticalMapLabelTier.Faction:
-                    return TaleWorlds.CampaignSystem.Campaign.Current?.CampaignObjectManager.Find<Kingdom>(key)?.Name?.ToString()
-                           ?? ClanNameOf(key);
+                    string? kingdomName = TaleWorlds.CampaignSystem.Campaign.Current?.CampaignObjectManager.Find<Kingdom>(key)?.Name?.ToString();
+                    return mode == PoliticalMapLabelMode.Clans
+                        ? ClanNameOf(_world.RulerClanOf(key) ?? key) ?? kingdomName
+                        : kingdomName ?? ClanNameOf(key);
                 case PoliticalMapLabelTier.Owner:
                     return mode == PoliticalMapLabelMode.Titles
                         ? TitleNameOf(hierarchy?.HighestTitleOf(key)?.Id) ?? ClanNameOf(key)

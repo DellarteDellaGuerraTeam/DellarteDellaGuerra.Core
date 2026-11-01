@@ -4,7 +4,7 @@ using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
 
 namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
 {
-    /// <summary>What the owners view's region labels name. Only the text changes, never the regions.</summary>
+    /// <summary>What the map's region labels name. Only the text changes, never the regions.</summary>
     public enum PoliticalMapLabelMode
     {
         /// <summary>Each region's holder's highest title (for a ruler, the realm's).</summary>
@@ -15,18 +15,19 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
     }
 
     /// <summary>
-    /// The label mode of each view that offers the choice: only the owners view, which starts on
-    /// clans and keeps its choice for the session. The kingdom view always names the realms.
+    /// Each view keeps its own label choice for the session. Kingdoms start on titles;
+    /// owners start on clans.
     /// </summary>
     public sealed class PoliticalMapLabelModes
     {
         private readonly Dictionary<PoliticalMapView, PoliticalMapLabelMode> _modes = new();
 
         /// <summary>Whether a view's labels can name either titles or clans.</summary>
-        public static bool HasChoice(PoliticalMapView view) => view == PoliticalMapView.Owners;
+        public static bool HasChoice(PoliticalMapView view) => view is PoliticalMapView.Kingdom or PoliticalMapView.Owners;
 
-        /// <summary>The naming a view starts on: clans.</summary>
-        public static PoliticalMapLabelMode DefaultOf(PoliticalMapView view) => PoliticalMapLabelMode.Clans;
+        /// <summary>The naming a view starts on.</summary>
+        public static PoliticalMapLabelMode DefaultOf(PoliticalMapView view) =>
+            view == PoliticalMapView.Kingdom ? PoliticalMapLabelMode.Titles : PoliticalMapLabelMode.Clans;
 
         /// <summary>Reads "title(s)" or "clan(s)", any case.</summary>
         public static bool TryParse(string? text, out PoliticalMapLabelMode mode)
@@ -50,7 +51,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
         /// <summary>Raised when a view's mode changes.</summary>
         public event Action? Changed;
 
-        /// <summary>A view's mode; the kingdom and off views always answer their default.</summary>
+        /// <summary>A view's mode; off always answers its default.</summary>
         public PoliticalMapLabelMode Of(PoliticalMapView view) =>
             HasChoice(view) && _modes.TryGetValue(view, out PoliticalMapLabelMode mode) ? mode : DefaultOf(view);
 

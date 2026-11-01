@@ -5,8 +5,8 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap.UI
 {
     /// <summary>
     /// Adds the political map button to the top-left corner of the campaign map, with the small
-    /// panel it opens under it (one row per view, its name over a one-line caption, then in the
-    /// owners view a row switching the region labels between titles and clans) and, while a
+    /// panel it opens under it (one row per view, its name over a one-line caption), a button
+    /// beside it switching region labels between titles and clans in either map view and, while a
     /// view is drawn, the legend: a large "Political Map: view" title, one line saying what the
     /// colours mean, the kingdom swatches or the clan colour note, the hover readout and the
     /// hotkey hint. The bottom bar has no free slot (the
@@ -28,11 +28,20 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap.UI
               <Children>
                 <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
                   <Children>
-                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="220" SuggestedHeight="50" HorizontalAlignment="Left" Brush="ButtonBrush2" Command.Click="ExecuteTogglePoliticalMapPanel" UpdateChildrenStates="true">
+                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="50" StackLayout.LayoutMethod="HorizontalLeftToRight">
                       <Children>
-                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Button.Text" Brush.FontSize="22" Text="@PoliticalMapButtonText"/>
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="220" SuggestedHeight="50" Brush="ButtonBrush2" Command.Click="ExecuteTogglePoliticalMapPanel" UpdateChildrenStates="true">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Button.Text" Brush.FontSize="22" Text="@PoliticalMapButtonText"/>
+                          </Children>
+                        </ButtonWidget>
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="212" SuggestedHeight="50" MarginLeft="8" Brush="ButtonBrush2" Command.Click="ExecuteTogglePoliticalMapLabelMode" IsVisible="@IsLabelModeVisible" UpdateChildrenStates="true">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Popup.Button.Text" Brush.FontSize="19" Text="@LabelModeText"/>
+                          </Children>
+                        </ButtonWidget>
                       </Children>
-                    </ButtonWidget>
+                    </ListPanel>
                     <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="4" Sprite="BlankWhiteSquare_9" Color="#0E0B08DD" IsVisible="@IsPoliticalMapPanelOpen">
                       <Children>
                         <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="8" MarginRight="8" MarginTop="8" MarginBottom="8" StackLayout.LayoutMethod="VerticalTopToBottom">
@@ -51,16 +60,6 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap.UI
                                 </ButtonWidget>
                               </ItemTemplate>
                             </ListPanel>
-                            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="62" MarginTop="4" MarginBottom="2" Brush="ButtonBrush2" Command.Click="ExecuteTogglePoliticalMapLabelMode" IsVisible="@IsLabelModeVisible" UpdateChildrenStates="true">
-                              <Children>
-                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom">
-                                  <Children>
-                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="26" Brush="Popup.Button.Text" Brush.FontSize="19" Text="@LabelModeText"/>
-                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="8" MarginRight="8" Brush="MapTextBrushGal" Brush.FontSize="13" Text="@LabelModeCaption"/>
-                                  </Children>
-                                </ListPanel>
-                              </Children>
-                            </ButtonWidget>
                             <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="26" MarginTop="4" Brush="MapTextBrushGal" Brush.FontSize="16" Text="@PoliticalMapHotkeyText"/>
                           </Children>
                         </ListPanel>
