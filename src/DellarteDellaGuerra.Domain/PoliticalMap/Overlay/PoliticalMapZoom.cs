@@ -21,7 +21,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         public const float NearBelow = 20f;
 
         /// <summary>Camera distance above which the camera is far.</summary>
-        public const float FarAbove = 120f;
+        public const float FarAbove = 150f;
 
         public static PoliticalMapZoomBand BandOf(float cameraDistance) =>
             cameraDistance < NearBelow ? PoliticalMapZoomBand.Near

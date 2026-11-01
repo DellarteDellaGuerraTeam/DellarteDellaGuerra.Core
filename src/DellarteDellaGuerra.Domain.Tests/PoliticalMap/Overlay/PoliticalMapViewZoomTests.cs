@@ -33,14 +33,14 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
 
         [Theory]
         [InlineData(200f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.Vassals)]
-        [InlineData(121f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.Vassals)]
-        [InlineData(120f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.SubVassals)]
-        [InlineData(120f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.Vassals)]
-        [InlineData(115f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.SubVassals)]
-        [InlineData(115f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.Vassals)]
-        [InlineData(110f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.SubVassals)]
-        [InlineData(110f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.Vassals)]
-        [InlineData(109f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.SubVassals)]
+        [InlineData(151f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.Vassals)]
+        [InlineData(150f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.SubVassals)]
+        [InlineData(150f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.Vassals)]
+        [InlineData(145f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.SubVassals)]
+        [InlineData(145f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.Vassals)]
+        [InlineData(140f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.SubVassals)]
+        [InlineData(140f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.Vassals)]
+        [InlineData(139f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.SubVassals)]
         [InlineData(5f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.SubVassals)]
         public void TheOwnersLevelSwitchesFarOutAndBackOnlyPastTheHysteresis(
             float distance, PoliticalMapOwnerLevel current, PoliticalMapOwnerLevel expected)
