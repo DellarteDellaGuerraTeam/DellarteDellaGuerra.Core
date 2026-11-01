@@ -9,7 +9,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
     /// <summary>
     /// Draws the political map's geometry on the campaign map scene: one entity per territory, its
     /// meshes draped over the terrain on the <see cref="PoliticalMapSheet"/> in a copy of
-    /// <c>vertex_color_mat</c> switched to real alpha blending. A territory is rebuilt into a new
+    /// <c>vertex_color_mat</c> switched to real alpha blending, with a separate additive white frontier material.
+    /// A territory is rebuilt into a new
     /// hidden entity a chunk at a time. Affected territories swap together after the batch finishes,
     /// so both sides of a smoothed frontier always use the same geometry.
     /// </summary>
@@ -18,6 +19,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
     /// colour times its alpha is added to the terrain, so black adds nothing and saturated colours
     /// wash out to pastel over bright ground. <c>Modulate</c> is the source-alpha over
     /// inverse-source-alpha blend, so a fill at the wash opacity covers that share of the terrain.
+    /// Frontiers use their own <c>AddAlpha</c> copy: opaque white brightens the ground regardless
+    /// of the fill's blend mode, and its small extra lift keeps it above the painted sheet.
     /// Main thread only: meshes are built through the engine. The renderer belongs to one scene;
     /// when the campaign map scene goes, its entities go with it and the renderer is dropped
     /// without touching them.
@@ -26,10 +29,12 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
     {
         private const string MaterialName = "vertex_color_mat";
         private const float Lift = 0.3f;
+        private const float FrontierLift = 0.025f;
 
         private readonly PoliticalMapGrid _grid;
         private readonly PoliticalMapSheet _sheet;
         private readonly Material _material;
+        private readonly Material _frontierMaterial;
         private readonly MeshBuilder _meshBuilder = new();
         private readonly Dictionary<string, GameEntity> _shown = new();
         private readonly Dictionary<string, GameEntity> _building = new();
@@ -42,8 +47,11 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             Scene = scene;
             _grid = grid;
             _sheet = sheet;
-            _material = Material.GetFromResource(MaterialName).CreateCopy();
+            Material source = Material.GetFromResource(MaterialName);
+            _material = source.CreateCopy();
             _material.SetAlphaBlendMode(Material.MBAlphaBlendMode.Modulate);
+            _frontierMaterial = source.CreateCopy();
+            _frontierMaterial.SetAlphaBlendMode(Material.MBAlphaBlendMode.AddAlpha);
         }
 
         public TaleWorlds.Engine.Scene Scene { get; }
@@ -105,8 +113,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             {
                 int left = quad.Column, right = quad.Column + quad.Width, bottom = quad.Row, top = quad.Row + quad.Height;
                 uint colour = quad.Color;
-                int a = AddCorner(left, bottom, colour), b = AddCorner(right, bottom, colour);
-                int c = AddCorner(right, top, colour), d = AddCorner(left, top, colour);
+                int a = AddCorner(left, bottom, colour, 0), b = AddCorner(right, bottom, colour, 0);
+                int c = AddCorner(right, top, colour, 0), d = AddCorner(left, top, colour, 0);
                 _meshBuilder.AddFace(a, b, c);
                 _meshBuilder.AddFace(a, c, d);
             }
@@ -114,24 +122,25 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             foreach (PoliticalMapTriangle triangle in chunk.Triangles)
             {
                 uint colour = triangle.Color;
-                int a = AddCorner(triangle.A.Column, triangle.A.Row, colour);
-                int b = AddCorner(triangle.B.Column, triangle.B.Row, colour);
-                int c = AddCorner(triangle.C.Column, triangle.C.Row, colour);
+                float lift = chunk.IsFrontier ? FrontierLift : 0;
+                int a = AddCorner(triangle.A.Column, triangle.A.Row, colour, lift);
+                int b = AddCorner(triangle.B.Column, triangle.B.Row, colour, lift);
+                int c = AddCorner(triangle.C.Column, triangle.C.Row, colour, lift);
                 _meshBuilder.AddFace(a, b, c);
             }
 
             Mesh mesh = _meshBuilder.Finalize();
-            mesh.SetMaterial(_material);
+            mesh.SetMaterial(chunk.IsFrontier ? _frontierMaterial : _material);
             mesh.CullingMode = MBMeshCullingMode.None;
             mesh.RecomputeBoundingBox();
             return mesh;
         }
 
-        private int AddCorner(float column, float row, uint colour) =>
-            _meshBuilder.AddFaceCorner(Corner(column, row), Vec3.Up, Vec2.Zero, colour);
+        private int AddCorner(float column, float row, uint colour, float lift) =>
+            _meshBuilder.AddFaceCorner(Corner(column, row, lift), Vec3.Up, Vec2.Zero, colour);
 
         // A cell corner on the sheet over the terrain.
-        private Vec3 Corner(float column, float row) =>
-            new(column * _grid.CellSize, row * _grid.CellSize, _sheet.HeightAt(column, row) + Lift);
+        private Vec3 Corner(float column, float row, float lift) =>
+            new(column * _grid.CellSize, row * _grid.CellSize, _sheet.HeightAt(column, row) + Lift + lift);
     }
 }

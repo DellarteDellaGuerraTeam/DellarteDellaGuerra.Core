@@ -88,6 +88,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             Assert.Equal("county_lancashire", paints[2].CountyKey);
             Assert.Null(paints[0].DuchyKey);
             Assert.Null(paints[0].RealmKey);
+            Assert.All(paints, paint => Assert.Null(paint.ParentRegionKey));
         }
 
         [Fact]
@@ -98,6 +99,9 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             Assert.Equal(
                 new[] { "clan_stanley", "clan_stanley", "clan_beaufort", "clan_neville", "clan_lancaster", "clan_stanley" },
                 Regions(paints));
+            Assert.Equal(
+                new[] { "clan_beaufort", "clan_beaufort", "clan_beaufort", "clan_neville", "clan_lancaster", "clan_beaufort" },
+                paints.Select(paint => paint.ParentRegionKey));
         }
 
         [Fact]
@@ -150,18 +154,30 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         [Theory]
         [InlineData(PoliticalMapOwnerLevel.Vassals)]
         [InlineData(PoliticalMapOwnerLevel.SubVassals)]
-        public void EachOwnersRegionIsOneShadeOfItsKingdomAndTouchingRegionsDiffer(PoliticalMapOwnerLevel level)
+        public void AllOwnersRegionsOfOneKingdomShareItsFlatBaseColourAndKeepDistinctFrontierIdentities(PoliticalMapOwnerLevel level)
         {
             PoliticalMapSettlementPaint[] paints = Paint(PoliticalMapView.Owners, level: level);
 
-            IReadOnlyList<uint> shades = PoliticalMapColouring.Shades(KingdomOfLancaster);
-            Assert.All(paints, paint => Assert.Contains(Opaque(paint.Fill), shades));
+            Assert.All(paints, paint => Assert.Equal(Wash(KingdomOfLancaster), paint.Fill));
             Assert.All(paints, paint => Assert.Equal(0u, paint.Hatch));
-            foreach (var group in paints.GroupBy(paint => paint.RegionKey)) Assert.Single(group.Select(paint => paint.Fill).Distinct());
-            foreach ((int a, int b) in Chain)
+            Assert.Equal(level == PoliticalMapOwnerLevel.Vassals ? 3 : 4, paints.Select(paint => paint.FrontierKey).Distinct().Count());
+            Assert.NotEqual(paints[2].FrontierKey, paints[3].FrontierKey);
+        }
+
+        [Theory]
+        [InlineData("sturgia", 0xFFD41E1Eu)]
+        [InlineData("vlandia", 0xFF1E64DCu)]
+        [InlineData("khuzait", 0xFF19B333u)]
+        [InlineData("battania", 0xFFF20DB9u)]
+        public void TheOwnersViewKeepsEachKingdomsFixedColourAtBothZoomLevels(string kingdom, uint baseColour)
+        {
+            foreach (string clan in _world.Kingdoms.Keys.ToArray()) _world.Kingdoms[clan] = kingdom;
+            PoliticalMapPainter painter = Painter();
+
+            foreach (PoliticalMapOwnerLevel level in Enum.GetValues<PoliticalMapOwnerLevel>())
             {
-                if (paints[a].RegionKey == paints[b].RegionKey) continue;
-                Assert.True(PoliticalMapColouring.Distance(paints[a].Fill, paints[b].Fill) >= PoliticalMapColouring.ShadeMinDistance);
+                Assert.All(Paint(PoliticalMapView.Owners, painter, level: level), paint => Assert.Equal(Wash(baseColour), paint.Fill));
+                Assert.Equal(baseColour, painter.MapColours(PoliticalMapView.Owners)[kingdom]);
             }
         }
 
@@ -189,7 +205,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         [Theory]
         [InlineData(PoliticalMapOwnerLevel.Vassals)]
         [InlineData(PoliticalMapOwnerLevel.SubVassals)]
-        public void LocalRulersKeepTheirShadeAcrossZoomLevelsRegardlessOfWhichWasPreparedFirst(PoliticalMapOwnerLevel first)
+        public void LocalRulersKeepTheirBaseColourAcrossZoomLevelsRegardlessOfWhichWasPreparedFirst(PoliticalMapOwnerLevel first)
         {
             PoliticalMapPainter painter = Painter();
             Paint(PoliticalMapView.Owners, painter, level: first);
@@ -198,23 +214,25 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
 
             // Beaufort, Neville and the king remain visible at both depths; Stanley appears close in.
             foreach (int index in new[] { 2, 3, 4 }) Assert.Equal(far[index].Fill, near[index].Fill);
-            Assert.NotEqual(near[2].Fill, near[0].Fill);
+            Assert.Equal(near[2].Fill, near[0].Fill);
+            Assert.NotEqual(near[2].RegionKey, near[0].RegionKey);
             Assert.Equal(far, Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.Vassals));
         }
 
         [Fact]
-        public void ALocalRulersShadeStillTracksTheirCurrentKingdom()
+        public void ALocalRulersBaseColourStillTracksTheirCurrentKingdom()
         {
             PoliticalMapPainter painter = Painter();
-            uint oldShade = Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.Vassals)[2].Fill;
+            uint oldColour = Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.Vassals)[2].Fill;
             _world.Kingdoms["clan_beaufort"] = "khuzait";
 
             PoliticalMapSettlementPaint[] near = Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.SubVassals);
             PoliticalMapSettlementPaint[] far = Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.Vassals);
 
-            Assert.NotEqual(oldShade, near[2].Fill);
+            Assert.NotEqual(oldColour, near[2].Fill);
             Assert.Equal(far[2].Fill, near[2].Fill);
-            Assert.Contains(Opaque(near[2].Fill), PoliticalMapColouring.Shades(PoliticalMapPalette.KingdomColor("khuzait", null)!.Value));
+            Assert.Equal(Wash(PoliticalMapPalette.KingdomColor("khuzait", null)), near[2].Fill);
+            Assert.Equal(Wash(KingdomOfLancaster), near[0].Fill);
         }
 
         [Fact]
@@ -227,7 +245,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             PoliticalMapSettlementPaint[] far = Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.Vassals);
 
             Assert.Equal("clan_beaufort", far[2].RegionKey);
-            Assert.Contains(Opaque(far[2].Fill), PoliticalMapColouring.Shades(KingdomOfLancaster));
+            Assert.Equal(Wash(KingdomOfLancaster), far[2].Fill);
         }
 
         [Fact]

@@ -26,6 +26,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
     public record PoliticalMapMeshChunk(IReadOnlyList<PoliticalMapQuad> Quads)
     {
         public IReadOnlyList<PoliticalMapTriangle> Triangles { get; init; } = Array.Empty<PoliticalMapTriangle>();
+        public bool IsFrontier { get; init; }
         public int TriangleCount => Quads.Count * 2 + Triangles.Count;
     }
 }

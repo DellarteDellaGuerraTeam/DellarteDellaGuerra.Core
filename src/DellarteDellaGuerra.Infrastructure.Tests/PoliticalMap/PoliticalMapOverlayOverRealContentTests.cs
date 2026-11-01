@@ -67,19 +67,21 @@ public class PoliticalMapOverlayOverRealContentTests
             foreach (PoliticalMapTriangle triangle in built.SelectMany(chunk => chunk.Triangles))
             {
                 PoliticalMapPoint a = triangle.A, b = triangle.B, c = triangle.C;
-                Assert.True((b.Column - a.Column) * (c.Row - a.Row) - (b.Row - a.Row) * (c.Column - a.Column) > 0);
+                Assert.True((b.Column - a.Column) * (c.Row - a.Row) - (b.Row - a.Row) * (c.Column - a.Column) > 0,
+                    $"Non-positive triangle in {territory}: {a}, {b}, {c}");
                 float minX = Math.Min(a.Column, Math.Min(b.Column, c.Column)), maxX = Math.Max(a.Column, Math.Max(b.Column, c.Column));
                 float minY = Math.Min(a.Row, Math.Min(b.Row, c.Row)), maxY = Math.Max(a.Row, Math.Max(b.Row, c.Row));
                 Assert.True(float.IsFinite(minX) && float.IsFinite(maxX) && float.IsFinite(minY) && float.IsFinite(maxY));
                 // A block's sheet corners are all above that block's maximum terrain height.
-                Assert.True(maxX <= (Math.Floor(minX / 8) + 1) * 8 + 0.00001);
-                Assert.True(maxY <= (Math.Floor(minY / 8) + 1) * 8 + 0.00001);
+                Assert.True(maxX <= (Math.Floor(minX / 8) + 1) * 8 + 0.00001, $"Triangle crosses sheet column in {territory}: {minX}..{maxX}");
+                Assert.True(maxY <= (Math.Floor(minY / 8) + 1) * 8 + 0.00001, $"Triangle crosses sheet row in {territory}: {minY}..{maxY}");
                 foreach ((float wa, float wb, float wc) in new[] { (0.333f, 0.333f, 0.334f), (0.7f, 0.1f, 0.2f) })
                 {
                     float x = a.Column * wa + b.Column * wb + c.Column * wc;
                     float y = a.Row * wa + b.Row * wb + c.Row * wc;
                     float height = sheet.HeightAt(a.Column, a.Row) * wa + sheet.HeightAt(b.Column, b.Row) * wb + sheet.HeightAt(c.Column, c.Row) * wc;
-                    Assert.True(height + 0.0001f >= fixture.Terrain.HeightAt(x * fixture.Grid.CellSize, y * fixture.Grid.CellSize));
+                    Assert.True(height + 0.0001f >= fixture.Terrain.HeightAt(x * fixture.Grid.CellSize, y * fixture.Grid.CellSize),
+                        $"Triangle falls below terrain in {territory} at {x},{y}");
                 }
             }
         }

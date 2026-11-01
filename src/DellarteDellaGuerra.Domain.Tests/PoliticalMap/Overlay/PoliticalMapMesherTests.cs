@@ -31,7 +31,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         };
 
         [Fact]
-        public void TheFillCoversEveryCellOfTheTerritoryInItsColourWithNoBorderAlongAnyKeyChange()
+        public void FrontierStrokesAreSeparateFromTheUnchangedTerritoryFill()
         {
             IReadOnlyList<PoliticalMapMeshChunk> chunks = Mesher(TwoHalves()).Build("county_west", Paints("r1", "r2"));
 
@@ -170,7 +170,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             Assert.InRange(original.Sum(Area), 0.5, 0.999);
 
             paints[1] = paints[1] with { Fill = Red };
-            Assert.Empty(mesher.Build("county_west", paints).SelectMany(c => c.Triangles));
+            Assert.Empty(mesher.Build("county_west", paints).Where(c => !c.IsFrontier).SelectMany(c => c.Triangles));
             Assert.Equal(1, Geometry(mesher.Build("county_west", paints)).Sum(Area));
             paints[1] = paints[1] with { Fill = Blue };
             Assert.Equal(original, Geometry(mesher.Build("county_west", paints)));
@@ -406,7 +406,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             new[] { "west", "east" }, Enumerable.Range(0, width * frontier.Length)
                 .Select(i => (ushort)(i % width < frontier[i / width] ? 1 : 2)).ToArray());
 
-        private static List<PoliticalMapTriangle> Geometry(IEnumerable<PoliticalMapMeshChunk> chunks) => chunks.SelectMany(chunk =>
+        private static List<PoliticalMapTriangle> Geometry(IEnumerable<PoliticalMapMeshChunk> chunks) => chunks.Where(chunk => !chunk.IsFrontier).SelectMany(chunk =>
             chunk.Triangles.Concat(chunk.Quads.SelectMany(quad =>
             {
                 var a = new PoliticalMapPoint(quad.Column, quad.Row);

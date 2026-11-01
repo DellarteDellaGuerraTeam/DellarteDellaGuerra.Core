@@ -6,8 +6,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
 {
     /// <summary>
     /// Turns a territory's cells into the geometry its meshes are built from: every cell in its
-    /// settlement's fill colour, striped with the hatch colour where it has one. There are no
-    /// borders: neighbouring regions are told apart by their colours alone.
+    /// settlement's fill colour, with thin shared frontiers between displayed political regions.
     /// </summary>
     /// <remarks>
     /// Same-coloured cells merge into rectangles of at most <see cref="MaxQuadSide"/> cells a side,
@@ -23,15 +22,18 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
 
         private readonly PoliticalMapGrid _grid;
         private readonly Dictionary<string, List<int>> _cellsByTerritory = new();
+        private readonly IReadOnlyList<string> _territoryOfSettlement;
         public const int SmoothingReach = PoliticalMapFrontiers.Iterations + 2;
         private PoliticalMapFrontiers? _frontiers;
-        private (uint Fill, uint Hatch)[] _frontierPaints = Array.Empty<(uint, uint)>();
+        private PoliticalMapSettlementPaint[] _frontierPaints = Array.Empty<PoliticalMapSettlementPaint>();
+        private Dictionary<string, List<PoliticalMapTriangle>> _strokes = new();
 
         /// <param name="grid">The settlement grid.</param>
         /// <param name="territoryOfSettlement">The territory each grid settlement is meshed with, by 0-based index.</param>
         public PoliticalMapMesher(PoliticalMapGrid grid, IReadOnlyList<string> territoryOfSettlement)
         {
             _grid = grid;
+            _territoryOfSettlement = territoryOfSettlement;
             for (int index = 0; index < grid.Cells.Length; index++)
             {
                 ushort cell = grid.Cells[index];
@@ -81,6 +83,12 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
             }
 
             PoliticalMapQuadPacker.AddChunks(chunks, PoliticalMapQuadPacker.Rectangles(fill, box), triangles);
+            if (_strokes.TryGetValue(territory, out List<PoliticalMapTriangle>? strokes))
+            {
+                var strokeChunks = new List<PoliticalMapMeshChunk>();
+                PoliticalMapQuadPacker.AddChunks(strokeChunks, new List<PoliticalMapQuad>(), strokes);
+                foreach (PoliticalMapMeshChunk chunk in strokeChunks) chunks.Add(chunk with { IsFrontier = true });
+            }
             return chunks;
         }
 
@@ -88,12 +96,13 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         {
             bool changed = _frontiers is null || _frontierPaints.Length != paints.Count;
             for (int i = 0; !changed && i < paints.Count; i++)
-                changed = _frontierPaints[i] != (paints[i].Fill, paints[i].Hatch);
+                changed = !_frontierPaints[i].HasSameGeometry(paints[i]);
             if (!changed) return;
 
             _frontiers = new PoliticalMapFrontiers(_grid, paints);
-            _frontierPaints = new (uint, uint)[paints.Count];
-            for (int i = 0; i < paints.Count; i++) _frontierPaints[i] = (paints[i].Fill, paints[i].Hatch);
+            _strokes = PoliticalMapFrontierStrokes.Build(_grid, paints, _territoryOfSettlement, _frontiers);
+            _frontierPaints = new PoliticalMapSettlementPaint[paints.Count];
+            for (int i = 0; i < paints.Count; i++) _frontierPaints[i] = paints[i];
         }
     }
 }
