@@ -165,6 +165,29 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             Assert.Equal("England", hierarchy.HighestTitleOf("clan_lancaster")!.Name);
         }
 
+        [Fact]
+        public void TheRulersLandUsesItsHighestControlledLandedTitleWithoutChangingItsRoyalRank()
+        {
+            _titles.SaveTitle(new Title("duchy_lancaster", "Duchy of Lancaster", TitleRank.Duke, "", "henry"));
+            _titles.SaveTitle(new Title("county_kent", "Kent", TitleRank.Count, "", "henry"));
+            PoliticalMapVassalHierarchy hierarchy = Hierarchy();
+
+            Assert.Equal("duchy_lancaster", hierarchy.HighestLandTitleOf("clan_lancaster")!.Id);
+            Assert.Equal("kingdom_england", hierarchy.HighestTitleOf("clan_lancaster")!.Id);
+            Assert.Null(hierarchy.LiegeOf("clan_lancaster"));
+
+            _titles.SaveTitle(_titles.GetTitle("duchy_lancaster")!.WithOccupant("clan_beaufort", 3f));
+            hierarchy = Hierarchy();
+            Assert.Equal("county_kent", hierarchy.HighestLandTitleOf("clan_lancaster")!.Id);
+            Assert.Equal("duchy_lancaster", hierarchy.HighestLandTitleOf("clan_beaufort")!.Id);
+        }
+
+        [Fact]
+        public void ACrownAloneDoesNotNameTheRulersEstate()
+        {
+            Assert.Null(Hierarchy().HighestLandTitleOf("clan_lancaster"));
+        }
+
         private sealed class FakeWorld : IPoliticalMapWorld
         {
             public readonly Dictionary<string, string> Kingdoms = new()

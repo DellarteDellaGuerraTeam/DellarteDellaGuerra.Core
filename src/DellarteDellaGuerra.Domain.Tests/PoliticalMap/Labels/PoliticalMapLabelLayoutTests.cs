@@ -169,6 +169,18 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Labels
         }
 
         [Fact]
+        public void DistinctRulersWithTheSameCrownLandCaptionAreNotDeduplicated()
+        {
+            var labels = PoliticalMapLabelLayout.Place(new[]
+            {
+                new PoliticalMapLabelCandidate(1, 500f, 300f, 30f, "Crown lands".Length, 2, "Owner:lancaster"),
+                new PoliticalMapLabelCandidate(2, 500f, 600f, 30f, "Crown lands".Length, 1, "Owner:york")
+            }, 1920f, 1080f);
+
+            Assert.Equal(2, labels.Count);
+        }
+
+        [Fact]
         public void TheRepeatDistanceIsAShareOfTheScreenWidth()
         {
             // Two patches whose boxes are ~450 px apart: past a third of a 1280 px screen (427 px),
@@ -211,6 +223,19 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Labels
         public void ALabelWithNoTextIsNotPlaced()
         {
             Assert.Empty(PoliticalMapLabelLayout.Place(new[] { Candidate(1, 500f, 500f, 60f, 0, 1) }, 1920f, 1080f));
+        }
+
+        [Fact]
+        public void WrappedLabelsUseTheHeightOfEveryLineForCollisions()
+        {
+            var labels = PoliticalMapLabelLayout.Place(new[]
+            {
+                new PoliticalMapLabelCandidate(1, 500, 500, 40, 9, 2, LineCount: 3),
+                Candidate(2, 500, 560, 40, 4, 1),
+                Candidate(3, 650, 500, 40, 4, 1)
+            }, 1920, 1080);
+
+            Assert.Equal(new[] { 1, 3 }, labels.Select(label => label.Id).OrderBy(id => id));
         }
     }
 }

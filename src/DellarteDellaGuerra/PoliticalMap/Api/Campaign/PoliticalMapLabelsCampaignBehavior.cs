@@ -7,6 +7,7 @@ using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.PoliticalMap.Grid;
 using DellarteDellaGuerra.Domain.PoliticalMap.Labels;
 using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
+using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
 using DellarteDellaGuerra.PoliticalMap.Labels;
 using SandBox.View.Map;
@@ -25,8 +26,9 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
      *  the settlement nameplates: kingdoms in the kingdom view, the vassal-hierarchy regions in the
      *  owners view, one label per region at the owners view's current level
      *  (<see cref="PoliticalMapOverlayCampaignBehavior.DisplayedOwnerLevel"/>). The owners view can switch
-     *  its labels between the holder's highest title and the holder clan (<see cref="Modes"/>):
-     *  only the text changes.
+     *  its labels between the holder's highest landed title and the holder clan (<see cref="Modes"/>):
+     *  only the text changes. The coarse level labels counts and higher; the detailed level
+     *  also labels barons and untitled estates.
      *  A continuing holder keeps the pole of its own detailed land at both Owners levels.
      * </summary>
      * <remarks>
@@ -40,10 +42,9 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
      *  built for the view and level drawn, so the two levels never mix and none go stale.
      *  </para>
      *  <para>
-     *  Every frame each label is projected, sized to how big its region shows on screen (never to
-     *  its name's length: a long name may run over its neighbours) and placed widest tier and
-     *  largest region first, a label that would overlap one already placed left out, and so is
-     *  one naming the same thing as a label placed nearby (<see cref="PoliticalMapLabelLayout"/>).
+     *  Every frame each label is projected and sized to its region; oversized names wrap onto
+     *  two or three lines. Labels are placed by title rank, then region size; overlaps and nearby
+     *  repetitions are dropped (<see cref="PoliticalMapLabelLayout"/>).
      *  </para>
      *  <para>
      *  The labels are a Gauntlet layer just under the nameplate layer, so party nameplates draw
@@ -366,7 +367,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         {
             IReadOnlyList<PoliticalMapRegion>[] regionsByTier = _regionsByTier!;
             PoliticalMapLabelMode mode = Modes.Of(view);
-            PoliticalMapVassalHierarchy? hierarchy = view == PoliticalMapView.Owners && mode == PoliticalMapLabelMode.Titles
+            PoliticalMapVassalHierarchy? hierarchy = view == PoliticalMapView.Owners
                 ? _painter.HierarchyOf(_world) : null;
             _resolvedNames.Clear();
             int labelIndex = 0;
@@ -377,12 +378,14 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
                 foreach (PoliticalMapRegion region in regionsByTier[index])
                 {
                     var key = (tier, region.Key);
+                    TitleRank? rank = RankOf(tier, region.Key, hierarchy);
                     if (!_resolvedNames.TryGetValue(key, out string? name))
-                        _resolvedNames[key] = name = NameOf(tier, mode, region.Key, hierarchy);
+                        _resolvedNames[key] = name = PoliticalMapLabelHierarchy.Shows(tier, rank, level)
+                            ? NameOf(tier, mode, region.Key, hierarchy) : null;
                     if (string.IsNullOrWhiteSpace(name)) continue;
 
                     if (labelIndex >= _labels.Count || !ReferenceEquals(_labels[labelIndex].Region, region)
-                        || _labels[labelIndex].Tier != tier || _labels[labelIndex].Text != name) changed = true;
+                        || _labels[labelIndex].Tier != tier || _labels[labelIndex].Rank != rank || _labels[labelIndex].Text != name) changed = true;
                     labelIndex++;
                 }
             }
@@ -402,7 +405,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
 
                     float height = mapScreen.MapScene.GetTerrainHeight(new Vec2(region.X, region.Y)) + HeightOffset;
                     var vm = new PoliticalMapLabelVM(name!);
-                    _labels.Add(new Label(tier, region, new Vec3(region.X, region.Y, height), name!, vm));
+                    _labels.Add(new Label(tier, region, new Vec3(region.X, region.Y, height), name!, vm, RankOf(tier, region.Key, hierarchy)));
                     _vm.Labels.Add(vm);
                 }
             }
@@ -411,8 +414,10 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             _keysLevel = level;
         }
 
-        // A region's label in a mode. An owners region is named after its holder clan, or its
-        // holder's highest title (a ruler's: the realm's); a clan holding no title keeps its name.
+        // All owners use their landed title, or a geographic name if they have no landed title.
+        private static TitleRank? RankOf(PoliticalMapLabelTier tier, string key, PoliticalMapVassalHierarchy? hierarchy) =>
+            tier == PoliticalMapLabelTier.Owner ? (hierarchy?.HighestLandTitleOf(key) ?? hierarchy?.HighestTitleOf(key))?.Rank : null;
+
         private string? NameOf(PoliticalMapLabelTier tier, PoliticalMapLabelMode mode, string key, PoliticalMapVassalHierarchy? hierarchy)
         {
             switch (tier)
@@ -423,9 +428,11 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
                         ? ClanNameOf(_world.RulerClanOf(key) ?? key) ?? kingdomName
                         : kingdomName ?? ClanNameOf(key);
                 case PoliticalMapLabelTier.Owner:
-                    return mode == PoliticalMapLabelMode.Titles
-                        ? TitleNameOf(hierarchy?.HighestTitleOf(key)?.Id) ?? ClanNameOf(key)
-                        : ClanNameOf(key);
+                    string? titleName = TitleNameOf(hierarchy?.HighestLandTitleOf(key)?.Id);
+                    string? estateName = mode == PoliticalMapLabelMode.Titles && titleName is null
+                        ? EstateNameOf(key) : null;
+                    string? label = PoliticalMapOwnerLabelName.Resolve(mode, titleName, ClanNameOf(key), estateName);
+                    return label is null ? null : new TextObject(label).ToString();
                 default:
                     return null;
             }
@@ -436,6 +443,14 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
 
         private string? TitleNameOf(string? titleId) =>
             titleId is not null && _feudalStructure.GetTitleName(titleId) is { } name ? new TextObject(name).ToString() : null;
+
+        private string? EstateNameOf(string clanId) => _grid?.SettlementIds
+            .Select(_world.SeatOf)
+            .Where(seat => seat is not null && _world.OwnerClanOf(seat) == clanId)
+            .Distinct()
+            .OrderBy(seat => seat, StringComparer.Ordinal)
+            .Select(seat => _world.SettlementName(seat!)?.Trim(' ', '\u00b7'))
+            .FirstOrDefault(name => !string.IsNullOrWhiteSpace(name));
 
         private void Layout(MapScreen mapScreen)
         {
@@ -457,9 +472,10 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
                 if (Project(camera, label.Position + new Vec3(0f, radius, 0f), out float ux, out float uy))
                     pixelRadius = Math.Max(pixelRadius, (float)Math.Sqrt((ux - x) * (ux - x) + (uy - y) * (uy - y)));
 
-                long priority = ((long)label.Tier << 32) | (uint)label.Region.CellCount;
+                label.Wrap(pixelRadius / scale);
+                long priority = PoliticalMapLabelHierarchy.Priority(label.Tier, label.Rank, label.Region.CellCount);
                 _candidates.Add(new PoliticalMapLabelCandidate(
-                    index, x / scale, y / scale, pixelRadius / scale, label.Text.Length, priority, label.Text));
+                    index, x / scale, y / scale, pixelRadius / scale, label.LongestLine, priority, label.Group, label.LineCount));
             }
 
             IReadOnlyList<PoliticalMapPlacedLabel> placed = PoliticalMapLabelLayout.Place(
@@ -489,20 +505,44 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
 
         private sealed class Label
         {
-            public Label(PoliticalMapLabelTier tier, PoliticalMapRegion region, Vec3 position, string text, PoliticalMapLabelVM viewModel)
+            private int _wrapLength = -1;
+
+            public Label(PoliticalMapLabelTier tier, PoliticalMapRegion region, Vec3 position, string text, PoliticalMapLabelVM viewModel, TitleRank? rank)
             {
                 Tier = tier;
                 Region = region;
                 Position = position;
                 Text = text;
+                Group = tier + ":" + region.Key;
                 ViewModel = viewModel;
+                Rank = rank;
+                LongestLine = text.Length;
             }
 
             public PoliticalMapLabelTier Tier { get; }
             public PoliticalMapRegion Region { get; }
             public Vec3 Position { get; }
             public string Text { get; }
+            public string Group { get; }
+            public TitleRank? Rank { get; }
+            public int LongestLine { get; private set; }
+            public int LineCount { get; private set; } = 1;
             public PoliticalMapLabelVM ViewModel { get; }
+
+            public void Wrap(float pixelRadius)
+            {
+                int size = PoliticalMapLabelLayout.SizeIndexFor(pixelRadius);
+                if (size < 0) return;
+                int target = Math.Max(1, (int)(2f * pixelRadius /
+                    (PoliticalMapLabelLayout.FontSizes[size] * PoliticalMapLabelLayout.CharWidth)));
+                if (target == _wrapLength) return;
+                _wrapLength = target;
+                string wrapped = PoliticalMapLabelWrapping.Wrap(Text, target);
+                string[] lines = wrapped.Split('\n');
+                LongestLine = lines.Max(line => line.Length);
+                LineCount = lines.Length;
+                ViewModel.Text = wrapped;
+            }
         }
     }
 }

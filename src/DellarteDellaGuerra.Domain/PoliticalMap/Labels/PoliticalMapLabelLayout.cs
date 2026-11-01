@@ -7,14 +7,15 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
     /// <param name="X">The label's centre on screen, in pixels.</param>
     /// <param name="Y">The label's centre on screen, in pixels.</param>
     /// <param name="PixelRadius">The region's inscribed radius as it shows on screen, in pixels.</param>
-    /// <param name="TextLength">How many characters the label has.</param>
-    /// <param name="Priority">Higher wins a collision: a wider tier, then a bigger region.</param>
+    /// <param name="TextLength">How many characters the label's longest line has.</param>
+    /// <param name="Priority">Higher wins a collision: tier, then title rank, then region size.</param>
     /// <param name="Group">
     /// What the label says (its text, or any key standing for it); null for none. A label is not
     /// repeated near one of its own group already placed (<see cref="PoliticalMapLabelLayout.RepeatDistance"/>).
     /// </param>
+    /// <param name="LineCount">Number of lines in the label, for collision checks.</param>
     public sealed record PoliticalMapLabelCandidate(
-        int Id, float X, float Y, float PixelRadius, int TextLength, long Priority, string? Group = null);
+        int Id, float X, float Y, float PixelRadius, int TextLength, long Priority, string? Group = null, int LineCount = 1);
 
     /// <summary>A label that is drawn this frame, in one of <see cref="PoliticalMapLabelLayout.FontSizes"/>.</summary>
     public sealed record PoliticalMapPlacedLabel(int Id, float X, float Y, int SizeIndex);
@@ -22,9 +23,9 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
     /// <summary>
     /// Sizes region labels to their regions as they show on screen and keeps them from piling up.
     /// The font follows how big the region shows (its inscribed radius on screen at this zoom),
-    /// never how long its name is: a long name is printed as large as a short one and may run over
-    /// its neighbours and the sea. A region too small on screen gets no label. Labels are placed
-    /// widest tier and biggest region first, each dropped when its text box overlaps one placed.
+    /// never how long its name is: long names can wrap without shrinking their font.
+    /// A region too small on screen gets no label. Labels are placed
+    /// by tier, title rank and region size, each dropped when its text box overlaps one placed.
     /// A label is also dropped when one saying the same thing (same <see cref="PoliticalMapLabelCandidate.Group"/>)
     /// is already placed nearby: a kingdom split into patches, or a clan holding scattered fiefs,
     /// is named once on its biggest patch in view, not on every patch.
@@ -133,7 +134,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
         private static Box BoxOf(PoliticalMapLabelCandidate candidate, int fontSize)
         {
             float halfWidth = TextWidthOf(fontSize, candidate.TextLength) / 2f + Gap;
-            float halfHeight = TextHeight * fontSize / 2f + Gap;
+            float halfHeight = (TextHeight + System.Math.Max(0, candidate.LineCount - 1)) * fontSize / 2f + Gap;
             return new Box(candidate.X - halfWidth, candidate.Y - halfHeight, candidate.X + halfWidth, candidate.Y + halfHeight);
         }
 

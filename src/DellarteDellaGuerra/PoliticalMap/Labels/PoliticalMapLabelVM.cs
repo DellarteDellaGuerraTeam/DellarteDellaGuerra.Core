@@ -10,13 +10,24 @@ namespace DellarteDellaGuerra.PoliticalMap.Labels
         private float _positionY;
         private bool _isShown;
         private int _sizeIndex = -1;
+        private string _text;
 
         public PoliticalMapLabelVM(string text)
         {
-            Text = text;
+            _text = text;
         }
 
-        [DataSourceProperty] public string Text { get; }
+        [DataSourceProperty]
+        public string Text
+        {
+            get => _text;
+            set
+            {
+                if (value == _text) return;
+                _text = value;
+                OnPropertyChangedWithValue(value);
+            }
+        }
 
         [DataSourceProperty]
         public float PositionX

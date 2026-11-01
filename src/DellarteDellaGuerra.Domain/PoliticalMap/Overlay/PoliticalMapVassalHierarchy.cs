@@ -38,6 +38,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         private readonly IPoliticalMapWorld _world;
         private readonly Dictionary<string, string> _controllerOfTitle = new(StringComparer.Ordinal);
         private readonly Dictionary<string, Title> _highestOfClan = new(StringComparer.Ordinal);
+        private readonly Dictionary<string, Title> _highestLandTitleOfClan = new(StringComparer.Ordinal);
         private readonly Dictionary<string, IReadOnlyList<string>> _chains = new(StringComparer.Ordinal);
 
         public PoliticalMapVassalHierarchy(
@@ -54,6 +55,8 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
 
                 _controllerOfTitle[title.Id] = clan;
                 if (!_highestOfClan.TryGetValue(clan, out Title? best) || Outranks(title, best)) _highestOfClan[clan] = title;
+                if (title.Rank < TitleRank.King && (!_highestLandTitleOfClan.TryGetValue(clan, out Title? land) || Outranks(title, land)))
+                    _highestLandTitleOfClan[clan] = title;
             }
         }
 
@@ -63,6 +66,10 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         /// </summary>
         public Title? HighestTitleOf(string clanId) =>
             _highestOfClan.TryGetValue(clanId, out Title? title) ? title : null;
+
+        /// <summary>The highest live title below a crown, used to name an owner's own land.</summary>
+        public Title? HighestLandTitleOf(string clanId) =>
+            _highestLandTitleOfClan.TryGetValue(clanId, out Title? title) ? title : null;
 
         /// <summary>The clan a clan answers to, null for a ruler, a kingdomless clan or a clan in a kingdom without a ruler.</summary>
         public string? LiegeOf(string clanId)
