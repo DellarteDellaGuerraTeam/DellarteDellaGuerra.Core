@@ -4,10 +4,10 @@ using DellarteDellaGuerra.Domain.PoliticalMap.Grid;
 
 namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
 {
-    /// <summary>White ribbons on the shared relaxed edges. Dash phase follows a complete boundary chain.</summary>
+    /// <summary>Gold ribbons on the shared relaxed edges. Dash phase follows a complete boundary chain.</summary>
     internal static class PoliticalMapFrontierStrokes
     {
-        private const uint Colour = 0xFFFFFFFF;
+        private const uint Colour = 0xFFE8B92C;
         // Cell coordinates: broad enough to read at the far camera without extra geometry.
         private const float MainHalfWidth = 0.45f;
         private const float SubVassalHalfWidth = 0.3f;

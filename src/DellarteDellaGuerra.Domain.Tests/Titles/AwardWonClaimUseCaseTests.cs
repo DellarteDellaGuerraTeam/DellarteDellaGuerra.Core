@@ -20,18 +20,18 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             if (winnerHasLeader) genealogy.WithLeader("clan_winner", "winner_lord");
 
             var structure = new FakeFeudalStructure()
-                .AddTitle("county", TitleRank.Count)
+                .AddTitle("county", TitleRank.Earl)
                 .AddTitle("barony_a", TitleRank.Baron, parentTitleId: "county")
                 .AddTitle("barony_b", TitleRank.Baron, parentTitleId: "county")
-                .AddTitle("county_elsewhere", TitleRank.Count)
+                .AddTitle("county_elsewhere", TitleRank.Earl)
                 .AddTitle("barony_c", TitleRank.Baron, parentTitleId: "county_elsewhere");
 
             var titles = new FakeTitleRepository(
-                new Title("county", "County", TitleRank.Count, "seat_county", "loser_lord",
+                new Title("county", "County", TitleRank.Earl, "seat_county", "loser_lord",
                     countyOccupant, countyOccupant is null ? null : 10f),
                 new Title("barony_a", "Barony A", TitleRank.Baron, "seat_a", "loser_lord"),
                 new Title("barony_b", "Barony B", TitleRank.Baron, "seat_b", "third_lord"),
-                new Title("county_elsewhere", "Elsewhere", TitleRank.Count, "seat_elsewhere", "loser_lord"),
+                new Title("county_elsewhere", "Elsewhere", TitleRank.Earl, "seat_elsewhere", "loser_lord"),
                 new Title("barony_c", "Barony C", TitleRank.Baron, "seat_c", "fourth_lord"))
             {
                 Genealogy = genealogy
@@ -146,7 +146,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         //                               └─ county_split (split)
         // kingdom_england (england_king) ── winner_title (winner, of the given rank)
         private static (AwardWonClaimUseCase UseCase, FakeFeudalStructure Structure, SuzeraintyPolicy Suzerain)
-            SetupAcrossTheBorder(TitleRank winnerRank = TitleRank.Count, string winnerRealm = "kingdom_england")
+            SetupAcrossTheBorder(TitleRank winnerRank = TitleRank.Earl, string winnerRealm = "kingdom_england")
         {
             var genealogy = new FakeGenealogy()
                 .AddHero("scots_king", "clan_scots")
@@ -159,21 +159,21 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
 
             var structure = new FakeFeudalStructure()
                 .AddTitle("kingdom_scotland", TitleRank.King)
-                .AddTitle("county", TitleRank.Count, parentTitleId: "kingdom_scotland")
+                .AddTitle("county", TitleRank.Earl, parentTitleId: "kingdom_scotland")
                 .AddTitle("barony_a", TitleRank.Baron, parentTitleId: "county")
                 .AddTitle("barony_b", TitleRank.Baron, parentTitleId: "county")
                 .AddTitle("barony_split", TitleRank.Baron, parentTitleId: "county")
-                .AddTitle("county_split", TitleRank.Count, parentTitleId: "kingdom_scotland")
+                .AddTitle("county_split", TitleRank.Earl, parentTitleId: "kingdom_scotland")
                 .AddTitle("kingdom_england", TitleRank.King)
                 .AddTitle("winner_title", winnerRank, parentTitleId: winnerRealm);
 
             var titles = new FakeTitleRepository(
                 new Title("kingdom_scotland", "Scotland", TitleRank.King, "seat_scotland", "scots_king"),
-                new Title("county", "County", TitleRank.Count, "seat_county", "loser_lord"),
+                new Title("county", "County", TitleRank.Earl, "seat_county", "loser_lord"),
                 new Title("barony_a", "Barony A", TitleRank.Baron, "seat_a", "loser_lord"),
                 new Title("barony_b", "Barony B", TitleRank.Baron, "seat_b", "third_lord"),
                 new Title("barony_split", "Barony Split", TitleRank.Baron, "seat_bs", "split_lord"),
-                new Title("county_split", "County Split", TitleRank.Count, "seat_cs", "split_lord"),
+                new Title("county_split", "County Split", TitleRank.Earl, "seat_cs", "split_lord"),
                 new Title("kingdom_england", "England", TitleRank.King, "seat_england", "england_king"),
                 new Title("winner_title", "Winner", winnerRank, "seat_winner", "winner_lord"))
             {
@@ -187,7 +187,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         [Fact]
         public void Execute_AttachesTheWonTitleUnderTheWinnersKing_WhenItRanksAsHighAsTheWinnersTitle()
         {
-            var (useCase, structure, suzerain) = SetupAcrossTheBorder(TitleRank.Count);
+            var (useCase, structure, suzerain) = SetupAcrossTheBorder(TitleRank.Earl);
 
             useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
@@ -203,6 +203,17 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             useCase.Execute("county", "clan_winner", "clan_loser", 10f);
 
             Assert.Equal("winner_title", structure.GetDeJureSuzerainTitleId("county"));
+        }
+
+        [Fact]
+        public void Execute_ReattachesByTerritorialTierEvenWhenTheWinnersDignityRanksHigher()
+        {
+            var (useCase, structure, _) = SetupAcrossTheBorder(TitleRank.Duke);
+            structure.AddTitle("winner_title", TitleRank.Earl, parentTitleId: "kingdom_england");
+
+            useCase.Execute("county", "clan_winner", "clan_loser", 10f);
+
+            Assert.Equal("kingdom_england", structure.GetDeJureSuzerainTitleId("county"));
         }
 
         [Fact]

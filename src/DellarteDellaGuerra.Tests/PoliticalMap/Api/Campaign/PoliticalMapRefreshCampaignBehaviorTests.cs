@@ -34,7 +34,7 @@ namespace DellarteDellaGuerra.Tests.PoliticalMap.Api.Campaign
         {
             var titles = new Titles(
                 new Title("kingdom_england", "England", TitleRank.King, "", "henry"),
-                new Title("county_lancashire", "County of Lancashire", TitleRank.Count, "Lancaster_town", "henry"),
+                new Title("county_lancashire", "County of Lancashire", TitleRank.Earl, "Lancaster_town", "henry"),
                 new Title("barony_piel", "Barony of Piel", TitleRank.Baron, "dadg_Piel_castle", "harrington"));
             var structure = new Structure(new Dictionary<string, string?>
             {
@@ -62,6 +62,7 @@ namespace DellarteDellaGuerra.Tests.PoliticalMap.Api.Campaign
 
         private sealed class Structure : IFeudalStructure
         {
+            public string? GetAllegianceSuzerainTitleId(string titleId) => GetDeJureSuzerainTitleId(titleId);
             private readonly Dictionary<string, string?> _suzerains;
             private readonly Titles _titles;
 

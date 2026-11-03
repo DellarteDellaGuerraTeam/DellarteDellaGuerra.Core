@@ -5,7 +5,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
     public class TitleTests
     {
         private static Title County(string? occupantClanId = null) =>
-            new("county", "County", TitleRank.Count, "s_c", "old_lord", occupantClanId, occupantClanId is null ? null : 3f);
+            new("county", "County", TitleRank.Earl, "s_c", "old_lord", occupantClanId, occupantClanId is null ? null : 3f);
 
         [Fact]
         public void New_OpensTheLedgerWithTheInitialHolderOnDayZero()

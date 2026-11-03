@@ -52,7 +52,7 @@ public class InMemoryTitleRegistryTests
     public void ShouldFilterTitlesByHolderClan()
     {
         _registry.SaveTitle(YorkDuchy());
-        _registry.SaveTitle(new Title("county_kent", "County of Kent", TitleRank.Count, "town_kent", null));
+        _registry.SaveTitle(new Title("county_kent", "County of Kent", TitleRank.Earl, "town_kent", null));
 
         Assert.Equal(new[] { "duchy_york" }, _registry.GetTitlesByClan("clan_york").Select(title => title.Id));
         Assert.Empty(_registry.GetTitlesByClan("clan_lancaster"));
@@ -63,7 +63,7 @@ public class InMemoryTitleRegistryTests
     {
         _registry.SaveTitle(YorkDuchy());
 
-        _registry.Initialise([new Title("county_kent", "County of Kent", TitleRank.Count, "town_kent", null)]);
+        _registry.Initialise([new Title("county_kent", "County of Kent", TitleRank.Earl, "town_kent", null)]);
 
         Assert.Null(_registry.GetTitle("duchy_york"));
         Assert.Null(_registry.GetTitleBySeat("town_york"));
@@ -81,7 +81,7 @@ public class InMemoryTitleRegistryTests
         _registry.SaveTitle(YorkDuchy());
         _registry.SaveTitle(YorkDuchy(holderClanId: "clan_neville"));
         _registry.SaveTitle(_registry.GetTitle("duchy_york")!.WithOccupant("clan_percy", 10f));
-        _registry.SaveTitle(new Title("county_kent", "County of Kent", TitleRank.Count, "town_kent", null));
+        _registry.SaveTitle(new Title("county_kent", "County of Kent", TitleRank.Earl, "town_kent", null));
 
         Assert.Equal(new[] { "duchy_york", "duchy_york", "county_kent" }, changed);
     }
@@ -102,7 +102,7 @@ public class InMemoryTitleRegistryTests
     public void ShouldSnapshotAllTitles()
     {
         _registry.SaveTitle(YorkDuchy());
-        _registry.SaveTitle(new Title("county_kent", "County of Kent", TitleRank.Count, "town_kent", null));
+        _registry.SaveTitle(new Title("county_kent", "County of Kent", TitleRank.Earl, "town_kent", null));
 
         IReadOnlyList<Title> snapshot = _registry.Snapshot();
 

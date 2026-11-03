@@ -11,6 +11,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Labels
             Assert.Empty(PoliticalMapLabelTiers.Of(PoliticalMapView.Off));
             Assert.Equal(new[] { PoliticalMapLabelTier.Faction }, PoliticalMapLabelTiers.Of(PoliticalMapView.Kingdom));
             Assert.Equal(new[] { PoliticalMapLabelTier.Owner }, PoliticalMapLabelTiers.Of(PoliticalMapView.Owners));
+            Assert.Equal(new[] { PoliticalMapLabelTier.Territory }, PoliticalMapLabelTiers.Of(PoliticalMapView.Owners, PoliticalMapLabelMode.Titles));
         }
 
         [Fact]
@@ -23,6 +24,9 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Labels
             Assert.Equal(
                 new[] { "clan_liege", null },
                 PoliticalMapLabelTiers.KeysOf(PoliticalMapLabelTier.Owner, ids, new[] { "clan_liege", null }, world));
+            Assert.Equal(
+                new[] { "county_a", "barony_b" },
+                PoliticalMapLabelTiers.KeysOf(PoliticalMapLabelTier.Territory, ids, new[] { "county_a", "barony_b" }, world));
         }
 
         [Fact]

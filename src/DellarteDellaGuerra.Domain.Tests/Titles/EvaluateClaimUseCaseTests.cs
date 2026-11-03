@@ -22,7 +22,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         public void Execute_ReturnsTrue_WhenTitleHeldByAnotherClan()
         {
             var titleRepository = new FakeTitleRepository(
-                new Title("county_a", "County", TitleRank.Count, "s_a", "clan_other"));
+                new Title("county_a", "County", TitleRank.Earl, "s_a", "clan_other"));
             var useCase = new EvaluateClaimUseCase(titleRepository, CreateGenealogy());
 
             Assert.True(useCase.Execute(CreateClaim("county_a")));
@@ -32,7 +32,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         public void Execute_ReturnsFalse_WhenClaimantHoldsTitle()
         {
             var titleRepository = new FakeTitleRepository(
-                new Title("county_a", "County", TitleRank.Count, "s_a", "clan_claimant"));
+                new Title("county_a", "County", TitleRank.Earl, "s_a", "clan_claimant"));
             var useCase = new EvaluateClaimUseCase(titleRepository, CreateGenealogy());
 
             Assert.False(useCase.Execute(CreateClaim("county_a")));
@@ -42,7 +42,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         public void Execute_ReturnsTrue_WhenABloodClaimantSharesTheHoldersClan()
         {
             var titleRepository = new FakeTitleRepository(
-                new Title("county_a", "County", TitleRank.Count, "s_a", "holder"));
+                new Title("county_a", "County", TitleRank.Earl, "s_a", "holder"));
             var useCase = new EvaluateClaimUseCase(titleRepository, CreateGenealogy());
 
             Assert.True(useCase.Execute(CreateBloodClaim("county_a", "brother", "clan_holder")));
@@ -52,7 +52,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         public void Execute_ReturnsFalse_WhenTheBloodClaimantIsTheHolderHimself()
         {
             var titleRepository = new FakeTitleRepository(
-                new Title("county_a", "County", TitleRank.Count, "s_a", "holder"));
+                new Title("county_a", "County", TitleRank.Earl, "s_a", "holder"));
             var useCase = new EvaluateClaimUseCase(titleRepository, CreateGenealogy());
 
             Assert.False(useCase.Execute(CreateBloodClaim("county_a", "holder", "clan_holder")));
@@ -62,7 +62,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         public void Execute_ReturnsFalse_WhenTitleVacant()
         {
             var titleRepository = new FakeTitleRepository(
-                new Title("county_a", "County", TitleRank.Count, "s_a", null));
+                new Title("county_a", "County", TitleRank.Earl, "s_a", null));
             var useCase = new EvaluateClaimUseCase(titleRepository, CreateGenealogy());
 
             Assert.False(useCase.Execute(CreateClaim("county_a")));

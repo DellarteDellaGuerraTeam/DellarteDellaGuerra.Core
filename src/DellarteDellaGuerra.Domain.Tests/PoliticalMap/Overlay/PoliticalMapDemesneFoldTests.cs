@@ -8,8 +8,8 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
     {
         private static readonly Dictionary<string, TitleRank> Ranks = new()
         {
-            ["county_a"] = TitleRank.Count,
-            ["county_b"] = TitleRank.Count,
+            ["county_a"] = TitleRank.Earl,
+            ["county_b"] = TitleRank.Earl,
             ["duchy_d"] = TitleRank.Duke,
             ["barony_e"] = TitleRank.Baron
         };

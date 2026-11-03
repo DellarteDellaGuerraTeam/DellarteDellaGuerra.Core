@@ -1,18 +1,17 @@
 namespace DellarteDellaGuerra.PoliticalMap.Labels
 {
     /// <summary>
-    /// Whether the map's settlement nameplates give way to the political map's region labels. Read
-    /// by a nameplate patch on the nameplate worker threads every frame, so clearing it brings the
-    /// nameplates back on the next frame.
+    /// Whether native map overlays give way to the political map's region labels. Read by
+    /// visibility patches, including on nameplate worker threads; clearing it restores native UI.
     /// </summary>
     public static class PoliticalMapNameplates
     {
-        private static volatile bool _hideSettlementNameplates;
+        private static volatile bool _hideNativeOverlays;
 
-        public static bool HideSettlementNameplates
+        public static bool HideNativeOverlays
         {
-            get => _hideSettlementNameplates;
-            set => _hideSettlementNameplates = value;
+            get => _hideNativeOverlays;
+            set => _hideNativeOverlays = value;
         }
     }
 }

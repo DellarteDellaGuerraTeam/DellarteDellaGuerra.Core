@@ -9,18 +9,18 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap
         private readonly FakeFeudalStructure _structure = new FakeFeudalStructure()
             .AddTitle("kingdom_england", TitleRank.King)
             .AddTitle("duchy_lancaster", TitleRank.Duke, "kingdom_england", "castle_pontefract")
-            .AddTitle("county_lancashire", TitleRank.Count, "duchy_lancaster", "town_lancaster")
+            .AddTitle("county_lancashire", TitleRank.Earl, "duchy_lancaster", "town_lancaster")
             .AddTitle("barony_piel", TitleRank.Baron, "county_lancashire", "castle_piel")
             .AddTitle("barony_clitheroe", TitleRank.Baron, "duchy_lancaster", "castle_clitheroe")
-            .AddTitle("county_kent", TitleRank.Count, "kingdom_england", "town_canterbury");
+            .AddTitle("county_kent", TitleRank.Earl, "kingdom_england", "town_canterbury");
 
         private readonly FakeTitleRepository _titles = new(
             new Title("kingdom_england", "England", TitleRank.King, "", "henry"),
             new Title("duchy_lancaster", "Duchy of Lancaster", TitleRank.Duke, "castle_pontefract", "henry"),
-            new Title("county_lancashire", "County of Lancashire", TitleRank.Count, "town_lancaster", "henry"),
+            new Title("county_lancashire", "County of Lancashire", TitleRank.Earl, "town_lancaster", "henry"),
             new Title("barony_piel", "Barony of Piel", TitleRank.Baron, "castle_piel", "harrington"),
             new Title("barony_clitheroe", "Barony of Clitheroe", TitleRank.Baron, "castle_clitheroe", "lacy"),
-            new Title("county_kent", "County of Kent", TitleRank.Count, "town_canterbury", "neville"));
+            new Title("county_kent", "County of Kent", TitleRank.Earl, "town_canterbury", "neville"));
 
         private PoliticalMapTerritories Territories() => new(_structure, _titles);
 

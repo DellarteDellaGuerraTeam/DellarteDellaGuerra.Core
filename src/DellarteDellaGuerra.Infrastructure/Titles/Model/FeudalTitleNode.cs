@@ -16,7 +16,10 @@ internal sealed record FeudalTitleNode(
     string? InitialHolderClanId,
     IReadOnlyList<FeudalTitleNode> Children,
     int? InitialHeldSinceYear = null,
-    IReadOnlyList<FeudalClaimNode>? InitialClaims = null);
+    IReadOnlyList<FeudalClaimNode>? InitialClaims = null,
+    TitleRank? DignityRank = null,
+    string? DignityName = null,
+    string? AllegianceTitleId = null);
 
 /**
  * <summary>

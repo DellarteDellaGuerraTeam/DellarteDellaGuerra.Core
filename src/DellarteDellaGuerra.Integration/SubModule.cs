@@ -87,6 +87,7 @@ namespace DellarteDellaGuerra.Integration
         {
             // Deferred until here so that the brush factory and the sprite categories are loaded.
             _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().RegisterNameplateBrush();
+            PoliticalMap.UI.PoliticalMapToolbar.RegisterIcon(_logger);
             InfoPrinter.Display("DADG loaded");
             var currentModule = TaleWorlds.MountAndBlade.Module.CurrentModule;
             _serviceProvider.GetRequiredService<DadgCampaignStartButtonAdder>().AddDadgCampaignStartButton(currentModule);
@@ -185,7 +186,8 @@ namespace DellarteDellaGuerra.Integration
                 _serviceProvider.GetRequiredService<IFeudalStructure>(),
                 _serviceProvider.GetRequiredService<SuzeraintyPolicy>(),
                 _serviceProvider.GetRequiredService<IGetDirectVassalsUseCase>(),
-                _serviceProvider.GetRequiredService<IBuildFeudalMapUseCase>());
+                _serviceProvider.GetRequiredService<IBuildFeudalMapUseCase>(),
+                _serviceProvider.GetRequiredService<IGenealogy>());
 
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();
@@ -194,6 +196,7 @@ namespace DellarteDellaGuerra.Integration
         // The political map overlay is ticked here rather than on the campaign tick, which stops while paused.
         protected override void OnApplicationTick(float dt)
         {
+            PoliticalMap.UI.MapBarPoliticalMapMixin.TickInput();
             Campaign.Current?.GetCampaignBehavior<PoliticalMapOverlayCampaignBehavior>()?.Tick(dt);
             Campaign.Current?.GetCampaignBehavior<PoliticalMapLabelsCampaignBehavior>()?.Tick(dt);
         }

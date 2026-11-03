@@ -23,6 +23,7 @@ namespace DellarteDellaGuerra.Integration.Titles.UI
         public static SuzeraintyPolicy? Suzerainty { get; private set; }
         public static IGetDirectVassalsUseCase? GetDirectVassals { get; private set; }
         public static IBuildFeudalMapUseCase? BuildFeudalMap { get; private set; }
+        public static IGenealogy? Genealogy { get; private set; }
 
         public static bool IsInitialised { get; private set; }
 
@@ -31,14 +32,15 @@ namespace DellarteDellaGuerra.Integration.Titles.UI
             IFeudalStructure structure,
             SuzeraintyPolicy suzerainty,
             IGetDirectVassalsUseCase getDirectVassals,
-            IBuildFeudalMapUseCase buildFeudalMap)
-
+            IBuildFeudalMapUseCase buildFeudalMap,
+            IGenealogy? genealogy = null)
         {
             Titles = titles;
             Structure = structure;
             Suzerainty = suzerainty;
             GetDirectVassals = getDirectVassals;
             BuildFeudalMap = buildFeudalMap;
+            Genealogy = genealogy;
             IsInitialised = true;
         }
 
@@ -49,6 +51,7 @@ namespace DellarteDellaGuerra.Integration.Titles.UI
             Suzerainty = null;
             GetDirectVassals = null;
             BuildFeudalMap = null;
+            Genealogy = null;
             IsInitialised = false;
         }
     }

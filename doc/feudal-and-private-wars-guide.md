@@ -131,7 +131,7 @@ The practical effect: land tends to stay inside the duchy it belongs to, and duk
 
 Holding high dignity is not just flavour. Your highest title feeds into four separate systems:
 
-- **Influence per day** — Baron +0.5, Count +1.0, Duke +2.0, King +3.0.
+- **Influence per day** — Baron +0.5, Earl +1.0, Duke +2.0, King +3.0.
 - **Overriding kingdom decisions** — a high-tier proposer pays 30% less influence to force a
   decision through; a very low-tier one pays 50% more.
 - **Army influence** — the hourly award for riding in an army scales with your tier.

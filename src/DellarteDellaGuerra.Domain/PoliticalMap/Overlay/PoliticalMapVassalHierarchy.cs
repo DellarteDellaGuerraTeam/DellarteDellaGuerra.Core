@@ -21,10 +21,10 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
     /// <summary>
     /// Who answers to whom, as the owners view groups land, from the live titles and the clans'
     /// kingdoms at one moment. A clan's liege is the clan holding (occupying, else holding) the
-    /// first title above the clan's highest title that another clan holds, walking up the de jure
-    /// chain; that liege must be sworn to the clan's own kingdom, else the clan answers to its
-    /// kingdom's ruler, and so does a clan holding no title. A ruler and a kingdomless clan answer
-    /// to no one. Every chain in a kingdom so ends at its ruler; a chain that loops is cut to the
+    /// first title above the clan's highest title whose controller holds a strictly higher dignity,
+    /// walking up the configured allegiance chain. That liege must belong to the clan's own kingdom,
+    /// else the clan answers to its kingdom's ruler, and so does a clan holding no title. A ruler
+    /// and a kingdomless clan answer to no one. Every chain in a kingdom so ends at its ruler; a chain that loops is cut to the
     /// clan and its ruler.
     /// </summary>
     /// <remarks>
@@ -55,7 +55,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
 
                 _controllerOfTitle[title.Id] = clan;
                 if (!_highestOfClan.TryGetValue(clan, out Title? best) || Outranks(title, best)) _highestOfClan[clan] = title;
-                if (title.Rank < TitleRank.King && (!_highestLandTitleOfClan.TryGetValue(clan, out Title? land) || Outranks(title, land)))
+                if (title.Rank < TitleRank.King && (!_highestLandTitleOfClan.TryGetValue(clan, out Title? land) || NamesLandBefore(title, land)))
                     _highestLandTitleOfClan[clan] = title;
             }
         }
@@ -67,7 +67,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         public Title? HighestTitleOf(string clanId) =>
             _highestOfClan.TryGetValue(clanId, out Title? title) ? title : null;
 
-        /// <summary>The highest live title below a crown, used to name an owner's own land.</summary>
+        /// <summary>The highest live dignity below a crown; ties favour its broader territorial tier, then tenure and id.</summary>
         public Title? HighestLandTitleOf(string clanId) =>
             _highestLandTitleOfClan.TryGetValue(clanId, out Title? title) ? title : null;
 
@@ -126,20 +126,29 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
             return chain.Count < depth ? ownerClanId : chain[chain.Count - depth];
         }
 
-        // The first clan other than this one holding a title up the de jure chain from its highest title.
+        // The first strictly higher-ranking controller along the primary title's allegiance.
         private string? TitleLiegeOf(string clanId)
         {
             if (HighestTitleOf(clanId) is not { } highest) return null;
 
             var seen = new HashSet<string>(StringComparer.Ordinal) { highest.Id };
-            for (string? current = _feudalStructure.GetDeJureSuzerainTitleId(highest.Id);
+            for (string? current = _feudalStructure.GetAllegianceSuzerainTitleId(highest.Id);
                  current is not null && seen.Add(current);
-                 current = _feudalStructure.GetDeJureSuzerainTitleId(current))
+                 current = _feudalStructure.GetAllegianceSuzerainTitleId(current))
             {
-                if (_controllerOfTitle.TryGetValue(current, out string? controller) && controller != clanId) return controller;
+                if (_controllerOfTitle.TryGetValue(current, out string? controller) && controller != clanId
+                    && HighestTitleOf(controller) is { } liege && liege.Rank > highest.Rank) return controller;
             }
 
             return null;
+        }
+
+        private bool NamesLandBefore(Title title, Title other)
+        {
+            TitleRank tier = _feudalStructure.GetRank(title.Id) ?? title.Rank;
+            TitleRank otherTier = _feudalStructure.GetRank(other.Id) ?? other.Rank;
+            // A regional lordship names the domain before an equally ranked castle barony.
+            return title.Rank == other.Rank && tier != otherTier ? tier > otherTier : Outranks(title, other);
         }
 
         private static bool Outranks(Title title, Title other) =>

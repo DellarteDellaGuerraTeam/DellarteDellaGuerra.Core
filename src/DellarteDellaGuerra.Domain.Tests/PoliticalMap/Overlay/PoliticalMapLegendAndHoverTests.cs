@@ -15,13 +15,13 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
 
         private readonly FakeFeudalStructure _structure = new FakeFeudalStructure()
             .AddTitle("duchy_lancaster", TitleRank.Duke, null, "castle_pontefract", "Duchy of Lancaster")
-            .AddTitle("county_lancashire", TitleRank.Count, "duchy_lancaster", "town_lancaster", "Lancashire")
-            .AddTitle("county_kent", TitleRank.Count, null, "town_canterbury", "Kent");
+            .AddTitle("county_lancashire", TitleRank.Earl, "duchy_lancaster", "town_lancaster", "Lancashire")
+            .AddTitle("county_kent", TitleRank.Earl, null, "town_canterbury", "Kent");
 
         private readonly FakeTitleRepository _titles = new(
             new Title("duchy_lancaster", "Duchy of Lancaster", TitleRank.Duke, "castle_pontefract", "somerset"),
-            new Title("county_lancashire", "Lancashire", TitleRank.Count, "town_lancaster", "stanley"),
-            new Title("county_kent", "Kent", TitleRank.Count, "town_canterbury", null));
+            new Title("county_lancashire", "Lancashire", TitleRank.Earl, "town_lancaster", "stanley"),
+            new Title("county_kent", "Kent", TitleRank.Earl, "town_canterbury", null));
 
         // The kingdom view's painted map colours: deliberately not the fake world's banner colours.
         private readonly Dictionary<string, uint> _mapColours = new()

@@ -14,7 +14,10 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
         Owner,
 
         /// <summary>The kingdom or kingdomless clan controlling each settlement (the kingdom view).</summary>
-        Faction
+        Faction,
+
+        /// <summary>The configured geographic title region, independent of clan ownership.</summary>
+        Territory
     }
 
     public static class PoliticalMapLabelTiers
@@ -22,19 +25,20 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
         private static readonly PoliticalMapLabelTier[] None = Array.Empty<PoliticalMapLabelTier>();
         private static readonly PoliticalMapLabelTier[] Kingdom = { PoliticalMapLabelTier.Faction };
         private static readonly PoliticalMapLabelTier[] Owners = { PoliticalMapLabelTier.Owner };
+        private static readonly PoliticalMapLabelTier[] Territories = { PoliticalMapLabelTier.Territory };
 
         /// <summary>The tiers a view labels; each at every zoom.</summary>
-        public static IReadOnlyList<PoliticalMapLabelTier> Of(PoliticalMapView view) => view switch
+        public static IReadOnlyList<PoliticalMapLabelTier> Of(PoliticalMapView view, PoliticalMapLabelMode mode = PoliticalMapLabelMode.Clans) => view switch
         {
             PoliticalMapView.Kingdom => Kingdom,
-            PoliticalMapView.Owners => Owners,
+            PoliticalMapView.Owners => mode == PoliticalMapLabelMode.Titles ? Territories : Owners,
             _ => None
         };
 
         /// <summary>Regions smaller than this many cells are fragments and get no label.</summary>
         public static int MinCells(PoliticalMapLabelTier tier) => tier switch
         {
-            PoliticalMapLabelTier.Owner => 150,
+            PoliticalMapLabelTier.Owner or PoliticalMapLabelTier.Territory => 150,
             _ => 400
         };
 
@@ -56,7 +60,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
                 keys[index] = tier switch
                 {
                     PoliticalMapLabelTier.Faction => world.FactionOf(settlementIds[index]),
-                    PoliticalMapLabelTier.Owner => ownerRegionKeys is not null && index < ownerRegionKeys.Count ? ownerRegionKeys[index] : null,
+                    PoliticalMapLabelTier.Owner or PoliticalMapLabelTier.Territory => ownerRegionKeys is not null && index < ownerRegionKeys.Count ? ownerRegionKeys[index] : null,
                     _ => null
                 };
             }

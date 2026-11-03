@@ -32,10 +32,10 @@ public class PoliticalMapMeshPlanTests
         var paints = new[]
         {
             Paint(1) with { RegionKey = "duke", ParentRegionKey = "duke" },
-            Paint(1) with { RegionKey = "count", ParentRegionKey = "duke" },
+            Paint(1) with { RegionKey = "earl", ParentRegionKey = "duke" },
             Paint(1) with { RegionKey = "duke", ParentRegionKey = "duke" },
-            Paint(1) with { RegionKey = "count", ParentRegionKey = "duke" },
-            Paint(1) with { RegionKey = "count", ParentRegionKey = "duke" },
+            Paint(1) with { RegionKey = "earl", ParentRegionKey = "duke" },
+            Paint(1) with { RegionKey = "earl", ParentRegionKey = "duke" },
             Paint(1) with { RegionKey = "unrelated", ParentRegionKey = "unrelated" }
         };
         plan.Update(paints);
@@ -48,7 +48,7 @@ public class PoliticalMapMeshPlanTests
         Assert.Equal(new[] { "a", "b", "c", "d" }, plan.Capture().Territories.OrderBy(x => x));
         plan.Complete(plan.Capture());
 
-        paints[1] = paints[1] with { RegionKey = "new_count" };
+        paints[1] = paints[1] with { RegionKey = "new_earl" };
         Assert.True(plan.Update(paints));
         Assert.Equal(new[] { "a", "b", "c", "d" }, plan.Capture().Territories.OrderBy(x => x));
     }

@@ -42,7 +42,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         }
 
         private static Title CountyA(string? holderHeroId = "holder") =>
-            new("county_a", "County A", TitleRank.Count, "seat_a", holderHeroId);
+            new("county_a", "County A", TitleRank.Earl, "seat_a", holderHeroId);
 
         private Claim? ClaimOf(string heroId) =>
             _claimRepository.AllClaims.FirstOrDefault(claim => claim.ClaimantHeroId == heroId);

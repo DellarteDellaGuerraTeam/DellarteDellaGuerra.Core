@@ -42,6 +42,23 @@ public class XmlFeudalStructure : IFeudalStructure
         return _parentTitleIdByTitleId.TryGetValue(titleId, out string parentTitleId) ? parentTitleId : null;
     }
 
+    public string? GetAllegianceSuzerainTitleId(string titleId)
+    {
+        // A conquest's saved reattachment takes precedence over the initial allegiance.
+        if (_reattachedSuzerainByTitleId.TryGetValue(titleId, out string? reattached)) return reattached;
+        if (_nodesByTitleId.TryGetValue(titleId, out FeudalTitleNode node)
+            && node.AllegianceTitleId is { } allegiance
+            && RealmOf(titleId) == RealmOf(allegiance)) return allegiance;
+        return GetDeJureSuzerainTitleId(titleId);
+    }
+
+    private string RealmOf(string titleId)
+    {
+        var seen = new HashSet<string> { titleId };
+        while (GetDeJureSuzerainTitleId(titleId) is { } parent && seen.Add(parent)) titleId = parent;
+        return titleId;
+    }
+
     public IReadOnlyList<string> GetDeJureVassalTitleIds(string titleId)
     {
         return _childTitleIdsByTitleId.TryGetValue(titleId, out List<string> childTitleIds)
@@ -141,7 +158,7 @@ public class XmlFeudalStructure : IFeudalStructure
                 : null;
             float heldSinceDay = (node.InitialHeldSinceYear ?? 0) * DaysInYear;
             titles.Add(new Title(
-                node.TitleId, node.Name, node.Rank, node.SeatSettlementId, holderHeroId,
+                node.TitleId, node.DignityName ?? node.Name, node.DignityRank ?? node.Rank, node.SeatSettlementId, holderHeroId,
                 heldSinceDay: heldSinceDay));
         }
 

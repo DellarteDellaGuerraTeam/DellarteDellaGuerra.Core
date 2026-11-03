@@ -8,7 +8,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         private static FakeFeudalStructure CreateStructure() => new FakeFeudalStructure()
             .AddTitle("kingdom_k", TitleRank.King, name: "Kingdom")
             .AddTitle("duchy_d", TitleRank.Duke, "kingdom_k", name: "Duchy")
-            .AddTitle("county_c", TitleRank.Count, "duchy_d", name: "County")
+            .AddTitle("county_c", TitleRank.Earl, "duchy_d", name: "County")
             .AddTitle("barony_b", TitleRank.Baron, "county_c", name: "Barony");
 
         private static FakeGenealogy CreateGenealogy() => new FakeGenealogy()

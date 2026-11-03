@@ -103,14 +103,15 @@ public class HolderDeathOverRealContentTests
     [Trait("Category", "DADG content integration")]
     [InlineData("dadg_lord_23_1", "county_lynn", "duchy_norfolk")]
     [InlineData("dadg_lord_26_1", "county_durham")]
-    [InlineData("dadg_lord_49_1", "barony_northampton", "barony_wardour")]
+    [InlineData("dadg_lord_49_1", "barony_northampton")]
     [InlineData("dadg_lord_52_1", "barony_montgomery")]
     [InlineData("dadg_lord_8_1", "county_cumberland")]
+    [InlineData("dadg_sco_lord_clan_douglas_lochleven", "barony_lochleven")]
     public void ATitleIsLeftVacantWhenTheLineDiesOutWithItsHolder(
         string holderId,
         params string[] expectedTitleIds)
     {
-        // These five head their clans and leave neither issue nor sibling. The clan-head backstop
+        // These six head their clans and leave neither authored issue nor sibling. The clan-head backstop
         // names the dead man himself, so it refuses, and the dignity waits for the next grant
         // rather than being handed to a corpse.
         Content content = Content.Load();
@@ -130,14 +131,14 @@ public class HolderDeathOverRealContentTests
     public void EveryHolderInTheContentCanDieWithoutOrphaningOrMisplacingHisDignities()
     {
         // The sweep that matters: a death is the one event this system cannot decline to handle,
-        // and it fires for all 72 holders over bloodlines authored by hand — England's 47 and the
-        // 25 of Scotland and the Isles. It is what caught a
+        // and it fires for all 73 holders over bloodlines authored by hand — England's 47 and the
+        // 26 of Scotland and the Isles. It is what caught a
         // duke listed as his own mother, whose cycle overflowed the descent walk's stack; the
         // record has since been corrected, and the walk's guard is unit-tested against a fake.
         Content content = Content.Load();
         IReadOnlyList<string> holderIds = content.HolderIds();
 
-        Assert.Equal(72, holderIds.Count);
+        Assert.Equal(73, holderIds.Count);
 
         foreach (string holderId in holderIds)
         {

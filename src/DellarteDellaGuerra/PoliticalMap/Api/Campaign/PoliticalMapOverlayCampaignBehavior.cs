@@ -10,7 +10,6 @@ using DellarteDellaGuerra.PoliticalMap.Rendering;
 using SandBox.View.Map;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Engine;
-using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
 using TaleWorlds.ScreenSystem;
 
@@ -49,8 +48,6 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
      */
     public class PoliticalMapOverlayCampaignBehavior : CampaignBehaviorBase
     {
-        public const InputKey CycleViewKey = InputKey.G;
-
         private const float RepaintIntervalSeconds = 1f;
         private const float HoverIntervalSeconds = 0.2f;
 
@@ -65,8 +62,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         private readonly BannerlordPoliticalMapWorld _world = new();
         private readonly PoliticalMapSnow _snow = new();
 
-        private PoliticalMapView _view = PoliticalMapView.Kingdom;
-        private int _savedView;
+        private PoliticalMapView _view = PoliticalMapView.Off;
         private PoliticalMapOwnerLevel _ownerLevel = PoliticalMapOwnerLevel.SubVassals;
 
         private PoliticalMapOverlayDrawing? _drawing;
@@ -148,19 +144,14 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
 
         public override void RegisterEvents()
         {
-            CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, _ => _view = PoliticalMapView.Kingdom);
+            CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, _ => SetView(PoliticalMapView.Off));
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, _ => Reset());
         }
 
         public override void SyncData(IDataStore dataStore)
         {
-            // A save from before the overlay holds no view, and the last campaign's must not leak in.
-            _savedView = dataStore.IsSaving ? (int)_view : (int)PoliticalMapView.Kingdom;
-            dataStore.SyncData("_dadgPoliticalMapView", ref _savedView);
-            if (dataStore.IsLoading)
-            {
-                _view = Enum.IsDefined(typeof(PoliticalMapView), _savedView) ? (PoliticalMapView)_savedView : PoliticalMapView.Kingdom;
-            }
+            // The overlay is a session preference; loading a save always starts with the normal map.
+            if (dataStore.IsLoading) SetView(PoliticalMapView.Off);
         }
 
         /// <summary>Called once a frame, paused or not, with the real time since the last frame.</summary>
@@ -173,8 +164,6 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             {
                 if (!TryInitialise(mapScreen)) return;
             }
-
-            if (ScreenManager.TopScreen == mapScreen && mapScreen.SceneLayer?.Input?.IsKeyPressed(CycleViewKey) == true) CycleView();
 
             float cameraDistance = mapScreen.MapCameraView.CameraDistance;
             PoliticalMapOwnerLevel ownerLevel = PoliticalMapZoom.OwnerLevelFor(cameraDistance, _ownerLevel);
@@ -211,10 +200,12 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
 
         private void Reset()
         {
+            _view = PoliticalMapView.Off;
             // The old scene's entities went with it: drop the references without touching them.
             _drawing = null;
             _legend = Array.Empty<PoliticalMapLegendEntry>();
             _hover = null;
+            Changed?.Invoke();
         }
 
         private void UpdateLegend()

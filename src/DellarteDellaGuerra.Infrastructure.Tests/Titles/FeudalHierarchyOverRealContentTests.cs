@@ -22,19 +22,38 @@ public class FeudalHierarchyOverRealContentTests
     private const string ScottishCrown = "clan_stewart";
     private const string IslesCrown = "clan_macdonald_isles";
 
+    [Theory]
+    [InlineData("clan_courtenay", "Earldom of Devon")]
+    [InlineData("clan_tudor", "Earldom of Pembroke")]
+    [InlineData("clan_woodville", "Earldom of Rivers")]
+    [InlineData("clan_talbot", "Earldom of Shrewsbury")]
+    [InlineData("clan_bourchier", "Earldom of Essex")]
+    [InlineData("clan_grey_of_ruthin", "Earldom of Kent")]
+    [InlineData("clan_fitzalan", "Earldom of Arundel")]
+    [InlineData("clan_de_vere", "Earldom of Oxford")]
+    [InlineData("clan_lindsay", "Earldom of Crawford")]
+    [InlineData("clan_de_la_pole", "Duchy of Suffolk")]
+    [InlineData("clan_holland", "Duchy of Exeter")]
+    public void ThePrimaryHeldTitleNamesTheDignityRatherThanItsGeographicCounty(string clanId, string expectedName)
+    {
+        Content content = Content.Load();
+        string titleId = content.PrimaryTitleId(clanId)!;
+
+        Assert.Equal(expectedName, content.AllTitles().Single(title => title.Id == titleId).Name);
+    }
+
     [Fact]
     [Trait("Category", "DADG content integration")]
     public void EveryHouseInTheRealmAnswersToTheCrownThroughAChainThatTerminates()
     {
         // The chain is walked at runtime to resolve war sides, so a loop in it would hang the
-        // daily tick rather than merely mis-answer. Seventy-two houses hold land across three
+        // daily tick rather than merely mis-answer. Seventy-three houses hold land across three
         // realms, and only the three kings answer to nobody. Forty-seven of them are England's,
-        // and every one arrives at Lancaster in at most three steps; Scotland's thirteen arrive
-        // at Stewart and the Isles' twelve at MacDonald, in at most two.
+        // and every chain must terminate after ranks strictly increase.
         Content content = Content.Load();
         IReadOnlyList<string> holdingClans = content.HoldingClans();
 
-        Assert.Equal(72, holdingClans.Count);
+        Assert.Equal(73, holdingClans.Count);
         Assert.Equal(
             new[] { Crown, ScottishCrown, IslesCrown }.OrderBy(clan => clan),
             holdingClans.Where(clan => content.Suzerain(clan) is null));
@@ -57,7 +76,7 @@ public class FeudalHierarchyOverRealContentTests
         }
 
         Assert.Equal(47, realms.Count(entry => entry.Value == Crown));
-        Assert.Equal(13, realms.Count(entry => entry.Value == ScottishCrown));
+        Assert.Equal(14, realms.Count(entry => entry.Value == ScottishCrown));
         Assert.Equal(12, realms.Count(entry => entry.Value == IslesCrown));
 
         // Each realm's houses are the houses holding land in that realm's own title tree, save the
@@ -69,9 +88,11 @@ public class FeudalHierarchyOverRealContentTests
         Assert.Equal(content.HoldingClansUnder("kingdom_isles"), InRealm(IslesCrown));
 
         Assert.Equal(0, depths[Crown]);
-        Assert.Equal(3, InRealm(Crown).Max(clan => depths[clan]));
-        Assert.Equal(2, InRealm(ScottishCrown).Max(clan => depths[clan]));
-        Assert.Equal(2, InRealm(IslesCrown).Max(clan => depths[clan]));
+        Assert.Equal(2, InRealm(Crown).Max(clan => depths[clan]));
+        Assert.Equal(1, InRealm(ScottishCrown).Max(clan => depths[clan]));
+        Assert.Equal(1, InRealm(IslesCrown).Max(clan => depths[clan]));
+        Assert.All(holdingClans.Where(clan => content.Suzerain(clan) is not null), clan =>
+            Assert.True(content.HighestRank(content.Suzerain(clan)!) > content.HighestRank(clan), clan));
 
         IEnumerable<string> InRealm(string king) =>
             realms.Where(entry => entry.Value == king).Select(entry => entry.Key).OrderBy(clan => clan);
@@ -82,10 +103,9 @@ public class FeudalHierarchyOverRealContentTests
     public void TheSuzerainAndDirectVassalViewsPartitionTheRealmTheSameWay()
     {
         // Two use cases answer the same question from opposite ends, and the campaign layer uses
-        // both. They agree here on all seventy-two houses: each non-royal house is named by
+        // both. They agree here on all seventy-three houses: each non-royal house is named by
         // exactly one liege, and the three kings are named by none, which is the same statement
-        // as "the chains form one tree per realm" arrived at the other way round. Fourteen houses
-        // answer straight to Lancaster, and seventeen of England's houses have vassals of their own.
+        // as "the chains form one tree per realm" arrived at the other way round.
         Content content = Content.Load();
         IReadOnlyList<string> holdingClans = content.HoldingClans();
         string[] kings = { Crown, ScottishCrown, IslesCrown };
@@ -93,8 +113,8 @@ public class FeudalHierarchyOverRealContentTests
         var vassalsByLiege = holdingClans.ToDictionary(clan => clan, content.DirectVassals);
         IReadOnlyList<string> england = content.HoldingClansUnder("kingdom_england");
 
-        Assert.Equal(14, vassalsByLiege[Crown].Count);
-        Assert.Equal(17, vassalsByLiege.Count(entry => england.Contains(entry.Key) && entry.Value.Count > 0));
+        Assert.Equal(25, vassalsByLiege[Crown].Count);
+        Assert.Equal(14, vassalsByLiege.Count(entry => england.Contains(entry.Key) && entry.Value.Count > 0));
 
         foreach (string clanId in holdingClans)
         {
@@ -116,18 +136,15 @@ public class FeudalHierarchyOverRealContentTests
     [Trait("Category", "DADG content integration")]
     public void AHouseAnswersForItsHighestDignityEvenWhereItHoldsLandOfItsOwnVassal()
     {
-        // York and Talbot each hold land of the other. York holds the barony of Ludlow beneath
-        // Talbot's county of Shropshire, and Talbot's county of Hallamshire sits beneath York's
-        // duchy. Tenure alone would make this a cycle. It does not, because the walk starts from
-        // the house's highest dignity only: York is a duke and answers to the king, so Talbot
-        // answers to York and the barony York holds of Talbot changes nothing.
+        // Territorial nesting still places Talbot's Hallamshire under York. His earldom of
+        // Shrewsbury answers to the Crown; York's lesser Ludlow estate does not reverse that.
         Content content = Content.Load();
 
         Assert.Equal(TitleRank.Duke, content.HighestRank("clan_york"));
-        Assert.Equal(TitleRank.Count, content.HighestRank("clan_talbot"));
+        Assert.Equal(TitleRank.Earl, content.HighestRank("clan_talbot"));
 
         Assert.Equal(Crown, content.Suzerain("clan_york"));
-        Assert.Equal("clan_york", content.Suzerain("clan_talbot"));
+        Assert.Equal(Crown, content.Suzerain("clan_talbot"));
 
         Assert.Equal("clan_york", content.ClanHolding("barony_ludlow"));
         Assert.Equal("clan_talbot", content.ClanHolding("county_shropshire"));
@@ -136,20 +153,20 @@ public class FeudalHierarchyOverRealContentTests
         Assert.Equal("clan_talbot", content.ClanHolding("county_hallamshire"));
         Assert.Equal("duchy_york", content.SuzerainTitleOf("county_hallamshire"));
 
-        // The same holds a rank down: Clifford's county of Cumberland sits in the Kingmaker's
-        // earldom of Warwick and Salisbury, so Clifford answers to Neville and Neville to the king.
-        Assert.Equal("clan_neville_of_middleham", content.Suzerain("clan_clifford"));
+        // Cumberland was not a Clifford earldom in 1471, and its map position is not evidence
+        // that Clifford was a Warwick retainer.
+        Assert.Equal(TitleRank.Baron, content.HighestRank("clan_clifford"));
+        Assert.Equal(Crown, content.Suzerain("clan_clifford"));
+        Assert.Equal(TitleRank.Earl, content.HighestRank("clan_neville_of_middleham"));
         Assert.Equal(Crown, content.Suzerain("clan_neville_of_middleham"));
     }
 
     [Fact]
     [Trait("Category", "DADG content integration")]
-    public void AHouseTornBetweenTwoEqualDignitiesAnswersForTheOneItHasHeldLongest()
+    public void AHistoricalDignityOutranksOtherEstatesAndLegacyTiesUseTenure()
     {
-        // Every held title is dated, so a tie on rank falls to tenure rather than to where the
-        // title happens to sit in the file. De la Pole were earls of Suffolk from 1385 but of
-        // Lincoln only from 1467: they answer to Norfolk, not York. Lovell held Wardour from 1393
-        // but Northampton only from 1430: they answer to Somerset, not to the Kingmaker.
+        // Suffolk's dukedom is independent of Norfolk. Lovell's remaining Northampton estate
+        // uses the territorial fallback; the Crown holds his forfeited Wardour estate.
         Content content = Content.Load();
 
         Assert.All(
@@ -157,10 +174,39 @@ public class FeudalHierarchyOverRealContentTests
             title => Assert.True(title.HeldSinceDay > 0f, $"{title.Id} has no heldSince year"));
 
         Assert.Equal("county_suffolk", content.PrimaryTitleId("clan_de_la_pole"));
-        Assert.Equal("clan_mowbray", content.Suzerain("clan_de_la_pole"));
+        Assert.Equal(TitleRank.Duke, content.HighestRank("clan_de_la_pole"));
+        Assert.Equal(Crown, content.Suzerain("clan_de_la_pole"));
 
-        Assert.Equal("barony_wardour", content.PrimaryTitleId("clan_lovell"));
-        Assert.Equal("clan_beaufort", content.Suzerain("clan_lovell"));
+        Assert.Equal(TitleRank.Duke, content.HighestRank("clan_holland"));
+        Assert.Equal(Crown, content.Suzerain("clan_holland"));
+
+        Assert.Equal("barony_northampton", content.PrimaryTitleId("clan_lovell"));
+        Assert.Equal("clan_neville_of_middleham", content.Suzerain("clan_lovell"));
+        Assert.Equal(Crown, content.ClanHolding("barony_wardour"));
+    }
+
+    [Fact]
+    public void SourcedFollowingAndScottishDignitiesDoNotDependOnMapTiers()
+    {
+        Content content = Content.Load();
+        Assert.Equal("clan_neville_of_middleham", content.Suzerain("clan_fitzhugh"));
+        Assert.Equal("county_durham", content.SuzerainTitleOf("barony_skelton"));
+        Assert.Equal(Crown, content.Suzerain("clan_hastings"));
+        Assert.Equal(TitleRank.Earl, content.HighestRank("clan_gordon"));
+        Assert.Equal(TitleRank.Earl, content.HighestRank("clan_douglas_angus"));
+        Assert.Equal("clan_douglas_lochleven", content.ClanHolding("barony_lochleven"));
+        Assert.Equal("barony_lochleven", content.PrimaryTitleId("clan_douglas_lochleven"));
+        Assert.Equal(TitleRank.Baron, content.HighestRank("clan_douglas_lochleven"));
+        Assert.Equal(ScottishCrown, content.Suzerain("clan_douglas_lochleven"));
+        Assert.Equal(1463f * 84, content.AllTitles().Single(title => title.Id == "barony_lochleven").HeldSinceDay);
+        Assert.Equal(TitleRank.Earl, content.HighestRank("clan_sinclair"));
+        Assert.Equal("barony_caithness", content.PrimaryTitleId("clan_sinclair"));
+        Assert.Equal(TitleRank.Baron, content.HighestRank("clan_hamilton"));
+        Assert.Equal(TitleRank.Baron, content.HighestRank("clan_maxwell"));
+        Assert.Equal(TitleRank.Baron, content.HighestRank("clan_kennedy"));
+        Assert.Equal(TitleRank.Baron, content.HighestRank("clan_howard"));
+        Assert.NotEmpty(content.DirectVassals("clan_neville_of_middleham"));
+        Assert.NotEmpty(content.DirectVassals("clan_talbot"));
     }
 
     [Fact]

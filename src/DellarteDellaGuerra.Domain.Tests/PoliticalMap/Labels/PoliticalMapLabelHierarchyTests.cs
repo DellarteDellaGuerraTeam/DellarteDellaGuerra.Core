@@ -9,7 +9,7 @@ public class PoliticalMapLabelHierarchyTests
     [Theory]
     [InlineData(TitleRank.King, true)]
     [InlineData(TitleRank.Duke, true)]
-    [InlineData(TitleRank.Count, true)]
+    [InlineData(TitleRank.Earl, true)]
     [InlineData(TitleRank.Baron, false)]
     [InlineData(null, false)]
     public void ZoomedOutOwnersOnlyLabelTheHigherTitles(TitleRank? rank, bool shown)
@@ -23,6 +23,9 @@ public class PoliticalMapLabelHierarchyTests
         Assert.True(PoliticalMapLabelHierarchy.Shows(PoliticalMapLabelTier.Owner, TitleRank.Baron, PoliticalMapOwnerLevel.SubVassals));
         Assert.True(PoliticalMapLabelHierarchy.Shows(PoliticalMapLabelTier.Owner, null, PoliticalMapOwnerLevel.SubVassals));
         Assert.True(PoliticalMapLabelHierarchy.Shows(PoliticalMapLabelTier.Faction, null, PoliticalMapOwnerLevel.Vassals));
+        // A geographic region must not disappear because its local dignity is below an earldom.
+        Assert.True(PoliticalMapLabelHierarchy.Shows(PoliticalMapLabelTier.Territory, TitleRank.Baron, PoliticalMapOwnerLevel.Vassals));
+        Assert.True(PoliticalMapLabelHierarchy.Shows(PoliticalMapLabelTier.Territory, null, PoliticalMapOwnerLevel.Vassals));
     }
 
     [Fact]

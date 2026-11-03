@@ -98,4 +98,5 @@
   <Faction id="clan_maclain" owner="Hero.dadg_sco_lord_clan_maclain" />
   <Faction id="clan_macalister" owner="Hero.dadg_sco_lord_clan_macalister" />
   <Faction id="clan_macleod_lewis" owner="Hero.dadg_sco_lord_clan_macleod_lewis" />
+  <Faction id="clan_douglas_lochleven" owner="Hero.dadg_sco_lord_clan_douglas_lochleven" />
 </Factions>

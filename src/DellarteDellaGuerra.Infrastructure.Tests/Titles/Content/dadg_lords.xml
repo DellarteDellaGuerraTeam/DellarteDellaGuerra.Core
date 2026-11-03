@@ -449,4 +449,6 @@
   <NPCCharacter id="dadg_sco_lord_clan_dunbar_moray" age="45" />
   <NPCCharacter id="dadg_sco_lord_clan_home" age="45" />
   <NPCCharacter id="dadg_sco_lord_clan_macleod_lewis" age="40" />
+  <NPCCharacter id="dadg_sco_lord_clan_douglas_lochleven" age="45" />
+  <NPCCharacter id="dadg_sco_family_lochleven_elizabeth" is_female="true" age="43" />
 </NPCCharacters>

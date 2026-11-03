@@ -4,10 +4,10 @@ using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
 
 namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
 {
-    /// <summary>What the map's region labels name. Only the text changes, never the regions.</summary>
+    /// <summary>Whether labels follow geographic title regions or the controlling clans' regions.</summary>
     public enum PoliticalMapLabelMode
     {
-        /// <summary>Each region's holder's highest title (for a ruler, the realm's).</summary>
+        /// <summary>The title geographically represented by each region (the realm in Kingdoms).</summary>
         Titles,
 
         /// <summary>Each region's holder clan.</summary>

@@ -8,7 +8,7 @@ namespace DellarteDellaGuerra.Tests.Titles.Spi
         [Fact]
         public void DeserialiseTitles_RestoresTheLedgerAndTheOccupation()
         {
-            var title = new Title("county", "County", TitleRank.Count, "s_c", "old_lord")
+            var title = new Title("county", "County", TitleRank.Earl, "s_c", "old_lord")
                 .GrantTo("lord", 12.5f)
                 .InheritBy(null, null, 30f)
                 .WithOccupant("clan_occupier", 31.25f);
@@ -23,13 +23,13 @@ namespace DellarteDellaGuerra.Tests.Titles.Spi
         {
             var restored = TitleStateSerialiser.DeserialiseTitles(new List<string>
             {
-                "county|County|Count|s_c|old_lord|clan_occupier|3",
+                "county|County|Earl|s_c|old_lord|clan_occupier|3",
                 "barony|Barony|Baron|s_b|baron"
             });
 
             Assert.Equal(new[]
             {
-                new Title("county", "County", TitleRank.Count, "s_c", "old_lord", "clan_occupier", 3f),
+                new Title("county", "County", TitleRank.Earl, "s_c", "old_lord", "clan_occupier", 3f),
                 new Title("barony", "Barony", TitleRank.Baron, "s_b", "baron")
             }, restored);
         }
@@ -39,7 +39,7 @@ namespace DellarteDellaGuerra.Tests.Titles.Spi
         {
             var restored = TitleStateSerialiser.DeserialiseTitles(new List<string>
             {
-                "county|County|Count|s_c|lord|||lord|0|Initial",
+                "county|County|Earl|s_c|lord|||lord|0|Initial",
                 "barony|Barony|Baron|s_b|baron|||baron|0",
                 "duchy|Duchy|Duke|s_d|duke|||duke|0|Stolen"
             });

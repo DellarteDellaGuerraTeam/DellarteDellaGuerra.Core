@@ -9,7 +9,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
     /// <summary>
     /// Draws the political map's geometry on the campaign map scene: one entity per territory, its
     /// meshes draped over the terrain on the <see cref="PoliticalMapSheet"/> in a copy of
-    /// <c>vertex_color_mat</c> switched to real alpha blending, with a separate additive white frontier material.
+    /// <c>vertex_color_mat</c> switched to real alpha blending, with a separate gold frontier material.
     /// A territory is rebuilt into a new
     /// hidden entity a chunk at a time. Affected territories swap together after the batch finishes,
     /// so both sides of a smoothed frontier always use the same geometry.
@@ -19,8 +19,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
     /// colour times its alpha is added to the terrain, so black adds nothing and saturated colours
     /// wash out to pastel over bright ground. <c>Modulate</c> is the source-alpha over
     /// inverse-source-alpha blend, so a fill at the wash opacity covers that share of the terrain.
-    /// Frontiers use their own <c>AddAlpha</c> copy: opaque white brightens the ground regardless
-    /// of the fill's blend mode, and its small extra lift keeps it above the painted sheet.
+    /// Frontiers use their own <c>Modulate</c> copy so opaque gold retains its colour over bright
+    /// ground; its small extra lift keeps it above the painted sheet.
     /// Main thread only: meshes are built through the engine. The renderer belongs to one scene;
     /// when the campaign map scene goes, its entities go with it and the renderer is dropped
     /// without touching them.
@@ -51,7 +51,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             _material = source.CreateCopy();
             _material.SetAlphaBlendMode(Material.MBAlphaBlendMode.Modulate);
             _frontierMaterial = source.CreateCopy();
-            _frontierMaterial.SetAlphaBlendMode(Material.MBAlphaBlendMode.AddAlpha);
+            _frontierMaterial.SetAlphaBlendMode(Material.MBAlphaBlendMode.Modulate);
         }
 
         public TaleWorlds.Engine.Scene Scene { get; }

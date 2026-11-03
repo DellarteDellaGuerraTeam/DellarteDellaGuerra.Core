@@ -8,9 +8,9 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         [Fact]
         public void Execute_ReturnsTheTitlesOwnSeat()
         {
-            var feudalStructure = new FakeFeudalStructure().AddTitle("county_a", TitleRank.Count);
+            var feudalStructure = new FakeFeudalStructure().AddTitle("county_a", TitleRank.Earl);
             var titleRepository = new FakeTitleRepository(
-                new Title("county_a", "County A", TitleRank.Count, "seat_a", null));
+                new Title("county_a", "County A", TitleRank.Earl, "seat_a", null));
             var useCase = new GetDeJureSettlementsUseCase(titleRepository, feudalStructure);
 
             var result = useCase.Execute("county_a");
@@ -23,11 +23,11 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var feudalStructure = new FakeFeudalStructure()
                 .AddTitle("duchy", TitleRank.Duke)
-                .AddTitle("county", TitleRank.Count, parentTitleId: "duchy")
+                .AddTitle("county", TitleRank.Earl, parentTitleId: "duchy")
                 .AddTitle("barony", TitleRank.Baron, parentTitleId: "county");
             var titleRepository = new FakeTitleRepository(
                 new Title("duchy", "Duchy", TitleRank.Duke, "seat_duchy", null),
-                new Title("county", "County", TitleRank.Count, "seat_county", null),
+                new Title("county", "County", TitleRank.Earl, "seat_county", null),
                 new Title("barony", "Barony", TitleRank.Baron, "seat_barony", null));
             var useCase = new GetDeJureSettlementsUseCase(titleRepository, feudalStructure);
 
@@ -41,7 +41,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         {
             var feudalStructure = new FakeFeudalStructure()
                 .AddTitle("duchy", TitleRank.Duke)
-                .AddTitle("county", TitleRank.Count, parentTitleId: "duchy")
+                .AddTitle("county", TitleRank.Earl, parentTitleId: "duchy")
                 .AddTitle("barony", TitleRank.Baron, parentTitleId: "county");
             var titleRepository = new FakeTitleRepository(
                 new Title("duchy", "Duchy", TitleRank.Duke, "seat_duchy", null),

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
 
 namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
@@ -19,7 +20,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
     /// kingdomless palette.</item>
     /// <item>Owners: every region uses its holder's kingdom's flat base map colour;
     /// a kingdomless clan's region uses a colour from the kingdomless palette.
-    /// Region identities stay separate so white frontiers still divide same-coloured domains.</item>
+    /// Region identities stay separate so gold frontiers still divide same-coloured domains.</item>
     /// </list>
     /// A settlement with no owner and land under no faction are left unfilled. The keys are not
     /// drawn; the region labels group by them. In the owners view the region key is the clan
@@ -59,6 +60,21 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
             string seat = world.SeatOf(settlementId) ?? settlementId;
             return _territories.GetTerritoryOfSeat(seat) ?? SettlementTerritoryPrefix + seat;
         }
+
+        /// <summary>Geographic labels follow territorial seats, independently of who owns their land.</summary>
+        public string GeographicLabelKeyOf(string settlementId, IPoliticalMapWorld world, PoliticalMapOwnerLevel level)
+        {
+            string seat = world.SeatOf(settlementId) ?? settlementId;
+            return (level == PoliticalMapOwnerLevel.Vassals
+                ? _territories.GetTerritoryOfSeat(seat)
+                : _feudalStructure.GetTitleIdBySeat(seat)) ?? SettlementTerritoryPrefix + seat;
+        }
+
+        public string? GeographicLabelNameOf(string key) =>
+            _feudalStructure.GetTitleName(key);
+
+        public TitleRank? GeographicLabelRankOf(string key) =>
+            _feudalStructure.GetRank(key);
 
         public IReadOnlyDictionary<string, string> Fold(Grid.PoliticalMapGrid grid, IReadOnlyList<string?> territoryOfSettlement) =>
             PoliticalMapDemesneFold.Fold(grid, territoryOfSettlement, territory => _feudalStructure.GetRank(territory));

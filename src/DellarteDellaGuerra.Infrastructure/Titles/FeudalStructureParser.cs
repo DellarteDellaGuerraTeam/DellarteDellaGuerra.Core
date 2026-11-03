@@ -29,6 +29,9 @@ namespace DellarteDellaGuerra.Infrastructure.Titles;
  * heldSince is the optional year the holder's house took the title. A Claim element gives a
  * clan a claim on its parent title from the start of the campaign; strength is Weak, Strong
  * or DeJure, Strong when absent.
+ * Optional dignityRank and dignityName describe the held dignity independently of the element's
+ * territorial tier and name. Optional allegiance names a title in the same realm instead of the
+ * territorial parent; the resulting allegiance chains must be acyclic.
  * </summary>
  */
 public static class FeudalStructureParser
@@ -69,7 +72,39 @@ public static class FeudalStructureParser
             forest.Add(ParseTitleElement(element, seenTitleIds, seenSeats));
         }
 
+        ValidateAllegiances(forest);
         return forest;
+    }
+
+    private static void ValidateAllegiances(IReadOnlyList<FeudalTitleNode> forest)
+    {
+        var parents = new Dictionary<string, string?>();
+        var realms = new Dictionary<string, string>();
+        var nodes = new Dictionary<string, FeudalTitleNode>();
+        void Index(FeudalTitleNode node, string? parent, string realm)
+        {
+            nodes.Add(node.TitleId, node);
+            parents.Add(node.TitleId, parent);
+            realms.Add(node.TitleId, realm);
+            foreach (FeudalTitleNode child in node.Children) Index(child, node.TitleId, realm);
+        }
+        foreach (FeudalTitleNode root in forest) Index(root, null, root.TitleId);
+
+        foreach (FeudalTitleNode node in nodes.Values)
+        {
+            if (node.AllegianceTitleId is not { } allegiance) continue;
+            if (!nodes.ContainsKey(allegiance) || realms[allegiance] != realms[node.TitleId]
+                || parents[node.TitleId] is null)
+                throw new InvalidOperationException($"Invalid allegiance '{allegiance}' on title '{node.TitleId}': expected a title in the same realm on a non-root title");
+            parents[node.TitleId] = allegiance;
+        }
+        foreach (string titleId in nodes.Keys)
+        {
+            var seen = new HashSet<string>();
+            for (string? current = titleId; current is not null; current = parents[current])
+                if (!seen.Add(current))
+                    throw new InvalidOperationException($"Cyclic allegiance at title '{current}' in the feudal titles configuration");
+        }
     }
 
     private static FeudalTitleNode ParseTitleElement(
@@ -95,6 +130,15 @@ public static class FeudalStructureParser
         string holderAttribute = rank == TitleRank.King ? KingClanIdAttribute : HolderClanIdAttribute;
         string? initialHolderClanId = element.Attribute(holderAttribute)?.Value;
         int? initialHeldSinceYear = ParseHeldSinceYear(element, titleId);
+        TitleRank? dignityRank = null;
+        if (element.Attribute("dignityRank") is { } dignity)
+        {
+            if (rank == TitleRank.King || (dignity.Value != "Baron" && dignity.Value != "Earl" && dignity.Value != "Duke"))
+                throw new InvalidOperationException($"Invalid dignityRank '{dignity.Value}' on title '{titleId}': expected Baron, Earl or Duke on a non-kingdom title");
+            dignityRank = (TitleRank) Enum.Parse(typeof(TitleRank), dignity.Value);
+        }
+        string? dignityName = element.Attribute("dignityName") is null ? null : GetRequiredAttribute(element, "dignityName");
+        string? allegiance = element.Attribute("allegiance") is null ? null : GetRequiredAttribute(element, "allegiance");
 
         var children = new List<FeudalTitleNode>();
         var claims = new List<FeudalClaimNode>();
@@ -110,7 +154,8 @@ public static class FeudalStructureParser
         }
 
         return new FeudalTitleNode(
-            titleId, name, rank, seatSettlementId, initialHolderClanId, children, initialHeldSinceYear, claims);
+            titleId, name, rank, seatSettlementId, initialHolderClanId, children, initialHeldSinceYear, claims,
+            dignityRank, dignityName, allegiance);
     }
 
     private static FeudalClaimNode ParseClaimElement(XElement element, string titleId, string? holderClanId)
@@ -157,7 +202,7 @@ public static class FeudalStructureParser
             case "Duchy":
                 return TitleRank.Duke;
             case "County":
-                return TitleRank.Count;
+                return TitleRank.Earl;
             case "Barony":
                 return TitleRank.Baron;
             default:

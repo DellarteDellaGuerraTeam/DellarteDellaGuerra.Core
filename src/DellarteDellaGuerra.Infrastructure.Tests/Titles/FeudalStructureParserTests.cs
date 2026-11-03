@@ -6,6 +6,36 @@ namespace DellarteDellaGuerra.Infrastructure.Tests.Titles;
 
 public class FeudalStructureParserTests
 {
+    [Theory]
+    [InlineData("Unknown")]
+    [InlineData("King")]
+    [InlineData("1")]
+    [InlineData("")]
+    public void RejectsInvalidDignityRanks(string rank)
+    {
+        Assert.Throws<InvalidOperationException>(() => FeudalStructureParser.Parse(
+            $"<Feudalism><Kingdom id='k'><County id='c' dignityRank='{rank}'/></Kingdom></Feudalism>"));
+    }
+
+    [Theory]
+    [InlineData("missing")]
+    [InlineData("c")]
+    [InlineData("b")]
+    [InlineData("other")]
+    [InlineData("")]
+    public void RejectsUnknownCrossRealmEmptyAndCyclicAllegiances(string target)
+    {
+        Assert.Throws<InvalidOperationException>(() => FeudalStructureParser.Parse(
+            $"<Feudalism><Kingdom id='k'><County id='c' allegiance='{target}'><Barony id='b'/></County></Kingdom><Kingdom id='other'/></Feudalism>"));
+    }
+
+    [Fact]
+    public void RejectsCyclesMadeEntirelyOfExplicitAllegiances()
+    {
+        Assert.Throws<InvalidOperationException>(() => FeudalStructureParser.Parse(
+            "<Feudalism><Kingdom id='k'><County id='a' allegiance='b'/><County id='b' allegiance='a'/></Kingdom></Feudalism>"));
+    }
+
     private const string SampleXml =
         """
         <Feudalism>
@@ -28,9 +58,9 @@ public class FeudalStructureParserTests
         FeudalTitleNode kingdom = Assert.Single(forest);
         Assert.Equal(TitleRank.King, kingdom.Rank);
         Assert.Equal(TitleRank.Duke, kingdom.Children[0].Rank);
-        Assert.Equal(TitleRank.Count, kingdom.Children[0].Children[0].Rank);
+        Assert.Equal(TitleRank.Earl, kingdom.Children[0].Children[0].Rank);
         Assert.Equal(TitleRank.Baron, kingdom.Children[0].Children[0].Children[0].Rank);
-        Assert.Equal(TitleRank.Count, kingdom.Children[1].Rank);
+        Assert.Equal(TitleRank.Earl, kingdom.Children[1].Rank);
     }
 
     [Fact]

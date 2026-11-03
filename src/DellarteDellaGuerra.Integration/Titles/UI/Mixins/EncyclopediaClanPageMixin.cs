@@ -4,6 +4,8 @@ using Bannerlord.UIExtenderEx.Attributes;
 using Bannerlord.UIExtenderEx.ViewModels;
 using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
+using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
+using DellarteDellaGuerra.PoliticalMap.Api.Campaign;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ViewModelCollection.Encyclopedia.Pages;
 using TaleWorlds.Library;
@@ -13,8 +15,8 @@ using TaleWorlds.ScreenSystem;
 namespace DellarteDellaGuerra.Integration.Titles.UI.Mixins
 {
     /// <summary>
-    /// Adds the full feudal summary (titles, suzerain, de jure liege chain, direct
-    /// vassals) to the clan encyclopedia page, together with a
+    /// Adds titles, title allegiance, current political allegiance, territorial nesting and
+    /// direct title vassals to the clan encyclopedia page, together with a
     /// button opening the realm-wide hierarchy screen. Hidden for clans outside the
     /// feudal structure. A new page VM is created on every encyclopedia navigation,
     /// so computing the values once here stays correct.
@@ -26,13 +28,15 @@ namespace DellarteDellaGuerra.Integration.Titles.UI.Mixins
         {
             FeudalSectionText = new TextObject("{=dadg_feudal_section}Feudal").ToString();
             FeudalTitlesLabel = new TextObject("{=dadg_feudal_titles}Titles:").ToString();
-            FeudalSuzerainLabel = new TextObject("{=dadg_feudal_suzerain}Suzerain:").ToString();
-            FeudalLiegeChainLabel = new TextObject("{=dadg_feudal_liege_chain}De Jure Lieges:").ToString();
-            FeudalVassalsLabel = new TextObject("{=dadg_feudal_vassals}Direct Vassals:").ToString();
-            ViewHierarchyText = new TextObject("{=dadg_feudal_view_hierarchy}View Feudal Hierarchy").ToString();
+            FeudalSuzerainLabel = new TextObject("{=dadg_title_liege}Title Liege:").ToString();
+            PoliticalLiegeLabel = new TextObject("{=dadg_political_liege}Current Political Liege:").ToString();
+            FeudalLiegeChainLabel = new TextObject("{=dadg_territorial_chain}Territorial Nesting:").ToString();
+            FeudalVassalsLabel = new TextObject("{=dadg_title_vassals}Direct Title Vassals:").ToString();
+            ViewHierarchyText = new TextObject("{=dadg_view_territorial_hierarchy}View Territorial Hierarchy").ToString();
             string none = new TextObject("{=dadg_feudal_none}None").ToString();
             FeudalTitlesText = none;
             FeudalSuzerainText = none;
+            PoliticalLiegeText = none;
             FeudalLiegeChainText = none;
             FeudalVassalsText = none;
 
@@ -52,7 +56,14 @@ namespace DellarteDellaGuerra.Integration.Titles.UI.Mixins
                 FeudalTitlesText = string.Join(", ", titles.Select(FormatTitleName));
             if (suzerainClan is not null)
                 FeudalSuzerainText = suzerainClan.Name.ToString();
-            string liegeChain = BuildLiegeChainText(titles, FeudalUiServices.Structure);
+            if (FeudalUiServices.Structure is { } structure && FeudalUiServices.Titles is { } repository
+                && FeudalUiServices.Genealogy is { } genealogy)
+            {
+                var political = new PoliticalMapVassalHierarchy(structure, repository, genealogy, new BannerlordPoliticalMapWorld());
+                if (political.LiegeOf(clan.StringId) is { } politicalLiege)
+                    PoliticalLiegeText = ResolveClanName(politicalLiege);
+            }
+            string liegeChain = BuildLiegeChainText(FeudalUiServices.Suzerainty?.GetPrimaryTitle(clan.StringId), FeudalUiServices.Structure);
             if (liegeChain.Length > 0)
                 FeudalLiegeChainText = liegeChain;
             if (vassalClanIds.Count > 0)
@@ -66,6 +77,8 @@ namespace DellarteDellaGuerra.Integration.Titles.UI.Mixins
         [DataSourceProperty] public string FeudalTitlesText { get; }
         [DataSourceProperty] public string FeudalSuzerainLabel { get; }
         [DataSourceProperty] public string FeudalSuzerainText { get; }
+        [DataSourceProperty] public string PoliticalLiegeLabel { get; }
+        [DataSourceProperty] public string PoliticalLiegeText { get; }
         [DataSourceProperty] public string FeudalLiegeChainLabel { get; }
         [DataSourceProperty] public string FeudalLiegeChainText { get; }
         [DataSourceProperty] public string FeudalVassalsLabel { get; }
@@ -84,13 +97,13 @@ namespace DellarteDellaGuerra.Integration.Titles.UI.Mixins
         /// e.g. "Duchy of York > England". Empty when the clan holds no title, sits at
         /// the top of the hierarchy, or the structure is unavailable.
         /// </summary>
-        private static string BuildLiegeChainText(IReadOnlyList<Title> titles, IFeudalStructure? structure)
+        private static string BuildLiegeChainText(Title? highest, IFeudalStructure? structure)
         {
-            if (titles.Count == 0 || structure is null) return string.Empty;
-            Title highest = titles.OrderByDescending(title => title.Rank).First();
+            if (highest is null || structure is null) return string.Empty;
             var liegeNames = new List<string>();
+            var seen = new HashSet<string> { highest.Id };
             string? liegeTitleId = structure.GetDeJureSuzerainTitleId(highest.Id);
-            while (liegeTitleId is not null)
+            while (liegeTitleId is not null && seen.Add(liegeTitleId))
             {
                 liegeNames.Add(structure.GetTitleName(liegeTitleId) ?? liegeTitleId);
                 liegeTitleId = structure.GetDeJureSuzerainTitleId(liegeTitleId);

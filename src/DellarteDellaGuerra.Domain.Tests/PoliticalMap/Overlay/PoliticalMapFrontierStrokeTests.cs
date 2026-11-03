@@ -18,12 +18,12 @@ public class PoliticalMapFrontierStrokeTests
         var chunks = territories.SelectMany(t => mesher.Build(t, paints)).ToList();
         Assert.All(chunks, c => Assert.InRange(c.TriangleCount, 1, PoliticalMapMesher.MaxTrianglesPerChunk));
         var strokes = chunks.Where(c => c.IsFrontier).SelectMany(c => c.Triangles).ToList();
-        Assert.All(strokes, t => Assert.Equal(0xFFFFFFFFu, t.Color));
+        Assert.All(strokes, t => Assert.Equal(0xFFE8B92Cu, t.Color));
         return strokes;
     }
 
     [Fact]
-    public void PeerRegionsHaveOneBroadOpaqueWhiteSolidBoundaryEvenWhenTheirFillColoursMatch()
+    public void PeerRegionsHaveOneBroadOpaqueGoldSolidBoundaryEvenWhenTheirFillColoursMatch()
     {
         var strokes = Strokes(Grid(), Paint("duke_a"), Paint("duke_b"));
         Assert.NotEmpty(strokes);
@@ -36,8 +36,8 @@ public class PoliticalMapFrontierStrokeTests
     }
 
     [Theory]
-    [InlineData("duke", "count")]
-    [InlineData("count_a", "count_b")]
+    [InlineData("duke", "earl")]
+    [InlineData("earl_a", "earl_b")]
     public void ALocalRulerAndVassalOrTwoOfItsVassalsShareADashedBoundary(string west, string east)
     {
         var strokes = Strokes(Grid(), Paint(west, "duke"), Paint(east, "duke"));
@@ -53,7 +53,7 @@ public class PoliticalMapFrontierStrokeTests
     [Fact]
     public void DifferentParentDomainsRemainSolidWhenZoomedIn()
     {
-        var strokes = Strokes(Grid(), Paint("count_a", "duke_a"), Paint("count_b", "duke_b"));
+        var strokes = Strokes(Grid(), Paint("earl_a", "duke_a"), Paint("earl_b", "duke_b"));
         Assert.True(Covers(strokes, 3, 3.1f));
         Assert.True(Covers(strokes, 3, 7.1f));
     }
@@ -63,7 +63,7 @@ public class PoliticalMapFrontierStrokeTests
     {
         var grid = new PoliticalMapGrid(6, 14, 1, new[] { "west", "east_south", "east_north" },
             Enumerable.Range(0, 6 * 14).Select(i => (ushort)(i % 6 < 3 ? 1 : i / 6 < 7 ? 2 : 3)).ToArray());
-        var strokes = Strokes(grid, Paint("duke", "duke"), Paint("count", "duke"), Paint("count", "duke"));
+        var strokes = Strokes(grid, Paint("duke", "duke"), Paint("earl", "duke"), Paint("earl", "duke"));
         Assert.False(Covers(strokes, 3, 7.1f)); // New source settlement at row 7 is still in the gap.
         Assert.True(Covers(strokes, 3, 8.1f));
         Assert.True(Covers(strokes, 3, 9.9f));
@@ -93,7 +93,7 @@ public class PoliticalMapFrontierStrokeTests
     {
         var grid = Grid();
         var mesher = new PoliticalMapMesher(grid, grid.SettlementIds);
-        var paints = new[] { Paint("duke", "duke"), Paint("count", "duke") };
+        var paints = new[] { Paint("duke", "duke"), Paint("earl", "duke") };
         IEnumerable<PoliticalMapTriangle> Current() => grid.SettlementIds.SelectMany(t => mesher.Build(t, paints))
             .Where(c => c.IsFrontier).SelectMany(c => c.Triangles);
         Assert.False(Covers(Current(), 3, 3.1f));
@@ -135,7 +135,7 @@ public class PoliticalMapFrontierStrokeTests
     }
 
     [Fact]
-    public void LongWhiteFrontiersKeepThe512TriangleChunkCap()
+    public void LongGoldFrontiersKeepThe512TriangleChunkCap()
     {
         var strokes = Strokes(Grid(600), Paint("duke_a"), Paint("duke_b"));
 

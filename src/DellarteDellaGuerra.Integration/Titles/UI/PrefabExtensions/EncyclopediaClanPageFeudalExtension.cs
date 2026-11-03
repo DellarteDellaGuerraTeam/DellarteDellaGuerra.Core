@@ -35,6 +35,12 @@ namespace DellarteDellaGuerra.Integration.Titles.UI.PrefabExtensions
                     </ListPanel>
                     <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" MarginLeft="30" MarginTop="3">
                       <Children>
+                        <AutoHideRichTextWidget HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" VerticalAlignment="Bottom" Brush="Encyclopedia.Stat.DefinitionText" Text="@PoliticalLiegeLabel" MarginRight="5"/>
+                        <AutoHideRichTextWidget HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" VerticalAlignment="Bottom" Brush="Encyclopedia.Stat.ValueText" Text="@PoliticalLiegeText"/>
+                      </Children>
+                    </ListPanel>
+                    <ListPanel HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" MarginLeft="30" MarginTop="3">
+                      <Children>
                         <AutoHideRichTextWidget HeightSizePolicy="CoverChildren" WidthSizePolicy="CoverChildren" VerticalAlignment="Bottom" Brush="Encyclopedia.Stat.DefinitionText" Text="@FeudalLiegeChainLabel" MarginRight="5"/>
                         <AutoHideRichTextWidget HeightSizePolicy="CoverChildren" WidthSizePolicy="StretchToParent" VerticalAlignment="Bottom" Brush="Encyclopedia.Stat.ValueText" Text="@FeudalLiegeChainText"/>
                       </Children>

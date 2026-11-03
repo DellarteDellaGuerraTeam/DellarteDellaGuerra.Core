@@ -261,7 +261,11 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, MBMusicManagerInitializePatch>();
         // Siege engines
         services.AddSingleton<IPatch, CannonballTrailCleanupPatch>();
-        // Political map: settlement nameplates give way to the region labels
+        // Political map: native overlays give way to region labels
         services.AddSingleton<IPatch, HideSettlementNameplatesPatch>();
+        services.AddSingleton<IPatch, HidePartyNameplatesPatch>();
+        services.AddSingleton<IPatch, HidePlayerPartyLabelsPatch>();
+        services.AddSingleton<IPatch, HidePlayerMapTrackerPatch>();
+        services.AddSingleton<IPatch, HideBookmarkedMapTrackersPatch>();
     }
 }

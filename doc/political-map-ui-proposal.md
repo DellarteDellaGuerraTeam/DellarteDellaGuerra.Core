@@ -781,7 +781,7 @@ track live kingdom membership, including defections.
 
 ### Frontier lines and title labels (2026-11-01)
 
-The live map draws thin solid lines between the displayed kingdoms or main owner regions.
+The live map draws solid gold lines (#E8B92C) between the displayed kingdoms or main owner regions. Both solid and dashed frontiers use opaque alpha blending so the gold does not wash out over bright terrain.
 Zooming into Owners adds dashed internal divisions within a direct vassal's territory,
 including the boundary between that lord's own land and its vassals. Lines follow the same
 smoothed geometry as the fills; coastlines and riverbanks are left unoutlined. Frontier
@@ -790,14 +790,14 @@ geometry is retained with the existing map-level caches and refreshed on live gr
 In Owners' Titles label mode, every owner uses its highest live title below the crown,
 including the ruler (for example Duchy of Lancaster rather than England or Crown lands).
 An owner without a landed title uses its estate's place name instead of silently falling
-back to its clan name. These are display names only: no title is granted or transferred.
+back to its clan name. The caption is the live held dignity name (for example Earldom of Devon or Duchy of Suffolk), rather than the geographic county name from the territorial tree. These are display names only: no title is granted or transferred.
 Clans mode still shows clan names. Label deduplication uses region identity, so distinct
 owners with the same caption are not treated as one.
 
 ### Hierarchy labels and flat colours (2026-11-01)
 
 Owners labels are filtered by the live title hierarchy in both naming modes: the zoomed-out
-level shows counts and higher; the detailed level also labels barons and untitled estates.
+level shows earls and higher; the detailed level also labels barons and untitled estates.
 When labels overlap, higher titles take precedence before region area. The existing label
 anchors, live ownership grouping and title/clan text toggle are retained.
 
@@ -809,10 +809,45 @@ character width changes; it never rebuilds map meshes.
 
 Per-vassal lighter/darker shades are disabled for now: every owner in a kingdom uses that
 kingdom's base map colour. Kingdomless clans keep distinct colours. The owner region keys
-remain separate, so smooth white frontiers distinguish the estates even when fills match.
+remain separate, so smooth gold frontiers distinguish the estates even when fills match.
 Main divisions remain solid and the revealed internal vassal divisions remain dashed.
 This supersedes the earlier shading descriptions; PoC banners and heraldry are unchanged.
 
 ### Compact controls and subdivision zoom (2026-11-01)
 
 The map UI now keeps only the Political Map and Labels buttons; the help and legend panel is removed. Owners reveals subvassals when camera distance falls below 140, and returns to the ruler/direct-vassal level above 150. This retains hysteresis while making subdivisions visible farther out.
+
+### Native map overlays (2026-11-01)
+
+While a political view is displayed, army/party nameplates and the floating player tracking icon give way to the political labels. Switching Off restores native visibility rules. This changes UI overlays only; parties, map models, orders and campaign simulation remain intact. The shared visibility flag also clears when leaving the map or when the political-label layer fails.
+
+### Buttons only and bookmarked overlays (2026-11-01)
+
+The rolled-parchment Political Map button (Scroll Unfurled by Lorc) sits immediately before Clan, Fleet and Kingdom in the native bottom toolbar, with its compact selector moved above that position. Clicking it or pressing M opens and closes the selector for Kingdoms, Owners, Off, and the title/clan label toggle; the tooltip displays Political Map (M). The shortcut follows the key labelled M on the current keyboard layout, including AZERTY, and is ignored during text entry, conversations and blocking map panels. G no longer changes the political view; polmap.view remains available. This supersedes earlier hotkey descriptions. The old top-left text buttons are removed.
+
+New campaigns and loaded saves always start with the normal map (Off) and the selector closed. The selected overlay is session only and is no longer persisted. The scroll icon is desaturated and darkened by the native toolbar brush to match neighbouring icons; native hover/press/selection styling is retained. Selection highlighting tracks the open selector rather than staying gold whenever an overlay is active.
+
+Bookmarked settlement nameplates are no longer exempt from suppression. The separate MapTrackers layer also yields while a political view is displayed, including party trackers. Visibility is restored from native per-frame binding updates at Off; no bookmarks are removed or changed. Unbookmarked siege/raid indicators and hideouts retain their existing exceptions.
+
+The icon is the existing Scroll Unfurled asset by Lorc from Game-icons.net, licensed under CC BY 3.0. Its unchanged SVG, gold-tinted 96px PNG and CREDITS.md ship in DellarteDellaGuerraMap/GUI/Textures/PoliticalMap. The game resolves the imported DADG\PoliticalMap\map sprite after UI resources initialise. The sprite definition is DellarteDellaGuerraMap/GUI/DadgPoliticalMapSpriteData.xml; the 128px atlas source is DellarteDellaGuerraMap/AssetSources/GauntletUI/dadg_political_map_1.png. Import it into the Map module through the Modding Tools, keeping texture resource name dadg_political_map_1, before live verification. No PNG is embedded or decoded at runtime. Source: https://game-icons.net/1x1/lorc/scroll-unfurled.html .
+
+
+### Geographic title labels (2026-11-03)
+
+Titles mode in Owners now groups labels by the configured geographic title regions,
+independently of ownership. Far out it labels the regional county/earldom territories
+and standalone seated duchies; close in it labels the individual local title seats.
+Villages follow their bound seat. Names and ranks come from the territorial structure,
+not the controller's highest dignity or an unrelated dignity seeded on a castle.
+Thus Hermitage is Barony of Hermitage rather than Earldom of Angus, and a king's
+scattered holdings no longer all read Duchy of Lancaster. A title transfer or conquest
+does not move a geographic name. Untitled seats use their settlement place names.
+
+The six regional names whose configured earldom dignity has the same place name
+(Devon, Pembroke, Essex, Kent, Oxford and Crawford) use Earldom in the geographic
+caption too. Geographic counties without a corresponding local earldom retain their
+county name; this does not grant a peerage. Labels include geographic regions whose
+holder has only a lower dignity. Clans mode retains the live ownership and vassal
+grouping. Overlay fills and frontier grouping continue to follow the selected view.
+Switching label mode rebuilds its region layout through the existing asynchronous
+cache. This supersedes the earlier highest-held-title naming and text-only toggle.

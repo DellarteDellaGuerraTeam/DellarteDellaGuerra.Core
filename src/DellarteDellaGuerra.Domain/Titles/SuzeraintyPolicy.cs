@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
@@ -6,8 +8,8 @@ namespace DellarteDellaGuerra.Domain.Titles
 {
     /**
      * <summary>
-     *  Whom a clan serves: the nearest holder above its primary title in the de jure hierarchy
-     *  who is not the clan itself.
+     *  Whom a clan serves: the nearest higher-ranking house along its primary title's
+     *  configured allegiance, falling back to territorial nesting.
      * </summary>
      */
     public class SuzeraintyPolicy
@@ -28,28 +30,31 @@ namespace DellarteDellaGuerra.Domain.Titles
             var primaryTitle = GetPrimaryTitle(clanId);
             if (primaryTitle is null) return null;
 
-            string? parentTitleId = _feudalStructure.GetDeJureSuzerainTitleId(primaryTitle.Id);
-            while (parentTitleId != null)
+            var seen = new HashSet<string>(StringComparer.Ordinal) { primaryTitle.Id };
+            string? parentTitleId = _feudalStructure.GetAllegianceSuzerainTitleId(primaryTitle.Id);
+            while (parentTitleId != null && seen.Add(parentTitleId))
             {
                 string? holderClanId = _genealogy.GetHolderClanOf(_titleRepository.GetTitle(parentTitleId));
-                if (holderClanId != null && holderClanId != clanId)
+                if (holderClanId != null && holderClanId != clanId
+                    && GetPrimaryTitle(holderClanId) is { } liegeTitle && liegeTitle.Rank > primaryTitle.Rank)
                 {
                     return holderClanId;
                 }
 
-                parentTitleId = _feudalStructure.GetDeJureSuzerainTitleId(parentTitleId);
+                parentTitleId = _feudalStructure.GetAllegianceSuzerainTitleId(parentTitleId);
             }
 
             return null;
         }
 
         // The title a clan serves under: its highest. On a tie it is the one held longest, so
-        // gaining a title of the same rank does not change its liege; then the listing order.
+        // gaining a title of the same rank does not change its liege; then a stable title id.
         public Title? GetPrimaryTitle(string clanId)
         {
             return _titleRepository.GetTitlesByClan(clanId)
                 .OrderByDescending(title => title.Rank)
                 .ThenBy(title => title.HeldSinceDay)
+                .ThenBy(title => title.Id, StringComparer.Ordinal)
                 .FirstOrDefault();
         }
     }

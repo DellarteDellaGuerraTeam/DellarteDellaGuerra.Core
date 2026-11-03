@@ -23,8 +23,8 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
                 .AddHero("hero_heir", "clan_heir")
                 .WithLeader("clan_heir", "hero_heir");
             _titleRepository = new FakeTitleRepository(
-                new Title("county_a", "County of A", TitleRank.Count, "settlement_a", "hero_old"),
-                new Title("county_b", "County of B", TitleRank.Count, "settlement_b", null));
+                new Title("county_a", "County of A", TitleRank.Earl, "settlement_a", "hero_old"),
+                new Title("county_b", "County of B", TitleRank.Earl, "settlement_b", null));
             _claimRepository = new FakeClaimRepository();
             _useCase = new AssignTitleUseCase(_titleRepository, _claimRepository, _genealogy, new FakeLoggerFactory());
         }

@@ -182,7 +182,6 @@ public class InitialBloodClaimsIntegrationTests
         barony_liverpool|dadg_lord_11_5|clan_hastings|Strong
         barony_liverpool|dadg_lord_11_7|clan_hastings|Strong
         barony_liverpool|dadg_lord_11_8|clan_hastings|Strong
-        barony_lochleven|dadg_sco_family_douglas_george|clan_douglas_angus|Strong
         barony_ludlow|dadg_lord_1_2|clan_york|Strong
         barony_ludlow|dadg_lord_1_3|clan_york|Strong
         barony_ludlow|dadg_lord_1_5|clan_york|Weak
@@ -300,6 +299,7 @@ public class InitialBloodClaimsIntegrationTests
         barony_tonbridge|dadg_lord_48_2|clan_clinton|Weak
         barony_totnes|dadg_lord_32_3|clan_basset|Strong
         barony_urquhart|dadg_sco_family_isles_angus|clan_macdonald_isles|Strong
+        barony_wardour|dadg_lord_2_3|clan_lancaster|Strong
         barony_winchester|dadg_lord_15_3|clan_stafford|Strong
         barony_winchester|dadg_lord_19_2|clan_talbot|Weak
         barony_winchester|dadg_lord_29_2|clan_beaumont|Weak
@@ -513,22 +513,34 @@ public class InitialBloodClaimsIntegrationTests
 
         IReadOnlyList<Claim> claims = useCase.Execute();
         Assert.Equal(ExpectedClaims.ReplaceLineEndings("\n"), Project(claims));
-        // England, Scotland and the Isles' 142 titles, held by 72 houses once the 1471 peerage
+        // England, Scotland and the Isles' 142 titles, held by 73 houses once the 1471 peerage
         // gives the crown's and the Kingmaker's great dignities to the houses that really held them.
         Assert.Equal(142, titleRepository.GetAllTitles().Count);
         Assert.Equal(
-            72,
+            73,
             titleRepository.GetAllTitles()
                 .Where(title => genealogy.GetHolderClanOf(title) is not null)
                 .Select(title => genealogy.GetHolderClanOf(title))
                 .Distinct()
                 .Count());
-        Assert.Equal(499, genealogy.HeroCount);
+        Assert.Equal(501, genealogy.HeroCount);
         Assert.Equal(483, claims.Count);
         Assert.Equal(227, claims.Count(claim => claim.Strength == ClaimStrength.Strong));
         Assert.Equal(256, claims.Count(claim => claim.Strength == ClaimStrength.Weak));
         Assert.Equal(67, claims.Select(claim => claim.ClaimantClanId).Distinct().Count());
         Assert.Equal(121,claims.Select(claim => claim.TitleId).Distinct().Count());
+        // Lochleven belongs to Robert Douglas's separate branch, not the earls of Angus.
+        // No children or collateral kin are authored for this household, so it derives no claims.
+        HeroNode lochleven = Assert.IsType<HeroNode>(genealogy.GetHero("dadg_sco_lord_clan_douglas_lochleven"));
+        HeroNode elizabeth = Assert.IsType<HeroNode>(genealogy.GetHero("dadg_sco_family_lochleven_elizabeth"));
+        Assert.Equal("clan_douglas_lochleven", lochleven.ClanId);
+        Assert.Equal("clan_douglas_lochleven", elizabeth.ClanId);
+        Assert.Equal(elizabeth.Id, lochleven.SpouseId);
+        Assert.Equal(lochleven.Id, elizabeth.SpouseId);
+        Assert.Equal(45f, lochleven.Age);
+        Assert.Equal(43f, elizabeth.Age);
+        Assert.Empty(lochleven.ChildIds);
+        Assert.DoesNotContain(claims, claim => claim.TitleId == "barony_lochleven");
         Assert.All(claims, claim => Assert.False(string.IsNullOrEmpty(claim.ClaimantHeroId)));
         Assert.Equal(claims.Count, claims.Select(claim => claim.Id).Distinct().Count());
         Assert.All(
@@ -597,6 +609,7 @@ public class InitialBloodClaimsIntegrationTests
                 "barony_sherborne|clan_grey_of_groby|Weak",
                 "barony_skipton|clan_clifford|Strong",
                 "barony_tattershall|clan_willoughby|Weak",
+                "barony_wardour|clan_lovell|Strong",
                 "county_cheshire|clan_lancaster|Strong",
                 "county_lochaber|clan_keppoch|Weak",
                 "county_moray|clan_crichton|Strong",

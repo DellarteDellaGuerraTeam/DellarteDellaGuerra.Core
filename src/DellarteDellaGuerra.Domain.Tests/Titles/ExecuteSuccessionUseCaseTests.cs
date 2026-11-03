@@ -6,7 +6,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
     public class ExecuteSuccessionUseCaseTests
     {
         private static Title CountyA(string? holderHeroId = "holder") =>
-            new("county_a", "County A", TitleRank.Count, "seat_a", holderHeroId);
+            new("county_a", "County A", TitleRank.Earl, "seat_a", holderHeroId);
 
         private static Title BaronyB(string? holderHeroId = "holder") =>
             new("barony_b", "Barony B", TitleRank.Baron, "seat_b", holderHeroId);
@@ -150,7 +150,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         public void PassesEveryTitleTheDeceasedHeldToTheSameHeir()
         {
             var otherHoldersTitle = new Title(
-                "county_c", "County C", TitleRank.Count, "seat_c", "another_holder");
+                "county_c", "County C", TitleRank.Earl, "seat_c", "another_holder");
             var titleRepository = new FakeTitleRepository(CountyA(), BaronyB(), otherHoldersTitle);
             var genealogy = new FakeGenealogy()
                 .AddHero("holder", "clan_holder", childIds: new[] { "son" })

@@ -20,9 +20,9 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         private readonly FakeFeudalStructure _structure = new FakeFeudalStructure()
             .AddTitle("kingdom_england", TitleRank.King)
             .AddTitle("duchy_lancaster", TitleRank.Duke, "kingdom_england", "castle_pontefract")
-            .AddTitle("county_lancashire", TitleRank.Count, "duchy_lancaster", "town_lancaster")
-            .AddTitle("county_cheshire", TitleRank.Count, "duchy_lancaster", "town_chester")
-            .AddTitle("county_kent", TitleRank.Count, "kingdom_england", "town_canterbury");
+            .AddTitle("county_lancashire", TitleRank.Earl, "duchy_lancaster", "town_lancaster", "County of Lancashire")
+            .AddTitle("county_cheshire", TitleRank.Earl, "duchy_lancaster", "town_chester", "County of Cheshire")
+            .AddTitle("county_kent", TitleRank.Earl, "kingdom_england", "town_canterbury");
 
         private readonly FakeGenealogy _genealogy = new FakeGenealogy()
             .AddHero("henry", "clan_lancaster")
@@ -35,9 +35,9 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         private readonly FakeTitleRepository _titles = new(
             new Title("kingdom_england", "England", TitleRank.King, "", "henry"),
             new Title("duchy_lancaster", "Lancaster", TitleRank.Duke, "castle_pontefract", "somerset"),
-            new Title("county_lancashire", "Lancashire", TitleRank.Count, "town_lancaster", "stanley"),
-            new Title("county_cheshire", "Cheshire", TitleRank.Count, "town_chester", "stanley"),
-            new Title("county_kent", "Kent", TitleRank.Count, "town_canterbury", "neville"));
+            new Title("county_lancashire", "Lancashire", TitleRank.Earl, "town_lancaster", "stanley"),
+            new Title("county_cheshire", "Cheshire", TitleRank.Earl, "town_chester", "stanley"),
+            new Title("county_kent", "Kent", TitleRank.Earl, "town_canterbury", "neville"));
 
         private readonly FakeWorld _world = new();
 
@@ -74,6 +74,51 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             Assert.Equal("county_lancashire", painter.TerritoryOf("village_lancaster", _world));
             Assert.Equal("duchy_lancaster", painter.TerritoryOf("castle_pontefract", _world));
             Assert.Equal("settlement:castle_lonely", painter.TerritoryOf("castle_lonely", _world));
+        }
+
+        [Fact]
+        public void GeographicLabelsSeparateCountiesEvenWhenOneClanOwnsBoth()
+        {
+            PoliticalMapPainter painter = Painter();
+            Assert.Equal("clan_stanley", _world.OwnerClanOf("town_lancaster"));
+            Assert.Equal("clan_stanley", _world.OwnerClanOf("town_chester"));
+
+            Assert.Equal("county_lancashire", painter.GeographicLabelKeyOf("town_lancaster", _world, PoliticalMapOwnerLevel.Vassals));
+            Assert.Equal("county_cheshire", painter.GeographicLabelKeyOf("town_chester", _world, PoliticalMapOwnerLevel.Vassals));
+            Assert.Equal("County of Lancashire", painter.GeographicLabelNameOf("county_lancashire"));
+            Assert.Equal("County of Cheshire", painter.GeographicLabelNameOf("county_cheshire"));
+
+            // Conquest changes the owner label, never the local title's geographic identity.
+            _world.Owners["town_chester"] = "clan_beaufort";
+            Assert.Equal("county_cheshire", painter.GeographicLabelKeyOf("town_chester", _world, PoliticalMapOwnerLevel.Vassals));
+            Assert.Equal("County of Cheshire", painter.GeographicLabelNameOf("county_cheshire"));
+        }
+
+        [Fact]
+        public void ZoomingInRevealsTheLocalBaronyInsteadOfItsOwnersRemoteDuchy()
+        {
+            _structure.AddTitle("barony_lathom", TitleRank.Baron, "county_lancashire", "castle_lonely", "Barony of Lathom");
+            // A dignity attached to the estate is not necessarily geographically local.
+            _titles.SaveTitle(new Title("barony_lathom", "Duchy of Somerset", TitleRank.Duke, "castle_lonely", "somerset"));
+            _world.Owners["castle_lonely"] = "clan_beaufort";
+            PoliticalMapPainter painter = Painter();
+
+            Assert.Equal("county_lancashire", painter.GeographicLabelKeyOf("castle_lonely", _world, PoliticalMapOwnerLevel.Vassals));
+            string detailed = painter.GeographicLabelKeyOf("castle_lonely", _world, PoliticalMapOwnerLevel.SubVassals);
+            Assert.Equal("barony_lathom", detailed);
+            Assert.Equal("Barony of Lathom", painter.GeographicLabelNameOf(detailed));
+            Assert.Equal(TitleRank.Baron, painter.GeographicLabelRankOf(detailed));
+        }
+
+        [Theory]
+        [InlineData(PoliticalMapOwnerLevel.Vassals)]
+        [InlineData(PoliticalMapOwnerLevel.SubVassals)]
+        public void VillagesUseTheirBoundSeatsTitleAndUntitledSeatsKeepSeparatePlaceKeys(PoliticalMapOwnerLevel level)
+        {
+            PoliticalMapPainter painter = Painter();
+            Assert.Equal("county_lancashire", painter.GeographicLabelKeyOf("village_lancaster", _world, level));
+            Assert.Equal("settlement:castle_lonely", painter.GeographicLabelKeyOf("castle_lonely", _world, level));
+            Assert.Null(painter.GeographicLabelNameOf("settlement:castle_lonely"));
         }
 
         [Fact]
@@ -259,14 +304,17 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
                 return Regions(Paint(PoliticalMapView.Owners, painter, level: level));
             }
 
-            string?[] near = PaintAt(109f);
-            string?[] far = PaintAt(121f);
+            float nearDistance = PoliticalMapZoom.FarAbove - PoliticalMapZoom.OwnerLevelHysteresis - 1f;
+            float farDistance = PoliticalMapZoom.FarAbove + 1f;
+            float bandDistance = PoliticalMapZoom.FarAbove - PoliticalMapZoom.OwnerLevelHysteresis / 2f;
+            string?[] near = PaintAt(nearDistance);
+            string?[] far = PaintAt(farDistance);
             Assert.Equal("clan_stanley", near[0]);
             Assert.Equal("clan_beaufort", far[0]);
             Assert.Equal("clan_lancaster", far[4]);
-            Assert.Equal(far, PaintAt(115f));
-            Assert.Equal(near, PaintAt(109f));
-            Assert.Equal(near, PaintAt(115f));
+            Assert.Equal(far, PaintAt(bandDistance));
+            Assert.Equal(near, PaintAt(nearDistance));
+            Assert.Equal(near, PaintAt(bandDistance));
         }
 
         [Fact]

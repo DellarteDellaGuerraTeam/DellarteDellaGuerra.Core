@@ -451,4 +451,6 @@
   <Hero id="dadg_sco_lord_clan_dunbar_moray" faction="Faction.clan_dunbar_moray" />
   <Hero id="dadg_sco_lord_clan_home" faction="Faction.clan_home" />
   <Hero id="dadg_sco_lord_clan_macleod_lewis" faction="Faction.clan_macleod_lewis" />
+  <Hero id="dadg_sco_lord_clan_douglas_lochleven" faction="Faction.clan_douglas_lochleven" spouse="Hero.dadg_sco_family_lochleven_elizabeth" />
+  <Hero id="dadg_sco_family_lochleven_elizabeth" faction="Faction.clan_douglas_lochleven" spouse="Hero.dadg_sco_lord_clan_douglas_lochleven" />
 </Heroes>

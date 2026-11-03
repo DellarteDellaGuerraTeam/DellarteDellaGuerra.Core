@@ -41,7 +41,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap
         {
             for (string? current = titleId; current is not null; current = _feudalStructure.GetDeJureSuzerainTitleId(current))
             {
-                if (_feudalStructure.GetRank(current) == TitleRank.Count) return current;
+                if (_feudalStructure.GetRank(current) == TitleRank.Earl) return current;
             }
 
             return titleId;
@@ -57,7 +57,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap
         {
             TitleRank? rank = _feudalStructure.GetRank(titleId);
             if (rank is null) return new string[0];
-            if (rank <= TitleRank.Count) return new[] { GetTerritoryOfTitle(titleId) };
+            if (rank <= TitleRank.Earl) return new[] { GetTerritoryOfTitle(titleId) };
 
             return string.IsNullOrEmpty(_titleRepository.GetTitle(titleId)?.SeatSettlementId)
                 ? new string[0]

@@ -79,7 +79,8 @@ namespace DellarteDellaGuerra.Domain.Titles
             string winnerRealm = GetRealm(winnerPrimaryTitle.Id);
             if (GetRealm(titleId) == winnerRealm) return false;
 
-            string? suzerainTitleId = rank < winnerPrimaryTitle.Rank ? winnerPrimaryTitle.Id
+            // Territory still nests by map tier when the house's dignity uses a different rank.
+            string? suzerainTitleId = rank < _feudalStructure.GetRank(winnerPrimaryTitle.Id) ? winnerPrimaryTitle.Id
                 : _feudalStructure.GetRank(winnerRealm) > rank ? winnerRealm
                 : null;
             _feudalStructure.Reattach(titleId, suzerainTitleId);

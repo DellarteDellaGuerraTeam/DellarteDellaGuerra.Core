@@ -18,7 +18,7 @@ namespace DellarteDellaGuerra.Integration.Titles.UI
         {
             _close = close;
             Nodes = new MBBindingList<FeudalTitleNodeVM>();
-            TitleText = new TextObject("{=dadg_feudal_hierarchy_title}Feudal Hierarchy").ToString();
+            TitleText = new TextObject("{=dadg_territorial_hierarchy_title}Territorial Hierarchy").ToString();
             CloseText = GameTexts.FindText("str_done").ToString();
 
             FeudalMap? map = FeudalUiServices.BuildFeudalMap?.Execute();

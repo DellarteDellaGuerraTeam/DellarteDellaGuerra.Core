@@ -6,7 +6,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
     public static class PoliticalMapLabelHierarchy
     {
         public static bool Shows(PoliticalMapLabelTier tier, TitleRank? rank, PoliticalMapOwnerLevel level) =>
-            tier == PoliticalMapLabelTier.Faction || level == PoliticalMapOwnerLevel.SubVassals || rank >= TitleRank.Count;
+            tier != PoliticalMapLabelTier.Owner || level == PoliticalMapOwnerLevel.SubVassals || rank >= TitleRank.Earl;
 
         // Rank wins before area, so a large barony cannot suppress a duke's label.
         public static long Priority(PoliticalMapLabelTier tier, TitleRank? rank, int cells) =>

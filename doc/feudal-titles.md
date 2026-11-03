@@ -81,8 +81,9 @@ empty hierarchy (the feature degrades to vanilla behaviour).
 
 Rules enforced by the parser (`FeudalStructureParser.cs`):
 
-- Element name determines rank: `Kingdom`→King, `Duchy`→Duke, `County`→Count, `Barony`→Baron.
+- Element name determines territorial tier and default dignity rank: `Kingdom`→King, `Duchy`→Duke, `County`→Earl, `Barony`→Baron.
   Any other element name throws.
+- Optional `dignityRank` (`Baron`, `Earl`, `Duke`) and `dignityName` override the held dignity independently of the territorial tier. `allegiance` selects a different title parent for house allegiance; it must remain within the configured realm and cannot form a cycle.
 - `id` is required and must be unique across all titles.
 - `seat` (a settlement `StringId`) is optional but must be unique when present.
 - The initial holder attribute is `kingClanId` on `Kingdom` and `holderClanId` on every other
@@ -121,7 +122,7 @@ campaigns.
 
 `Title` (`Domain/Titles/Model/Title.cs`) is
 `(Id, Name, Rank, SeatSettlementId, HolderHeroId, OccupantClanId, ContestedSinceDay)` with ranks
-`Baron < Count < Duke < King < Emperor`. `HolderHeroId` is the de jure holder — a hero, whose clan
+`Baron < Earl < Duke < King < Emperor`. `HolderHeroId` is the de jure holder — a hero, whose clan
 is derived through `IGenealogy.GetClanOf` rather than stored. `OccupantClanId` is the de facto
 holder of the seat when the two diverge, and stays a clan because occupation derives from
 `Settlement.OwnerClan`, which has no hero equivalent.
@@ -193,6 +194,8 @@ the current rules would not grant.
 
 Do not reorder or remove fields of the serialiser formats without a migration path — that would
 break existing saves.
+
+The November 2026 rank rename intentionally breaks compatibility: the rank is now `Earl` throughout the domain, configuration and serialised state. Earlier saved rank strings are not migrated. Start a new campaign. Geographic `County` elements and title IDs remain unchanged.
 
 ## Extending the system
 

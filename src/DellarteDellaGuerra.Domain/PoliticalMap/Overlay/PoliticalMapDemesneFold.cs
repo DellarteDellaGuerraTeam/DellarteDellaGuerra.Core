@@ -32,7 +32,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
                 if (!isDemesne.TryGetValue(territory, out bool demesne))
                 {
                     TitleRank? rank = rankOf(territory);
-                    isDemesne[territory] = demesne = rank is not null && rank != TitleRank.Count;
+                    isDemesne[territory] = demesne = rank is not null && rank != TitleRank.Earl;
                 }
 
                 return demesne;
@@ -62,7 +62,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
                     void AddRim(int neighbour)
                     {
                         string? other = TerritoryAt(neighbour);
-                        if (other is not null && other != territory && rankOf(other) == TitleRank.Count) rim.Add(neighbour);
+                        if (other is not null && other != territory && rankOf(other) == TitleRank.Earl) rim.Add(neighbour);
                     }
                 }
             }

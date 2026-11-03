@@ -23,7 +23,7 @@ namespace DellarteDellaGuerra.Integration.Titles.UI.Mixins
         {
             FeudalSectionText = new TextObject("{=dadg_feudal_section}Feudal").ToString();
             FeudalTitlesLabel = new TextObject("{=dadg_feudal_clan_titles}Clan Titles:").ToString();
-            FeudalSuzerainLabel = new TextObject("{=dadg_feudal_suzerain}Suzerain:").ToString();
+            FeudalSuzerainLabel = new TextObject("{=dadg_title_liege}Title Liege:").ToString();
             string none = new TextObject("{=dadg_feudal_none}None").ToString();
             FeudalTitlesText = none;
             FeudalSuzerainText = none;

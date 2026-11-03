@@ -6,14 +6,14 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
 {
     public class PoliticalMapVassalHierarchyTests
     {
-        // England: King Lancaster; Duke Beaufort; Count Stanley under the duchy; Baron Tudor
-        // under Stanley's county; Count Neville straight under the crown.
+        // England: King Lancaster; Duke Beaufort; Earl Stanley under the duchy; Baron Tudor
+        // under Stanley's county; Earl Neville straight under the crown.
         private readonly FakeFeudalStructure _structure = new FakeFeudalStructure()
             .AddTitle("kingdom_england", TitleRank.King)
             .AddTitle("duchy_lancaster", TitleRank.Duke, "kingdom_england")
-            .AddTitle("county_lancashire", TitleRank.Count, "duchy_lancaster")
+            .AddTitle("county_lancashire", TitleRank.Earl, "duchy_lancaster")
             .AddTitle("barony_lathom", TitleRank.Baron, "county_lancashire")
-            .AddTitle("county_kent", TitleRank.Count, "kingdom_england");
+            .AddTitle("county_kent", TitleRank.Earl, "kingdom_england");
 
         private readonly FakeGenealogy _genealogy = new FakeGenealogy()
             .AddHero("henry", "clan_lancaster")
@@ -27,9 +27,9 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         private readonly FakeTitleRepository _titles = new(
             new Title("kingdom_england", "England", TitleRank.King, "", "henry"),
             new Title("duchy_lancaster", "Duchy of Lancaster", TitleRank.Duke, "", "somerset"),
-            new Title("county_lancashire", "Lancashire", TitleRank.Count, "", "stanley"),
+            new Title("county_lancashire", "Lancashire", TitleRank.Earl, "", "stanley"),
             new Title("barony_lathom", "Lathom", TitleRank.Baron, "", "tudor"),
-            new Title("county_kent", "Kent", TitleRank.Count, "", "neville"));
+            new Title("county_kent", "Kent", TitleRank.Earl, "", "neville"));
 
         private readonly FakeWorld _world = new();
 
@@ -102,10 +102,10 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         [Fact]
         public void TheWalkUpSkipsTitlesTheClanItselfHoldsAboveItsHighest()
         {
-            // Two counts in a row, both Stanley's: the first title another clan holds is the duchy.
-            _structure.AddTitle("county_cheshire", TitleRank.Count, "county_lancashire");
+            // Two counties in a row, both Stanley's: the first title another clan holds is the duchy.
+            _structure.AddTitle("county_cheshire", TitleRank.Earl, "county_lancashire");
             _genealogy.AddHero("stanley_2", "clan_stanley");
-            _titles.SaveTitle(new Title("county_cheshire", "Cheshire", TitleRank.Count, "", "stanley_2"));
+            _titles.SaveTitle(new Title("county_cheshire", "Cheshire", TitleRank.Earl, "", "stanley_2"));
             PoliticalMapVassalHierarchy hierarchy = Hierarchy();
 
             Assert.Equal("county_cheshire", hierarchy.HighestTitleOf("clan_stanley")!.Id);
@@ -141,15 +141,15 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         public void ALoopUpTheTitlesIsCutToTheClanAndItsRuler()
         {
             // Two counties each under the other: Neville and Percy would answer to each other.
-            _structure.AddTitle("county_york", TitleRank.Count, "county_durham")
-                .AddTitle("county_durham", TitleRank.Count, "county_york");
-            _titles.SaveTitle(new Title("county_kent", "Kent", TitleRank.Count, "", "henry"));
-            _titles.SaveTitle(new Title("county_york", "York", TitleRank.Count, "", "neville"));
-            _titles.SaveTitle(new Title("county_durham", "Durham", TitleRank.Count, "", "percy"));
+            _structure.AddTitle("county_york", TitleRank.Earl, "county_durham")
+                .AddTitle("county_durham", TitleRank.Earl, "county_york");
+            _titles.SaveTitle(new Title("county_kent", "Kent", TitleRank.Earl, "", "henry"));
+            _titles.SaveTitle(new Title("county_york", "York", TitleRank.Earl, "", "neville"));
+            _titles.SaveTitle(new Title("county_durham", "Durham", TitleRank.Earl, "", "percy"));
             PoliticalMapVassalHierarchy hierarchy = Hierarchy();
 
-            Assert.Equal("clan_percy", hierarchy.LiegeOf("clan_neville"));
-            Assert.Equal("clan_neville", hierarchy.LiegeOf("clan_percy"));
+            Assert.Equal("clan_lancaster", hierarchy.LiegeOf("clan_neville"));
+            Assert.Equal("clan_lancaster", hierarchy.LiegeOf("clan_percy"));
             Assert.Equal(new[] { "clan_neville", "clan_lancaster" }, hierarchy.ChainOf("clan_neville"));
             Assert.Equal("clan_neville", hierarchy.RegionHolderOf("clan_neville", PoliticalMapOwnerLevel.Vassals));
         }
@@ -158,7 +158,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         public void AClansHighestTitleIsItsHighestRanked()
         {
             _genealogy.AddHero("somerset_2", "clan_beaufort");
-            _titles.SaveTitle(new Title("county_kent", "Kent", TitleRank.Count, "", "somerset_2"));
+            _titles.SaveTitle(new Title("county_kent", "Kent", TitleRank.Earl, "", "somerset_2"));
             PoliticalMapVassalHierarchy hierarchy = Hierarchy();
 
             Assert.Equal("Duchy of Lancaster", hierarchy.HighestTitleOf("clan_beaufort")!.Name);
@@ -169,7 +169,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         public void TheRulersLandUsesItsHighestControlledLandedTitleWithoutChangingItsRoyalRank()
         {
             _titles.SaveTitle(new Title("duchy_lancaster", "Duchy of Lancaster", TitleRank.Duke, "", "henry"));
-            _titles.SaveTitle(new Title("county_kent", "Kent", TitleRank.Count, "", "henry"));
+            _titles.SaveTitle(new Title("county_kent", "Kent", TitleRank.Earl, "", "henry"));
             PoliticalMapVassalHierarchy hierarchy = Hierarchy();
 
             Assert.Equal("duchy_lancaster", hierarchy.HighestLandTitleOf("clan_lancaster")!.Id);
@@ -186,6 +186,41 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         public void ACrownAloneDoesNotNameTheRulersEstate()
         {
             Assert.Null(Hierarchy().HighestLandTitleOf("clan_lancaster"));
+        }
+
+        [Theory]
+        [InlineData(TitleRank.Baron, "Lordship of Maxwell")]
+        [InlineData(TitleRank.Earl, "Earldom held at Caerlaverock")]
+        public void EqualDignitiesNameTheRegionalLordshipBeforeAnOlderCastleEstate(TitleRank castleRank, string expectedName)
+        {
+            _structure.AddTitle("county_nithsdale", TitleRank.Earl, "kingdom_england")
+                .AddTitle("barony_caerlaverock", TitleRank.Baron, "county_nithsdale");
+            _titles.SaveTitle(new Title("county_nithsdale", "Lordship of Maxwell", TitleRank.Baron,
+                "dumfries", "percy", heldSinceDay: 1440f));
+            _titles.SaveTitle(new Title("barony_caerlaverock", castleRank == TitleRank.Baron
+                ? "Barony of Caerlaverock" : "Earldom held at Caerlaverock", castleRank,
+                "caerlaverock", "percy", heldSinceDay: 1220f));
+
+            PoliticalMapVassalHierarchy hierarchy = Hierarchy();
+
+            Assert.Equal(expectedName, hierarchy.HighestLandTitleOf("clan_percy")!.Name);
+            Assert.Equal("barony_caerlaverock", hierarchy.HighestTitleOf("clan_percy")!.Id);
+        }
+
+        [Fact]
+        public void ExplicitAllegianceCanGiveAnEarlAFollowingOutsideHisTerritorialCounty()
+        {
+            _structure.WithAllegiance("barony_lathom", "county_kent");
+            Assert.Equal("clan_neville", Hierarchy().LiegeOf("clan_tudor"));
+            _world.Kingdoms["clan_neville"] = "kingdom_scotland";
+            Assert.Equal("clan_lancaster", Hierarchy().LiegeOf("clan_tudor"));
+        }
+
+        [Fact]
+        public void ADukesLesserEstateCannotMakeHimServeAnEarl()
+        {
+            _titles.SaveTitle(new Title("barony_lathom", "Duchy of Suffolk", TitleRank.Duke, "", "tudor"));
+            Assert.Equal("clan_lancaster", Hierarchy().LiegeOf("clan_tudor"));
         }
 
         private sealed class FakeWorld : IPoliticalMapWorld

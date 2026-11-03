@@ -28,6 +28,38 @@ public class XmlFeudalStructureTests
     private readonly IdentityGenealogy _genealogy = new();
 
     [Fact]
+    public void DignityAndAllegianceAreIndependentOfTerritorialTierAndParent()
+    {
+        string xml = SampleXml.Replace("id=\"county_richmond\"", "id=\"county_richmond\" dignityRank=\"Baron\" dignityName=\"Lordship of Richmond\" allegiance=\"kingdom_england\"");
+        var structure = new XmlFeudalStructure(FeudalStructureParser.Parse(xml));
+        Title title = structure.BuildInitialTitles(_genealogy).Single(t => t.Id == "county_richmond");
+
+        Assert.Equal(TitleRank.Baron, title.Rank);
+        Assert.Equal("Lordship of Richmond", title.Name);
+        Assert.Equal(TitleRank.Earl, structure.GetRank(title.Id));
+        Assert.Equal("County of Richmond", structure.GetTitleName(title.Id));
+        Assert.Equal("duchy_york", structure.GetDeJureSuzerainTitleId(title.Id));
+        Assert.Equal("kingdom_england", structure.GetAllegianceSuzerainTitleId(title.Id));
+        Assert.Equal("county_richmond", structure.GetAllegianceSuzerainTitleId("barony_middleham"));
+    }
+
+    [Fact]
+    public void SavedConquestOverridesInitialAllegianceIncludingForDescendantsMovedToAnotherRealm()
+    {
+        string xml = SampleXml.Replace("id=\"barony_middleham\"", "id=\"barony_middleham\" allegiance=\"kingdom_england\"")
+            .Replace("</Feudalism>", "<Kingdom id=\"kingdom_scotland\"/></Feudalism>");
+        var structure = new XmlFeudalStructure(FeudalStructureParser.Parse(xml));
+        structure.Reattach("county_richmond", "kingdom_scotland");
+        var saved = structure.SnapshotReattachments();
+        structure.InitialiseReattachments(saved);
+
+        Assert.Equal("kingdom_scotland", structure.GetAllegianceSuzerainTitleId("county_richmond"));
+        Assert.Equal("county_richmond", structure.GetAllegianceSuzerainTitleId("barony_middleham"));
+        structure.Reattach("barony_middleham", null);
+        Assert.Null(structure.GetAllegianceSuzerainTitleId("barony_middleham"));
+    }
+
+    [Fact]
     public void ShouldResolveDeJureSuzerain()
     {
         Assert.Null(_feudalStructure.GetDeJureSuzerainTitleId("kingdom_england"));

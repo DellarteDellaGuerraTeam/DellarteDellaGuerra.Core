@@ -11,8 +11,8 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap
     /// <summary>
     /// Hides the settlement nameplates while the political map names its regions
     /// (<see cref="PoliticalMapNameplates"/>), by answering "not visible" from the nameplate's own
-    /// per-frame visibility check. Tracked settlements, settlements under siege or raid, and
-    /// hideouts keep theirs; party nameplates are a different view model and never touched.
+    /// per-frame visibility check. Settlements under siege or raid and hideouts keep theirs,
+    /// unless bookmarked; bookmark state itself is unchanged.
     /// </summary>
     /// <remarks>
     /// The check runs every frame on the nameplate worker threads, so clearing the flag brings
@@ -43,8 +43,8 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap
 
         private static void Postfix(SettlementNameplateVM __instance, ref bool __result)
         {
-            if (!__result || !PoliticalMapNameplates.HideSettlementNameplates) return;
-            if (__instance.IsTracked || __instance.MapEventVisualType != 0 || __instance.Settlement.IsHideout) return;
+            if (!__result || !PoliticalMapNameplates.HideNativeOverlays) return;
+            if (!__instance.IsTracked && (__instance.MapEventVisualType != 0 || __instance.Settlement.IsHideout)) return;
 
             __result = false;
         }

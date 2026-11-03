@@ -92,6 +92,14 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
 
     internal sealed class FakeFeudalStructure : IFeudalStructure
     {
+        private readonly Dictionary<string, string> _allegiances = new();
+        public FakeFeudalStructure WithAllegiance(string titleId, string liegeTitleId)
+        {
+            _allegiances[titleId] = liegeTitleId;
+            return this;
+        }
+        public string? GetAllegianceSuzerainTitleId(string titleId) =>
+            _allegiances.TryGetValue(titleId, out var liege) ? liege : GetDeJureSuzerainTitleId(titleId);
         private readonly Dictionary<string, string?> _parents = new();
         private readonly Dictionary<string, string> _seats = new();
         private readonly Dictionary<string, TitleRank> _ranks = new();

@@ -3,7 +3,7 @@ namespace DellarteDellaGuerra.Domain.Titles.Model
     public enum TitleRank
     {
         Baron,
-        Count,
+        Earl,
         Duke,
         King,
         Emperor

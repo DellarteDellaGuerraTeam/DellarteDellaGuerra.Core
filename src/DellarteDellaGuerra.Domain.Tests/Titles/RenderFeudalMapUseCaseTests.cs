@@ -10,7 +10,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             var barony = new FeudalMapEntry(
                 "barony_b", "Barony of B", TitleRank.Baron, "castle_b", null, new List<FeudalMapEntry>());
             var county = new FeudalMapEntry(
-                "county_c", "County of C", TitleRank.Count, "town_c", "clan_count",
+                "county_c", "County of C", TitleRank.Earl, "town_c", "clan_earl",
                 new List<FeudalMapEntry> { barony });
             var duchy = new FeudalMapEntry(
                 "duchy_d", "Duchy of D", TitleRank.Duke, "town_d", "clan_duke",
@@ -40,7 +40,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             Assert.Contains(
                 "\n  - **Duchy of D** (`duchy_d`) — seat: `town_d` — held by: `clan_duke`\n", markdown);
             Assert.Contains(
-                "\n    - **County of C** (`county_c`) — seat: `town_c` — held by: `clan_count`\n", markdown);
+                "\n    - **County of C** (`county_c`) — seat: `town_c` — held by: `clan_earl`\n", markdown);
             Assert.Contains("\n      - **Barony of B** (`barony_b`)", markdown);
         }
 
@@ -61,7 +61,7 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
             Assert.StartsWith("flowchart TD\n", mermaid);
             Assert.Contains("kingdom_k[\"Kingdom of K\\n(clan_king)\"]", mermaid);
             Assert.Contains("duchy_d[\"Duchy of D\\n(clan_duke)\"]", mermaid);
-            Assert.Contains("county_c[\"County of C\\n(clan_count)\"]", mermaid);
+            Assert.Contains("county_c[\"County of C\\n(clan_earl)\"]", mermaid);
         }
 
         [Fact]

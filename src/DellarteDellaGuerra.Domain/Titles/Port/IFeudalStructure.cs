@@ -10,9 +10,12 @@ namespace DellarteDellaGuerra.Domain.Titles.Port
     public interface IFeudalStructure
     {
         string? GetDeJureSuzerainTitleId(string titleId);
+        /// <summary>Configured house allegiance, falling back to territorial nesting.</summary>
+        string? GetAllegianceSuzerainTitleId(string titleId);
         IReadOnlyList<string> GetDeJureVassalTitleIds(string titleId);
         string? GetTitleIdBySeat(string settlementId);
         IReadOnlyList<string> GetAllTitleIds();
+        /// <summary>Territorial tier; a held title's historical dignity can have a different rank.</summary>
         TitleRank? GetRank(string titleId);
         string? GetTitleName(string titleId);
 
