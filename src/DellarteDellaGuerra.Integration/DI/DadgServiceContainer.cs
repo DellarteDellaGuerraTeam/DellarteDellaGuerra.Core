@@ -263,6 +263,7 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, CannonballTrailCleanupPatch>();
         // Political map: native overlays give way to region labels
         services.AddSingleton<IPatch, HideSettlementNameplatesPatch>();
+        services.AddSingleton<IPatch, SelectPoliticalMapRegionPatch>();
         services.AddSingleton<IPatch, HidePartyNameplatesPatch>();
         services.AddSingleton<IPatch, HidePlayerPartyLabelsPatch>();
         services.AddSingleton<IPatch, HidePlayerMapTrackerPatch>();

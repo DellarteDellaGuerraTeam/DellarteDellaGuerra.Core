@@ -4,6 +4,7 @@ using System.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.PoliticalMap;
 using DellarteDellaGuerra.Domain.PoliticalMap.Grid;
+using DellarteDellaGuerra.Domain.PoliticalMap.Labels;
 using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
 
 namespace DellarteDellaGuerra.PoliticalMap.Rendering
@@ -20,6 +21,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         private readonly PoliticalMapPainter _painter;
         private readonly PoliticalMapRefreshScheduler _events;
         private readonly IPoliticalMapWorld _world;
+        private readonly PoliticalMapLabelModes _labelModes;
         private readonly string[] _territories;
         private readonly PoliticalMapSheet _sheet;
         private readonly IReadOnlyList<(int A, int B)> _neighbours;
@@ -34,7 +36,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         private readonly Dictionary<(PoliticalMapView View, PoliticalMapOwnerLevel Level), double> _lastValidation = new();
 
         public PoliticalMapOverlayDrawing(TaleWorlds.Engine.Scene scene, PoliticalMapGrid grid, PoliticalMapSheet sheet,
-            PoliticalMapPainter painter, PoliticalMapRefreshScheduler scheduler, IPoliticalMapWorld world, ILogger logger)
+            PoliticalMapPainter painter, PoliticalMapRefreshScheduler scheduler, IPoliticalMapWorld world, ILogger logger,
+            PoliticalMapLabelModes labelModes)
         {
             Scene = scene;
             Grid = grid;
@@ -42,6 +45,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             _painter = painter;
             _events = scheduler;
             _world = world;
+            _labelModes = labelModes;
             _logger = logger;
             _territories = grid.SettlementIds.Select(id => painter.TerritoryOf(id, world)).ToArray();
             Folds = painter.Fold(grid, _territories);
@@ -58,6 +62,28 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         public int TerritoryCount { get; }
         public PoliticalMapView DisplayedView => _visible && _shown is { } shown ? shown.View : PoliticalMapView.Off;
         public PoliticalMapOwnerLevel DisplayedOwnerLevel => _shown?.Level ?? _cameraLevel;
+        public PoliticalMapSelection? Selection { get; private set; }
+
+        public void ClearSelection()
+        {
+            if (Selection is not { } previous) return;
+            Selection = null;
+            Validate(Key(previous.View, previous.Level));
+        }
+
+        public void SelectAt(float x, float y)
+        {
+            if (!_visible || _shown is not { } shown) return;
+            PoliticalMapSettlementPaint[] paints = Paint(shown);
+            string?[] keys = _painter.LabelKeysOf(shown.View, _labelModes.Of(shown.View), Grid.SettlementIds, paints, _world, shown.Level);
+            string? settlement = Grid.SettlementAt(x, y);
+            int index = settlement is null ? -1 : Array.IndexOf(Grid.SettlementIds.ToArray(), settlement);
+            string? key = index >= 0 && paints[index].Fill != 0 ? keys[index] : null;
+            PoliticalMapSelection? selection = key is null ? null : new(shown.View, shown.Level, _labelModes.Of(shown.View), key);
+            if (Selection == selection) return;
+            Selection = selection;
+            Validate(shown);
+        }
 
         public void SetVisibility(PoliticalMapZoomBand band, bool visible)
         {
@@ -69,8 +95,11 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         public void Repaint(PoliticalMapView view, PoliticalMapOwnerLevel level)
         {
             if (view == PoliticalMapView.Off) return;
+            var requested = Key(view, level);
+            if (Selection is { } selected && !selected.Matches(requested.View, requested.Level, _labelModes.Of(view)))
+                ClearSelection();
             _cameraLevel = level;
-            _requested = Key(view, level);
+            _requested = requested;
             Validate(_requested.Value);
             ShowIfReady();
         }
@@ -110,8 +139,16 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             }
         }
 
-        private void Validate((PoliticalMapView View, PoliticalMapOwnerLevel Level) key) =>
-            Layer(key).Repaint(_painter.Paint(key.View, Grid.SettlementIds, _territories, Folds, _world, _neighbours, key.Level));
+        private PoliticalMapSettlementPaint[] Paint((PoliticalMapView View, PoliticalMapOwnerLevel Level) key) =>
+            _painter.Paint(key.View, Grid.SettlementIds, _territories, Folds, _world, _neighbours, key.Level);
+
+        private void Validate((PoliticalMapView View, PoliticalMapOwnerLevel Level) key)
+        {
+            PoliticalMapSettlementPaint[] paints = Paint(key);
+            if (Selection is { } selected && selected.Matches(key.View, key.Level, _labelModes.Of(key.View)))
+                paints = selected.Apply(paints, _painter.SelectionKeysOf(selected, Grid.SettlementIds, paints, _world));
+            Layer(key).Repaint(paints);
+        }
 
         private PoliticalMapCachedLayer Layer((PoliticalMapView View, PoliticalMapOwnerLevel Level) key)
         {

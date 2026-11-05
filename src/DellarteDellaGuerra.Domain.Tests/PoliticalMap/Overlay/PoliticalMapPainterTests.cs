@@ -67,6 +67,64 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         private static uint Opaque(uint washed) => washed | 0xFF000000u;
 
         [Fact]
+        public void SelectingADuchyIncludesItsDisconnectedCountiesWithoutSelectingTheHoldersOtherTitles()
+        {
+            PoliticalMapPainter painter = Painter();
+            var paints = Paint(PoliticalMapView.Owners, painter, level: PoliticalMapOwnerLevel.Vassals);
+            var selection = new PoliticalMapSelection(PoliticalMapView.Owners, PoliticalMapOwnerLevel.Vassals,
+                PoliticalMapLabelMode.Titles, "duchy_lancaster");
+            string?[] keys = painter.SelectionKeysOf(selection, Settlements, paints, _world);
+            var result = selection.Apply(paints, keys);
+
+            foreach (int i in new[] { 0, 1, 2, 5 })
+            {
+                Assert.Equal(selection.Key, keys[i]);
+                Assert.NotEqual(paints[i].Fill, result[i].Fill);
+            }
+            Assert.Equal(paints[3], result[3]); // Kent is outside the selected duchy.
+            Assert.Equal(paints[4], result[4]); // The ruler's untitled estate is outside it too.
+
+            var county = selection with { Key = "county_lancashire" };
+            var countyResult = county.Apply(paints, painter.SelectionKeysOf(county, Settlements, paints, _world));
+            Assert.NotEqual(paints[0].Fill, countyResult[0].Fill);
+            Assert.Equal(paints[2], countyResult[2]); // The duchy's own seat is not in this county.
+            Assert.Equal(paints[5], countyResult[5]); // Same owner, different county.
+        }
+
+        [Theory]
+        [InlineData(PoliticalMapOwnerLevel.Vassals)]
+        [InlineData(PoliticalMapOwnerLevel.SubVassals)]
+        public void SelectionUsesTheSameGeographicOrClanIdentityAsTheLabels(PoliticalMapOwnerLevel level)
+        {
+            PoliticalMapPainter painter = Painter();
+            var paints = Paint(PoliticalMapView.Owners, painter, level: level);
+            string?[] titles = painter.LabelKeysOf(PoliticalMapView.Owners, PoliticalMapLabelMode.Titles, Settlements, paints, _world, level);
+            string?[] clans = painter.LabelKeysOf(PoliticalMapView.Owners, PoliticalMapLabelMode.Clans, Settlements, paints, _world, level);
+
+            Assert.Equal(Settlements.Select(id => painter.GeographicLabelKeyOf(id, _world, level)), titles);
+            Assert.Equal(paints.Select(paint => paint.RegionKey), clans);
+            Assert.Equal(titles[0], titles[1]); // The bound village follows its seat.
+            Assert.NotEqual(titles[0], titles[5]); // One clan, two separate geographic titles.
+            Assert.Equal(clans[0], clans[5]); // Both estates belong to the selected clan's region.
+
+            var selected = new PoliticalMapSelection(PoliticalMapView.Owners, level, PoliticalMapLabelMode.Clans, clans[0]!);
+            var highlighted = selected.Apply(paints, clans);
+            Assert.NotEqual(paints[0].Fill, highlighted[0].Fill);
+            Assert.NotEqual(paints[5].Fill, highlighted[5].Fill);
+            Assert.Equal(paints[3], highlighted[3]);
+        }
+
+        [Theory]
+        [InlineData(PoliticalMapLabelMode.Titles)]
+        [InlineData(PoliticalMapLabelMode.Clans)]
+        public void KingdomSelectionUsesTheFactionRegardlessOfLabelText(PoliticalMapLabelMode mode)
+        {
+            var paints = Paint(PoliticalMapView.Kingdom);
+            Assert.Equal(paints.Select(paint => paint.RealmKey),
+                Painter().LabelKeysOf(PoliticalMapView.Kingdom, mode, Settlements, paints, _world, PoliticalMapOwnerLevel.Vassals));
+        }
+
+        [Fact]
         public void ASettlementIsMeshedWithItsSeatsTerritoryOrItsSeatWhenThatHoldsNoTitle()
         {
             PoliticalMapPainter painter = Painter();

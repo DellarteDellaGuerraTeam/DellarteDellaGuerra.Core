@@ -112,7 +112,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         /// What each view's labels name, titles or clans; for the map bar's label button and
         /// <c>polmap.labels</c>. Session only, not saved.
         /// </summary>
-        public PoliticalMapLabelModes Modes { get; } = new();
+        public PoliticalMapLabelModes Modes => _overlay.LabelModes;
 
         public override void RegisterEvents()
         {
@@ -282,12 +282,9 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         private string?[][] KeysOf(PoliticalMapView view, PoliticalMapOwnerLevel level)
         {
             PoliticalMapGrid grid = _grid!;
-            IReadOnlyList<PoliticalMapLabelTier> tiers = PoliticalMapLabelTiers.Of(view, Modes.Of(view));
-            bool geographic = tiers.Contains(PoliticalMapLabelTier.Territory);
-            IReadOnlyList<string?>? ownerRegionKeys = geographic
-                ? grid.SettlementIds.Select(id => _painter.GeographicLabelKeyOf(id, _world, level)).ToArray()
-                : tiers.Contains(PoliticalMapLabelTier.Owner) ? OwnerRegionKeys(grid, level) : null;
-            string?[][] keys = tiers.Select(tier => PoliticalMapLabelTiers.KeysOf(tier, grid.SettlementIds, ownerRegionKeys, _world)).ToArray();
+            bool geographic = Modes.Of(view) == PoliticalMapLabelMode.Titles;
+            var paints = _painter.Paint(view, grid.SettlementIds, _territories, _folds, _world, null, level);
+            string?[][] keys = { _painter.LabelKeysOf(view, Modes.Of(view), grid.SettlementIds, paints, _world, level) };
             // A holder's own detailed land can change without changing any coarse grouping key.
             return view == PoliticalMapView.Owners && !geographic && level == PoliticalMapOwnerLevel.Vassals
                 ? keys.Concat(new[] { OwnerRegionKeys(grid, PoliticalMapOwnerLevel.SubVassals).ToArray() }).ToArray()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DellarteDellaGuerra.Domain.PoliticalMap.Labels;
 using DellarteDellaGuerra.Domain.Titles.Model;
 using DellarteDellaGuerra.Domain.Titles.Port;
 
@@ -75,6 +76,43 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
 
         public TitleRank? GeographicLabelRankOf(string key) =>
             _feudalStructure.GetRank(key);
+
+        /// <summary>Shared identities for labels and click selection at the displayed zoom level.</summary>
+        public string?[] LabelKeysOf(PoliticalMapView view, PoliticalMapLabelMode mode,
+            IReadOnlyList<string> settlementIds, IReadOnlyList<PoliticalMapSettlementPaint> paints,
+            IPoliticalMapWorld world, PoliticalMapOwnerLevel level)
+        {
+            if (settlementIds.Count != paints.Count) throw new ArgumentException("One paint per settlement is required.", nameof(paints));
+            var keys = new string?[settlementIds.Count];
+            for (int i = 0; i < keys.Length; i++)
+                keys[i] = view switch
+                {
+                    PoliticalMapView.Kingdom => paints[i].RealmKey,
+                    PoliticalMapView.Owners when mode == PoliticalMapLabelMode.Titles => GeographicLabelKeyOf(settlementIds[i], world, level),
+                    PoliticalMapView.Owners => paints[i].RegionKey,
+                    _ => null
+                };
+            return keys;
+        }
+
+        /// <summary>A selected geographic title includes its subordinate territories, regardless of ownership.</summary>
+        public string?[] SelectionKeysOf(PoliticalMapSelection selection, IReadOnlyList<string> settlementIds,
+            IReadOnlyList<PoliticalMapSettlementPaint> paints, IPoliticalMapWorld world)
+        {
+            string?[] keys = LabelKeysOf(selection.View, selection.Mode, settlementIds, paints, world, selection.Level);
+            if (selection.View != PoliticalMapView.Owners || selection.Mode != PoliticalMapLabelMode.Titles) return keys;
+            for (int i = 0; i < keys.Length; i++)
+            {
+                var seen = new HashSet<string>();
+                for (string? title = keys[i]; title is not null && seen.Add(title); title = _feudalStructure.GetDeJureSuzerainTitleId(title))
+                    if (title == selection.Key)
+                    {
+                        keys[i] = selection.Key;
+                        break;
+                    }
+            }
+            return keys;
+        }
 
         public IReadOnlyDictionary<string, string> Fold(Grid.PoliticalMapGrid grid, IReadOnlyList<string?> territoryOfSettlement) =>
             PoliticalMapDemesneFold.Fold(grid, territoryOfSettlement, territory => _feudalStructure.GetRank(territory));

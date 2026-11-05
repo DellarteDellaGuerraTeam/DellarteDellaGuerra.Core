@@ -851,3 +851,25 @@ holder has only a lower dignity. Clans mode retains the live ownership and vassa
 grouping. Overlay fills and frontier grouping continue to follow the selected view.
 Switching label mode rebuilds its region layout through the existing asynchronous
 cache. This supersedes the earlier highest-held-title naming and text-only toggle.
+
+### Region selection (2026-11-03)
+
+A left click on the displayed political map selects the title or clan represented at
+that zoom level and darkens its fill to 60% of its original RGB, preserving opacity
+and gold frontiers. All matching pieces are selected together, including disconnected
+estates. Titles mode includes geographic descendants of the selected title: selecting
+a duchy includes its subordinate counties and baronies, independently of their owners.
+Clans mode follows the displayed vassal grouping and includes that clan's scattered
+holdings; Kingdoms selects the whole faction regardless of the label wording.
+
+Selecting another region restores the previous fill. Repeated clicks keep the same
+selection without accumulating darkening. Clicking water or unpainted land clears it.
+Changing view, label mode or owner zoom level clears the selection; new and loaded
+campaigns start without one. Selection is exposed as its view, level, mode and stable
+title/clan/faction key for later interactions, without changing ownership or titles.
+
+The native map-click dispatch handles UI exclusion and camera drag detection before
+the selection patch runs. While the political map is displayed, those map clicks are
+consumed rather than ordering the party to travel. The normal map retains native
+click behavior. Mesh updates use the existing asynchronous revision checks and
+atomic territory swaps, so rapid selection changes cannot publish stale colours.

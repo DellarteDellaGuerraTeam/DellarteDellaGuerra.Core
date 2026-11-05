@@ -5,6 +5,7 @@ using System.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.Domain.PoliticalMap;
 using DellarteDellaGuerra.Domain.PoliticalMap.Grid;
+using DellarteDellaGuerra.Domain.PoliticalMap.Labels;
 using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
 using DellarteDellaGuerra.PoliticalMap.Rendering;
 using SandBox.View.Map;
@@ -31,7 +32,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
      *  view or zoom switch only changes visibility.
      *  </para>
      *  <para>
-     *  The chosen view is saved with the campaign; a new campaign starts on the kingdom view.
+     *  The view and region selection are session-only; new and loaded campaigns start off.
      *  </para>
      *  <para>
      *  The owners view's level follows the camera (<see cref="PoliticalMapZoom.OwnerLevelFor"/>):
@@ -85,6 +86,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             _scheduler = scheduler;
             _hoverDescriber = hoverDescriber;
             _logger = loggerFactory.CreateLogger<PoliticalMapOverlayCampaignBehavior>();
+            LabelModes.Changed += () => _repaintNow = true;
         }
 
         /// <summary>Raised when the view, the legend or the hover readout changes, for the map bar's panel.</summary>
@@ -109,10 +111,24 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         public PoliticalMapHoverInfo? Hover => _hover;
 
         public PoliticalMapSnow Snow => _snow;
+        public PoliticalMapLabelModes LabelModes { get; } = new();
+        public PoliticalMapSelection? Selection => _drawing?.Selection;
+
+        /// <summary>Consumes a native terrain click while the political map is displayed.</summary>
+        public bool TrySelectAt(MapScreen mapScreen, float x, float y)
+        {
+            if (DisplayedView == PoliticalMapView.Off || ScreenManager.TopScreen != mapScreen
+                || _drawing?.Scene != mapScreen.MapScene || mapScreen.IsInMenu
+                || TaleWorlds.CampaignSystem.Campaign.Current?.ConversationManager?.IsConversationInProgress == true) return false;
+            _drawing.SelectAt(x, y);
+            Changed?.Invoke();
+            return true;
+        }
 
         public void SetView(PoliticalMapView view)
         {
             if (_view == view) return;
+            _drawing?.ClearSelection();
             _view = view;
             _repaintNow = true;
             _sinceHover = HoverIntervalSeconds;
@@ -249,7 +265,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             try
             {
                 var clock = Stopwatch.StartNew();
-                _drawing = new PoliticalMapOverlayDrawing(mapScreen.MapScene, grid, sheet, _painter, _scheduler, _world, _logger);
+                _drawing = new PoliticalMapOverlayDrawing(mapScreen.MapScene, grid, sheet, _painter, _scheduler, _world, _logger, LabelModes);
                 _repaintNow = true;
                 _logger.Info(
                     $"Political map overlay ready: {_drawing.TerritoryCount} territories, "
