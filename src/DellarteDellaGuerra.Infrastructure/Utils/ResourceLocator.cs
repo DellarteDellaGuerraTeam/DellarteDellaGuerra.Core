@@ -120,6 +120,20 @@ namespace DellarteDellaGuerra.Infrastructure.Utils
 
         /**
          * <summary>
+         * Gets the path to the dadg_combat_items.xml file in the ModuleData/CustomXml folder.
+         * Its existence is checked.
+         * </summary>
+         * <returns>
+         * The first found among all of the mod's modules or null if not found.
+         * </returns>
+         */
+        public static string? GetCombatItemsXmlFilePath()
+        {
+            return GetCustomXmlFile("dadg_combat_items.xml");
+        }
+
+        /**
+         * <summary>
          * Gets the path to the dadg_battle_scenes.xml file in the ModuleData folder.
          * Its existence is checked.
          * </summary>

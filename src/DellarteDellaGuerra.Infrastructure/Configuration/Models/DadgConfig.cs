@@ -33,5 +33,13 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Models
          */
         [XmlElement(ElementName = "JoustingConfig")]
         public JoustingConfig JoustingConfig { get; set; } = new JoustingConfig();
+
+        /**
+         * <summary>
+         * Gets or sets whether the combat overhaul's damage rules and item tiers are installed.
+         * </summary>
+         */
+        [XmlElement(ElementName = "CombatConfig")]
+        public CombatConfig CombatConfig { get; set; } = new CombatConfig();
     }
 }
