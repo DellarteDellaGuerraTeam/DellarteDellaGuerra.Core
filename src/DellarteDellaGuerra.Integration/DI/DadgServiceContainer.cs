@@ -93,6 +93,7 @@ public class DadgServiceContainer
         RegisterTournamentServices(services);
         RegisterDisplayServices(services);
         RegisterMissionServices(services);
+        services.AddDadgCombat();
         RegisterPatches(services);
         services.AddHarmonyPatching();
 
