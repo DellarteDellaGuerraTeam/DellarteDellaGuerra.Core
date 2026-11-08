@@ -142,7 +142,11 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
 
         public TitleRank? GetMapLabelRank(string titleId) => GetRank(titleId);
 
-        public void Reattach(string titleId, string? suzerainTitleId) => _parents[titleId] = suzerainTitleId;
+        public void Reattach(string titleId, string? suzerainTitleId)
+        {
+            _parents[titleId] = suzerainTitleId;
+            _allegiances.Remove(titleId);
+        }
     }
 
     internal sealed class FakeLogger : ILogger

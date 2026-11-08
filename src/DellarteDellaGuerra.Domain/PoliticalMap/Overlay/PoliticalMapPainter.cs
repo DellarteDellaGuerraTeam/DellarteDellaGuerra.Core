@@ -68,15 +68,16 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
             string seat = world.SeatOf(settlementId) ?? settlementId;
             string? title = _feudalStructure.GetTitleIdBySeat(seat);
             if (title is null) return SettlementTerritoryPrefix + seat;
-            if (level == PoliticalMapOwnerLevel.Vassals)
+            // Far out shows the region directly under the realm; close in, the shire directly under that region.
+            var seen = new HashSet<string> { title };
+            string? belowTop = null;
+            while (_feudalStructure.GetDeJureSuzerainTitleId(title) is { } parent
+                && _feudalStructure.GetRank(parent) < TitleRank.King && seen.Add(parent))
             {
-                // Show the whole geographic title, including its constituent honours and estates.
-                var seen = new HashSet<string> { title };
-                while (_feudalStructure.GetDeJureSuzerainTitleId(title) is { } parent
-                    && _feudalStructure.GetRank(parent) < TitleRank.King && seen.Add(parent))
-                    title = parent;
+                belowTop = title;
+                title = parent;
             }
-            return title;
+            return level == PoliticalMapOwnerLevel.SubVassals && belowTop is not null ? belowTop : title;
         }
 
         public string? GeographicLabelNameOf(string key) =>
@@ -88,11 +89,13 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         public PoliticalMapTitleDomains TitleDomainsOf(IPoliticalMapWorld world) =>
             new(_feudalStructure, world, HierarchyOf(world));
 
-        public string? DomainLabelNameOf(string key) =>
-            _titleRepository.GetTitle(key)?.Name ?? _feudalStructure.GetTitleName(key);
+        public string? DomainLabelNameOf(string key, PoliticalMapOwnerLevel level = PoliticalMapOwnerLevel.Vassals) =>
+            level == PoliticalMapOwnerLevel.SubVassals ? _feudalStructure.GetTitleName(key)
+                : _titleRepository.GetTitle(key)?.Name ?? _feudalStructure.GetTitleName(key);
 
-        public TitleRank? DomainLabelRankOf(string key) =>
-            _titleRepository.GetTitle(key)?.Rank ?? _feudalStructure.GetMapLabelRank(key);
+        public TitleRank? DomainLabelRankOf(string key, PoliticalMapOwnerLevel level = PoliticalMapOwnerLevel.Vassals) =>
+            level == PoliticalMapOwnerLevel.SubVassals ? _feudalStructure.GetMapLabelRank(key)
+                : _titleRepository.GetTitle(key)?.Rank ?? _feudalStructure.GetMapLabelRank(key);
 
         /// <summary>Shared identities for labels and click selection at the displayed zoom level.</summary>
         public string?[] LabelKeysOf(PoliticalMapView view, PoliticalMapLabelMode mode,
@@ -140,7 +143,9 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
             for (int i = 0; i < keys.Length; i++)
             {
                 bool contains = selection.Mode == PoliticalMapLabelMode.Titles
-                    ? domains.Contains(selection.Key, settlementIds[i])
+                    ? selection.Level == PoliticalMapOwnerLevel.SubVassals
+                        ? domains.ContainsLocal(selection.Key, settlementIds[i])
+                        : domains.Contains(selection.Key, settlementIds[i])
                     : world.OwnerClanOf(settlementIds[i]) is { } owner && hierarchy.ChainOf(owner).Contains(selection.Key);
                 // Never keep a label key that matched before a transfer but no longer belongs to this domain.
                 keys[i] = contains ? selection.Key : keys[i] == selection.Key ? null : keys[i];

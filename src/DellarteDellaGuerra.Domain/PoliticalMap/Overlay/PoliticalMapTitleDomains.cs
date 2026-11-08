@@ -29,6 +29,10 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
                 : level == PoliticalMapOwnerLevel.Vassals ? SuperiorOwnedTitle(title, holder) : title;
         }
 
+        /// <summary>The local territory displayed at close zoom, rather than its holder's whole dignity.</summary>
+        public bool ContainsLocal(string titleId, string settlementId) =>
+            KeyOf(settlementId, PoliticalMapOwnerLevel.SubVassals) == titleId;
+
         /// <summary>Membership is independent of camera level and never includes an unrelated owner's land.</summary>
         public bool Contains(string titleId, string settlementId)
         {

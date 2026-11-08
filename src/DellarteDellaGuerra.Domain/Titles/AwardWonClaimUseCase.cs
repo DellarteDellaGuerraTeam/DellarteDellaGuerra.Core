@@ -7,10 +7,10 @@ namespace DellarteDellaGuerra.Domain.Titles
 {
     /**
      * <summary>
-     *  What a won claim war gives: the title fought for, and every title below it in the de
-     *  jure hierarchy that the loser holds, all go to the winner's leader. A title below it
-     *  that another house holds stays with that house, and the loser keeps whatever lies
-     *  outside the fought-for title.
+     *  What a won claim war gives: the title fought for and the inheritance the loser holds
+     *  under it, the titles answering to it by allegiance and in turn theirs, all go to the
+     *  winner's leader. A title another house holds under it stays with that house, and the
+     *  loser keeps whatever lies outside the fought-for inheritance.
      * </summary>
      * <remarks>
      *  Returns the seats of the titles it moved, so the caller can hand over the settlements
@@ -61,10 +61,18 @@ namespace DellarteDellaGuerra.Domain.Titles
             // on. Then it is not the loser's to give up, and it stays in its realm with its clans.
             bool titleWon = _genealogy.GetHolderClanOf(_titleRepository.GetTitle(titleId)) == loserClanId;
 
-            Award(titleId, winnerClanId, winnerLeaderId, loserClanId, currentDay, movedSeats);
+            var movedTitleIds = new List<string>();
+            Award(titleId, winnerClanId, winnerLeaderId, loserClanId, currentDay, movedSeats, movedTitleIds);
 
             if (titleWon && winnerPrimaryTitle is not null && MoveIntoWinnersRealm(titleId, winnerPrimaryTitle))
             {
+                // The rest of the inheritance follows the title it answers to across the border.
+                string winnerRealm = GetRealm(titleId);
+                foreach (string movedTitleId in movedTitleIds.Where(id => id != titleId && GetRealm(id) != winnerRealm))
+                {
+                    _feudalStructure.Reattach(movedTitleId, titleId);
+                }
+
                 joiningClans.AddRange(ClansWhosePrimaryTitleIsUnder(titleId, winnerClanId));
             }
 
@@ -128,18 +136,22 @@ namespace DellarteDellaGuerra.Domain.Titles
             string winnerLeaderId,
             string loserClanId,
             float currentDay,
-            List<string> movedSeats)
+            List<string> movedSeats,
+            List<string> movedTitleIds)
         {
-            Title? title = _titleRepository.GetTitle(titleId);
-            if (title is not null && _genealogy.GetHolderClanOf(title) == loserClanId)
+            // Collected before anything moves, since moving a title changes who holds it.
+            List<string> inheritance = new[] { titleId }
+                .Concat(TitleInheritance.HeldUnder(titleId, loserClanId, _feudalStructure, _titleRepository, _genealogy))
+                .ToList();
+
+            foreach (string inheritedTitleId in inheritance)
             {
+                Title? title = _titleRepository.GetTitle(inheritedTitleId);
+                if (title is null || _genealogy.GetHolderClanOf(title) != loserClanId) continue;
+
                 _titleRepository.SaveTitle(title.AwardTo(winnerLeaderId, winnerClanId, currentDay));
                 if (!string.IsNullOrEmpty(title.SeatSettlementId)) movedSeats.Add(title.SeatSettlementId);
-            }
-
-            foreach (string vassalTitleId in _feudalStructure.GetDeJureVassalTitleIds(titleId))
-            {
-                Award(vassalTitleId, winnerClanId, winnerLeaderId, loserClanId, currentDay, movedSeats);
+                movedTitleIds.Add(inheritedTitleId);
             }
         }
     }

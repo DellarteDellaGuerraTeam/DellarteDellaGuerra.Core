@@ -47,13 +47,13 @@ public class FeudalHierarchyOverRealContentTests
     public void EveryHouseInTheRealmAnswersToTheCrownThroughAChainThatTerminates()
     {
         // The chain is walked at runtime to resolve war sides, so a loop in it would hang the
-        // daily tick rather than merely mis-answer. Seventy-three houses hold land across three
-        // realms, and only the three kings answer to nobody. Forty-seven of them are England's,
+        // daily tick rather than merely mis-answer. Seventy-two houses hold land across three
+        // realms, and only the three kings answer to nobody. Forty-six of them are England's,
         // and every chain must terminate after ranks strictly increase.
         Content content = Content.Load();
         IReadOnlyList<string> holdingClans = content.HoldingClans();
 
-        Assert.Equal(73, holdingClans.Count);
+        Assert.Equal(72, holdingClans.Count);
         Assert.Equal(
             new[] { Crown, ScottishCrown, IslesCrown }.OrderBy(clan => clan),
             holdingClans.Where(clan => content.Suzerain(clan) is null));
@@ -75,7 +75,7 @@ public class FeudalHierarchyOverRealContentTests
             depths[clanId] = walked.Count - 1;
         }
 
-        Assert.Equal(47, realms.Count(entry => entry.Value == Crown));
+        Assert.Equal(46, realms.Count(entry => entry.Value == Crown));
         Assert.Equal(14, realms.Count(entry => entry.Value == ScottishCrown));
         Assert.Equal(12, realms.Count(entry => entry.Value == IslesCrown));
 
@@ -147,8 +147,8 @@ public class FeudalHierarchyOverRealContentTests
         Assert.Equal(Crown, content.Suzerain("clan_talbot"));
 
         Assert.Equal("clan_york", content.ClanHolding("barony_ludlow"));
-        Assert.Equal("clan_talbot", content.ClanHolding("county_shropshire"));
-        Assert.Equal("county_shropshire", content.SuzerainTitleOf("barony_ludlow"));
+        Assert.Equal("clan_talbot", content.ClanHolding("county_shrewsbury"));
+        Assert.Equal("county_shrewsbury", content.SuzerainTitleOf("barony_ludlow"));
 
         Assert.Equal("clan_talbot", content.ClanHolding("county_hallamshire"));
         Assert.Equal("duchy_york", content.SuzerainTitleOf("county_hallamshire"));
@@ -190,7 +190,7 @@ public class FeudalHierarchyOverRealContentTests
     {
         Content content = Content.Load();
         Assert.Equal("clan_neville_of_middleham", content.Suzerain("clan_fitzhugh"));
-        Assert.Equal("county_durham", content.SuzerainTitleOf("barony_skelton"));
+        Assert.Equal("duchy_warwick", content.SuzerainTitleOf("barony_skelton"));
         Assert.Equal(Crown, content.Suzerain("clan_hastings"));
         Assert.Equal(TitleRank.Earl, content.HighestRank("clan_gordon"));
         Assert.Equal(TitleRank.Earl, content.HighestRank("clan_douglas_angus"));
@@ -217,17 +217,19 @@ public class FeudalHierarchyOverRealContentTests
         // its baronies; a duchy gathers the counties and their baronies in turn. The crown's
         // dignity gathers the realm — all ninety-six of England's seats, one per title save the
         // kingdom itself. Scotland's crown gathers twenty-eight and the Isles' fifteen the same way.
-        // The three kingdoms are the only titles authored without a seat of their own, and the
-        // three realms between them account for every seat in the content, none twice.
+        // The three kingdoms and their regions and shires are the only titles authored without a
+        // seat of their own, and the three realms between them account for every seat in the
+        // content, none twice.
         Content content = Content.Load();
 
-        Assert.Equal(142, content.AllTitles().Count);
+        Assert.Equal(207, content.AllTitles().Count);
         Assert.Equal(
             new[] { "kingdom_england", "kingdom_isles", "kingdom_scotland" },
             content.AllTitles()
-                .Where(title => string.IsNullOrEmpty(title.SeatSettlementId))
+                .Where(title => string.IsNullOrEmpty(title.SeatSettlementId) && title.Rank == TitleRank.King)
                 .Select(title => title.Id)
                 .OrderBy(id => id));
+        Assert.Equal(68, content.AllTitles().Count(title => string.IsNullOrEmpty(title.SeatSettlementId)));
 
         IReadOnlyList<string> realm = content.DeJureSettlements("kingdom_england");
         IReadOnlyList<string> scotland = content.DeJureSettlements("kingdom_scotland");
@@ -252,20 +254,43 @@ public class FeudalHierarchyOverRealContentTests
 
         // And every one of them has a house to hold it: no Scottish dignity is left to nobody.
         Assert.All(
-            content.AllTitles().Where(title => title.Id != "kingdom_england" && !realm.Contains(title.SeatSettlementId)),
+            content.AllTitles().Where(title => title.Id != "kingdom_england" && !realm.Contains(title.SeatSettlementId)
+                && (title.Rank == TitleRank.King || !string.IsNullOrEmpty(title.SeatSettlementId))),
             title => Assert.NotNull(content.ClanHolding(title.Id)));
 
-        Assert.Equal(13, content.DeJureSettlements("duchy_york").Count);
-        Assert.Equal(5, content.DeJureSettlements("county_york").Count);
+        Assert.Equal(11, content.DeJureSettlements("region_york").Count);
+        Assert.Equal(2, content.DeJureSettlements("shire_east_riding").Count);
+        Assert.Equal(1, content.DeJureSettlements("county_york").Count);
         Assert.Equal(1, content.DeJureSettlements("barony_middleham").Count);
 
-        // The roll-up nests: York's county is inside York's duchy is inside the realm.
+        // The roll-up nests: York's city is inside the East Riding, inside the County of York,
+        // inside the realm.
         Assert.Subset(
             realm.ToHashSet(),
-            content.DeJureSettlements("duchy_york").ToHashSet());
+            content.DeJureSettlements("region_york").ToHashSet());
         Assert.Subset(
-            content.DeJureSettlements("duchy_york").ToHashSet(),
+            content.DeJureSettlements("region_york").ToHashSet(),
+            content.DeJureSettlements("shire_east_riding").ToHashSet());
+        Assert.Subset(
+            content.DeJureSettlements("shire_east_riding").ToHashSet(),
             content.DeJureSettlements("county_york").ToHashSet());
+    }
+
+    [Fact]
+    public void AClaimOnTheDuchyOfYorkPutsTheYorkInheritanceAtStake_NotItsFollowers()
+    {
+        var content = Content.Load();
+
+        IReadOnlyList<string> inheritance = content.InheritanceSettlements("duchy_york");
+
+        Assert.Equal(
+            new[] { "dadg_Fotheringhay_castle", "York_town", "dadg_Richmond_castle", "dadg_Helmsley_castle", "Kingston_upon_Hull_town" },
+            inheritance);
+        // Sheffield (Talbot) and Lincoln (de la Pole) follow York but are their own houses' inheritances.
+        Assert.DoesNotContain(content.SeatOf("county_hallamshire"), inheritance);
+        Assert.DoesNotContain(content.SeatOf("county_lincoln"), inheritance);
+        // A claim on a barony still disputes just that estate.
+        Assert.Equal(new[] { content.SeatOf("barony_middleham") }, content.InheritanceSettlements("barony_middleham"));
     }
 
     /// <summary>
@@ -280,6 +305,7 @@ public class FeudalHierarchyOverRealContentTests
         private readonly SuzeraintyPolicy _suzerain;
         private readonly GetDirectVassalsUseCase _directVassals;
         private readonly GetDeJureSettlementsUseCase _deJureSettlements;
+        private readonly GetInheritanceSettlementsUseCase _inheritanceSettlements;
 
         private Content(DadgXmlGenealogy genealogy, XmlFeudalStructure structure)
         {
@@ -290,6 +316,7 @@ public class FeudalHierarchyOverRealContentTests
             _suzerain = new SuzeraintyPolicy(_titles, structure, genealogy);
             _directVassals = new GetDirectVassalsUseCase(_titles, structure, _suzerain, genealogy);
             _deJureSettlements = new GetDeJureSettlementsUseCase(_titles, structure);
+            _inheritanceSettlements = new GetInheritanceSettlementsUseCase(_titles, structure, genealogy);
         }
 
         public static Content Load()
@@ -316,7 +343,11 @@ public class FeudalHierarchyOverRealContentTests
 
         public IReadOnlyList<string> DeJureSettlements(string titleId) => _deJureSettlements.Execute(titleId);
 
-        public string? SuzerainTitleOf(string titleId) => _structure.GetDeJureSuzerainTitleId(titleId);
+        public IReadOnlyList<string> InheritanceSettlements(string titleId) => _inheritanceSettlements.Execute(titleId);
+
+        public string? SeatOf(string titleId) => _titles.GetTitle(titleId)?.SeatSettlementId;
+
+        public string? SuzerainTitleOf(string titleId) => _structure.GetAllegianceSuzerainTitleId(titleId);
 
         public string? ClanHolding(string titleId) => _genealogy.GetHolderClanOf(_titles.GetTitle(titleId));
 

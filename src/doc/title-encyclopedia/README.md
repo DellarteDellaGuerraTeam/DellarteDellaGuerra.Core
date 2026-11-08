@@ -199,8 +199,12 @@ allegiance. Its labels, frontiers, selection and Ctrl+click use the same title k
 `dignityRank`. Geographic presentation uses the researched title kind:
 duchies/principalities use the largest font, earldoms and superior territorial
 groups the next sizes, and local estates, boroughs and honours the smaller sizes.
-Ownership labels use the represented dignity's name and rank. This changes
-neither personal vassalage nor settlement ownership.
+Broad ownership labels use the represented dignity's name and rank. At detailed
+zoom they give way to the underlying geographic title's local name and prominence:
+Devon's seat is labelled City of Exeter instead of repeating Earldom of Devon.
+Region labels use the centre of the largest circle inside the displayed region;
+they are no longer forced onto the holder's personal demesne. This changes neither
+personal vassalage nor settlement ownership.
 
 Known coverage limit: `county_pembroke` currently contains only `Pembroke_town`.
 Its actual domain can additionally include attached vassals; its de jure list

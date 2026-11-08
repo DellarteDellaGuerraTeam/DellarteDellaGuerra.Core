@@ -254,6 +254,70 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         }
 
         [Fact]
+        public void Execute_GivesTheWinnerTheLosersTitlesHeldUnderTheClaimedTitleByAllegiance()
+        {
+            var (useCase, titles, _) = Setup();
+            var structure = new FakeFeudalStructure()
+                .AddTitle("county", TitleRank.Earl)
+                .AddTitle("county_elsewhere", TitleRank.Earl)
+                .AddTitle("barony_c", TitleRank.Baron, parentTitleId: "county_elsewhere")
+                .WithAllegiance("county_elsewhere", "county");
+            var genealogy = titles.Genealogy;
+            useCase = new AwardWonClaimUseCase(titles, structure, genealogy, new SuzeraintyPolicy(titles, structure, genealogy));
+
+            var award = useCase.Execute("county", "clan_winner", "clan_loser", 10f);
+
+            Assert.Equal("winner_lord", titles.GetTitle("county_elsewhere")!.HolderHeroId);
+            Assert.Equal("fourth_lord", titles.GetTitle("barony_c")!.HolderHeroId);
+            Assert.Equal(new[] { "seat_county", "seat_elsewhere" }, award.MovedSeatIds);
+        }
+
+        [Fact]
+        public void Execute_BringsTheRestOfTheInheritanceAcrossTheBorderUnderTheWonTitle()
+        {
+            // county_split answers to county by allegiance and is held by the loser.
+            var (useCase, structure, _) = SetupAcrossTheBorderWithInheritance();
+
+            useCase.Execute("county", "clan_winner", "clan_loser", 10f);
+
+            Assert.Equal("kingdom_england", structure.GetDeJureSuzerainTitleId("county"));
+            Assert.Equal("county", structure.GetDeJureSuzerainTitleId("county_split"));
+            Assert.Equal("county", structure.GetAllegianceSuzerainTitleId("county_split"));
+        }
+
+        private static (AwardWonClaimUseCase UseCase, FakeFeudalStructure Structure, FakeTitleRepository Titles)
+            SetupAcrossTheBorderWithInheritance()
+        {
+            var genealogy = new FakeGenealogy()
+                .AddHero("scots_king", "clan_scots")
+                .AddHero("england_king", "clan_england")
+                .AddHero("loser_lord", "clan_loser")
+                .AddHero("winner_lord", "clan_winner")
+                .WithLeader("clan_winner", "winner_lord");
+
+            var structure = new FakeFeudalStructure()
+                .AddTitle("kingdom_scotland", TitleRank.King)
+                .AddTitle("county", TitleRank.Earl, parentTitleId: "kingdom_scotland")
+                .AddTitle("county_split", TitleRank.Earl, parentTitleId: "kingdom_scotland")
+                .AddTitle("kingdom_england", TitleRank.King)
+                .AddTitle("winner_title", TitleRank.Earl, parentTitleId: "kingdom_england")
+                .WithAllegiance("county_split", "county");
+
+            var titles = new FakeTitleRepository(
+                new Title("kingdom_scotland", "Scotland", TitleRank.King, "seat_scotland", "scots_king"),
+                new Title("county", "County", TitleRank.Earl, "seat_county", "loser_lord"),
+                new Title("county_split", "County Split", TitleRank.Earl, "seat_cs", "loser_lord"),
+                new Title("kingdom_england", "England", TitleRank.King, "seat_england", "england_king"),
+                new Title("winner_title", "Winner", TitleRank.Earl, "seat_winner", "winner_lord"))
+            {
+                Genealogy = genealogy
+            };
+
+            var suzerain = new SuzeraintyPolicy(titles, structure, genealogy);
+            return (new AwardWonClaimUseCase(titles, structure, genealogy, suzerain), structure, titles);
+        }
+
+        [Fact]
         public void Execute_LeavesAWonKingdomARealmOfItsOwn()
         {
             var (useCase, structure, _) = SetupAcrossTheBorder();

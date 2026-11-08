@@ -44,7 +44,8 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap
             {
                 if (selection.View == PoliticalMapView.DeJure
                     || selection.View == PoliticalMapView.Owners && selection.Mode == PoliticalMapLabelMode.Titles)
-                    TitleEncyclopediaEntry.Open(selection.Key);
+                    TitleEncyclopediaEntry.Open(selection.Key, selection.View == PoliticalMapView.Owners
+                        && selection.Level == PoliticalMapOwnerLevel.SubVassals);
                 else
                 {
                     IFaction? faction = selection.View == PoliticalMapView.Kingdom

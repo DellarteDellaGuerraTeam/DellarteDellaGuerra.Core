@@ -5,8 +5,8 @@ namespace DellarteDellaGuerra.Domain.Titles
 {
     /// <summary>
     /// Flattens a title to the settlements it covers de jure: its own seat plus the seat of
-    /// every title below it in the hierarchy. A war over a duchy is fought for the duchy's
-    /// counties and baronies too, so this is the set the main goal is picked from.
+    /// every title below it in the hierarchy. This is the title's territorial extent, shown in
+    /// the encyclopedia; a claim war is fought for the inheritance instead.
     /// </summary>
     public class GetDeJureSettlementsUseCase : IGetDeJureSettlementsUseCase
     {

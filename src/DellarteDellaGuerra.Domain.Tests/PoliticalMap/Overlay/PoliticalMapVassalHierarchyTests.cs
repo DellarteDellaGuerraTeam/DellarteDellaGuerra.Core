@@ -103,12 +103,12 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         public void TheWalkUpSkipsTitlesTheClanItselfHoldsAboveItsHighest()
         {
             // Two counties in a row, both Stanley's: the first title another clan holds is the duchy.
-            _structure.AddTitle("county_cheshire", TitleRank.Earl, "county_lancashire");
+            _structure.AddTitle("county_chester", TitleRank.Earl, "county_lancashire");
             _genealogy.AddHero("stanley_2", "clan_stanley");
-            _titles.SaveTitle(new Title("county_cheshire", "Cheshire", TitleRank.Earl, "", "stanley_2"));
+            _titles.SaveTitle(new Title("county_chester", "Cheshire", TitleRank.Earl, "", "stanley_2"));
             PoliticalMapVassalHierarchy hierarchy = Hierarchy();
 
-            Assert.Equal("county_cheshire", hierarchy.HighestTitleOf("clan_stanley")!.Id);
+            Assert.Equal("county_chester", hierarchy.HighestTitleOf("clan_stanley")!.Id);
             Assert.Equal("clan_beaufort", hierarchy.LiegeOf("clan_stanley"));
         }
 
@@ -193,9 +193,9 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         [InlineData(TitleRank.Earl, "Earldom held at Caerlaverock")]
         public void EqualDignitiesNameTheRegionalLordshipBeforeAnOlderCastleEstate(TitleRank castleRank, string expectedName)
         {
-            _structure.AddTitle("county_nithsdale", TitleRank.Earl, "kingdom_england")
-                .AddTitle("barony_caerlaverock", TitleRank.Baron, "county_nithsdale");
-            _titles.SaveTitle(new Title("county_nithsdale", "Lordship of Maxwell", TitleRank.Baron,
+            _structure.AddTitle("county_maxwell", TitleRank.Earl, "kingdom_england")
+                .AddTitle("barony_caerlaverock", TitleRank.Baron, "county_maxwell");
+            _titles.SaveTitle(new Title("county_maxwell", "Lordship of Maxwell", TitleRank.Baron,
                 "dumfries", "percy", heldSinceDay: 1440f));
             _titles.SaveTitle(new Title("barony_caerlaverock", castleRank == TitleRank.Baron
                 ? "Barony of Caerlaverock" : "Earldom held at Caerlaverock", castleRank,

@@ -47,7 +47,7 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
         var structure = FeudalServices.Structure;
         var titles = FeudalServices.Titles;
         Title? title = titles?.GetTitle(_id);
-        NameText = title?.Name ?? structure?.GetTitleName(_id) ?? _id;
+        NameText = entry.GetName().ToString();
         Articles.Value.TryGetValue(_id, out var article);
         if ((string?)article?.Attribute("name") != NameText)
             article = Articles.Value.Values.FirstOrDefault(x => (string?)x.Attribute("name") == NameText);
@@ -56,16 +56,19 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
         SourcesText = article is null ? "" : string.Join("\n", article.Elements("Source").Select(x => x.Value));
         _parent = structure?.GetDeJureSuzerainTitleId(_id);
         ParentText = _parent is null ? "No superior title" : "De jure: " + (structure?.GetTitleName(_parent) ?? _parent);
-        Holder = new HeroVM(FindHero(title?.HolderHeroId)!);
+        var seat = string.IsNullOrEmpty(title?.SeatSettlementId) ? null : Settlement.Find(title!.SeatSettlementId);
+        Holder = new HeroVM((entry.IsLocalTerritory ? seat?.OwnerClan?.Leader : FindHero(title?.HolderHeroId))!);
         HasHolder = Holder.Hero is not null;
-        HolderText = title?.HolderHeroId is null ? "Holder not recorded" : "Recognised holder";
+        HolderText = entry.IsLocalTerritory ? "Lord of the settlement"
+            : title?.HolderHeroId is null ? "Holder not recorded" : "Recognised holder";
 
         if (titles is not null && structure is not null)
         {
             var world = new BannerlordPoliticalMapWorld();
             var hierarchy = new PoliticalMapVassalHierarchy(structure, titles, new CampaignGenealogy(), world);
             var domains = new PoliticalMapTitleDomains(structure, world, hierarchy);
-            foreach (var settlement in Settlement.All.Where(x => (x.IsTown || x.IsCastle) && domains.Contains(_id, x.StringId))
+            foreach (var settlement in Settlement.All.Where(x => (x.IsTown || x.IsCastle)
+                && (entry.IsLocalTerritory ? domains.ContainsLocal(_id, x.StringId) : domains.Contains(_id, x.StringId)))
                 .OrderBy(x => x.Name.ToString()))
             {
                 Settlements.Add(new EncyclopediaSettlementVM(settlement));
@@ -79,14 +82,15 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
         }
         SettlementsText = "Actual domain — towns and castles (" + Settlements.Count + ")";
         DeJureSettlementsText = "De jure extent — towns and castles (" + DeJureSettlements.Count + ")";
-        foreach (Claim claim in FeudalServices.Claims?.GetClaimsOn(_id) ?? Array.Empty<Claim>())
+        bool showsDignity = !entry.IsLocalTerritory || NameText == title?.Name;
+        foreach (Claim claim in showsDignity ? FeudalServices.Claims?.GetClaimsOn(_id) ?? Array.Empty<Claim>() : Array.Empty<Claim>())
         {
             Clan? house = FindClan(claim.ClaimantClanId);
             Hero? hero = claim.ClaimantHeroId is { } heroId ? FindHero(heroId) : house?.Leader;
             Claimants.Add(new TitleClaimantVM(hero, claim, house));
         }
         ClaimsText = Claimants.Count == 0 ? "No recorded claims" : "Claimants (" + Claimants.Count + ")";
-        if (title is not null)
+        if (showsDignity && title is not null)
             foreach (TitleHolder holder in title.Holders.Reverse())
             {
                 if (holder.HeroId is null && holder.Acquisition == TitleAcquisition.Initial) continue;
@@ -97,11 +101,11 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
                     : TaleWorlds.CampaignSystem.CampaignTime.Days(holder.SinceDay).ToString();
                 History.Add(new TitleHistoryVM(name + " — " + AcquisitionText(holder.Acquisition) + ". " + date));
             }
-        var seat = string.IsNullOrEmpty(title?.SeatSettlementId) ? null : Settlement.Find(title!.SeatSettlementId);
         SettlementImageID = seat?.SettlementComponent?.WaitMeshName ?? "";
         HasSeatImage = SettlementImageID.Length > 0;
         SeatText = seat is null ? "No single seat" : "Seat: " + seat.Name;
-        OccupancyText = title?.OccupantClanId is { } occupant
+        OccupancyText = entry.IsLocalTerritory ? "The towns and castles of this territory are listed with their present owners."
+            : title?.OccupantClanId is { } occupant
             ? "The seat is occupied by " + (FindClan(occupant)?.Name.ToString() ?? occupant) + ". The recognised holder retains the title."
             : "The actual domain includes controlled holdings and attached vassals. The de jure extent is listed separately.";
         IsLoadingOver = true;
@@ -117,7 +121,7 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
     };
     private static Hero? FindHero(string? id) => id is null ? null : Campaign.Current?.CampaignObjectManager.Find<Hero>(id);
     private static Clan? FindClan(string id) => Campaign.Current?.CampaignObjectManager.Find<Clan>(id);
-    public void ExecuteParentLink() { if (_parent is not null) TitleEncyclopediaEntry.Open(_parent); }
+    public void ExecuteParentLink() { if (_parent is not null) TitleEncyclopediaEntry.Open(_parent, true); }
     public void ExecuteLink(string link) => Campaign.Current?.EncyclopediaManager.GoToLink(link);
     public override void ExecuteSwitchBookmarkedState()
     {

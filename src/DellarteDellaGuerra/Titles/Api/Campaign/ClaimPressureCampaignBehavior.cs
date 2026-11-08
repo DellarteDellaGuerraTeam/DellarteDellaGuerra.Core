@@ -51,7 +51,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
         private readonly IClaimRepository _claimRepository;
         private readonly IGenealogy _genealogy;
         private readonly SuzeraintyPolicy _suzeraintyPolicy;
-        private readonly IGetDeJureSettlementsUseCase _getDeJureSettlementsUseCase;
+        private readonly IGetInheritanceSettlementsUseCase _getInheritanceSettlementsUseCase;
         private readonly IAwardWonClaimUseCase _awardWonClaimUseCase;
         private readonly IGenerateBloodClaimsUseCase _generateBloodClaimsUseCase;
         private readonly IScreenClaimUseCase _screenClaimUseCase;
@@ -72,7 +72,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             IClaimRepository claimRepository,
             IGenealogy genealogy,
             SuzeraintyPolicy suzeraintyPolicy,
-            IGetDeJureSettlementsUseCase getDeJureSettlementsUseCase,
+            IGetInheritanceSettlementsUseCase getInheritanceSettlementsUseCase,
             IAwardWonClaimUseCase awardWonClaimUseCase,
             IGenerateBloodClaimsUseCase generateBloodClaimsUseCase,
             IScreenClaimUseCase screenClaimUseCase,
@@ -87,7 +87,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
             _claimRepository = claimRepository;
             _genealogy = genealogy;
             _suzeraintyPolicy = suzeraintyPolicy;
-            _getDeJureSettlementsUseCase = getDeJureSettlementsUseCase;
+            _getInheritanceSettlementsUseCase = getInheritanceSettlementsUseCase;
             _awardWonClaimUseCase = awardWonClaimUseCase;
             _generateBloodClaimsUseCase = generateBloodClaimsUseCase;
             _screenClaimUseCase = screenClaimUseCase;
@@ -208,7 +208,7 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
 
                     string? mainGoalSettlementId = _privateWarDeclaration.SelectMainGoal(
                         defenderClanId,
-                        _getDeJureSettlementsUseCase.Execute(title.Id));
+                        _getInheritanceSettlementsUseCase.Execute(title.Id));
                     if (mainGoalSettlementId is null)
                     {
                         Skip("no main goal");

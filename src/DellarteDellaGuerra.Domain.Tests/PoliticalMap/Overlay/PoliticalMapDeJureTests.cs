@@ -76,6 +76,21 @@ public class PoliticalMapDeJureTests
         Assert.Equal(paints[4], selected[4]);
     }
 
+    [Theory]
+    [InlineData(PoliticalMapOwnerLevel.Vassals, "region")]
+    [InlineData(PoliticalMapOwnerLevel.SubVassals, "shire")]
+    public void ADeepHierarchyShowsTheRegionFarOutAndTheShireCloseIn(PoliticalMapOwnerLevel level, string expected)
+    {
+        _structure
+            .AddTitle("region", TitleRank.Duke, "realm")
+            .AddTitle("shire", TitleRank.Duke, "region")
+            .AddTitle("county_deep", TitleRank.Earl, "shire", "deep")
+            .AddTitle("barony_deep", TitleRank.Baron, "county_deep", "deeper");
+
+        Assert.Equal(expected, Painter().GeographicLabelKeyOf("deep", _world, level));
+        Assert.Equal(expected, Painter().GeographicLabelKeyOf("deeper", _world, level));
+    }
+
     // Throwing accessors ensure de jure rendering remains independent of live control and allegiance.
     private sealed class World : IPoliticalMapWorld, IPoliticalMapNames
     {

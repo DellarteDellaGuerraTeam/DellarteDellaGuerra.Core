@@ -8,6 +8,296 @@
   <Title id="kingdom_isles" name="Lordship of the Isles">
     <Description>The Lordship of the Isles brings together island and mainland territories under the MacDonald lords. Its power rests on a network of local lordships and kinship ties, within a contested relationship with the Scottish Crown.</Description>
   </Title>
+  <Title id="region_durham" name="County Palatine of Durham">
+    <Description>The bishop of Durham's palatine liberty between Tyne and Tees, where the king's writ did not run and the bishop kept his own courts, chancery and mint.</Description>
+    <Source>https://en.wikipedia.org/wiki/County_Palatine_of_Durham</Source>
+  </Title>
+  <Title id="region_east_march" name="East March">
+    <Description>The English East March towards Scotland, the county of Northumberland and the Tyne, kept by the warden of the East March from the Percy strongholds of the coast.</Description>
+    <Source>https://en.wikipedia.org/wiki/Warden_of_the_Marches</Source>
+    <Source>https://en.wikipedia.org/wiki/Henry_Percy,_4th_Earl_of_Northumberland</Source>
+  </Title>
+  <Title id="shire_northumberland" name="Northumberland">
+    <Description>The shire of Northumberland north of the Tyne, a land of border castles along the coast and the Cheviot foothills.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="region_west_march" name="West March">
+    <Description>The English West March, Cumberland and Westmorland, guarded from Carlisle against the Scots of Annandale and Liddesdale.</Description>
+    <Source>https://en.wikipedia.org/wiki/Warden_of_the_Marches</Source>
+  </Title>
+  <Title id="shire_cumberland" name="Cumberland">
+    <Description>The shire of Cumberland, centred on the border city of Carlisle and the Eden valley.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="region_york" name="County of York">
+    <Description>The great shire of York, the largest in the realm, divided into its Ridings and the liberty of Richmondshire.</Description>
+    <Source>https://en.wikipedia.org/wiki/Richmondshire</Source>
+    <Source>https://en.wikipedia.org/wiki/Assizes</Source>
+  </Title>
+  <Title id="shire_east_riding" name="York and the East Riding">
+    <Description>The city of York and the East Riding, from the Ouse to the Humber and the port of Hull.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="shire_richmondshire" name="Richmondshire">
+    <Description>The liberty of Richmondshire in the Yorkshire dales, the honour of Richmond with Wensleydale and Middleham.</Description>
+    <Source>https://en.wikipedia.org/wiki/Richmondshire</Source>
+  </Title>
+  <Title id="shire_north_riding" name="North Riding">
+    <Description>The North Riding of Yorkshire, from the vale of York to the moors and the sea at Scarborough.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="shire_west_riding" name="West Riding">
+    <Description>The West Riding of Yorkshire, from Craven in the Pennines to the honours of Pontefract, Conisbrough and Hallamshire.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="region_lancaster" name="County Palatine of Lancaster">
+    <Description>The county palatine of Lancaster, united to the duchy of Lancaster and so to the crown, with its own chancery and justices between the Mersey and the Lakeland fells.</Description>
+    <Source>https://en.wikipedia.org/wiki/County_Palatine_of_Lancaster</Source>
+  </Title>
+  <Title id="region_chester" name="County Palatine of Chester">
+    <Description>The palatine earldom of Chester, held with Flint by the Prince of Wales, governed by its own justiciar and exchequer at Chester.</Description>
+    <Source>https://en.wikipedia.org/wiki/County_Palatine_of_Chester</Source>
+    <Source>https://en.wikipedia.org/wiki/Edward_of_Westminster</Source>
+  </Title>
+  <Title id="region_midland_circuit" name="Midland Circuit">
+    <Description>The shires of the English Midlands visited together by the king's justices of assize, from Warwick to Lincoln.</Description>
+    <Source>https://en.wikipedia.org/wiki/Assizes</Source>
+    <Source>https://discovery.nationalarchives.gov.uk/details/r/C9979</Source>
+  </Title>
+  <Title id="shire_warwick_leicester" name="Warwick and Leicester">
+    <Description>Warwickshire and Leicestershire, which shared one sheriff, with Warwick, Coventry and Kenilworth.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="shire_northamptonshire" name="Northamptonshire">
+    <Description>The shire of Northampton along the Nene, with the castles of Northampton and Fotheringhay.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="shire_nottingham_derby" name="Nottingham and Derby">
+    <Description>Nottinghamshire and Derbyshire, which shared one sheriff, from Nottingham castle to the High Peak.</Description>
+    <Source>https://en.wikipedia.org/wiki/Sheriff_of_Nottinghamshire,_Derbyshire_and_the_Royal_Forests</Source>
+  </Title>
+  <Title id="shire_lincolnshire" name="Lincolnshire">
+    <Description>The shire of Lincoln, from the cathedral city to the fens around Tattershall.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="region_norfolk_circuit" name="Norfolk Circuit">
+    <Description>The shires of East Anglia visited together by the king's justices of assize.</Description>
+    <Source>https://en.wikipedia.org/wiki/Assizes</Source>
+    <Source>https://discovery.nationalarchives.gov.uk/details/r/C9979</Source>
+  </Title>
+  <Title id="shire_norfolk" name="Norfolk">
+    <Description>The shire of Norfolk, with the city of Norwich and the port of Lynn.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="shire_suffolk" name="Suffolk">
+    <Description>The shire of Suffolk, which shared its sheriff with Norfolk, with Bury St Edmunds, Clare and Framlingham.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="region_home_circuit" name="Home Circuit">
+    <Description>The shires around London visited together by the king's justices of assize, with the City itself and the liberty of the Cinque Ports.</Description>
+    <Source>https://en.wikipedia.org/wiki/Assizes</Source>
+    <Source>https://discovery.nationalarchives.gov.uk/details/r/C9979</Source>
+    <Source>https://en.wikipedia.org/wiki/Cinque_Ports</Source>
+  </Title>
+  <Title id="shire_kent" name="Kent">
+    <Description>The shire of Kent, from Canterbury to the Medway at Rochester and the Weald at Tonbridge.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="shire_cinque_ports" name="Cinque Ports">
+    <Description>The confederation of the Cinque Ports, a liberty under the Lord Warden at Dover Castle.</Description>
+    <Source>https://en.wikipedia.org/wiki/Cinque_Ports</Source>
+  </Title>
+  <Title id="shire_surrey_sussex" name="Surrey and Sussex">
+    <Description>Surrey and Sussex, which shared one sheriff, from the Downs to the Channel coast.</Description>
+    <Source>https://en.wikipedia.org/wiki/Sheriff_of_Sussex</Source>
+  </Title>
+  <Title id="shire_essex_hertford" name="Essex and Hertford">
+    <Description>Essex and Hertfordshire, which shared one sheriff, north and east of London.</Description>
+    <Source>https://en.wikipedia.org/wiki/High_Sheriff_of_Hertfordshire</Source>
+  </Title>
+  <Title id="region_oxford_circuit" name="Oxford Circuit">
+    <Description>The shires of the western Midlands and the Severn visited together by the king's justices of assize.</Description>
+    <Source>https://en.wikipedia.org/wiki/Assizes</Source>
+    <Source>https://discovery.nationalarchives.gov.uk/details/r/C9979</Source>
+  </Title>
+  <Title id="shire_oxford_berks" name="Oxford and Berks">
+    <Description>Oxfordshire and Berkshire, which shared one sheriff, on either bank of the Thames.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="shire_gloucester" name="Gloucestershire and Bristol">
+    <Description>The shire of Gloucester with the town and county of Bristol at the mouth of the Severn.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="shire_shropshire" name="Shropshire">
+    <Description>The shire of Shropshire on the Welsh border, with Shrewsbury and Ludlow.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="region_western_circuit" name="Western Circuit">
+    <Description>The shires of the West Country visited together by the king's justices of assize.</Description>
+    <Source>https://en.wikipedia.org/wiki/Assizes</Source>
+    <Source>https://discovery.nationalarchives.gov.uk/details/r/C9979</Source>
+  </Title>
+  <Title id="shire_hampshire" name="Hampshire">
+    <Description>The shire of Southampton, with Winchester and the Isle of Wight.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="shire_somerset_dorset" name="Somerset and Dorset">
+    <Description>Somerset and Dorset, which shared one sheriff, from Corfe and Sherborne to Taunton and Dunster.</Description>
+    <Source>https://en.wikipedia.org/wiki/High_Sheriff_of_Somerset</Source>
+    <Source>https://en.wikipedia.org/wiki/High_Sheriff_of_Dorset</Source>
+  </Title>
+  <Title id="shire_devon" name="Devon">
+    <Description>The shire of Devon, from the city of Exeter to Plymouth Sound and the edge of Dartmoor.</Description>
+    <Source>https://en.wikipedia.org/wiki/List_of_shrievalties</Source>
+  </Title>
+  <Title id="region_cornwall" name="Duchy of Cornwall">
+    <Description>The duchy of Cornwall, created in 1337 for the king's eldest son and held by the Prince of Wales, with its stannaries and its castle at Launceston.</Description>
+    <Source>https://en.wikipedia.org/wiki/Duchy_of_Cornwall</Source>
+    <Source>https://en.wikipedia.org/wiki/Edward_of_Westminster</Source>
+  </Title>
+  <Title id="region_wales" name="Principality of Wales">
+    <Description>The principality of Wales, the shires of the old Welsh princes held by the Prince of Wales under the Statute of Rhuddlan.</Description>
+    <Source>https://en.wikipedia.org/wiki/Principality_of_Wales</Source>
+    <Source>https://en.wikipedia.org/wiki/Statute_of_Rhuddlan</Source>
+  </Title>
+  <Title id="shire_north_wales" name="North Wales">
+    <Description>Anglesey, Caernarfon and Merioneth, governed by the justiciar of North Wales from Caernarfon.</Description>
+    <Source>https://en.wikipedia.org/wiki/Statute_of_Rhuddlan</Source>
+  </Title>
+  <Title id="shire_south_wales" name="South Wales">
+    <Description>Cardigan and Carmarthen, governed by the justiciar of South Wales from Carmarthen.</Description>
+    <Source>https://en.wikipedia.org/wiki/Statute_of_Rhuddlan</Source>
+  </Title>
+  <Title id="region_march_of_wales" name="March of Wales">
+    <Description>The marcher lordships between England and the principality, outside the shires, where each lord held royal rights over his own land.</Description>
+    <Source>https://en.wikipedia.org/wiki/Welsh_Marches</Source>
+    <Source>https://en.wikipedia.org/wiki/Marcher_lord</Source>
+  </Title>
+  <Title id="shire_glamorgan" name="Lordship of Glamorgan">
+    <Description>The marcher lordship of Glamorgan, ruled from Cardiff with Caerphilly in the hills.</Description>
+    <Source>https://en.wikipedia.org/wiki/Welsh_Marches</Source>
+  </Title>
+  <Title id="shire_gower" name="Lordship of Gower">
+    <Description>The marcher lordship of Gower, ruled from Swansea.</Description>
+    <Source>https://en.wikipedia.org/wiki/Welsh_Marches</Source>
+  </Title>
+  <Title id="region_lothian" name="Lothian">
+    <Description>The lands south of the Forth, the old justiciary of Lothian, with Edinburgh and Stirling.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+    <Source>https://en.wikipedia.org/wiki/Justiciar_of_Lothian</Source>
+  </Title>
+  <Title id="shire_edinburgh" name="Sheriffdom of Edinburgh">
+    <Description>The sheriffdom of Edinburgh with Haddington and the coast at Dunbar.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+  </Title>
+  <Title id="region_scottish_marches" name="Scottish Marches">
+    <Description>The East, Middle and West Marches facing England, with Berwick, held by the Scots since 1461, and Galloway, in the crown's hands since 1455.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+    <Source>https://en.wikipedia.org/wiki/Warden_of_the_Marches</Source>
+    <Source>https://en.wikipedia.org/wiki/Berwick-upon-Tweed</Source>
+    <Source>https://en.wikipedia.org/wiki/Stewartry_of_Kirkcudbright</Source>
+  </Title>
+  <Title id="shire_liddesdale" name="Lordship of Liddesdale">
+    <Description>The border lordship of Liddesdale, guarded by Hermitage Castle.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+  </Title>
+  <Title id="shire_dumfries" name="Sheriffdom of Dumfries">
+    <Description>The sheriffdom of Dumfries, Nithsdale and the Solway shore.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+  </Title>
+  <Title id="shire_galloway" name="Lordship of Galloway">
+    <Description>The lordship of Galloway, forfeited by the Douglases and kept for the crown from Threave.</Description>
+    <Source>https://en.wikipedia.org/wiki/Stewartry_of_Kirkcudbright</Source>
+  </Title>
+  <Title id="region_clydesdale" name="Clydesdale and the Principality">
+    <Description>The Clyde valley and the Stewart patrimony of Carrick and Bute, tied to the heir to the throne by the act of 1469, with Argyll beyond the firth.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+    <Source>https://en.wikipedia.org/wiki/Prince_of_Scotland</Source>
+  </Title>
+  <Title id="shire_argyll" name="Argyll">
+    <Description>The lands of Argyll and Lorne, with Glenorchy and the castle of Kilchurn.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+  </Title>
+  <Title id="region_fife_gowrie_angus" name="Fife, Gowrie and Angus">
+    <Description>The ancient provinces of Fife, Gowrie and Angus between the Forth and the Mounth, the heart of the old kingdom.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+  </Title>
+  <Title id="shire_fife" name="Sheriffdom of Fife">
+    <Description>The sheriffdom of Fife, with St Andrews and Loch Leven in Kinross.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+  </Title>
+  <Title id="region_mar_mearns" name="Mar and the Mearns">
+    <Description>The provinces of Mar, Buchan and the Mearns, from Aberdeen to the coast at Dunnottar.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+  </Title>
+  <Title id="shire_aberdeen" name="Sheriffdom of Aberdeen">
+    <Description>The sheriffdom of Aberdeen, with the earldom of Mar at Kildrummy and the Gordon lordship of Strathbogie.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+  </Title>
+  <Title id="region_moray" name="Moray">
+    <Description>The old province of Moray, a crown earldom since 1455, from Elgin to Inverness and the Great Glen.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+    <Source>https://en.wikipedia.org/wiki/Earl_of_Moray</Source>
+  </Title>
+  <Title id="shire_inverness" name="Sheriffdom of Inverness">
+    <Description>The sheriffdom of Inverness, with Urquhart on Loch Ness.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+  </Title>
+  <Title id="region_far_north" name="Caithness, Sutherland and Orkney">
+    <Description>The far-northern earldoms, with Orkney, pledged by the king of Norway in 1468 and in the Scottish crown's hands since 1470.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+    <Source>https://en.wikipedia.org/wiki/Earl_of_Orkney</Source>
+    <Source>https://en.wikipedia.org/wiki/Annexation_of_Orkney_and_Shetland</Source>
+  </Title>
+  <Title id="shire_caithness" name="Earldom of Caithness">
+    <Description>The earldom of Caithness, with Wick and the strath of Dirlot.</Description>
+    <Source>https://en.wikipedia.org/wiki/Shires_of_Scotland</Source>
+  </Title>
+  <Title id="region_islay_kintyre" name="Islay and Kintyre">
+    <Description>The heart of the Lordship, Islay with Finlaggan, its council seat, together with Kintyre, Knapdale and Mull.</Description>
+    <Source>https://en.wikipedia.org/wiki/Lord_of_the_Isles</Source>
+    <Source>https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross</Source>
+  </Title>
+  <Title id="shire_islay" name="Islay">
+    <Description>The island of Islay, with Finlaggan and Dunyvaig.</Description>
+    <Source>https://en.wikipedia.org/wiki/Lord_of_the_Isles</Source>
+    <Source>https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross</Source>
+  </Title>
+  <Title id="region_ross" name="Earldom of Ross">
+    <Description>The earldom of Ross, held by the Lord of the Isles, from the Cromarty Firth to Kintail.</Description>
+    <Source>https://en.wikipedia.org/wiki/Lord_of_the_Isles</Source>
+    <Source>https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross</Source>
+  </Title>
+  <Title id="shire_easter_ross" name="Easter Ross">
+    <Description>Easter Ross along the Cromarty and Dornoch firths, with Dingwall, Balnagown and Foulis.</Description>
+    <Source>https://en.wikipedia.org/wiki/Lord_of_the_Isles</Source>
+    <Source>https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross</Source>
+  </Title>
+  <Title id="region_skye_outer_isles" name="Skye and the Outer Isles">
+    <Description>Skye and the Long Island, held by the MacLeods, the MacNeils and the Clan Donald of Sleat under the Lord of the Isles.</Description>
+    <Source>https://en.wikipedia.org/wiki/Lord_of_the_Isles</Source>
+    <Source>https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross</Source>
+  </Title>
+  <Title id="shire_long_island" name="The Long Island">
+    <Description>The Outer Hebrides, from Lewis to Barra.</Description>
+    <Source>https://en.wikipedia.org/wiki/Lord_of_the_Isles</Source>
+    <Source>https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross</Source>
+  </Title>
+  <Title id="shire_skye" name="Skye">
+    <Description>The Isle of Skye, with Dunvegan and Sleat.</Description>
+    <Source>https://en.wikipedia.org/wiki/Lord_of_the_Isles</Source>
+    <Source>https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross</Source>
+  </Title>
+  <Title id="region_lochaber" name="Lochaber and Garmoran">
+    <Description>Lochaber, granted to the Lords of the Isles in 1376, and Garmoran, gained by the MacRuairi marriage.</Description>
+    <Source>https://en.wikipedia.org/wiki/Lord_of_the_Isles</Source>
+    <Source>https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross</Source>
+  </Title>
+  <Title id="shire_garmoran" name="Garmoran and Ardnamurchan">
+    <Description>The rough bounds of Moidart and the Ardnamurchan peninsula.</Description>
+    <Source>https://en.wikipedia.org/wiki/Lord_of_the_Isles</Source>
+    <Source>https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross</Source>
+  </Title>
   <Title id="duchy_lancaster" name="Honour of Pontefract">
     <Description>Honour of Pontefract is centred on Pontefract Castle. It is associated with West Riding of Yorkshire. An honour brings together estates and rights under a common lordship; its lands need not form a single continuous territory.</Description>
     <Source>https://www.wyjs.org.uk/media/1354/pontefract-castle.pdf</Source>
@@ -32,7 +322,7 @@
     <Source>https://www.lancaster.ac.uk/fass/projects/manorialrecords/cumbria/westmorlandlist.htm</Source>
     <Source>https://www.cumbriacountyhistory.org.uk/township/kendal-formerly-kirkby-kendal</Source>
   </Title>
-  <Title id="county_cheshire" name="City of Chester">
+  <Title id="county_rivers" name="City of Chester">
     <Description>City of Chester is centred on Chester. It is associated with Cheshire palatinate.</Description>
     <Source>https://www.cambridge.org/core/books/abs/cheshire-and-the-tudor-state-14801560/chester-council-and-exchequer-powerful-local-institutions/3AB603AE0A876F54D2BD3044B3C9DADA</Source>
     <Source>https://www.english-heritage.org.uk/visit/places/beeston-castle-and-woodland-park/history</Source>
@@ -74,7 +364,7 @@
     <Source>https://eprints.oxfordarchaeology.com/661/4/WCM_101341_WODIBOT2.FinalpdfA.pdf</Source>
     <Source>https://www.explorethepast.co.uk/2021/11/our-archaeological-archivist/</Source>
   </Title>
-  <Title id="county_durham" name="Borough of Newcastle upon Tyne">
+  <Title id="county_westmorland" name="Borough of Newcastle upon Tyne">
     <Description>Borough of Newcastle upon Tyne is centred on Newcastle upon Tyne. It is associated with Northumberland; town county from 1400. Its county status concerns the town's civic jurisdiction rather than a hereditary earldom.</Description>
     <Source>https://calmview.twmuseums.org.uk/calmview/Record.aspx?id=MD.NC&amp;src=CalmView.Catalog</Source>
   </Title>
@@ -92,7 +382,7 @@
     <Source>https://teesarchaeology.com/wp-content/uploads/2023/06/MedievalSkelton.pdf</Source>
     <Source>https://yorkshiregardenstrust.org.uk/research/sites/skelton-castle</Source>
   </Title>
-  <Title id="county_cumberland" name="City of Carlisle">
+  <Title id="county_clifford" name="City of Carlisle">
     <Description>City of Carlisle is centred on Carlisle. It is associated with Cumberland, West March.</Description>
     <Source>https://www.english-heritage.org.uk/visit/places/carlisle-castle/history/</Source>
   </Title>
@@ -163,7 +453,7 @@
     <Source>https://www.staffordbc.gov.uk/stafford-castle-and-visitor-centre</Source>
     <Source>https://www.staffordbc.gov.uk/history-of-stafford-and-the-council</Source>
   </Title>
-  <Title id="county_hereford" name="City of Hereford">
+  <Title id="county_bergavenny" name="City of Hereford">
     <Description>City of Hereford is centred on Hereford. It is associated with Herefordshire.</Description>
     <Source>https://herefordcitycouncil.gov.uk/city-history/</Source>
     <Source>https://htt.herefordshire.gov.uk/herefordshires-past/the-medieval-period/towns/</Source>
@@ -177,7 +467,7 @@
     <Description>Lordship of Painscastle is centred on Painscastle. It is associated with Elfael Is Mynydd, Welsh March (later Radnorshire). A Marcher lordship combines landed authority with the distinctive rights and customs of the Welsh March.</Description>
     <Source>https://coflein.gov.uk/en/sites/402326</Source>
   </Title>
-  <Title id="county_shropshire" name="Borough of Shrewsbury">
+  <Title id="county_shrewsbury" name="Borough of Shrewsbury">
     <Description>Borough of Shrewsbury is centred on Shrewsbury. It is associated with Shropshire.</Description>
     <Source>https://www.shrewsburytowncouncil.gov.uk/wp-content/uploads/Mayors-Handbook-2023-24.pdf</Source>
   </Title>
@@ -195,7 +485,7 @@
     <Description>Lordship of Framlingham is centred on Framlingham Castle. It is associated with Suffolk.</Description>
     <Source>https://historicengland.org.uk/listing/the-list/list-entry/1002965</Source>
   </Title>
-  <Title id="county_norwich" name="City and County of Norwich">
+  <Title id="county_howard" name="City and County of Norwich">
     <Description>City and County of Norwich is centred on Norwich. It is associated with Norfolk. Its county status concerns the town's civic jurisdiction rather than a hereditary earldom.</Description>
     <Source>https://researchbriefings.files.parliament.uk/documents/CBP-10233/CBP-10233.pdf</Source>
   </Title>
@@ -248,7 +538,7 @@
     <Description>Manor of Farleigh Hungerford is centred on Farleigh Castle. It is associated with Somerset. The manor is a local estate whose lands and customary rights form a distinct lordship.</Description>
     <Source>https://www.english-heritage.org.uk/visit/places/farleigh-hungerford-castle/history/</Source>
   </Title>
-  <Title id="barony_sherborne" name="Episcopal estate of Sherborne">
+  <Title id="barony_exeter" name="Episcopal estate of Sherborne">
     <Description>Episcopal estate of Sherborne is centred on Sherborne Castle. It is associated with Dorset. The estate's history is tied to the temporal lands of a bishopric.</Description>
     <Source>https://historicengland.org.uk/listing/the-list/list-entry/1015328</Source>
   </Title>
@@ -330,7 +620,7 @@
     <Description>Castle estate of Cardigan is centred on Cardigan Castle. It is associated with Cardiganshire; Ceredigion. The castle forms the centre of a local landed estate.</Description>
     <Source>https://senedd.wales/media/5yvkqbel/bus-guide-n0000000000000000000000000004371-english.pdf</Source>
   </Title>
-  <Title id="county_gwynedd" name="Royal castle and borough of Caernarfon">
+  <Title id="county_ferrers" name="Royal castle and borough of Caernarfon">
     <Description>Royal castle and borough of Caernarfon is centred on Caernarfon. It is associated with Caernarfonshire; Gwynedd.</Description>
     <Source>https://www.wales.com/about/history-and-heritage/how-cadw-safeguards-historic-places-wales</Source>
     <Source>https://whc.unesco.org/archive/2008/whc08-32com-inf8B1ADDe.pdf</Source>
@@ -395,7 +685,7 @@
     <Source>https://ryetowncouncil.gov.uk/our-town-council/</Source>
     <Source>https://www.visit1066country.com/destinations/rye/history</Source>
   </Title>
-  <Title id="county_sussex" name="City of Chichester">
+  <Title id="county_arundel" name="City of Chichester">
     <Description>City of Chichester is centred on Chichester. It is associated with Sussex; rape of Chichester.</Description>
     <Source>https://westsussexrecordofficeblog.com/2020/08/18/west-sussex-unwrapped-week-10-chichester/</Source>
     <Source>https://ipm-os.kdl.kcl.ac.uk/view/inquisition/22-520/index.html</Source>
@@ -439,7 +729,7 @@
     <Description>Manor of Donnington is centred on Donnington Castle. It is associated with Berkshire. The manor is a local estate whose lands and customary rights form a distinct lordship.</Description>
     <Source>https://www.english-heritage.org.uk/visit/places/donnington-castle/history/</Source>
   </Title>
-  <Title id="county_warkworth" name="Lordship of Warkworth">
+  <Title id="county_northumberland" name="Lordship of Warkworth">
     <Description>Lordship of Warkworth is centred on Warkworth. It is associated with Northumberland.</Description>
     <Source>https://www.english-heritage.org.uk/visit/places/warkworth-castle-and-hermitage/history/</Source>
     <Source>https://historicengland.org.uk/listing/the-list/list-entry/1011649</Source>
@@ -457,7 +747,7 @@
     <Description>Royal burgh of Edinburgh is centred on Edinburgh. It is associated with Lothian; Edinburgh sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates.</Description>
     <Source>https://scarf.scot/regional/sesarf/9-medieval/9-1-lntroduction/</Source>
   </Title>
-  <Title id="county_berwick" name="Burgh and royal fortress of Berwick">
+  <Title id="county_march" name="Burgh and royal fortress of Berwick">
     <Description>Burgh and royal fortress of Berwick is centred on Berwick-upon-Tweed. It is associated with Berwick; East March. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates.</Description>
     <Source>https://historicengland.org.uk/listing/the-list/list-entry/1015520</Source>
     <Source>https://www.northumberland.gov.uk/NorthumberlandCountyCouncil/media/Planning-and-Building/Conservation/Archaeology/Berwick.pdf</Source>
@@ -471,7 +761,7 @@
     <Description>Royal burgh of Stirling is centred on Stirling. It is associated with Stirling sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates.</Description>
     <Source>https://www.stirlingarchives.scot/2024/01/01/stirling-900-the-origins-of-the-royal-burgh-and-the-special-relationship-with-the-crown/</Source>
   </Title>
-  <Title id="county_lanark" name="Regality of Glasgow">
+  <Title id="county_hamilton" name="Regality of Glasgow">
     <Description>Regality of Glasgow is centred on Glasgow. It is associated with Clydesdale; Lanark sheriffdom. The estate's history is tied to the temporal lands of a bishopric.</Description>
     <Source>https://theses.gla.ac.uk/78777/1/13804140.pdf</Source>
     <Source>https://theglasgowstory.com/story/?id=TGSAA06</Source>
@@ -480,11 +770,11 @@
     <Description>Royal castle of Rothesay is centred on Rothesay Castle. It is associated with Bute. The castle forms the centre of a local landed estate.</Description>
     <Source>https://www.historicenvironment.scot/visit/all/rothesay-castle/history-and-stories/</Source>
   </Title>
-  <Title id="county_carrick" name="Royal burgh of Ayr">
+  <Title id="county_kennedy" name="Royal burgh of Ayr">
     <Description>Royal burgh of Ayr is centred on Ayr. It is associated with Kyle; Ayr sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates.</Description>
     <Source>https://archive.south-ayrshire.gov.uk/committee/CommitteePapers2021/Leadership%20Panel/30%20November%202021%20%28Special%29/Item%203a%20-%20REP%2020211130%20LP%20S%20City%20Status%20Bid%20%281%29.pdf</Source>
   </Title>
-  <Title id="county_nithsdale" name="Royal burgh of Dumfries">
+  <Title id="county_maxwell" name="Royal burgh of Dumfries">
     <Description>Dumfries is a royal burgh founded in 1186. Its burgh jurisdiction is distinct from the surrounding region of Nithsdale and from the Maxwell estate at Caerlaverock. The burgh's status rests on its royal foundation rather than an earldom of Dumfries.</Description>
     <Source>https://www.futuremuseum.co.uk/collections/life-work/social-history/government/the-royal-burgh-of-dumfries/oldest-surviving-copy-of-dumfries-burghs-royal-charter</Source>
   </Title>
@@ -497,7 +787,7 @@
     <Source>https://www.historicenvironment.scot/visit/all/threave-castle/history-and-stories/</Source>
     <Source>https://portal.historicenvironment.scot/apex/f?p=1505%3A300%3A%3A%3A%3A%3AVIEWTYPE%2CVIEWREF%3Adesignation%2CSM90301</Source>
   </Title>
-  <Title id="barony_hermitage" name="Hermitage castle estate">
+  <Title id="barony_angus" name="Hermitage castle estate">
     <Description>Hermitage stands in Liddesdale in the Scottish Borders. Its castle and surrounding estate are associated with the lordship of Liddesdale and the Douglas family. The estate has its own territorial identity, distinct from the Earldom of Angus held by its Douglas lords.</Description>
     <Source>https://portal.historicenvironment.scot/apex/f?p=1505%3A300%3A%3A%3A%3A%3AVIEWTYPE%2CVIEWREF%3Adesignation%2CSM90161</Source>
     <Source>https://www.historicenvironment.scot/visit/all/hermitage-castle/history-and-stories/</Source>
@@ -514,7 +804,7 @@
     <Description>Royal burgh of Dundee is centred on Dundee. It is associated with Angus; Forfar sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates.</Description>
     <Source>https://www.dundeecity.gov.uk/dundees-civic-history/royal-authority-to-use-the-title-lord-provost</Source>
   </Title>
-  <Title id="county_gowrie" name="Royal burgh of Perth">
+  <Title id="county_ruthven" name="Royal burgh of Perth">
     <Description>Royal burgh of Perth is centred on Perth. It is associated with Gowrie; Perth sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates.</Description>
     <Source>https://www.pkc.gov.uk/media/14401/City-Status-Bid-document/pdf/City_Status_Bid_document.pdf?m=1474990460393</Source>
   </Title>
@@ -523,7 +813,7 @@
     <Source>https://www.historicenvironment.scot/visit/all/kilchurn-castle/</Source>
     <Source>https://portal.historicenvironment.scot/apex/f?p=1505%3A300%3A%3A%3A%3A%3AVIEWTYPE%2CVIEWREF%3Adesignation%2CSM90179</Source>
   </Title>
-  <Title id="county_aberdeen" name="Royal burgh of Aberdeen">
+  <Title id="county_marischal" name="Royal burgh of Aberdeen">
     <Description>Royal burgh of Aberdeen is centred on Aberdeen. It is associated with Aberdeen sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates.</Description>
     <Source>https://committees.aberdeencity.gov.uk/documents/s22406/Freedom%20of%20the%20City.pdf</Source>
   </Title>
@@ -541,12 +831,12 @@
     <Description>Royal burgh of Elgin is centred on Elgin. It is associated with Moray; Elgin sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates.</Description>
     <Source>https://scarf.scot/national/medieval/3-lifestyles-and-living-spaces/3-6-commerce-industry-and-manufacturing/</Source>
   </Title>
-  <Title id="barony_strathbogie" name="Lordship of Strathbogie">
+  <Title id="barony_huntly" name="Lordship of Strathbogie">
     <Description>Lordship of Strathbogie is centred on Huntly. It is associated with Strathbogie; Aberdeen sheriffdom.</Description>
     <Source>https://portal.historicenvironment.scot/apex/f?p=PORTAL%3Adocument%3A0%3A%3A%3A%3ADOCREF%3A600001992</Source>
     <Source>https://her.aberdeenshire.gov.uk/Monument/MAB13616/</Source>
   </Title>
-  <Title id="county_inverness" name="Royal burgh of Inverness">
+  <Title id="county_westfield" name="Royal burgh of Inverness">
     <Description>Royal burgh of Inverness is centred on Inverness. It is associated with Inverness sheriffdom; northern Moray. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates.</Description>
     <Source>https://scarf.scot/regional/higharf/highland-archaeological-research-framework-case-studies/medieval-inverness/</Source>
   </Title>
@@ -636,7 +926,7 @@
     <Source>https://deriv.nls.uk/dcn23/1266/1366/126613661.23.pdf</Source>
     <Source>https://academic.oup.com/oxford-dictionary-of-national-biography/reference/63486/reference-article-abstract/580998820</Source>
   </Title>
-  <Title id="county_lochaber" name="Inverlochy settlement estate">
+  <Title id="county_lochiel" name="Inverlochy settlement estate">
     <Description>Inverlochy settlement estate is centred on Inverlochy. It is associated with Lochaber; Inverness sheriffdom.</Description>
     <Source>https://www.historicenvironment.scot/visit/all/inverlochy-castle/history-and-stories/</Source>
     <Source>https://deriv.nls.uk/dcn23/1266/1366/126613661.23.pdf</Source>
@@ -650,44 +940,5 @@
     <Description>Lands of Ardnamurchan is centred on Mingary. It is associated with Ardnamurchan; Inverness sheriffdom.</Description>
     <Source>https://deriv.nls.uk/dcn23/1266/1366/126613661.23.pdf</Source>
     <Source>https://archaeologydataservice.ac.uk/archiveDS/archiveDownload?t=arch-352-1%2Fdissemination%2Fpdf%2Fvol_144%2F144_0265_0276.pdf</Source>
-  </Title>
-  <Title id="group_7abb388a4f64" name="Duchy of Lancaster">
-    <Description>Duchy of Lancaster comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity.</Description>
-  </Title>
-  <Title id="group_fe353b33a20a" name="Earldom of Chester">
-    <Description>Earldom of Chester comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity.</Description>
-  </Title>
-  <Title id="group_74d7d74889fc" name="Duchy of Cornwall">
-    <Description>Duchy of Cornwall comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity.</Description>
-  </Title>
-  <Title id="group_e7ac5b3d8ae6" name="Principality of Wales">
-    <Description>Principality of Wales comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity.</Description>
-  </Title>
-  <Title id="group_76d8831f745b" name="Lordship of Glamorgan">
-    <Description>Lordship of Glamorgan comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity.</Description>
-  </Title>
-  <Title id="group_30a224df15c1" name="Lordship of Gower">
-    <Description>Lordship of Gower comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity.</Description>
-  </Title>
-  <Title id="group_8c9d9345b3b5" name="Lordship of Galloway">
-    <Description>Lordship of Galloway comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity.</Description>
-  </Title>
-  <Title id="group_78163fe87745" name="Lordship of Liddesdale">
-    <Description>Lordship of Liddesdale comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity.</Description>
-  </Title>
-  <Title id="group_5c2c9f4890fc" name="Lands of Glenorchy">
-    <Description>Lands of Glenorchy comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity.</Description>
-  </Title>
-  <Title id="group_177f441807f1" name="Earldom of Mar">
-    <Description>Earldom of Mar comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity.</Description>
-  </Title>
-  <Title id="group_b4e4cbf6b4b7" name="Earldom of Ross">
-    <Description>Earldom of Ross comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity.</Description>
-  </Title>
-  <Title id="group_1b3e86ef44f4" name="Lordship of Lochaber">
-    <Description>Lordship of Lochaber comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity.</Description>
-  </Title>
-  <Title id="group_ea25fa29900f" name="Lordship of Garmoran">
-    <Description>Lordship of Garmoran comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity.</Description>
   </Title>
 </Titles>

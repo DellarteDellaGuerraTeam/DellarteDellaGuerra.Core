@@ -194,7 +194,7 @@ public class DadgServiceContainer
         services.AddSingleton<IGenerateBloodClaimsUseCase, GenerateBloodClaimsUseCase>();
         services.AddSingleton<IExecuteSuccessionUseCase, ExecuteSuccessionUseCase>();
         services.AddSingleton<IBuildFeudalMapUseCase, BuildFeudalMapUseCase>();
-        services.AddSingleton<IGetDeJureSettlementsUseCase, GetDeJureSettlementsUseCase>();
+        services.AddSingleton<IGetInheritanceSettlementsUseCase, GetInheritanceSettlementsUseCase>();
         services.AddSingleton<IAwardWonClaimUseCase, AwardWonClaimUseCase>();
         services.AddSingleton<IScreenClaimUseCase, ScreenClaimUseCase>();
         services.AddSingleton<IEvaluatePressClaimUseCase, EvaluatePressClaimUseCase>();

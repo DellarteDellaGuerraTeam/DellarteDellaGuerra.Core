@@ -14,21 +14,32 @@ namespace DellarteDellaGuerra.Integration.Titles.UI;
 public sealed class TitleEncyclopediaEntry : Concept
 {
     public const string Prefix = "dadg_title_";
+    private const string LocalPrefix = "local:";
     public string TitleId { get; }
-    public TitleEncyclopediaEntry(string id)
+    public bool IsLocalTerritory { get; }
+    public TitleEncyclopediaEntry(string id, bool localTerritory = false)
     {
         TitleId = id;
-        StringId = Prefix + id;
-        Title = new TextObject(FeudalServices.Titles?.GetTitle(id)?.Name ?? FeudalServices.Structure?.GetTitleName(id) ?? id);
+        IsLocalTerritory = localTerritory;
+        StringId = Prefix + (localTerritory ? LocalPrefix : "") + id;
+        Title = new TextObject((localTerritory ? FeudalServices.Structure?.GetTitleName(id)
+            : FeudalServices.Titles?.GetTitle(id)?.Name) ?? FeudalServices.Structure?.GetTitleName(id) ?? id);
         Description = new TextObject("Lands, holders and claims.");
         FilterGroup = "DadgTitles";
     }
     public override TextObject GetName() => Title;
 
-    public static void Open(string id)
+    public static void Open(string id, bool localTerritory = false)
     {
         if (FeudalServices.Structure?.GetTitleName(id) is not null)
-            Campaign.Current?.EncyclopediaManager.GoToLink("Concept", Prefix + id);
+            Campaign.Current?.EncyclopediaManager.GoToLink("Concept", Prefix + (localTerritory ? LocalPrefix : "") + id);
+    }
+
+    public static TitleEncyclopediaEntry FromLink(string stringId)
+    {
+        string id = stringId.Substring(Prefix.Length);
+        bool local = id.StartsWith(LocalPrefix, StringComparison.Ordinal);
+        return new TitleEncyclopediaEntry(local ? id.Substring(LocalPrefix.Length) : id, local);
     }
 }
 
@@ -45,7 +56,7 @@ public sealed class TitleEncyclopediaPage : DefaultEncyclopediaConceptPage
     {
         if (!stringID.StartsWith(TitleEncyclopediaEntry.Prefix, StringComparison.Ordinal)) return base.GetObject(typeName, stringID);
         if (!_entries.TryGetValue(stringID, out var entry))
-            _entries.Add(stringID, entry = new TitleEncyclopediaEntry(stringID.Substring(TitleEncyclopediaEntry.Prefix.Length)));
+            _entries.Add(stringID, entry = TitleEncyclopediaEntry.FromLink(stringID));
         return entry;
     }
     public override bool IsValidEncyclopediaItem(object o) => o is TitleEncyclopediaEntry entry

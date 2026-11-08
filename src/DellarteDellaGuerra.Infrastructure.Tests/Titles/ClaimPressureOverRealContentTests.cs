@@ -73,8 +73,8 @@ public class ClaimPressureOverRealContentTests
         // Crown, so York cannot muster his following.
         Content content = Content.Load();
 
-        Assert.Equal((4f, 43f), content.Sides("clan_neville_of_middleham", "clan_lancaster"));
-        Assert.Equal((2f, 45f), content.Sides("clan_york", "clan_lancaster"));
+        Assert.Equal((4f, 42f), content.Sides("clan_neville_of_middleham", "clan_lancaster"));
+        Assert.Equal((2f, 44f), content.Sides("clan_york", "clan_lancaster"));
 
         Assert.Equal((2f, 4f), content.Sides("clan_percy", "clan_neville_of_middleham"));
 
@@ -115,7 +115,7 @@ public class ClaimPressureOverRealContentTests
     public void NoClaimIsWorthPressingWhileTheRealmIsAtPeaceWithItself()
     {
         // Adult holders leave only the three strong inter-house claims actionable. Making the
-        // holders minors exposes 117 opportunities, but the corrected followings still produce
+        // holders minors exposes 119 opportunities, but the corrected followings still produce
         // no declaration without distraction or hostility. Friendship never tips a claim into war.
         Content adults = Content.Load();
         Assert.Equal(3, adults.Opportunities().Count);
@@ -124,9 +124,9 @@ public class ClaimPressureOverRealContentTests
         Content content = adults.WithMinorHolders();
         IReadOnlyList<ClaimOpportunity> quiet = content.Opportunities();
 
-        Assert.Equal(117, quiet.Count);
+        Assert.Equal(119, quiet.Count);
         Assert.Equal(3, quiet.Count(o => o.Strength == ClaimStrength.Strong));
-        Assert.Equal(114, quiet.Count(o => o.Strength == ClaimStrength.Weak));
+        Assert.Equal(116, quiet.Count(o => o.Strength == ClaimStrength.Weak));
 
         Assert.Equal(19, quiet.Count(o => content.Score(o) > 0f));
         Assert.Equal(0, quiet.Count(o => content.Score(o) >= DeclarationThreshold));
@@ -152,9 +152,9 @@ public class ClaimPressureOverRealContentTests
 
         ClaimOpportunity crownAgainstWarwick = content.Opportunity("barony_middleham", "clan_lancaster");
         ClaimOpportunity mowbrayAgainstBourchier = content.Opportunity("county_essex", "clan_mowbray");
-        ClaimOpportunity staffordAgainstWoodville = content.Opportunity("county_cheshire", "clan_stafford");
+        ClaimOpportunity staffordAgainstWoodville = content.Opportunity("county_rivers", "clan_stafford");
 
-        Assert.Equal((43f, 4f), (crownAgainstWarwick.AttackerStrength, crownAgainstWarwick.DefenderStrength));
+        Assert.Equal((42f, 4f), (crownAgainstWarwick.AttackerStrength, crownAgainstWarwick.DefenderStrength));
         Assert.Equal((3f, 1f), (mowbrayAgainstBourchier.AttackerStrength, mowbrayAgainstBourchier.DefenderStrength));
         Assert.Equal((2f, 2f), (staffordAgainstWoodville.AttackerStrength, staffordAgainstWoodville.DefenderStrength));
 
@@ -171,7 +171,7 @@ public class ClaimPressureOverRealContentTests
         Assert.Equal((3f, 3f), (mowbrayAgainstTalbot.AttackerStrength, mowbrayAgainstTalbot.DefenderStrength));
         Assert.Equal(0f, content.Score(mowbrayAgainstTalbot));
 
-        ClaimOpportunity fitzalanAgainstWoodville = content.Opportunity("county_cheshire", "clan_fitzalan");
+        ClaimOpportunity fitzalanAgainstWoodville = content.Opportunity("county_rivers", "clan_fitzalan");
         Assert.Equal((2f, 2f), (fitzalanAgainstWoodville.AttackerStrength, fitzalanAgainstWoodville.DefenderStrength));
         Assert.Equal(0f, content.Score(fitzalanAgainstWoodville));
         Assert.Equal(
@@ -201,7 +201,7 @@ public class ClaimPressureOverRealContentTests
         Assert.All(adults.InternalOpportunities(), o => Assert.Equal(ClaimStrength.Strong, o.Strength));
 
         Assert.Equal(116, internals.Count);
-        Assert.Equal(59, internals.Select(o => o.DefenderClanId).Distinct().Count());
+        Assert.Equal(58, internals.Select(o => o.DefenderClanId).Distinct().Count());
         Assert.Equal(
             content.TitlesHeldBy("clan_lancaster"),
             internals.Where(o => o.DefenderClanId == "clan_lancaster").Select(o => o.TitleId).OrderBy(id => id));
@@ -258,7 +258,7 @@ public class ClaimPressureOverRealContentTests
             o => Assert.Equal((o.AttackerStrength, o.DefenderStrength), content.SidesAfter(o, content.Solicit(o))));
 
         Assert.All(weak, o => Assert.NotEmpty(content.Solicit(o).DefenderSupporters));
-        Assert.All(weak, o => Assert.Equal((0f, 47f), content.SidesAfter(o, content.Solicit(o))));
+        Assert.All(weak, o => Assert.Equal((0f, 46f), content.SidesAfter(o, content.Solicit(o))));
     }
 
     [Fact]
@@ -274,7 +274,7 @@ public class ClaimPressureOverRealContentTests
             .Where(pair => pair.Support.AttackerSupporters.Count > 0 || pair.Support.DefenderSupporters.Count > 0)
             .ToArray();
 
-        Assert.Equal(6, answered.Length);
+        Assert.Equal(7, answered.Length);
         Assert.All(
             answered,
             pair => Assert.True(pair.Opportunity.AttackerStrength * 4f <= pair.Opportunity.DefenderStrength));
@@ -286,9 +286,9 @@ public class ClaimPressureOverRealContentTests
         Assert.Empty(crownsCall.AttackerSupporters);
         Assert.Empty(crownsCall.DefenderSupporters);
         Assert.Equal(
-            42,
+            41,
             content.Candidates(middleham).Count(clanId => content.SideOf(middleham, clanId) == "clan_lancaster"));
-        Assert.Equal((43f, 4f), content.SidesAfter(middleham, crownsCall));
+        Assert.Equal((42f, 4f), content.SidesAfter(middleham, crownsCall));
     }
 
     [Fact]
@@ -306,7 +306,7 @@ public class ClaimPressureOverRealContentTests
         ILookup<string, string> realms = content.Realms();
 
         Assert.Equal(
-            new[] { ("clan_lancaster", 47), ("clan_macdonald_isles", 12), ("clan_stewart", 14) },
+            new[] { ("clan_lancaster", 46), ("clan_macdonald_isles", 12), ("clan_stewart", 14) },
             realms.Select(realm => (realm.Key, realm.Count())).OrderBy(realm => realm.Key));
 
         Assert.True(content.IsBonded("clan_york", "clan_woodville", 0f));
@@ -369,7 +369,7 @@ public class ClaimPressureOverRealContentTests
             Assert.DoesNotContain(ruthven, support.AttackerSupporters);
             Assert.DoesNotContain(ruthven, support.DefenderSupporters);
         });
-        Assert.DoesNotContain(ruthven, married.Candidates(married.Opportunity("county_cheshire", "clan_stafford")));
+        Assert.DoesNotContain(ruthven, married.Candidates(married.Opportunity("county_rivers", "clan_stafford")));
 
         Assert.Empty(content.Claims().Where(c => c.ClaimantClanId == ruthven));
         Assert.Equal(
@@ -435,7 +435,7 @@ public class ClaimPressureOverRealContentTests
             .Where(o => o.DefenderClanId == percy)
             .ToArray();
         Assert.Equal(
-            new[] { ("clan_de_vere", "county_warkworth") },
+            new[] { ("clan_de_vere", "county_northumberland") },
             percysFeuds.Select(o => (o.AttackerClanId, o.TitleId)).OrderBy(pair => pair.TitleId));
         Assert.All(percysFeuds, o =>
         {
@@ -449,9 +449,9 @@ public class ClaimPressureOverRealContentTests
         });
 
         Claim hers = Assert.Single(content.Claims(), c => c.ClaimantHeroId == bride);
-        Assert.Equal((kennedy, "county_carrick", ClaimStrength.Weak), (hers.ClaimantClanId, hers.TitleId, hers.Strength));
+        Assert.Equal((kennedy, "county_kennedy", ClaimStrength.Weak), (hers.ClaimantClanId, hers.TitleId, hers.Strength));
         Assert.Equal(
-            new[] { "county_carrick" },
+            new[] { "county_kennedy" },
             married.Claims().Where(c => c.ClaimantClanId == percy && c.ClaimantHeroId == bride).Select(c => c.TitleId));
         Assert.Equal(
             content.Claims().Where(c => c.ClaimantClanId == kennedy && c.ClaimantHeroId != bride),
@@ -467,7 +467,7 @@ public class ClaimPressureOverRealContentTests
         const string maxwell = "clan_maxwell";
 
         Content content = Content.Load();
-        ClaimOpportunity cheshire = content.Opportunity("county_cheshire", "clan_stafford");
+        ClaimOpportunity cheshire = content.Opportunity("county_rivers", "clan_stafford");
 
         Assert.DoesNotContain(maxwell, content.Candidates(cheshire));
         Assert.DoesNotContain(maxwell, content.Candidates(cheshire, Befriended(maxwell, 50f)));

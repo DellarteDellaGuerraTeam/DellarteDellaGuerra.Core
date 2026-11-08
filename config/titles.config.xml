@@ -3,209 +3,311 @@
 <Feudalism>
   <Kingdom id="kingdom_england" name="Crown of England" kingClanId="clan_lancaster" heldSince="1399" mapLabelRank="King">
     <Claim clanId="clan_york" />
-    <Barony id="barony_piel" name="Piel estate" seat="dadg_Piel_castle" holderClanId="clan_stanley" heldSince="1385" dignityName="Barony of Piel" dignityRank="Baron" allegiance="county_lancashire" mapLabelRank="Baron" />
-    <Barony id="barony_kendal" name="Barony of Kendal" seat="dadg_Kendal_castle" holderClanId="clan_parr" heldSince="1383" dignityName="Barony of Kendal" dignityRank="Baron" allegiance="county_lancashire" mapLabelRank="Baron" />
-    <Barony id="barony_chirk" name="Lordship of Chirk" seat="dadg_Chirk_castle" holderClanId="clan_york" heldSince="1440" dignityName="Barony of Chirk" dignityRank="Baron" allegiance="county_cheshire" mapLabelRank="Baron" />
-    <Duchy id="duchy_warwick" name="Earldom of Warwick" seat="dadg_Warwick_castle" holderClanId="clan_neville_of_middleham" heldSince="1449" dignityRank="Earl" allegiance="kingdom_england" dignityName="Earldom of Warwick and Salisbury" mapLabelRank="Earl" />
-    <County id="county_warwick" name="City of Coventry" seat="Coventry_town" holderClanId="clan_neville_of_middleham" heldSince="1449" dignityName="Lordship of Warwick" dignityRank="Baron" allegiance="duchy_warwick" mapLabelRank="Baron" />
-    <Barony id="barony_northampton" name="Northampton castle estate" seat="dadg_Northampton_castle" holderClanId="clan_lovell" heldSince="1430" dignityName="Barony of Northampton" dignityRank="Baron" allegiance="county_warwick" mapLabelRank="Baron" />
-    <Barony id="barony_worcester" name="Worcester castle estate" seat="dadg_Worcester_castle" holderClanId="clan_sutton" heldSince="1440" dignityName="Barony of Worcester" dignityRank="Baron" allegiance="county_warwick" mapLabelRank="Baron" />
-    <County id="county_durham" name="Borough of Newcastle upon Tyne" seat="Newcastle_upon_Tyne_town" holderClanId="clan_neville_of_raby" heldSince="1397" dignityName="Earldom of Westmorland" allegiance="kingdom_england" dignityRank="Earl" mapLabelRank="Baron" />
-    <Barony id="barony_durham" name="Durham episcopal castle estate" seat="dadg_Durham_castle" holderClanId="clan_greystoke" heldSince="1420" dignityName="Barony of Durham" dignityRank="Baron" allegiance="county_durham" mapLabelRank="Baron" />
-    <Barony id="barony_barnard" name="Lordship of Barnard Castle" seat="dadg_Barnard_castle" holderClanId="clan_neville_of_middleham" heldSince="1449" dignityName="Barony of Barnard" dignityRank="Baron" allegiance="county_durham" mapLabelRank="Baron" />
-    <Barony id="barony_skelton" name="Lordship of Skelton" seat="dadg_Skelton_castle" holderClanId="clan_fitzhugh" heldSince="1400" allegiance="duchy_warwick" dignityName="Barony of Skelton" dignityRank="Baron" mapLabelRank="Baron" />
-    <County id="county_cumberland" name="City of Carlisle" seat="Carlisle_town" holderClanId="clan_clifford" heldSince="1269" dignityName="Barony de Clifford" dignityRank="Baron" allegiance="kingdom_england" mapLabelRank="Baron" />
-    <Barony id="barony_penrith" name="Lordship of Penrith" seat="dadg_Penrith_castle" holderClanId="clan_neville_of_middleham" heldSince="1460" dignityName="Barony of Penrith" dignityRank="Baron" allegiance="county_cumberland" mapLabelRank="Baron" />
-    <Duchy id="duchy_york" name="Lordship of Fotheringhay" seat="dadg_Fotheringhay_castle" holderClanId="clan_york" heldSince="1385" dignityName="Duchy of York" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
-    <County id="county_york" name="City of York" seat="York_town" holderClanId="clan_york" heldSince="1385" dignityName="County of York" dignityRank="Earl" allegiance="duchy_york" mapLabelRank="Baron" />
-    <Barony id="barony_skipton" name="Honour of Skipton" seat="dadg_Skipton_castle" holderClanId="clan_stanley" heldSince="1465" dignityName="Barony of Skipton" dignityRank="Baron" allegiance="county_york" mapLabelRank="Baron">
-      <Claim clanId="clan_clifford" />
-    </Barony>
-    <Barony id="barony_middleham" name="Lordship of Middleham" seat="dadg_Middleham_castle" holderClanId="clan_neville_of_middleham" heldSince="1270" dignityName="Barony of Middleham" dignityRank="Baron" allegiance="county_york" mapLabelRank="Baron" />
-    <Barony id="barony_richmond" name="Honour of Richmond" seat="dadg_Richmond_castle" holderClanId="clan_york" heldSince="1462" dignityName="Barony of Richmond" dignityRank="Baron" allegiance="county_york" mapLabelRank="Baron">
-      <Claim clanId="clan_tudor" />
-    </Barony>
-    <Barony id="barony_helmsley" name="Lordship of Helmsley" seat="dadg_Helmsley_castle" holderClanId="clan_york" heldSince="1465" dignityName="Barony of Helmsley" dignityRank="Baron" allegiance="county_york" mapLabelRank="Baron" />
-    <County id="county_hull" name="Borough of Kingston upon Hull" seat="Kingston_upon_Hull_town" holderClanId="clan_york" heldSince="1440" dignityName="County of Hull" dignityRank="Earl" allegiance="duchy_york" mapLabelRank="Baron" />
-    <Barony id="barony_scarborough" name="Scarborough castle estate" seat="dadg_Scarborough_castle" holderClanId="clan_scrope_of_bolton" heldSince="1400" dignityName="Barony of Scarborough" dignityRank="Baron" allegiance="county_hull" mapLabelRank="Baron" />
-    <County id="county_hallamshire" name="Lordship of Hallamshire" seat="Sheffield_town" holderClanId="clan_talbot" heldSince="1409" dignityName="Lordship of Hallamshire" dignityRank="Baron" allegiance="duchy_york" mapLabelRank="Baron" />
-    <Barony id="barony_conisbrough" name="Honour of Conisbrough" seat="dadg_Conisbrough_castle" holderClanId="clan_burgh" heldSince="1450" dignityName="Barony of Conisbrough" dignityRank="Baron" allegiance="county_hallamshire" mapLabelRank="Baron" />
-    <Barony id="barony_nottingham" name="Nottingham castle estate" seat="dadg_Nottingham_castle" holderClanId="clan_hastings" heldSince="1461" allegiance="kingdom_england" dignityName="Barony of Nottingham" dignityRank="Baron" mapLabelRank="Baron">
-      <Claim clanId="clan_beaumont" />
-    </Barony>
-    <County id="county_lincoln" name="City of Lincoln" seat="Lincoln_town" holderClanId="clan_de_la_pole" heldSince="1467" dignityName="County of Lincoln" dignityRank="Earl" allegiance="duchy_york" mapLabelRank="Baron" />
-    <Barony id="barony_tattershall" name="Lordship of Tattershall" seat="dadg_Tattershall_castle" holderClanId="clan_bourchier" heldSince="1456" dignityName="Barony of Tattershall" dignityRank="Baron" allegiance="county_lincoln" mapLabelRank="Baron">
-      <Claim clanId="clan_willoughby" strength="Weak" />
-    </Barony>
-    <Duchy id="duchy_buckingham" name="Stafford castle estate" seat="dadg_Stafford_castle" holderClanId="clan_stafford" heldSince="1444" dignityName="Duchy of Buckingham" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
-    <County id="county_hereford" name="City of Hereford" seat="Hereford_town" holderClanId="clan_neville_of_bergavenny" heldSince="1450" dignityName="Barony of Bergavenny" dignityRank="Baron" allegiance="kingdom_england" mapLabelRank="Baron" />
-    <Barony id="barony_brecon" name="Lordship of Brecknock" seat="dadg_Brecon_castle" holderClanId="clan_neville_of_bergavenny" heldSince="1450" dignityName="Barony of Brecon" dignityRank="Baron" allegiance="county_hereford" mapLabelRank="Baron">
-      <Claim clanId="clan_stafford" />
-    </Barony>
-    <Barony id="barony_painscastle" name="Lordship of Painscastle" seat="dadg_Painscastle_castle" holderClanId="clan_grey_of_wilton" heldSince="1400" dignityName="Barony of Painscastle" dignityRank="Baron" allegiance="county_hereford" mapLabelRank="Baron" />
-    <County id="county_shropshire" name="Borough of Shrewsbury" seat="Shrewsbury_town" holderClanId="clan_talbot" heldSince="1442" dignityName="Earldom of Shrewsbury" allegiance="kingdom_england" dignityRank="Earl" mapLabelRank="Baron" />
-    <Barony id="barony_ludlow" name="Lordship of Ludlow" seat="dadg_Ludlow_castle" holderClanId="clan_york" heldSince="1425" dignityName="Barony of Ludlow" dignityRank="Baron" allegiance="county_shropshire" mapLabelRank="Baron" />
-    <Barony id="barony_montgomery" name="Lordship of Montgomery" seat="dadg_Montgomery_castle" holderClanId="clan_grey_of_codnor" heldSince="1400" dignityName="Barony of Montgomery" dignityRank="Baron" allegiance="county_shropshire" mapLabelRank="Baron" />
-    <Duchy id="duchy_norfolk" name="Lordship of Framlingham" seat="dadg_Framlingham_castle" holderClanId="clan_mowbray" heldSince="1397" dignityName="Duchy of Norfolk" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
-    <County id="county_norwich" name="City and County of Norwich" seat="Norwich_town" holderClanId="clan_howard" heldSince="1470" dignityName="Barony of Howard" dignityRank="Baron" allegiance="duchy_norfolk" mapLabelRank="Baron" />
-    <Barony id="barony_baconsthorpe" name="Manor of Baconsthorpe" seat="dadg_Baconsthorpe_castle" holderClanId="clan_paston" heldSince="1440" dignityName="Barony of Baconsthorpe" dignityRank="Baron" allegiance="county_norwich" mapLabelRank="Baron" />
-    <County id="county_lynn" name="Borough of Lynn Episcopi" seat="Kings_Lynn_town" holderClanId="clan_mowbray" heldSince="1397" dignityName="County of Lynn" dignityRank="Earl" allegiance="duchy_norfolk" mapLabelRank="Baron" />
-    <County id="county_suffolk" name="Liberty of St Edmund" seat="Bury_St_Edmunds_town" holderClanId="clan_de_la_pole" heldSince="1463" dignityName="Duchy of Suffolk" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
-    <Barony id="barony_clare" name="Honour of Clare" seat="dadg_Clare_castle" holderClanId="clan_morley" heldSince="1420" dignityName="Barony of Clare" dignityRank="Baron" allegiance="county_suffolk" mapLabelRank="Baron" />
-    <County id="county_essex" name="Borough of Colchester" seat="Colchester_town" holderClanId="clan_bourchier" heldSince="1461" dignityName="Earldom of Essex" allegiance="kingdom_england" dignityRank="Earl" mapLabelRank="Baron" />
-    <Barony id="barony_hedingham" name="Lordship of Castle Hedingham" seat="dadg_Hedingham_castle" holderClanId="clan_de_vere" heldSince="1086" dignityName="Barony of Hedingham" dignityRank="Baron" allegiance="county_essex" mapLabelRank="Baron" />
-    <Duchy id="duchy_somerset" name="Royal castle and manor of Corfe" seat="dadg_Corfe_castle" holderClanId="clan_beaufort" heldSince="1443" dignityName="Duchy of Somerset" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
-    <County id="county_bristol" name="Town and County of Bristol" seat="Bristol_town" holderClanId="clan_beaufort" heldSince="1443" dignityName="County of Bristol" dignityRank="Earl" allegiance="duchy_somerset" mapLabelRank="Baron" />
-    <Barony id="barony_chepstow" name="Lordship of Chepstow (Striguil)" seat="dadg_Chepstow_castle" holderClanId="clan_berkeley" heldSince="1430" dignityName="Barony of Chepstow" dignityRank="Baron" allegiance="county_bristol" mapLabelRank="Baron" />
-    <Barony id="barony_gloucester" name="Royal castle of Gloucester" seat="dadg_Gloucester_castle" holderClanId="clan_beauchamp" heldSince="1420" dignityName="Barony of Gloucester" dignityRank="Baron" allegiance="county_bristol" mapLabelRank="Baron" />
-    <Barony id="barony_farleigh" name="Manor of Farleigh Hungerford" seat="dadg_Farleigh_castle" holderClanId="clan_york" heldSince="1462" dignityName="Barony of Farleigh" dignityRank="Baron" allegiance="county_bristol" mapLabelRank="Baron" />
-    <Barony id="barony_sherborne" name="Episcopal estate of Sherborne" seat="dadg_Sherborne_castle" holderClanId="clan_holland" heldSince="1445" dignityName="Duchy of Exeter" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron">
-      <Claim clanId="clan_grey_of_groby" strength="Weak" />
-    </Barony>
-    <Barony id="barony_wardour" name="Manor of Wardour" seat="dadg_Wardour_castle" holderClanId="clan_lancaster" heldSince="1470" dignityName="Barony of Wardour" dignityRank="Baron" allegiance="county_bristol" mapLabelRank="Baron">
-      <Claim clanId="clan_lovell" />
-    </Barony>
-    <County id="county_devon" name="City of Exeter" seat="Exeter_town" holderClanId="clan_courtenay" heldSince="1335" dignityName="Earldom of Devon" allegiance="kingdom_england" dignityRank="Earl" mapLabelRank="Baron" />
-    <Barony id="barony_dunster" name="Honour of Dunster" seat="dadg_Dunster_castle" holderClanId="clan_herbert" heldSince="1463" dignityName="Barony of Dunster" dignityRank="Baron" allegiance="county_devon" mapLabelRank="Baron" />
-    <Barony id="barony_plymouth" name="Borough of Plymouth" seat="dadg_Plymouth_castle" holderClanId="clan_blount" heldSince="1465" dignityName="Barony of Plymouth" dignityRank="Baron" allegiance="county_devon" mapLabelRank="Baron" />
-    <Barony id="barony_totnes" name="Barony of Totnes" seat="dadg_Totnes_castle" holderClanId="clan_basset" heldSince="1430" dignityName="Barony of Totnes" dignityRank="Baron" allegiance="county_devon" mapLabelRank="Baron" />
-    <Barony id="barony_taunton" name="Manor of Taunton Deane" seat="dadg_Taunton_castle" holderClanId="clan_harrington" heldSince="1460" dignityName="Barony of Taunton" dignityRank="Baron" allegiance="county_devon" mapLabelRank="Baron" />
-    <Barony id="barony_okehampton" name="Barony of Okehampton" seat="dadg_Okehampton_castle" holderClanId="clan_courtenay" heldSince="1173" dignityName="Barony of Okehampton" dignityRank="Baron" allegiance="county_cornwall" mapLabelRank="Baron" />
-    <Barony id="barony_saint_michaels_mount" name="Priory estate of St Michael's Mount" seat="dadg_Saint_Michaels_Mount_castle" holderClanId="clan_courtenay" heldSince="1450" dignityName="Barony of Saint Michael's Mount" dignityRank="Baron" allegiance="county_cornwall" mapLabelRank="Baron" />
-    <County id="county_pembroke" name="Earldom of Pembroke" seat="Pembroke_town" holderClanId="clan_tudor" heldSince="1452" dignityName="Earldom of Pembroke" allegiance="kingdom_england" dignityRank="Earl" mapLabelRank="Earl">
-      <Claim clanId="clan_herbert" />
-    </County>
-    <Barony id="barony_cardigan" name="Castle estate of Cardigan" seat="dadg_Cardigan_castle" holderClanId="clan_tudor" heldSince="1452" dignityName="Barony of Cardigan" dignityRank="Baron" allegiance="county_ceredigion" mapLabelRank="Baron" />
-    <Barony id="barony_denbigh" name="Lordship of Denbigh" seat="dadg_Denbigh_castle" holderClanId="clan_herbert" heldSince="1461" dignityName="Barony of Denbigh" dignityRank="Baron" allegiance="county_gwynedd" mapLabelRank="Baron">
-      <Claim clanId="clan_york" />
-    </Barony>
-    <County id="county_london" name="City of London" seat="town_V6" holderClanId="clan_lancaster" heldSince="1399" dignityName="County of London" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Baron" />
-    <Barony id="barony_windsor" name="Royal castle estate of Windsor" seat="dadg_Windsor_castle" holderClanId="clan_bourchier" heldSince="1461" dignityName="Barony of Windsor" dignityRank="Baron" allegiance="county_london" mapLabelRank="Baron" />
-    <Barony id="barony_hertford" name="Castle estate of Hertford" seat="dadg_Hertford_castle" holderClanId="clan_lancaster" heldSince="1399" dignityName="Barony of Hertford" dignityRank="Baron" allegiance="county_london" mapLabelRank="Baron" />
-    <County id="county_kent" dignityName="Earldom of Kent" name="City and County of Canterbury" seat="Canterbury_town" holderClanId="clan_grey_of_ruthin" heldSince="1465" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Baron" />
-    <Barony id="barony_dover" name="Royal castle of Dover" seat="dadg_Dover_castle" holderClanId="clan_west" heldSince="1427" dignityName="Barony of Dover" dignityRank="Baron" allegiance="county_kent" mapLabelRank="Baron" />
-    <Barony id="barony_rochester" name="Castle estate of Rochester" seat="dadg_Rochester_castle" holderClanId="clan_grey_of_ruthin" heldSince="1465" dignityName="Barony of Rochester" dignityRank="Baron" allegiance="county_kent" mapLabelRank="Baron" />
-    <Barony id="barony_tonbridge" name="Castle and Lowy of Tonbridge" seat="dadg_Tonbridge_castle" holderClanId="clan_fiennes_of_saye_and_sele" heldSince="1447" dignityName="Barony of Tonbridge" dignityRank="Baron" allegiance="county_kent" mapLabelRank="Baron" />
-    <Barony id="barony_rye" name="Antient Town of Rye" seat="dadg_Rye_castle" holderClanId="clan_neville_of_middleham" heldSince="1460" dignityName="Barony of Rye" dignityRank="Baron" allegiance="county_kent" mapLabelRank="Baron" />
-    <County id="county_sussex" dignityName="Earldom of Arundel" name="City of Chichester" seat="Chichester_town" holderClanId="clan_fitzalan" heldSince="1243" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Baron" />
-    <Barony id="barony_lewes" name="Barony and honour of Lewes" seat="dadg_Lewes_castle" holderClanId="clan_fienne_of_dacre" heldSince="1458" dignityName="Barony of Lewes" dignityRank="Baron" allegiance="county_sussex" mapLabelRank="Baron" />
-    <Barony id="barony_arundel" name="Honour of Arundel" seat="dadg_Arundel_castle" holderClanId="clan_fitzalan" heldSince="1243" dignityName="Barony of Arundel" dignityRank="Baron" allegiance="county_sussex" mapLabelRank="Baron" />
-    <County id="county_hampshire" name="Town and County of Southampton" seat="Southampton_town" holderClanId="clan_stafford" heldSince="1444" dignityName="County of Hampshire" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Baron" />
-    <Barony id="barony_carisbrooke" name="Lordship of the Isle of Wight" seat="dadg_Carisbrooke_castle" holderClanId="clan_woodville" heldSince="1467" dignityName="Barony of Carisbrooke" dignityRank="Baron" allegiance="county_hampshire" mapLabelRank="Baron" />
-    <Barony id="barony_farnham" name="Episcopal manor of Farnham" seat="dadg_Farnham_castle" holderClanId="clan_st_leger" heldSince="1460" dignityName="Barony of Farnham" dignityRank="Baron" allegiance="county_hampshire" mapLabelRank="Baron" />
-    <Barony id="barony_winchester" name="Royal castle of Winchester" seat="dadg_Winchester_castle" holderClanId="clan_stafford" heldSince="1444" dignityName="Barony of Winchester" dignityRank="Baron" allegiance="county_hampshire" mapLabelRank="Baron" />
-    <County id="county_oxford" dignityName="Earldom of Oxford" name="Borough of Oxford" seat="Oxford_town" holderClanId="clan_de_vere" heldSince="1142" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Baron" />
-    <Barony id="barony_donnington" name="Manor of Donnington" seat="dadg_Donnington_castle" holderClanId="clan_de_la_pole" heldSince="1434" dignityName="Barony of Donnington" dignityRank="Baron" allegiance="county_oxford" mapLabelRank="Baron" />
-    <County id="county_warkworth" name="Lordship of Warkworth" seat="Warkworth_town" holderClanId="clan_percy" heldSince="1377" dignityName="Earldom of Northumberland" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Baron">
-      <Claim clanId="clan_neville_of_middleham" />
-    </County>
-    <Barony id="barony_bamburgh" name="Bamburgh castle estate" seat="dadg_Bamburgh_castle" holderClanId="clan_lumley" heldSince="1430" dignityName="Barony of Bamburgh" dignityRank="Baron" allegiance="county_warkworth" mapLabelRank="Baron" />
-    <Duchy id="group_7abb388a4f64" name="Duchy of Lancaster" dignityName="Duchy of Lancaster" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Duke">
-      <Duchy id="duchy_lancaster" name="Honour of Pontefract" seat="dadg_Pontefract_castle" holderClanId="clan_lancaster" heldSince="1362" dignityName="Duchy of Lancaster" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
-      <County id="county_lancashire" name="Honour of Lancaster" seat="Lancaster_town" holderClanId="clan_lancaster" heldSince="1362" dignityName="County of Lancashire" dignityRank="Earl" allegiance="duchy_lancaster" mapLabelRank="Baron" />
-      <Barony id="barony_liverpool" name="Liverpool castle estate" seat="dadg_Liverpool_castle" holderClanId="clan_hastings" heldSince="1464" dignityName="Barony of Liverpool" dignityRank="Baron" allegiance="county_lancashire" mapLabelRank="Baron" />
-      <Barony id="barony_peveril" name="Lordship of the High Peak" seat="dadg_Peveril_castle" holderClanId="clan_lancaster" heldSince="1372" dignityName="Barony of Peveril" dignityRank="Baron" allegiance="county_cheshire" mapLabelRank="Baron" />
-      <Barony id="barony_kenilworth" name="Kenilworth castle estate" seat="dadg_Kenilworth_castle" holderClanId="clan_lancaster" heldSince="1362" dignityName="Barony of Kenilworth" dignityRank="Baron" allegiance="county_warwick" mapLabelRank="Baron" />
-      <Barony id="barony_dunstanburgh" name="Dunstanburgh castle estate" seat="dadg_Dunstanburgh_castle" holderClanId="clan_lancaster" heldSince="1362" dignityName="Barony of Dunstanburgh" dignityRank="Baron" allegiance="county_warkworth" mapLabelRank="Baron" />
+    <Duchy id="region_durham" dignityRank="Duke" name="County Palatine of Durham" mapLabelRank="Duke">
+      <Barony id="barony_durham" name="Durham episcopal castle estate" seat="dadg_Durham_castle" holderClanId="clan_greystoke" heldSince="1420" dignityName="Barony of Durham" dignityRank="Baron" allegiance="county_westmorland" mapLabelRank="Baron" />
+      <Barony id="barony_barnard" name="Lordship of Barnard Castle" seat="dadg_Barnard_castle" holderClanId="clan_neville_of_middleham" heldSince="1449" dignityName="Barony of Barnard" dignityRank="Baron" allegiance="county_westmorland" mapLabelRank="Baron" />
     </Duchy>
-    <County id="group_fe353b33a20a" name="Earldom of Chester" dignityName="Earldom of Chester" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Earl">
-      <County id="county_cheshire" name="City of Chester" seat="Chester_town" holderClanId="clan_woodville" heldSince="1466" dignityName="Earldom of Rivers" allegiance="kingdom_england" dignityRank="Earl" mapLabelRank="Baron">
+    <Duchy id="region_east_march" dignityRank="Duke" name="East March" mapLabelRank="Duke">
+      <Duchy id="shire_northumberland" dignityRank="Earl" name="Northumberland" mapLabelRank="Earl">
+        <County id="county_northumberland" name="Lordship of Warkworth" seat="Warkworth_town" holderClanId="clan_percy" heldSince="1377" dignityName="Earldom of Northumberland" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Baron">
+          <Claim clanId="clan_neville_of_middleham" />
+        </County>
+        <Barony id="barony_bamburgh" name="Bamburgh castle estate" seat="dadg_Bamburgh_castle" holderClanId="clan_lumley" heldSince="1430" dignityName="Barony of Bamburgh" dignityRank="Baron" allegiance="county_northumberland" mapLabelRank="Baron" />
+        <Barony id="barony_dunstanburgh" name="Dunstanburgh castle estate" seat="dadg_Dunstanburgh_castle" holderClanId="clan_lancaster" heldSince="1362" dignityName="Barony of Dunstanburgh" dignityRank="Baron" allegiance="county_northumberland" mapLabelRank="Baron" />
+      </Duchy>
+      <County id="county_westmorland" name="Borough of Newcastle upon Tyne" seat="Newcastle_upon_Tyne_town" holderClanId="clan_neville_of_raby" heldSince="1397" dignityName="Earldom of Westmorland" allegiance="kingdom_england" dignityRank="Earl" mapLabelRank="Baron" />
+    </Duchy>
+    <Duchy id="region_west_march" dignityRank="Duke" name="West March" mapLabelRank="Duke">
+      <Duchy id="shire_cumberland" dignityRank="Earl" name="Cumberland" mapLabelRank="Earl">
+        <County id="county_clifford" name="City of Carlisle" seat="Carlisle_town" holderClanId="clan_clifford" heldSince="1269" dignityName="Barony de Clifford" dignityRank="Baron" allegiance="kingdom_england" mapLabelRank="Baron" />
+        <Barony id="barony_penrith" name="Lordship of Penrith" seat="dadg_Penrith_castle" holderClanId="clan_neville_of_middleham" heldSince="1460" dignityName="Barony of Penrith" dignityRank="Baron" allegiance="county_clifford" mapLabelRank="Baron" />
+      </Duchy>
+      <Barony id="barony_kendal" name="Barony of Kendal" seat="dadg_Kendal_castle" holderClanId="clan_parr" heldSince="1383" dignityName="Barony of Kendal" dignityRank="Baron" allegiance="county_lancashire" mapLabelRank="Baron" />
+    </Duchy>
+    <Duchy id="region_york" dignityRank="Duke" name="County of York" mapLabelRank="Duke">
+      <Duchy id="shire_east_riding" dignityRank="Earl" name="York and the East Riding" mapLabelRank="Earl">
+        <County id="county_york" name="City of York" seat="York_town" holderClanId="clan_york" heldSince="1385" dignityName="County of York" dignityRank="Earl" allegiance="duchy_york" mapLabelRank="Baron" />
+        <County id="county_hull" name="Borough of Kingston upon Hull" seat="Kingston_upon_Hull_town" holderClanId="clan_york" heldSince="1440" dignityName="County of Hull" dignityRank="Earl" allegiance="duchy_york" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_richmondshire" dignityRank="Earl" name="Richmondshire" mapLabelRank="Earl">
+        <Barony id="barony_middleham" name="Lordship of Middleham" seat="dadg_Middleham_castle" holderClanId="clan_neville_of_middleham" heldSince="1270" dignityName="Barony of Middleham" dignityRank="Baron" allegiance="county_york" mapLabelRank="Baron" />
+        <Barony id="barony_richmond" name="Honour of Richmond" seat="dadg_Richmond_castle" holderClanId="clan_york" heldSince="1462" dignityName="Barony of Richmond" dignityRank="Baron" allegiance="county_york" mapLabelRank="Baron">
+          <Claim clanId="clan_tudor" />
+        </Barony>
+      </Duchy>
+      <Duchy id="shire_north_riding" dignityRank="Earl" name="North Riding" mapLabelRank="Earl">
+        <Barony id="barony_skelton" name="Lordship of Skelton" seat="dadg_Skelton_castle" holderClanId="clan_fitzhugh" heldSince="1400" allegiance="duchy_warwick" dignityName="Barony of Skelton" dignityRank="Baron" mapLabelRank="Baron" />
+        <Barony id="barony_helmsley" name="Lordship of Helmsley" seat="dadg_Helmsley_castle" holderClanId="clan_york" heldSince="1465" dignityName="Barony of Helmsley" dignityRank="Baron" allegiance="county_york" mapLabelRank="Baron" />
+        <Barony id="barony_scarborough" name="Scarborough castle estate" seat="dadg_Scarborough_castle" holderClanId="clan_scrope_of_bolton" heldSince="1400" dignityName="Barony of Scarborough" dignityRank="Baron" allegiance="county_hull" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_west_riding" dignityRank="Earl" name="West Riding" mapLabelRank="Earl">
+        <Duchy id="duchy_lancaster" name="Honour of Pontefract" seat="dadg_Pontefract_castle" holderClanId="clan_lancaster" heldSince="1362" dignityName="Duchy of Lancaster" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
+        <Barony id="barony_skipton" name="Honour of Skipton" seat="dadg_Skipton_castle" holderClanId="clan_stanley" heldSince="1465" dignityName="Barony of Skipton" dignityRank="Baron" allegiance="county_york" mapLabelRank="Baron">
+          <Claim clanId="clan_clifford" />
+        </Barony>
+        <County id="county_hallamshire" name="Lordship of Hallamshire" seat="Sheffield_town" holderClanId="clan_talbot" heldSince="1409" dignityName="Lordship of Hallamshire" dignityRank="Baron" allegiance="duchy_york" mapLabelRank="Baron" />
+        <Barony id="barony_conisbrough" name="Honour of Conisbrough" seat="dadg_Conisbrough_castle" holderClanId="clan_burgh" heldSince="1450" dignityName="Barony of Conisbrough" dignityRank="Baron" allegiance="county_hallamshire" mapLabelRank="Baron" />
+      </Duchy>
+    </Duchy>
+    <Duchy id="region_lancaster" dignityRank="Duke" name="County Palatine of Lancaster" mapLabelRank="Duke">
+      <County id="county_lancashire" name="Honour of Lancaster" seat="Lancaster_town" holderClanId="clan_lancaster" heldSince="1362" dignityName="County of Lancashire" dignityRank="Earl" allegiance="duchy_lancaster" mapLabelRank="Baron" />
+      <Barony id="barony_piel" name="Piel estate" seat="dadg_Piel_castle" holderClanId="clan_stanley" heldSince="1385" dignityName="Barony of Piel" dignityRank="Baron" allegiance="county_lancashire" mapLabelRank="Baron" />
+      <Barony id="barony_liverpool" name="Liverpool castle estate" seat="dadg_Liverpool_castle" holderClanId="clan_hastings" heldSince="1464" dignityName="Barony of Liverpool" dignityRank="Baron" allegiance="county_lancashire" mapLabelRank="Baron" />
+    </Duchy>
+    <Duchy id="region_chester" dignityRank="Duke" name="County Palatine of Chester" mapLabelRank="Duke">
+      <County id="county_rivers" name="City of Chester" seat="Chester_town" holderClanId="clan_woodville" heldSince="1466" dignityName="Earldom of Rivers" allegiance="kingdom_england" dignityRank="Earl" mapLabelRank="Baron">
         <Claim clanId="clan_lancaster" />
       </County>
-      <Barony id="barony_beeston" name="Beeston castle estate" seat="dadg_Beeston_castle" holderClanId="clan_vernon" heldSince="1450" dignityName="Barony of Beeston" dignityRank="Baron" allegiance="county_cheshire" mapLabelRank="Baron" />
-    </County>
-    <Duchy id="group_74d7d74889fc" name="Duchy of Cornwall" dignityName="Duchy of Cornwall" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Duke">
-      <County id="county_cornwall" name="Honour of Launceston" seat="Launceston_town" holderClanId="clan_lancaster" heldSince="1453" dignityName="County of Cornwall" dignityRank="Earl" allegiance="duchy_somerset" mapLabelRank="Baron" />
-      <Barony id="barony_berkhamsted" name="Honour of Berkhamsted" seat="dadg_Berkhamsted_castle" holderClanId="clan_lancaster" heldSince="1399" dignityName="Barony of Berkhamsted" dignityRank="Baron" allegiance="county_london" mapLabelRank="Baron" />
+      <Barony id="barony_beeston" name="Beeston castle estate" seat="dadg_Beeston_castle" holderClanId="clan_vernon" heldSince="1450" dignityName="Barony of Beeston" dignityRank="Baron" allegiance="county_rivers" mapLabelRank="Baron" />
     </Duchy>
-    <County id="group_e7ac5b3d8ae6" name="Principality of Wales" dignityName="Principality of Wales" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Duke">
-      <Duchy id="duchy_wales" name="Royal castle and borough of Harlech" seat="dadg_Harlech_castle" holderClanId="clan_lancaster" heldSince="1454" dignityName="Principality of Wales" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
-      <Barony id="barony_carmarthen" name="Royal castle of Carmarthen" seat="dadg_Carmarthen_castle" holderClanId="clan_lancaster" heldSince="1399" dignityName="Barony of Carmarthen" dignityRank="Baron" allegiance="county_pembroke" mapLabelRank="Baron" />
-      <County id="county_ceredigion" name="Royal castle and borough of Aberystwyth" seat="Aberystwyth_town" holderClanId="clan_tudor" heldSince="1452" dignityName="Lordship of Ceredigion" dignityRank="Baron" allegiance="duchy_wales" mapLabelRank="Baron" />
-      <County id="county_gwynedd" name="Royal castle and borough of Caernarfon" seat="Caernarfon_town" holderClanId="clan_devereux" heldSince="1461" dignityName="Barony of Ferrers of Chartley" dignityRank="Baron" allegiance="kingdom_england" mapLabelRank="Baron" />
-      <Barony id="barony_conwy" name="Royal castle and borough of Conwy" seat="dadg_Conwy_castle" holderClanId="clan_woodville" heldSince="1466" dignityName="Barony of Conwy" dignityRank="Baron" allegiance="county_gwynedd" mapLabelRank="Baron" />
-      <Barony id="barony_beaumaris" name="Royal castle and borough of Beaumaris" seat="dadg_Beaumaris_castle" holderClanId="clan_devereux" heldSince="1461" dignityName="Barony of Beaumaris" dignityRank="Baron" allegiance="county_gwynedd" mapLabelRank="Baron" />
-    </County>
-    <County id="group_76d8831f745b" name="Lordship of Glamorgan" dignityName="Lordship of Glamorgan" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Earl">
-      <County id="county_glamorgan" dignityRank="Baron" dignityName="Lordship of Glamorgan" name="Castle and borough of Cardiff" seat="Cardiff_town" holderClanId="clan_neville_of_middleham" heldSince="1449" allegiance="duchy_wales" mapLabelRank="Baron" />
-      <Barony id="barony_caerphilly" name="Castle estate of Caerphilly" seat="dadg_Caerphilly_castle" holderClanId="clan_neville_of_middleham" heldSince="1449" dignityName="Barony of Caerphilly" dignityRank="Baron" allegiance="county_glamorgan" mapLabelRank="Baron" />
-    </County>
-    <County id="group_30a224df15c1" name="Lordship of Gower" dignityName="Lordship of Gower" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Earl">
-      <Barony id="barony_swansea" name="Castle and borough of Swansea" seat="dadg_Swansea_castle" holderClanId="clan_herbert" heldSince="1469" dignityName="Barony of Swansea" dignityRank="Baron" allegiance="county_glamorgan" mapLabelRank="Baron" />
-    </County>
+    <Duchy id="region_midland_circuit" dignityRank="Duke" name="Midland Circuit" mapLabelRank="Duke">
+      <Duchy id="shire_warwick_leicester" dignityRank="Earl" name="Warwick and Leicester" mapLabelRank="Earl">
+        <Duchy id="duchy_warwick" name="Earldom of Warwick" seat="dadg_Warwick_castle" holderClanId="clan_neville_of_middleham" heldSince="1449" dignityRank="Earl" allegiance="kingdom_england" dignityName="Earldom of Warwick and Salisbury" mapLabelRank="Earl" />
+        <County id="county_warwick" name="City of Coventry" seat="Coventry_town" holderClanId="clan_neville_of_middleham" heldSince="1449" dignityName="Lordship of Warwick" dignityRank="Baron" allegiance="duchy_warwick" mapLabelRank="Baron" />
+        <Barony id="barony_kenilworth" name="Kenilworth castle estate" seat="dadg_Kenilworth_castle" holderClanId="clan_lancaster" heldSince="1362" dignityName="Barony of Kenilworth" dignityRank="Baron" allegiance="county_warwick" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_northamptonshire" dignityRank="Earl" name="Northamptonshire" mapLabelRank="Earl">
+        <Barony id="barony_northampton" name="Northampton castle estate" seat="dadg_Northampton_castle" holderClanId="clan_lovell" heldSince="1430" dignityName="Barony of Northampton" dignityRank="Baron" allegiance="county_warwick" mapLabelRank="Baron" />
+        <Duchy id="duchy_york" name="Lordship of Fotheringhay" seat="dadg_Fotheringhay_castle" holderClanId="clan_york" heldSince="1385" dignityName="Duchy of York" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_nottingham_derby" dignityRank="Earl" name="Nottingham and Derby" mapLabelRank="Earl">
+        <Barony id="barony_peveril" name="Lordship of the High Peak" seat="dadg_Peveril_castle" holderClanId="clan_lancaster" heldSince="1372" dignityName="Barony of Peveril" dignityRank="Baron" allegiance="county_rivers" mapLabelRank="Baron" />
+        <Barony id="barony_nottingham" name="Nottingham castle estate" seat="dadg_Nottingham_castle" holderClanId="clan_hastings" heldSince="1461" allegiance="kingdom_england" dignityName="Barony of Nottingham" dignityRank="Baron" mapLabelRank="Baron">
+          <Claim clanId="clan_beaumont" />
+        </Barony>
+      </Duchy>
+      <Duchy id="shire_lincolnshire" dignityRank="Earl" name="Lincolnshire" mapLabelRank="Earl">
+        <County id="county_lincoln" name="City of Lincoln" seat="Lincoln_town" holderClanId="clan_de_la_pole" heldSince="1467" dignityName="County of Lincoln" dignityRank="Earl" allegiance="duchy_york" mapLabelRank="Baron" />
+        <Barony id="barony_tattershall" name="Lordship of Tattershall" seat="dadg_Tattershall_castle" holderClanId="clan_bourchier" heldSince="1456" dignityName="Barony of Tattershall" dignityRank="Baron" allegiance="county_lincoln" mapLabelRank="Baron">
+          <Claim clanId="clan_willoughby" strength="Weak" />
+        </Barony>
+      </Duchy>
+    </Duchy>
+    <Duchy id="region_norfolk_circuit" dignityRank="Duke" name="Norfolk Circuit" mapLabelRank="Duke">
+      <Duchy id="shire_norfolk" dignityRank="Earl" name="Norfolk" mapLabelRank="Earl">
+        <County id="county_howard" name="City and County of Norwich" seat="Norwich_town" holderClanId="clan_howard" heldSince="1470" dignityName="Barony of Howard" dignityRank="Baron" allegiance="duchy_norfolk" mapLabelRank="Baron" />
+        <Barony id="barony_baconsthorpe" name="Manor of Baconsthorpe" seat="dadg_Baconsthorpe_castle" holderClanId="clan_paston" heldSince="1440" dignityName="Barony of Baconsthorpe" dignityRank="Baron" allegiance="county_howard" mapLabelRank="Baron" />
+        <County id="county_lynn" name="Borough of Lynn Episcopi" seat="Kings_Lynn_town" holderClanId="clan_mowbray" heldSince="1397" dignityName="County of Lynn" dignityRank="Earl" allegiance="duchy_norfolk" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_suffolk" dignityRank="Earl" name="Suffolk" mapLabelRank="Earl">
+        <Duchy id="duchy_norfolk" name="Lordship of Framlingham" seat="dadg_Framlingham_castle" holderClanId="clan_mowbray" heldSince="1397" dignityName="Duchy of Norfolk" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
+        <County id="county_suffolk" name="Liberty of St Edmund" seat="Bury_St_Edmunds_town" holderClanId="clan_de_la_pole" heldSince="1463" dignityName="Duchy of Suffolk" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
+        <Barony id="barony_clare" name="Honour of Clare" seat="dadg_Clare_castle" holderClanId="clan_morley" heldSince="1420" dignityName="Barony of Clare" dignityRank="Baron" allegiance="county_suffolk" mapLabelRank="Baron" />
+      </Duchy>
+    </Duchy>
+    <Duchy id="region_home_circuit" dignityRank="Duke" name="Home Circuit" mapLabelRank="Duke">
+      <Duchy id="shire_kent" dignityRank="Earl" name="Kent" mapLabelRank="Earl">
+        <County id="county_kent" dignityName="Earldom of Kent" name="City and County of Canterbury" seat="Canterbury_town" holderClanId="clan_grey_of_ruthin" heldSince="1465" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Baron" />
+        <Barony id="barony_rochester" name="Castle estate of Rochester" seat="dadg_Rochester_castle" holderClanId="clan_grey_of_ruthin" heldSince="1465" dignityName="Barony of Rochester" dignityRank="Baron" allegiance="county_kent" mapLabelRank="Baron" />
+        <Barony id="barony_tonbridge" name="Castle and Lowy of Tonbridge" seat="dadg_Tonbridge_castle" holderClanId="clan_fiennes_of_saye_and_sele" heldSince="1447" dignityName="Barony of Tonbridge" dignityRank="Baron" allegiance="county_kent" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_cinque_ports" dignityRank="Earl" name="Cinque Ports" mapLabelRank="Earl">
+        <Barony id="barony_dover" name="Royal castle of Dover" seat="dadg_Dover_castle" holderClanId="clan_west" heldSince="1427" dignityName="Barony of Dover" dignityRank="Baron" allegiance="county_kent" mapLabelRank="Baron" />
+        <Barony id="barony_rye" name="Antient Town of Rye" seat="dadg_Rye_castle" holderClanId="clan_neville_of_middleham" heldSince="1460" dignityName="Barony of Rye" dignityRank="Baron" allegiance="county_kent" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_surrey_sussex" dignityRank="Earl" name="Surrey and Sussex" mapLabelRank="Earl">
+        <County id="county_arundel" dignityName="Earldom of Arundel" name="City of Chichester" seat="Chichester_town" holderClanId="clan_fitzalan" heldSince="1243" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Baron" />
+        <Barony id="barony_lewes" name="Barony and honour of Lewes" seat="dadg_Lewes_castle" holderClanId="clan_fienne_of_dacre" heldSince="1458" dignityName="Barony of Lewes" dignityRank="Baron" allegiance="county_arundel" mapLabelRank="Baron" />
+        <Barony id="barony_arundel" name="Honour of Arundel" seat="dadg_Arundel_castle" holderClanId="clan_fitzalan" heldSince="1243" dignityName="Barony of Arundel" dignityRank="Baron" allegiance="county_arundel" mapLabelRank="Baron" />
+        <Barony id="barony_farnham" name="Episcopal manor of Farnham" seat="dadg_Farnham_castle" holderClanId="clan_st_leger" heldSince="1460" dignityName="Barony of Farnham" dignityRank="Baron" allegiance="county_hampshire" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_essex_hertford" dignityRank="Earl" name="Essex and Hertford" mapLabelRank="Earl">
+        <County id="county_essex" name="Borough of Colchester" seat="Colchester_town" holderClanId="clan_bourchier" heldSince="1461" dignityName="Earldom of Essex" allegiance="kingdom_england" dignityRank="Earl" mapLabelRank="Baron" />
+        <Barony id="barony_hedingham" name="Lordship of Castle Hedingham" seat="dadg_Hedingham_castle" holderClanId="clan_de_vere" heldSince="1086" dignityName="Barony of Hedingham" dignityRank="Baron" allegiance="county_essex" mapLabelRank="Baron" />
+        <Barony id="barony_berkhamsted" name="Honour of Berkhamsted" seat="dadg_Berkhamsted_castle" holderClanId="clan_lancaster" heldSince="1399" dignityName="Barony of Berkhamsted" dignityRank="Baron" allegiance="county_london" mapLabelRank="Baron" />
+        <Barony id="barony_hertford" name="Castle estate of Hertford" seat="dadg_Hertford_castle" holderClanId="clan_lancaster" heldSince="1399" dignityName="Barony of Hertford" dignityRank="Baron" allegiance="county_london" mapLabelRank="Baron" />
+      </Duchy>
+      <County id="county_london" name="City of London" seat="town_V6" holderClanId="clan_lancaster" heldSince="1399" dignityName="County of London" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Baron" />
+    </Duchy>
+    <Duchy id="region_oxford_circuit" dignityRank="Duke" name="Oxford Circuit" mapLabelRank="Duke">
+      <Duchy id="shire_oxford_berks" dignityRank="Earl" name="Oxford and Berks" mapLabelRank="Earl">
+        <Barony id="barony_windsor" name="Royal castle estate of Windsor" seat="dadg_Windsor_castle" holderClanId="clan_bourchier" heldSince="1461" dignityName="Barony of Windsor" dignityRank="Baron" allegiance="county_london" mapLabelRank="Baron" />
+        <County id="county_oxford" dignityName="Earldom of Oxford" name="Borough of Oxford" seat="Oxford_town" holderClanId="clan_de_vere" heldSince="1142" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Baron" />
+        <Barony id="barony_donnington" name="Manor of Donnington" seat="dadg_Donnington_castle" holderClanId="clan_de_la_pole" heldSince="1434" dignityName="Barony of Donnington" dignityRank="Baron" allegiance="county_oxford" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_gloucester" dignityRank="Earl" name="Gloucestershire and Bristol" mapLabelRank="Earl">
+        <County id="county_bristol" name="Town and County of Bristol" seat="Bristol_town" holderClanId="clan_beaufort" heldSince="1443" dignityName="County of Bristol" dignityRank="Earl" allegiance="duchy_somerset" mapLabelRank="Baron" />
+        <Barony id="barony_gloucester" name="Royal castle of Gloucester" seat="dadg_Gloucester_castle" holderClanId="clan_beauchamp" heldSince="1420" dignityName="Barony of Gloucester" dignityRank="Baron" allegiance="county_bristol" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_shropshire" dignityRank="Earl" name="Shropshire" mapLabelRank="Earl">
+        <County id="county_shrewsbury" name="Borough of Shrewsbury" seat="Shrewsbury_town" holderClanId="clan_talbot" heldSince="1442" dignityName="Earldom of Shrewsbury" allegiance="kingdom_england" dignityRank="Earl" mapLabelRank="Baron" />
+        <Barony id="barony_ludlow" name="Lordship of Ludlow" seat="dadg_Ludlow_castle" holderClanId="clan_york" heldSince="1425" dignityName="Barony of Ludlow" dignityRank="Baron" allegiance="county_shrewsbury" mapLabelRank="Baron" />
+      </Duchy>
+      <Barony id="barony_worcester" name="Worcester castle estate" seat="dadg_Worcester_castle" holderClanId="clan_sutton" heldSince="1440" dignityName="Barony of Worcester" dignityRank="Baron" allegiance="county_warwick" mapLabelRank="Baron" />
+      <Duchy id="duchy_buckingham" name="Stafford castle estate" seat="dadg_Stafford_castle" holderClanId="clan_stafford" heldSince="1444" dignityName="Duchy of Buckingham" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
+      <County id="county_bergavenny" name="City of Hereford" seat="Hereford_town" holderClanId="clan_neville_of_bergavenny" heldSince="1450" dignityName="Barony of Bergavenny" dignityRank="Baron" allegiance="kingdom_england" mapLabelRank="Baron" />
+    </Duchy>
+    <Duchy id="region_western_circuit" dignityRank="Duke" name="Western Circuit" mapLabelRank="Duke">
+      <Duchy id="shire_hampshire" dignityRank="Earl" name="Hampshire" mapLabelRank="Earl">
+        <County id="county_hampshire" name="Town and County of Southampton" seat="Southampton_town" holderClanId="clan_stafford" heldSince="1444" dignityName="County of Hampshire" dignityRank="Earl" allegiance="kingdom_england" mapLabelRank="Baron" />
+        <Barony id="barony_carisbrooke" name="Lordship of the Isle of Wight" seat="dadg_Carisbrooke_castle" holderClanId="clan_woodville" heldSince="1467" dignityName="Barony of Carisbrooke" dignityRank="Baron" allegiance="county_hampshire" mapLabelRank="Baron" />
+        <Barony id="barony_winchester" name="Royal castle of Winchester" seat="dadg_Winchester_castle" holderClanId="clan_stafford" heldSince="1444" dignityName="Barony of Winchester" dignityRank="Baron" allegiance="county_hampshire" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_somerset_dorset" dignityRank="Earl" name="Somerset and Dorset" mapLabelRank="Earl">
+        <Duchy id="duchy_somerset" name="Royal castle and manor of Corfe" seat="dadg_Corfe_castle" holderClanId="clan_beaufort" heldSince="1443" dignityName="Duchy of Somerset" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
+        <Barony id="barony_farleigh" name="Manor of Farleigh Hungerford" seat="dadg_Farleigh_castle" holderClanId="clan_york" heldSince="1462" dignityName="Barony of Farleigh" dignityRank="Baron" allegiance="county_bristol" mapLabelRank="Baron" />
+        <Barony id="barony_exeter" name="Episcopal estate of Sherborne" seat="dadg_Sherborne_castle" holderClanId="clan_holland" heldSince="1445" dignityName="Duchy of Exeter" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron">
+          <Claim clanId="clan_grey_of_groby" strength="Weak" />
+        </Barony>
+        <Barony id="barony_dunster" name="Honour of Dunster" seat="dadg_Dunster_castle" holderClanId="clan_herbert" heldSince="1463" dignityName="Barony of Dunster" dignityRank="Baron" allegiance="county_devon" mapLabelRank="Baron" />
+        <Barony id="barony_taunton" name="Manor of Taunton Deane" seat="dadg_Taunton_castle" holderClanId="clan_harrington" heldSince="1460" dignityName="Barony of Taunton" dignityRank="Baron" allegiance="county_devon" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_devon" dignityRank="Earl" name="Devon" mapLabelRank="Earl">
+        <County id="county_devon" name="City of Exeter" seat="Exeter_town" holderClanId="clan_courtenay" heldSince="1335" dignityName="Earldom of Devon" allegiance="kingdom_england" dignityRank="Earl" mapLabelRank="Baron" />
+        <Barony id="barony_plymouth" name="Borough of Plymouth" seat="dadg_Plymouth_castle" holderClanId="clan_blount" heldSince="1465" dignityName="Barony of Plymouth" dignityRank="Baron" allegiance="county_devon" mapLabelRank="Baron" />
+        <Barony id="barony_totnes" name="Barony of Totnes" seat="dadg_Totnes_castle" holderClanId="clan_basset" heldSince="1430" dignityName="Barony of Totnes" dignityRank="Baron" allegiance="county_devon" mapLabelRank="Baron" />
+        <Barony id="barony_okehampton" name="Barony of Okehampton" seat="dadg_Okehampton_castle" holderClanId="clan_courtenay" heldSince="1173" dignityName="Barony of Okehampton" dignityRank="Baron" allegiance="county_cornwall" mapLabelRank="Baron" />
+      </Duchy>
+      <Barony id="barony_wardour" name="Manor of Wardour" seat="dadg_Wardour_castle" holderClanId="clan_lancaster" heldSince="1470" dignityName="Barony of Wardour" dignityRank="Baron" allegiance="county_bristol" mapLabelRank="Baron">
+        <Claim clanId="clan_lovell" />
+      </Barony>
+    </Duchy>
+    <Duchy id="region_cornwall" dignityRank="Duke" name="Duchy of Cornwall" mapLabelRank="Duke">
+      <County id="county_cornwall" name="Honour of Launceston" seat="Launceston_town" holderClanId="clan_lancaster" heldSince="1453" dignityName="County of Cornwall" dignityRank="Earl" allegiance="duchy_wales" mapLabelRank="Baron" />
+      <Barony id="barony_saint_michaels_mount" name="Priory estate of St Michael's Mount" seat="dadg_Saint_Michaels_Mount_castle" holderClanId="clan_courtenay" heldSince="1450" dignityName="Barony of Saint Michael's Mount" dignityRank="Baron" allegiance="county_cornwall" mapLabelRank="Baron" />
+    </Duchy>
+    <Duchy id="region_wales" dignityRank="Duke" name="Principality of Wales" mapLabelRank="Duke">
+      <Duchy id="shire_north_wales" dignityRank="Earl" name="North Wales" mapLabelRank="Earl">
+        <Duchy id="duchy_wales" name="Royal castle and borough of Harlech" seat="dadg_Harlech_castle" holderClanId="clan_lancaster" heldSince="1454" dignityName="Principality of Wales" dignityRank="Duke" allegiance="kingdom_england" mapLabelRank="Baron" />
+        <County id="county_ferrers" name="Royal castle and borough of Caernarfon" seat="Caernarfon_town" holderClanId="clan_devereux" heldSince="1461" dignityName="Barony of Ferrers of Chartley" dignityRank="Baron" allegiance="kingdom_england" mapLabelRank="Baron" />
+        <Barony id="barony_conwy" name="Royal castle and borough of Conwy" seat="dadg_Conwy_castle" holderClanId="clan_woodville" heldSince="1466" dignityName="Barony of Conwy" dignityRank="Baron" allegiance="county_ferrers" mapLabelRank="Baron" />
+        <Barony id="barony_beaumaris" name="Royal castle and borough of Beaumaris" seat="dadg_Beaumaris_castle" holderClanId="clan_devereux" heldSince="1461" dignityName="Barony of Beaumaris" dignityRank="Baron" allegiance="county_ferrers" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_south_wales" dignityRank="Earl" name="South Wales" mapLabelRank="Earl">
+        <Barony id="barony_carmarthen" name="Royal castle of Carmarthen" seat="dadg_Carmarthen_castle" holderClanId="clan_lancaster" heldSince="1399" dignityName="Barony of Carmarthen" dignityRank="Baron" allegiance="county_pembroke" mapLabelRank="Baron" />
+        <County id="county_ceredigion" name="Royal castle and borough of Aberystwyth" seat="Aberystwyth_town" holderClanId="clan_tudor" heldSince="1452" dignityName="Lordship of Ceredigion" dignityRank="Baron" allegiance="duchy_wales" mapLabelRank="Baron" />
+        <Barony id="barony_cardigan" name="Castle estate of Cardigan" seat="dadg_Cardigan_castle" holderClanId="clan_tudor" heldSince="1452" dignityName="Barony of Cardigan" dignityRank="Baron" allegiance="county_ceredigion" mapLabelRank="Baron" />
+      </Duchy>
+    </Duchy>
+    <Duchy id="region_march_of_wales" dignityRank="Duke" name="March of Wales" mapLabelRank="Duke">
+      <Duchy id="shire_glamorgan" dignityRank="Earl" name="Lordship of Glamorgan" mapLabelRank="Earl">
+        <County id="county_glamorgan" dignityRank="Baron" dignityName="Lordship of Glamorgan" name="Castle and borough of Cardiff" seat="Cardiff_town" holderClanId="clan_neville_of_middleham" heldSince="1449" allegiance="duchy_wales" mapLabelRank="Baron" />
+        <Barony id="barony_caerphilly" name="Castle estate of Caerphilly" seat="dadg_Caerphilly_castle" holderClanId="clan_neville_of_middleham" heldSince="1449" dignityName="Barony of Caerphilly" dignityRank="Baron" allegiance="county_glamorgan" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_gower" dignityRank="Earl" name="Lordship of Gower" mapLabelRank="Earl">
+        <Barony id="barony_swansea" name="Castle and borough of Swansea" seat="dadg_Swansea_castle" holderClanId="clan_herbert" heldSince="1469" dignityName="Barony of Swansea" dignityRank="Baron" allegiance="county_glamorgan" mapLabelRank="Baron" />
+      </Duchy>
+      <Barony id="barony_chirk" name="Lordship of Chirk" seat="dadg_Chirk_castle" holderClanId="clan_york" heldSince="1440" dignityName="Barony of Chirk" dignityRank="Baron" allegiance="county_rivers" mapLabelRank="Baron" />
+      <Barony id="barony_brecon" name="Lordship of Brecknock" seat="dadg_Brecon_castle" holderClanId="clan_stafford" heldSince="1460" dignityName="Barony of Brecon" dignityRank="Baron" allegiance="duchy_buckingham" mapLabelRank="Baron" />
+      <Barony id="barony_painscastle" name="Lordship of Painscastle" seat="dadg_Painscastle_castle" holderClanId="clan_grey_of_wilton" heldSince="1400" dignityName="Barony of Painscastle" dignityRank="Baron" allegiance="county_bergavenny" mapLabelRank="Baron" />
+      <Barony id="barony_montgomery" name="Lordship of Montgomery" seat="dadg_Montgomery_castle" holderClanId="clan_grey_of_codnor" heldSince="1400" dignityName="Barony of Montgomery" dignityRank="Baron" allegiance="county_shrewsbury" mapLabelRank="Baron" />
+      <Barony id="barony_chepstow" name="Lordship of Chepstow (Striguil)" seat="dadg_Chepstow_castle" holderClanId="clan_herbert" heldSince="1469" dignityName="Barony of Chepstow" dignityRank="Baron" allegiance="county_bristol" mapLabelRank="Baron" />
+      <County id="county_pembroke" name="Earldom of Pembroke" seat="Pembroke_town" holderClanId="clan_tudor" heldSince="1452" dignityName="Earldom of Pembroke" allegiance="kingdom_england" dignityRank="Earl" mapLabelRank="Earl">
+        <Claim clanId="clan_herbert" />
+      </County>
+      <Barony id="barony_denbigh" name="Lordship of Denbigh" seat="dadg_Denbigh_castle" holderClanId="clan_herbert" heldSince="1461" dignityName="Barony of Denbigh" dignityRank="Baron" allegiance="county_ferrers" mapLabelRank="Baron">
+        <Claim clanId="clan_york" />
+      </Barony>
+    </Duchy>
   </Kingdom>
   <Kingdom id="kingdom_scotland" name="Crown of Scotland" kingClanId="clan_stewart" heldSince="1371" mapLabelRank="King">
-    <County id="county_lothian" name="Royal burgh of Edinburgh" seat="dadg_sco_edinburgh_town" holderClanId="clan_stewart" heldSince="1371" dignityName="County of Lothian" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    <County id="county_berwick" name="Burgh and royal fortress of Berwick" seat="dadg_sco_berwick_upon_tweed_town" holderClanId="clan_stewart" heldSince="1461" dignityName="Earldom of March" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    <Barony id="barony_dunbar" name="Dunbar castle estate" seat="dadg_sco_dunbar_castle" holderClanId="clan_stewart" heldSince="1435" dignityName="Barony of Dunbar" dignityRank="Baron" allegiance="county_berwick" mapLabelRank="Baron">
-      <Claim clanId="clan_hepburn" strength="Weak" />
-    </Barony>
-    <County id="county_stirling" name="Royal burgh of Stirling" seat="dadg_sco_stirling_town" holderClanId="clan_hamilton" heldSince="1455" dignityName="Lordship of Stirling" dignityRank="Baron" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    <County id="county_lanark" name="Regality of Glasgow" seat="dadg_sco_glasgow_town" holderClanId="clan_hamilton" heldSince="1445" dignityName="Lordship of Hamilton" dignityRank="Baron" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    <Barony id="barony_rothesay" name="Royal castle of Rothesay" seat="dadg_sco_rothesay_castle" holderClanId="clan_hamilton" heldSince="1460" dignityName="Barony of Rothesay" dignityRank="Baron" allegiance="county_lanark" mapLabelRank="Baron" />
-    <County id="county_carrick" name="Royal burgh of Ayr" seat="dadg_sco_ayr_town" holderClanId="clan_kennedy" heldSince="1372" dignityName="Lordship of Kennedy" dignityRank="Baron" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    <County id="county_nithsdale" name="Royal burgh of Dumfries" seat="dadg_sco_dumfries_town" holderClanId="clan_maxwell" heldSince="1440" dignityName="Lordship of Maxwell" dignityRank="Baron" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    <Barony id="barony_caerlaverock" name="Lands of Caerlaverock" seat="dadg_sco_caerlaverock_castle" holderClanId="clan_maxwell" heldSince="1220" dignityName="Barony of Caerlaverock" dignityRank="Baron" allegiance="county_nithsdale" mapLabelRank="Baron" />
-    <County id="county_fife" name="Episcopal burgh of St Andrews" seat="dadg_sco_st_andrews_town" holderClanId="clan_stewart" heldSince="1425" dignityName="County of Fife" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    <Barony id="barony_lochleven" name="Lochleven castle estate" seat="dadg_sco_lochleven_castle" holderClanId="clan_douglas_lochleven" heldSince="1463" dignityName="Barony of Lochleven" dignityRank="Baron" allegiance="county_fife" mapLabelRank="Baron" />
-    <County id="county_crawford" dignityName="Earldom of Crawford" name="Royal burgh of Dundee" seat="dadg_sco_dundee_town" holderClanId="clan_lindsay" heldSince="1398" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    <County id="county_gowrie" name="Royal burgh of Perth" seat="dadg_sco_perth_town" holderClanId="clan_ruthven" heldSince="1300" dignityName="Lands of Ruthven" dignityRank="Baron" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    <County id="county_aberdeen" name="Royal burgh of Aberdeen" seat="dadg_sco_aberdeen_town" holderClanId="clan_keith" heldSince="1458" dignityName="Earldom Marischal" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    <Barony id="barony_dunnottar" name="Dunnottar castle estate" seat="dadg_sco_dunnottar_castle" holderClanId="clan_keith" heldSince="1392" dignityName="Barony of Dunnottar" dignityRank="Baron" allegiance="county_aberdeen" mapLabelRank="Baron" />
-    <County id="county_moray" name="Royal burgh of Elgin" seat="dadg_sco_elgin_town" holderClanId="clan_stewart" heldSince="1455" dignityName="Earldom of Moray" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron">
-      <Claim clanId="clan_crichton" />
-      <Claim clanId="clan_dunbar_moray" strength="Weak" />
-    </County>
-    <Barony id="barony_strathbogie" name="Lordship of Strathbogie" seat="dadg_sco_huntly_castle" holderClanId="clan_gordon" heldSince="1445" dignityName="Earldom of Huntly" dignityRank="Earl" allegiance="county_moray" mapLabelRank="Baron" />
-    <County id="county_inverness" name="Royal burgh of Inverness" seat="dadg_sco_inverness_town" holderClanId="clan_dunbar_moray" heldSince="1430" dignityName="Lordship of Westfield" dignityRank="Baron" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    <Barony id="barony_urquhart" name="Lordship of Urquhart" seat="dadg_sco_urquhart_castle" holderClanId="clan_macdonald_isles" heldSince="1452" dignityName="Barony of Urquhart" dignityRank="Baron" allegiance="county_inverness" mapLabelRank="Baron" />
-    <Barony id="barony_cawdor" name="Thanage of Calder" seat="dadg_sco_cawdor_castle" holderClanId="clan_calder" heldSince="1405" dignityName="Barony of Cawdor" dignityRank="Baron" allegiance="county_inverness" mapLabelRank="Baron" />
-    <County id="county_orkney" name="Town of Kirkwall" seat="dadg_sco_kirkevaag_village" holderClanId="clan_stewart" heldSince="1470" dignityName="Earldom of Orkney" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    <Barony id="barony_caithness" name="Wick settlement estate" seat="dadg_sco_wick_town" holderClanId="clan_sinclair" heldSince="1455" dignityName="Earldom of Caithness" dignityRank="Earl" allegiance="county_orkney" mapLabelRank="Baron" />
-    <Barony id="barony_dirlot" name="Dirlot castle estate" seat="dadg_sco_dirlot_castle" holderClanId="clan_stewart" heldSince="1440" dignityName="Barony of Dirlot" dignityRank="Baron" allegiance="county_orkney" mapLabelRank="Baron" />
-    <County id="county_sutherland" name="Dornoch episcopal settlement" seat="dadg_sco_dornoch_town" holderClanId="clan_sinclair" heldSince="1455" dignityRank="Baron" dignityName="Lands of Sutherland" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    <County id="group_8c9d9345b3b5" name="Lordship of Galloway" dignityName="Lordship of Galloway" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Earl">
-      <Barony id="barony_threave" name="Threave castle estate" seat="dadg_sco_threave_castle" holderClanId="clan_stewart" heldSince="1455" dignityName="Barony of Threave" dignityRank="Baron" allegiance="county_nithsdale" mapLabelRank="Baron" />
-    </County>
-    <County id="group_78163fe87745" name="Lordship of Liddesdale" dignityName="Lordship of Liddesdale" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Earl">
-      <Barony id="barony_hermitage" name="Hermitage castle estate" seat="dadg_sco_hermitage_castle" holderClanId="clan_douglas_angus" heldSince="1455" dignityName="Earldom of Angus" dignityRank="Earl" allegiance="county_nithsdale" mapLabelRank="Baron" />
-    </County>
-    <County id="group_5c2c9f4890fc" name="Lands of Glenorchy" dignityName="Lands of Glenorchy" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Earl">
-      <County id="county_argyll" name="Kilchurn castle estate" seat="dadg_sco_kilchurn_castle" holderClanId="clan_campbell" heldSince="1457" dignityName="Earldom of Argyll" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
-    </County>
-    <County id="group_177f441807f1" name="Earldom of Mar" dignityName="Earldom of Mar" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Earl">
-      <Barony id="barony_mar" name="Kildrummy castle estate" seat="dadg_sco_kildrummy_castle" holderClanId="clan_stewart" heldSince="1435" dignityName="Barony of Mar" dignityRank="Baron" allegiance="county_aberdeen" mapLabelRank="Baron">
-        <Claim clanId="clan_erskine" />
-      </Barony>
-    </County>
+    <Duchy id="region_lothian" dignityRank="Duke" name="Lothian" mapLabelRank="Duke">
+      <Duchy id="shire_edinburgh" dignityRank="Earl" name="Sheriffdom of Edinburgh" mapLabelRank="Earl">
+        <County id="county_lothian" name="Royal burgh of Edinburgh" seat="dadg_sco_edinburgh_town" holderClanId="clan_stewart" heldSince="1371" dignityName="County of Lothian" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+        <Barony id="barony_dunbar" name="Dunbar castle estate" seat="dadg_sco_dunbar_castle" holderClanId="clan_stewart" heldSince="1435" dignityName="Barony of Dunbar" dignityRank="Baron" allegiance="county_march" mapLabelRank="Baron">
+          <Claim clanId="clan_hepburn" strength="Weak" />
+        </Barony>
+      </Duchy>
+      <County id="county_stirling" name="Royal burgh of Stirling" seat="dadg_sco_stirling_town" holderClanId="clan_hamilton" heldSince="1455" dignityName="Lordship of Stirling" dignityRank="Baron" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+    </Duchy>
+    <Duchy id="region_scottish_marches" dignityRank="Duke" name="Scottish Marches" mapLabelRank="Duke">
+      <Duchy id="shire_liddesdale" dignityRank="Earl" name="Lordship of Liddesdale" mapLabelRank="Earl">
+        <Barony id="barony_angus" name="Hermitage castle estate" seat="dadg_sco_hermitage_castle" holderClanId="clan_douglas_angus" heldSince="1455" dignityName="Earldom of Angus" dignityRank="Earl" allegiance="county_maxwell" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_dumfries" dignityRank="Earl" name="Sheriffdom of Dumfries" mapLabelRank="Earl">
+        <County id="county_maxwell" name="Royal burgh of Dumfries" seat="dadg_sco_dumfries_town" holderClanId="clan_maxwell" heldSince="1440" dignityName="Lordship of Maxwell" dignityRank="Baron" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+        <Barony id="barony_caerlaverock" name="Lands of Caerlaverock" seat="dadg_sco_caerlaverock_castle" holderClanId="clan_maxwell" heldSince="1220" dignityName="Barony of Caerlaverock" dignityRank="Baron" allegiance="county_maxwell" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_galloway" dignityRank="Earl" name="Lordship of Galloway" mapLabelRank="Earl">
+        <Barony id="barony_threave" name="Threave castle estate" seat="dadg_sco_threave_castle" holderClanId="clan_stewart" heldSince="1455" dignityName="Barony of Threave" dignityRank="Baron" allegiance="county_maxwell" mapLabelRank="Baron" />
+      </Duchy>
+      <County id="county_march" name="Burgh and royal fortress of Berwick" seat="dadg_sco_berwick_upon_tweed_town" holderClanId="clan_stewart" heldSince="1461" dignityName="Earldom of March" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+    </Duchy>
+    <Duchy id="region_clydesdale" dignityRank="Duke" name="Clydesdale and the Principality" mapLabelRank="Duke">
+      <Duchy id="shire_argyll" dignityRank="Earl" name="Argyll" mapLabelRank="Earl">
+        <County id="county_argyll" name="Kilchurn castle estate" seat="dadg_sco_kilchurn_castle" holderClanId="clan_campbell" heldSince="1457" dignityName="Earldom of Argyll" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+      </Duchy>
+      <County id="county_hamilton" name="Regality of Glasgow" seat="dadg_sco_glasgow_town" holderClanId="clan_hamilton" heldSince="1445" dignityName="Lordship of Hamilton" dignityRank="Baron" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+      <Barony id="barony_rothesay" name="Royal castle of Rothesay" seat="dadg_sco_rothesay_castle" holderClanId="clan_hamilton" heldSince="1460" dignityName="Barony of Rothesay" dignityRank="Baron" allegiance="county_hamilton" mapLabelRank="Baron" />
+      <County id="county_kennedy" name="Royal burgh of Ayr" seat="dadg_sco_ayr_town" holderClanId="clan_kennedy" heldSince="1372" dignityName="Lordship of Kennedy" dignityRank="Baron" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+    </Duchy>
+    <Duchy id="region_fife_gowrie_angus" dignityRank="Duke" name="Fife, Gowrie and Angus" mapLabelRank="Duke">
+      <Duchy id="shire_fife" dignityRank="Earl" name="Sheriffdom of Fife" mapLabelRank="Earl">
+        <County id="county_fife" name="Episcopal burgh of St Andrews" seat="dadg_sco_st_andrews_town" holderClanId="clan_stewart" heldSince="1425" dignityName="County of Fife" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+        <Barony id="barony_lochleven" name="Lochleven castle estate" seat="dadg_sco_lochleven_castle" holderClanId="clan_douglas_lochleven" heldSince="1463" dignityName="Barony of Lochleven" dignityRank="Baron" allegiance="county_fife" mapLabelRank="Baron" />
+      </Duchy>
+      <County id="county_crawford" dignityName="Earldom of Crawford" name="Royal burgh of Dundee" seat="dadg_sco_dundee_town" holderClanId="clan_lindsay" heldSince="1398" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+      <County id="county_ruthven" name="Royal burgh of Perth" seat="dadg_sco_perth_town" holderClanId="clan_ruthven" heldSince="1300" dignityName="Lands of Ruthven" dignityRank="Baron" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+    </Duchy>
+    <Duchy id="region_mar_mearns" dignityRank="Duke" name="Mar and the Mearns" mapLabelRank="Duke">
+      <Duchy id="shire_aberdeen" dignityRank="Earl" name="Sheriffdom of Aberdeen" mapLabelRank="Earl">
+        <County id="county_marischal" name="Royal burgh of Aberdeen" seat="dadg_sco_aberdeen_town" holderClanId="clan_keith" heldSince="1458" dignityName="Earldom Marischal" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+        <Barony id="barony_mar" name="Kildrummy castle estate" seat="dadg_sco_kildrummy_castle" holderClanId="clan_stewart" heldSince="1435" dignityName="Barony of Mar" dignityRank="Baron" allegiance="county_marischal" mapLabelRank="Baron">
+          <Claim clanId="clan_erskine" />
+        </Barony>
+        <Barony id="barony_huntly" name="Lordship of Strathbogie" seat="dadg_sco_huntly_castle" holderClanId="clan_gordon" heldSince="1445" dignityName="Earldom of Huntly" dignityRank="Earl" allegiance="county_moray" mapLabelRank="Baron" />
+      </Duchy>
+      <Barony id="barony_dunnottar" name="Dunnottar castle estate" seat="dadg_sco_dunnottar_castle" holderClanId="clan_keith" heldSince="1392" dignityName="Barony of Dunnottar" dignityRank="Baron" allegiance="county_marischal" mapLabelRank="Baron" />
+    </Duchy>
+    <Duchy id="region_moray" dignityRank="Duke" name="Moray" mapLabelRank="Duke">
+      <Duchy id="shire_inverness" dignityRank="Earl" name="Sheriffdom of Inverness" mapLabelRank="Earl">
+        <County id="county_westfield" name="Royal burgh of Inverness" seat="dadg_sco_inverness_town" holderClanId="clan_dunbar_moray" heldSince="1430" dignityName="Lordship of Westfield" dignityRank="Baron" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+        <Barony id="barony_urquhart" name="Lordship of Urquhart" seat="dadg_sco_urquhart_castle" holderClanId="clan_macdonald_isles" heldSince="1452" dignityName="Barony of Urquhart" dignityRank="Baron" allegiance="county_westfield" mapLabelRank="Baron" />
+      </Duchy>
+      <County id="county_moray" name="Royal burgh of Elgin" seat="dadg_sco_elgin_town" holderClanId="clan_stewart" heldSince="1455" dignityName="Earldom of Moray" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron">
+        <Claim clanId="clan_crichton" />
+        <Claim clanId="clan_dunbar_moray" strength="Weak" />
+      </County>
+      <Barony id="barony_cawdor" name="Thanage of Calder" seat="dadg_sco_cawdor_castle" holderClanId="clan_calder" heldSince="1405" dignityName="Barony of Cawdor" dignityRank="Baron" allegiance="county_westfield" mapLabelRank="Baron" />
+    </Duchy>
+    <Duchy id="region_far_north" dignityRank="Duke" name="Caithness, Sutherland and Orkney" mapLabelRank="Duke">
+      <Duchy id="shire_caithness" dignityRank="Earl" name="Earldom of Caithness" mapLabelRank="Earl">
+        <Barony id="barony_caithness" name="Wick settlement estate" seat="dadg_sco_wick_town" holderClanId="clan_sinclair" heldSince="1455" dignityName="Earldom of Caithness" dignityRank="Earl" allegiance="county_orkney" mapLabelRank="Baron" />
+        <Barony id="barony_dirlot" name="Dirlot castle estate" seat="dadg_sco_dirlot_castle" holderClanId="clan_stewart" heldSince="1440" dignityName="Barony of Dirlot" dignityRank="Baron" allegiance="county_orkney" mapLabelRank="Baron" />
+      </Duchy>
+      <County id="county_orkney" name="Town of Kirkwall" seat="dadg_sco_kirkevaag_village" holderClanId="clan_stewart" heldSince="1470" dignityName="Earldom of Orkney" dignityRank="Earl" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+      <County id="county_sutherland" name="Dornoch episcopal settlement" seat="dadg_sco_dornoch_town" holderClanId="clan_sinclair" heldSince="1455" dignityRank="Baron" dignityName="Lands of Sutherland" allegiance="kingdom_scotland" mapLabelRank="Baron" />
+    </Duchy>
   </Kingdom>
   <Kingdom id="kingdom_isles" name="Lordship of the Isles" kingClanId="clan_macdonald_isles" heldSince="1336" mapLabelRank="King">
-    <County id="county_islay" name="Finlaggan demesne" seat="dadg_sco_finlaggan_town" holderClanId="clan_macdonald_isles" heldSince="1336" dignityName="County of Islay" dignityRank="Earl" allegiance="kingdom_isles" mapLabelRank="Baron" />
-    <Barony id="barony_dunyvaig" name="Dunyvaig castle estate" seat="dadg_sco_dunyvaig_castle" holderClanId="clan_macdonald_isles" heldSince="1336" dignityName="Barony of Dunyvaig" dignityRank="Baron" allegiance="county_islay" mapLabelRank="Baron" />
-    <Barony id="barony_knapdale" name="Tarbert castle estate" seat="dadg_sco_tarbert_castle" holderClanId="clan_macdonald_isles" heldSince="1376" dignityName="Barony of Knapdale" dignityRank="Baron" allegiance="county_islay" mapLabelRank="Baron">
-      <Claim clanId="clan_macneil" strength="Weak" />
-    </Barony>
-    <Barony id="barony_duart" name="Lands of Duart" seat="dadg_sco_duart_castle" holderClanId="clan_maclean" heldSince="1390" dignityName="Barony of Duart" dignityRank="Baron" allegiance="county_islay" mapLabelRank="Baron" />
-    <County id="county_lewis" name="Stornoway settlement estate" seat="dadg_sco_stornoway_town" holderClanId="clan_macleod_lewis" heldSince="1343" dignityName="Lordship of Lewis" dignityRank="Baron" allegiance="kingdom_isles" mapLabelRank="Baron" />
-    <Barony id="barony_dunvegan" name="Dunvegan castle estate" seat="dadg_sco_dunvegan_castle" holderClanId="clan_macleod" heldSince="1343" dignityName="Barony of Dunvegan" dignityRank="Baron" allegiance="county_lewis" mapLabelRank="Baron" />
-    <Barony id="barony_barra" name="Lands of Barra" seat="dadg_sco_kisimul_castle" holderClanId="clan_macneil_barra" heldSince="1427" dignityName="Barony of Barra" dignityRank="Baron" allegiance="county_lewis" mapLabelRank="Baron" />
-    <County id="county_ross" name="Royal burgh of Dingwall" seat="dadg_sco_dingwall_town" holderClanId="clan_macdonald_isles" heldSince="1449" dignityName="Earldom of Ross" dignityRank="Earl" allegiance="kingdom_isles" mapLabelRank="Baron">
-      <Claim clanId="clan_ross" strength="Weak" />
-    </County>
-    <Barony id="barony_sleat" name="Lands of Sleat" seat="dadg_sco_dunscaith_castle" holderClanId="clan_macdonald_sleat" heldSince="1469" dignityName="Barony of Sleat" dignityRank="Baron" allegiance="county_ross" mapLabelRank="Baron" />
-    <Barony id="barony_ardnamurchan" name="Lands of Ardnamurchan" seat="dadg_sco_mingary_castle" holderClanId="clan_maclain" heldSince="1341" dignityName="Barony of Ardnamurchan" dignityRank="Baron" allegiance="county_lochaber" mapLabelRank="Baron" />
-    <County id="group_b4e4cbf6b4b7" name="Earldom of Ross" dignityName="Earldom of Ross" dignityRank="Earl" allegiance="kingdom_isles" mapLabelRank="Earl">
-      <Barony id="barony_balnagowan" name="Lands of Balnagown" seat="dadg_sco_balnagowan_castle" holderClanId="clan_ross" heldSince="1370" dignityName="Barony of Balnagowan" dignityRank="Baron" allegiance="county_ross" mapLabelRank="Baron" />
-      <Barony id="barony_foulis" name="Lands of Foulis" seat="dadg_sco_foulis_castle" holderClanId="clan_munro" heldSince="1350" dignityName="Barony of Foulis" dignityRank="Baron" allegiance="county_ross" mapLabelRank="Baron" />
+    <Duchy id="region_islay_kintyre" dignityRank="Duke" name="Islay and Kintyre" mapLabelRank="Duke">
+      <Duchy id="shire_islay" dignityRank="Earl" name="Islay" mapLabelRank="Earl">
+        <County id="county_islay" name="Finlaggan demesne" seat="dadg_sco_finlaggan_town" holderClanId="clan_macdonald_isles" heldSince="1336" dignityName="County of Islay" dignityRank="Earl" allegiance="kingdom_isles" mapLabelRank="Baron" />
+        <Barony id="barony_dunyvaig" name="Dunyvaig castle estate" seat="dadg_sco_dunyvaig_castle" holderClanId="clan_macdonald_isles" heldSince="1336" dignityName="Barony of Dunyvaig" dignityRank="Baron" allegiance="county_islay" mapLabelRank="Baron" />
+      </Duchy>
+      <Barony id="barony_knapdale" name="Tarbert castle estate" seat="dadg_sco_tarbert_castle" holderClanId="clan_macdonald_isles" heldSince="1376" dignityName="Barony of Knapdale" dignityRank="Baron" allegiance="county_islay" mapLabelRank="Baron">
+        <Claim clanId="clan_macneil" strength="Weak" />
+      </Barony>
+      <Barony id="barony_duart" name="Lands of Duart" seat="dadg_sco_duart_castle" holderClanId="clan_maclean" heldSince="1390" dignityName="Barony of Duart" dignityRank="Baron" allegiance="county_islay" mapLabelRank="Baron" />
+    </Duchy>
+    <Duchy id="region_ross" dignityRank="Duke" name="Earldom of Ross" mapLabelRank="Duke">
+      <Duchy id="shire_easter_ross" dignityRank="Earl" name="Easter Ross" mapLabelRank="Earl">
+        <County id="county_ross" name="Royal burgh of Dingwall" seat="dadg_sco_dingwall_town" holderClanId="clan_macdonald_isles" heldSince="1449" dignityName="Earldom of Ross" dignityRank="Earl" allegiance="kingdom_isles" mapLabelRank="Baron">
+          <Claim clanId="clan_ross" strength="Weak" />
+        </County>
+        <Barony id="barony_balnagowan" name="Lands of Balnagown" seat="dadg_sco_balnagowan_castle" holderClanId="clan_ross" heldSince="1370" dignityName="Barony of Balnagowan" dignityRank="Baron" allegiance="county_ross" mapLabelRank="Baron" />
+        <Barony id="barony_foulis" name="Lands of Foulis" seat="dadg_sco_foulis_castle" holderClanId="clan_munro" heldSince="1350" dignityName="Barony of Foulis" dignityRank="Baron" allegiance="county_ross" mapLabelRank="Baron" />
+      </Duchy>
       <Barony id="barony_kintail" name="Eilean Donan castle estate" seat="dadg_sco_eilean_donan_castle" holderClanId="clan_mackenzie" heldSince="1463" dignityName="Barony of Kintail" dignityRank="Baron" allegiance="county_ross" mapLabelRank="Baron" />
-    </County>
-    <County id="group_1b3e86ef44f4" name="Lordship of Lochaber" dignityName="Lordship of Lochaber" dignityRank="Earl" allegiance="kingdom_isles" mapLabelRank="Earl">
-      <County id="county_lochaber" name="Inverlochy settlement estate" seat="dadg_sco_inverlochy_town" holderClanId="clan_cameron" heldSince="1461" dignityName="Lordship of Lochiel" dignityRank="Baron" allegiance="kingdom_isles" mapLabelRank="Baron">
+    </Duchy>
+    <Duchy id="region_skye_outer_isles" dignityRank="Duke" name="Skye and the Outer Isles" mapLabelRank="Duke">
+      <Duchy id="shire_long_island" dignityRank="Earl" name="The Long Island" mapLabelRank="Earl">
+        <County id="county_lewis" name="Stornoway settlement estate" seat="dadg_sco_stornoway_town" holderClanId="clan_macleod_lewis" heldSince="1343" dignityName="Lordship of Lewis" dignityRank="Baron" allegiance="kingdom_isles" mapLabelRank="Baron" />
+        <Barony id="barony_barra" name="Lands of Barra" seat="dadg_sco_kisimul_castle" holderClanId="clan_macneil_barra" heldSince="1427" dignityName="Barony of Barra" dignityRank="Baron" allegiance="county_lewis" mapLabelRank="Baron" />
+      </Duchy>
+      <Duchy id="shire_skye" dignityRank="Earl" name="Skye" mapLabelRank="Earl">
+        <Barony id="barony_dunvegan" name="Dunvegan castle estate" seat="dadg_sco_dunvegan_castle" holderClanId="clan_macleod" heldSince="1343" dignityName="Barony of Dunvegan" dignityRank="Baron" allegiance="county_lewis" mapLabelRank="Baron" />
+        <Barony id="barony_sleat" name="Lands of Sleat" seat="dadg_sco_dunscaith_castle" holderClanId="clan_macdonald_sleat" heldSince="1469" dignityName="Barony of Sleat" dignityRank="Baron" allegiance="county_ross" mapLabelRank="Baron" />
+      </Duchy>
+    </Duchy>
+    <Duchy id="region_lochaber" dignityRank="Duke" name="Lochaber and Garmoran" mapLabelRank="Duke">
+      <Duchy id="shire_garmoran" dignityRank="Earl" name="Garmoran and Ardnamurchan" mapLabelRank="Earl">
+        <Barony id="barony_moidart" name="Tioram castle estate" seat="dadg_sco_tioram_castle" holderClanId="clan_clanranald" heldSince="1373" dignityName="Barony of Moidart" dignityRank="Baron" allegiance="county_lochiel" mapLabelRank="Baron" />
+        <Barony id="barony_ardnamurchan" name="Lands of Ardnamurchan" seat="dadg_sco_mingary_castle" holderClanId="clan_maclain" heldSince="1341" dignityName="Barony of Ardnamurchan" dignityRank="Baron" allegiance="county_lochiel" mapLabelRank="Baron" />
+      </Duchy>
+      <County id="county_lochiel" name="Inverlochy settlement estate" seat="dadg_sco_inverlochy_town" holderClanId="clan_cameron" heldSince="1461" dignityName="Lordship of Lochiel" dignityRank="Baron" allegiance="kingdom_isles" mapLabelRank="Baron">
         <Claim clanId="clan_keppoch" strength="Weak" />
       </County>
-    </County>
-    <County id="group_ea25fa29900f" name="Lordship of Garmoran" dignityName="Lordship of Garmoran" dignityRank="Earl" allegiance="kingdom_isles" mapLabelRank="Earl">
-      <Barony id="barony_moidart" name="Tioram castle estate" seat="dadg_sco_tioram_castle" holderClanId="clan_clanranald" heldSince="1373" dignityName="Barony of Moidart" dignityRank="Baron" allegiance="county_lochaber" mapLabelRank="Baron" />
-    </County>
+    </Duchy>
   </Kingdom>
 </Feudalism>

@@ -81,7 +81,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         private PoliticalMapView _keysView = PoliticalMapView.Off;
         private PoliticalMapOwnerLevel _keysLevel;
         private readonly PoliticalMapLabelRegionCache _regionCache = new();
-        private Task<(IReadOnlyList<PoliticalMapRegion>[] Regions, IReadOnlyList<PoliticalMapRegion>[]? Detailed)>? _finding;
+        private Task<IReadOnlyList<PoliticalMapRegion>[]>? _finding;
         private CancellationTokenSource? _findingCancellation;
         private PoliticalMapView _findingView;
         private PoliticalMapOwnerLevel _findingLevel;
@@ -170,10 +170,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
                 _findingCancellation = null;
                 if (finding.Status == TaskStatus.RanToCompletion)
                 {
-                    _regionCache.Store(_findingView, _findingLevel, _findingKeys, finding.Result.Regions);
-                    if (finding.Result.Detailed is { } detailed)
-                        _regionCache.Store(PoliticalMapView.Owners, PoliticalMapOwnerLevel.SubVassals,
-                            new[] { _findingKeys[1] }, detailed);
+                    _regionCache.Store(_findingView, _findingLevel, _findingKeys, finding.Result);
                 }
                 else if (finding.Exception is not null) throw finding.Exception;
                 _findingKeys = Array.Empty<string?[]>();
@@ -283,13 +280,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         private string?[][] KeysOf(PoliticalMapView view, PoliticalMapOwnerLevel level)
         {
             PoliticalMapGrid grid = _grid!;
-            bool geographic = Modes.Of(view) == PoliticalMapLabelMode.Titles;
             var paints = _painter.Paint(view, grid.SettlementIds, _territories, _folds, _world, null, level, Modes.Of(view));
-            string?[][] keys = { _painter.LabelKeysOf(view, Modes.Of(view), grid.SettlementIds, paints, _world, level) };
-            // A holder's own detailed land can change without changing any coarse grouping key.
-            return view == PoliticalMapView.Owners && !geographic && level == PoliticalMapOwnerLevel.Vassals
-                ? keys.Concat(new[] { OwnerRegionKeys(grid, PoliticalMapOwnerLevel.SubVassals).ToArray() }).ToArray()
-                : keys;
+            return new[] { _painter.LabelKeysOf(view, Modes.Of(view), grid.SettlementIds, paints, _world, level) };
         }
 
         private static PoliticalMapOwnerLevel OtherOwnerLevel(PoliticalMapOwnerLevel level) =>
@@ -310,10 +302,6 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             CancelFinding();
             PoliticalMapGrid grid = _grid!;
             IReadOnlyList<PoliticalMapLabelTier> tiers = PoliticalMapLabelTiers.Of(view, Modes.Of(view));
-            bool anchorOwners = view == PoliticalMapView.Owners && Modes.Of(view) == PoliticalMapLabelMode.Clans
-                && level == PoliticalMapOwnerLevel.Vassals;
-            IReadOnlyList<PoliticalMapRegion>[]? cachedDetailed = anchorOwners
-                ? _regionCache.Get(PoliticalMapView.Owners, PoliticalMapOwnerLevel.SubVassals, new[] { keys[1] }) : null;
             _findingView = view;
             _findingLevel = level;
             _findingKeys = keys;
@@ -327,19 +315,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
                     cancellation.ThrowIfCancellationRequested();
                     regions[index] = PoliticalMapRegions.Find(grid, keys[index], PoliticalMapLabelTiers.MinCells(tiers[index]));
                 }
-                IReadOnlyList<PoliticalMapRegion>[]? detailed = null;
-                if (anchorOwners)
-                {
-                    cancellation.ThrowIfCancellationRequested();
-                    detailed = cachedDetailed ?? new[]
-                    {
-                        PoliticalMapRegions.Find(grid, keys[1], PoliticalMapLabelTiers.MinCells(PoliticalMapLabelTier.Owner))
-                    };
-                    cancellation.ThrowIfCancellationRequested();
-                    regions[0] = PoliticalMapOwnerLabelAnchors.Apply(grid, keys[0], regions[0], detailed[0]);
-                }
                 cancellation.ThrowIfCancellationRequested();
-                return (regions, detailed);
+                return regions;
             }, cancellation);
         }
 
@@ -354,12 +331,6 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             _findingCancellation = null;
             _findingKeys = Array.Empty<string?[]>();
         }
-
-        // The owners view's own regions at a level (each the clan they belong to), so labels group as the colours do.
-        private IReadOnlyList<string?> OwnerRegionKeys(PoliticalMapGrid grid, PoliticalMapOwnerLevel level) =>
-            _painter.Paint(PoliticalMapView.Owners, grid.SettlementIds, _territories, _folds, _world, null, level)
-                .Select(paint => paint.RegionKey)
-                .ToArray();
 
         private void BuildLabels(MapScreen mapScreen, PoliticalMapView view, PoliticalMapOwnerLevel level)
         {
@@ -414,7 +385,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
 
         private TitleRank? RankOf(PoliticalMapLabelTier tier, string key, PoliticalMapVassalHierarchy? hierarchy) =>
             tier == PoliticalMapLabelTier.Territory ? (_keysView == PoliticalMapView.DeJure
-                ? _painter.GeographicLabelRankOf(key) : _painter.DomainLabelRankOf(key))
+                ? _painter.GeographicLabelRankOf(key) : _painter.DomainLabelRankOf(key, _keysLevel))
             : tier == PoliticalMapLabelTier.Owner ? (hierarchy?.HighestLandTitleOf(key) ?? hierarchy?.HighestTitleOf(key))?.Rank : null;
 
         private string? NameOf(PoliticalMapLabelTier tier, PoliticalMapLabelMode mode, string key, PoliticalMapVassalHierarchy? hierarchy)
@@ -430,7 +401,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
                     return ClanNameOf(key);
                 case PoliticalMapLabelTier.Territory:
                     string? titleName = _keysView == PoliticalMapView.DeJure
-                        ? _painter.GeographicLabelNameOf(key) : _painter.DomainLabelNameOf(key);
+                        ? _painter.GeographicLabelNameOf(key) : _painter.DomainLabelNameOf(key, _keysLevel);
                     if (titleName is not null) return new TextObject(titleName).ToString();
                     return key.StartsWith("settlement:", StringComparison.Ordinal)
                         ? _world.SettlementName(key.Substring("settlement:".Length))?.Trim(' ', '\u00b7') : null;

@@ -28,19 +28,98 @@ public class PoliticalMapOverlayOverRealContentTests
     [Trait("Category", "DADG content integration")]
     public void EachDuchyDemesneFoldsIntoTheCountyItBordersMost()
     {
-        // The same folds tools/political_map_bake.py draws: Pontefract into York, Warwick into
-        // Oxford, Fotheringhay into Warwick, Stafford into Cheshire, Framlingham into Norwich,
-        // Corfe into Bristol and Harlech into Gwynedd.
+        // Every seat is its own territory, so every non-county seat (a duchy seated at a castle or
+        // a barony) is painted as the county it borders most, the same way
+        // tools/political_map_bake.py draws it.
         Assert.Equal(
             new Dictionary<string, string>
             {
-                ["duchy_buckingham"] = "county_cheshire",
+                ["barony_arundel"] = "county_arundel",
+                ["barony_baconsthorpe"] = "county_howard",
+                ["barony_balnagowan"] = "county_sutherland",
+                ["barony_bamburgh"] = "county_march",
+                ["barony_barnard"] = "county_lancashire",
+                ["barony_beaumaris"] = "county_ferrers",
+                ["barony_beeston"] = "county_rivers",
+                ["barony_berkhamsted"] = "county_oxford",
+                ["barony_brecon"] = "county_bergavenny",
+                ["barony_caerlaverock"] = "county_maxwell",
+                ["barony_caerphilly"] = "county_glamorgan",
+                ["barony_cardigan"] = "county_pembroke",
+                ["barony_carisbrooke"] = "county_hampshire",
+                ["barony_carmarthen"] = "county_ceredigion",
+                ["barony_cawdor"] = "county_westfield",
+                ["barony_chepstow"] = "county_bergavenny",
+                ["barony_chirk"] = "county_shrewsbury",
+                ["barony_clare"] = "county_suffolk",
+                ["barony_conisbrough"] = "county_lincoln",
+                ["barony_conwy"] = "county_ferrers",
+                ["barony_denbigh"] = "county_rivers",
+                ["barony_dirlot"] = "county_sutherland",
+                ["barony_donnington"] = "county_oxford",
+                ["barony_dover"] = "county_kent",
+                ["barony_duart"] = "county_argyll",
+                ["barony_dunbar"] = "county_march",
+                ["barony_dunnottar"] = "county_crawford",
+                ["barony_dunstanburgh"] = "county_northumberland",
+                ["barony_dunster"] = "county_devon",
+                ["barony_dunvegan"] = "county_lewis",
+                ["barony_dunyvaig"] = "county_islay",
+                ["barony_durham"] = "county_westmorland",
+                ["barony_farleigh"] = "county_bristol",
+                ["barony_farnham"] = "county_arundel",
+                ["barony_foulis"] = "county_ross",
+                ["barony_gloucester"] = "county_bristol",
+                ["barony_hedingham"] = "county_essex",
+                ["barony_helmsley"] = "county_york",
+                ["barony_angus"] = "county_clifford",
+                ["barony_hertford"] = "county_london",
+                ["barony_kendal"] = "county_clifford",
+                ["barony_kenilworth"] = "county_warwick",
+                ["barony_kintail"] = "county_ross",
+                ["barony_knapdale"] = "county_argyll",
+                ["barony_lewes"] = "county_arundel",
+                ["barony_liverpool"] = "county_lancashire",
+                ["barony_lochleven"] = "county_lothian",
+                ["barony_ludlow"] = "county_bergavenny",
+                ["barony_mar"] = "county_ruthven",
+                ["barony_middleham"] = "county_york",
+                ["barony_moidart"] = "county_lochiel",
+                ["barony_montgomery"] = "county_shrewsbury",
+                ["barony_northampton"] = "county_warwick",
+                ["barony_nottingham"] = "county_warwick",
+                ["barony_okehampton"] = "county_cornwall",
+                ["barony_painscastle"] = "county_ceredigion",
+                ["barony_penrith"] = "county_clifford",
+                ["barony_peveril"] = "county_hallamshire",
+                ["barony_piel"] = "county_clifford",
+                ["barony_plymouth"] = "county_cornwall",
+                ["barony_rochester"] = "county_kent",
+                ["barony_rothesay"] = "county_argyll",
+                ["barony_rye"] = "county_kent",
+                ["barony_saint_michaels_mount"] = "county_cornwall",
+                ["barony_scarborough"] = "county_hull",
+                ["barony_exeter"] = "county_devon",
+                ["barony_skipton"] = "county_lancashire",
+                ["barony_huntly"] = "county_marischal",
+                ["barony_swansea"] = "county_glamorgan",
+                ["barony_tattershall"] = "county_lincoln",
+                ["barony_taunton"] = "county_devon",
+                ["barony_threave"] = "county_kennedy",
+                ["barony_tonbridge"] = "county_london",
+                ["barony_totnes"] = "county_devon",
+                ["barony_urquhart"] = "county_lochiel",
+                ["barony_wardour"] = "county_hampshire",
+                ["barony_winchester"] = "county_hampshire",
+                ["barony_windsor"] = "county_london",
+                ["barony_worcester"] = "county_warwick",
+                ["duchy_buckingham"] = "county_shrewsbury",
                 ["duchy_lancaster"] = "county_york",
-                ["duchy_norfolk"] = "county_norwich",
-                ["duchy_somerset"] = "county_bristol",
-                ["duchy_wales"] = "county_gwynedd",
+                ["duchy_norfolk"] = "county_howard",
+                ["duchy_somerset"] = "county_hampshire",
+                ["duchy_wales"] = "county_ferrers",
                 ["duchy_warwick"] = "county_oxford",
-                ["duchy_york"] = "county_warwick"
+                ["duchy_york"] = "county_lynn"
             },
             Built.Value.Folds);
     }
@@ -87,7 +166,7 @@ public class PoliticalMapOverlayOverRealContentTests
         }
 
         _output.WriteLine($"{mesher.Territories.Count()} territories, {chunks} chunks, {quads} quads, {triangles} triangles; planning and geometry checks {watch.ElapsedMilliseconds} ms");
-        Assert.Equal(54, mesher.Territories.Count());
+        Assert.Equal(139, mesher.Territories.Count());
         Assert.InRange(quads, 1, 40_000);
         Assert.InRange(triangles, 1, 250_000);
     }

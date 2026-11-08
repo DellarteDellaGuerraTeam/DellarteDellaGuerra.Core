@@ -30,9 +30,9 @@ public class PoliticalMapTerritoriesOverRealContentTests
     [Trait("Category", "DADG content integration")]
     public void EverySeatBelongsToACountyOrToTheDuchyItSeats()
     {
-        // 139 seats across three realms: every town seats a county and every barony lies in one,
-        // so the only territories that are not counties are the seven English duchies seated at
-        // castles of their own. A barony left outside a county would show up here as a territory.
+        // 139 seats across three realms. Regions and shires are seatless duchy-tagged groups, so
+        // no seat merges into another: every seat is its own territory, and the demesne fold
+        // paints the ones that are not counties with a neighbour.
         IReadOnlyList<Title> seated = _titles.GetAllTitles().Where(title => title.SeatSettlementId.Length > 0).ToList();
         var territories = seated
             .Select(title => _territories.GetTerritoryOfSeat(title.SeatSettlementId))
@@ -40,20 +40,13 @@ public class PoliticalMapTerritoriesOverRealContentTests
 
         Assert.Equal(139, seated.Count);
         Assert.DoesNotContain(null, territories);
-        Assert.Equal(54, territories.Distinct().Count());
-        Assert.Equal(
-            new[]
-            {
-                "duchy_buckingham", "duchy_lancaster", "duchy_norfolk", "duchy_somerset",
-                "duchy_wales", "duchy_warwick", "duchy_york"
-            },
-            territories.Distinct().Where(territory => _structure.GetRank(territory!) != TitleRank.Earl).OrderBy(id => id));
+        Assert.Equal(seated.Select(title => title.Id).OrderBy(id => id), territories.OrderBy(id => id));
     }
 
     [Theory]
     [Trait("Category", "DADG content integration")]
     [InlineData("Lancaster_town", "county_lancashire")]
-    [InlineData("dadg_Piel_castle", "county_lancashire")]
+    [InlineData("dadg_Piel_castle", "barony_piel")]
     [InlineData("dadg_Pontefract_castle", "duchy_lancaster")]
     public void ASeatIsPaintedWithItsCounty(string seat, string territory)
     {
@@ -62,12 +55,15 @@ public class PoliticalMapTerritoriesOverRealContentTests
 
     [Theory]
     [Trait("Category", "DADG content integration")]
-    [InlineData("Pembroke_town", PoliticalMapOwnerLevel.Vassals, "county_pembroke", "Earldom of Pembroke")]
-    [InlineData("Exeter_town", PoliticalMapOwnerLevel.Vassals, "county_devon", "Earldom of Devon")]
-    [InlineData("dadg_sco_dumfries_town", PoliticalMapOwnerLevel.Vassals, "county_nithsdale", "County of Nithsdale")]
-    [InlineData("dadg_sco_hermitage_castle", PoliticalMapOwnerLevel.Vassals, "county_nithsdale", "County of Nithsdale")]
-    [InlineData("dadg_sco_hermitage_castle", PoliticalMapOwnerLevel.SubVassals, "barony_hermitage", "Barony of Hermitage")]
-    [InlineData("dadg_sco_threave_castle", PoliticalMapOwnerLevel.SubVassals, "barony_threave", "Barony of Threave")]
+    [InlineData("Pembroke_town", PoliticalMapOwnerLevel.Vassals, "region_march_of_wales", "March of Wales")]
+    [InlineData("Pembroke_town", PoliticalMapOwnerLevel.SubVassals, "county_pembroke", "Earldom of Pembroke")]
+    [InlineData("Exeter_town", PoliticalMapOwnerLevel.Vassals, "region_western_circuit", "Western Circuit")]
+    [InlineData("Exeter_town", PoliticalMapOwnerLevel.SubVassals, "shire_devon", "Devon")]
+    [InlineData("dadg_sco_dumfries_town", PoliticalMapOwnerLevel.Vassals, "region_scottish_marches", "Scottish Marches")]
+    [InlineData("dadg_sco_dumfries_town", PoliticalMapOwnerLevel.SubVassals, "shire_dumfries", "Sheriffdom of Dumfries")]
+    [InlineData("dadg_sco_hermitage_castle", PoliticalMapOwnerLevel.Vassals, "region_scottish_marches", "Scottish Marches")]
+    [InlineData("dadg_sco_hermitage_castle", PoliticalMapOwnerLevel.SubVassals, "shire_liddesdale", "Lordship of Liddesdale")]
+    [InlineData("dadg_sco_threave_castle", PoliticalMapOwnerLevel.SubVassals, "shire_galloway", "Lordship of Galloway")]
     public void GeographicLabelsNameTheirLocalTerritoryRatherThanTheHoldersDignity(
         string seat, PoliticalMapOwnerLevel level, string titleId, string name)
     {
@@ -141,9 +137,9 @@ public class PoliticalMapTerritoriesOverRealContentTests
     public void TheSeatlessEnglishCrownChangingHandsRepaintsNothing()
     {
         // The crown is seatless so that London, a county, survives a change of dynasty; a new
-        // king leaves every county's fill as it was.
+        // king leaves every seat's fill as it was.
         Assert.Empty(_territories.GetTerritoriesAffectedByTitle("kingdom_england"));
-        Assert.Equal(new[] { "county_lancashire" }, _territories.GetTerritoriesAffectedByTitle("barony_piel"));
+        Assert.Equal(new[] { "barony_piel" }, _territories.GetTerritoriesAffectedByTitle("barony_piel"));
     }
 
     private sealed class GeographicWorld : IPoliticalMapWorld

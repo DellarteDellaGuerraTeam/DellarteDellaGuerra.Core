@@ -157,7 +157,10 @@ public class PoliticalMapTitleDomainsTests
         Assert.NotEqual(labels[0], labels[4]);
         var selection = new PoliticalMapSelection(PoliticalMapView.Owners, level, PoliticalMapLabelMode.Titles, "pembroke");
         var selected = selection.Apply(paints, painter.SelectionKeysOf(selection, settlements, paints, _world));
-        for (int i = 0; i < 4; i++) Assert.NotEqual(paints[i].Fill, selected[i].Fill);
+        for (int i = 0; i < 4; i++)
+            if (level == PoliticalMapOwnerLevel.Vassals || labels[i] == selection.Key)
+                Assert.NotEqual(paints[i].Fill, selected[i].Fill);
+            else Assert.Equal(paints[i], selected[i]);
         for (int i = 4; i < 6; i++) Assert.Equal(paints[i], selected[i]);
     }
 

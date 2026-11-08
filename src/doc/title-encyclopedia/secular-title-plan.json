@@ -62,6 +62,1141 @@
       "description": "The Lordship of the Isles brings together island and mainland territories under the MacDonald lords. Its power rests on a network of local lordships and kinship ties, within a contested relationship with the Scottish Crown."
     },
     {
+      "id": "region_durham",
+      "name": "County Palatine of Durham",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/County_Palatine_of_Durham"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The bishop of Durham's palatine liberty between Tyne and Tees, where the king's writ did not run and the bishop kept his own courts, chancery and mint."
+    },
+    {
+      "id": "region_east_march",
+      "name": "East March",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Warden_of_the_Marches",
+        "https://en.wikipedia.org/wiki/Henry_Percy,_4th_Earl_of_Northumberland"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The English East March towards Scotland, the county of Northumberland and the Tyne, kept by the warden of the East March from the Percy strongholds of the coast."
+    },
+    {
+      "id": "shire_northumberland",
+      "name": "Northumberland",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_east_march",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shire of Northumberland north of the Tyne, a land of border castles along the coast and the Cheviot foothills."
+    },
+    {
+      "id": "region_west_march",
+      "name": "West March",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Warden_of_the_Marches"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The English West March, Cumberland and Westmorland, guarded from Carlisle against the Scots of Annandale and Liddesdale."
+    },
+    {
+      "id": "shire_cumberland",
+      "name": "Cumberland",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_west_march",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shire of Cumberland, centred on the border city of Carlisle and the Eden valley."
+    },
+    {
+      "id": "region_york",
+      "name": "County of York",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Richmondshire",
+        "https://en.wikipedia.org/wiki/Assizes"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The great shire of York, the largest in the realm, divided into its Ridings and the liberty of Richmondshire."
+    },
+    {
+      "id": "shire_east_riding",
+      "name": "York and the East Riding",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_york",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The city of York and the East Riding, from the Ouse to the Humber and the port of Hull."
+    },
+    {
+      "id": "shire_richmondshire",
+      "name": "Richmondshire",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_york",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Richmondshire"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The liberty of Richmondshire in the Yorkshire dales, the honour of Richmond with Wensleydale and Middleham."
+    },
+    {
+      "id": "shire_north_riding",
+      "name": "North Riding",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_york",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The North Riding of Yorkshire, from the vale of York to the moors and the sea at Scarborough."
+    },
+    {
+      "id": "shire_west_riding",
+      "name": "West Riding",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_york",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The West Riding of Yorkshire, from Craven in the Pennines to the honours of Pontefract, Conisbrough and Hallamshire."
+    },
+    {
+      "id": "region_lancaster",
+      "name": "County Palatine of Lancaster",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/County_Palatine_of_Lancaster"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The county palatine of Lancaster, united to the duchy of Lancaster and so to the crown, with its own chancery and justices between the Mersey and the Lakeland fells."
+    },
+    {
+      "id": "region_chester",
+      "name": "County Palatine of Chester",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/County_Palatine_of_Chester",
+        "https://en.wikipedia.org/wiki/Edward_of_Westminster"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The palatine earldom of Chester, held with Flint by the Prince of Wales, governed by its own justiciar and exchequer at Chester."
+    },
+    {
+      "id": "region_midland_circuit",
+      "name": "Midland Circuit",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Assizes",
+        "https://discovery.nationalarchives.gov.uk/details/r/C9979"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shires of the English Midlands visited together by the king's justices of assize, from Warwick to Lincoln."
+    },
+    {
+      "id": "shire_warwick_leicester",
+      "name": "Warwick and Leicester",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_midland_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "Warwickshire and Leicestershire, which shared one sheriff, with Warwick, Coventry and Kenilworth."
+    },
+    {
+      "id": "shire_northamptonshire",
+      "name": "Northamptonshire",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_midland_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shire of Northampton along the Nene, with the castles of Northampton and Fotheringhay."
+    },
+    {
+      "id": "shire_nottingham_derby",
+      "name": "Nottingham and Derby",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_midland_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Sheriff_of_Nottinghamshire,_Derbyshire_and_the_Royal_Forests"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "Nottinghamshire and Derbyshire, which shared one sheriff, from Nottingham castle to the High Peak."
+    },
+    {
+      "id": "shire_lincolnshire",
+      "name": "Lincolnshire",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_midland_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shire of Lincoln, from the cathedral city to the fens around Tattershall."
+    },
+    {
+      "id": "region_norfolk_circuit",
+      "name": "Norfolk Circuit",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Assizes",
+        "https://discovery.nationalarchives.gov.uk/details/r/C9979"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shires of East Anglia visited together by the king's justices of assize."
+    },
+    {
+      "id": "shire_norfolk",
+      "name": "Norfolk",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_norfolk_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shire of Norfolk, with the city of Norwich and the port of Lynn."
+    },
+    {
+      "id": "shire_suffolk",
+      "name": "Suffolk",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_norfolk_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shire of Suffolk, which shared its sheriff with Norfolk, with Bury St Edmunds, Clare and Framlingham."
+    },
+    {
+      "id": "region_home_circuit",
+      "name": "Home Circuit",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Assizes",
+        "https://discovery.nationalarchives.gov.uk/details/r/C9979",
+        "https://en.wikipedia.org/wiki/Cinque_Ports"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shires around London visited together by the king's justices of assize, with the City itself and the liberty of the Cinque Ports."
+    },
+    {
+      "id": "shire_kent",
+      "name": "Kent",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_home_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shire of Kent, from Canterbury to the Medway at Rochester and the Weald at Tonbridge."
+    },
+    {
+      "id": "shire_cinque_ports",
+      "name": "Cinque Ports",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_home_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Cinque_Ports"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The confederation of the Cinque Ports, a liberty under the Lord Warden at Dover Castle."
+    },
+    {
+      "id": "shire_surrey_sussex",
+      "name": "Surrey and Sussex",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_home_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Sheriff_of_Sussex"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "Surrey and Sussex, which shared one sheriff, from the Downs to the Channel coast."
+    },
+    {
+      "id": "shire_essex_hertford",
+      "name": "Essex and Hertford",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_home_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/High_Sheriff_of_Hertfordshire"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "Essex and Hertfordshire, which shared one sheriff, north and east of London."
+    },
+    {
+      "id": "region_oxford_circuit",
+      "name": "Oxford Circuit",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Assizes",
+        "https://discovery.nationalarchives.gov.uk/details/r/C9979"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shires of the western Midlands and the Severn visited together by the king's justices of assize."
+    },
+    {
+      "id": "shire_oxford_berks",
+      "name": "Oxford and Berks",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_oxford_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "Oxfordshire and Berkshire, which shared one sheriff, on either bank of the Thames."
+    },
+    {
+      "id": "shire_gloucester",
+      "name": "Gloucestershire and Bristol",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_oxford_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shire of Gloucester with the town and county of Bristol at the mouth of the Severn."
+    },
+    {
+      "id": "shire_shropshire",
+      "name": "Shropshire",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_oxford_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shire of Shropshire on the Welsh border, with Shrewsbury and Ludlow."
+    },
+    {
+      "id": "region_western_circuit",
+      "name": "Western Circuit",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Assizes",
+        "https://discovery.nationalarchives.gov.uk/details/r/C9979"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shires of the West Country visited together by the king's justices of assize."
+    },
+    {
+      "id": "shire_hampshire",
+      "name": "Hampshire",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_western_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shire of Southampton, with Winchester and the Isle of Wight."
+    },
+    {
+      "id": "shire_somerset_dorset",
+      "name": "Somerset and Dorset",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_western_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/High_Sheriff_of_Somerset",
+        "https://en.wikipedia.org/wiki/High_Sheriff_of_Dorset"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "Somerset and Dorset, which shared one sheriff, from Corfe and Sherborne to Taunton and Dunster."
+    },
+    {
+      "id": "shire_devon",
+      "name": "Devon",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_western_circuit",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/List_of_shrievalties"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The shire of Devon, from the city of Exeter to Plymouth Sound and the edge of Dartmoor."
+    },
+    {
+      "id": "region_cornwall",
+      "name": "Duchy of Cornwall",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Duchy_of_Cornwall",
+        "https://en.wikipedia.org/wiki/Edward_of_Westminster"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The duchy of Cornwall, created in 1337 for the king's eldest son and held by the Prince of Wales, with its stannaries and its castle at Launceston."
+    },
+    {
+      "id": "region_wales",
+      "name": "Principality of Wales",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Principality_of_Wales",
+        "https://en.wikipedia.org/wiki/Statute_of_Rhuddlan"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The principality of Wales, the shires of the old Welsh princes held by the Prince of Wales under the Statute of Rhuddlan."
+    },
+    {
+      "id": "shire_north_wales",
+      "name": "North Wales",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_wales",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Statute_of_Rhuddlan"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "Anglesey, Caernarfon and Merioneth, governed by the justiciar of North Wales from Caernarfon."
+    },
+    {
+      "id": "shire_south_wales",
+      "name": "South Wales",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_wales",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Statute_of_Rhuddlan"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "Cardigan and Carmarthen, governed by the justiciar of South Wales from Carmarthen."
+    },
+    {
+      "id": "region_march_of_wales",
+      "name": "March of Wales",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "kingdom_england",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Welsh_Marches",
+        "https://en.wikipedia.org/wiki/Marcher_lord"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The marcher lordships between England and the principality, outside the shires, where each lord held royal rights over his own land."
+    },
+    {
+      "id": "shire_glamorgan",
+      "name": "Lordship of Glamorgan",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_march_of_wales",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Welsh_Marches"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The marcher lordship of Glamorgan, ruled from Cardiff with Caerphilly in the hills."
+    },
+    {
+      "id": "shire_gower",
+      "name": "Lordship of Gower",
+      "kind": "territorial-group",
+      "realm": "kingdom_england",
+      "seat": null,
+      "parent_id": "region_march_of_wales",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Welsh_Marches"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The marcher lordship of Gower, ruled from Swansea."
+    },
+    {
+      "id": "region_lothian",
+      "name": "Lothian",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "kingdom_scotland",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland",
+        "https://en.wikipedia.org/wiki/Justiciar_of_Lothian"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The lands south of the Forth, the old justiciary of Lothian, with Edinburgh and Stirling."
+    },
+    {
+      "id": "shire_edinburgh",
+      "name": "Sheriffdom of Edinburgh",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "region_lothian",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The sheriffdom of Edinburgh with Haddington and the coast at Dunbar."
+    },
+    {
+      "id": "region_scottish_marches",
+      "name": "Scottish Marches",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "kingdom_scotland",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland",
+        "https://en.wikipedia.org/wiki/Warden_of_the_Marches",
+        "https://en.wikipedia.org/wiki/Berwick-upon-Tweed",
+        "https://en.wikipedia.org/wiki/Stewartry_of_Kirkcudbright"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The East, Middle and West Marches facing England, with Berwick, held by the Scots since 1461, and Galloway, in the crown's hands since 1455."
+    },
+    {
+      "id": "shire_liddesdale",
+      "name": "Lordship of Liddesdale",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "region_scottish_marches",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The border lordship of Liddesdale, guarded by Hermitage Castle."
+    },
+    {
+      "id": "shire_dumfries",
+      "name": "Sheriffdom of Dumfries",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "region_scottish_marches",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The sheriffdom of Dumfries, Nithsdale and the Solway shore."
+    },
+    {
+      "id": "shire_galloway",
+      "name": "Lordship of Galloway",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "region_scottish_marches",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Stewartry_of_Kirkcudbright"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The lordship of Galloway, forfeited by the Douglases and kept for the crown from Threave."
+    },
+    {
+      "id": "region_clydesdale",
+      "name": "Clydesdale and the Principality",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "kingdom_scotland",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland",
+        "https://en.wikipedia.org/wiki/Prince_of_Scotland"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The Clyde valley and the Stewart patrimony of Carrick and Bute, tied to the heir to the throne by the act of 1469, with Argyll beyond the firth."
+    },
+    {
+      "id": "shire_argyll",
+      "name": "Argyll",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "region_clydesdale",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The lands of Argyll and Lorne, with Glenorchy and the castle of Kilchurn."
+    },
+    {
+      "id": "region_fife_gowrie_angus",
+      "name": "Fife, Gowrie and Angus",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "kingdom_scotland",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The ancient provinces of Fife, Gowrie and Angus between the Forth and the Mounth, the heart of the old kingdom."
+    },
+    {
+      "id": "shire_fife",
+      "name": "Sheriffdom of Fife",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "region_fife_gowrie_angus",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The sheriffdom of Fife, with St Andrews and Loch Leven in Kinross."
+    },
+    {
+      "id": "region_mar_mearns",
+      "name": "Mar and the Mearns",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "kingdom_scotland",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The provinces of Mar, Buchan and the Mearns, from Aberdeen to the coast at Dunnottar."
+    },
+    {
+      "id": "shire_aberdeen",
+      "name": "Sheriffdom of Aberdeen",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "region_mar_mearns",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The sheriffdom of Aberdeen, with the earldom of Mar at Kildrummy and the Gordon lordship of Strathbogie."
+    },
+    {
+      "id": "region_moray",
+      "name": "Moray",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "kingdom_scotland",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland",
+        "https://en.wikipedia.org/wiki/Earl_of_Moray"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The old province of Moray, a crown earldom since 1455, from Elgin to Inverness and the Great Glen."
+    },
+    {
+      "id": "shire_inverness",
+      "name": "Sheriffdom of Inverness",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "region_moray",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The sheriffdom of Inverness, with Urquhart on Loch Ness."
+    },
+    {
+      "id": "region_far_north",
+      "name": "Caithness, Sutherland and Orkney",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "kingdom_scotland",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland",
+        "https://en.wikipedia.org/wiki/Earl_of_Orkney",
+        "https://en.wikipedia.org/wiki/Annexation_of_Orkney_and_Shetland"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The far-northern earldoms, with Orkney, pledged by the king of Norway in 1468 and in the Scottish crown's hands since 1470."
+    },
+    {
+      "id": "shire_caithness",
+      "name": "Earldom of Caithness",
+      "kind": "territorial-group",
+      "realm": "kingdom_scotland",
+      "seat": null,
+      "parent_id": "region_far_north",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Shires_of_Scotland"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The earldom of Caithness, with Wick and the strath of Dirlot."
+    },
+    {
+      "id": "region_islay_kintyre",
+      "name": "Islay and Kintyre",
+      "kind": "territorial-group",
+      "realm": "kingdom_isles",
+      "seat": null,
+      "parent_id": "kingdom_isles",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Lord_of_the_Isles",
+        "https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The heart of the Lordship, Islay with Finlaggan, its council seat, together with Kintyre, Knapdale and Mull."
+    },
+    {
+      "id": "shire_islay",
+      "name": "Islay",
+      "kind": "territorial-group",
+      "realm": "kingdom_isles",
+      "seat": null,
+      "parent_id": "region_islay_kintyre",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Lord_of_the_Isles",
+        "https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The island of Islay, with Finlaggan and Dunyvaig."
+    },
+    {
+      "id": "region_ross",
+      "name": "Earldom of Ross",
+      "kind": "territorial-group",
+      "realm": "kingdom_isles",
+      "seat": null,
+      "parent_id": "kingdom_isles",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Lord_of_the_Isles",
+        "https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The earldom of Ross, held by the Lord of the Isles, from the Cromarty Firth to Kintail."
+    },
+    {
+      "id": "shire_easter_ross",
+      "name": "Easter Ross",
+      "kind": "territorial-group",
+      "realm": "kingdom_isles",
+      "seat": null,
+      "parent_id": "region_ross",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Lord_of_the_Isles",
+        "https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "Easter Ross along the Cromarty and Dornoch firths, with Dingwall, Balnagown and Foulis."
+    },
+    {
+      "id": "region_skye_outer_isles",
+      "name": "Skye and the Outer Isles",
+      "kind": "territorial-group",
+      "realm": "kingdom_isles",
+      "seat": null,
+      "parent_id": "kingdom_isles",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Lord_of_the_Isles",
+        "https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "Skye and the Long Island, held by the MacLeods, the MacNeils and the Clan Donald of Sleat under the Lord of the Isles."
+    },
+    {
+      "id": "shire_long_island",
+      "name": "The Long Island",
+      "kind": "territorial-group",
+      "realm": "kingdom_isles",
+      "seat": null,
+      "parent_id": "region_skye_outer_isles",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Lord_of_the_Isles",
+        "https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The Outer Hebrides, from Lewis to Barra."
+    },
+    {
+      "id": "shire_skye",
+      "name": "Skye",
+      "kind": "territorial-group",
+      "realm": "kingdom_isles",
+      "seat": null,
+      "parent_id": "region_skye_outer_isles",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Lord_of_the_Isles",
+        "https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The Isle of Skye, with Dunvegan and Sleat."
+    },
+    {
+      "id": "region_lochaber",
+      "name": "Lochaber and Garmoran",
+      "kind": "territorial-group",
+      "realm": "kingdom_isles",
+      "seat": null,
+      "parent_id": "kingdom_isles",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Lord_of_the_Isles",
+        "https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "Lochaber, granted to the Lords of the Isles in 1376, and Garmoran, gained by the MacRuairi marriage."
+    },
+    {
+      "id": "shire_garmoran",
+      "name": "Garmoran and Ardnamurchan",
+      "kind": "territorial-group",
+      "realm": "kingdom_isles",
+      "seat": null,
+      "parent_id": "region_lochaber",
+      "assignment": "researched-region",
+      "holder": null,
+      "claims": [],
+      "sources": [
+        "https://en.wikipedia.org/wiki/Lord_of_the_Isles",
+        "https://en.wikipedia.org/wiki/John_of_Islay,_Earl_of_Ross"
+      ],
+      "historical_status": "provisional",
+      "note": "Seatless 1471 territorial grouping (palatinate, march, assize circuit, joint shrievalty or sheriffdom). It has no holder and only organises the de jure map.",
+      "description": "The rough bounds of Moidart and the Ardnamurchan peninsula."
+    },
+    {
       "id": "duchy_lancaster",
       "name": "Honour of Pontefract",
       "old_name": "Duchy of Lancaster",
@@ -109,7 +1244,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_7abb388a4f64",
+      "parent_id": "shire_west_riding",
       "assignment": "researched-documented",
       "description": "Honour of Pontefract is centred on Pontefract Castle. It is associated with West Riding of Yorkshire. An honour brings together estates and rights under a common lordship; its lands need not form a single continuous territory."
     },
@@ -189,7 +1324,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_7abb388a4f64",
+      "parent_id": "region_lancaster",
       "assignment": "researched-documented",
       "description": "Honour of Lancaster is centred on Lancaster. It is associated with Lancashire, county palatine. An honour brings together estates and rights under a common lordship; its lands need not form a single continuous territory."
     },
@@ -247,7 +1382,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_lancaster",
       "assignment": "church-deferred-realm-fallback",
       "description": "Piel estate is centred on Piel Castle. It is associated with Furness, Lancashire north of the sands. The estate's history is tied to the landed possessions of a religious house."
     },
@@ -299,7 +1434,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_7abb388a4f64",
+      "parent_id": "region_lancaster",
       "assignment": "researched-provisional",
       "description": "Liverpool castle estate is centred on Liverpool Castle. It is associated with West Derby hundred, Lancashire. The castle forms the centre of a local landed estate."
     },
@@ -351,12 +1486,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_west_march",
       "assignment": "unresolved-realm-fallback",
       "description": "Barony of Kendal is centred on Kendal Castle. It is associated with Southern Westmorland."
     },
     {
-      "id": "county_cheshire",
+      "id": "county_rivers",
       "name": "City of Chester",
       "old_name": "County of Cheshire",
       "kind": "borough",
@@ -402,33 +1537,33 @@
         {
           "settlement_id": "village_Birkenhead",
           "name": "Birkenhead",
-          "title_id": "county_cheshire",
+          "title_id": "county_rivers",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Runcorn",
           "name": "Runcorn",
-          "title_id": "county_cheshire",
+          "title_id": "county_rivers",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Flint",
           "name": "Flint",
-          "title_id": "county_cheshire",
+          "title_id": "county_rivers",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Wrenbury",
           "name": "Wrenbury",
-          "title_id": "county_cheshire",
+          "title_id": "county_rivers",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "group_fe353b33a20a",
+      "parent_id": "region_chester",
       "assignment": "researched-provisional",
       "description": "City of Chester is centred on Chester. It is associated with Cheshire palatinate."
     },
@@ -479,7 +1614,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_fe353b33a20a",
+      "parent_id": "region_chester",
       "assignment": "researched-documented",
       "description": "Beeston castle estate is centred on Beeston Castle. It is associated with Cheshire. The castle forms the centre of a local landed estate."
     },
@@ -538,7 +1673,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_march_of_wales",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Chirk is centred on Chirk Castle. It is associated with Chirkland, Welsh March. A Marcher lordship combines landed authority with the distinctive rights and customs of the Welsh March."
     },
@@ -596,7 +1731,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_7abb388a4f64",
+      "parent_id": "shire_nottingham_derby",
       "assignment": "researched-documented",
       "description": "Lordship of the High Peak is centred on Peveril Castle. It is associated with Peak, Derbyshire."
     },
@@ -647,7 +1782,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_warwick_leicester",
       "assignment": "unresolved-realm-fallback",
       "description": "Earldom of Warwick is centred on Warwick Castle. It is associated with Warwickshire."
     },
@@ -720,7 +1855,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_warwick_leicester",
       "assignment": "unresolved-realm-fallback",
       "description": "City of Coventry is centred on Coventry. It is associated with Warwickshire; county of the city from 1451. Its county status concerns the town's civic jurisdiction rather than a hereditary earldom."
     },
@@ -779,7 +1914,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_7abb388a4f64",
+      "parent_id": "shire_warwick_leicester",
       "assignment": "researched-documented",
       "description": "Kenilworth castle estate is centred on Kenilworth Castle. It is associated with Warwickshire. The castle forms the centre of a local landed estate."
     },
@@ -838,7 +1973,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_northamptonshire",
       "assignment": "researched-provisional",
       "description": "Northampton castle estate is centred on Northampton Castle. It is associated with Northamptonshire."
     },
@@ -890,12 +2025,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_oxford_circuit",
       "assignment": "unresolved-realm-fallback",
       "description": "Worcester castle estate is centred on Worcester Castle. It is associated with Worcestershire. The castle forms the centre of a local landed estate."
     },
     {
-      "id": "county_durham",
+      "id": "county_westmorland",
       "name": "Borough of Newcastle upon Tyne",
       "old_name": "County of Durham",
       "kind": "county-corporate",
@@ -929,33 +2064,33 @@
         {
           "settlement_id": "village_Heddon_on_the_Wall",
           "name": "Heddon-on-the-Wall",
-          "title_id": "county_durham",
+          "title_id": "county_westmorland",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Hexham_Abbey",
           "name": "Hexham Abbey",
-          "title_id": "county_durham",
+          "title_id": "county_westmorland",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Sunderland",
           "name": "Sunderland",
-          "title_id": "county_durham",
+          "title_id": "county_westmorland",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Craster",
           "name": "Craster",
-          "title_id": "county_durham",
+          "title_id": "county_westmorland",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_east_march",
       "assignment": "researched-provisional",
       "description": "Borough of Newcastle upon Tyne is centred on Newcastle upon Tyne. It is associated with Northumberland; town county from 1400. Its county status concerns the town's civic jurisdiction rather than a hereditary earldom."
     },
@@ -1014,7 +2149,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_durham",
       "assignment": "church-deferred-realm-fallback",
       "description": "Durham episcopal castle estate is centred on Durham Castle. It is associated with County palatine of Durham. The estate's history is tied to the temporal lands of a bishopric."
     },
@@ -1072,7 +2207,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_durham",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Barnard Castle is centred on Barnard Castle. It is associated with Teesdale, Durham border."
     },
@@ -1131,12 +2266,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_north_riding",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Skelton is centred on Skelton Castle. It is associated with Cleveland, North Riding of Yorkshire."
     },
     {
-      "id": "county_cumberland",
+      "id": "county_clifford",
       "name": "City of Carlisle",
       "old_name": "County of Cumberland",
       "kind": "borough",
@@ -1170,26 +2305,26 @@
         {
           "settlement_id": "village_Lanercost_Priory",
           "name": "Lanercost Priory",
-          "title_id": "county_cumberland",
+          "title_id": "county_clifford",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Maryport",
           "name": "Maryport",
-          "title_id": "county_cumberland",
+          "title_id": "county_clifford",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Grange",
           "name": "Grange",
-          "title_id": "county_cumberland",
+          "title_id": "county_clifford",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_cumberland",
       "assignment": "unresolved-realm-fallback",
       "description": "City of Carlisle is centred on Carlisle. It is associated with Cumberland, West March."
     },
@@ -1240,7 +2375,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_cumberland",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Penrith is centred on Penrith Castle. It is associated with Cumberland."
     },
@@ -1299,7 +2434,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_northamptonshire",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Fotheringhay is centred on Fotheringhay Castle. It is associated with Northamptonshire."
     },
@@ -1364,7 +2499,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_east_riding",
       "assignment": "researched-documented",
       "description": "City of York is centred on York. It is associated with Yorkshire; county of the city from 1396. Its county status concerns the town's civic jurisdiction rather than a hereditary earldom."
     },
@@ -1434,7 +2569,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_west_riding",
       "assignment": "unresolved-realm-fallback",
       "description": "Honour of Skipton is centred on Skipton Castle. It is associated with Craven, West Riding of Yorkshire. An honour brings together estates and rights under a common lordship; its lands need not form a single continuous territory."
     },
@@ -1492,7 +2627,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_richmondshire",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Middleham is centred on Middleham Castle. It is associated with Wensleydale, North Riding of Yorkshire."
     },
@@ -1561,7 +2696,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_richmondshire",
       "assignment": "researched-provisional",
       "description": "Honour of Richmond is centred on Richmond Castle. It is associated with Richmondshire, North Riding of Yorkshire; dispersed honour estates. An honour brings together estates and rights under a common lordship; its lands need not form a single continuous territory."
     },
@@ -1612,7 +2747,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_north_riding",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Helmsley is centred on Helmsley Castle. It is associated with Ryedale, North Riding of Yorkshire."
     },
@@ -1678,7 +2813,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_east_riding",
       "assignment": "researched-documented",
       "description": "Borough of Kingston upon Hull is centred on Kingston upon Hull. It is associated with East Riding of Yorkshire; Hullshire from 1440/1447. Its county status concerns the town's civic jurisdiction rather than a hereditary earldom."
     },
@@ -1736,7 +2871,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_north_riding",
       "assignment": "researched-provisional",
       "description": "Scarborough castle estate is centred on Scarborough Castle. It is associated with North Riding of Yorkshire."
     },
@@ -1795,7 +2930,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_west_riding",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Hallamshire is centred on Sheffield. It is associated with West Riding of Yorkshire."
     },
@@ -1853,7 +2988,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_west_riding",
       "assignment": "unresolved-realm-fallback",
       "description": "Honour of Conisbrough is centred on Conisbrough Castle. It is associated with West Riding of Yorkshire. An honour brings together estates and rights under a common lordship; its lands need not form a single continuous territory."
     },
@@ -1909,7 +3044,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_nottingham_derby",
       "assignment": "researched-documented",
       "description": "Nottingham castle estate is centred on Nottingham Castle. It is associated with Nottinghamshire."
     },
@@ -1982,7 +3117,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_lincolnshire",
       "assignment": "researched-provisional",
       "description": "City of Lincoln is centred on Lincoln. It is associated with Lincolnshire; county of the city from 1409. Its county status concerns the town's civic jurisdiction rather than a hereditary earldom."
     },
@@ -2051,7 +3186,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_lincolnshire",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Tattershall is centred on Tattershall Castle. It is associated with Lindsey, Lincolnshire."
     },
@@ -2103,12 +3238,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_oxford_circuit",
       "assignment": "unresolved-realm-fallback",
       "description": "Stafford castle estate is centred on Stafford Castle. It is associated with Staffordshire. The castle forms the centre of a local landed estate."
     },
     {
-      "id": "county_hereford",
+      "id": "county_bergavenny",
       "name": "City of Hereford",
       "old_name": "County of Hereford",
       "kind": "borough",
@@ -2143,26 +3278,26 @@
         {
           "settlement_id": "village_Rowlestone",
           "name": "Rowlestone",
-          "title_id": "county_hereford",
+          "title_id": "county_bergavenny",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Almeley",
           "name": "Almeley",
-          "title_id": "county_hereford",
+          "title_id": "county_bergavenny",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Goodrich",
           "name": "Goodrich",
-          "title_id": "county_hereford",
+          "title_id": "county_bergavenny",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_oxford_circuit",
       "assignment": "unresolved-realm-fallback",
       "description": "City of Hereford is centred on Hereford. It is associated with Herefordshire."
     },
@@ -2176,31 +3311,20 @@
       "seat_name": "Brecon Castle",
       "settlement_type": "castle",
       "holder": {
-        "clan_id": "clan_neville_of_bergavenny",
-        "clan_name": "Neville of Bergavenny",
-        "hero_id": "dadg_lord_27_1",
-        "hero_name": "Edward Neville"
+        "clan_id": "clan_stafford",
+        "clan_name": "Stafford",
+        "hero_id": "dadg_lord_15_1",
+        "hero_name": "John Stafford, Earl of Wiltshire"
       },
       "possessor": {
-        "clan_id": "clan_neville_of_bergavenny",
-        "clan_name": "Neville of Bergavenny",
-        "hero_id": "dadg_lord_27_1",
-        "hero_name": "Edward Neville"
+        "clan_id": "clan_stafford",
+        "clan_name": "Stafford",
+        "hero_id": "dadg_lord_15_1",
+        "hero_name": "John Stafford, Earl of Wiltshire"
       },
       "configured_dignity": "Barony of Brecon",
-      "held_since": "1450",
-      "claims": [
-        {
-          "claimant": {
-            "clan_id": "clan_stafford",
-            "clan_name": "Stafford",
-            "hero_id": "dadg_lord_15_1",
-            "hero_name": "John Stafford, Earl of Wiltshire"
-          },
-          "strength": "Strong",
-          "origin": "Seeded claim"
-        }
-      ],
+      "held_since": "1460",
+      "claims": [],
       "historical_superior": null,
       "historical_status": "unresolved",
       "area": "Brecknock, Welsh March",
@@ -2225,7 +3349,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_march_of_wales",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Brecknock is centred on Brecon Castle. It is associated with Brecknock, Welsh March. A Marcher lordship combines landed authority with the distinctive rights and customs of the Welsh March."
     },
@@ -2276,12 +3400,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_march_of_wales",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Painscastle is centred on Painscastle. It is associated with Elfael Is Mynydd, Welsh March (later Radnorshire). A Marcher lordship combines landed authority with the distinctive rights and customs of the Welsh March."
     },
     {
-      "id": "county_shropshire",
+      "id": "county_shrewsbury",
       "name": "Borough of Shrewsbury",
       "old_name": "County of Shropshire",
       "kind": "borough",
@@ -2315,40 +3439,40 @@
         {
           "settlement_id": "village_Stretton",
           "name": "Stretton",
-          "title_id": "county_shropshire",
+          "title_id": "county_shrewsbury",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Bridgnorth",
           "name": "Bridgnorth",
-          "title_id": "county_shropshire",
+          "title_id": "county_shrewsbury",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Ellesmere",
           "name": "Ellesmere",
-          "title_id": "county_shropshire",
+          "title_id": "county_shrewsbury",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Norbury",
           "name": "Norbury",
-          "title_id": "county_shropshire",
+          "title_id": "county_shrewsbury",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Market_Drayton",
           "name": "Market Drayton",
-          "title_id": "county_shropshire",
+          "title_id": "county_shrewsbury",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_shropshire",
       "assignment": "researched-provisional",
       "description": "Borough of Shrewsbury is centred on Shrewsbury. It is associated with Shropshire."
     },
@@ -2407,7 +3531,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_shropshire",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Ludlow is centred on Ludlow Castle. It is associated with Shropshire, Welsh March."
     },
@@ -2466,7 +3590,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_march_of_wales",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Montgomery is centred on Montgomery Castle. It is associated with Montgomery, Welsh March. A Marcher lordship combines landed authority with the distinctive rights and customs of the Welsh March."
     },
@@ -2517,12 +3641,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_suffolk",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Framlingham is centred on Framlingham Castle. It is associated with Suffolk."
     },
     {
-      "id": "county_norwich",
+      "id": "county_howard",
       "name": "City and County of Norwich",
       "old_name": "County of Norwich",
       "kind": "county-corporate",
@@ -2556,47 +3680,47 @@
         {
           "settlement_id": "village_Thetford",
           "name": "Thetford",
-          "title_id": "county_norwich",
+          "title_id": "county_howard",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Caistor_Saint_Edmund",
           "name": "Caistor Saint Edmund",
-          "title_id": "county_norwich",
+          "title_id": "county_howard",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Caister_on_Sea",
           "name": "Caister-on-Sea",
-          "title_id": "county_norwich",
+          "title_id": "county_howard",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Lowestoft",
           "name": "Lowestoft",
-          "title_id": "county_norwich",
+          "title_id": "county_howard",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Dereham",
           "name": "Dereham",
-          "title_id": "county_norwich",
+          "title_id": "county_howard",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Walcott",
           "name": "Walcott",
-          "title_id": "county_norwich",
+          "title_id": "county_howard",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_norfolk",
       "assignment": "researched-documented",
       "description": "City and County of Norwich is centred on Norwich. It is associated with Norfolk. Its county status concerns the town's civic jurisdiction rather than a hereditary earldom."
     },
@@ -2640,7 +3764,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_norfolk",
       "assignment": "unresolved-realm-fallback",
       "description": "Manor of Baconsthorpe is centred on Baconsthorpe Castle. It is associated with Norfolk. The manor is a local estate whose lands and customary rights form a distinct lordship."
     },
@@ -2699,7 +3823,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_norfolk",
       "assignment": "church-deferred-realm-fallback",
       "description": "Borough of Lynn Episcopi is centred on Lynn. It is associated with Norfolk."
     },
@@ -2757,7 +3881,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_suffolk",
       "assignment": "church-deferred-realm-fallback",
       "description": "Liberty of St Edmund is centred on Bury St. Edmunds. It is associated with Suffolk."
     },
@@ -2815,7 +3939,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_suffolk",
       "assignment": "unresolved-realm-fallback",
       "description": "Honour of Clare is centred on Clare Castle. It is associated with Suffolk. An honour brings together estates and rights under a common lordship; its lands need not form a single continuous territory."
     },
@@ -2881,7 +4005,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_essex_hertford",
       "assignment": "researched-provisional",
       "description": "Borough of Colchester is centred on Colchester. It is associated with Essex."
     },
@@ -2932,7 +4056,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_essex_hertford",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Castle Hedingham is centred on Hedingham Castle. It is associated with Essex."
     },
@@ -2990,7 +4114,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_somerset_dorset",
       "assignment": "researched-documented",
       "description": "Royal castle and manor of Corfe is centred on Corfe Castle. It is associated with Dorset; Isle of Purbeck."
     },
@@ -3063,7 +4187,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_gloucester",
       "assignment": "researched-documented",
       "description": "Bristol received county status by royal charter in 1373. Its civic jurisdiction belonged to the town and was distinct from a hereditary earldom: the Town and County of Bristol did not require an Earl of Bristol."
     },
@@ -3077,19 +4201,19 @@
       "seat_name": "Chepstow Castle",
       "settlement_type": "castle",
       "holder": {
-        "clan_id": "clan_berkeley",
-        "clan_name": "Berkeley",
-        "hero_id": "dadg_lord_37_1",
-        "hero_name": "William Berkeley"
+        "clan_id": "clan_herbert",
+        "clan_name": "Herbert",
+        "hero_id": "dadg_william_herbert_1455",
+        "hero_name": "William Herbert"
       },
       "possessor": {
-        "clan_id": "clan_berkeley",
-        "clan_name": "Berkeley",
-        "hero_id": "dadg_lord_37_1",
-        "hero_name": "William Berkeley"
+        "clan_id": "clan_herbert",
+        "clan_name": "Herbert",
+        "hero_id": "dadg_william_herbert_1455",
+        "hero_name": "William Herbert"
       },
       "configured_dignity": "Barony of Chepstow",
-      "held_since": "1430",
+      "held_since": "1469",
       "claims": [],
       "historical_superior": null,
       "historical_status": "unresolved",
@@ -3115,7 +4239,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_march_of_wales",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Chepstow (Striguil) is centred on Chepstow Castle. It is associated with Welsh March; lower Wye. A Marcher lordship combines landed authority with the distinctive rights and customs of the Welsh March."
     },
@@ -3174,7 +4298,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_gloucester",
       "assignment": "researched-provisional",
       "description": "Royal castle of Gloucester is centred on Gloucester Castle. It is associated with Gloucestershire."
     },
@@ -3232,12 +4356,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_somerset_dorset",
       "assignment": "unresolved-realm-fallback",
       "description": "Manor of Farleigh Hungerford is centred on Farleigh Castle. It is associated with Somerset. The manor is a local estate whose lands and customary rights form a distinct lordship."
     },
     {
-      "id": "barony_sherborne",
+      "id": "barony_exeter",
       "name": "Episcopal estate of Sherborne",
       "old_name": "Barony of Sherborne",
       "kind": "episcopal-estate",
@@ -3282,26 +4406,26 @@
         {
           "settlement_id": "village_Yeovil",
           "name": "Yeovil",
-          "title_id": "barony_sherborne",
+          "title_id": "barony_exeter",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Glastonbury",
           "name": "Glastonbury",
-          "title_id": "barony_sherborne",
+          "title_id": "barony_exeter",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Evershot",
           "name": "Evershot",
-          "title_id": "barony_sherborne",
+          "title_id": "barony_exeter",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_somerset_dorset",
       "assignment": "church-deferred-realm-fallback",
       "description": "Episcopal estate of Sherborne is centred on Sherborne Castle. It is associated with Dorset. The estate's history is tied to the temporal lands of a bishopric."
     },
@@ -3370,7 +4494,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_western_circuit",
       "assignment": "unresolved-realm-fallback",
       "description": "Manor of Wardour is centred on Wardour Castle. It is associated with Wiltshire. The manor is a local estate whose lands and customary rights form a distinct lordship."
     },
@@ -3429,7 +4553,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_devon",
       "assignment": "researched-provisional",
       "description": "City of Exeter is centred on Exeter. It is associated with Devon."
     },
@@ -3488,7 +4612,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_somerset_dorset",
       "assignment": "unresolved-realm-fallback",
       "description": "Honour of Dunster is centred on Dunster Castle. It is associated with Somerset. An honour brings together estates and rights under a common lordship; its lands need not form a single continuous territory."
     },
@@ -3533,7 +4657,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_devon",
       "assignment": "unresolved-realm-fallback",
       "description": "Borough of Plymouth is centred on Plymouth Castle. It is associated with Devon."
     },
@@ -3591,7 +4715,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_devon",
       "assignment": "unresolved-realm-fallback",
       "description": "Barony of Totnes is centred on Totnes Castle. It is associated with Devon."
     },
@@ -3650,7 +4774,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_somerset_dorset",
       "assignment": "church-deferred-realm-fallback",
       "description": "Manor of Taunton Deane is centred on Taunton Castle. It is associated with Somerset. The manor belongs to the historical pattern of episcopal landed estates."
     },
@@ -3723,7 +4847,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_74d7d74889fc",
+      "parent_id": "region_cornwall",
       "assignment": "researched-documented",
       "description": "Honour of Launceston is centred on Launceston. It is associated with Cornwall. An honour brings together estates and rights under a common lordship; its lands need not form a single continuous territory."
     },
@@ -3781,7 +4905,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_devon",
       "assignment": "unresolved-realm-fallback",
       "description": "Barony of Okehampton is centred on Okehampton Castle. It is associated with Devon."
     },
@@ -3839,7 +4963,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_cornwall",
       "assignment": "church-deferred-realm-fallback",
       "description": "Priory estate of St Michael's Mount is centred on St. Michael's Mount Castle. It is associated with Cornwall. The estate's history is tied to the landed possessions of a religious house."
     },
@@ -3898,7 +5022,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_e7ac5b3d8ae6",
+      "parent_id": "shire_north_wales",
       "assignment": "researched-provisional",
       "description": "Royal castle and borough of Harlech is centred on Harlech Castle. It is associated with Merioneth; Gwynedd."
     },
@@ -3963,7 +5087,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_76d8831f745b",
+      "parent_id": "shire_glamorgan",
       "assignment": "researched-documented",
       "description": "Castle and borough of Cardiff is centred on Cardiff. It is associated with Glamorgan; Welsh March."
     },
@@ -4022,7 +5146,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_30a224df15c1",
+      "parent_id": "shire_gower",
       "assignment": "researched-documented",
       "description": "Castle and borough of Swansea is centred on Swansea Castle. It is associated with Gower; Welsh March."
     },
@@ -4074,7 +5198,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_76d8831f745b",
+      "parent_id": "shire_glamorgan",
       "assignment": "researched-provisional",
       "description": "Castle estate of Caerphilly is centred on Caerphilly Castle. It is associated with Senghenydd; Glamorgan; Welsh March. The castle forms the centre of a local landed estate."
     },
@@ -4151,7 +5275,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_march_of_wales",
       "assignment": "unresolved-realm-fallback",
       "description": "The Earldom of Pembroke is centred on Pembroke and its castle in south-west Wales. Its history is closely bound to the struggle between the houses of Lancaster and York, with rival Tudor and Herbert claims to the dignity."
     },
@@ -4202,7 +5326,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_e7ac5b3d8ae6",
+      "parent_id": "shire_south_wales",
       "assignment": "researched-provisional",
       "description": "Royal castle of Carmarthen is centred on Carmarthen Castle. It is associated with Carmarthenshire; south-west Wales."
     },
@@ -4275,7 +5399,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_e7ac5b3d8ae6",
+      "parent_id": "shire_south_wales",
       "assignment": "researched-provisional",
       "description": "Royal castle and borough of Aberystwyth is centred on Aberystwyth. It is associated with Cardiganshire; Ceredigion."
     },
@@ -4326,12 +5450,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_south_wales",
       "assignment": "unresolved-realm-fallback",
       "description": "Castle estate of Cardigan is centred on Cardigan Castle. It is associated with Cardiganshire; Ceredigion. The castle forms the centre of a local landed estate."
     },
     {
-      "id": "county_gwynedd",
+      "id": "county_ferrers",
       "name": "Royal castle and borough of Caernarfon",
       "old_name": "County of Gwynedd",
       "kind": "royal-castle-borough",
@@ -4366,33 +5490,33 @@
         {
           "settlement_id": "village_Aberdaron",
           "name": "Aberdaron",
-          "title_id": "county_gwynedd",
+          "title_id": "county_ferrers",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Beddgelert",
           "name": "Beddgelert",
-          "title_id": "county_gwynedd",
+          "title_id": "county_ferrers",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Aberffraw",
           "name": "Aberffraw",
-          "title_id": "county_gwynedd",
+          "title_id": "county_ferrers",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Holyhead",
           "name": "Holyhead",
-          "title_id": "county_gwynedd",
+          "title_id": "county_ferrers",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "group_e7ac5b3d8ae6",
+      "parent_id": "shire_north_wales",
       "assignment": "researched-provisional",
       "description": "Royal castle and borough of Caernarfon is centred on Caernarfon. It is associated with Caernarfonshire; Gwynedd."
     },
@@ -4451,7 +5575,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_e7ac5b3d8ae6",
+      "parent_id": "shire_north_wales",
       "assignment": "researched-provisional",
       "description": "Royal castle and borough of Conwy is centred on Conwy Castle. It is associated with Caernarfonshire; Gwynedd."
     },
@@ -4503,7 +5627,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_e7ac5b3d8ae6",
+      "parent_id": "shire_north_wales",
       "assignment": "researched-provisional",
       "description": "Royal castle and borough of Beaumaris is centred on Beaumaris Castle. It is associated with Anglesey; Gwynedd."
     },
@@ -4573,7 +5697,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_march_of_wales",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Denbigh is centred on Denbigh Castle. It is associated with Perfeddwlad; north-east Welsh March. A Marcher lordship combines landed authority with the distinctive rights and customs of the Welsh March."
     },
@@ -4653,7 +5777,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "region_home_circuit",
       "assignment": "researched-documented",
       "description": "City of London is centred on London. It is associated with London; Middlesex."
     },
@@ -4705,7 +5829,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_oxford_berks",
       "assignment": "researched-documented",
       "description": "Royal castle estate of Windsor is centred on Windsor Castle. It is associated with Berkshire."
     },
@@ -4764,7 +5888,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_74d7d74889fc",
+      "parent_id": "shire_essex_hertford",
       "assignment": "researched-documented",
       "description": "Honour of Berkhamsted is centred on Berkhamsted Castle. It is associated with Hertfordshire. An honour brings together estates and rights under a common lordship; its lands need not form a single continuous territory."
     },
@@ -4823,7 +5947,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_essex_hertford",
       "assignment": "unresolved-realm-fallback",
       "description": "Castle estate of Hertford is centred on Hertford Castle. It is associated with Hertfordshire."
     },
@@ -4896,7 +6020,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_kent",
       "assignment": "researched-documented",
       "description": "City and County of Canterbury is centred on Canterbury. It is associated with Kent. Its county status concerns the town's civic jurisdiction rather than a hereditary earldom."
     },
@@ -4954,7 +6078,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_cinque_ports",
       "assignment": "researched-documented",
       "description": "Royal castle of Dover is centred on Dover Castle. It is associated with Kent; Cinque Ports."
     },
@@ -4999,7 +6123,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_kent",
       "assignment": "unresolved-realm-fallback",
       "description": "Castle estate of Rochester is centred on Rochester Castle. It is associated with Kent. The castle forms the centre of a local landed estate."
     },
@@ -5052,7 +6176,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_kent",
       "assignment": "church-deferred-realm-fallback",
       "description": "Castle and Lowy of Tonbridge is centred on Tonbridge Castle. It is associated with Kent; lowy extending into Surrey. An honour brings together estates and rights under a common lordship; its lands need not form a single continuous territory."
     },
@@ -5111,12 +6235,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_cinque_ports",
       "assignment": "researched-provisional",
       "description": "Antient Town of Rye is centred on Rye Castle. It is associated with Sussex; Cinque Ports."
     },
     {
-      "id": "county_sussex",
+      "id": "county_arundel",
       "name": "City of Chichester",
       "old_name": "County of Sussex",
       "kind": "borough",
@@ -5151,33 +6275,33 @@
         {
           "settlement_id": "village_Selsey",
           "name": "Selsey",
-          "title_id": "county_sussex",
+          "title_id": "county_arundel",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Liss",
           "name": "Liss",
-          "title_id": "county_sussex",
+          "title_id": "county_arundel",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Petworth",
           "name": "Petworth",
-          "title_id": "county_sussex",
+          "title_id": "county_arundel",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Hurstpierpoint",
           "name": "Hurstpierpoint",
-          "title_id": "county_sussex",
+          "title_id": "county_arundel",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_surrey_sussex",
       "assignment": "unresolved-realm-fallback",
       "description": "City of Chichester is centred on Chichester. It is associated with Sussex; rape of Chichester."
     },
@@ -5236,7 +6360,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_surrey_sussex",
       "assignment": "unresolved-realm-fallback",
       "description": "Barony and honour of Lewes is centred on Lewes Castle. It is associated with Sussex; rape of Lewes. An honour brings together estates and rights under a common lordship; its lands need not form a single continuous territory."
     },
@@ -5288,7 +6412,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_surrey_sussex",
       "assignment": "unresolved-realm-fallback",
       "description": "Honour of Arundel is centred on Arundel Castle. It is associated with Sussex; rape of Arundel. An honour brings together estates and rights under a common lordship; its lands need not form a single continuous territory."
     },
@@ -5347,7 +6471,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_hampshire",
       "assignment": "researched-documented",
       "description": "Town and County of Southampton is centred on Southampton. It is associated with Hampshire. Its county status concerns the town's civic jurisdiction rather than a hereditary earldom."
     },
@@ -5399,7 +6523,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_hampshire",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of the Isle of Wight is centred on Carisbrooke Castle. It is associated with Isle of Wight; Hampshire."
     },
@@ -5458,7 +6582,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_surrey_sussex",
       "assignment": "church-deferred-realm-fallback",
       "description": "Episcopal manor of Farnham is centred on Farnham Castle. It is associated with Surrey. The manor belongs to the historical pattern of episcopal landed estates."
     },
@@ -5517,7 +6641,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_hampshire",
       "assignment": "researched-documented",
       "description": "Royal castle of Winchester is centred on Winchester Castle. It is associated with Hampshire."
     },
@@ -5583,7 +6707,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_oxford_berks",
       "assignment": "researched-provisional",
       "description": "Borough of Oxford is centred on Oxford. It is associated with Oxfordshire; south-bank suburbs historically Berkshire."
     },
@@ -5641,12 +6765,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_oxford_berks",
       "assignment": "unresolved-realm-fallback",
       "description": "Manor of Donnington is centred on Donnington Castle. It is associated with Berkshire. The manor is a local estate whose lands and customary rights form a distinct lordship."
     },
     {
-      "id": "county_warkworth",
+      "id": "county_northumberland",
       "name": "Lordship of Warkworth",
       "old_name": "Earldom of Northumberland",
       "kind": "lordship",
@@ -5692,26 +6816,26 @@
         {
           "settlement_id": "village_Holystone",
           "name": "Holystone",
-          "title_id": "county_warkworth",
+          "title_id": "county_northumberland",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Otterburn",
           "name": "Otterburn",
-          "title_id": "county_warkworth",
+          "title_id": "county_northumberland",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "village_Belsay",
           "name": "Belsay",
-          "title_id": "county_warkworth",
+          "title_id": "county_northumberland",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_northumberland",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Warkworth is centred on Warkworth. It is associated with Northumberland."
     },
@@ -5770,7 +6894,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_england",
+      "parent_id": "shire_northumberland",
       "assignment": "researched-provisional",
       "description": "Bamburgh castle estate is centred on Bamburgh Castle. It is associated with Northumberland."
     },
@@ -5821,7 +6945,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_7abb388a4f64",
+      "parent_id": "shire_northumberland",
       "assignment": "researched-provisional",
       "description": "Dunstanburgh castle estate is centred on Dunstanburgh Castle. It is associated with Northumberland. The castle forms the centre of a local landed estate."
     },
@@ -5886,12 +7010,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "shire_edinburgh",
       "assignment": "researched-documented",
       "description": "Royal burgh of Edinburgh is centred on Edinburgh. It is associated with Lothian; Edinburgh sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates."
     },
     {
-      "id": "county_berwick",
+      "id": "county_march",
       "name": "Burgh and royal fortress of Berwick",
       "old_name": "Earldom of March",
       "kind": "royal-burgh",
@@ -5926,19 +7050,19 @@
         {
           "settlement_id": "dadg_sco_duns_village",
           "name": "Duns",
-          "title_id": "county_berwick",
+          "title_id": "county_march",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_kelso_abbey",
           "name": "Kelso",
-          "title_id": "county_berwick",
+          "title_id": "county_march",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "region_scottish_marches",
       "assignment": "researched-provisional",
       "description": "Burgh and royal fortress of Berwick is centred on Berwick-upon-Tweed. It is associated with Berwick; East March. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates."
     },
@@ -6001,7 +7125,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "shire_edinburgh",
       "assignment": "unresolved-realm-fallback",
       "description": "Dunbar castle estate is centred on Dunbar. It is associated with East Lothian; Haddington sheriffdom. The castle forms the centre of a local landed estate."
     },
@@ -6066,12 +7190,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "region_lothian",
       "assignment": "researched-documented",
       "description": "Royal burgh of Stirling is centred on Stirling. It is associated with Stirling sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates."
     },
     {
-      "id": "county_lanark",
+      "id": "county_hamilton",
       "name": "Regality of Glasgow",
       "old_name": "County of Lanark",
       "kind": "episcopal-estate",
@@ -6106,33 +7230,33 @@
         {
           "settlement_id": "dadg_sco_bothwell_castle",
           "name": "Bothwell",
-          "title_id": "county_lanark",
+          "title_id": "county_hamilton",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_strathaven_castle_village",
           "name": "Strathaven Castle",
-          "title_id": "county_lanark",
+          "title_id": "county_hamilton",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_newmilns_village",
           "name": "Newmilns",
-          "title_id": "county_lanark",
+          "title_id": "county_hamilton",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_paisley_abbey",
           "name": "Paisley",
-          "title_id": "county_lanark",
+          "title_id": "county_hamilton",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "region_clydesdale",
       "assignment": "church-deferred-realm-fallback",
       "description": "Regality of Glasgow is centred on Glasgow. It is associated with Clydesdale; Lanark sheriffdom. The estate's history is tied to the temporal lands of a bishopric."
     },
@@ -6197,12 +7321,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "region_clydesdale",
       "assignment": "researched-provisional",
       "description": "Royal castle of Rothesay is centred on Rothesay Castle. It is associated with Bute. The castle forms the centre of a local landed estate."
     },
     {
-      "id": "county_carrick",
+      "id": "county_kennedy",
       "name": "Royal burgh of Ayr",
       "old_name": "County of Carrick",
       "kind": "royal-burgh",
@@ -6236,38 +7360,38 @@
         {
           "settlement_id": "dadg_sco_irvine_village",
           "name": "Irvine",
-          "title_id": "county_carrick",
+          "title_id": "county_kennedy",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_kildonan_castle_village",
           "name": "Kildonan Castle",
-          "title_id": "county_carrick",
+          "title_id": "county_kennedy",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_crossraguel_abbey",
           "name": "Crossraguel",
-          "title_id": "county_carrick",
+          "title_id": "county_kennedy",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_girvan_village",
           "name": "Girvan",
-          "title_id": "county_carrick",
+          "title_id": "county_kennedy",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "region_clydesdale",
       "assignment": "researched-documented",
       "description": "Royal burgh of Ayr is centred on Ayr. It is associated with Kyle; Ayr sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates."
     },
     {
-      "id": "county_nithsdale",
+      "id": "county_maxwell",
       "name": "Royal burgh of Dumfries",
       "old_name": "County of Nithsdale",
       "kind": "royal-burgh",
@@ -6301,33 +7425,33 @@
         {
           "settlement_id": "dadg_sco_lochwood_castle_village",
           "name": "Lochwood Castle",
-          "title_id": "county_nithsdale",
+          "title_id": "county_maxwell",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_morton_castle_village",
           "name": "Morton Castle",
-          "title_id": "county_nithsdale",
+          "title_id": "county_maxwell",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_crawford_village",
           "name": "Crawford",
-          "title_id": "county_nithsdale",
+          "title_id": "county_maxwell",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_sanquhar_village",
           "name": "Sanquhar",
-          "title_id": "county_nithsdale",
+          "title_id": "county_maxwell",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "shire_dumfries",
       "assignment": "researched-documented",
       "description": "Dumfries is a royal burgh founded in 1186. Its burgh jurisdiction is distinct from the surrounding region of Nithsdale and from the Maxwell estate at Caerlaverock. The burgh's status rests on its royal foundation rather than an earldom of Dumfries."
     },
@@ -6385,7 +7509,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "shire_dumfries",
       "assignment": "researched-provisional",
       "description": "Lands of Caerlaverock is centred on Caerlaverock. It is associated with Nithsdale; Dumfries sheriffdom. The castle forms the centre of a local landed estate."
     },
@@ -6451,12 +7575,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_8c9d9345b3b5",
+      "parent_id": "shire_galloway",
       "assignment": "researched-documented",
       "description": "Threave castle estate is centred on Threave. It is associated with Galloway; Kirkcudbright stewartry. The castle forms the centre of a local landed estate."
     },
     {
-      "id": "barony_hermitage",
+      "id": "barony_angus",
       "name": "Hermitage castle estate",
       "old_name": "Barony of Hermitage",
       "kind": "castle-estate",
@@ -6491,19 +7615,19 @@
         {
           "settlement_id": "dadg_sco_selkirk_village",
           "name": "Selkirk",
-          "title_id": "barony_hermitage",
+          "title_id": "barony_angus",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_jedburgh_abbey",
           "name": "Jedburgh",
-          "title_id": "barony_hermitage",
+          "title_id": "barony_angus",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "group_78163fe87745",
+      "parent_id": "shire_liddesdale",
       "assignment": "researched-documented",
       "description": "Hermitage stands in Liddesdale in the Scottish Borders. Its castle and surrounding estate are associated with the lordship of Liddesdale and the Douglas family. The estate has its own territorial identity, distinct from the Earldom of Angus held by its Douglas lords."
     },
@@ -6554,7 +7678,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "shire_fife",
       "assignment": "church-deferred-realm-fallback",
       "description": "Episcopal burgh of St Andrews is centred on Saint Andrews. It is associated with Fife. The estate's history is tied to the temporal lands of a bishopric."
     },
@@ -6612,7 +7736,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "shire_fife",
       "assignment": "researched-provisional",
       "description": "Lochleven castle estate is centred on Lochleven. It is associated with Kinross; Fife region. The castle forms the centre of a local landed estate."
     },
@@ -6670,12 +7794,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "region_fife_gowrie_angus",
       "assignment": "researched-documented",
       "description": "Royal burgh of Dundee is centred on Dundee. It is associated with Angus; Forfar sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates."
     },
     {
-      "id": "county_gowrie",
+      "id": "county_ruthven",
       "name": "Royal burgh of Perth",
       "old_name": "County of Gowrie",
       "kind": "royal-burgh",
@@ -6709,19 +7833,19 @@
         {
           "settlement_id": "dadg_sco_auchterarder_village",
           "name": "Auchterarder",
-          "title_id": "county_gowrie",
+          "title_id": "county_ruthven",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_alyth_village",
           "name": "Alyth",
-          "title_id": "county_gowrie",
+          "title_id": "county_ruthven",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "region_fife_gowrie_angus",
       "assignment": "researched-documented",
       "description": "Royal burgh of Perth is centred on Perth. It is associated with Gowrie; Perth sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates."
     },
@@ -6787,12 +7911,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_5c2c9f4890fc",
+      "parent_id": "shire_argyll",
       "assignment": "researched-provisional",
       "description": "Kilchurn castle estate is centred on Kilchurn Castle. It is associated with Glenorchy; Lochawe; Argyll. The castle forms the centre of a local landed estate."
     },
     {
-      "id": "county_aberdeen",
+      "id": "county_marischal",
       "name": "Royal burgh of Aberdeen",
       "old_name": "Earldom Marischal",
       "kind": "royal-burgh",
@@ -6826,33 +7950,33 @@
         {
           "settlement_id": "dadg_sco_newburgh_village_2",
           "name": "Newburgh",
-          "title_id": "county_aberdeen",
+          "title_id": "county_marischal",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_kintore_village",
           "name": "Kintore",
-          "title_id": "county_aberdeen",
+          "title_id": "county_marischal",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_haddo_stronghold_village",
           "name": "Haddo Stronghold",
-          "title_id": "county_aberdeen",
+          "title_id": "county_marischal",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_old_rattray_castle_village",
           "name": "Old Rattray Castle",
-          "title_id": "county_aberdeen",
+          "title_id": "county_marischal",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "shire_aberdeen",
       "assignment": "researched-documented",
       "description": "Royal burgh of Aberdeen is centred on Aberdeen. It is associated with Aberdeen sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates."
     },
@@ -6904,7 +8028,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "region_mar_mearns",
       "assignment": "unresolved-realm-fallback",
       "description": "Dunnottar castle estate is centred on Dunnottar. It is associated with Mearns; Kincardine sheriffdom. The castle forms the centre of a local landed estate."
     },
@@ -6974,7 +8098,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_177f441807f1",
+      "parent_id": "shire_aberdeen",
       "assignment": "researched-documented",
       "description": "Kildrummy castle estate is centred on Kildrummy. It is associated with Mar; Aberdeen sheriffdom. The castle forms the centre of a local landed estate."
     },
@@ -7046,12 +8170,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "region_moray",
       "assignment": "researched-documented",
       "description": "Royal burgh of Elgin is centred on Elgin. It is associated with Moray; Elgin sheriffdom. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates."
     },
     {
-      "id": "barony_strathbogie",
+      "id": "barony_huntly",
       "name": "Lordship of Strathbogie",
       "old_name": "Barony of Strathbogie",
       "kind": "lordship",
@@ -7086,38 +8210,38 @@
         {
           "settlement_id": "dadg_sco_auchindoun_castle_village",
           "name": "Auchindoun Castle",
-          "title_id": "barony_strathbogie",
+          "title_id": "barony_huntly",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_delgatie_castle_village",
           "name": "Delgatie Castle",
-          "title_id": "barony_strathbogie",
+          "title_id": "barony_huntly",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_banff_village",
           "name": "Banff",
-          "title_id": "barony_strathbogie",
+          "title_id": "barony_huntly",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_pitsligo_castle_village",
           "name": "Pitsligo Castle",
-          "title_id": "barony_strathbogie",
+          "title_id": "barony_huntly",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "shire_aberdeen",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Strathbogie is centred on Huntly. It is associated with Strathbogie; Aberdeen sheriffdom."
     },
     {
-      "id": "county_inverness",
+      "id": "county_westfield",
       "name": "Royal burgh of Inverness",
       "old_name": "County of Inverness",
       "kind": "royal-burgh",
@@ -7151,19 +8275,19 @@
         {
           "settlement_id": "dadg_sco_castle_dounie_village",
           "name": "Castle Dounie",
-          "title_id": "county_inverness",
+          "title_id": "county_westfield",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_old_blairfindy_tower_village",
           "name": "Old Blairfindy tower",
-          "title_id": "county_inverness",
+          "title_id": "county_westfield",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "shire_inverness",
       "assignment": "researched-documented",
       "description": "Royal burgh of Inverness is centred on Inverness. It is associated with Inverness sheriffdom; northern Moray. A royal burgh holds privileges granted by the Crown, giving the town a jurisdiction distinct from neighbouring landed estates."
     },
@@ -7215,7 +8339,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "shire_inverness",
       "assignment": "unresolved-realm-fallback",
       "description": "Lordship of Urquhart is centred on Urquhart Castle. It is associated with Glen Urquhart; Inverness sheriffdom."
     },
@@ -7267,7 +8391,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "region_moray",
       "assignment": "researched-provisional",
       "description": "Thanage of Calder is centred on Cawdor. It is associated with Nairn sheriffdom; Moray. A thanage is a Scottish territorial jurisdiction associated with the office and obligations of a thane."
     },
@@ -7320,7 +8444,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "region_far_north",
       "assignment": "unresolved-realm-fallback",
       "description": "Town of Kirkwall is centred on Kirkwall. It is associated with Orkney Mainland."
     },
@@ -7379,7 +8503,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "shire_caithness",
       "assignment": "unresolved-realm-fallback",
       "description": "Wick settlement estate is centred on Wick. It is associated with Caithness."
     },
@@ -7437,7 +8561,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "shire_caithness",
       "assignment": "unresolved-realm-fallback",
       "description": "Dirlot castle estate is centred on Dirlot Castle. It is associated with Halkirk; Caithness. The castle forms the centre of a local landed estate."
     },
@@ -7496,7 +8620,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_scotland",
+      "parent_id": "region_far_north",
       "assignment": "church-deferred-realm-fallback",
       "description": "Dornoch episcopal settlement is centred on Dornoch. It is associated with Sutherland; diocese of Caithness. The estate's history is tied to the temporal lands of a bishopric."
     },
@@ -7548,7 +8672,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_isles",
+      "parent_id": "shire_islay",
       "assignment": "researched-documented",
       "description": "Finlaggan demesne is centred on Finlaggan. It is associated with Islay."
     },
@@ -7599,7 +8723,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_isles",
+      "parent_id": "shire_islay",
       "assignment": "researched-provisional",
       "description": "Dunyvaig castle estate is centred on Dunyvaig. It is associated with Southern Islay. The castle forms the centre of a local landed estate."
     },
@@ -7675,7 +8799,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_isles",
+      "parent_id": "region_islay_kintyre",
       "assignment": "unresolved-realm-fallback",
       "description": "Tarbert castle estate is centred on Tarbert Castle. It is associated with Tarbert; southern Knapdale; Kintyre isthmus. The castle forms the centre of a local landed estate."
     },
@@ -7741,7 +8865,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_isles",
+      "parent_id": "region_islay_kintyre",
       "assignment": "researched-provisional",
       "description": "Lands of Duart is centred on Duart. It is associated with Torosay; Mull. The castle forms the centre of a local landed estate."
     },
@@ -7807,7 +8931,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_isles",
+      "parent_id": "shire_long_island",
       "assignment": "unresolved-realm-fallback",
       "description": "Stornoway settlement estate is centred on Stornoway. It is associated with Lewis."
     },
@@ -7872,7 +8996,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_isles",
+      "parent_id": "shire_skye",
       "assignment": "unresolved-realm-fallback",
       "description": "Dunvegan castle estate is centred on Dunvegan. It is associated with Duirinish; Skye. The castle forms the centre of a local landed estate."
     },
@@ -7931,7 +9055,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_isles",
+      "parent_id": "shire_long_island",
       "assignment": "researched-documented",
       "description": "Lands of Barra is centred on Kisimul. It is associated with Barra."
     },
@@ -8008,7 +9132,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_isles",
+      "parent_id": "shire_easter_ross",
       "assignment": "cross-realm-review-fallback",
       "description": "Dingwall was established as a royal burgh in 1226. Its castle was a principal seat of the earls of Ross, but the burgh and the earldom's landed estate were distinct jurisdictions."
     },
@@ -8074,7 +9198,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_b4e4cbf6b4b7",
+      "parent_id": "shire_easter_ross",
       "assignment": "researched-provisional",
       "description": "Lands of Balnagown is centred on Balnagowan. It is associated with Easter Ross; Kilmuir Easter. The castle forms the centre of a local landed estate."
     },
@@ -8126,7 +9250,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_b4e4cbf6b4b7",
+      "parent_id": "shire_easter_ross",
       "assignment": "researched-provisional",
       "description": "Lands of Foulis is centred on Foulis. It is associated with Kiltearn; Easter Ross. The castle forms the centre of a local landed estate."
     },
@@ -8191,7 +9315,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_b4e4cbf6b4b7",
+      "parent_id": "region_ross",
       "assignment": "researched-provisional",
       "description": "Eilean Donan castle estate is centred on Eilean Donan. It is associated with Kintail; Wester Ross. The castle forms the centre of a local landed estate."
     },
@@ -8257,12 +9381,12 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_isles",
+      "parent_id": "shire_skye",
       "assignment": "researched-documented",
       "description": "Lands of Sleat is centred on Dunscaith. It is associated with Sleat; Skye."
     },
     {
-      "id": "county_lochaber",
+      "id": "county_lochiel",
       "name": "Inverlochy settlement estate",
       "old_name": "County of Lochaber",
       "kind": "town-estate",
@@ -8308,40 +9432,40 @@
         {
           "settlement_id": "dadg_sco_tora_beag_keppoch_motte_village",
           "name": "Tora Beag / Keppoch motte",
-          "title_id": "county_lochaber",
+          "title_id": "county_lochiel",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_glen_scaddle_dauge_village",
           "name": "Glen Scaddle Dauge",
-          "title_id": "county_lochaber",
+          "title_id": "county_lochiel",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_corror_estate_village",
           "name": "Corror Estate",
-          "title_id": "county_lochaber",
+          "title_id": "county_lochiel",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_glen_dessarry_village",
           "name": "Glen Dessarry",
-          "title_id": "county_lochaber",
+          "title_id": "county_lochiel",
           "assignment": "existing-game-binding",
           "historically_verified": false
         },
         {
           "settlement_id": "dadg_sco_cille_mhoadain_village",
           "name": "Cille Mhoadain",
-          "title_id": "county_lochaber",
+          "title_id": "county_lochiel",
           "assignment": "existing-game-binding",
           "historically_verified": false
         }
       ],
-      "parent_id": "group_1b3e86ef44f4",
+      "parent_id": "region_lochaber",
       "assignment": "researched-provisional",
       "description": "Inverlochy settlement estate is centred on Inverlochy. It is associated with Lochaber; Inverness sheriffdom."
     },
@@ -8393,7 +9517,7 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "group_ea25fa29900f",
+      "parent_id": "shire_garmoran",
       "assignment": "researched-provisional",
       "description": "Tioram castle estate is centred on Tioram. It is associated with Moidart; Garmoran. The castle forms the centre of a local landed estate."
     },
@@ -8459,204 +9583,9 @@
           "historically_verified": false
         }
       ],
-      "parent_id": "kingdom_isles",
+      "parent_id": "shire_garmoran",
       "assignment": "researched-provisional",
       "description": "Lands of Ardnamurchan is centred on Mingary. It is associated with Ardnamurchan; Inverness sheriffdom."
-    },
-    {
-      "id": "group_7abb388a4f64",
-      "name": "Duchy of Lancaster",
-      "kind": "territorial-group",
-      "realm": "kingdom_england",
-      "seat": null,
-      "parent_id": "kingdom_england",
-      "assignment": "group-realm-fallback",
-      "holder": null,
-      "claims": [],
-      "sources": [],
-      "historical_status": "unresolved",
-      "note": "Named superior from the research. Its own superior and holder remain unassigned in this proposal; realm attachment is a gameplay fallback.",
-      "description": "Duchy of Lancaster comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity."
-    },
-    {
-      "id": "group_fe353b33a20a",
-      "name": "Earldom of Chester",
-      "kind": "territorial-group",
-      "realm": "kingdom_england",
-      "seat": null,
-      "parent_id": "kingdom_england",
-      "assignment": "group-realm-fallback",
-      "holder": null,
-      "claims": [],
-      "sources": [],
-      "historical_status": "unresolved",
-      "note": "Named superior from the research. Its own superior and holder remain unassigned in this proposal; realm attachment is a gameplay fallback.",
-      "description": "Earldom of Chester comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity."
-    },
-    {
-      "id": "group_74d7d74889fc",
-      "name": "Duchy of Cornwall",
-      "kind": "territorial-group",
-      "realm": "kingdom_england",
-      "seat": null,
-      "parent_id": "kingdom_england",
-      "assignment": "group-realm-fallback",
-      "holder": null,
-      "claims": [],
-      "sources": [],
-      "historical_status": "unresolved",
-      "note": "Named superior from the research. Its own superior and holder remain unassigned in this proposal; realm attachment is a gameplay fallback.",
-      "description": "Duchy of Cornwall comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity."
-    },
-    {
-      "id": "group_e7ac5b3d8ae6",
-      "name": "Principality of Wales",
-      "kind": "territorial-group",
-      "realm": "kingdom_england",
-      "seat": null,
-      "parent_id": "kingdom_england",
-      "assignment": "group-realm-fallback",
-      "holder": null,
-      "claims": [],
-      "sources": [],
-      "historical_status": "unresolved",
-      "note": "Named superior from the research. Its own superior and holder remain unassigned in this proposal; realm attachment is a gameplay fallback.",
-      "description": "Principality of Wales comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity."
-    },
-    {
-      "id": "group_76d8831f745b",
-      "name": "Lordship of Glamorgan",
-      "kind": "territorial-group",
-      "realm": "kingdom_england",
-      "seat": null,
-      "parent_id": "kingdom_england",
-      "assignment": "group-realm-fallback",
-      "holder": null,
-      "claims": [],
-      "sources": [],
-      "historical_status": "unresolved",
-      "note": "Named superior from the research. Its own superior and holder remain unassigned in this proposal; realm attachment is a gameplay fallback.",
-      "description": "Lordship of Glamorgan comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity."
-    },
-    {
-      "id": "group_30a224df15c1",
-      "name": "Lordship of Gower",
-      "kind": "territorial-group",
-      "realm": "kingdom_england",
-      "seat": null,
-      "parent_id": "kingdom_england",
-      "assignment": "group-realm-fallback",
-      "holder": null,
-      "claims": [],
-      "sources": [],
-      "historical_status": "unresolved",
-      "note": "Named superior from the research. Its own superior and holder remain unassigned in this proposal; realm attachment is a gameplay fallback.",
-      "description": "Lordship of Gower comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity."
-    },
-    {
-      "id": "group_8c9d9345b3b5",
-      "name": "Lordship of Galloway",
-      "kind": "territorial-group",
-      "realm": "kingdom_scotland",
-      "seat": null,
-      "parent_id": "kingdom_scotland",
-      "assignment": "group-realm-fallback",
-      "holder": null,
-      "claims": [],
-      "sources": [],
-      "historical_status": "unresolved",
-      "note": "Named superior from the research. Its own superior and holder remain unassigned in this proposal; realm attachment is a gameplay fallback.",
-      "description": "Lordship of Galloway comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity."
-    },
-    {
-      "id": "group_78163fe87745",
-      "name": "Lordship of Liddesdale",
-      "kind": "territorial-group",
-      "realm": "kingdom_scotland",
-      "seat": null,
-      "parent_id": "kingdom_scotland",
-      "assignment": "group-realm-fallback",
-      "holder": null,
-      "claims": [],
-      "sources": [],
-      "historical_status": "unresolved",
-      "note": "Named superior from the research. Its own superior and holder remain unassigned in this proposal; realm attachment is a gameplay fallback.",
-      "description": "Lordship of Liddesdale comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity."
-    },
-    {
-      "id": "group_5c2c9f4890fc",
-      "name": "Lands of Glenorchy",
-      "kind": "territorial-group",
-      "realm": "kingdom_scotland",
-      "seat": null,
-      "parent_id": "kingdom_scotland",
-      "assignment": "group-realm-fallback",
-      "holder": null,
-      "claims": [],
-      "sources": [],
-      "historical_status": "unresolved",
-      "note": "Named superior from the research. Its own superior and holder remain unassigned in this proposal; realm attachment is a gameplay fallback.",
-      "description": "Lands of Glenorchy comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity."
-    },
-    {
-      "id": "group_177f441807f1",
-      "name": "Earldom of Mar",
-      "kind": "territorial-group",
-      "realm": "kingdom_scotland",
-      "seat": null,
-      "parent_id": "kingdom_scotland",
-      "assignment": "group-realm-fallback",
-      "holder": null,
-      "claims": [],
-      "sources": [],
-      "historical_status": "unresolved",
-      "note": "Named superior from the research. Its own superior and holder remain unassigned in this proposal; realm attachment is a gameplay fallback.",
-      "description": "Earldom of Mar comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity."
-    },
-    {
-      "id": "group_b4e4cbf6b4b7",
-      "name": "Earldom of Ross",
-      "kind": "territorial-group",
-      "realm": "kingdom_isles",
-      "seat": null,
-      "parent_id": "kingdom_isles",
-      "assignment": "group-realm-fallback",
-      "holder": null,
-      "claims": [],
-      "sources": [],
-      "historical_status": "unresolved",
-      "note": "Named superior from the research. Its own superior and holder remain unassigned in this proposal; realm attachment is a gameplay fallback.",
-      "description": "Earldom of Ross comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity."
-    },
-    {
-      "id": "group_1b3e86ef44f4",
-      "name": "Lordship of Lochaber",
-      "kind": "territorial-group",
-      "realm": "kingdom_isles",
-      "seat": null,
-      "parent_id": "kingdom_isles",
-      "assignment": "group-realm-fallback",
-      "holder": null,
-      "claims": [],
-      "sources": [],
-      "historical_status": "unresolved",
-      "note": "Named superior from the research. Its own superior and holder remain unassigned in this proposal; realm attachment is a gameplay fallback.",
-      "description": "Lordship of Lochaber comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity."
-    },
-    {
-      "id": "group_ea25fa29900f",
-      "name": "Lordship of Garmoran",
-      "kind": "territorial-group",
-      "realm": "kingdom_isles",
-      "seat": null,
-      "parent_id": "kingdom_isles",
-      "assignment": "group-realm-fallback",
-      "holder": null,
-      "claims": [],
-      "sources": [],
-      "historical_status": "unresolved",
-      "note": "Named superior from the research. Its own superior and holder remain unassigned in this proposal; realm attachment is a gameplay fallback.",
-      "description": "Lordship of Garmoran comprises the lands and rights associated with this dignity. Its subordinate estates may lie in separate places, each retaining its own local identity."
     }
   ],
   "villages": [
@@ -8740,42 +9669,42 @@
     {
       "settlement_id": "village_Thetford",
       "name": "Thetford",
-      "title_id": "county_norwich",
+      "title_id": "county_howard",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Caistor_Saint_Edmund",
       "name": "Caistor Saint Edmund",
-      "title_id": "county_norwich",
+      "title_id": "county_howard",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Caister_on_Sea",
       "name": "Caister-on-Sea",
-      "title_id": "county_norwich",
+      "title_id": "county_howard",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Lowestoft",
       "name": "Lowestoft",
-      "title_id": "county_norwich",
+      "title_id": "county_howard",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Dereham",
       "name": "Dereham",
-      "title_id": "county_norwich",
+      "title_id": "county_howard",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Walcott",
       "name": "Walcott",
-      "title_id": "county_norwich",
+      "title_id": "county_howard",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -8852,21 +9781,21 @@
     {
       "settlement_id": "village_Heddon_on_the_Wall",
       "name": "Heddon-on-the-Wall",
-      "title_id": "county_durham",
+      "title_id": "county_westmorland",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Hexham_Abbey",
       "name": "Hexham Abbey",
-      "title_id": "county_durham",
+      "title_id": "county_westmorland",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Sunderland",
       "name": "Sunderland",
-      "title_id": "county_durham",
+      "title_id": "county_westmorland",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -8901,7 +9830,7 @@
     {
       "settlement_id": "village_Craster",
       "name": "Craster",
-      "title_id": "county_durham",
+      "title_id": "county_westmorland",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -8915,21 +9844,21 @@
     {
       "settlement_id": "village_Birkenhead",
       "name": "Birkenhead",
-      "title_id": "county_cheshire",
+      "title_id": "county_rivers",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Runcorn",
       "name": "Runcorn",
-      "title_id": "county_cheshire",
+      "title_id": "county_rivers",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Flint",
       "name": "Flint",
-      "title_id": "county_cheshire",
+      "title_id": "county_rivers",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -8943,7 +9872,7 @@
     {
       "settlement_id": "village_Wrenbury",
       "name": "Wrenbury",
-      "title_id": "county_cheshire",
+      "title_id": "county_rivers",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -9146,7 +10075,7 @@
     {
       "settlement_id": "village_Lanercost_Priory",
       "name": "Lanercost Priory",
-      "title_id": "county_cumberland",
+      "title_id": "county_clifford",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -9160,7 +10089,7 @@
     {
       "settlement_id": "village_Maryport",
       "name": "Maryport",
-      "title_id": "county_cumberland",
+      "title_id": "county_clifford",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -9174,28 +10103,28 @@
     {
       "settlement_id": "village_Grange",
       "name": "Grange",
-      "title_id": "county_cumberland",
+      "title_id": "county_clifford",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Holystone",
       "name": "Holystone",
-      "title_id": "county_warkworth",
+      "title_id": "county_northumberland",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Otterburn",
       "name": "Otterburn",
-      "title_id": "county_warkworth",
+      "title_id": "county_northumberland",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Belsay",
       "name": "Belsay",
-      "title_id": "county_warkworth",
+      "title_id": "county_northumberland",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -9433,7 +10362,7 @@
     {
       "settlement_id": "village_Yeovil",
       "name": "Yeovil",
-      "title_id": "barony_sherborne",
+      "title_id": "barony_exeter",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -9797,7 +10726,7 @@
     {
       "settlement_id": "village_Glastonbury",
       "name": "Glastonbury",
-      "title_id": "barony_sherborne",
+      "title_id": "barony_exeter",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -9923,7 +10852,7 @@
     {
       "settlement_id": "village_Aberdaron",
       "name": "Aberdaron",
-      "title_id": "county_gwynedd",
+      "title_id": "county_ferrers",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -9937,7 +10866,7 @@
     {
       "settlement_id": "village_Beddgelert",
       "name": "Beddgelert",
-      "title_id": "county_gwynedd",
+      "title_id": "county_ferrers",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -9958,14 +10887,14 @@
     {
       "settlement_id": "village_Aberffraw",
       "name": "Aberffraw",
-      "title_id": "county_gwynedd",
+      "title_id": "county_ferrers",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Holyhead",
       "name": "Holyhead",
-      "title_id": "county_gwynedd",
+      "title_id": "county_ferrers",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -9986,21 +10915,21 @@
     {
       "settlement_id": "village_Stretton",
       "name": "Stretton",
-      "title_id": "county_shropshire",
+      "title_id": "county_shrewsbury",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Bridgnorth",
       "name": "Bridgnorth",
-      "title_id": "county_shropshire",
+      "title_id": "county_shrewsbury",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Ellesmere",
       "name": "Ellesmere",
-      "title_id": "county_shropshire",
+      "title_id": "county_shrewsbury",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10014,7 +10943,7 @@
     {
       "settlement_id": "village_Norbury",
       "name": "Norbury",
-      "title_id": "county_shropshire",
+      "title_id": "county_shrewsbury",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10035,7 +10964,7 @@
     {
       "settlement_id": "village_Market_Drayton",
       "name": "Market Drayton",
-      "title_id": "county_shropshire",
+      "title_id": "county_shrewsbury",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10126,14 +11055,14 @@
     {
       "settlement_id": "village_Rowlestone",
       "name": "Rowlestone",
-      "title_id": "county_hereford",
+      "title_id": "county_bergavenny",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Almeley",
       "name": "Almeley",
-      "title_id": "county_hereford",
+      "title_id": "county_bergavenny",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10147,7 +11076,7 @@
     {
       "settlement_id": "village_Goodrich",
       "name": "Goodrich",
-      "title_id": "county_hereford",
+      "title_id": "county_bergavenny",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10161,21 +11090,21 @@
     {
       "settlement_id": "village_Selsey",
       "name": "Selsey",
-      "title_id": "county_sussex",
+      "title_id": "county_arundel",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Liss",
       "name": "Liss",
-      "title_id": "county_sussex",
+      "title_id": "county_arundel",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "village_Petworth",
       "name": "Petworth",
-      "title_id": "county_sussex",
+      "title_id": "county_arundel",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10196,7 +11125,7 @@
     {
       "settlement_id": "village_Hurstpierpoint",
       "name": "Hurstpierpoint",
-      "title_id": "county_sussex",
+      "title_id": "county_arundel",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10672,7 +11601,7 @@
     {
       "settlement_id": "village_Evershot",
       "name": "Evershot",
-      "title_id": "barony_sherborne",
+      "title_id": "barony_exeter",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10707,7 +11636,7 @@
     {
       "settlement_id": "dadg_sco_bothwell_castle",
       "name": "Bothwell",
-      "title_id": "county_lanark",
+      "title_id": "county_hamilton",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10749,7 +11678,7 @@
     {
       "settlement_id": "dadg_sco_newburgh_village_2",
       "name": "Newburgh",
-      "title_id": "county_aberdeen",
+      "title_id": "county_marischal",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10777,7 +11706,7 @@
     {
       "settlement_id": "dadg_sco_lochwood_castle_village",
       "name": "Lochwood Castle",
-      "title_id": "county_nithsdale",
+      "title_id": "county_maxwell",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10791,7 +11720,7 @@
     {
       "settlement_id": "dadg_sco_irvine_village",
       "name": "Irvine",
-      "title_id": "county_carrick",
+      "title_id": "county_kennedy",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10805,7 +11734,7 @@
     {
       "settlement_id": "dadg_sco_castle_dounie_village",
       "name": "Castle Dounie",
-      "title_id": "county_inverness",
+      "title_id": "county_westfield",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10826,7 +11755,7 @@
     {
       "settlement_id": "dadg_sco_strathaven_castle_village",
       "name": "Strathaven Castle",
-      "title_id": "county_lanark",
+      "title_id": "county_hamilton",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10840,14 +11769,14 @@
     {
       "settlement_id": "dadg_sco_selkirk_village",
       "name": "Selkirk",
-      "title_id": "barony_hermitage",
+      "title_id": "barony_angus",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "dadg_sco_auchterarder_village",
       "name": "Auchterarder",
-      "title_id": "county_gowrie",
+      "title_id": "county_ruthven",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10882,42 +11811,42 @@
     {
       "settlement_id": "dadg_sco_duns_village",
       "name": "Duns",
-      "title_id": "county_berwick",
+      "title_id": "county_march",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "dadg_sco_auchindoun_castle_village",
       "name": "Auchindoun Castle",
-      "title_id": "barony_strathbogie",
+      "title_id": "barony_huntly",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "dadg_sco_alyth_village",
       "name": "Alyth",
-      "title_id": "county_gowrie",
+      "title_id": "county_ruthven",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "dadg_sco_morton_castle_village",
       "name": "Morton Castle",
-      "title_id": "county_nithsdale",
+      "title_id": "county_maxwell",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "dadg_sco_crawford_village",
       "name": "Crawford",
-      "title_id": "county_nithsdale",
+      "title_id": "county_maxwell",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "dadg_sco_sanquhar_village",
       "name": "Sanquhar",
-      "title_id": "county_nithsdale",
+      "title_id": "county_maxwell",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10931,7 +11860,7 @@
     {
       "settlement_id": "dadg_sco_kintore_village",
       "name": "Kintore",
-      "title_id": "county_aberdeen",
+      "title_id": "county_marischal",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10959,7 +11888,7 @@
     {
       "settlement_id": "dadg_sco_newmilns_village",
       "name": "Newmilns",
-      "title_id": "county_lanark",
+      "title_id": "county_hamilton",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -10980,7 +11909,7 @@
     {
       "settlement_id": "dadg_sco_kildonan_castle_village",
       "name": "Kildonan Castle",
-      "title_id": "county_carrick",
+      "title_id": "county_kennedy",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -11008,7 +11937,7 @@
     {
       "settlement_id": "dadg_sco_haddo_stronghold_village",
       "name": "Haddo Stronghold",
-      "title_id": "county_aberdeen",
+      "title_id": "county_marischal",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -11022,7 +11951,7 @@
     {
       "settlement_id": "dadg_sco_old_blairfindy_tower_village",
       "name": "Old Blairfindy tower",
-      "title_id": "county_inverness",
+      "title_id": "county_westfield",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -11043,21 +11972,21 @@
     {
       "settlement_id": "dadg_sco_delgatie_castle_village",
       "name": "Delgatie Castle",
-      "title_id": "barony_strathbogie",
+      "title_id": "barony_huntly",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "dadg_sco_old_rattray_castle_village",
       "name": "Old Rattray Castle",
-      "title_id": "county_aberdeen",
+      "title_id": "county_marischal",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "dadg_sco_banff_village",
       "name": "Banff",
-      "title_id": "barony_strathbogie",
+      "title_id": "barony_huntly",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -11092,7 +12021,7 @@
     {
       "settlement_id": "dadg_sco_pitsligo_castle_village",
       "name": "Pitsligo Castle",
-      "title_id": "barony_strathbogie",
+      "title_id": "barony_huntly",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -11211,7 +12140,7 @@
     {
       "settlement_id": "dadg_sco_tora_beag_keppoch_motte_village",
       "name": "Tora Beag / Keppoch motte",
-      "title_id": "county_lochaber",
+      "title_id": "county_lochiel",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -11260,7 +12189,7 @@
     {
       "settlement_id": "dadg_sco_glen_scaddle_dauge_village",
       "name": "Glen Scaddle Dauge",
-      "title_id": "county_lochaber",
+      "title_id": "county_lochiel",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -11302,14 +12231,14 @@
     {
       "settlement_id": "dadg_sco_corror_estate_village",
       "name": "Corror Estate",
-      "title_id": "county_lochaber",
+      "title_id": "county_lochiel",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "dadg_sco_glen_dessarry_village",
       "name": "Glen Dessarry",
-      "title_id": "county_lochaber",
+      "title_id": "county_lochiel",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -11400,28 +12329,28 @@
     {
       "settlement_id": "dadg_sco_kelso_abbey",
       "name": "Kelso",
-      "title_id": "county_berwick",
+      "title_id": "county_march",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "dadg_sco_jedburgh_abbey",
       "name": "Jedburgh",
-      "title_id": "barony_hermitage",
+      "title_id": "barony_angus",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "dadg_sco_paisley_abbey",
       "name": "Paisley",
-      "title_id": "county_lanark",
+      "title_id": "county_hamilton",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
     {
       "settlement_id": "dadg_sco_crossraguel_abbey",
       "name": "Crossraguel",
-      "title_id": "county_carrick",
+      "title_id": "county_kennedy",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -11603,7 +12532,7 @@
     {
       "settlement_id": "dadg_sco_girvan_village",
       "name": "Girvan",
-      "title_id": "county_carrick",
+      "title_id": "county_kennedy",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -11617,7 +12546,7 @@
     {
       "settlement_id": "dadg_sco_cille_mhoadain_village",
       "name": "Cille Mhoadain",
-      "title_id": "county_lochaber",
+      "title_id": "county_lochiel",
       "assignment": "existing-game-binding",
       "historically_verified": false
     },
@@ -11638,7 +12567,7 @@
   ],
   "summary": {
     "landed_titles": 139,
-    "title_nodes": 155,
+    "title_nodes": 207,
     "villages": 425,
     "assignments": {
       "researched-documented": 36,

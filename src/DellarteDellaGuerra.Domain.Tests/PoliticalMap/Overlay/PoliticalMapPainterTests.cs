@@ -21,7 +21,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             .AddTitle("kingdom_england", TitleRank.King)
             .AddTitle("duchy_lancaster", TitleRank.Duke, "kingdom_england", "castle_pontefract")
             .AddTitle("county_lancashire", TitleRank.Earl, "duchy_lancaster", "town_lancaster", "County of Lancashire")
-            .AddTitle("county_cheshire", TitleRank.Earl, "duchy_lancaster", "town_chester", "County of Cheshire")
+            .AddTitle("county_rivers", TitleRank.Earl, "duchy_lancaster", "town_chester", "County of Cheshire")
             .AddTitle("county_kent", TitleRank.Earl, "kingdom_england", "town_canterbury");
 
         private readonly FakeGenealogy _genealogy = new FakeGenealogy()
@@ -36,7 +36,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             new Title("kingdom_england", "England", TitleRank.King, "", "henry"),
             new Title("duchy_lancaster", "Lancaster", TitleRank.Duke, "castle_pontefract", "somerset"),
             new Title("county_lancashire", "Lancashire", TitleRank.Earl, "town_lancaster", "stanley"),
-            new Title("county_cheshire", "Cheshire", TitleRank.Earl, "town_chester", "stanley"),
+            new Title("county_rivers", "Cheshire", TitleRank.Earl, "town_chester", "stanley"),
             new Title("county_kent", "Kent", TitleRank.Earl, "town_canterbury", "neville"));
 
         private readonly FakeWorld _world = new();
@@ -65,6 +65,45 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         private static uint Wash(uint? argb) => PoliticalMapPalette.Wash(argb);
 
         private static uint Opaque(uint washed) => washed | 0xFF000000u;
+
+        [Fact]
+        public void ZoomingInReplacesTheEarldomWithTheUnderlyingLocalNameAndProminence()
+        {
+            _structure.AddTitle("county_devon", TitleRank.Baron, "kingdom_england", "exeter", "City of Exeter");
+            _titles.SaveTitle(new Title("county_devon", "Earldom of Devon", TitleRank.Earl, "exeter", "stanley"));
+            var painter = Painter();
+
+            Assert.Equal("Earldom of Devon", painter.DomainLabelNameOf("county_devon", PoliticalMapOwnerLevel.Vassals));
+            Assert.Equal(TitleRank.Earl, painter.DomainLabelRankOf("county_devon", PoliticalMapOwnerLevel.Vassals));
+            Assert.Equal("City of Exeter", painter.DomainLabelNameOf("county_devon", PoliticalMapOwnerLevel.SubVassals));
+            Assert.Equal(TitleRank.Baron, painter.DomainLabelRankOf("county_devon", PoliticalMapOwnerLevel.SubVassals));
+        }
+
+        [Fact]
+        public void ClickingExeterAtCloseZoomSelectsTheCityWhileAnExistingDevonSelectionKeepsItsEstates()
+        {
+            _structure.AddTitle("county_devon", TitleRank.Baron, "kingdom_england", "exeter", "City of Exeter")
+                .AddTitle("okehampton", TitleRank.Baron, "county_devon", "okehampton_castle", "Barony of Okehampton");
+            _titles.SaveTitle(new Title("county_devon", "Earldom of Devon", TitleRank.Earl, "exeter", "somerset"));
+            _titles.SaveTitle(new Title("okehampton", "Barony of Okehampton", TitleRank.Baron, "okehampton_castle", "somerset"));
+            _world.Owners["exeter"] = _world.Owners["okehampton_castle"] = "clan_beaufort";
+            var painter = Painter();
+            string[] settlements = { "exeter", "okehampton_castle" };
+            string[] territories = settlements.Select(x => painter.TerritoryOf(x, _world)).ToArray();
+            var city = new PoliticalMapSelection(PoliticalMapView.Owners, PoliticalMapOwnerLevel.SubVassals,
+                PoliticalMapLabelMode.Titles, "county_devon");
+            var earldom = city with { Level = PoliticalMapOwnerLevel.Vassals };
+
+            foreach (var zoom in new[] { PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.Vassals })
+            {
+                var paints = painter.Paint(PoliticalMapView.Owners, settlements, territories, _folds, _world,
+                    level: zoom, mode: PoliticalMapLabelMode.Titles);
+                Assert.Equal("county_devon", painter.SelectionKeysOf(city, settlements, paints, _world)[0]);
+                Assert.NotEqual("county_devon", painter.SelectionKeysOf(city, settlements, paints, _world)[1]);
+                Assert.Equal(new[] { "county_devon", "county_devon" },
+                    painter.SelectionKeysOf(earldom, settlements, paints, _world));
+            }
+        }
 
         [Fact]
         public void SelectingADuchyIncludesItsDisconnectedCountiesWithoutSelectingTheHoldersOtherTitles()
@@ -103,7 +142,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
 
             Assert.Equal(level == PoliticalMapOwnerLevel.Vassals
                 ? new[] { "duchy_lancaster", "duchy_lancaster", "duchy_lancaster", "county_kent", "kingdom_england", "duchy_lancaster" }
-                : new[] { "county_lancashire", "county_lancashire", "duchy_lancaster", "county_kent", "kingdom_england", "county_cheshire" }, titles);
+                : new[] { "county_lancashire", "county_lancashire", "duchy_lancaster", "county_kent", "kingdom_england", "county_rivers" }, titles);
             Assert.Equal(paints.Select(paint => paint.RegionKey), clans);
             Assert.Equal(titles[0], titles[1]); // The bound village follows its seat.
             if (level == PoliticalMapOwnerLevel.Vassals)
@@ -143,26 +182,26 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         public void GeographicLabelsSeparateCountiesEvenWhenOneClanOwnsBoth()
         {
             _structure.Reattach("county_lancashire", "kingdom_england");
-            _structure.Reattach("county_cheshire", "kingdom_england");
+            _structure.Reattach("county_rivers", "kingdom_england");
             PoliticalMapPainter painter = Painter();
             Assert.Equal("clan_stanley", _world.OwnerClanOf("town_lancaster"));
             Assert.Equal("clan_stanley", _world.OwnerClanOf("town_chester"));
 
             Assert.Equal("county_lancashire", painter.GeographicLabelKeyOf("town_lancaster", _world, PoliticalMapOwnerLevel.Vassals));
-            Assert.Equal("county_cheshire", painter.GeographicLabelKeyOf("town_chester", _world, PoliticalMapOwnerLevel.Vassals));
+            Assert.Equal("county_rivers", painter.GeographicLabelKeyOf("town_chester", _world, PoliticalMapOwnerLevel.Vassals));
             Assert.Equal("County of Lancashire", painter.GeographicLabelNameOf("county_lancashire"));
-            Assert.Equal("County of Cheshire", painter.GeographicLabelNameOf("county_cheshire"));
+            Assert.Equal("County of Cheshire", painter.GeographicLabelNameOf("county_rivers"));
 
             // Conquest changes the owner label, never the local title's geographic identity.
             _world.Owners["town_chester"] = "clan_beaufort";
-            Assert.Equal("county_cheshire", painter.GeographicLabelKeyOf("town_chester", _world, PoliticalMapOwnerLevel.Vassals));
-            Assert.Equal("County of Cheshire", painter.GeographicLabelNameOf("county_cheshire"));
+            Assert.Equal("county_rivers", painter.GeographicLabelKeyOf("town_chester", _world, PoliticalMapOwnerLevel.Vassals));
+            Assert.Equal("County of Cheshire", painter.GeographicLabelNameOf("county_rivers"));
         }
 
         [Fact]
         public void ZoomingInRevealsTheLocalBaronyInsteadOfItsOwnersRemoteDuchy()
         {
-            _structure.AddTitle("barony_lathom", TitleRank.Baron, "county_lancashire", "castle_lonely", "Barony of Lathom");
+            _structure.AddTitle("barony_lathom", TitleRank.Baron, "duchy_lancaster", "castle_lonely", "Barony of Lathom");
             // A dignity attached to the estate is not necessarily geographically local.
             _titles.SaveTitle(new Title("barony_lathom", "Duchy of Somerset", TitleRank.Duke, "castle_lonely", "somerset"));
             _world.Owners["castle_lonely"] = "clan_beaufort";
