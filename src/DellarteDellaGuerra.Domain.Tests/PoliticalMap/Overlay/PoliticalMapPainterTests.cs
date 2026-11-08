@@ -84,7 +84,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             Assert.Equal(paints[3], result[3]); // Kent is outside the selected duchy.
             Assert.Equal(paints[4], result[4]); // The ruler's untitled estate is outside it too.
 
-            var county = selection with { Key = "county_lancashire" };
+            var county = selection with { Key = "county_lancashire", Level = PoliticalMapOwnerLevel.SubVassals };
             var countyResult = county.Apply(paints, painter.SelectionKeysOf(county, Settlements, paints, _world));
             Assert.NotEqual(paints[0].Fill, countyResult[0].Fill);
             Assert.Equal(paints[2], countyResult[2]); // The duchy's own seat is not in this county.
@@ -101,10 +101,15 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             string?[] titles = painter.LabelKeysOf(PoliticalMapView.Owners, PoliticalMapLabelMode.Titles, Settlements, paints, _world, level);
             string?[] clans = painter.LabelKeysOf(PoliticalMapView.Owners, PoliticalMapLabelMode.Clans, Settlements, paints, _world, level);
 
-            Assert.Equal(Settlements.Select(id => painter.GeographicLabelKeyOf(id, _world, level)), titles);
+            Assert.Equal(level == PoliticalMapOwnerLevel.Vassals
+                ? new[] { "duchy_lancaster", "duchy_lancaster", "duchy_lancaster", "county_kent", "kingdom_england", "duchy_lancaster" }
+                : new[] { "county_lancashire", "county_lancashire", "duchy_lancaster", "county_kent", "kingdom_england", "county_cheshire" }, titles);
             Assert.Equal(paints.Select(paint => paint.RegionKey), clans);
             Assert.Equal(titles[0], titles[1]); // The bound village follows its seat.
-            Assert.NotEqual(titles[0], titles[5]); // One clan, two separate geographic titles.
+            if (level == PoliticalMapOwnerLevel.Vassals)
+                Assert.Equal(titles[0], titles[5]); // Constituent counties share the duchy's geographic identity.
+            else
+                Assert.NotEqual(titles[0], titles[5]); // Zooming in separates its counties.
             Assert.Equal(clans[0], clans[5]); // Both estates belong to the selected clan's region.
 
             var selected = new PoliticalMapSelection(PoliticalMapView.Owners, level, PoliticalMapLabelMode.Clans, clans[0]!);
@@ -137,6 +142,8 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         [Fact]
         public void GeographicLabelsSeparateCountiesEvenWhenOneClanOwnsBoth()
         {
+            _structure.Reattach("county_lancashire", "kingdom_england");
+            _structure.Reattach("county_cheshire", "kingdom_england");
             PoliticalMapPainter painter = Painter();
             Assert.Equal("clan_stanley", _world.OwnerClanOf("town_lancaster"));
             Assert.Equal("clan_stanley", _world.OwnerClanOf("town_chester"));
@@ -161,7 +168,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             _world.Owners["castle_lonely"] = "clan_beaufort";
             PoliticalMapPainter painter = Painter();
 
-            Assert.Equal("county_lancashire", painter.GeographicLabelKeyOf("castle_lonely", _world, PoliticalMapOwnerLevel.Vassals));
+            Assert.Equal("duchy_lancaster", painter.GeographicLabelKeyOf("castle_lonely", _world, PoliticalMapOwnerLevel.Vassals));
             string detailed = painter.GeographicLabelKeyOf("castle_lonely", _world, PoliticalMapOwnerLevel.SubVassals);
             Assert.Equal("barony_lathom", detailed);
             Assert.Equal("Barony of Lathom", painter.GeographicLabelNameOf(detailed));
@@ -174,7 +181,8 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         public void VillagesUseTheirBoundSeatsTitleAndUntitledSeatsKeepSeparatePlaceKeys(PoliticalMapOwnerLevel level)
         {
             PoliticalMapPainter painter = Painter();
-            Assert.Equal("county_lancashire", painter.GeographicLabelKeyOf("village_lancaster", _world, level));
+            Assert.Equal(level == PoliticalMapOwnerLevel.Vassals ? "duchy_lancaster" : "county_lancashire",
+                painter.GeographicLabelKeyOf("village_lancaster", _world, level));
             Assert.Equal("settlement:castle_lonely", painter.GeographicLabelKeyOf("castle_lonely", _world, level));
             Assert.Null(painter.GeographicLabelNameOf("settlement:castle_lonely"));
         }

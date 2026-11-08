@@ -14,8 +14,10 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
     /// repeated near one of its own group already placed (<see cref="PoliticalMapLabelLayout.RepeatDistance"/>).
     /// </param>
     /// <param name="LineCount">Number of lines in the label, for collision checks.</param>
+    /// <param name="SizeIndex">Optional hierarchy-selected font step; otherwise uses region size.</param>
     public sealed record PoliticalMapLabelCandidate(
-        int Id, float X, float Y, float PixelRadius, int TextLength, long Priority, string? Group = null, int LineCount = 1);
+        int Id, float X, float Y, float PixelRadius, int TextLength, long Priority, string? Group = null, int LineCount = 1,
+        int? SizeIndex = null);
 
     /// <summary>A label that is drawn this frame, in one of <see cref="PoliticalMapLabelLayout.FontSizes"/>.</summary>
     public sealed record PoliticalMapPlacedLabel(int Id, float X, float Y, int SizeIndex);
@@ -104,7 +106,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
             foreach (PoliticalMapLabelCandidate candidate in ordered)
             {
                 if (candidate.TextLength <= 0) continue;
-                int size = SizeIndexFor(candidate.PixelRadius);
+                int size = candidate.SizeIndex ?? SizeIndexFor(candidate.PixelRadius);
                 if (size < 0) continue;
 
                 Box box = BoxOf(candidate, FontSizes[size]);

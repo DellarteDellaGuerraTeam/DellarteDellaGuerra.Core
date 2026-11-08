@@ -78,6 +78,7 @@ namespace DellarteDellaGuerra.Tests.PoliticalMap.Api.Campaign
             public string? GetTitleIdBySeat(string settlementId) => _titles.GetTitleBySeat(settlementId)?.Id;
             public IReadOnlyList<string> GetAllTitleIds() => _suzerains.Keys.ToList();
             public TitleRank? GetRank(string titleId) => _titles.GetTitle(titleId)?.Rank;
+            public TitleRank? GetMapLabelRank(string titleId) => GetRank(titleId);
             public string? GetTitleName(string titleId) => _titles.GetTitle(titleId)?.Name;
             public void Reattach(string titleId, string? suzerainTitleId) => _suzerains[titleId] = suzerainTitleId;
         }

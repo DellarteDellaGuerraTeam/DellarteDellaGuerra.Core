@@ -139,6 +139,14 @@ public static class FeudalStructureParser
         }
         string? dignityName = element.Attribute("dignityName") is null ? null : GetRequiredAttribute(element, "dignityName");
         string? allegiance = element.Attribute("allegiance") is null ? null : GetRequiredAttribute(element, "allegiance");
+        TitleRank? mapLabelRank = null;
+        if (element.Attribute("mapLabelRank") is { } labelRank)
+        {
+            if (!Enum.TryParse<TitleRank>(labelRank.Value, out var parsed)
+                || !Enum.IsDefined(typeof(TitleRank), parsed) || labelRank.Value != parsed.ToString())
+                throw new InvalidOperationException($"Invalid mapLabelRank '{labelRank.Value}' on title '{titleId}'");
+            mapLabelRank = parsed;
+        }
 
         var children = new List<FeudalTitleNode>();
         var claims = new List<FeudalClaimNode>();
@@ -155,7 +163,7 @@ public static class FeudalStructureParser
 
         return new FeudalTitleNode(
             titleId, name, rank, seatSettlementId, initialHolderClanId, children, initialHeldSinceYear, claims,
-            dignityRank, dignityName, allegiance);
+            dignityRank, dignityName, allegiance, mapLabelRank);
     }
 
     private static FeudalClaimNode ParseClaimElement(XElement element, string titleId, string? holderClanId)

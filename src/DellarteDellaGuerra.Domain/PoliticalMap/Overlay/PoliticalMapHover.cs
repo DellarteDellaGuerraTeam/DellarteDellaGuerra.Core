@@ -29,13 +29,17 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
             PoliticalMapView view,
             string settlementId,
             IPoliticalMapWorld world,
-            IPoliticalMapNames names)
+            IPoliticalMapNames names,
+            PoliticalMapOwnerLevel level = PoliticalMapOwnerLevel.SubVassals)
         {
             string settlement = names.SettlementName(settlementId) ?? settlementId;
             switch (view)
             {
                 case PoliticalMapView.Kingdom:
                     return new PoliticalMapHoverInfo(view, settlement, FactionName: NameOf(world.FactionOf(settlementId), names.FactionName));
+                case PoliticalMapView.DeJure:
+                    return new PoliticalMapHoverInfo(view, settlement,
+                        TitleName: _painter.GeographicLabelNameOf(_painter.GeographicLabelKeyOf(settlementId, world, level)));
                 case PoliticalMapView.Owners:
                     if (world.OwnerClanOf(settlementId) is not { } owner) return new PoliticalMapHoverInfo(view, settlement);
 

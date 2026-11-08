@@ -6,6 +6,23 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Labels;
 
 public class PoliticalMapLabelHierarchyTests
 {
+    [Fact]
+    public void SmallEarldomIsMoreProminentThanLargeLocalEstate()
+    {
+        int estate = PoliticalMapLabelHierarchy.SizeIndexFor(PoliticalMapLabelTier.Territory, TitleRank.Baron, 200);
+        int earl = PoliticalMapLabelHierarchy.SizeIndexFor(PoliticalMapLabelTier.Territory, TitleRank.Earl, 25);
+        int duke = PoliticalMapLabelHierarchy.SizeIndexFor(PoliticalMapLabelTier.Territory, TitleRank.Duke, 25);
+        Assert.True(estate < earl && earl < duke);
+        Assert.True(PoliticalMapLabelHierarchy.SizeIndexFor(PoliticalMapLabelTier.Territory, TitleRank.Earl, 200) < duke);
+        Assert.Equal(-1, PoliticalMapLabelHierarchy.SizeIndexFor(PoliticalMapLabelTier.Territory, TitleRank.Duke, 1));
+        Assert.Equal(PoliticalMapLabelLayout.SizeIndexFor(200),
+            PoliticalMapLabelHierarchy.SizeIndexFor(PoliticalMapLabelTier.Owner, TitleRank.Baron, 200));
+        Assert.Equal(earl, Assert.Single(PoliticalMapLabelLayout.Place(new[]
+        {
+            new PoliticalMapLabelCandidate(1, 500, 500, 25, 10, 1, SizeIndex: earl)
+        }, 1920, 1080)).SizeIndex);
+    }
+
     [Theory]
     [InlineData(TitleRank.King, true)]
     [InlineData(TitleRank.Duke, true)]

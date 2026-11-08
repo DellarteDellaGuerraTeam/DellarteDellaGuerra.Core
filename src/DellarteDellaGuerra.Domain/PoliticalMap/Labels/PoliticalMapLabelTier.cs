@@ -32,6 +32,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
         {
             PoliticalMapView.Kingdom => Kingdom,
             PoliticalMapView.Owners => mode == PoliticalMapLabelMode.Titles ? Territories : Owners,
+            PoliticalMapView.DeJure => Territories,
             _ => None
         };
 

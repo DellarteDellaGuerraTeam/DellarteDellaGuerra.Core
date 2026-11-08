@@ -36,6 +36,7 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap.UI
         {
             PoliticalMapView.Kingdom,
             PoliticalMapView.Owners,
+            PoliticalMapView.DeJure,
             PoliticalMapView.Off
         };
 
@@ -190,6 +191,7 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap.UI
         {
             PoliticalMapView.Kingdom => new TextObject("{=dadg_polmap_view_kingdom}Kingdoms").ToString(),
             PoliticalMapView.Owners => new TextObject("{=dadg_polmap_view_owners}Owners").ToString(),
+            PoliticalMapView.DeJure => new TextObject("{=dadg_polmap_view_de_jure}De jure").ToString(),
             _ => new TextObject("{=dadg_polmap_view_off}Off").ToString()
         };
     }

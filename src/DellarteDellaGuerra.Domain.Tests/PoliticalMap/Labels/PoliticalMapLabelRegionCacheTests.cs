@@ -62,6 +62,8 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Labels
         [InlineData(PoliticalMapView.Kingdom, PoliticalMapOwnerLevel.SubVassals)]
         [InlineData(PoliticalMapView.Owners, PoliticalMapOwnerLevel.Vassals)]
         [InlineData(PoliticalMapView.Owners, PoliticalMapOwnerLevel.SubVassals)]
+        [InlineData(PoliticalMapView.DeJure, PoliticalMapOwnerLevel.Vassals)]
+        [InlineData(PoliticalMapView.DeJure, PoliticalMapOwnerLevel.SubVassals)]
         public void ChangedKeysReplaceOnlyThatStatesSnapshot(PoliticalMapView view, PoliticalMapOwnerLevel level)
         {
             var cache = new PoliticalMapLabelRegionCache();

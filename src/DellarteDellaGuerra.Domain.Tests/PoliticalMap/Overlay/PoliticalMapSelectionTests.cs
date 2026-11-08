@@ -21,9 +21,9 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         {
             var result = Select("clan_a").Apply(Paints, new[] { "clan_a", "clan_b", "clan_a", null });
 
-            Assert.Equal(0x99783C1Eu, result[0].Fill);
+            Assert.Equal(0xD932190Cu, result[0].Fill);
             Assert.Equal(result[0].Fill, result[2].Fill);
-            Assert.Equal(0x99303C48u, result[2].Hatch);
+            Assert.Equal(0xD914191Eu, result[2].Hatch);
             Assert.Equal(Paints[1], result[1]);
             Assert.Equal(PoliticalMapSettlementPaint.Blank, result[3]);
             Assert.Equal(Paints[0].FrontierKey, result[0].FrontierKey);
@@ -46,12 +46,12 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         }
 
         [Fact]
-        public void SelectionBelongsToItsViewZoomLevelAndLabelMode()
+        public void SelectionSurvivesZoomButBelongsToItsViewAndLabelMode()
         {
             var selection = Select("clan_a");
             Assert.True(selection.Matches(PoliticalMapView.Owners, PoliticalMapOwnerLevel.Vassals, PoliticalMapLabelMode.Clans));
             Assert.False(selection.Matches(PoliticalMapView.Kingdom, selection.Level, selection.Mode));
-            Assert.False(selection.Matches(selection.View, PoliticalMapOwnerLevel.SubVassals, selection.Mode));
+            Assert.True(selection.Matches(selection.View, PoliticalMapOwnerLevel.SubVassals, selection.Mode));
             Assert.False(selection.Matches(selection.View, selection.Level, PoliticalMapLabelMode.Titles));
         }
 

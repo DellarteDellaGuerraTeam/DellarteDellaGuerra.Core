@@ -100,6 +100,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         /// <summary>The completed mesh level actually visible while a requested cold cache is preparing.</summary>
         public PoliticalMapView DisplayedView => _view == PoliticalMapView.Off ? PoliticalMapView.Off : _drawing?.DisplayedView ?? PoliticalMapView.Off;
         public PoliticalMapOwnerLevel DisplayedOwnerLevel => _drawing?.DisplayedOwnerLevel ?? _ownerLevel;
+        public PoliticalMapLabelMode DisplayedLabelMode => _drawing?.DisplayedLabelMode ?? LabelModes.Of(_view);
 
         /// <summary>
         /// The factions holding land, in the current view's swatch colours (kingdom colours in the
@@ -186,7 +187,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             if (ownerLevel != _ownerLevel)
             {
                 _ownerLevel = ownerLevel;
-                if (_view == PoliticalMapView.Owners)
+                if (_view is PoliticalMapView.Owners or PoliticalMapView.DeJure)
                 {
                     _repaintNow = true;
                     Changed?.Invoke();
@@ -253,7 +254,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             if (!mapScreen.MapScene.RayCastForClosestEntityOrTerrain(near, far, out float _, out Vec3 point, 0.01f, CursorRayExcludeFlags)) return null;
 
             if (_drawing!.Grid.SettlementAt(point.x, point.y) is not { } settlementId) return null;
-            return _hoverDescriber.Describe(_view, settlementId, _world, _world);
+            return _hoverDescriber.Describe(DisplayedView, settlementId, _world, _world, DisplayedOwnerLevel);
         }
 
         private bool TryInitialise(MapScreen mapScreen)

@@ -19,7 +19,7 @@ public sealed class TitleEncyclopediaEntry : Concept
     {
         TitleId = id;
         StringId = Prefix + id;
-        Title = new TextObject(FeudalServices.Structure?.GetTitleName(id) ?? id);
+        Title = new TextObject(FeudalServices.Titles?.GetTitle(id)?.Name ?? FeudalServices.Structure?.GetTitleName(id) ?? id);
         Description = new TextObject("Lands, holders and claims.");
         FilterGroup = "DadgTitles";
     }
@@ -54,7 +54,8 @@ public sealed class TitleEncyclopediaPage : DefaultEncyclopediaConceptPage
     {
         foreach (string id in FeudalServices.Structure?.GetAllTitleIds() ?? Array.Empty<string>())
             yield return new EncyclopediaListItem(GetObject("Concept", TitleEncyclopediaEntry.Prefix + id),
-                FeudalServices.Structure!.GetTitleName(id) ?? id, "", TitleEncyclopediaEntry.Prefix + id, "Concept", true);
+                FeudalServices.Titles?.GetTitle(id)?.Name ?? FeudalServices.Structure!.GetTitleName(id) ?? id,
+                "", TitleEncyclopediaEntry.Prefix + id, "Concept", true);
         foreach (var item in base.InitializeListItems()) yield return item;
     }
     protected override IEnumerable<EncyclopediaFilterGroup> InitializeFilterItems()

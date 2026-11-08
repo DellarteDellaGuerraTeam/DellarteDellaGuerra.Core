@@ -4,10 +4,10 @@ using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
 
 namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
 {
-    /// <summary>Whether labels follow geographic title regions or the controlling clans' regions.</summary>
+    /// <summary>Whether ownership domains are grouped by titles or by controlling clans.</summary>
     public enum PoliticalMapLabelMode
     {
-        /// <summary>The title geographically represented by each region (the realm in Kingdoms).</summary>
+        /// <summary>Actual title domains (the realm in Kingdoms), including their attached vassals.</summary>
         Titles,
 
         /// <summary>Each region's holder clan.</summary>
@@ -27,7 +27,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
 
         /// <summary>The naming a view starts on.</summary>
         public static PoliticalMapLabelMode DefaultOf(PoliticalMapView view) =>
-            view == PoliticalMapView.Kingdom ? PoliticalMapLabelMode.Titles : PoliticalMapLabelMode.Clans;
+            view is PoliticalMapView.Kingdom or PoliticalMapView.DeJure ? PoliticalMapLabelMode.Titles : PoliticalMapLabelMode.Clans;
 
         /// <summary>Reads "title(s)" or "clan(s)", any case.</summary>
         public static bool TryParse(string? text, out PoliticalMapLabelMode mode)

@@ -185,7 +185,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             {
                 _sinceRecompute = 0f;
                 RecomputeKeys(mapScreen, view, level);
-                if (view != PoliticalMapView.Off && _regionsByTier is not null && _finding is null)
+                if (view != PoliticalMapView.Off && _regionsByTier is not null && _finding is null && view != PoliticalMapView.DeJure)
                     PrecomputeOwnerLevels(view == PoliticalMapView.Owners ? OtherOwnerLevel(level) : _overlay.OwnerLevel,
                         view == PoliticalMapView.Kingdom);
             }
@@ -193,6 +193,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             _renameNow = false;
 
             bool shown = view != PoliticalMapView.Off
+                         && Modes.Of(view) == _overlay.DisplayedLabelMode
                          && _keysView == view
                          && _keysLevel == level
                          && _regionsByTier is not null
@@ -247,9 +248,9 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             _sinceRecompute = RecomputeIntervalSeconds;
         }
 
-        // The level the labels group the owners view by; the other views have one level.
+        // Ownership and de jure titles both follow the completed mesh's zoom level.
         private PoliticalMapOwnerLevel LevelOf(PoliticalMapView view) =>
-            view == PoliticalMapView.Owners ? _overlay.DisplayedOwnerLevel : PoliticalMapOwnerLevel.SubVassals;
+            view is PoliticalMapView.Owners or PoliticalMapView.DeJure ? _overlay.DisplayedOwnerLevel : PoliticalMapOwnerLevel.SubVassals;
 
         private void RecomputeKeys(MapScreen mapScreen, PoliticalMapView view, PoliticalMapOwnerLevel level)
         {
@@ -283,7 +284,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         {
             PoliticalMapGrid grid = _grid!;
             bool geographic = Modes.Of(view) == PoliticalMapLabelMode.Titles;
-            var paints = _painter.Paint(view, grid.SettlementIds, _territories, _folds, _world, null, level);
+            var paints = _painter.Paint(view, grid.SettlementIds, _territories, _folds, _world, null, level, Modes.Of(view));
             string?[][] keys = { _painter.LabelKeysOf(view, Modes.Of(view), grid.SettlementIds, paints, _world, level) };
             // A holder's own detailed land can change without changing any coarse grouping key.
             return view == PoliticalMapView.Owners && !geographic && level == PoliticalMapOwnerLevel.Vassals
@@ -412,7 +413,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         }
 
         private TitleRank? RankOf(PoliticalMapLabelTier tier, string key, PoliticalMapVassalHierarchy? hierarchy) =>
-            tier == PoliticalMapLabelTier.Territory ? _painter.GeographicLabelRankOf(key)
+            tier == PoliticalMapLabelTier.Territory ? (_keysView == PoliticalMapView.DeJure
+                ? _painter.GeographicLabelRankOf(key) : _painter.DomainLabelRankOf(key))
             : tier == PoliticalMapLabelTier.Owner ? (hierarchy?.HighestLandTitleOf(key) ?? hierarchy?.HighestTitleOf(key))?.Rank : null;
 
         private string? NameOf(PoliticalMapLabelTier tier, PoliticalMapLabelMode mode, string key, PoliticalMapVassalHierarchy? hierarchy)
@@ -427,7 +429,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
                 case PoliticalMapLabelTier.Owner:
                     return ClanNameOf(key);
                 case PoliticalMapLabelTier.Territory:
-                    string? titleName = _painter.GeographicLabelNameOf(key);
+                    string? titleName = _keysView == PoliticalMapView.DeJure
+                        ? _painter.GeographicLabelNameOf(key) : _painter.DomainLabelNameOf(key);
                     if (titleName is not null) return new TextObject(titleName).ToString();
                     return key.StartsWith("settlement:", StringComparison.Ordinal)
                         ? _world.SettlementName(key.Substring("settlement:".Length))?.Trim(' ', '\u00b7') : null;
@@ -459,10 +462,11 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
                 if (Project(camera, label.Position + new Vec3(0f, radius, 0f), out float ux, out float uy))
                     pixelRadius = Math.Max(pixelRadius, (float)Math.Sqrt((ux - x) * (ux - x) + (uy - y) * (uy - y)));
 
-                label.Wrap(pixelRadius / scale);
+                int size = PoliticalMapLabelHierarchy.SizeIndexFor(label.Tier, label.Rank, pixelRadius / scale);
+                label.Wrap(pixelRadius / scale, size);
                 long priority = PoliticalMapLabelHierarchy.Priority(label.Tier, label.Rank, label.Region.CellCount);
                 _candidates.Add(new PoliticalMapLabelCandidate(
-                    index, x / scale, y / scale, pixelRadius / scale, label.LongestLine, priority, label.Group, label.LineCount));
+                    index, x / scale, y / scale, pixelRadius / scale, label.LongestLine, priority, label.Group, label.LineCount, size));
             }
 
             IReadOnlyList<PoliticalMapPlacedLabel> placed = PoliticalMapLabelLayout.Place(
@@ -516,9 +520,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             public int LineCount { get; private set; } = 1;
             public PoliticalMapLabelVM ViewModel { get; }
 
-            public void Wrap(float pixelRadius)
+            public void Wrap(float pixelRadius, int size)
             {
-                int size = PoliticalMapLabelLayout.SizeIndexFor(pixelRadius);
                 if (size < 0) return;
                 int target = Math.Max(1, (int)(2f * pixelRadius /
                     (PoliticalMapLabelLayout.FontSizes[size] * PoliticalMapLabelLayout.CharWidth)));

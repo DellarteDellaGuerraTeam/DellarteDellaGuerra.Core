@@ -14,7 +14,7 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap
     /// <summary>Console switches for the political map overlay, the same ones as its map bar panel.</summary>
     public static class PoliticalMapCommands
     {
-        // polmap.view [next|Kingdom|Owners|Off]
+        // polmap.view [next|Kingdom|Owners|DeJure|Off]
         [CommandLineFunctionality.CommandLineArgumentFunction("view", "polmap")]
         public static string View(List<string> args)
         {

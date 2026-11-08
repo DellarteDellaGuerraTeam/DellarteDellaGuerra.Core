@@ -19,7 +19,8 @@ internal sealed record FeudalTitleNode(
     IReadOnlyList<FeudalClaimNode>? InitialClaims = null,
     TitleRank? DignityRank = null,
     string? DignityName = null,
-    string? AllegianceTitleId = null);
+    string? AllegianceTitleId = null,
+    TitleRank? MapLabelRank = null);
 
 /**
  * <summary>

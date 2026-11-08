@@ -9,9 +9,9 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode, string Key)
     {
         public bool Matches(PoliticalMapView view, PoliticalMapOwnerLevel level, PoliticalMapLabelMode mode) =>
-            View == view && Level == level && Mode == mode;
+            View == view && Mode == mode;
 
-        /// <summary>Derives the selected wash from fresh paints; frontiers and opacity stay unchanged.</summary>
+        /// <summary>Derives a darker, more opaque selected wash from fresh paints; frontiers stay unchanged.</summary>
         public PoliticalMapSettlementPaint[] Apply(IReadOnlyList<PoliticalMapSettlementPaint> paints, IReadOnlyList<string?> keys)
         {
             if (paints.Count != keys.Count) throw new ArgumentException("One selection key per settlement is required.", nameof(keys));
@@ -23,8 +23,8 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
             return result;
         }
 
-        private static uint Darken(uint colour) =>
-            (colour & 0xFF000000u) | (((colour >> 16 & 0xFFu) * 3 / 5) << 16)
-            | (((colour >> 8 & 0xFFu) * 3 / 5) << 8) | ((colour & 0xFFu) * 3 / 5);
+        private static uint Darken(uint colour) => colour == 0 ? 0 :
+            (Math.Max(colour >> 24, 0xD9u) << 24) | (((colour >> 16 & 0xFFu) / 4) << 16)
+            | (((colour >> 8 & 0xFFu) / 4) << 8) | ((colour & 0xFFu) / 4);
     }
 }

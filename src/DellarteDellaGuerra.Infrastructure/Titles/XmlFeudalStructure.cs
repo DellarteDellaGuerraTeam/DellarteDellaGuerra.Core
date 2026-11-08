@@ -86,6 +86,9 @@ public class XmlFeudalStructure : IFeudalStructure
         return _nodesByTitleId.TryGetValue(titleId, out FeudalTitleNode node) ? node.Name : null;
     }
 
+    public TitleRank? GetMapLabelRank(string titleId) =>
+        _nodesByTitleId.TryGetValue(titleId, out var node) ? node.MapLabelRank ?? node.Rank : null;
+
     public void Reattach(string titleId, string? suzerainTitleId)
     {
         if (GetDeJureSuzerainTitleId(titleId) is { } formerSuzerainTitleId)

@@ -42,7 +42,8 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap
             if ((Input.IsKeyDown(InputKey.LeftControl) || Input.IsKeyDown(InputKey.RightControl))
                 && behavior.Selection is { } selection)
             {
-                if (selection.View == PoliticalMapView.Owners && selection.Mode == PoliticalMapLabelMode.Titles)
+                if (selection.View == PoliticalMapView.DeJure
+                    || selection.View == PoliticalMapView.Owners && selection.Mode == PoliticalMapLabelMode.Titles)
                     TitleEncyclopediaEntry.Open(selection.Key);
                 else
                 {

@@ -20,6 +20,17 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Labels
         }
 
         [Fact]
+        public void DeJureAlwaysNamesGeographicTitles()
+        {
+            var modes = new PoliticalMapLabelModes();
+            Assert.False(PoliticalMapLabelModes.HasChoice(PoliticalMapView.DeJure));
+            Assert.Equal(PoliticalMapLabelMode.Titles, modes.Of(PoliticalMapView.DeJure));
+            modes.Toggle(PoliticalMapView.DeJure);
+            Assert.Equal(PoliticalMapLabelMode.Titles, modes.Of(PoliticalMapView.DeJure));
+            Assert.Equal(new[] { PoliticalMapLabelTier.Territory }, PoliticalMapLabelTiers.Of(PoliticalMapView.DeJure));
+        }
+
+        [Fact]
         public void TheKingdomViewStartsOnTitlesAndKeepsItsOwnChoice()
         {
             var modes = new PoliticalMapLabelModes();

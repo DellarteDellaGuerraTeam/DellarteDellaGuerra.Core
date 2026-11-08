@@ -27,13 +27,13 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         private readonly IReadOnlyList<(int A, int B)> _neighbours;
         private readonly IReadOnlyList<(int A, int B)> _boundaryNeighbours;
         private readonly ILogger _logger;
-        private readonly Dictionary<(PoliticalMapView View, PoliticalMapOwnerLevel Level), PoliticalMapCachedLayer> _layers = new();
-        private (PoliticalMapView View, PoliticalMapOwnerLevel Level)? _requested;
-        private (PoliticalMapView View, PoliticalMapOwnerLevel Level)? _shown;
+        private readonly Dictionary<(PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode), PoliticalMapCachedLayer> _layers = new();
+        private (PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode)? _requested;
+        private (PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode)? _shown;
         private PoliticalMapOwnerLevel _cameraLevel;
         private PoliticalMapZoomBand _band = PoliticalMapZoomBand.Mid;
         private bool _visible;
-        private readonly Dictionary<(PoliticalMapView View, PoliticalMapOwnerLevel Level), double> _lastValidation = new();
+        private readonly Dictionary<(PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode), double> _lastValidation = new();
 
         public PoliticalMapOverlayDrawing(TaleWorlds.Engine.Scene scene, PoliticalMapGrid grid, PoliticalMapSheet sheet,
             PoliticalMapPainter painter, PoliticalMapRefreshScheduler scheduler, IPoliticalMapWorld world, ILogger logger,
@@ -62,27 +62,34 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         public int TerritoryCount { get; }
         public PoliticalMapView DisplayedView => _visible && _shown is { } shown ? shown.View : PoliticalMapView.Off;
         public PoliticalMapOwnerLevel DisplayedOwnerLevel => _shown?.Level ?? _cameraLevel;
+        public PoliticalMapLabelMode DisplayedLabelMode => _shown?.Mode ?? PoliticalMapLabelMode.Clans;
         public PoliticalMapSelection? Selection { get; private set; }
 
         public void ClearSelection()
         {
-            if (Selection is not { } previous) return;
+            if (Selection is null) return;
             Selection = null;
-            Validate(Key(previous.View, previous.Level));
+            RefreshSelectionLayers();
         }
 
         public void SelectAt(float x, float y)
         {
             if (!_visible || _shown is not { } shown) return;
             PoliticalMapSettlementPaint[] paints = Paint(shown);
-            string?[] keys = _painter.LabelKeysOf(shown.View, _labelModes.Of(shown.View), Grid.SettlementIds, paints, _world, shown.Level);
+            string?[] keys = _painter.LabelKeysOf(shown.View, shown.Mode, Grid.SettlementIds, paints, _world, shown.Level);
             string? settlement = Grid.SettlementAt(x, y);
             int index = settlement is null ? -1 : Array.IndexOf(Grid.SettlementIds.ToArray(), settlement);
             string? key = index >= 0 && paints[index].Fill != 0 ? keys[index] : null;
-            PoliticalMapSelection? selection = key is null ? null : new(shown.View, shown.Level, _labelModes.Of(shown.View), key);
+            PoliticalMapSelection? selection = key is null ? null : new(shown.View, shown.Level, shown.Mode, key);
             if (Selection == selection) return;
             Selection = selection;
-            Validate(shown);
+            RefreshSelectionLayers();
+        }
+
+        private void RefreshSelectionLayers()
+        {
+            // Both zoom caches must forget the old highlight before either can be shown again.
+            foreach (var key in _layers.Keys.ToArray()) Validate(key);
         }
 
         public void SetVisibility(PoliticalMapZoomBand band, bool visible)
@@ -139,21 +146,21 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             }
         }
 
-        private PoliticalMapSettlementPaint[] Paint((PoliticalMapView View, PoliticalMapOwnerLevel Level) key) =>
-            _painter.Paint(key.View, Grid.SettlementIds, _territories, Folds, _world, _neighbours, key.Level);
+        private PoliticalMapSettlementPaint[] Paint((PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode) key) =>
+            _painter.Paint(key.View, Grid.SettlementIds, _territories, Folds, _world, _neighbours, key.Level, key.Mode);
 
-        private void Validate((PoliticalMapView View, PoliticalMapOwnerLevel Level) key)
+        private void Validate((PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode) key)
         {
             PoliticalMapSettlementPaint[] paints = Paint(key);
-            if (Selection is { } selected && selected.Matches(key.View, key.Level, _labelModes.Of(key.View)))
+            if (Selection is { } selected && selected.Matches(key.View, key.Level, key.Mode))
                 paints = selected.Apply(paints, _painter.SelectionKeysOf(selected, Grid.SettlementIds, paints, _world));
             Layer(key).Repaint(paints);
         }
 
-        private PoliticalMapCachedLayer Layer((PoliticalMapView View, PoliticalMapOwnerLevel Level) key)
+        private PoliticalMapCachedLayer Layer((PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode) key)
         {
             if (!_layers.TryGetValue(key, out PoliticalMapCachedLayer? layer))
-                _layers[key] = layer = new PoliticalMapCachedLayer(Scene, Grid, _sheet, _territories, _boundaryNeighbours, _logger, $"{key.View}/{key.Level}");
+                _layers[key] = layer = new PoliticalMapCachedLayer(Scene, Grid, _sheet, _territories, _boundaryNeighbours, _logger, $"{key.View}/{key.Level}/{key.Mode}");
             return layer;
         }
 
@@ -165,12 +172,17 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             _layers[requested].SetVisibility(_band, _visible);
         }
 
-        private static (PoliticalMapView View, PoliticalMapOwnerLevel Level) Key(PoliticalMapView view, PoliticalMapOwnerLevel level) =>
-            (view, view == PoliticalMapView.Kingdom ? PoliticalMapOwnerLevel.SubVassals : level);
+        private (PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode) Key(PoliticalMapView view, PoliticalMapOwnerLevel level) =>
+            (view, view == PoliticalMapView.Kingdom ? PoliticalMapOwnerLevel.SubVassals : level, _labelModes.Of(view));
 
-        private IEnumerable<(PoliticalMapView View, PoliticalMapOwnerLevel Level)> WarmOrder((PoliticalMapView View, PoliticalMapOwnerLevel Level) requested)
+        private IEnumerable<(PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode)> WarmOrder((PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode) requested)
         {
             PoliticalMapOwnerLevel opposite = _cameraLevel == PoliticalMapOwnerLevel.Vassals ? PoliticalMapOwnerLevel.SubVassals : PoliticalMapOwnerLevel.Vassals;
+            if (requested.View == PoliticalMapView.DeJure)
+            {
+                yield return Key(PoliticalMapView.DeJure, opposite);
+                yield break;
+            }
             if (requested.View == PoliticalMapView.Kingdom) yield return Key(PoliticalMapView.Owners, _cameraLevel);
             yield return Key(PoliticalMapView.Owners, opposite);
             if (requested.View == PoliticalMapView.Owners) yield return Key(PoliticalMapView.Kingdom, _cameraLevel);

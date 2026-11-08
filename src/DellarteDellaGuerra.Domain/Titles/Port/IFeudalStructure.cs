@@ -17,6 +17,8 @@ namespace DellarteDellaGuerra.Domain.Titles.Port
         IReadOnlyList<string> GetAllTitleIds();
         /// <summary>Territorial tier; a held title's historical dignity can have a different rank.</summary>
         TitleRank? GetRank(string titleId);
+        /// <summary>Geographic label prominence, independent of structural tier and personal dignity.</summary>
+        TitleRank? GetMapLabelRank(string titleId);
         string? GetTitleName(string titleId);
 
         /// <summary>

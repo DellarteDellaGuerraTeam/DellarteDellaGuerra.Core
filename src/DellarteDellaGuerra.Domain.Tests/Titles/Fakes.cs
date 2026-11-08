@@ -140,6 +140,8 @@ namespace DellarteDellaGuerra.Domain.Tests.Titles
         public string? GetTitleName(string titleId) =>
             _names.TryGetValue(titleId, out var name) ? name : null;
 
+        public TitleRank? GetMapLabelRank(string titleId) => GetRank(titleId);
+
         public void Reattach(string titleId, string? suzerainTitleId) => _parents[titleId] = suzerainTitleId;
     }
 

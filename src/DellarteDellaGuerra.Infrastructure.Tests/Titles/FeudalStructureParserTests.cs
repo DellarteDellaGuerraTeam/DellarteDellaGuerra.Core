@@ -6,6 +6,25 @@ namespace DellarteDellaGuerra.Infrastructure.Tests.Titles;
 
 public class FeudalStructureParserTests
 {
+    [Fact]
+    public void GeographicLabelRankDoesNotChangeStructuralTierOrPersonalDignity()
+    {
+        var forest = FeudalStructureParser.Parse(
+            "<Feudalism><Kingdom id='k'><Duchy id='d' mapLabelRank='Baron' dignityRank='Duke'/></Kingdom></Feudalism>");
+        var title = Assert.Single(Assert.Single(forest).Children);
+        Assert.Equal(TitleRank.Duke, title.Rank);
+        Assert.Equal(TitleRank.Duke, title.DignityRank);
+        Assert.Equal(TitleRank.Baron, title.MapLabelRank);
+        Assert.Equal(TitleRank.Baron, new XmlFeudalStructure(forest).GetMapLabelRank("d"));
+    }
+
+    [Theory]
+    [InlineData("1")]
+    [InlineData("Unknown")]
+    [InlineData("")]
+    public void RejectsInvalidMapLabelRanks(string rank) => Assert.Throws<InvalidOperationException>(() =>
+        FeudalStructureParser.Parse($"<Feudalism><Kingdom id='k' mapLabelRank='{rank}'/></Feudalism>"));
+
     [Theory]
     [InlineData("Unknown")]
     [InlineData("King")]

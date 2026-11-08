@@ -37,6 +37,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         private readonly IFeudalStructure _feudalStructure;
         private readonly IPoliticalMapWorld _world;
         private readonly Dictionary<string, string> _controllerOfTitle = new(StringComparer.Ordinal);
+        private readonly Dictionary<string, TitleRank> _rankOfTitle = new(StringComparer.Ordinal);
         private readonly Dictionary<string, Title> _highestOfClan = new(StringComparer.Ordinal);
         private readonly Dictionary<string, Title> _highestLandTitleOfClan = new(StringComparer.Ordinal);
         private readonly Dictionary<string, IReadOnlyList<string>> _chains = new(StringComparer.Ordinal);
@@ -51,6 +52,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
             _world = world;
             foreach (Title title in titleRepository.GetAllTitles())
             {
+                _rankOfTitle[title.Id] = title.Rank;
                 if ((title.OccupantClanId ?? genealogy.GetHolderClanOf(title)) is not { } clan) continue;
 
                 _controllerOfTitle[title.Id] = clan;
@@ -70,6 +72,12 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         /// <summary>The highest live dignity below a crown; ties favour its broader territorial tier, then tenure and id.</summary>
         public Title? HighestLandTitleOf(string clanId) =>
             _highestLandTitleOfClan.TryGetValue(clanId, out Title? title) ? title : null;
+
+        public string? ControllerOf(string titleId) =>
+            _controllerOfTitle.TryGetValue(titleId, out string? clan) ? clan : null;
+
+        public TitleRank? RankOf(string titleId) =>
+            _rankOfTitle.TryGetValue(titleId, out TitleRank rank) ? rank : null;
 
         /// <summary>The clan a clan answers to, null for a ruler, a kingdomless clan or a clan in a kingdom without a ruler.</summary>
         public string? LiegeOf(string clanId)

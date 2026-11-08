@@ -66,16 +66,33 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         public string GeographicLabelKeyOf(string settlementId, IPoliticalMapWorld world, PoliticalMapOwnerLevel level)
         {
             string seat = world.SeatOf(settlementId) ?? settlementId;
-            return (level == PoliticalMapOwnerLevel.Vassals
-                ? _territories.GetTerritoryOfSeat(seat)
-                : _feudalStructure.GetTitleIdBySeat(seat)) ?? SettlementTerritoryPrefix + seat;
+            string? title = _feudalStructure.GetTitleIdBySeat(seat);
+            if (title is null) return SettlementTerritoryPrefix + seat;
+            if (level == PoliticalMapOwnerLevel.Vassals)
+            {
+                // Show the whole geographic title, including its constituent honours and estates.
+                var seen = new HashSet<string> { title };
+                while (_feudalStructure.GetDeJureSuzerainTitleId(title) is { } parent
+                    && _feudalStructure.GetRank(parent) < TitleRank.King && seen.Add(parent))
+                    title = parent;
+            }
+            return title;
         }
 
         public string? GeographicLabelNameOf(string key) =>
             _feudalStructure.GetTitleName(key);
 
         public TitleRank? GeographicLabelRankOf(string key) =>
-            _feudalStructure.GetRank(key);
+            _feudalStructure.GetMapLabelRank(key);
+
+        public PoliticalMapTitleDomains TitleDomainsOf(IPoliticalMapWorld world) =>
+            new(_feudalStructure, world, HierarchyOf(world));
+
+        public string? DomainLabelNameOf(string key) =>
+            _titleRepository.GetTitle(key)?.Name ?? _feudalStructure.GetTitleName(key);
+
+        public TitleRank? DomainLabelRankOf(string key) =>
+            _titleRepository.GetTitle(key)?.Rank ?? _feudalStructure.GetMapLabelRank(key);
 
         /// <summary>Shared identities for labels and click selection at the displayed zoom level.</summary>
         public string?[] LabelKeysOf(PoliticalMapView view, PoliticalMapLabelMode mode,
@@ -84,32 +101,49 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         {
             if (settlementIds.Count != paints.Count) throw new ArgumentException("One paint per settlement is required.", nameof(paints));
             var keys = new string?[settlementIds.Count];
+            PoliticalMapTitleDomains? domains = view == PoliticalMapView.Owners && mode == PoliticalMapLabelMode.Titles
+                ? TitleDomainsOf(world) : null;
             for (int i = 0; i < keys.Length; i++)
                 keys[i] = view switch
                 {
                     PoliticalMapView.Kingdom => paints[i].RealmKey,
-                    PoliticalMapView.Owners when mode == PoliticalMapLabelMode.Titles => GeographicLabelKeyOf(settlementIds[i], world, level),
+                    PoliticalMapView.DeJure => GeographicLabelKeyOf(settlementIds[i], world, level),
+                    PoliticalMapView.Owners when mode == PoliticalMapLabelMode.Titles => domains!.KeyOf(settlementIds[i], level),
                     PoliticalMapView.Owners => paints[i].RegionKey,
                     _ => null
                 };
             return keys;
         }
 
-        /// <summary>A selected geographic title includes its subordinate territories, regardless of ownership.</summary>
+        /// <summary>Selects the actual title or clan domain, including disconnected vassal territories.</summary>
         public string?[] SelectionKeysOf(PoliticalMapSelection selection, IReadOnlyList<string> settlementIds,
             IReadOnlyList<PoliticalMapSettlementPaint> paints, IPoliticalMapWorld world)
         {
             string?[] keys = LabelKeysOf(selection.View, selection.Mode, settlementIds, paints, world, selection.Level);
-            if (selection.View != PoliticalMapView.Owners || selection.Mode != PoliticalMapLabelMode.Titles) return keys;
+            if (selection.View == PoliticalMapView.DeJure)
+            {
+                for (int i = 0; i < keys.Length; i++)
+                {
+                    string local = GeographicLabelKeyOf(settlementIds[i], world, PoliticalMapOwnerLevel.SubVassals);
+                    var seen = new HashSet<string>(StringComparer.Ordinal);
+                    bool contains = false;
+                    for (string? current = local; current is not null && seen.Add(current);
+                         current = _feudalStructure.GetDeJureSuzerainTitleId(current))
+                        if (current == selection.Key) { contains = true; break; }
+                    keys[i] = contains ? selection.Key : null;
+                }
+                return keys;
+            }
+            if (selection.View != PoliticalMapView.Owners) return keys;
+            PoliticalMapTitleDomains domains = TitleDomainsOf(world);
+            PoliticalMapVassalHierarchy hierarchy = HierarchyOf(world);
             for (int i = 0; i < keys.Length; i++)
             {
-                var seen = new HashSet<string>();
-                for (string? title = keys[i]; title is not null && seen.Add(title); title = _feudalStructure.GetDeJureSuzerainTitleId(title))
-                    if (title == selection.Key)
-                    {
-                        keys[i] = selection.Key;
-                        break;
-                    }
+                bool contains = selection.Mode == PoliticalMapLabelMode.Titles
+                    ? domains.Contains(selection.Key, settlementIds[i])
+                    : world.OwnerClanOf(settlementIds[i]) is { } owner && hierarchy.ChainOf(owner).Contains(selection.Key);
+                // Never keep a label key that matched before a transfer but no longer belongs to this domain.
+                keys[i] = contains ? selection.Key : keys[i] == selection.Key ? null : keys[i];
             }
             return keys;
         }
@@ -138,7 +172,8 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
             IReadOnlyDictionary<string, string> folds,
             IPoliticalMapWorld world,
             IReadOnlyList<(int A, int B)>? neighbours = null,
-            PoliticalMapOwnerLevel level = PoliticalMapOwnerLevel.SubVassals)
+            PoliticalMapOwnerLevel level = PoliticalMapOwnerLevel.SubVassals,
+            PoliticalMapLabelMode mode = PoliticalMapLabelMode.Clans)
         {
             int count = settlementIds.Count;
             var paints = new PoliticalMapSettlementPaint[count];
@@ -160,8 +195,34 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
                 keys[index] = (folds.TryGetValue(territory, out string? folded) ? folded : territory, null, null);
             }
 
-            if (view == PoliticalMapView.Kingdom) PaintKingdoms(settlementIds, world, neighbours, remember, fills, keys);
+            if (view == PoliticalMapView.DeJure)
+            {
+                for (int index = 0; index < count; index++)
+                {
+                    string key = GeographicLabelKeyOf(settlementIds[index], world, level);
+                    regionKeys[index] = key;
+                    keys[index] = (key, null, null);
+                    parentKeys[index] = level == PoliticalMapOwnerLevel.SubVassals
+                        ? GeographicLabelKeyOf(settlementIds[index], world, PoliticalMapOwnerLevel.Vassals) : null;
+                }
+                var colours = PoliticalMapColouring.Assign(Weights(regionKeys), Touching(regionKeys, neighbours),
+                    _ => PoliticalMapColouring.KingdomlessPalette, NoColours, null, PoliticalMapColouring.DistinctMinDistance);
+                Fill(regionKeys, colours, fills);
+                _legendColours[view] = NoColours;
+            }
+            else if (view == PoliticalMapView.Kingdom) PaintKingdoms(settlementIds, world, neighbours, remember, fills, keys);
             else PaintOwners(settlementIds, world, neighbours, remember, level, fills, regionKeys, parentKeys);
+
+            if (view == PoliticalMapView.Owners && mode == PoliticalMapLabelMode.Titles)
+            {
+                PoliticalMapTitleDomains domains = TitleDomainsOf(world);
+                for (int index = 0; index < count; index++)
+                {
+                    regionKeys[index] = domains.KeyOf(settlementIds[index], level);
+                    parentKeys[index] = level == PoliticalMapOwnerLevel.SubVassals
+                        ? domains.KeyOf(settlementIds[index], PoliticalMapOwnerLevel.Vassals) : null;
+                }
+            }
 
             for (int index = 0; index < count; index++)
             {

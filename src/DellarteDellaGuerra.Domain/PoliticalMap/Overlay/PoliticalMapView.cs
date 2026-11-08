@@ -13,13 +13,21 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         Owners,
 
         /// <summary>Nothing drawn.</summary>
-        Off
+        Off,
+
+        /// <summary>The configured geographic title hierarchy, independent of actual ownership.</summary>
+        DeJure
     }
 
     public static class PoliticalMapViews
     {
         /// <summary>The view the toggle moves to next, wrapping from Off back to the first.</summary>
-        public static PoliticalMapView Next(PoliticalMapView view) =>
-            view == PoliticalMapView.Off ? PoliticalMapView.Kingdom : view + 1;
+        public static PoliticalMapView Next(PoliticalMapView view) => view switch
+        {
+            PoliticalMapView.Kingdom => PoliticalMapView.Owners,
+            PoliticalMapView.Owners => PoliticalMapView.DeJure,
+            PoliticalMapView.DeJure => PoliticalMapView.Off,
+            _ => PoliticalMapView.Kingdom
+        };
     }
 }

@@ -5,10 +5,10 @@ using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
 
 namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
 {
-    /// <summary>One region layout per state: Kingdom and the two Owners levels, for a single grid.</summary>
+    /// <summary>One region layout per view and zoom level, for a single grid.</summary>
     public sealed class PoliticalMapLabelRegionCache
     {
-        private readonly Entry?[] _entries = new Entry?[3];
+        private readonly Entry?[] _entries = new Entry?[5];
 
         public IReadOnlyList<PoliticalMapRegion>[]? Get(
             PoliticalMapView view, PoliticalMapOwnerLevel level, string?[][] keys)
@@ -43,6 +43,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
         {
             PoliticalMapView.Kingdom => 0,
             PoliticalMapView.Owners => level == PoliticalMapOwnerLevel.Vassals ? 1 : 2,
+            PoliticalMapView.DeJure => level == PoliticalMapOwnerLevel.Vassals ? 3 : 4,
             _ => -1
         };
 

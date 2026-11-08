@@ -5,6 +5,9 @@ using System.Xml.Linq;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.Domain.Titles;
 using DellarteDellaGuerra.Domain.Titles.Model;
+using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
+using DellarteDellaGuerra.Infrastructure.Titles;
+using DellarteDellaGuerra.PoliticalMap.Api.Campaign;
 using DellarteDellaGuerra.Titles.Api;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -44,27 +47,38 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
         var structure = FeudalServices.Structure;
         var titles = FeudalServices.Titles;
         Title? title = titles?.GetTitle(_id);
-        NameText = structure?.GetTitleName(_id) ?? title?.Name ?? _id;
-        InformationText = Articles.Value.TryGetValue(_id, out var article)
-            && (string?)article.Attribute("name") == NameText
-            ? (string?)article.Element("Description") ?? "" : NameText + " comprises the lands and rights of this territory.";
+        NameText = title?.Name ?? structure?.GetTitleName(_id) ?? _id;
+        Articles.Value.TryGetValue(_id, out var article);
+        if ((string?)article?.Attribute("name") != NameText)
+            article = Articles.Value.Values.FirstOrDefault(x => (string?)x.Attribute("name") == NameText);
+        InformationText = (string?)article?.Element("Description")
+            ?? NameText + " comprises the lands and rights of this title.";
         SourcesText = article is null ? "" : string.Join("\n", article.Elements("Source").Select(x => x.Value));
         _parent = structure?.GetDeJureSuzerainTitleId(_id);
-        ParentText = _parent is null ? "No superior title" : structure?.GetTitleName(_parent) ?? _parent;
+        ParentText = _parent is null ? "No superior title" : "De jure: " + (structure?.GetTitleName(_parent) ?? _parent);
         Holder = new HeroVM(FindHero(title?.HolderHeroId)!);
         HasHolder = Holder.Hero is not null;
         HolderText = title?.HolderHeroId is null ? "Holder not recorded" : "Recognised holder";
 
         if (titles is not null && structure is not null)
-            foreach (var settlement in new GetDeJureSettlementsUseCase(titles, structure).Execute(_id)
-                .Distinct().Select(Settlement.Find).Where(x => x is not null && (x.IsTown || x.IsCastle))
+        {
+            var world = new BannerlordPoliticalMapWorld();
+            var hierarchy = new PoliticalMapVassalHierarchy(structure, titles, new CampaignGenealogy(), world);
+            var domains = new PoliticalMapTitleDomains(structure, world, hierarchy);
+            foreach (var settlement in Settlement.All.Where(x => (x.IsTown || x.IsCastle) && domains.Contains(_id, x.StringId))
                 .OrderBy(x => x.Name.ToString()))
             {
                 Settlements.Add(new EncyclopediaSettlementVM(settlement));
                 if (settlement.OwnerClan is { } clan && Occupiers.All(x => x.Faction != clan))
                     Occupiers.Add(new EncyclopediaFactionVM(clan));
             }
-        SettlementsText = "Towns and castles (" + Settlements.Count + ")";
+            foreach (var settlement in new GetDeJureSettlementsUseCase(titles, structure).Execute(_id)
+                .Distinct().Select(Settlement.Find).Where(x => x is not null && (x.IsTown || x.IsCastle))
+                .OrderBy(x => x.Name.ToString()))
+                DeJureSettlements.Add(new EncyclopediaSettlementVM(settlement));
+        }
+        SettlementsText = "Actual domain — towns and castles (" + Settlements.Count + ")";
+        DeJureSettlementsText = "De jure extent — towns and castles (" + DeJureSettlements.Count + ")";
         foreach (Claim claim in FeudalServices.Claims?.GetClaimsOn(_id) ?? Array.Empty<Claim>())
         {
             Clan? house = FindClan(claim.ClaimantClanId);
@@ -89,7 +103,7 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
         SeatText = seat is null ? "No single seat" : "Seat: " + seat.Name;
         OccupancyText = title?.OccupantClanId is { } occupant
             ? "The seat is occupied by " + (FindClan(occupant)?.Name.ToString() ?? occupant) + ". The recognised holder retains the title."
-            : "Possession of the towns and castles is shown separately from the recognised titleholder.";
+            : "The actual domain includes controlled holdings and attached vassals. The de jure extent is listed separately.";
         IsLoadingOver = true;
     }
 
@@ -132,11 +146,13 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
     [DataSourceProperty] public string HolderText { get; } = "";
     [DataSourceProperty] public string SourcesText { get; } = "";
     [DataSourceProperty] public string SettlementsText { get; } = "";
+    [DataSourceProperty] public string DeJureSettlementsText { get; } = "";
     [DataSourceProperty] public string ClaimsText { get; } = "";
-    [DataSourceProperty] public string OccupiersText => "Territorial possession";
+    [DataSourceProperty] public string OccupiersText => "Owners within the actual domain";
     [DataSourceProperty] public string HistoryText => "Succession and transfers";
     [DataSourceProperty] public string SourcesHeading => "Historical references";
     [DataSourceProperty] public MBBindingList<EncyclopediaSettlementVM> Settlements { get; } = new();
+    [DataSourceProperty] public MBBindingList<EncyclopediaSettlementVM> DeJureSettlements { get; } = new();
     [DataSourceProperty] public MBBindingList<EncyclopediaFactionVM> Occupiers { get; } = new();
     [DataSourceProperty] public MBBindingList<TitleClaimantVM> Claimants { get; } = new();
     [DataSourceProperty] public MBBindingList<TitleHistoryVM> History { get; } = new();

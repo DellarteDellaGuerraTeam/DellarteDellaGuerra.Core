@@ -9,17 +9,17 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         {
             var seen = new List<PoliticalMapView>();
             PoliticalMapView view = PoliticalMapView.Kingdom;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 seen.Add(view);
                 view = PoliticalMapViews.Next(view);
             }
 
             Assert.Equal(
-                new[] { PoliticalMapView.Kingdom, PoliticalMapView.Owners, PoliticalMapView.Off },
+                new[] { PoliticalMapView.Kingdom, PoliticalMapView.Owners, PoliticalMapView.DeJure, PoliticalMapView.Off },
                 seen);
             Assert.Equal(PoliticalMapView.Kingdom, view);
-            Assert.Equal(new[] { "Kingdom", "Owners", "Off" }, Enum.GetNames(typeof(PoliticalMapView)));
+            Assert.Equal(new[] { "Kingdom", "Owners", "Off", "DeJure" }, Enum.GetNames(typeof(PoliticalMapView)));
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             // The titles view was 1 and the owners view 2: they now read as owners and off.
             Assert.Equal(PoliticalMapView.Owners, (PoliticalMapView)1);
             Assert.Equal(PoliticalMapView.Off, (PoliticalMapView)2);
-            Assert.False(Enum.IsDefined(typeof(PoliticalMapView), 3));
+            Assert.Equal(PoliticalMapView.DeJure, (PoliticalMapView)3);
         }
 
         [Theory]

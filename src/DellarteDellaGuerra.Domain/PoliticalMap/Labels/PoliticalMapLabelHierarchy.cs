@@ -5,6 +5,18 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
 {
     public static class PoliticalMapLabelHierarchy
     {
+        public static int SizeIndexFor(PoliticalMapLabelTier tier, TitleRank? rank, float pixelRadius)
+        {
+            int size = PoliticalMapLabelLayout.SizeIndexFor(pixelRadius);
+            if (size < 0 || tier != PoliticalMapLabelTier.Territory) return size;
+            return rank switch
+            {
+                >= TitleRank.Duke => 6,
+                TitleRank.Earl => System.Math.Min(System.Math.Max(size, 4), 5),
+                _ => System.Math.Min(size, 2)
+            };
+        }
+
         public static bool Shows(PoliticalMapLabelTier tier, TitleRank? rank, PoliticalMapOwnerLevel level) =>
             tier != PoliticalMapLabelTier.Owner || level == PoliticalMapOwnerLevel.SubVassals || rank >= TitleRank.Earl;
 
