@@ -6,4 +6,7 @@
     <MinimumRidingSkill>100</MinimumRidingSkill>
     <MinimumPolearmSkill>100</MinimumPolearmSkill>
   </JoustingConfig>
+  <CombatConfig>
+    <EnableCombatOverhaul>true</EnableCombatOverhaul>
+  </CombatConfig>
 </DadgConfiguration>

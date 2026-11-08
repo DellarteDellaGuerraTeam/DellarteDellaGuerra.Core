@@ -40,6 +40,7 @@ using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
+using DellarteDellaGuerra.Integration.Combat;
 
 namespace DellarteDellaGuerra.Integration
 {
@@ -100,6 +101,8 @@ namespace DellarteDellaGuerra.Integration
 
         protected override void InitializeGameStarter(Game game, IGameStarter starterObject)
         {
+            _serviceProvider.GetRequiredService<CombatFeatureInstaller>().InstallModels(starterObject);
+
             if (game.GameType is not Campaign || starterObject is not CampaignGameStarter campaignGameStarter) return;
 
             campaignGameStarter.AddModel(ActivatorUtilities.CreateInstance<FemaleNonCombatantHeroCreationModel>(
@@ -143,6 +146,8 @@ namespace DellarteDellaGuerra.Integration
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<BannerSurcoatMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<TournamentRecapBannerMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<VisorToggleMissionLogic>());
+            if (_serviceProvider.GetRequiredService<CombatFeatureInstaller>().IsEnabled)
+                mission.AddMissionBehavior(_serviceProvider.GetRequiredService<CombatBalanceMissionLogic>());
         }
 
         public override void RegisterSubModuleObjects(bool isSavedCmapaign)
