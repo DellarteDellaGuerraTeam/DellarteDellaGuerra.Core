@@ -87,18 +87,6 @@
                                     </ButtonWidget>
                                   </ItemTemplate>
                                 </NavigatableGridWidget>
-                                <EncyclopediaDivider Id="DeJureSettlementsDivider" MarginTop="35" Parameter.Title="@DeJureSettlementsText" Parameter.ItemList="..\DeJureSettlementsGrid" />
-                                <NavigatableGridWidget Id="DeJureSettlementsGrid" DataSource="{DeJureSettlements}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" SuggestedWidth="350" SuggestedHeight="350" HorizontalAlignment="Left" MarginTop="5" DefaultCellWidth="100" DefaultCellHeight="140" ColumnCount="7" MarginLeft="20" MarginBottom="50">
-                                  <ItemTemplate>
-                                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="90" SuggestedHeight="90" Brush="Encyclopedia.SubPage.Element" Command.Click="ExecuteLink" UpdateChildrenStates="true">
-                                      <Children>
-                                        <DefaultLayerSpriteChangerBrushWidget Id="VillageImage" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="80" SuggestedHeight="80" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Encyclopedia.SubPage.Element.Settlement.ButtonBrush" SpriteBrush="Encyclopedia.SubPage.Element.Settlement.SpriteBrush" SpriteBrushLayerName="@FileName" />
-                                        <HintWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
-                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" VerticalAlignment="Top" PositionYOffset="95" Brush="Encyclopedia.SubPage.Element.Name.Text" Brush.FontSize="18" Text="@NameText" />
-                                      </Children>
-                                    </ButtonWidget>
-                                  </ItemTemplate>
-                                </NavigatableGridWidget>
                                 <EncyclopediaDivider Id="HistoryDivider" MarginTop="35" Parameter.Title="@HistoryText" Parameter.ItemList="..\HistoryList" />
                                 <ListPanel Id="HistoryList" DataSource="{History}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
                                   <ItemTemplate>
