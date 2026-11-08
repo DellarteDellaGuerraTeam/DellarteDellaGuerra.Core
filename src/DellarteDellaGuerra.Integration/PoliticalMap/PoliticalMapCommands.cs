@@ -87,7 +87,7 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap
             PoliticalMapLabelsCampaignBehavior? labels = Campaign.Current?.GetCampaignBehavior<PoliticalMapLabelsCampaignBehavior>();
             if (overlay is null || labels is null) return "Start or load a campaign first.";
 
-            const string usage = "Usage: polmap.labels title|clan (kingdom or owners view)";
+            const string usage = "Usage: polmap.labels title|clan (kingdom or lordships view)";
             PoliticalMapView view = overlay.View;
             if (!PoliticalMapLabelModes.HasChoice(view)) return $"The {view} view's labels have no choice. {usage}";
 

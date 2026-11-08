@@ -14,6 +14,7 @@ namespace DellarteDellaGuerra.Integration.Titles.UI;
 public sealed class TitleEncyclopediaEntry : Concept
 {
     public const string Prefix = "dadg_title_";
+    public const string Group = "DadgTitles";
     private const string LocalPrefix = "local:";
     public string TitleId { get; }
     public bool IsLocalTerritory { get; }
@@ -25,7 +26,7 @@ public sealed class TitleEncyclopediaEntry : Concept
         Title = new TextObject((localTerritory ? FeudalServices.Structure?.GetTitleName(id)
             : FeudalServices.Titles?.GetTitle(id)?.Name) ?? FeudalServices.Structure?.GetTitleName(id) ?? id);
         Description = new TextObject("Lands, holders and claims.");
-        FilterGroup = "DadgTitles";
+        FilterGroup = Group;
     }
     public override TextObject GetName() => Title;
 
@@ -73,8 +74,9 @@ public sealed class TitleEncyclopediaPage : DefaultEncyclopediaConceptPage
     {
         yield return new EncyclopediaFilterGroup(new List<EncyclopediaFilterItem>
         {
-            new(new TextObject("{=dadg_title_filter}Titles"), o => o is TitleEncyclopediaEntry),
-            new(new TextObject("{=dadg_concept_filter}Concepts"), o => o is not TitleEncyclopediaEntry)
+            // The mod's own concepts about titles (dadg_concepts.xml) share the titles' group.
+            new(new TextObject("{=dadg_title_filter}Titles"), o => o is Concept { FilterGroup: TitleEncyclopediaEntry.Group }),
+            new(new TextObject("{=dadg_concept_filter}Concepts"), o => o is Concept { FilterGroup: not TitleEncyclopediaEntry.Group })
         }, new TextObject("{=dadg_entry_type}Entry type"));
     }
     protected override IEnumerable<EncyclopediaSortController> InitializeSortControllers() => Array.Empty<EncyclopediaSortController>();

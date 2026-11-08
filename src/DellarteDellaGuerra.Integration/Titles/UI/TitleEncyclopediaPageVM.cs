@@ -51,9 +51,8 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
         Articles.Value.TryGetValue(_id, out var article);
         if ((string?)article?.Attribute("name") != NameText)
             article = Articles.Value.Values.FirstOrDefault(x => (string?)x.Attribute("name") == NameText);
-        InformationText = (string?)article?.Element("Description")
+        string description = (string?)article?.Element("Description")
             ?? NameText + " comprises the lands and rights of this title.";
-        SourcesText = article is null ? "" : string.Join("\n", article.Elements("Source").Select(x => x.Value));
         _parent = structure?.GetDeJureSuzerainTitleId(_id);
         ParentText = _parent is null ? "No superior title" : "Jurisdiction: " + (structure?.GetTitleName(_parent) ?? _parent);
         var seat = string.IsNullOrEmpty(title?.SeatSettlementId) ? null : Settlement.Find(title!.SeatSettlementId);
@@ -85,6 +84,8 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
             Claimants.Add(new TitleClaimantVM(hero, claim, house));
         }
         ClaimsText = Claimants.Count == 0 ? "No recorded claims" : "Claimants (" + Claimants.Count + ")";
+        // The succession reads as the closing paragraph of the description.
+        var succession = new List<string>();
         if (showsDignity && title is not null)
             foreach (TitleHolder holder in title.Holders.Reverse())
             {
@@ -92,10 +93,11 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
                 string name = FindHero(holder.HeroId)?.Name.ToString() ?? (holder.HeroId is null ? "Vacant" : "Unknown holder");
                 // Initial dates record house tenure, not this person's accession.
                 string date = holder.Acquisition == TitleAcquisition.Initial
-                    ? "House tenure recorded from " + (int)(holder.SinceDay / 84)
+                    ? "house tenure recorded from " + (int)(holder.SinceDay / 84)
                     : TaleWorlds.CampaignSystem.CampaignTime.Days(holder.SinceDay).ToString();
-                History.Add(new TitleHistoryVM(name + " — " + AcquisitionText(holder.Acquisition) + ". " + date));
+                succession.Add(name + ", " + AcquisitionText(holder.Acquisition) + " (" + date + ").");
             }
+        InformationText = succession.Count == 0 ? description : description + "\n\n" + string.Join("\n", succession);
         SettlementImageID = seat?.SettlementComponent?.WaitMeshName ?? "";
         HasSeatImage = SettlementImageID.Length > 0;
         SeatText = seat is null ? "No single seat" : "Seat: " + seat.Name;
@@ -143,16 +145,12 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
     [DataSourceProperty] public bool HasHolder { get; }
     [DataSourceProperty] public string OccupancyText { get; } = "";
     [DataSourceProperty] public string HolderText { get; } = "";
-    [DataSourceProperty] public string SourcesText { get; } = "";
     [DataSourceProperty] public string SettlementsText { get; } = "";
     [DataSourceProperty] public string ClaimsText { get; } = "";
     [DataSourceProperty] public string OccupiersText => "Owners within the actual domain";
-    [DataSourceProperty] public string HistoryText => "Succession and transfers";
-    [DataSourceProperty] public string SourcesHeading => "Historical references";
     [DataSourceProperty] public MBBindingList<EncyclopediaSettlementVM> Settlements { get; } = new();
     [DataSourceProperty] public MBBindingList<EncyclopediaFactionVM> Occupiers { get; } = new();
     [DataSourceProperty] public MBBindingList<TitleClaimantVM> Claimants { get; } = new();
-    [DataSourceProperty] public MBBindingList<TitleHistoryVM> History { get; } = new();
 }
 
 public sealed class TitleClaimantVM : HeroVM
@@ -162,9 +160,4 @@ public sealed class TitleClaimantVM : HeroVM
         ClaimText = claim.Strength + " — " + claim.Origin + (claim.ClaimantHeroId is null ? "\nHouse claim: " + (house?.Name.ToString() ?? claim.ClaimantClanId) : "\nPersonal claim");
     }
     [DataSourceProperty] public string ClaimText { get; }
-}
-
-public sealed class TitleHistoryVM(string text) : ViewModel
-{
-    [DataSourceProperty] public string Text { get; } = text;
 }

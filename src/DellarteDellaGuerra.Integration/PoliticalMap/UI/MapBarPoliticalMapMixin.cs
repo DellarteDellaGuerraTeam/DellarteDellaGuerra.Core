@@ -190,7 +190,7 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap.UI
         private static string NameOf(PoliticalMapView view) => view switch
         {
             PoliticalMapView.Kingdom => new TextObject("{=dadg_polmap_view_kingdom}Kingdoms").ToString(),
-            PoliticalMapView.Owners => new TextObject("{=dadg_polmap_view_owners}Owners").ToString(),
+            PoliticalMapView.Owners => new TextObject("{=dadg_polmap_view_lordships}Lordships").ToString(),
             PoliticalMapView.DeJure => new TextObject("{=dadg_polmap_view_jurisdictions}Jurisdictions").ToString(),
             _ => new TextObject("{=dadg_polmap_view_off}Off").ToString()
         };
