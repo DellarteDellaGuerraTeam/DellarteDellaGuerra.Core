@@ -46,11 +46,6 @@ public class InitialBloodClaimsIntegrationTests
         barony_beeston|dadg_lord_20_4|clan_vernon|Strong
         barony_beeston|dadg_lord_20_5|clan_vernon|Strong
         barony_berkhamsted|dadg_lord_2_3|clan_lancaster|Strong
-        barony_brecon|dadg_lord_15_3|clan_stafford|Strong
-        barony_brecon|dadg_lord_19_2|clan_talbot|Weak
-        barony_brecon|dadg_lord_29_2|clan_beaumont|Weak
-        barony_brecon|dadg_lord_41_4|clan_de_vere|Weak
-        barony_brecon|dadg_lord_54_3|clan_beauchamp|Weak
         barony_caerlaverock|dadg_sco_family_maxwell_john|clan_maxwell|Strong
         barony_caerphilly|dadg_lord_11_2|clan_hastings|Weak
         barony_caerphilly|dadg_lord_2_4|clan_lancaster|Weak
@@ -70,7 +65,6 @@ public class InitialBloodClaimsIntegrationTests
         barony_cardigan|dadg_lord_7_2|clan_tudor|Weak
         barony_cardigan|dadg_lord_7_4|clan_tudor|Weak
         barony_carisbrooke|dadg_lord_1_4|clan_york|Weak
-        barony_carisbrooke|dadg_lord_15_5|clan_stafford|Strong
         barony_carisbrooke|dadg_lord_15_6|clan_stafford|Weak
         barony_carisbrooke|dadg_lord_21_2|clan_woodville|Weak
         barony_carisbrooke|dadg_lord_21_3|clan_woodville|Strong
@@ -100,7 +94,6 @@ public class InitialBloodClaimsIntegrationTests
         barony_conisbrough|dadg_lord_44_4|clan_burgh|Weak
         barony_conisbrough|dadg_lord_44_5|clan_burgh|Weak
         barony_conwy|dadg_lord_1_4|clan_york|Weak
-        barony_conwy|dadg_lord_15_5|clan_stafford|Strong
         barony_conwy|dadg_lord_15_6|clan_stafford|Weak
         barony_conwy|dadg_lord_21_2|clan_woodville|Weak
         barony_conwy|dadg_lord_21_3|clan_woodville|Strong
@@ -300,11 +293,6 @@ public class InitialBloodClaimsIntegrationTests
         barony_totnes|dadg_lord_32_3|clan_basset|Strong
         barony_urquhart|dadg_sco_family_isles_angus|clan_macdonald_isles|Strong
         barony_wardour|dadg_lord_2_3|clan_lancaster|Strong
-        barony_winchester|dadg_lord_15_3|clan_stafford|Strong
-        barony_winchester|dadg_lord_19_2|clan_talbot|Weak
-        barony_winchester|dadg_lord_29_2|clan_beaumont|Weak
-        barony_winchester|dadg_lord_41_4|clan_de_vere|Weak
-        barony_winchester|dadg_lord_54_3|clan_beauchamp|Weak
         barony_windsor|dadg_lord_12_3|clan_bourchier|Strong
         barony_windsor|dadg_lord_12_5|clan_bourchier|Strong
         barony_windsor|dadg_lord_12_6|clan_bourchier|Strong
@@ -371,11 +359,6 @@ public class InitialBloodClaimsIntegrationTests
         county_hallamshire|dadg_lord_20_2|clan_vernon|Weak
         county_hallamshire|dadg_lord_23_2|clan_mowbray|Weak
         county_hamilton|dadg_sco_family_lindsay_elizabeth|clan_lindsay|Weak
-        county_hampshire|dadg_lord_15_3|clan_stafford|Strong
-        county_hampshire|dadg_lord_19_2|clan_talbot|Weak
-        county_hampshire|dadg_lord_29_2|clan_beaumont|Weak
-        county_hampshire|dadg_lord_41_4|clan_de_vere|Weak
-        county_hampshire|dadg_lord_54_3|clan_beauchamp|Weak
         county_howard|dadg_lord_4_3|clan_howard|Strong
         county_howard|dadg_lord_4_4|clan_howard|Weak
         county_howard|dadg_lord_4_5|clan_howard|Weak
@@ -396,7 +379,6 @@ public class InitialBloodClaimsIntegrationTests
         county_lancashire|dadg_lord_2_3|clan_lancaster|Strong
         county_lewis|dadg_sco_family_lewis_malcolm|clan_macleod_lewis|Strong
         county_lewis|dadg_sco_family_lewis_torquil|clan_macleod_lewis|Strong
-        county_lincoln|dadg_lord_14_4|clan_de_la_pole|Strong
         county_lincoln|dadg_lord_14_5|clan_de_la_pole|Strong
         county_lincoln|dadg_lord_14_6|clan_de_la_pole|Weak
         county_lincoln|dadg_lord_14_7|clan_de_la_pole|Strong
@@ -414,7 +396,6 @@ public class InitialBloodClaimsIntegrationTests
         county_pembroke|dadg_lord_7_2|clan_tudor|Weak
         county_pembroke|dadg_lord_7_4|clan_tudor|Weak
         county_rivers|dadg_lord_1_4|clan_york|Weak
-        county_rivers|dadg_lord_15_5|clan_stafford|Strong
         county_rivers|dadg_lord_15_6|clan_stafford|Weak
         county_rivers|dadg_lord_21_2|clan_woodville|Weak
         county_rivers|dadg_lord_21_3|clan_woodville|Strong
@@ -459,18 +440,12 @@ public class InitialBloodClaimsIntegrationTests
         county_york|dadg_lord_1_7|clan_york|Strong
         county_york|dadg_lord_14_3|clan_de_la_pole|Weak
         county_york|dadg_lord_17_2|clan_holland|Weak
-        duchy_buckingham|dadg_lord_15_3|clan_stafford|Strong
-        duchy_buckingham|dadg_lord_19_2|clan_talbot|Weak
-        duchy_buckingham|dadg_lord_29_2|clan_beaumont|Weak
-        duchy_buckingham|dadg_lord_41_4|clan_de_vere|Weak
-        duchy_buckingham|dadg_lord_54_3|clan_beauchamp|Weak
         duchy_lancaster|dadg_lord_2_3|clan_lancaster|Strong
         duchy_somerset|dadg_lord_25_2|clan_grey_of_wilton|Weak
         duchy_somerset|dadg_lord_32_4|clan_basset|Weak
         duchy_somerset|dadg_lord_6_2|clan_beaufort|Strong
         duchy_somerset|dadg_lord_6_3|clan_beaufort|Weak
         duchy_somerset|dadg_lord_7_3|clan_tudor|Weak
-        duchy_wales|dadg_lord_2_3|clan_lancaster|Strong
         duchy_warwick|dadg_lord_11_2|clan_hastings|Weak
         duchy_warwick|dadg_lord_2_4|clan_lancaster|Weak
         duchy_warwick|dadg_lord_30_2|clan_fitzhugh|Weak
@@ -523,12 +498,12 @@ public class InitialBloodClaimsIntegrationTests
                 .Select(title => genealogy.GetHolderClanOf(title))
                 .Distinct()
                 .Count());
-        Assert.Equal(501, genealogy.HeroCount);
-        Assert.Equal(483, claims.Count);
-        Assert.Equal(226, claims.Count(claim => claim.Strength == ClaimStrength.Strong));
-        Assert.Equal(257, claims.Count(claim => claim.Strength == ClaimStrength.Weak));
-        Assert.Equal(66, claims.Select(claim => claim.ClaimantClanId).Distinct().Count());
-        Assert.Equal(121,claims.Select(claim => claim.TitleId).Distinct().Count());
+        Assert.Equal(502, genealogy.HeroCount);
+        Assert.Equal(458, claims.Count);
+        Assert.Equal(217, claims.Count(claim => claim.Strength == ClaimStrength.Strong));
+        Assert.Equal(241, claims.Count(claim => claim.Strength == ClaimStrength.Weak));
+        Assert.Equal(65, claims.Select(claim => claim.ClaimantClanId).Distinct().Count());
+        Assert.Equal(116,claims.Select(claim => claim.TitleId).Distinct().Count());
         // Lochleven belongs to Robert Douglas's separate branch, not the earls of Angus.
         // No children or collateral kin are authored for this household, so it derives no claims.
         HeroNode lochleven = Assert.IsType<HeroNode>(genealogy.GetHero("dadg_sco_lord_clan_douglas_lochleven"));

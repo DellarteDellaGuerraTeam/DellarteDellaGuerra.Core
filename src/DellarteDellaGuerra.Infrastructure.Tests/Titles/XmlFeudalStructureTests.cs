@@ -170,6 +170,26 @@ public class XmlFeudalStructureTests
         Assert.Null(_genealogy.GetHolderClanOf(barony));
     }
 
+    [Theory]
+    [InlineData("heir_york", "heir_york")]
+    [InlineData("stranger", "leader_york")] // not of the holder clan: the leader holds instead
+    public void TheConfiguredHolderHeroHoldsTheTitleOnlyWhenOfTheHolderClan(string configuredHeroId, string expectedHolderId)
+    {
+        string xml = SampleXml.Replace("holderClanId=\"clan_york\"", $"holderClanId=\"clan_york\" holderHeroId=\"{configuredHeroId}\"");
+        var structure = new XmlFeudalStructure(FeudalStructureParser.Parse(xml));
+
+        Title duchy = structure.BuildInitialTitles(new YorkGenealogy()).Single(title => title.Id == "duchy_york");
+
+        Assert.Equal(expectedHolderId, duchy.HolderHeroId);
+    }
+
+    private sealed class YorkGenealogy : IGenealogy
+    {
+        public HeroNode? GetHero(string heroId) => new(heroId, false, true, GetClanOf(heroId), Array.Empty<string>());
+        public string? GetClanLeaderId(string clanId) => clanId == "clan_york" ? "leader_york" : clanId;
+        public string? GetClanOf(string heroId) => heroId is "heir_york" or "leader_york" ? "clan_york" : null;
+    }
+
     [Fact]
     public void ShouldDateTheInitialHolderFromTheConfiguredYear()
     {

@@ -131,14 +131,14 @@ public class HolderDeathOverRealContentTests
     public void EveryHolderInTheContentCanDieWithoutOrphaningOrMisplacingHisDignities()
     {
         // The sweep that matters: a death is the one event this system cannot decline to handle,
-        // and it fires for all 72 holders over bloodlines authored by hand — England's 46 and the
+        // and it fires for all 74 holders over bloodlines authored by hand — England's 48 and the
         // 26 of Scotland and the Isles. It is what caught a
         // duke listed as his own mother, whose cycle overflowed the descent walk's stack; the
         // record has since been corrected, and the walk's guard is unit-tested against a fake.
         Content content = Content.Load();
         IReadOnlyList<string> holderIds = content.HolderIds();
 
-        Assert.Equal(72, holderIds.Count);
+        Assert.Equal(74, holderIds.Count);
 
         foreach (string holderId in holderIds)
         {
@@ -186,8 +186,8 @@ public class HolderDeathOverRealContentTests
         afterDeath.ExecuteSuccession(warwick);
         IReadOnlyList<Claim> after = afterDeath.GenerateClaims();
 
-        Assert.Equal(483, before.Count);
-        Assert.Equal(387, after.Count);
+        Assert.Equal(458, before.Count);
+        Assert.Equal(362, after.Count);
 
         Assert.Equal(96, Key(before).Except(Key(after)).Count());
         Assert.Equal(

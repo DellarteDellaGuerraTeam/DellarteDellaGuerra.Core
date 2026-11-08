@@ -20,7 +20,8 @@ internal sealed record FeudalTitleNode(
     TitleRank? DignityRank = null,
     string? DignityName = null,
     string? AllegianceTitleId = null,
-    TitleRank? MapLabelRank = null);
+    TitleRank? MapLabelRank = null,
+    string? InitialHolderHeroId = null);
 
 /**
  * <summary>

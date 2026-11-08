@@ -32,6 +32,8 @@ namespace DellarteDellaGuerra.Infrastructure.Titles;
  * Optional dignityRank and dignityName describe the held dignity independently of the element's
  * territorial tier and name. Optional allegiance names a title in the same realm instead of the
  * territorial parent; the resulting allegiance chains must be acyclic.
+ * Optional holderHeroId names the member of the holder clan who holds the dignity when that is
+ * not the clan leader, such as a minor heir whose uncle leads the house.
  * </summary>
  */
 public static class FeudalStructureParser
@@ -163,7 +165,7 @@ public static class FeudalStructureParser
 
         return new FeudalTitleNode(
             titleId, name, rank, seatSettlementId, initialHolderClanId, children, initialHeldSinceYear, claims,
-            dignityRank, dignityName, allegiance, mapLabelRank);
+            dignityRank, dignityName, allegiance, mapLabelRank, element.Attribute("holderHeroId")?.Value);
     }
 
     private static FeudalClaimNode ParseClaimElement(XElement element, string titleId, string? holderClanId)

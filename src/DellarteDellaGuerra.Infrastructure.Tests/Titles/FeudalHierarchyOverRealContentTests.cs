@@ -23,6 +23,14 @@ public class FeudalHierarchyOverRealContentTests
     private const string IslesCrown = "clan_macdonald_isles";
 
     [Theory]
+    [InlineData("duchy_wales", "dadg_lord_2_3")] // Edward, Prince of Wales, under Henry VI
+    [InlineData("county_lincoln", "dadg_lord_14_4")] // John de la Pole, Earl of Lincoln, under his father
+    public void AnHeirStyledWithTheDignityHoldsItWhileAnotherLeadsTheHouse(string titleId, string heroId)
+    {
+        Assert.Equal(heroId, Content.Load().AllTitles().Single(title => title.Id == titleId).HolderHeroId);
+    }
+
+    [Theory]
     [InlineData("clan_courtenay", "Earldom of Devon")]
     [InlineData("clan_tudor", "Earldom of Pembroke")]
     [InlineData("clan_woodville", "Earldom of Rivers")]

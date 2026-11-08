@@ -146,7 +146,8 @@ public class XmlFeudalStructure : IFeudalStructure
     /**
      * <summary>
      * Builds the initial titles from the configured hierarchy,
-     * each held by the leader of its configured initial holder clan, if any,
+     * each held by the configured holder hero when he belongs to the initial holder clan,
+     * otherwise by that clan's leader, if any,
      * since the configured year (day 0 when none is given).
      * </summary>
      */
@@ -156,9 +157,9 @@ public class XmlFeudalStructure : IFeudalStructure
         foreach (string titleId in _allTitleIds)
         {
             FeudalTitleNode node = _nodesByTitleId[titleId];
-            string? holderHeroId = node.InitialHolderClanId is { } clanId
-                ? genealogy.GetClanLeaderId(clanId)
-                : null;
+            string? holderHeroId = node.InitialHolderClanId is not { } clanId ? null
+                : node.InitialHolderHeroId is { } heroId && genealogy.GetClanOf(heroId) == clanId ? heroId
+                : genealogy.GetClanLeaderId(clanId);
             float heldSinceDay = (node.InitialHeldSinceYear ?? 0) * DaysInYear;
             titles.Add(new Title(
                 node.TitleId, node.DignityName ?? node.Name, node.DignityRank ?? node.Rank, node.SeatSettlementId, holderHeroId,

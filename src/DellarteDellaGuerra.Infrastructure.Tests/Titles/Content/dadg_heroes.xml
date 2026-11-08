@@ -20,6 +20,7 @@
   <Hero id="dadg_dead_lord_13_1" alive="false" spouse="Hero.dadg_anne_devereux_1430" faction="Faction.clan_herbert" />
   <Hero id="dadg_dead_lord_14_1" alive="false" spouse="Hero.dadg_lord_14_2" faction="Faction.clan_de_la_pole" />
   <Hero id="dadg_dead_lord_15_1" alive="false" spouse="Hero.dadg_lord_15_4" faction="Faction.clan_stafford" />
+  <Hero id="dadg_dead_lord_15_2" alive="false" father="Hero.dadg_dead_lord_15_1" mother="Hero.dadg_lord_15_4" faction="Faction.clan_stafford" />
   <Hero id="dadg_dead_lord_16_1" alive="false" spouse="Hero.dadg_dead_lord_16_2" faction="Faction.clan_courtenay" />
   <Hero id="dadg_dead_lord_16_2" alive="false" spouse="Hero.dadg_dead_lord_16_1" faction="Faction.clan_courtenay" />
   <Hero id="dadg_dead_lord_17_1" alive="false" spouse="Hero.dadg_dead_lord_17_2" faction="Faction.clan_holland" />
@@ -143,18 +144,18 @@
   <Hero id="dadg_lord_13_8" father="Hero.dadg_dead_lord_13_1" mother="Hero.dadg_anne_devereux_1430" faction="Faction.clan_herbert" />
   <Hero id="dadg_lord_13_9" father="Hero.dadg_dead_lord_13_1" mother="Hero.dadg_anne_devereux_1430" faction="Faction.clan_herbert" />
   <Hero id="dadg_lord_13_10" father="Hero.dadg_dead_lord_13_1" mother="Hero.dadg_anne_devereux_1430" faction="Faction.clan_herbert" />
-  <Hero id="dadg_lord_14_1" father="Hero.dadg_dead_lord_14_1" mother="Hero.dadg_lord_14_3" spouse="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
+  <Hero id="dadg_lord_14_1" father="Hero.dadg_dead_lord_14_1" mother="Hero.dadg_lord_14_2" spouse="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
   <Hero id="dadg_lord_14_2" spouse="Hero.dadg_dead_lord_14_1" faction="Faction.clan_de_la_pole" />
   <Hero id="dadg_lord_14_3" father="Hero.dadg_dead_lord_1_1" mother="Hero.dadg_lord_1_9" spouse="Hero.dadg_lord_14_1" faction="Faction.clan_de_la_pole" />
-  <Hero id="dadg_lord_14_4" father="Hero.dadg_dead_lord_14_1" mother="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
-  <Hero id="dadg_lord_14_5" father="Hero.dadg_dead_lord_14_1" mother="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
-  <Hero id="dadg_lord_14_6" father="Hero.dadg_dead_lord_14_1" mother="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
-  <Hero id="dadg_lord_14_7" father="Hero.dadg_dead_lord_14_1" mother="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
+  <Hero id="dadg_lord_14_4" father="Hero.dadg_lord_14_1" mother="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
+  <Hero id="dadg_lord_14_5" father="Hero.dadg_lord_14_1" mother="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
+  <Hero id="dadg_lord_14_6" father="Hero.dadg_lord_14_1" mother="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
+  <Hero id="dadg_lord_14_7" father="Hero.dadg_lord_14_1" mother="Hero.dadg_lord_14_3" faction="Faction.clan_de_la_pole" />
   <Hero id="dadg_lord_15_1" father="Hero.dadg_dead_lord_15_1" mother="Hero.dadg_lord_15_4" spouse="Hero.dadg_lord_15_2" faction="Faction.clan_stafford" />
   <Hero id="dadg_lord_15_2" spouse="Hero.dadg_lord_15_1" faction="Faction.clan_stafford" />
   <Hero id="dadg_lord_15_3" father="Hero.dadg_lord_15_1" mother="Hero.dadg_lord_15_2" faction="Faction.clan_stafford" />
   <Hero id="dadg_lord_15_4" father="Hero.dadg_dead_lord_27_1" mother="Hero.dadg_dead_lord_27_2" spouse="Hero.dadg_dead_lord_15_1" faction="Faction.clan_stafford" />
-  <Hero id="dadg_lord_15_5" father="Hero.dadg_dead_lord_21_1" mother="Hero.dadg_lord_21_2" spouse="Hero.dadg_lord_15_6" faction="Faction.clan_stafford" />
+  <Hero id="dadg_lord_15_5" father="Hero.dadg_dead_lord_15_2"spouse="Hero.dadg_lord_15_6" faction="Faction.clan_stafford" />
   <Hero id="dadg_lord_15_6" father="Hero.dadg_dead_lord_21_1" mother="Hero.dadg_lord_21_6" spouse="Hero.dadg_lord_15_5" faction="Faction.clan_stafford" />
   <Hero id="dadg_lord_16_1" father="Hero.dadg_dead_lord_16_1" mother="Hero.dadg_dead_lord_16_2" spouse="Hero.dadg_lord_16_6" faction="Faction.clan_courtenay" />
   <Hero id="dadg_lord_16_2" father="Hero.dadg_lord_16_1" mother="Hero.dadg_lord_16_6" faction="Faction.clan_courtenay" />
