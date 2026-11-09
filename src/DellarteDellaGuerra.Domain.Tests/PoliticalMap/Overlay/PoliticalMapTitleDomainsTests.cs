@@ -39,6 +39,37 @@ public class PoliticalMapTitleDomainsTests
     private PoliticalMapPainter Painter() => new(_structure, _titles, _genealogy, new PoliticalMapTerritories(_structure, _titles));
     private PoliticalMapTitleDomains Domains() => Painter().TitleDomainsOf(_world);
 
+    [Theory]
+    [InlineData(PoliticalMapOwnerLevel.Vassals)]
+    [InlineData(PoliticalMapOwnerLevel.SubVassals)]
+    public void RoyalPersonalEstatesKeepTheirUnderlyingTitlesInsteadOfMergingIntoTheCrown(PoliticalMapOwnerLevel level)
+    {
+        Add("royal_castle", TitleRank.Baron, "crown", "king");
+        Add("royal_borough", TitleRank.Baron, "crown", "king");
+        Add("crown_vassal", TitleRank.Baron, "crown", "tenant_of_crown");
+        var domains = Domains();
+        Assert.Equal("royal_castle", domains.KeyOf("royal_castle_seat", level));
+        Assert.Equal("royal_borough", domains.KeyOf("royal_borough_seat", level));
+        Assert.Equal("crown_vassal", domains.KeyOf("crown_vassal_seat", level));
+        Assert.True(domains.Contains("crown", "royal_castle_seat"));
+        Assert.True(domains.Contains("crown", "crown_vassal_seat"));
+    }
+
+    [Fact]
+    public void ADukesPersonalEarldomJoinsHisOverviewButKeepsItsLocalTitle()
+    {
+        Add("suffolk", TitleRank.Duke, "crown", "de_la_pole");
+        Add("lincoln", TitleRank.Earl, "crown", "de_la_pole");
+        Add("york", TitleRank.Duke, "crown", "york");
+        _structure.WithAllegiance("lincoln", "york");
+        var domains = Domains();
+        Assert.Equal("suffolk", domains.KeyOf("lincoln_seat", PoliticalMapOwnerLevel.Vassals));
+        Assert.Equal("lincoln", domains.KeyOf("lincoln_seat", PoliticalMapOwnerLevel.SubVassals));
+        Assert.True(domains.Contains("suffolk", "lincoln_seat"));
+        Assert.True(domains.Contains("lincoln", "lincoln_seat"));
+        Assert.False(domains.Contains("york", "lincoln_seat"));
+    }
+
     [Fact]
     public void MainEarldomGroupsDisconnectedPersonalBaroniesButNotAnotherEarldom()
     {
@@ -68,7 +99,7 @@ public class PoliticalMapTitleDomainsTests
         Assert.False(domains.Contains("pembroke", "duchy_seat"));
         Assert.False(domains.Contains("pembroke", "duchy_vassal_seat"));
         Assert.False(domains.Contains("pembroke", "outsider_seat"));
-        Assert.Equal("pembroke", domains.KeyOf("distant_estate_seat", PoliticalMapOwnerLevel.Vassals));
+        Assert.Equal("duchy", domains.KeyOf("distant_estate_seat", PoliticalMapOwnerLevel.Vassals));
         Assert.Equal("distant_estate", domains.KeyOf("distant_estate_seat", PoliticalMapOwnerLevel.SubVassals));
     }
 
@@ -132,12 +163,12 @@ public class PoliticalMapTitleDomainsTests
     }
 
     [Fact]
-    public void AllegianceChoosesTheSecondaryDomainEvenWhenGeographyDiffers()
+    public void AllegianceKeepsTheSecondaryDomainWithinItsHoldersPrimaryOverview()
     {
         _structure.Reattach("pembroke_vassal", "duchy");
         _structure.WithAllegiance("pembroke_vassal", "pembroke");
         Assert.True(Domains().Contains("pembroke", "pembroke_vassal_seat"));
-        Assert.False(Domains().Contains("duchy", "pembroke_vassal_seat"));
+        Assert.True(Domains().Contains("duchy", "pembroke_vassal_seat"));
     }
 
     [Theory]
@@ -154,7 +185,8 @@ public class PoliticalMapTitleDomainsTests
         var labels = painter.LabelKeysOf(PoliticalMapView.Owners, PoliticalMapLabelMode.Titles, settlements, paints, _world, level);
         Assert.Equal(labels, paints.Select(x => x.RegionKey));
         Assert.Equal(labels[0], labels[1]);
-        Assert.NotEqual(labels[0], labels[4]);
+        if (level == PoliticalMapOwnerLevel.Vassals) Assert.Equal(labels[0], labels[4]);
+        else Assert.NotEqual(labels[0], labels[4]);
         var selection = new PoliticalMapSelection(PoliticalMapView.Owners, level, PoliticalMapLabelMode.Titles, "pembroke");
         var selected = selection.Apply(paints, painter.SelectionKeysOf(selection, settlements, paints, _world));
         for (int i = 0; i < 4; i++)

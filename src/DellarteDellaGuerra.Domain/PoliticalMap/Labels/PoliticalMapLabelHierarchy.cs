@@ -5,6 +5,15 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
 {
     public static class PoliticalMapLabelHierarchy
     {
+        /// <summary>Keep the current font near a threshold instead of alternating widgets as the camera moves.</summary>
+        public static int StableSizeIndexFor(PoliticalMapLabelTier tier, TitleRank? rank, float pixelRadius, int? previous)
+        {
+            int size = SizeIndexFor(tier, rank, pixelRadius);
+            if (previous is not { } old || old == size) return size;
+            float toleranceRadius = pixelRadius * (size > old ? 0.92f : 1.08f);
+            return SizeIndexFor(tier, rank, toleranceRadius) == old ? old : size;
+        }
+
         public static int SizeIndexFor(PoliticalMapLabelTier tier, TitleRank? rank, float pixelRadius)
         {
             int size = PoliticalMapLabelLayout.SizeIndexFor(pixelRadius);

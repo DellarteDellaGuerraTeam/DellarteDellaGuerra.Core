@@ -32,15 +32,16 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         }
 
         [Theory]
-        [InlineData(200f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.Vassals)]
-        [InlineData(151f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.Vassals)]
-        [InlineData(150f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.SubVassals)]
-        [InlineData(150f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.Vassals)]
-        [InlineData(145f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.SubVassals)]
-        [InlineData(145f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.Vassals)]
-        [InlineData(140f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.SubVassals)]
-        [InlineData(140f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.Vassals)]
-        [InlineData(139f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.SubVassals)]
+        [InlineData(620f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.Vassals)]
+        [InlineData(261f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.Vassals)]
+        [InlineData(260f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.SubVassals)]
+        [InlineData(260f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.Vassals)]
+        [InlineData(255f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.SubVassals)]
+        [InlineData(255f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.Vassals)]
+        [InlineData(250f, PoliticalMapOwnerLevel.SubVassals, PoliticalMapOwnerLevel.SubVassals)]
+        [InlineData(250f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.Vassals)]
+        [InlineData(249f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.SubVassals)]
+        [InlineData(214f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.SubVassals)]
         [InlineData(5f, PoliticalMapOwnerLevel.Vassals, PoliticalMapOwnerLevel.SubVassals)]
         public void TheOwnersLevelSwitchesFarOutAndBackOnlyPastTheHysteresis(
             float distance, PoliticalMapOwnerLevel current, PoliticalMapOwnerLevel expected)

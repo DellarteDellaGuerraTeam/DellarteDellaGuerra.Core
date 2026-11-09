@@ -409,9 +409,9 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
                 return Regions(Paint(PoliticalMapView.Owners, painter, level: level));
             }
 
-            float nearDistance = PoliticalMapZoom.FarAbove - PoliticalMapZoom.OwnerLevelHysteresis - 1f;
-            float farDistance = PoliticalMapZoom.FarAbove + 1f;
-            float bandDistance = PoliticalMapZoom.FarAbove - PoliticalMapZoom.OwnerLevelHysteresis / 2f;
+            float nearDistance = PoliticalMapZoom.OwnerOverviewAbove - PoliticalMapZoom.OwnerLevelHysteresis - 1f;
+            float farDistance = PoliticalMapZoom.OwnerOverviewAbove + 1f;
+            float bandDistance = PoliticalMapZoom.OwnerOverviewAbove - PoliticalMapZoom.OwnerLevelHysteresis / 2f;
             string?[] near = PaintAt(nearDistance);
             string?[] far = PaintAt(farDistance);
             Assert.Equal("clan_stanley", near[0]);

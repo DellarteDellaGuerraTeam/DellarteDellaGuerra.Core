@@ -5,6 +5,14 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
     /// <summary>Breaks oversized names at word boundaries, keeping at most three centred lines.</summary>
     public static class PoliticalMapLabelWrapping
     {
+        public static int TargetLengthFor(float pixelRadius, int sizeIndex, int previous = -1)
+        {
+            int target = Math.Max(1, (int)(2f * pixelRadius /
+                (PoliticalMapLabelLayout.FontSizes[sizeIndex] * PoliticalMapLabelLayout.CharWidth)));
+            return previous > 0 && Math.Abs(target - previous) <= Math.Max(1, previous * 0.12f)
+                ? previous : target;
+        }
+
         public static string Wrap(string text, int targetLength)
         {
             targetLength = Math.Max(1, targetLength);

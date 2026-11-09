@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
 {
+    public sealed record PoliticalMapLabelAnchor(float X, float Y);
+
     /// <summary>A region label as projected this frame, before it is sized and checked for room.</summary>
     /// <param name="Id">The caller's handle for the label.</param>
     /// <param name="X">The label's centre on screen, in pixels.</param>
@@ -15,9 +17,12 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
     /// </param>
     /// <param name="LineCount">Number of lines in the label, for collision checks.</param>
     /// <param name="SizeIndex">Optional hierarchy-selected font step; otherwise uses region size.</param>
+    /// <param name="LineWidths">Measured advance of each centred line, divided by its font size.</param>
+    /// <param name="LineAdvance">Baseline spacing divided by font size, matching the text renderer.</param>
     public sealed record PoliticalMapLabelCandidate(
         int Id, float X, float Y, float PixelRadius, int TextLength, long Priority, string? Group = null, int LineCount = 1,
-        int? SizeIndex = null);
+        int? SizeIndex = null, IReadOnlyList<float>? LineWidths = null, float LineAdvance = 1f,
+        IReadOnlyList<PoliticalMapLabelAnchor>? AlternativeAnchors = null);
 
     /// <summary>A label that is drawn this frame, in one of <see cref="PoliticalMapLabelLayout.FontSizes"/>.</summary>
     public sealed record PoliticalMapPlacedLabel(int Id, float X, float Y, int SizeIndex);
@@ -27,17 +32,18 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
     /// The font follows how big the region shows (its inscribed radius on screen at this zoom),
     /// never how long its name is: long names can wrap without shrinking their font.
     /// A region too small on screen gets no label. Labels are placed
-    /// by tier, title rank and region size, each dropped when its text box overlaps one placed.
+    /// by tier, title rank and region size, each dropped when its measured lines overlap one placed.
     /// A label is also dropped when one saying the same thing (same <see cref="PoliticalMapLabelCandidate.Group"/>)
-    /// is already placed nearby: a kingdom split into patches, or a clan holding scattered fiefs,
-    /// is named once on its biggest patch in view, not on every patch.
+    /// has a preferred patch nearby: a kingdom split into patches, or a clan holding scattered fiefs,
+    /// keeps its name on that patch even when a different title temporarily crowds it.
     /// </summary>
     /// <remarks>
     /// <para>
     /// Gauntlet cannot bind a font size, so sizes come in fixed steps, each its own text widget.
     /// </para>
     /// <para>
-    /// The text box, used only to keep labels apart, is estimated from the character count. The
+    /// When measured line widths are supplied, collisions use one box per line. Otherwise the
+    /// text box, used only to keep labels apart, is estimated from the character count. The
     /// advance is calibrated on the game's <c>GUI/GauntletUI/Fonts/Galahad/Galahad.fnt</c> (size 32,
     /// no kerning pairs): capitals average 0.58 em, lower case 0.42 em, a space 0.25 em, and real
     /// region names come to 0.36 to 0.42 em a character. <see cref="CharWidth"/> takes 0.5 em, a
@@ -65,12 +71,14 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
         /// width counts. A third of the screen (640 px on 1920) keeps one name per kingdom or clan
         /// in a typical view: zoomed far out a whole realm fits inside that, so its outlying patches
         /// go; zoomed in, a patch a screen-third away is far enough that the first name reads as
-        /// another place's, and it is named again. A patch whose kept twin is off screen is named.
+        /// another place's, and it is named again. With whole-map layout, an offscreen twin still counts.
         /// </summary>
         public const float RepeatDistance = 1f / 3f;
 
         // Between two labels' boxes, in pixels.
         private const float Gap = 4f;
+        // A hidden label needs clear room before returning; a visible one keeps the normal gap.
+        private const float ReentryClearance = 12f;
 
         /// <summary>
         /// The largest font step a region earns from its inscribed radius on screen, or -1 when it
@@ -94,7 +102,8 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
 
         /// <summary>The labels to draw this frame, in no particular order.</summary>
         public static IReadOnlyList<PoliticalMapPlacedLabel> Place(
-            IReadOnlyList<PoliticalMapLabelCandidate> candidates, float screenWidth, float screenHeight)
+            IReadOnlyList<PoliticalMapLabelCandidate> candidates, float screenWidth, float screenHeight,
+            IReadOnlyCollection<int>? previouslyShown = null, bool includeOffscreen = false)
         {
             var ordered = new List<PoliticalMapLabelCandidate>(candidates);
             ordered.Sort((a, b) => a.Priority != b.Priority ? b.Priority.CompareTo(a.Priority) : a.Id.CompareTo(b.Id));
@@ -102,7 +111,8 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
             float repeatDistance = RepeatDistance * screenWidth;
             var placed = new List<PoliticalMapPlacedLabel>();
             var boxes = new List<Box>();
-            var groups = new List<string?>();
+            var repeatBoxes = new List<Box>();
+            var groups = new List<string>();
             foreach (PoliticalMapLabelCandidate candidate in ordered)
             {
                 if (candidate.TextLength <= 0) continue;
@@ -110,21 +120,52 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
                 if (size < 0) continue;
 
                 Box box = BoxOf(candidate, FontSizes[size]);
-                if (box.Right < 0f || box.Left > screenWidth || box.Bottom < 0f || box.Top > screenHeight) continue;
-                if (boxes.Exists(other => other.Overlaps(box))) continue;
-                if (candidate.Group is { } group && RepeatsNearby(group, box)) continue;
+                if (!includeOffscreen && (box.Right < 0f || box.Left > screenWidth || box.Bottom < 0f || box.Top > screenHeight)) continue;
+                float clearance = previouslyShown is not null && !System.Linq.Enumerable.Contains(previouslyShown, candidate.Id)
+                    ? ReentryClearance : 0f;
+                if (candidate.Group is { } group && RepeatsNearby(group, box, clearance)) continue;
 
-                boxes.Add(box);
-                groups.Add(candidate.Group);
-                placed.Add(new PoliticalMapPlacedLabel(candidate.Id, candidate.X, candidate.Y, size));
+                // Reserve the preferred patch even when another title crowds it: no sideways fallback.
+                if (candidate.Group is { } reservedGroup)
+                {
+                    repeatBoxes.Add(box);
+                    groups.Add(reservedGroup);
+                }
+                PoliticalMapLabelCandidate chosen = candidate;
+                IReadOnlyList<Box> ink = LineBoxesOf(chosen, FontSizes[size], box);
+                if (Crowded(ink))
+                {
+                    bool found = false;
+                    if (candidate.AlternativeAnchors is { } alternatives)
+                        foreach (PoliticalMapLabelAnchor anchor in alternatives)
+                        {
+                            chosen = candidate with { X = anchor.X, Y = anchor.Y };
+                            ink = LineBoxesOf(chosen, FontSizes[size], BoxOf(chosen, FontSizes[size]));
+                            if (Crowded(ink)) continue;
+                            found = true;
+                            break;
+                        }
+                    if (!found) continue;
+                }
+
+                boxes.AddRange(ink);
+                placed.Add(new PoliticalMapPlacedLabel(candidate.Id, chosen.X, chosen.Y, size));
+
+                bool Crowded(IReadOnlyList<Box> lines)
+                {
+                    foreach (Box line in lines)
+                        if (boxes.Exists(other => other.Overlaps(line) || clearance > 0 && other.DistanceTo(line) < clearance))
+                            return true;
+                    return false;
+                }
             }
 
-            bool RepeatsNearby(string group, Box box)
+            bool RepeatsNearby(string group, Box box, float clearance)
             {
-                for (int index = 0; index < boxes.Count; index++)
+                for (int index = 0; index < repeatBoxes.Count; index++)
                 {
                     if (string.Equals(groups[index], group, System.StringComparison.Ordinal)
-                        && boxes[index].DistanceTo(box) < repeatDistance) return true;
+                        && repeatBoxes[index].DistanceTo(box) < repeatDistance + clearance) return true;
                 }
 
                 return false;
@@ -135,9 +176,26 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
 
         private static Box BoxOf(PoliticalMapLabelCandidate candidate, int fontSize)
         {
-            float halfWidth = TextWidthOf(fontSize, candidate.TextLength) / 2f + Gap;
-            float halfHeight = (TextHeight + System.Math.Max(0, candidate.LineCount - 1)) * fontSize / 2f + Gap;
+            float width = candidate.LineWidths is { Count: > 0 } widths
+                ? System.Linq.Enumerable.Max(widths) * fontSize : TextWidthOf(fontSize, candidate.TextLength);
+            float halfWidth = width / 2f + Gap;
+            float halfHeight = (TextHeight + System.Math.Max(0, candidate.LineCount - 1) * candidate.LineAdvance) * fontSize / 2f + Gap;
             return new Box(candidate.X - halfWidth, candidate.Y - halfHeight, candidate.X + halfWidth, candidate.Y + halfHeight);
+        }
+
+        private static IReadOnlyList<Box> LineBoxesOf(PoliticalMapLabelCandidate candidate, int fontSize, Box fallback)
+        {
+            if (candidate.LineWidths is not { Count: > 0 } widths) return new[] { fallback };
+            var lines = new List<Box>(widths.Count);
+            float firstY = candidate.Y - (widths.Count - 1) * candidate.LineAdvance * fontSize / 2f;
+            for (int i = 0; i < widths.Count; i++)
+            {
+                float halfWidth = widths[i] * fontSize / 2f + Gap;
+                float halfHeight = TextHeight * fontSize / 2f + Gap;
+                float y = firstY + i * candidate.LineAdvance * fontSize;
+                lines.Add(new Box(candidate.X - halfWidth, y - halfHeight, candidate.X + halfWidth, y + halfHeight));
+            }
+            return lines;
         }
 
         private readonly struct Box

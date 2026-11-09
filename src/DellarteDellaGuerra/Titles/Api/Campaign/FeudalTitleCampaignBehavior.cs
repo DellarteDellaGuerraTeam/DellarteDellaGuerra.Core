@@ -98,7 +98,13 @@ namespace DellarteDellaGuerra.Titles.Api.Campaign
                 return;
             }
 
-            _stateStore.InitialiseTitles(TitleStateSerialiser.DeserialiseTitles(_serialisedTitles));
+            // Names come from current configuration; the save owns the campaign's holder history.
+            var configuredNames = _initialTitlesProvider().ToDictionary(title => title.Id, title => title.Name);
+            _stateStore.InitialiseTitles(TitleStateSerialiser.DeserialiseTitles(_serialisedTitles).Select(title =>
+                configuredNames.TryGetValue(title.Id, out string name) && name != title.Name
+                    ? Title.Restore(title.Id, name, title.Rank, title.SeatSettlementId, title.Holders,
+                        title.OccupantClanId, title.ContestedSinceDay)
+                    : title).ToList());
             _stateStore.InitialiseClaims(TitleStateSerialiser.DeserialiseClaims(_serialisedClaims));
 
             // Blood claims are a pure function of the bloodlines, so they are rebuilt rather

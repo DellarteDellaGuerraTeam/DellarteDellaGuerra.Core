@@ -62,7 +62,7 @@
     </Duchy>
     <Duchy id="region_midland_circuit" dignityRank="Duke" name="Midland Circuit" mapLabelRank="Duke">
       <Duchy id="shire_warwick_leicester" dignityRank="Earl" name="Warwick and Leicester" mapLabelRank="Earl">
-        <Duchy id="duchy_warwick" name="Earldom of Warwick" seat="dadg_Warwick_castle" holderClanId="clan_neville_of_middleham" heldSince="1449" dignityRank="Earl" allegiance="kingdom_england" dignityName="Earldom of Warwick and Salisbury" mapLabelRank="Earl" />
+        <Duchy id="duchy_warwick" name="Earldom of Warwick" seat="dadg_Warwick_castle" holderClanId="clan_neville_of_middleham" heldSince="1449" dignityRank="Earl" allegiance="kingdom_england" dignityName="Earldom of Warwick" mapLabelRank="Earl" />
         <County id="county_warwick" name="City of Coventry" seat="Coventry_town" holderClanId="clan_neville_of_middleham" heldSince="1449" dignityName="Lordship of Warwick" dignityRank="Baron" allegiance="duchy_warwick" mapLabelRank="Baron" />
         <Barony id="barony_kenilworth" name="Kenilworth castle estate" seat="dadg_Kenilworth_castle" holderClanId="clan_lancaster" heldSince="1362" dignityName="Barony of Kenilworth" dignityRank="Baron" allegiance="county_warwick" mapLabelRank="Baron" />
       </Duchy>

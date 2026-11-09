@@ -28,7 +28,6 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
      *  its labels between geographic title regions and the holder clan (<see cref="Modes"/>).
      *  Geographic labels follow regional territories far out and local title seats close in.
      *  Clan labels follow the live vassal hierarchy.
-     *  A continuing holder keeps the pole of its own detailed land at both Owners levels.
      * </summary>
      * <remarks>
      *  <para>
@@ -41,9 +40,9 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
      *  built for the view and level drawn, so the two levels never mix and none go stale.
      *  </para>
      *  <para>
-     *  Every frame each label is projected and sized to its region; oversized names wrap onto
-     *  two or three lines. Labels are placed by title rank, then region size; overlaps and nearby
-     *  repetitions are dropped (<see cref="PoliticalMapLabelLayout"/>).
+     *  Label size and wrapping follow zoom. A whole-map layout selects labels by title rank,
+     *  then region size, before projecting the chosen labels into the viewport. Panning cannot
+     *  promote smaller labels when a main title moves offscreen.
      *  </para>
      *  <para>
      *  The labels are a Gauntlet layer just under the nameplate layer and take no input.
@@ -92,6 +91,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         private readonly List<Label> _labels = new();
         private readonly Dictionary<(PoliticalMapLabelTier Tier, string Key), string?> _resolvedNames = new();
         private readonly List<PoliticalMapLabelCandidate> _candidates = new();
+        private readonly HashSet<int> _shownLabels = new();
+        private readonly HashSet<int> _eligibleLabels = new();
         private float _sinceRecompute;
         private bool _failed;
 
@@ -212,6 +213,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             _keysView = PoliticalMapView.Off;
             _sinceRecompute = RecomputeIntervalSeconds;
             _labels.Clear();
+            _shownLabels.Clear();
+            _eligibleLabels.Clear();
             _resolvedNames.Clear();
             PoliticalMapNameplates.HideNativeOverlays = false;
         }
@@ -228,6 +231,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             _sinceRecompute = RecomputeIntervalSeconds;
             _vm?.Labels.Clear();
             _labels.Clear();
+            _shownLabels.Clear();
+            _eligibleLabels.Clear();
             _resolvedNames.Clear();
         }
 
@@ -240,6 +245,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             mapScreen.AddLayer(_layer);
             // The labels belonged to the old screen's movie: build them again.
             _labels.Clear();
+            _shownLabels.Clear();
+            _eligibleLabels.Clear();
             _regionsByTier = null;
             _keysView = PoliticalMapView.Off;
             _sinceRecompute = RecomputeIntervalSeconds;
@@ -363,7 +370,10 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             if (!changed && labelIndex == _labels.Count) return;
 
             _labels.Clear();
+            _shownLabels.Clear();
+            _eligibleLabels.Clear();
             _vm!.Labels.Clear();
+            string?[][] labelKeys = KeysOf(view, level);
             for (int index = 0; index < regionsByTier.Length; index++)
             {
                 PoliticalMapLabelTier tier = _regionTiers[index];
@@ -374,7 +384,10 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
 
                     float height = mapScreen.MapScene.GetTerrainHeight(new Vec2(region.X, region.Y)) + HeightOffset;
                     var vm = new PoliticalMapLabelVM(name!);
-                    _labels.Add(new Label(tier, region, new Vec3(region.X, region.Y, height), name!, vm, RankOf(tier, region.Key, hierarchy)));
+                    var label = new Label(tier, region, new Vec3(region.X, region.Y, height), name!, vm, RankOf(tier, region.Key, hierarchy));
+                    label.Alternatives = PoliticalMapRegions.AlternativeAnchors(_grid!, labelKeys[index], region)
+                        .Select(anchor => new Vec3(anchor.X, anchor.Y, height)).ToArray();
+                    _labels.Add(label);
                     _vm.Labels.Add(vm);
                 }
             }
@@ -418,41 +431,59 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             Camera camera = mapScreen.MapCameraView.Camera;
             float scale = Screen.RealScreenResolutionHeight / ReferenceHeight;
             if (scale <= 0f) return;
+            float width = Screen.RealScreenResolutionWidth / scale;
+            float height = Screen.RealScreenResolutionHeight / scale;
+            // Size and wrapping follow zoom, not the label's perspective depth as the map pans.
+            float pixelsPerMetre = height / (2f * Math.Max(1f, mapScreen.MapCameraView.CameraDistance)
+                * (float)Math.Tan(camera.GetFovVertical() / 2f));
+            MatrixFrame frame = camera.Frame;
 
             _candidates.Clear();
             for (int index = 0; index < _labels.Count; index++)
             {
                 Label label = _labels[index];
-                if (!Project(camera, label.Position, out float x, out float y)) continue;
-
-                // How big the region's inscribed circle shows: the longer of its two half-spans on screen.
-                float radius = label.Region.Radius;
-                float pixelRadius = 0f;
-                if (Project(camera, label.Position + new Vec3(radius, 0f, 0f), out float rx, out float ry))
-                    pixelRadius = Math.Max(pixelRadius, (float)Math.Sqrt((rx - x) * (rx - x) + (ry - y) * (ry - y)));
-                if (Project(camera, label.Position + new Vec3(0f, radius, 0f), out float ux, out float uy))
-                    pixelRadius = Math.Max(pixelRadius, (float)Math.Sqrt((ux - x) * (ux - x) + (uy - y) * (uy - y)));
-
-                int size = PoliticalMapLabelHierarchy.SizeIndexFor(label.Tier, label.Rank, pixelRadius / scale);
-                label.Wrap(pixelRadius / scale, size);
+                float pixelRadius = label.Region.Radius * pixelsPerMetre;
+                int size = PoliticalMapLabelHierarchy.StableSizeIndexFor(label.Tier, label.Rank, pixelRadius, label.SizeIndex);
+                label.SizeIndex = size;
+                if (size < 0) continue;
+                if (_keysLevel == PoliticalMapOwnerLevel.Vassals && _keysView is PoliticalMapView.Owners or PoliticalMapView.DeJure)
+                    size = Math.Max(0, size - 1);
+                label.Wrap(pixelRadius, size);
+                // Whole-map collision coordinates deliberately exclude camera translation and viewport clipping.
+                float x = Vec3.DotProduct(label.DrawPosition, frame.rotation.s) * pixelsPerMetre;
+                float y = -Vec3.DotProduct(label.DrawPosition, frame.rotation.f) * pixelsPerMetre;
+                var alternatives = label.Alternatives.Select(position => new PoliticalMapLabelAnchor(
+                    Vec3.DotProduct(position, frame.rotation.s) * pixelsPerMetre,
+                    -Vec3.DotProduct(position, frame.rotation.f) * pixelsPerMetre)).ToArray();
                 long priority = PoliticalMapLabelHierarchy.Priority(label.Tier, label.Rank, label.Region.CellCount);
                 _candidates.Add(new PoliticalMapLabelCandidate(
-                    index, x / scale, y / scale, pixelRadius / scale, label.LongestLine, priority, label.Group, label.LineCount, size));
+                    index, x, y, pixelRadius, label.LongestLine, priority, label.Group, label.LineCount, size,
+                    label.LineWidths, label.LineAdvance, alternatives));
             }
 
             IReadOnlyList<PoliticalMapPlacedLabel> placed = PoliticalMapLabelLayout.Place(
-                _candidates, Screen.RealScreenResolutionWidth / scale, Screen.RealScreenResolutionHeight / scale);
+                _candidates, width, height, includeOffscreen: true);
 
-            var shown = new bool[_labels.Count];
+            _shownLabels.Clear();
+            _eligibleLabels.Clear();
             foreach (PoliticalMapPlacedLabel label in placed)
             {
-                shown[label.Id] = true;
-                _labels[label.Id].ViewModel.Place(label.X * scale, label.Y * scale, label.SizeIndex);
+                _eligibleLabels.Add(label.Id);
+                Label source = _labels[label.Id];
+                float dx = label.X / pixelsPerMetre - Vec3.DotProduct(source.DrawPosition, frame.rotation.s);
+                float dy = -label.Y / pixelsPerMetre - Vec3.DotProduct(source.DrawPosition, frame.rotation.f);
+                float determinant = frame.rotation.s.x * frame.rotation.f.y - frame.rotation.s.y * frame.rotation.f.x;
+                if (Math.Abs(determinant) > 0.01f && Math.Abs(dx) + Math.Abs(dy) > 0.001f)
+                    source.DrawPosition += new Vec3((dx * frame.rotation.f.y - dy * frame.rotation.s.y) / determinant,
+                        (dy * frame.rotation.s.x - dx * frame.rotation.f.x) / determinant, 0);
+                if (!Project(camera, source.DrawPosition, out float x, out float y)) continue;
+                _shownLabels.Add(label.Id);
+                _labels[label.Id].ViewModel.Place(x, y, label.SizeIndex);
             }
 
             for (int index = 0; index < _labels.Count; index++)
             {
-                if (!shown[index]) _labels[index].ViewModel.Hide();
+                if (!_shownLabels.Contains(index)) _labels[index].ViewModel.Hide();
             }
         }
 
@@ -474,6 +505,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
                 Tier = tier;
                 Region = region;
                 Position = position;
+                DrawPosition = position;
                 Text = text;
                 Group = tier + ":" + region.Key;
                 ViewModel = viewModel;
@@ -484,24 +516,37 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             public PoliticalMapLabelTier Tier { get; }
             public PoliticalMapRegion Region { get; }
             public Vec3 Position { get; }
+            public Vec3 DrawPosition { get; set; }
+            public Vec3[] Alternatives { get; set; } = Array.Empty<Vec3>();
             public string Text { get; }
             public string Group { get; }
             public TitleRank? Rank { get; }
+            public int? SizeIndex { get; set; }
             public int LongestLine { get; private set; }
             public int LineCount { get; private set; } = 1;
+            public float[] LineWidths { get; private set; } = Array.Empty<float>();
+            public float LineAdvance { get; private set; } = 1f;
             public PoliticalMapLabelVM ViewModel { get; }
 
             public void Wrap(float pixelRadius, int size)
             {
                 if (size < 0) return;
-                int target = Math.Max(1, (int)(2f * pixelRadius /
-                    (PoliticalMapLabelLayout.FontSizes[size] * PoliticalMapLabelLayout.CharWidth)));
+                int target = PoliticalMapLabelWrapping.TargetLengthFor(pixelRadius, size, _wrapLength);
                 if (target == _wrapLength) return;
                 _wrapLength = target;
                 string wrapped = PoliticalMapLabelWrapping.Wrap(Text, target);
                 string[] lines = wrapped.Split('\n');
                 LongestLine = lines.Max(line => line.Length);
                 LineCount = lines.Length;
+                var fonts = UIResourceManager.FontFactory;
+                var font = fonts.GetMappedFontForLocalization("Galahad");
+                // Match native Text's glyph padding and baseline spacing, expressed in font-size units.
+                LineAdvance = (font.Base + 5f) / font.Size;
+                LineWidths = lines.Select(line => line.Sum(character =>
+                {
+                    var glyphFont = font.Characters.ContainsKey(character) ? font : fonts.GetUsableFontForCharacter(character) ?? font;
+                    return glyphFont.GetCharacterWidth(character, 0.5f) / glyphFont.Size;
+                })).ToArray();
                 ViewModel.Text = wrapped;
             }
         }

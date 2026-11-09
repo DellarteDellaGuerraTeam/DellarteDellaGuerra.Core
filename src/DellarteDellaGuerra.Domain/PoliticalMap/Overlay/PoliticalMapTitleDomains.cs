@@ -92,9 +92,9 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
                 if (_hierarchy.RankOf(current) < TitleRank.King && _hierarchy.ControllerOf(current) == holder
                     && _hierarchy.RankOf(current) >= _hierarchy.RankOf(result))
                     result = current;
-            // Minor personal estates belong to the main domain at broad zoom, even outside its de jure bounds.
+            // Lower personal titles belong to the main domain at broad zoom, even outside its de jure bounds.
             Title? primary = _hierarchy.HighestTitleOf(holder);
-            return primary is not null && _hierarchy.RankOf(result) < TitleRank.Earl
+            return primary is not null && primary.Rank < TitleRank.King
                 && _hierarchy.RankOf(result) < primary.Rank ? primary.Id : result;
         }
     }

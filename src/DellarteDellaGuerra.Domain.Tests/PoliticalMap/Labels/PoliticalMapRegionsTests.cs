@@ -23,6 +23,17 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Labels
         }
 
         [Fact]
+        public void AlternativeAnchorsNeverCrossWaterToAnotherHoldingWithTheSameName()
+        {
+            var grid = Grid("111.111", "111.111", "111.111");
+            var keys = new[] { "a" };
+            var region = PoliticalMapRegions.Find(grid, keys, 1)[0];
+            var anchors = PoliticalMapRegions.AlternativeAnchors(grid, keys, region);
+            Assert.NotEmpty(anchors);
+            Assert.All(anchors, anchor => Assert.True(anchor.X >= 0 && anchor.X < 3));
+        }
+
+        [Fact]
         public void SettlementsSharingAKeyMakeOneRegion()
         {
             PoliticalMapGrid grid = Grid(

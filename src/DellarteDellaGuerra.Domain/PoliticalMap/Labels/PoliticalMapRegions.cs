@@ -28,6 +28,33 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
     /// </remarks>
     public static class PoliticalMapRegions
     {
+        /// <summary>Nearby label centres reached entirely through this same land patch.</summary>
+        public static IReadOnlyList<PoliticalMapLabelAnchor> AlternativeAnchors(
+            PoliticalMapGrid grid, IReadOnlyList<string?> keys, PoliticalMapRegion region)
+        {
+            var result = new List<PoliticalMapLabelAnchor>();
+            foreach (float distance in new[] { 0.6f, 1.2f, 1.8f })
+                for (int direction = 0; direction < 8; direction++)
+                {
+                    double angle = direction * Math.PI / 4;
+                    float dx = (float)Math.Cos(angle) * region.Radius * distance;
+                    float dy = (float)Math.Sin(angle) * region.Radius * distance;
+                    int steps = Math.Max(1, (int)Math.Ceiling(Math.Sqrt(dx * dx + dy * dy) / (grid.CellSize * 0.5f)));
+                    bool inside = true;
+                    for (int step = 1; step <= steps; step++)
+                    {
+                        int x = (int)Math.Floor((region.X + dx * step / steps) / grid.CellSize);
+                        int y = (int)Math.Floor((region.Y + dy * step / steps) / grid.CellSize);
+                        if (x < 0 || y < 0 || x >= grid.Width || y >= grid.Height) { inside = false; break; }
+                        int settlement = grid.Cells[y * grid.Width + x] - 1;
+                        if (settlement < 0 || settlement >= keys.Count || keys[settlement] != region.Key)
+                        { inside = false; break; }
+                    }
+                    if (inside) result.Add(new PoliticalMapLabelAnchor(region.X + dx, region.Y + dy));
+                }
+            return result;
+        }
+
         private const int Straight = 3;
         private const int Diagonal = 4;
         private const int Unreached = int.MaxValue / 2;

@@ -30,21 +30,24 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
 
         public static bool ShowsWash(PoliticalMapZoomBand band) => band != PoliticalMapZoomBand.Near;
 
+        /// <summary>Camera distance above which ownership regions merge into their parent titles.</summary>
+        public const float OwnerOverviewAbove = 260f;
+
         /// <summary>
-        /// How far back below <see cref="FarAbove"/> the camera must come before the owners view
+        /// How far back below <see cref="OwnerOverviewAbove"/> the camera must come before the owners view
         /// splits its vassals again, so a camera resting on the threshold does not flip the map.
         /// </summary>
         public const float OwnerLevelHysteresis = 10f;
 
         /// <summary>
         /// The owners view's level at a camera distance, given the current one: the direct vassals
-        /// once the camera is far (beyond <see cref="FarAbove"/>), their own vassals once it is
-        /// back under <see cref="FarAbove"/> less <see cref="OwnerLevelHysteresis"/>; in between it
+        /// once the camera is far (beyond <see cref="OwnerOverviewAbove"/>), their own vassals once it is
+        /// back under <see cref="OwnerOverviewAbove"/> less <see cref="OwnerLevelHysteresis"/>; in between it
         /// keeps the current level.
         /// </summary>
         public static PoliticalMapOwnerLevel OwnerLevelFor(float cameraDistance, PoliticalMapOwnerLevel current) =>
-            cameraDistance > FarAbove ? PoliticalMapOwnerLevel.Vassals
-            : cameraDistance < FarAbove - OwnerLevelHysteresis ? PoliticalMapOwnerLevel.SubVassals
+            cameraDistance > OwnerOverviewAbove ? PoliticalMapOwnerLevel.Vassals
+            : cameraDistance < OwnerOverviewAbove - OwnerLevelHysteresis ? PoliticalMapOwnerLevel.SubVassals
             : current;
     }
 }
