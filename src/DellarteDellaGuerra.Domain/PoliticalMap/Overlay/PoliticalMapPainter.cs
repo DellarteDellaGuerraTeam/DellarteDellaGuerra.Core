@@ -118,6 +118,21 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
             return keys;
         }
 
+        /// <summary>Expands a local title selection when the clicked land joins its overview title.</summary>
+        public PoliticalMapSelection PromoteSelection(PoliticalMapSelection selection, PoliticalMapOwnerLevel level,
+            string settlementId, IPoliticalMapWorld world)
+        {
+            if (selection.Level != PoliticalMapOwnerLevel.SubVassals || level != PoliticalMapOwnerLevel.Vassals
+                || selection.Mode != PoliticalMapLabelMode.Titles) return selection;
+            string? key = selection.View switch
+            {
+                PoliticalMapView.Owners => TitleDomainsOf(world).KeyOf(settlementId, level),
+                PoliticalMapView.DeJure => GeographicLabelKeyOf(settlementId, world, level),
+                _ => null
+            };
+            return key is null ? selection : selection with { Key = key, Level = level };
+        }
+
         /// <summary>Selects the actual title or clan domain, including disconnected vassal territories.</summary>
         public string?[] SelectionKeysOf(PoliticalMapSelection selection, IReadOnlyList<string> settlementIds,
             IReadOnlyList<PoliticalMapSettlementPaint> paints, IPoliticalMapWorld world)

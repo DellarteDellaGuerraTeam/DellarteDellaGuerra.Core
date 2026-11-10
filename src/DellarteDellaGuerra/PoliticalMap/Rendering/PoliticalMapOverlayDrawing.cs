@@ -31,6 +31,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         private (PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode)? _requested;
         private (PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode)? _shown;
         private PoliticalMapOwnerLevel _cameraLevel;
+        private string? _selectedSettlementId;
         private PoliticalMapZoomBand _band = PoliticalMapZoomBand.Mid;
         private bool _visible;
         private readonly Dictionary<(PoliticalMapView View, PoliticalMapOwnerLevel Level, PoliticalMapLabelMode Mode), double> _lastValidation = new();
@@ -69,6 +70,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         {
             if (Selection is null) return;
             Selection = null;
+            _selectedSettlementId = null;
             RefreshSelectionLayers();
         }
 
@@ -83,6 +85,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             PoliticalMapSelection? selection = key is null ? null : new(shown.View, shown.Level, shown.Mode, key);
             if (Selection == selection) return;
             Selection = selection;
+            _selectedSettlementId = selection is null ? null : settlement;
             RefreshSelectionLayers();
         }
 
@@ -105,6 +108,15 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             var requested = Key(view, level);
             if (Selection is { } selected && !selected.Matches(requested.View, requested.Level, _labelModes.Of(view)))
                 ClearSelection();
+            else if (Selection is { } local && _selectedSettlementId is { } settlement)
+            {
+                PoliticalMapSelection promoted = _painter.PromoteSelection(local, requested.Level, settlement, _world);
+                if (promoted != local)
+                {
+                    Selection = promoted;
+                    RefreshSelectionLayers();
+                }
+            }
             _cameraLevel = level;
             _requested = requested;
             Validate(_requested.Value);

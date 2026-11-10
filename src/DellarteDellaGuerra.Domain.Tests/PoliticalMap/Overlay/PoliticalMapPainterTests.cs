@@ -67,6 +67,25 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         private static uint Opaque(uint washed) => washed | 0xFF000000u;
 
         [Fact]
+        public void ZoomingOutPromotesALocalBaronyToItsOwnershipTitleAndZoomingInKeepsItSelected()
+        {
+            _structure.AddTitle("okehampton", TitleRank.Baron, "county_lancashire", "okehampton_castle");
+            _titles.SaveTitle(new Title("okehampton", "Okehampton", TitleRank.Baron, "okehampton_castle", "stanley"));
+            _world.Owners["okehampton_castle"] = "clan_stanley";
+            var painter = Painter();
+            var barony = new PoliticalMapSelection(PoliticalMapView.Owners, PoliticalMapOwnerLevel.SubVassals,
+                PoliticalMapLabelMode.Titles, "okehampton");
+            Assert.Equal(barony, painter.PromoteSelection(barony, PoliticalMapOwnerLevel.SubVassals, "okehampton_castle", _world));
+            var promoted = painter.PromoteSelection(barony, PoliticalMapOwnerLevel.Vassals, "okehampton_castle", _world);
+            Assert.Equal(painter.TitleDomainsOf(_world).KeyOf("okehampton_castle", PoliticalMapOwnerLevel.Vassals), promoted.Key);
+            Assert.NotEqual(barony.Key, promoted.Key);
+            Assert.Equal(PoliticalMapOwnerLevel.Vassals, promoted.Level);
+            Assert.Equal(promoted, painter.PromoteSelection(promoted, PoliticalMapOwnerLevel.SubVassals, "okehampton_castle", _world));
+            var clans = barony with { Mode = PoliticalMapLabelMode.Clans, Key = "clan_stanley" };
+            Assert.Equal(clans, painter.PromoteSelection(clans, PoliticalMapOwnerLevel.Vassals, "okehampton_castle", _world));
+        }
+
+        [Fact]
         public void ZoomingInReplacesTheEarldomWithTheUnderlyingLocalNameAndProminence()
         {
             _structure.AddTitle("county_devon", TitleRank.Baron, "kingdom_england", "exeter", "City of Exeter");

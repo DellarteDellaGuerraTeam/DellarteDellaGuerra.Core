@@ -59,6 +59,15 @@ public class PoliticalMapDeJureTests
     }
 
     [Fact]
+    public void ZoomingOutPromotesTheClickedCountyToItsGeographicDuchyWithoutReadingOwnership()
+    {
+        var selection = new PoliticalMapSelection(PoliticalMapView.DeJure, PoliticalMapOwnerLevel.SubVassals,
+            PoliticalMapLabelMode.Titles, "county_a");
+        Assert.Equal(selection with { Key = "duchy", Level = PoliticalMapOwnerLevel.Vassals },
+            Painter().PromoteSelection(selection, PoliticalMapOwnerLevel.Vassals, "a", _world));
+    }
+
+    [Fact]
     public void SelectingADuchyIncludesItsWholeGeographicExtentAcrossZoomLevels()
     {
         var painter = Painter();
