@@ -341,8 +341,10 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
 
         private void BuildLabels(MapScreen mapScreen, PoliticalMapView view, PoliticalMapOwnerLevel level)
         {
-            IReadOnlyList<PoliticalMapRegion>[] regionsByTier = _regionsByTier!;
             PoliticalMapLabelMode mode = Modes.Of(view);
+            IReadOnlyList<PoliticalMapRegion>[] regionsByTier = _regionsByTier!
+                .Select(regions => mode == PoliticalMapLabelMode.Titles
+                    ? PoliticalMapRegions.LargestPatches(regions) : regions).ToArray();
             PoliticalMapVassalHierarchy? hierarchy = view == PoliticalMapView.Owners
                 ? _painter.HierarchyOf(_world) : null;
             _resolvedNames.Clear();

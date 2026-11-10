@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DellarteDellaGuerra.Domain.PoliticalMap.Grid;
 
 namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
@@ -28,6 +29,12 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Labels
     /// </remarks>
     public static class PoliticalMapRegions
     {
+        /// <summary>One label per title, kept on its largest land patch regardless of the viewport.</summary>
+        public static IReadOnlyList<PoliticalMapRegion> LargestPatches(IEnumerable<PoliticalMapRegion> regions) =>
+            regions.OrderByDescending(region => region.CellCount)
+                .GroupBy(region => region.Key, StringComparer.Ordinal)
+                .Select(group => group.First()).ToArray();
+
         /// <summary>Nearby label centres reached entirely through this same land patch.</summary>
         public static IReadOnlyList<PoliticalMapLabelAnchor> AlternativeAnchors(
             PoliticalMapGrid grid, IReadOnlyList<string?> keys, PoliticalMapRegion region)

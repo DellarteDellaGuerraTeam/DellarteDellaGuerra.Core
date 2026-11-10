@@ -5,6 +5,24 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Labels
 {
     public class PoliticalMapRegionsTests
     {
+        [Fact]
+        public void TitleLabelsUseTheLargestPatchAndFreeTheSmallerPatchForOtherTitles()
+        {
+            var yorkSmall = new PoliticalMapRegion("york", 20, 1200, 300, 50);
+            var yorkLarge = new PoliticalMapRegion("york", 100, 100, 300, 30);
+            var exeter = new PoliticalMapRegion("exeter", 15, 1200, 300, 30);
+            var regions = PoliticalMapRegions.LargestPatches(new[] { yorkSmall, exeter, yorkLarge });
+
+            Assert.Equal(new[] { yorkLarge, exeter }, regions);
+            foreach (float pan in new[] { -1500f, 0f, 1500f })
+            {
+                var candidates = regions.Select((region, index) => new PoliticalMapLabelCandidate(
+                    index, region.X + pan, region.Y, region.Radius, 10, region.CellCount, region.Key));
+                var placed = PoliticalMapLabelLayout.Place(candidates.ToArray(), 1920, 1080, includeOffscreen: true);
+                Assert.Equal(2, placed.Count);
+            }
+        }
+
         // Rows from y = 0 up; each character is a settlement index (1-based), '.' is water.
         private static PoliticalMapGrid Grid(params string[] rows)
         {
