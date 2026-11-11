@@ -41,6 +41,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
 
         private PoliticalMapZoomBand _band = PoliticalMapZoomBand.Mid;
         private bool _visible = true;
+        private uint _lightingFactor = 0xFFFFFFFFu;
 
         public PoliticalMapRenderer(TaleWorlds.Engine.Scene scene, PoliticalMapGrid grid, PoliticalMapSheet sheet)
         {
@@ -85,6 +86,14 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         /// <summary>Shows or hides the wash for the zoom band, and everything for the Off view.</summary>
         public void SetVisibility(PoliticalMapZoomBand band, bool visible)
         {
+            // notexture ignores scene lighting; adjust its mesh factor without rebuilding geometry.
+            uint lighting = PoliticalMapLighting.FactorFor(Scene.TimeOfDay);
+            if (lighting != _lightingFactor)
+            {
+                _lightingFactor = lighting;
+                foreach (GameEntity entity in _shown.Values) ApplyLighting(entity);
+                foreach (GameEntity entity in _building.Values) ApplyLighting(entity);
+            }
             if (band == _band && visible == _visible) return;
             _band = band;
             _visible = visible;
@@ -95,6 +104,12 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         {
             entity.SetVisibilityExcludeParents(_visible && PoliticalMapZoom.ShowsWash(_band));
             entity.SetReadyToRender(true);
+        }
+
+        private void ApplyLighting(GameEntity entity)
+        {
+            for (int index = 0; index < entity.MultiMeshComponentCount; index++)
+                entity.GetMetaMesh(index).SetFactor1(_lightingFactor);
         }
 
         /// <summary>Discards an unfinished replacement; the currently shown territory is kept.</summary>
@@ -130,6 +145,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             }
 
             Mesh mesh = _meshBuilder.Finalize();
+            mesh.Color = _lightingFactor;
             mesh.SetMaterial(chunk.IsFrontier ? _frontierMaterial : _material);
             mesh.CullingMode = MBMeshCullingMode.None;
             mesh.RecomputeBoundingBox();

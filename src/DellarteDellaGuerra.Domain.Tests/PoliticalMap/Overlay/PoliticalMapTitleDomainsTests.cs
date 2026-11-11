@@ -104,6 +104,33 @@ public class PoliticalMapTitleDomainsTests
     }
 
     [Fact]
+    public void ARealmRulersPersonalDuchyDoesNotAbsorbSubjectsWhoAreOnlySwornToTheRealm()
+    {
+        // A claimant can lead a kingdom without holding the disputed crown title.
+        _world.Ruler = "lord";
+        Add("realm_subject", TitleRank.Baron, "crown", "realm_subject");
+        var domains = Domains();
+        Assert.True(domains.Contains("duchy", "duchy_seat"));
+        Assert.True(domains.Contains("duchy", "duchy_castle_seat"));
+        Assert.True(domains.Contains("duchy", "duchy_vassal_seat"));
+        Assert.True(domains.Contains("duchy", "subvassal_seat"));
+        Assert.False(domains.Contains("duchy", "realm_subject_seat"));
+        Assert.False(domains.Contains("duchy", "outsider_seat"));
+        Assert.True(domains.Contains("duchy", "pembroke_seat")); // Still the ruler's own personal land.
+
+        var painter = Painter();
+        string[] settlements = { "duchy_seat", "duchy_castle_seat", "duchy_vassal_seat", "realm_subject_seat", "outsider_seat" };
+        var paints = painter.Paint(PoliticalMapView.Owners, settlements,
+            settlements.Select(x => painter.TerritoryOf(x, _world)).ToArray(), new Dictionary<string, string>(),
+            _world, level: PoliticalMapOwnerLevel.Vassals, mode: PoliticalMapLabelMode.Titles);
+        var selection = new PoliticalMapSelection(PoliticalMapView.Owners, PoliticalMapOwnerLevel.Vassals,
+            PoliticalMapLabelMode.Titles, "duchy");
+        var selected = selection.Apply(paints, painter.SelectionKeysOf(selection, settlements, paints, _world));
+        for (int i = 0; i < 3; i++) Assert.NotEqual(paints[i].Fill, selected[i].Fill);
+        for (int i = 3; i < 5; i++) Assert.Equal(paints[i], selected[i]);
+    }
+
+    [Fact]
     public void PrimaryTitleGathersUnattachedVassalsAndUntitledPersonalLand()
     {
         // Unattached clans answer to the Crown, not to a secondary duchy held by the king.

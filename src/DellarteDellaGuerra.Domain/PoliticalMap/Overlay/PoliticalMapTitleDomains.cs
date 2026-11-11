@@ -71,6 +71,9 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
                 if (_structure.GetRank(current) < TitleRank.King && _hierarchy.ControllerOf(current) == holder)
                     return current;
 
+            // Ruling a faction does not attach all its subjects to the ruler's personal duchy.
+            if (_world.KingdomOfClan(holder) is { } kingdom && _world.RulerClanOf(kingdom) == holder
+                && _hierarchy.HighestTitleOf(holder)?.Rank < TitleRank.King) return null;
             return primary;
         }
 
