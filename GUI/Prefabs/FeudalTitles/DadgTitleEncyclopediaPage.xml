@@ -87,14 +87,6 @@
                                     </ButtonWidget>
                                   </ItemTemplate>
                                 </NavigatableGridWidget>
-                                <EncyclopediaDivider Id="HistoryDivider" MarginTop="35" Parameter.Title="@HistoryText" Parameter.ItemList="..\HistoryList" />
-                                <ListPanel Id="HistoryList" DataSource="{History}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
-                                  <ItemTemplate>
-                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="25" MarginRight="25" MarginTop="20" Brush="Encyclopedia.SubPage.Info.Text" Text="@Text" />
-                                  </ItemTemplate>
-                                </ListPanel>
-                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="25" MarginRight="25" MarginTop="40" Brush="Encyclopedia.SubPage.Info.Text" Text="@SourcesHeading" />
-                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="25" MarginRight="25" MarginTop="20" Brush="Encyclopedia.SubPage.Info.Text" Text="@SourcesText" />
                               </Children>
                             </ListPanel>
                           </Children>

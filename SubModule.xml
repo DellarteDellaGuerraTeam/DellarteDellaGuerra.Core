@@ -54,5 +54,13 @@
       <Tags />
     </SubModule>
   </SubModules>
-  <Xmls/>
+  <Xmls>
+    <XmlNode>
+      <XmlName id="Concepts" path="dadg_concepts"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+      </IncludedGameTypes>
+    </XmlNode>
+  </Xmls>
 </Module>
