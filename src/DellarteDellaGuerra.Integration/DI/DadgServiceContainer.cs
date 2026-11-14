@@ -167,6 +167,7 @@ public class DadgServiceContainer
         services.AddSingleton<VisorVariantCatalog>();
         services.AddTransient<VisorToggleMissionLogic>();
         services.AddTransient<ShipSwivelGunCrewMissionLogic>();
+        services.AddTransient<ShipRudderVisualMissionLogic>();
     }
 
     private static void RegisterTitleServices(IServiceCollection services)

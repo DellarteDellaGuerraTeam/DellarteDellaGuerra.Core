@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-14",
+  "release_solution_build": {
+    "command": "rtk proxy dotnet build DellarteDellaGuerra.sln --configuration Release -v:minimal",
+    "exit_code": 0,
+    "warnings": 86,
+    "errors": 0,
+    "elapsed_seconds": 73.05,
+    "note": "Normal config/deployment targets required access outside the src sandbox; the authorized escalated build passed. Earlier sandbox-only build attempts failed."
+  },
+  "rudder_adapter_selfcheck": {
+    "command": "rtk proxy dotnet run --project artifacts/ship-visual-fixes-20261114/rudder-selfcheck/rudder-selfcheck.csproj --configuration Release",
+    "exit_code": 0,
+    "scope": "Production source compiled against engine doubles: empty mission, late spawn, absolute/reversed rotation, stable pivot, removed blade, no accumulated drift. Native engine rendering was not exercised."
+  },
+  "deployed_integration_dll_sha256": "13c73078362c128aada391350780512b7bc11192292e9448f111ef4d9e42f513",
+  "client_and_editor_dlls_match_build": true,
+  "fire_xml_static_checks": "Passed all three ships: required parent tags, unique instance GUIDs across ships, contiguous unique node indices, no physics/destructible/ship scripts cloned; live hashes match authoring manifest.",
+  "durable_authoring_package_hashes": "All 27 files match files.json",
+  "staged_rudder_driver_tags": "Boat native fallback; kogge and carrack custom adapter; no duplicate driver tags",
+  "new_mesh_cutover_active": false,
+  "native_asset_import": "Pending",
+  "runtime_visual_and_battle_verification": "Not performed"
+}

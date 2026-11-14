@@ -225,6 +225,7 @@ namespace DellarteDellaGuerra.Integration
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<TournamentRecapBannerMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<VisorToggleMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<ShipSwivelGunCrewMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<ShipRudderVisualMissionLogic>());
             if (_serviceProvider.GetRequiredService<CombatFeatureInstaller>().IsEnabled)
                 mission.AddMissionBehavior(_serviceProvider.GetRequiredService<CombatBalanceMissionLogic>());
         }

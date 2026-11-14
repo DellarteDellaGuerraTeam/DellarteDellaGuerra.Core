@@ -1,0 +1,267 @@
+{
+  "status": "final static geometry review; runtime not performed",
+  "supersedes": "initial candidates.json and REPORT_INITIAL_SUPERSEDED.md",
+  "ships": {
+    "english_boat_b": {
+      "staged_attachment": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerra.Core\\src\\artifacts\\ship-boarding-20261114\\stage\\NestedPrefabs\\dadg_ws_english_boat_b_ship_nested\\attachment_machine_holder.xml",
+      "staged_attachment_sha256": "aaab65cdc164d6b1526d53f3419b7fe0ba608f5e522dd8b10b6cc07fc9eec03c",
+      "nav_evidence_sha256": "af373b3e028b5f112815c92e55939d2f75172134dd905a6b55723434b9ce26d4",
+      "boarding_vertex_max_collision_height_error": 0.11884000178813936,
+      "boarding_vertices_missing_support": 0,
+      "source": {
+        "source": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_ws_english_boat_b.blend",
+        "source_sha256": "f737f0874db304d3a564f0a26cc4f32b831ee173c262001145cf0afe6d1dec25",
+        "body_name": "dadg_ws_english_boat_b_body",
+        "visual_z_offset": 0.15,
+        "collision_source": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_warsails\\collision\\dadg_ws_collision_sources_v1.fbx",
+        "collision_sha256": "b8a218a3aec4e3ec08bdc30017a3e200fc2b7530ecd4750ed691ad91bccbe51f"
+      },
+      "stations": [
+        {
+          "position": [
+            -0.375,
+            -1.95,
+            0.20781
+          ],
+          "minimum_neutral_surface_clearance_m": 0.10716000000000003,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            0.32499999999999996,
+            0.20574,
+            0.21827,
+            0.012529999999999986
+          ]
+        },
+        {
+          "position": [
+            0.375,
+            -1.95,
+            0.20575
+          ],
+          "minimum_neutral_surface_clearance_m": 0.10794999999999999,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            -0.375,
+            0.20781,
+            0.20785,
+            4.000000000001225e-05
+          ]
+        },
+        {
+          "position": [
+            -0.375,
+            2.45,
+            0.19953
+          ],
+          "minimum_neutral_surface_clearance_m": 0.09782999999999997,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            0.3999999999999999,
+            0.19854,
+            0.20055,
+            0.0020100000000000118
+          ]
+        },
+        {
+          "position": [
+            0.375,
+            2.45,
+            0.19813
+          ],
+          "minimum_neutral_surface_clearance_m": 0.09926999999999997,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            -0.44999999999999996,
+            0.20034,
+            0.19095,
+            -0.009389999999999982
+          ]
+        }
+      ]
+    },
+    "kogge": {
+      "staged_attachment": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerra.Core\\src\\artifacts\\ship-boarding-20261114\\stage\\NestedPrefabs\\dadg_ws_kogge_ship_nested\\attachment_machine_holder.xml",
+      "staged_attachment_sha256": "55e2bc3c6ae4c336f633bd047d7196f20325bf0750de1e7fa4dd625be2f50988",
+      "nav_evidence_sha256": "e7c97580c142bb0f75c35c81fe100e684669309ac582e39486c6981bad95fea5",
+      "boarding_vertex_max_collision_height_error": 0.012134476776123115,
+      "boarding_vertices_missing_support": 0,
+      "source": {
+        "source": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_ws_kogge_body_without_yards_v1.blend",
+        "source_sha256": "90c1081df361ef3bdfbda686e2f68595d65a05a4c0f54f8ae7250ab136bbaba6",
+        "body_name": "dadg_ws_kogge_body_without_yards_v1",
+        "visual_z_offset": -0.8,
+        "collision_source": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_warsails\\collision\\dadg_ws_remaining_detailed_collision_v1.fbx",
+        "collision_sha256": "8f313ffffc42328f1f969a3fcb3779069824db42513542317613ca8effb029d5"
+      },
+      "stations": [
+        {
+          "position": [
+            -2.5,
+            -3.75,
+            1.73249
+          ],
+          "minimum_neutral_surface_clearance_m": 0.13567344631206302,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            -1.55,
+            1.79411,
+            1.79378,
+            -0.0003300000000001635
+          ]
+        },
+        {
+          "position": [
+            2.5,
+            -3.75,
+            1.73332
+          ],
+          "minimum_neutral_surface_clearance_m": 0.109662168253716,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            1.55,
+            1.79444,
+            1.79461,
+            0.00017000000000000348
+          ]
+        },
+        {
+          "position": [
+            -2.5,
+            -2.25,
+            1.69838
+          ],
+          "minimum_neutral_surface_clearance_m": 0.12787554771129672,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            -1.5250000000000001,
+            1.76095,
+            1.77318,
+            0.012229999999999963
+          ]
+        },
+        {
+          "position": [
+            2.5,
+            -2.25,
+            1.69794
+          ],
+          "minimum_neutral_surface_clearance_m": 0.06942506422406014,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            1.5250000000000001,
+            1.75999,
+            1.77274,
+            0.012750000000000039
+          ]
+        },
+        {
+          "position": [
+            -2.5,
+            2.75,
+            1.78805
+          ],
+          "minimum_neutral_surface_clearance_m": 0.09206464177999107,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            -1.5,
+            1.85926,
+            1.87636,
+            0.017100000000000115
+          ]
+        },
+        {
+          "position": [
+            2.5,
+            2.75,
+            1.78911
+          ],
+          "minimum_neutral_surface_clearance_m": 0.05918132360135875,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            1.475,
+            1.85763,
+            1.84093,
+            -0.016699999999999937
+          ]
+        }
+      ]
+    },
+    "carrack": {
+      "staged_attachment": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerra.Core\\src\\artifacts\\ship-boarding-20261114\\stage\\NestedPrefabs\\dadg_ws_carrack_ship_nested\\attachment_machine_holder.xml",
+      "staged_attachment_sha256": "05ce170fe39f74b4842c9308b1f968653e26da96ce78f11ce688232b02b8eec6",
+      "nav_evidence_sha256": "f7ba23ee052c4a1e53aeba1f82fd68bdce3987ae36f3929267cde313a2b8783d",
+      "boarding_vertex_max_collision_height_error": 0.0017900812530515786,
+      "boarding_vertices_missing_support": 0,
+      "source": {
+        "source": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_ws_carrack_body_without_yards_v1.blend",
+        "source_sha256": "985704d23f6e11ad4e424bee4d78ef7acad8d8ba9ca4c9b2cccc54c84783bc39",
+        "body_name": "dadg_ws_carrack_body_without_yards_v1",
+        "visual_z_offset": -1.4,
+        "collision_source": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_warsails\\collision\\dadg_ws_remaining_detailed_collision_v1.fbx",
+        "collision_sha256": "8f313ffffc42328f1f969a3fcb3779069824db42513542317613ca8effb029d5"
+      },
+      "stations": [
+        {
+          "position": [
+            -2.3,
+            5.3,
+            2.23134
+          ],
+          "minimum_neutral_surface_clearance_m": 0.13497019685872447,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            -1.325,
+            2.27595,
+            2.266,
+            -0.009949999999999903
+          ]
+        },
+        {
+          "position": [
+            2.3,
+            5.3,
+            2.23134
+          ],
+          "minimum_neutral_surface_clearance_m": 0.07413090945327871,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            1.325,
+            2.27595,
+            2.266,
+            -0.009949999999999903
+          ]
+        },
+        {
+          "position": [
+            -1.1,
+            10.3,
+            4.49333
+          ],
+          "minimum_neutral_surface_clearance_m": 0.5822399999999996,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            -0.42500000000000027,
+            4.60545,
+            4.61259,
+            0.007139999999999702
+          ]
+        },
+        {
+          "position": [
+            1.1,
+            10.3,
+            4.50877
+          ],
+          "minimum_neutral_surface_clearance_m": 0.5960099999999997,
+          "ground_overlap_exists": true,
+          "closest_ground_transition": [
+            0.40000000000000013,
+            4.60734,
+            4.60848,
+            0.001140000000000363
+          ]
+        }
+      ]
+    }
+  }
+}

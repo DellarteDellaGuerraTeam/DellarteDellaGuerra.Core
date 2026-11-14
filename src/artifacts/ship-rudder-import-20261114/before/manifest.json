@@ -1,0 +1,130 @@
+{
+  "Schema": "bannerlord-tpac-export-v1",
+  "CompletedUtc": "2026-11-14T13:26:09.9096147+00:00",
+  "AssetPackages": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\Assets",
+  "TpacToolBin": "D:\\Bannerlord\\Tools\\TpacTool_v1.3\\bin",
+  "ExportOptions": "AssimpModelExporter.ExportToFile; ExportAllLod; native coordinates and relative scale; no embedded materials or textures",
+  "OwnershipNotice": "TPAC packages and extracted source assets remain TaleWorlds property.",
+  "PrefabXmlInputs": [],
+  "RequestedMeshCount": 6,
+  "ExportedMeshCount": 0,
+  "MissingMeshCount": 3,
+  "ErrorMeshCount": 3,
+  "DuplicateAssetNameCount": 0,
+  "Meshes": [
+    {
+      "MeshId": "dadg_ws_carrack_body_without_yards_v1",
+      "Status": "error",
+      "FbxFile": "fbx/dadg_ws_carrack_body_without_yards_v1.fbx",
+      "AssetGuid": "a4affe6f-75d4-4097-a09e-965c716808f7",
+      "SourcePackage": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\Assets\\dadg_warsails\\carrack\\dadg_ws_carrack_body_without_yards_v1_geo.tpac",
+      "DuplicateAssetCount": 1,
+      "Sha256": null,
+      "ByteCount": 0,
+      "Sources": [
+        {
+          "MeshId": "dadg_ws_carrack_body_without_yards_v1",
+          "Kind": "explicit",
+          "Source": "--mesh"
+        }
+      ],
+      "Error": "ResolveFailedException`1: Exception of type 'TpacTool.Lib.ResolveFailedException`1[TpacTool.Lib.Material]' was thrown.",
+      "FbxHeader": null
+    },
+    {
+      "MeshId": "dadg_ws_carrack_rudder_v1",
+      "Status": "missing",
+      "FbxFile": null,
+      "AssetGuid": null,
+      "SourcePackage": null,
+      "DuplicateAssetCount": 0,
+      "Sha256": null,
+      "ByteCount": 0,
+      "Sources": [
+        {
+          "MeshId": "dadg_ws_carrack_rudder_v1",
+          "Kind": "explicit",
+          "Source": "--mesh"
+        }
+      ],
+      "Error": null,
+      "FbxHeader": null
+    },
+    {
+      "MeshId": "dadg_ws_english_boat_b_body",
+      "Status": "error",
+      "FbxFile": "fbx/dadg_ws_english_boat_b_body.fbx",
+      "AssetGuid": "13346306-04a2-41e6-b20d-5e8429ca16ec",
+      "SourcePackage": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\Assets\\dadg_warsails\\english_boat_b\\dadg_ws_english_boat_b_geo.tpac",
+      "DuplicateAssetCount": 1,
+      "Sha256": null,
+      "ByteCount": 0,
+      "Sources": [
+        {
+          "MeshId": "dadg_ws_english_boat_b_body",
+          "Kind": "explicit",
+          "Source": "--mesh"
+        }
+      ],
+      "Error": "ResolveFailedException`1: Exception of type 'TpacTool.Lib.ResolveFailedException`1[TpacTool.Lib.Material]' was thrown.",
+      "FbxHeader": null
+    },
+    {
+      "MeshId": "dadg_ws_english_boat_b_rudder_v1",
+      "Status": "missing",
+      "FbxFile": null,
+      "AssetGuid": null,
+      "SourcePackage": null,
+      "DuplicateAssetCount": 0,
+      "Sha256": null,
+      "ByteCount": 0,
+      "Sources": [
+        {
+          "MeshId": "dadg_ws_english_boat_b_rudder_v1",
+          "Kind": "explicit",
+          "Source": "--mesh"
+        }
+      ],
+      "Error": null,
+      "FbxHeader": null
+    },
+    {
+      "MeshId": "dadg_ws_kogge_body_without_yards_v1",
+      "Status": "error",
+      "FbxFile": "fbx/dadg_ws_kogge_body_without_yards_v1.fbx",
+      "AssetGuid": "88e6e519-69bc-4ac9-8bd8-3bd567c5eb66",
+      "SourcePackage": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\Assets\\dadg_warsails\\kogge\\dadg_ws_kogge_body_without_yards_v1_geo.tpac",
+      "DuplicateAssetCount": 1,
+      "Sha256": null,
+      "ByteCount": 0,
+      "Sources": [
+        {
+          "MeshId": "dadg_ws_kogge_body_without_yards_v1",
+          "Kind": "explicit",
+          "Source": "--mesh"
+        }
+      ],
+      "Error": "ResolveFailedException`1: Exception of type 'TpacTool.Lib.ResolveFailedException`1[TpacTool.Lib.Material]' was thrown.",
+      "FbxHeader": null
+    },
+    {
+      "MeshId": "dadg_ws_kogge_rudder_v1",
+      "Status": "missing",
+      "FbxFile": null,
+      "AssetGuid": null,
+      "SourcePackage": null,
+      "DuplicateAssetCount": 0,
+      "Sha256": null,
+      "ByteCount": 0,
+      "Sources": [
+        {
+          "MeshId": "dadg_ws_kogge_rudder_v1",
+          "Kind": "explicit",
+          "Source": "--mesh"
+        }
+      ],
+      "Error": null,
+      "FbxHeader": null
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "files": [
+    {
+      "path": "NavMeshPrefabs\\dadg_ws_english_boat_b_navmesh.bin",
+      "before_sha256": "34851578bae15ab3e22b9cfa89c15853f8877d9a56cb70ac0c92076cf43d445d",
+      "after_sha256": "a990131f8f82f18a91bcae4a6097ccac62ed5f8edb203b6c7dea315d465c4458"
+    },
+    {
+      "path": "NestedPrefabs\\dadg_ws_english_boat_b_ship_nested\\attachment_machine_holder.xml",
+      "before_sha256": "b42a52586b5829c8d29bd39bee64dd1d65fa81bc606de85e126abdb5ca725156",
+      "after_sha256": "aaab65cdc164d6b1526d53f3419b7fe0ba608f5e522dd8b10b6cc07fc9eec03c"
+    },
+    {
+      "path": "NavMeshPrefabs\\dadg_ws_kogge_navmesh.bin",
+      "before_sha256": "758821485e706dd7f711e296f3951fc391f18769915c00ee9730e79c94a32656",
+      "after_sha256": "b696d174ebb866ab47f963bcadb8ef38749abf47611dc6b607cf394f71a6f191"
+    },
+    {
+      "path": "NestedPrefabs\\dadg_ws_kogge_ship_nested\\attachment_machine_holder.xml",
+      "before_sha256": "e34f8219a8595bff5c3f4680f36bf0948700427de2f589cacf1115dbfe2b45a3",
+      "after_sha256": "55e2bc3c6ae4c336f633bd047d7196f20325bf0750de1e7fa4dd625be2f50988"
+    },
+    {
+      "path": "NestedPrefabs\\dadg_ws_kogge_ship_nested\\climbers_holder.xml",
+      "before_sha256": "fd92fdb2c52f51628e371a7d8909404d3f88562e61b8a51474fdba8544498aae",
+      "after_sha256": "ab03802d61526c10b9f696b734f4788028d868061608d5d3c73e5b12cbf2f5d5"
+    },
+    {
+      "path": "NavMeshPrefabs\\dadg_ws_carrack_navmesh.bin",
+      "before_sha256": "97aad47041207512abf78becd102965fcae721ec273e36d37b7d734f8c82353f",
+      "after_sha256": "2353a2936a1e4a50340ad275c726c3fdeecbf5f2ea5497a3593383af99cb68dd"
+    },
+    {
+      "path": "NestedPrefabs\\dadg_ws_carrack_ship_nested\\attachment_machine_holder.xml",
+      "before_sha256": "88d1d356fb80ec89c295fffd95867782de1b0940408da0dc0bf977e27e89d410",
+      "after_sha256": "05ce170fe39f74b4842c9308b1f968653e26da96ce78f11ce688232b02b8eec6"
+    }
+  ],
+  "verified_live_sha256": {
+    "NavMeshPrefabs\\dadg_ws_english_boat_b_navmesh.bin": "a990131f8f82f18a91bcae4a6097ccac62ed5f8edb203b6c7dea315d465c4458",
+    "NestedPrefabs\\dadg_ws_english_boat_b_ship_nested\\attachment_machine_holder.xml": "aaab65cdc164d6b1526d53f3419b7fe0ba608f5e522dd8b10b6cc07fc9eec03c",
+    "NavMeshPrefabs\\dadg_ws_kogge_navmesh.bin": "b696d174ebb866ab47f963bcadb8ef38749abf47611dc6b607cf394f71a6f191",
+    "NestedPrefabs\\dadg_ws_kogge_ship_nested\\attachment_machine_holder.xml": "55e2bc3c6ae4c336f633bd047d7196f20325bf0750de1e7fa4dd625be2f50988",
+    "NestedPrefabs\\dadg_ws_kogge_ship_nested\\climbers_holder.xml": "ab03802d61526c10b9f696b734f4788028d868061608d5d3c73e5b12cbf2f5d5",
+    "NavMeshPrefabs\\dadg_ws_carrack_navmesh.bin": "2353a2936a1e4a50340ad275c726c3fdeecbf5f2ea5497a3593383af99cb68dd",
+    "NestedPrefabs\\dadg_ws_carrack_ship_nested\\attachment_machine_holder.xml": "05ce170fe39f74b4842c9308b1f968653e26da96ce78f11ce688232b02b8eec6"
+  },
+  "campaign_map_navmesh_unchanged_sha256": "14cd2e4b656f5ec38b28d06875d0cb21d264f6e6379cc66b0161c8ab82550ce9"
+}

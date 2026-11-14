@@ -1,0 +1,29 @@
+[
+  {
+    "ship": "english_boat_b",
+    "body_metamesh": "dadg_ws_english_boat_b_body",
+    "body_guid": "13346306-04a2-41e6-b20d-5e8429ca16ec",
+    "body_package": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap\\Assets\\dadg_warsails\\english_boat_b\\dadg_ws_english_boat_b_geo.tpac",
+    "body_package_sha256": "6a600a30d996d7c451d3311115ba391ef9f1325b2f7f34393f8ee8a4d6792a21",
+    "new_rudder_metamesh": "dadg_ws_english_boat_b_rudder_v1",
+    "new_rudder_present_before": false
+  },
+  {
+    "ship": "kogge",
+    "body_metamesh": "dadg_ws_kogge_body_without_yards_v1",
+    "body_guid": "88e6e519-69bc-4ac9-8bd8-3bd567c5eb66",
+    "body_package": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap\\Assets\\dadg_warsails\\kogge\\dadg_ws_kogge_body_without_yards_v1_geo.tpac",
+    "body_package_sha256": "6f9d0e03bfd5dfb088d9e74c6d763e04609f275351cd29efb20dec8d7b689cbf",
+    "new_rudder_metamesh": "dadg_ws_kogge_rudder_v1",
+    "new_rudder_present_before": false
+  },
+  {
+    "ship": "carrack",
+    "body_metamesh": "dadg_ws_carrack_body_without_yards_v1",
+    "body_guid": "a4affe6f-75d4-4097-a09e-965c716808f7",
+    "body_package": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap\\Assets\\dadg_warsails\\carrack\\dadg_ws_carrack_body_without_yards_v1_geo.tpac",
+    "body_package_sha256": "2ffd4f2069fc9c1e52504ee239c6886f4a2805673f11145ea2269dbca5b1da7b",
+    "new_rudder_metamesh": "dadg_ws_carrack_rudder_v1",
+    "new_rudder_present_before": false
+  }
+]

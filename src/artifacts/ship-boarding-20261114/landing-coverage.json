@@ -1,0 +1,2744 @@
+{
+  "english_boat_b": [
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_captain_nested",
+      "position": [
+        -0.125,
+        -2.625,
+        0.207423
+      ],
+      "after_position": [
+        -0.125,
+        -2.625,
+        0.207423
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0024230017881393395,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0024230017881393395,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -0.375,
+        0.125,
+        0.204622
+      ],
+      "after_position": [
+        -0.375,
+        0.125,
+        0.204622
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0003779982118606584,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0003779982118606584,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -0.125,
+        2.625,
+        0.196997
+      ],
+      "after_position": [
+        -0.125,
+        2.625,
+        0.196997
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.008002998211860651,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.008002998211860651,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        0.125,
+        1.625,
+        0.198333
+      ],
+      "after_position": [
+        0.125,
+        1.625,
+        0.198333
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0066669982118606474,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0066669982118606474,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_crew_spawn_nested",
+      "position": [
+        0.125,
+        -0.625,
+        0.203067
+      ],
+      "after_position": [
+        0.125,
+        -0.625,
+        0.203067
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.001932998211860687,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.001932998211860687,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "climbers_holder.xml",
+      "name": "climb_point",
+      "position": [
+        -0.3750000000000411,
+        0.8750002372909915,
+        0.20289400000000002
+      ],
+      "after_position": [
+        -0.3750000000000411,
+        0.8750002372909915,
+        0.20289400000000002
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.002105998211860638,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.002105998211860638,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "climbers_holder.xml",
+      "name": "climb_point",
+      "position": [
+        0.375,
+        0.875,
+        0.20045800000000003
+      ],
+      "after_position": [
+        0.375,
+        0.875,
+        0.20045800000000003
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.004541998211860632,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.004541998211860632,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "control_point_holder.xml",
+      "name": "ShipControl_nested",
+      "position": [
+        0.0,
+        -1.5,
+        0.205246
+      ],
+      "after_position": [
+        0.0,
+        -1.5,
+        0.205246
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.000246001788139355,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.000246001788139355,
+        "nearest_xy_m": 0.0
+      }
+    }
+  ],
+  "kogge": [
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_captain_nested",
+      "position": [
+        -1.0,
+        -2.0,
+        1.794
+      ],
+      "after_position": [
+        -1.0,
+        -2.0,
+        1.794
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0001666425350648204,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0001666425350648204,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.0,
+        -4.0,
+        1.843
+      ],
+      "after_position": [
+        -1.0,
+        -4.0,
+        1.843
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00020002685784858976,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00020002685784858976,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        1.0,
+        -4.0,
+        1.844
+      ],
+      "after_position": [
+        1.0,
+        -4.0,
+        1.844
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0001000279426588424,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0001000279426588424,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.0,
+        4.0,
+        1.955
+      ],
+      "after_position": [
+        -1.0,
+        4.0,
+        1.955
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0004166642631640016,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0004166642631640016,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        1.0,
+        4.0,
+        1.95
+      ],
+      "after_position": [
+        1.0,
+        4.0,
+        1.95
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00044442474105732543,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00044442474105732543,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.0,
+        -9.0,
+        5.465
+      ],
+      "after_position": [
+        0.0,
+        -9.0,
+        5.465
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.7,
+        -10.9,
+        5.465
+      ],
+      "after_position": [
+        0.7,
+        -10.9,
+        5.465
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -2.5,
+        -4.0,
+        1.744
+      ],
+      "after_position": [
+        -2.5,
+        -4.0,
+        1.744
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 9.998216628992473e-05,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 7.420777250310984e-05,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        2.5,
+        -4.0,
+        1.745
+      ],
+      "after_position": [
+        2.5,
+        -4.0,
+        1.745
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 9.996929168654134e-05,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 4.994314908612907e-05,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -2.0,
+        4.0,
+        1.872
+      ],
+      "after_position": [
+        -2.0,
+        4.0,
+        1.872
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.000444501087988991,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.000444501087988991,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        2.0,
+        4.0,
+        1.873
+      ],
+      "after_position": [
+        2.0,
+        4.0,
+        1.873
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.000444454357947377,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.000444454357947377,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -2.0,
+        -2.0,
+        1.731
+      ],
+      "after_position": [
+        -2.0,
+        -2.0,
+        1.731
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.00016665835512963412,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.000249970701833524,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        2.0,
+        -2.0,
+        1.73
+      ],
+      "after_position": [
+        2.0,
+        -2.0,
+        1.73
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.000249981035788549,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00010416578087557582,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -2.0,
+        2.0,
+        1.788
+      ],
+      "after_position": [
+        -2.0,
+        2.0,
+        1.788
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.0003529526002126193,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0004706026658520823,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        2.0,
+        2.0,
+        1.789
+      ],
+      "after_position": [
+        2.0,
+        2.0,
+        1.789
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.00023526344937319088,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0009215573615100059,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -1.2,
+        -10.0,
+        5.465
+      ],
+      "after_position": [
+        -1.2,
+        -10.0,
+        5.465
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        1.2,
+        -10.0,
+        5.465
+      ],
+      "after_position": [
+        1.2,
+        -10.0,
+        5.465
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -1.0,
+        -11.5,
+        5.465
+      ],
+      "after_position": [
+        -1.0,
+        -11.5,
+        5.465
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        1.0,
+        -11.5,
+        5.465
+      ],
+      "after_position": [
+        1.0,
+        -11.5,
+        5.465
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -0.9,
+        7.0,
+        5.484
+      ],
+      "after_position": [
+        -0.9,
+        7.0,
+        5.484
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00038479344520681025,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00038479344520681025,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        0.9,
+        7.0,
+        5.485
+      ],
+      "after_position": [
+        0.9,
+        7.0,
+        5.485
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0003847209659593176,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0003847209659593176,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_crew_spawn_nested",
+      "position": [
+        -1.6,
+        0.0,
+        1.762
+      ],
+      "after_position": [
+        -1.6,
+        0.0,
+        1.762
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.00037779754472877514,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.00037779754472877514,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_crew_spawn_nested",
+      "position": [
+        1.6,
+        0.0,
+        1.762
+      ],
+      "after_position": [
+        1.6,
+        0.0,
+        1.762
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.00037779754472877514,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.00037779754472877514,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -1.2,
+        -9.0,
+        5.465
+      ],
+      "after_position": [
+        -1.2,
+        -9.0,
+        5.465
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        1.2,
+        -9.0,
+        5.465
+      ],
+      "after_position": [
+        1.2,
+        -9.0,
+        5.465
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.0,
+        -7.8,
+        5.465
+      ],
+      "after_position": [
+        0.0,
+        -7.8,
+        5.465
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -1.8,
+        -3.3,
+        1.757
+      ],
+      "after_position": [
+        -1.8,
+        -3.3,
+        1.757
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.00025001007317726476,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.00025001007317726476,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        1.2,
+        -2.7,
+        1.782
+      ],
+      "after_position": [
+        1.2,
+        -2.7,
+        1.782
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 8.334396117004594e-05,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 8.334396117004594e-05,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.2,
+        -0.9,
+        1.783
+      ],
+      "after_position": [
+        -1.2,
+        -0.9,
+        1.783
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0004944532237332044,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0004944532237332044,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -1.8,
+        3.0,
+        1.849
+      ],
+      "after_position": [
+        -1.8,
+        3.0,
+        1.849
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.0003333488383234773,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.0003333494273702886,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "climbers_holder.xml",
+      "name": "climb_point",
+      "position": [
+        -3.00000000000003,
+        1.7320510330969674e-07,
+        1.671
+      ],
+      "after_position": [
+        -2.999999896076968,
+        -0.2999998267948787,
+        1.671
+      ],
+      "before": {
+        "xy_faces": 0,
+        "z_error": null,
+        "nearest_xy_m": 0.8
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.004999698462275104,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "climbers_holder.xml",
+      "name": "climb_point",
+      "position": [
+        3.0,
+        0.0,
+        1.671
+      ],
+      "after_position": [
+        3.0,
+        -0.3,
+        1.671
+      ],
+      "before": {
+        "xy_faces": 0,
+        "z_error": null,
+        "nearest_xy_m": 0.8
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0004444133643211057,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "control_point_holder.xml",
+      "name": "ShipControl_nested",
+      "position": [
+        0.034,
+        -11.428,
+        5.465
+      ],
+      "after_position": [
+        0.034,
+        -11.428,
+        5.465
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "control_point_holder.xml",
+      "name": "dadg_ship_falconet_1",
+      "position": [
+        1.5,
+        -8.0,
+        5.465
+      ],
+      "after_position": [
+        1.5,
+        -8.0,
+        5.465
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "control_point_holder.xml",
+      "name": "dadg_ship_falconet_2",
+      "position": [
+        -1.5,
+        -8.0,
+        5.465
+      ],
+      "after_position": [
+        -1.5,
+        -8.0,
+        5.465
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 1.5258789076710855e-07,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "control_point_holder.xml",
+      "name": "dadg_ship_falconet_3",
+      "position": [
+        0.0,
+        8.6,
+        5.486
+      ],
+      "after_position": [
+        0.0,
+        8.6,
+        5.486
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.000500024795532461,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.000500024795532461,
+        "nearest_xy_m": 0.0
+      }
+    }
+  ],
+  "carrack": [
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_captain_nested",
+      "position": [
+        0.0,
+        -7.5,
+        5.524
+      ],
+      "after_position": [
+        0.0,
+        -7.5,
+        5.524
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0003528411627788941,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0003528411627788941,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.0,
+        0.0,
+        2.316
+      ],
+      "after_position": [
+        -1.0,
+        0.0,
+        2.316
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.022691178356180952,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.022691178356180952,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        1.0,
+        0.0,
+        2.316
+      ],
+      "after_position": [
+        1.0,
+        0.0,
+        2.316
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.02249114516831474,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.02249114516831474,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.0,
+        4.0,
+        2.316
+      ],
+      "after_position": [
+        -1.0,
+        4.0,
+        2.316
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.022449862633180384,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.022449862633180384,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        1.0,
+        4.0,
+        2.316
+      ],
+      "after_position": [
+        1.0,
+        4.0,
+        2.316
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.023209391804788204,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.023209391804788204,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.2,
+        1.0,
+        2.285
+      ],
+      "after_position": [
+        -1.2,
+        1.0,
+        2.285
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0002140340830938392,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0002140340830938392,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -0.5,
+        1.0,
+        2.331
+      ],
+      "after_position": [
+        -0.5,
+        1.0,
+        2.331
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.014634188114686975,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.014634188114686975,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.5,
+        1.0,
+        2.331
+      ],
+      "after_position": [
+        0.5,
+        1.0,
+        2.331
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.014634188114686975,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.014634188114686975,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        1.2,
+        1.0,
+        2.285
+      ],
+      "after_position": [
+        1.2,
+        1.0,
+        2.285
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00021394685678366443,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00021394685678366443,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.5,
+        3.0,
+        2.296
+      ],
+      "after_position": [
+        -1.5,
+        3.0,
+        2.296
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.02343749585934063,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.02343749585934063,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -0.5,
+        3.0,
+        2.331
+      ],
+      "after_position": [
+        -0.5,
+        3.0,
+        2.331
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.014187574222678467,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.014187574222678467,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.5,
+        3.0,
+        2.331
+      ],
+      "after_position": [
+        0.5,
+        3.0,
+        2.331
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.014187574222678467,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.014187574222678467,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        1.5,
+        3.0,
+        2.296
+      ],
+      "after_position": [
+        1.5,
+        3.0,
+        2.296
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.023437495859341073,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.023437495859341073,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.5,
+        5.0,
+        2.293
+      ],
+      "after_position": [
+        -1.5,
+        5.0,
+        2.293
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.025770791681500427,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.025770791681500427,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        1.5,
+        5.0,
+        2.293
+      ],
+      "after_position": [
+        1.5,
+        5.0,
+        2.293
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.025833302006135206,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.025833302006135206,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.5,
+        6.0,
+        2.288
+      ],
+      "after_position": [
+        -1.5,
+        6.0,
+        2.288
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.02449990938602653,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.02449990938602653,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -0.8,
+        9.0,
+        4.369
+      ],
+      "after_position": [
+        -0.8,
+        9.0,
+        4.369
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.00019999938015757834,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.00019999938015757834,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.8,
+        9.0,
+        4.374
+      ],
+      "after_position": [
+        0.8,
+        9.0,
+        4.374
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 9.989204415195019e-05,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 9.989204415195019e-05,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        1.5,
+        6.0,
+        2.288
+      ],
+      "after_position": [
+        1.5,
+        6.0,
+        2.288
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.02449990938602653,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.02449990938602653,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.85,
+        7.0,
+        2.252
+      ],
+      "after_position": [
+        -1.85,
+        7.0,
+        2.252
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.011400082874298612,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.011400082874298612,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.0,
+        7.0,
+        2.309
+      ],
+      "after_position": [
+        -1.0,
+        7.0,
+        2.309
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.025810042531306365,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.025810042531306365,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        1.0,
+        7.0,
+        2.309
+      ],
+      "after_position": [
+        1.0,
+        7.0,
+        2.309
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.025810042531306365,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.025810042531306365,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        1.85,
+        7.0,
+        2.252
+      ],
+      "after_position": [
+        1.85,
+        7.0,
+        2.252
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.011400082874299056,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.011400082874299056,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -2.4,
+        4.0,
+        2.231
+      ],
+      "after_position": [
+        -2.4,
+        4.0,
+        2.231
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00025637002591816227,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00025637002591816227,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        2.4,
+        4.0,
+        2.231
+      ],
+      "after_position": [
+        2.4,
+        4.0,
+        2.231
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00025637002591816227,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00025637002591816227,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        0.8,
+        -6.6,
+        5.357
+      ],
+      "after_position": [
+        0.8,
+        -6.6,
+        5.357
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0005374654971168624,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0005374654971168624,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -2.4,
+        5.0,
+        2.229
+      ],
+      "after_position": [
+        -2.4,
+        5.0,
+        2.229
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0019334020190844292,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0020445144809295712,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        2.4,
+        5.0,
+        2.229
+      ],
+      "after_position": [
+        2.4,
+        5.0,
+        2.229
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0019334020190848733,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0020445144809295712,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -2.25,
+        6.0,
+        2.228
+      ],
+      "after_position": [
+        -2.25,
+        6.0,
+        2.228
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0008332773579335928,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0008332773579335928,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        2.25,
+        6.0,
+        2.228
+      ],
+      "after_position": [
+        2.25,
+        6.0,
+        2.228
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0004999287128417684,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0004999287128417684,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_crew_spawn_nested",
+      "position": [
+        -1.0,
+        2.0,
+        2.317
+      ],
+      "after_position": [
+        -1.0,
+        2.0,
+        2.317
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.022291084263535765,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.022291084263535765,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_crew_spawn_nested",
+      "position": [
+        1.0,
+        2.0,
+        2.317
+      ],
+      "after_position": [
+        1.0,
+        2.0,
+        2.317
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.022291084263535765,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.022291084263535765,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -0.6,
+        -5.1,
+        3.891
+      ],
+      "after_position": [
+        -0.6,
+        -5.1,
+        3.891
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0004404983912249527,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0004404983912249527,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        0.6,
+        -5.1,
+        3.891
+      ],
+      "after_position": [
+        0.6,
+        -5.1,
+        3.891
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0004404983912245086,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0004404983912245086,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.0,
+        -4.2,
+        3.877
+      ],
+      "after_position": [
+        0.0,
+        -4.2,
+        3.877
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.000430123599655996,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.000430123599655996,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -0.6,
+        -3.3,
+        3.86
+      ],
+      "after_position": [
+        -0.6,
+        -3.3,
+        3.86
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00029625831154023174,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00029625831154023174,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.6,
+        -3.3,
+        3.86
+      ],
+      "after_position": [
+        0.6,
+        -3.3,
+        3.86
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00029625831153934357,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00029625831153934357,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.0,
+        -2.4,
+        3.838
+      ],
+      "after_position": [
+        0.0,
+        -2.4,
+        3.838
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0002892344928926427,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0002892344928926427,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -2.1,
+        -1.5,
+        3.732
+      ],
+      "after_position": [
+        -2.1,
+        -1.5,
+        3.732
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.000406986565553602,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.000406986565553602,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -0.9,
+        -1.5,
+        3.817
+      ],
+      "after_position": [
+        -0.9,
+        -1.5,
+        3.817
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00010842754726825277,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00010842754726825277,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.6,
+        -1.5,
+        3.817
+      ],
+      "after_position": [
+        0.6,
+        -1.5,
+        3.817
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00010842754726825277,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00010842754726825277,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        2.1,
+        -1.5,
+        3.733
+      ],
+      "after_position": [
+        2.1,
+        -1.5,
+        3.733
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00014854826819155065,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00014854826819155065,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.0,
+        2.1,
+        2.325
+      ],
+      "after_position": [
+        0.0,
+        2.1,
+        2.325
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 4.7683715642676816e-08,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 4.7683715642676816e-08,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -2.1,
+        2.4,
+        2.247
+      ],
+      "after_position": [
+        -2.1,
+        2.4,
+        2.247
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00033341031604461335,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00033341031604461335,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        2.1,
+        2.4,
+        2.247
+      ],
+      "after_position": [
+        2.1,
+        2.4,
+        2.247
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00033341031604416926,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00033341031604416926,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.0,
+        3.6,
+        2.325
+      ],
+      "after_position": [
+        0.0,
+        3.6,
+        2.325
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 4.7683715642676816e-08,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 4.7683715642676816e-08,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -0.3,
+        -1.8,
+        3.824
+      ],
+      "after_position": [
+        -0.3,
+        -1.8,
+        3.824
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 2.4126466118268297e-05,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 2.4126466118268297e-05,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.0,
+        -1.2,
+        3.81
+      ],
+      "after_position": [
+        0.0,
+        -1.2,
+        3.81
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0002409815606561061,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0002409815606561061,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        1.2,
+        -1.2,
+        3.791
+      ],
+      "after_position": [
+        1.2,
+        -1.2,
+        3.791
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 7.978656105889215e-05,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 7.978656105889215e-05,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -2.1,
+        3.3,
+        2.246
+      ],
+      "after_position": [
+        -2.1,
+        3.3,
+        2.246
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00010413046843327223,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00010413046843327223,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        2.1,
+        3.3,
+        2.246
+      ],
+      "after_position": [
+        2.1,
+        3.3,
+        2.246
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00010413046843327223,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00010413046843327223,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.0,
+        -5.1,
+        3.891
+      ],
+      "after_position": [
+        0.0,
+        -5.1,
+        3.891
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0004404983912253968,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0004404983912253968,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        -0.6,
+        -4.5,
+        3.881
+      ],
+      "after_position": [
+        -0.6,
+        -4.5,
+        3.881
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00023308480315487046,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00023308480315487046,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_outer_deck_nested",
+      "position": [
+        0.6,
+        -4.5,
+        3.881
+      ],
+      "after_position": [
+        0.6,
+        -4.5,
+        3.881
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00023308480315487046,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00023308480315487046,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -0.6,
+        -3.9,
+        3.872
+      ],
+      "after_position": [
+        -0.6,
+        -3.9,
+        3.872
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 9.333200246608442e-05,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 9.333200246608442e-05,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.9,
+        -8.1,
+        5.633
+      ],
+      "after_position": [
+        0.9,
+        -8.1,
+        5.633
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00012504065035923162,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00012504065035923162,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.0,
+        -6.3,
+        5.302
+      ],
+      "after_position": [
+        -1.0,
+        -6.3,
+        5.302
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0004749801799546205,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0004749801799546205,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.0,
+        -3.0,
+        3.853
+      ],
+      "after_position": [
+        0.0,
+        -3.0,
+        3.853
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00033338356018086657,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00033338356018086657,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        0.0,
+        1.5,
+        2.325
+      ],
+      "after_position": [
+        0.0,
+        1.5,
+        2.325
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 4.7683715642676816e-08,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 4.7683715642676816e-08,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.5,
+        2.4,
+        2.273
+      ],
+      "after_position": [
+        -1.5,
+        2.4,
+        2.273
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0004374958593409417,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0004374958593409417,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        1.5,
+        2.4,
+        2.273
+      ],
+      "after_position": [
+        1.5,
+        2.4,
+        2.273
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0004374958593413858,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0004374958593413858,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "spawn_point_holder.xml",
+      "name": "sp_troop_inner_deck_nested",
+      "position": [
+        -1.5,
+        3.6,
+        2.273
+      ],
+      "after_position": [
+        -1.5,
+        3.6,
+        2.273
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0004374958593413858,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0004374958593413858,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "climbers_holder.xml",
+      "name": "climb_point",
+      "position": [
+        -2.50000000000003,
+        3.250000173205103,
+        2.235
+      ],
+      "after_position": [
+        -2.50000000000003,
+        3.250000173205103,
+        2.235
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.006500031369852888,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.006500031369852888,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "climbers_holder.xml",
+      "name": "climb_point",
+      "position": [
+        2.5,
+        3.25,
+        2.235
+      ],
+      "after_position": [
+        2.5,
+        3.25,
+        2.235
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00650003115336073,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00650003115336073,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "control_point_holder.xml",
+      "name": "ShipControl_nested",
+      "position": [
+        0.0,
+        -3.7,
+        3.869
+      ],
+      "after_position": [
+        0.0,
+        -3.7,
+        3.869
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.00020213760433973604,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.00020213760433973604,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "control_point_holder.xml",
+      "name": "dadg_ship_falconet_1",
+      "position": [
+        1.5,
+        8.0,
+        4.195
+      ],
+      "after_position": [
+        1.5,
+        8.0,
+        4.195
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0003591598405217056,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0003591598405217056,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "control_point_holder.xml",
+      "name": "dadg_ship_falconet_2",
+      "position": [
+        -1.5,
+        8.0,
+        4.168
+      ],
+      "after_position": [
+        -1.5,
+        8.0,
+        4.168
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 7.778130852553744e-05,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 7.778130852553744e-05,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "control_point_holder.xml",
+      "name": "dadg_ship_falconet_3",
+      "position": [
+        1.6,
+        -2.7,
+        3.794
+      ],
+      "after_position": [
+        1.6,
+        -2.7,
+        3.794
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.0002666390556984588,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.0002666390556984588,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "control_point_holder.xml",
+      "name": "dadg_ship_falconet_4",
+      "position": [
+        -1.6,
+        -2.7,
+        3.794
+      ],
+      "after_position": [
+        -1.6,
+        -2.7,
+        3.794
+      ],
+      "before": {
+        "xy_faces": 2,
+        "z_error": 0.0002666389657250967,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 2,
+        "z_error": 0.0002666389657250967,
+        "nearest_xy_m": 0.0
+      }
+    },
+    {
+      "file": "control_point_holder.xml",
+      "name": "dadg_ship_falconet_5",
+      "position": [
+        0.5,
+        -8.2,
+        5.651
+      ],
+      "after_position": [
+        0.5,
+        -8.2,
+        5.651
+      ],
+      "before": {
+        "xy_faces": 1,
+        "z_error": 0.0003750466108289885,
+        "nearest_xy_m": 0.0
+      },
+      "after": {
+        "xy_faces": 1,
+        "z_error": 0.0003750466108289885,
+        "nearest_xy_m": 0.0
+      }
+    }
+  ]
+}

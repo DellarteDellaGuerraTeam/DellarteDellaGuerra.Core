@@ -1,0 +1,59 @@
+[
+  {
+    "ship": "english_boat_b",
+    "body_metamesh": "dadg_ws_english_boat_b_body",
+    "rudder_metamesh": "dadg_ws_english_boat_b_rudder_v1",
+    "pivot_root": [
+      0.0005448032170534134,
+      -3.5098936557769775,
+      0.0
+    ],
+    "rotation_x": 0.6672837038351979,
+    "live_body_z_offset_unchanged": 0.15,
+    "body_fbx": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_warsails\\rudder\\dadg_ws_english_boat_b_rudder_separated_v1.fbx",
+    "body_sha256": "caa8d42d3e55378e52b965755ad3914ba21a36f83e807e0ad69edc5a98482ec3",
+    "rudder_fbx": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_warsails\\rudder\\dadg_ws_english_boat_b_rudder_v1.fbx",
+    "rudder_sha256": "d6321f0913b4e99650ea694b558eed3b81475a1b25660f54d159f147bf7c0b70",
+    "prefab_candidate": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\Tools\\WarSailsShips\\visual-fixes-20261114\\authoring\\prefab-stage\\english_boat_b\\rudders_holder.xml",
+    "live_prefab_before_sha256": "b6432dafcc6b158bbbf6fb841ca14e4bd19df4e2ef302cbb3c05d247d9473514",
+    "prefab_candidate_sha256": "380d7decd974d3bc1d887a9cbe9d45c3a2fa574e924ccb0073eeea2d5f92cfaa"
+  },
+  {
+    "ship": "kogge",
+    "body_metamesh": "dadg_ws_kogge_body_without_yards_v1",
+    "rudder_metamesh": "dadg_ws_kogge_rudder_v1",
+    "pivot_root": [
+      -0.008291706442832947,
+      -11.2498197555542,
+      0.0
+    ],
+    "rotation_x": 0.17264555929922987,
+    "live_body_z_offset_unchanged": -0.8,
+    "body_fbx": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_warsails\\rudder\\dadg_ws_kogge_body_without_yards_v1_rudder_separated_v1.fbx",
+    "body_sha256": "a98ef478e7481c33fd9980c2f7f168c79dc8b12a2fed49c2a359af8ea1589606",
+    "rudder_fbx": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_warsails\\rudder\\dadg_ws_kogge_rudder_v1.fbx",
+    "rudder_sha256": "8c81ddf9c2b5feff6740d491aa7b4583d052d0ce0b4289d20921da9dd19103c9",
+    "prefab_candidate": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\Tools\\WarSailsShips\\visual-fixes-20261114\\authoring\\prefab-stage\\kogge\\rudders_holder.xml",
+    "live_prefab_before_sha256": "6671936718b9f638605decdba12524841185f86bde381f29d25285a4a1a4dd54",
+    "prefab_candidate_sha256": "5e3a769a39b96ce5695cb74b36a0225c990bcd0f79ef3bf4ff78d31096ecb774"
+  },
+  {
+    "ship": "carrack",
+    "body_metamesh": "dadg_ws_carrack_body_without_yards_v1",
+    "rudder_metamesh": "dadg_ws_carrack_rudder_v1",
+    "pivot_root": [
+      2.518296241760254e-06,
+      -8.516388893127441,
+      0.0
+    ],
+    "rotation_x": 0.2688726841055963,
+    "live_body_z_offset_unchanged": -1.4,
+    "body_fbx": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_warsails\\rudder\\dadg_ws_carrack_body_without_yards_v1_rudder_separated_v1.fbx",
+    "body_sha256": "e03fd4536799c3b7c9c333810c0e0907c4d070bd23926090eae37cf8697a1180",
+    "rudder_fbx": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_warsails\\rudder\\dadg_ws_carrack_rudder_v1.fbx",
+    "rudder_sha256": "6da28eaec3dd9b14af248dec658792cf9f89e393bdc5148f2c1992819c867514",
+    "prefab_candidate": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\Tools\\WarSailsShips\\visual-fixes-20261114\\authoring\\prefab-stage\\carrack\\rudders_holder.xml",
+    "live_prefab_before_sha256": "7b0ffdf901cf63c7653ffae43046b709bc655be4a07cfb4d5ac8ad9b3a4c9842",
+    "prefab_candidate_sha256": "d2483efb5cededfd5e4edb96333b9a7ea9947d6207793b1a76febc1606fac33f"
+  }
+]

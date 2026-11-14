@@ -1,0 +1,165 @@
+<?xml version='1.0' encoding='utf-8'?>
+<prefab_definition>
+  <entity name="climbers_holder">
+    <prefab_link>
+      <instance guid="{2C72C6A7-9EF6-5DC3-BC35-F06BC09E1720}" />
+      <prefab guid="{00000000-0000-0000-0000-000000000000}" />
+    </prefab_link>
+    <children>
+      <entity name="longboat_rope_climber_medium_nested">
+        <prefab_link>
+          <instance guid="{AB7B874B-29BE-5303-B94F-549CB9650557}" />
+          <prefab guid="{87C171B4-776D-474F-931E-2CFB8BDA0B9D}" />
+        </prefab_link>
+        <transform>
+          <position type_name="vec3" value="-3.500, 0.000, 3.246" />
+          <rotation_euler type_name="vec3" value="0.000, 0.000, 3.141593" />
+        </transform>
+        <scripts>
+          <script name="ClimbingMachine">
+            <prefab_link>
+              <instance guid="{7D2D79F8-A03D-5E1B-B747-CF0853F3EE53}" />
+              <prefab guid="{99489248-F075-4F78-98C8-7CE896A6996B}" />
+            </prefab_link>
+          </script>
+        </scripts>
+        <children>
+          <entity name="end_position">
+            <prefab_link>
+              <instance guid="{8DC881FC-F2A0-5DBC-A024-C67F28FE95C5}" />
+              <prefab guid="{D22D54DD-4115-440D-A34B-946C89B208B9}" />
+            </prefab_link>
+            <transform>
+              <position type_name="vec3" value="0.000, 0.000, 0.000" />
+            </transform>
+          </entity>
+          <entity name="standing_point">
+            <prefab_link>
+              <instance guid="{99CC1459-5EA1-5A7F-8A46-8350D5F1A526}" />
+              <prefab guid="{51052292-C06A-4CD8-9D53-1A95095B3E4D}" />
+            </prefab_link>
+            <transform>
+              <position type_name="vec3" value="0.000, 0.000, -3.246" />
+            </transform>
+            <scripts>
+              <script name="StandingPointWithSwimmingLimit">
+                <prefab_link>
+                  <instance guid="{31C54171-B87D-5F2C-9BF9-14A034863CAC}" />
+                  <prefab guid="{B802684C-B74C-4D74-A917-301D8F0EE779}" />
+                </prefab_link>
+              </script>
+            </scripts>
+          </entity>
+          <entity name="climb_point">
+            <prefab_link>
+              <instance guid="{2FAA241A-5823-50D5-B88B-70903985B637}" />
+              <prefab guid="{1FF9E3C0-ED5C-4D5C-A4B8-F5FC8E03550E}" />
+            </prefab_link>
+            <transform>
+              <position type_name="vec3" value="-0.500, 0.000, -1.575" />
+            </transform>
+            <components>
+              <meta_mesh_component name="editor_cube">
+                <prefab_link>
+                  <instance guid="{BA2D3E2B-67B1-5198-8E38-4D97B3CA33CE}" />
+                  <prefab guid="{E6DA1EE0-654C-4D2D-A1AD-A74520C5D54D}" />
+                </prefab_link>
+              </meta_mesh_component>
+            </components>
+          </entity>
+          <entity name="ship_climbing_rope_medium">
+            <prefab_link>
+              <instance guid="{72D2E21C-6C55-5A10-912C-E582A0FD3870}" />
+              <prefab guid="{9180EDE5-AACF-453A-ABF3-D51918BCF8FA}" />
+            </prefab_link>
+            <components>
+              <meta_mesh_component name="ship_climbing_rope_medium">
+                <prefab_link>
+                  <instance guid="{3578C3F7-8649-5CB0-A64F-4F08B227A614}" />
+                  <prefab guid="{59D9B39F-51EA-48B2-B74B-72943CEEBBDF}" />
+                </prefab_link>
+              </meta_mesh_component>
+            </components>
+          </entity>
+        </children>
+      </entity>
+      <entity name="longboat_rope_climber_medium_nested">
+        <prefab_link>
+          <instance guid="{EFBFC5CF-05D4-5F37-9849-C5ABC548779E}" />
+          <prefab guid="{87C171B4-776D-474F-931E-2CFB8BDA0B9D}" />
+        </prefab_link>
+        <transform>
+          <position type_name="vec3" value="3.500, 0.000, 3.246" />
+          <rotation_euler type_name="vec3" value="0.000, 0.000, 0.000" />
+        </transform>
+        <scripts>
+          <script name="ClimbingMachine">
+            <prefab_link>
+              <instance guid="{02271193-E8B9-5F42-9153-3168C521142D}" />
+              <prefab guid="{99489248-F075-4F78-98C8-7CE896A6996B}" />
+            </prefab_link>
+          </script>
+        </scripts>
+        <children>
+          <entity name="end_position">
+            <prefab_link>
+              <instance guid="{283A18DE-521F-5D10-8C72-CD4487E80658}" />
+              <prefab guid="{D22D54DD-4115-440D-A34B-946C89B208B9}" />
+            </prefab_link>
+            <transform>
+              <position type_name="vec3" value="0.000, 0.000, 0.000" />
+            </transform>
+          </entity>
+          <entity name="standing_point">
+            <prefab_link>
+              <instance guid="{765C2FC9-25BE-54C4-8C8A-0CBE402A29C6}" />
+              <prefab guid="{51052292-C06A-4CD8-9D53-1A95095B3E4D}" />
+            </prefab_link>
+            <transform>
+              <position type_name="vec3" value="0.000, 0.000, -3.246" />
+            </transform>
+            <scripts>
+              <script name="StandingPointWithSwimmingLimit">
+                <prefab_link>
+                  <instance guid="{B57E3BE5-3B08-5977-A72E-3229369E5ADD}" />
+                  <prefab guid="{B802684C-B74C-4D74-A917-301D8F0EE779}" />
+                </prefab_link>
+              </script>
+            </scripts>
+          </entity>
+          <entity name="climb_point">
+            <prefab_link>
+              <instance guid="{490B313F-7C75-54D0-9C11-6D2A271F9405}" />
+              <prefab guid="{1FF9E3C0-ED5C-4D5C-A4B8-F5FC8E03550E}" />
+            </prefab_link>
+            <transform>
+              <position type_name="vec3" value="-0.500, 0.000, -1.575" />
+            </transform>
+            <components>
+              <meta_mesh_component name="editor_cube">
+                <prefab_link>
+                  <instance guid="{9A63755D-0915-53B9-890F-7882ACF58BDE}" />
+                  <prefab guid="{E6DA1EE0-654C-4D2D-A1AD-A74520C5D54D}" />
+                </prefab_link>
+              </meta_mesh_component>
+            </components>
+          </entity>
+          <entity name="ship_climbing_rope_medium">
+            <prefab_link>
+              <instance guid="{A8703D66-7824-59D9-8383-EDA7C72B2086}" />
+              <prefab guid="{9180EDE5-AACF-453A-ABF3-D51918BCF8FA}" />
+            </prefab_link>
+            <components>
+              <meta_mesh_component name="ship_climbing_rope_medium">
+                <prefab_link>
+                  <instance guid="{FA6281B4-7A76-5A0C-9DF7-107A98EACCC4}" />
+                  <prefab guid="{59D9B39F-51EA-48B2-B74B-72943CEEBBDF}" />
+                </prefab_link>
+              </meta_mesh_component>
+            </components>
+          </entity>
+        </children>
+      </entity>
+    </children>
+  </entity>
+</prefab_definition>

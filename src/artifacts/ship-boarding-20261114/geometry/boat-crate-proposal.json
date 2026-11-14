@@ -1,0 +1,838 @@
+{
+  "scope": "proposal only: no stage/live edits",
+  "staged_sha256": "aaab65cdc164d6b1526d53f3419b7fe0ba608f5e522dd8b10b6cc07fc9eec03c",
+  "crates": [
+    {
+      "station_origin": [
+        -0.375,
+        -1.9500000476837158,
+        0.20779000222682953
+      ],
+      "state": "bridge_source_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_source_point/crate_a",
+      "mesh": "crate_a",
+      "bounds": [
+        [
+          -0.7377622723579407,
+          -1.8723492622375488,
+          0.3108554482460022
+        ],
+        [
+          -0.2836149334907532,
+          -1.3390977382659912,
+          0.6865674257278442
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.20742,
+      "native_stack_contact_count": 80,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "boarding_bridge_hanged_a",
+          "point": [
+            -0.6923475384712219,
+            -1.819024109840393,
+            0.64026
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_a",
+          "point": [
+            -0.6923475384712219,
+            -1.819024109840393,
+            0.70904
+          ]
+        },
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            -0.6923475384712219,
+            -1.819024109840393,
+            0.49542
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        -0.375,
+        -1.9500000476837158,
+        0.20779000222682953
+      ],
+      "state": "bridge_source_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_source_point/crate_b",
+      "mesh": "crate_b",
+      "bounds": [
+        [
+          -0.7447219491004944,
+          -2.440028429031372,
+          0.3108554780483246
+        ],
+        [
+          -0.28635743260383606,
+          -1.914267659187317,
+          0.6771066188812256
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.20758,
+      "native_stack_contact_count": 74,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "boarding_bridge_hanged_a",
+          "point": [
+            -0.6988854974508285,
+            -2.3874523520469664,
+            0.68151
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_a",
+          "point": [
+            -0.6988854974508285,
+            -2.3874523520469664,
+            0.54889
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_b",
+          "point": [
+            -0.6988854974508285,
+            -2.3874523520469664,
+            0.338
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        -0.375,
+        -1.9500000476837158,
+        0.20779000222682953
+      ],
+      "state": "bridge_target_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_target_point/crate_a",
+      "mesh": "crate_a",
+      "bounds": [
+        [
+          -0.7377622723579407,
+          -1.8723492622375488,
+          0.3108554482460022
+        ],
+        [
+          -0.2836149334907532,
+          -1.3390977382659912,
+          0.6865674257278442
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.20742,
+      "native_stack_contact_count": 20,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            -0.6923475384712219,
+            -1.819024109840393,
+            0.49542
+          ]
+        },
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            -0.6923475384712219,
+            -1.7123738050460815,
+            0.53167
+          ]
+        },
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            -0.6923475384712219,
+            -1.60572350025177,
+            0.56258
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        -0.375,
+        -1.9500000476837158,
+        0.20779000222682953
+      ],
+      "state": "bridge_target_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_target_point/crate_b",
+      "mesh": "crate_b",
+      "bounds": [
+        [
+          -0.7447219491004944,
+          -2.440028429031372,
+          0.3108554780483246
+        ],
+        [
+          -0.28635743260383606,
+          -1.914267659187317,
+          0.6771066188812256
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.20758,
+      "native_stack_contact_count": 14,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "bd_sack_b",
+          "point": [
+            -0.6988854974508285,
+            -2.2823001980781554,
+            0.67228
+          ]
+        },
+        {
+          "mesh": "bd_sack_b",
+          "point": [
+            -0.6988854974508285,
+            -2.1771480441093445,
+            0.68577
+          ]
+        },
+        {
+          "mesh": "bd_sack_b",
+          "point": [
+            -0.6988854974508285,
+            -2.0719958901405335,
+            0.64197
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        0.375,
+        -1.9500000476837158,
+        0.20556999742984772
+      ],
+      "state": "bridge_source_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_source_point/crate_a",
+      "mesh": "crate_a",
+      "bounds": [
+        [
+          0.2836151719093323,
+          -2.5609023571014404,
+          0.37341243028640747
+        ],
+        [
+          0.7377626299858093,
+          -2.0276505947113037,
+          0.7491244077682495
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.20599,
+      "native_stack_contact_count": 80,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "boarding_bridge_pile_a",
+          "point": [
+            0.32902991771698,
+            -2.5075771808624268,
+            0.61635
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_b",
+          "point": [
+            0.32902991771698,
+            -2.5075771808624268,
+            0.39786
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_a",
+          "point": [
+            0.32902991771698,
+            -2.4009268283843994,
+            0.62856
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        0.375,
+        -1.9500000476837158,
+        0.20556999742984772
+      ],
+      "state": "bridge_source_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_source_point/crate_b",
+      "mesh": "crate_b",
+      "bounds": [
+        [
+          0.2863572835922241,
+          -1.9857323169708252,
+          0.37341246008872986
+        ],
+        [
+          0.7447219491004944,
+          -1.45997154712677,
+          0.7396636009216309
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.20489,
+      "native_stack_contact_count": 74,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "boarding_bridge_pile_a",
+          "point": [
+            0.33219375014305114,
+            -1.9331562399864197,
+            0.6689
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_b",
+          "point": [
+            0.33219375014305114,
+            -1.9331562399864197,
+            0.39259
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_a",
+          "point": [
+            0.33219375014305114,
+            -1.8280040860176086,
+            0.65778
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        0.375,
+        -1.9500000476837158,
+        0.20556999742984772
+      ],
+      "state": "bridge_target_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_target_point/crate_a",
+      "mesh": "crate_a",
+      "bounds": [
+        [
+          0.2836151719093323,
+          -2.5609023571014404,
+          0.37341243028640747
+        ],
+        [
+          0.7377626299858093,
+          -2.0276505947113037,
+          0.7491244077682495
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.20599,
+      "native_stack_contact_count": 20,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            0.4198594093322754,
+            -2.5075771808624268,
+            0.59329
+          ]
+        },
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            0.4198594093322754,
+            -2.4009268283843994,
+            0.6135
+          ]
+        },
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            0.4198594093322754,
+            -2.294276475906372,
+            0.62674
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        0.375,
+        -1.9500000476837158,
+        0.20556999742984772
+      ],
+      "state": "bridge_target_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_target_point/crate_b",
+      "mesh": "crate_b",
+      "bounds": [
+        [
+          0.2863572835922241,
+          -1.9857323169708252,
+          0.37341246008872986
+        ],
+        [
+          0.7447219491004944,
+          -1.45997154712677,
+          0.7396636009216309
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.20489,
+      "native_stack_contact_count": 14,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "bd_sack_b",
+          "point": [
+            0.4238666832447052,
+            -1.7228519320487976,
+            0.63974
+          ]
+        },
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            0.5155396163463593,
+            -1.9331562399864197,
+            0.44045
+          ]
+        },
+        {
+          "mesh": "bd_sack_b",
+          "point": [
+            0.5155396163463593,
+            -1.8280040860176086,
+            0.78176
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        -0.375,
+        2.450000047683716,
+        0.1995300054550171
+      ],
+      "state": "bridge_source_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_source_point/crate_a",
+      "mesh": "crate_a",
+      "bounds": [
+        [
+          -0.7377622723579407,
+          2.527651071548462,
+          0.4025954604148865
+        ],
+        [
+          -0.2836149334907532,
+          3.0609023571014404,
+          0.7783074378967285
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.1976,
+      "native_stack_contact_count": 80,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "boarding_bridge_hanged_a",
+          "point": [
+            -0.6923475384712219,
+            2.58097620010376,
+            0.732
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_a",
+          "point": [
+            -0.6923475384712219,
+            2.58097620010376,
+            0.80078
+          ]
+        },
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            -0.6923475384712219,
+            2.58097620010376,
+            0.58716
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        -0.375,
+        2.450000047683716,
+        0.1995300054550171
+      ],
+      "state": "bridge_source_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_source_point/crate_b",
+      "mesh": "crate_b",
+      "bounds": [
+        [
+          -0.7447219491004944,
+          1.95997154712677,
+          0.40259549021720886
+        ],
+        [
+          -0.28635743260383606,
+          2.4857325553894043,
+          0.7688466310501099
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.19908,
+      "native_stack_contact_count": 74,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "boarding_bridge_hanged_a",
+          "point": [
+            -0.6988854974508285,
+            2.0125476479530335,
+            0.77325
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_a",
+          "point": [
+            -0.6988854974508285,
+            2.0125476479530335,
+            0.64063
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_b",
+          "point": [
+            -0.6988854974508285,
+            2.0125476479530335,
+            0.42974
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        -0.375,
+        2.450000047683716,
+        0.1995300054550171
+      ],
+      "state": "bridge_target_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_target_point/crate_a",
+      "mesh": "crate_a",
+      "bounds": [
+        [
+          -0.7377622723579407,
+          2.527651071548462,
+          0.4025954604148865
+        ],
+        [
+          -0.2836149334907532,
+          3.0609023571014404,
+          0.7783074378967285
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.1976,
+      "native_stack_contact_count": 20,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            -0.6923475384712219,
+            2.58097620010376,
+            0.58716
+          ]
+        },
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            -0.6923475384712219,
+            2.6876264572143556,
+            0.62341
+          ]
+        },
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            -0.6923475384712219,
+            2.794276714324951,
+            0.65432
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        -0.375,
+        2.450000047683716,
+        0.1995300054550171
+      ],
+      "state": "bridge_target_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_target_point/crate_b",
+      "mesh": "crate_b",
+      "bounds": [
+        [
+          -0.7447219491004944,
+          1.95997154712677,
+          0.40259549021720886
+        ],
+        [
+          -0.28635743260383606,
+          2.4857325553894043,
+          0.7688466310501099
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.19908,
+      "native_stack_contact_count": 14,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "bd_sack_b",
+          "point": [
+            -0.6988854974508285,
+            2.11769984960556,
+            0.76402
+          ]
+        },
+        {
+          "mesh": "bd_sack_b",
+          "point": [
+            -0.6988854974508285,
+            2.222852051258087,
+            0.77751
+          ]
+        },
+        {
+          "mesh": "bd_sack_b",
+          "point": [
+            -0.6988854974508285,
+            2.328004252910614,
+            0.73371
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        0.375,
+        2.450000047683716,
+        0.19812999665737152
+      ],
+      "state": "bridge_source_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_source_point/crate_a",
+      "mesh": "crate_a",
+      "bounds": [
+        [
+          0.2836151719093323,
+          1.8390977382659912,
+          0.4659724831581116
+        ],
+        [
+          0.7377626299858093,
+          2.372349500656128,
+          0.8416844606399536
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.1979,
+      "native_stack_contact_count": 80,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "boarding_bridge_pile_a",
+          "point": [
+            0.32902991771698,
+            1.8924229145050049,
+            0.70891
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_b",
+          "point": [
+            0.32902991771698,
+            1.8924229145050049,
+            0.49042
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_a",
+          "point": [
+            0.32902991771698,
+            1.9990732669830322,
+            0.72112
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        0.375,
+        2.450000047683716,
+        0.19812999665737152
+      ],
+      "state": "bridge_source_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_source_point/crate_b",
+      "mesh": "crate_b",
+      "bounds": [
+        [
+          0.2863572835922241,
+          2.4142677783966064,
+          0.46597251296043396
+        ],
+        [
+          0.7447219491004944,
+          2.940028667449951,
+          0.832223653793335
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.19727,
+      "native_stack_contact_count": 74,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "boarding_bridge_pile_a",
+          "point": [
+            0.33219375014305114,
+            2.466843867301941,
+            0.76146
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_b",
+          "point": [
+            0.33219375014305114,
+            2.466843867301941,
+            0.48515
+          ]
+        },
+        {
+          "mesh": "boarding_bridge_pile_a",
+          "point": [
+            0.33219375014305114,
+            2.57199604511261,
+            0.75034
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        0.375,
+        2.450000047683716,
+        0.19812999665737152
+      ],
+      "state": "bridge_target_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_target_point/crate_a",
+      "mesh": "crate_a",
+      "bounds": [
+        [
+          0.2836151719093323,
+          1.8390977382659912,
+          0.4659724831581116
+        ],
+        [
+          0.7377626299858093,
+          2.372349500656128,
+          0.8416844606399536
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.1979,
+      "native_stack_contact_count": 20,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            0.4198594093322754,
+            1.8924229145050049,
+            0.68585
+          ]
+        },
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            0.4198594093322754,
+            1.9990732669830322,
+            0.70606
+          ]
+        },
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            0.4198594093322754,
+            2.1057236194610596,
+            0.7193
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    },
+    {
+      "station_origin": [
+        0.375,
+        2.450000047683716,
+        0.19812999665737152
+      ],
+      "state": "bridge_target_point",
+      "path": "/attachment_machine_nested/attachment_point_machine/visual/bridge_target_point/crate_b",
+      "mesh": "crate_b",
+      "bounds": [
+        [
+          0.2863572835922241,
+          2.4142677783966064,
+          0.46597251296043396
+        ],
+        [
+          0.7447219491004944,
+          2.940028667449951,
+          0.832223653793335
+        ]
+      ],
+      "min_hull_floor_under_footprint": 0.19727,
+      "native_stack_contact_count": 14,
+      "native_stack_contact_examples": [
+        {
+          "mesh": "bd_sack_b",
+          "point": [
+            0.4238666832447052,
+            2.677148222923279,
+            0.7323
+          ]
+        },
+        {
+          "mesh": "bd_sack_c",
+          "point": [
+            0.5155396163463593,
+            2.466843867301941,
+            0.53301
+          ]
+        },
+        {
+          "mesh": "bd_sack_b",
+          "point": [
+            0.5155396163463593,
+            2.57199604511261,
+            0.87432
+          ]
+        }
+      ],
+      "exposed_gap_confirmed": false,
+      "correction": null
+    }
+  ]
+}

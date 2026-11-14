@@ -1,0 +1,1405 @@
+<?xml version='1.0' encoding='utf-8'?>
+<prefab_definition>
+  <entity name="attachment_machine_holder">
+    <prefab_link>
+      <instance guid="{721C3C90-37A6-5E43-9E4C-11066C80D239}" />
+      <prefab guid="{00000000-0000-0000-0000-000000000000}" />
+    </prefab_link>
+    <children>
+      <entity name="attachment_machine_nested">
+        <prefab_link>
+          <instance guid="{0130A27A-777E-5B40-8235-D512F0721A76}" />
+          <prefab guid="{7693F16A-5698-4D61-9EA2-778DE25B050D}" />
+        </prefab_link>
+        <transform>
+          <position type_name="vec3" value="-2.500, 3.250, 2.235" />
+          <rotation_euler type_name="vec3" value="0.000, 0.000, 1.570796" />
+        </transform>
+        <children>
+          <entity name="attachment_machine">
+            <prefab_link>
+              <instance guid="{E16A8B13-2916-532D-AFDC-AA21E8D9F96D}" />
+              <prefab guid="{0F42C745-F3C8-4BA2-9F91-13D1DB95F59B}" />
+            </prefab_link>
+            <scripts>
+              <script name="ShipAttachmentMachine">
+                <prefab_link>
+                  <instance guid="{38543372-C96A-54E0-B78C-CAF0BA0E8901}" />
+                  <prefab guid="{5F154543-AB20-490F-87E2-5BCA49CBEA4A}" />
+                </prefab_link>
+                <variables>
+                  <variable name="RelatedShipNavmeshOffset" type_name="int" value="1" />
+                </variables>
+              </script>
+            </scripts>
+            <children>
+              <entity name="focus_object">
+                <prefab_link>
+                  <instance guid="{1D8E87FC-9CD7-5DF2-8C2C-784954B0CFD3}" />
+                  <prefab guid="{0518019F-28AB-4467-ACA2-E586D266403C}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, -0.055, 0.322" />
+                </transform>
+              </entity>
+              <entity name="hook">
+                <prefab_link>
+                  <instance guid="{590E083C-23D1-5845-AA0A-CE4E11B0C956}" />
+                  <prefab guid="{4DD6F000-6E47-4E5D-B53F-CD3CA13B90E4}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, 0.116, 0.698" />
+                  <rotation_euler type_name="vec3" value="0.577, 3.138, -3.135" />
+                </transform>
+                <components>
+                  <meta_mesh_component name="hook">
+                    <prefab_link>
+                      <instance guid="{C5D70227-96E9-562B-A5FD-738E4082B033}" />
+                      <prefab guid="{918079DE-377B-416D-8936-975BFA069682}" />
+                    </prefab_link>
+                  </meta_mesh_component>
+                </components>
+              </entity>
+              <entity name="pilot">
+                <prefab_link>
+                  <instance guid="{680E32D8-B27B-57F1-ADE7-02892D820D90}" />
+                  <prefab guid="{F6A53312-57B3-4B73-9D4C-E05785D3745D}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, 0.000, 0.000" />
+                </transform>
+                <scripts>
+                  <script name="StandingPoint">
+                    <prefab_link>
+                      <instance guid="{52591441-11B4-5504-BB60-9832D4989927}" />
+                      <prefab guid="{D9A8DE85-40BF-4C0E-A1AA-3CD27730C701}" />
+                    </prefab_link>
+                    <variables>
+                      <variable name="_customPlayerInteractionDistance" type_name="float" value="0.000" />
+                    </variables>
+                  </script>
+                </scripts>
+                <components>
+                  <meta_mesh_component name="icon_man">
+                    <prefab_link>
+                      <instance guid="{24156683-E88C-5B1C-A08C-56317E71D2F1}" />
+                      <prefab guid="{9BBF9E7C-DCB7-4C1D-938A-2FCB16D2DBED}" />
+                    </prefab_link>
+                  </meta_mesh_component>
+                </components>
+              </entity>
+              <entity name="pile_holder">
+                <prefab_link>
+                  <instance guid="{2A74F3B3-7D91-5F3D-897E-92335CFC1C20}" />
+                  <prefab guid="{346475D5-C9B2-4B29-95BE-625811F4008F}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, 0.213, 0.629" />
+                  <rotation_euler type_name="vec3" value="0.000, 0.500, 1.571" />
+                </transform>
+                <children>
+                  <entity name="pile">
+                    <prefab_link>
+                      <instance guid="{33E59821-CA3B-5FBA-9557-9BB261C33BC8}" />
+                      <prefab guid="{FD91DF25-B122-4A5C-B07D-2196569F09FB}" />
+                    </prefab_link>
+                    <scripts>
+                      <script name="RopePileBaked">
+                        <prefab_link>
+                          <instance guid="{086D5752-F753-5F2B-BBE9-7F81212AA040}" />
+                          <prefab guid="{B20BE16E-6FC6-430B-B47A-EAEDDBA9C2B8}" />
+                        </prefab_link>
+                      </script>
+                    </scripts>
+                    <components>
+                      <meta_mesh_component name="sail_rope_pile_d">
+                        <prefab_link>
+                          <instance guid="{8CF05754-5AF3-595A-A65E-54D1698C8325}" />
+                          <prefab guid="{C428D10A-D061-4C8C-B548-2A3E032E48C2}" />
+                        </prefab_link>
+                      </meta_mesh_component>
+                    </components>
+                  </entity>
+                  <entity name="hanger">
+                    <prefab_link>
+                      <instance guid="{EB8A41B3-E771-5AF1-AE3C-43B42F48ABC1}" />
+                      <prefab guid="{3BEAC2D9-A7F2-4CA1-8FD5-2AD6EE3394D6}" />
+                    </prefab_link>
+                    <components>
+                      <meta_mesh_component name="rope_pile_hanger">
+                        <prefab_link>
+                          <instance guid="{40FF8FAB-A73B-5E5B-A968-AA209F1C4D6A}" />
+                          <prefab guid="{CB22DF89-F66B-4EF7-8D0F-5A6E35BC8674}" />
+                        </prefab_link>
+                        <children>
+                          <mesh name="rope_pile_hanger">
+                            <misc>
+                              <factor_color type_name="vec4" value="0.071, 0.075, 0.075, 1.000" />
+                            </misc>
+                          </mesh>
+                        </children>
+                      </meta_mesh_component>
+                    </components>
+                  </entity>
+                  <entity name="pile_floor_static">
+                    <prefab_link>
+                      <instance guid="{D915886D-B273-55D3-AB04-C8A3B9AE2CAC}" />
+                      <prefab guid="{39CCAA3A-D8F6-4A18-9D9E-3EC9165641ED}" />
+                    </prefab_link>
+                    <misc>
+                      <is_visible type_name="bool" value="0" />
+                    </misc>
+                    <components>
+                      <meta_mesh_component name="sail_rope_pile_d_2">
+                        <prefab_link>
+                          <instance guid="{8BB68261-FAA0-512C-8B95-8D48690F7F78}" />
+                          <prefab guid="{467003D1-FAF5-4D54-930C-CD13CC6DEA71}" />
+                        </prefab_link>
+                      </meta_mesh_component>
+                    </components>
+                  </entity>
+                  <entity name="pile_hanged_static">
+                    <prefab_link>
+                      <instance guid="{B078E520-4611-5548-8152-E841BD9E1AEF}" />
+                      <prefab guid="{1B98EA6B-90C7-4E01-A337-D3B3E59903D8}" />
+                    </prefab_link>
+                    <components>
+                      <meta_mesh_component name="sail_rope_pile_d_1">
+                        <prefab_link>
+                          <instance guid="{07ECA13F-CD7B-5D53-80DB-065BEF10D6C2}" />
+                          <prefab guid="{ECBCDACE-899D-4F2D-9EE4-6C8A0659B363}" />
+                        </prefab_link>
+                      </meta_mesh_component>
+                    </components>
+                  </entity>
+                </children>
+              </entity>
+            </children>
+          </entity>
+          <entity name="attachment_point_machine">
+            <prefab_link>
+              <instance guid="{9155E449-F46C-5CE0-B7CC-B00ED4E3BEC1}" />
+              <prefab guid="{A349BB86-333E-42DF-8735-3AD5CE722A5D}" />
+            </prefab_link>
+            <scripts>
+              <script name="ShipAttachmentPointMachine">
+                <prefab_link>
+                  <instance guid="{1B78CED5-E87C-5084-B739-91F1768008C6}" />
+                  <prefab guid="{357AF429-8B5E-4404-8D46-29C42AED7CEA}" />
+                </prefab_link>
+                <variables>
+                  <variable name="RelatedShipNavmeshOffset" type_name="int" value="1" />
+                </variables>
+              </script>
+            </scripts>
+            <children>
+              <entity name="focus_object">
+                <prefab_link>
+                  <instance guid="{3ED55A94-E9A1-58F4-89C5-6BAD86093A99}" />
+                  <prefab guid="{8B379159-A80B-462E-9A4D-E1001A6F61A5}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, 0.945, 0.710" />
+                </transform>
+              </entity>
+              <entity name="pilot">
+                <prefab_link>
+                  <instance guid="{59451DB0-BFB8-5FFD-8BC2-2241A5C7AB08}" />
+                  <prefab guid="{A06F321E-4ACA-4BF6-B805-EF117053A26B}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, 0.000, 0.000" />
+                </transform>
+                <scripts>
+                  <script name="StandingPoint">
+                    <prefab_link>
+                      <instance guid="{4FD038CB-E2F4-5364-B04D-D258039B221D}" />
+                      <prefab guid="{2EFECD1D-1AE1-4EB3-8224-6330F3472202}" />
+                    </prefab_link>
+                    <variables>
+                      <variable name="_customPlayerInteractionDistance" type_name="float" value="0.000" />
+                    </variables>
+                  </script>
+                </scripts>
+                <components>
+                  <meta_mesh_component name="icon_man">
+                    <prefab_link>
+                      <instance guid="{CBF412F7-B892-5B9F-8178-CDB519319291}" />
+                      <prefab guid="{29D1A9E6-9729-4678-93E0-A4575976C496}" />
+                    </prefab_link>
+                  </meta_mesh_component>
+                </components>
+              </entity>
+              <entity name="_barrier_ai_04x04m_nested">
+                <prefab_link>
+                  <instance guid="{FE88D629-DBC7-56AB-8A24-BC1AC577A692}" />
+                  <prefab guid="{91565B86-7863-460E-804A-DE4CCA13B8EA}" />
+                </prefab_link>
+                <components>
+                  <meta_mesh_component name="barrier">
+                    <prefab_link>
+                      <instance guid="{4E27E79C-1B44-5C2E-9BB6-20EDD689B77D}" />
+                      <prefab guid="{2BC4FAA7-59D3-409B-BA41-2BE9C4778259}" />
+                    </prefab_link>
+                  </meta_mesh_component>
+                </components>
+              </entity>
+              <entity name="visual">
+                <prefab_link>
+                  <instance guid="{8716D194-FBEF-55BC-86E9-5C6B50B946F8}" />
+                  <prefab guid="{536FCC32-6FD9-4CAE-8763-97310DA18DDC}" />
+                </prefab_link>
+                <children>
+                  <entity name="bridge_target_point">
+                    <prefab_link>
+                      <instance guid="{2707167C-769D-5336-931D-6007711E0452}" />
+                      <prefab guid="{908A9719-D289-429C-A042-F0BC45B03FB0}" />
+                    </prefab_link>
+                    <transform>
+                      <position type_name="vec3" value="0.000, -0.396, -0.051" />
+                    </transform>
+                    <children>
+                      <entity name="bd_sack_c">
+                        <prefab_link>
+                          <instance guid="{F78A70F0-13F8-5381-BFD1-44E4B64CFC7E}" />
+                          <prefab guid="{53FD2DF1-26EC-4F54-8489-F7886EC16272}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_sack_c">
+                            <prefab_link>
+                              <instance guid="{A7FEE558-3198-55C6-BFF4-9D8FEEA7748B}" />
+                              <prefab guid="{A0F13FF7-ACF5-4196-BFA9-5E33465FC6DB}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="bridge_end">
+                        <prefab_link>
+                          <instance guid="{E1FD2974-D761-55BB-AA98-7CCB1A921E5E}" />
+                          <prefab guid="{BDB77FE8-15B6-4877-BB4B-5E16A813BF5F}" />
+                        </prefab_link>
+                        <transform>
+                          <position type_name="vec3" value="0.000, 0.057, 0.106" />
+                        </transform>
+                        <components>
+                          <meta_mesh_component name="boarding_bridge_hook">
+                            <prefab_link>
+                              <instance guid="{D7D584F4-E5DE-54D0-A73A-253AEB2D09B1}" />
+                              <prefab guid="{7BD08BFE-75CD-488C-BC3B-0FBF15E591A1}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="crate_a">
+                        <prefab_link>
+                          <instance guid="{E6C60661-4139-5705-B083-456A50C1D84E}" />
+                          <prefab guid="{74FCE801-A35D-4048-844C-4C7003A95C95}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="crate_a">
+                            <prefab_link>
+                              <instance guid="{77ABE545-1D38-570F-B690-48A83914AF0D}" />
+                              <prefab guid="{12DE8DA4-48BC-40DD-8CA5-C00DC53C0C6A}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="pile_c">
+                        <prefab_link>
+                          <instance guid="{5BE7CBB4-8922-5911-9078-E3417079041A}" />
+                          <prefab guid="{1C3B241A-6DFA-4E6B-9DDB-BFA2BEB03DB2}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_rope_b">
+                            <prefab_link>
+                              <instance guid="{1E3118D8-32BB-5150-B949-C08A3B329DE4}" />
+                              <prefab guid="{EB41291F-D7CE-4397-AF82-5A2222732715}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="crate_b">
+                        <prefab_link>
+                          <instance guid="{1ED9838B-E70D-56AE-BB6F-BE53D949EA38}" />
+                          <prefab guid="{73076A45-6696-4ABC-83A4-554DF7CED785}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="crate_b">
+                            <prefab_link>
+                              <instance guid="{80B631D7-6798-53D9-8BF4-1BE224583F55}" />
+                              <prefab guid="{60E66D4A-4636-44DC-A4DB-79314464B3D9}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="pile_d">
+                        <prefab_link>
+                          <instance guid="{12435977-3EE9-543F-A390-554F00C127F2}" />
+                          <prefab guid="{E918EFEA-83E9-4F7D-92D0-5544CF97A17A}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_rope_a">
+                            <prefab_link>
+                              <instance guid="{948DEE13-5711-562C-8CAE-44A7563C7004}" />
+                              <prefab guid="{E86AFEA2-2263-4A84-AB6A-19F04F7C0B19}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_b">
+                        <prefab_link>
+                          <instance guid="{8A8B4544-85F0-557B-B8CB-B79140334E84}" />
+                          <prefab guid="{237FD6DD-6452-4167-9ABA-A396B0C24041}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_b">
+                            <prefab_link>
+                              <instance guid="{291466D2-A50B-5E07-BFAC-729EA48CA254}" />
+                              <prefab guid="{FF0951C7-F243-434E-8C4C-D6229A5D08ED}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_d">
+                        <prefab_link>
+                          <instance guid="{971D26B3-7FF2-57DB-AC08-72507FF68BF9}" />
+                          <prefab guid="{779159AC-1FDD-4689-9A5C-DC081AFADE83}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_d">
+                            <prefab_link>
+                              <instance guid="{4D66B4D7-A948-54AF-9548-B002A3C31EFA}" />
+                              <prefab guid="{76832485-29EC-4797-83DD-33DE415D494B}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_a">
+                        <prefab_link>
+                          <instance guid="{74286554-DA18-5FE3-AAA1-7AFEB3F52C38}" />
+                          <prefab guid="{75A13001-64EC-4C92-8A5E-4E6D41E074DA}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_a">
+                            <prefab_link>
+                              <instance guid="{88FFA9A3-3A61-5F66-935F-269D27D16D13}" />
+                              <prefab guid="{06B9405F-6C3A-45B2-8B9A-55DA7B6E72F7}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="bd_sack_b">
+                        <prefab_link>
+                          <instance guid="{B1D87293-6B33-53CB-87B6-20C4B79C6363}" />
+                          <prefab guid="{0BA91063-B63C-495A-B005-4E728B61CB07}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_sack_b">
+                            <prefab_link>
+                              <instance guid="{3E0A51B8-2546-54CE-8E2C-44BBEEF37BBD}" />
+                              <prefab guid="{53E484DF-8F92-40C8-8993-FA230635D988}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_c">
+                        <prefab_link>
+                          <instance guid="{ABE3C277-0BB2-5724-867B-BA90E3D16537}" />
+                          <prefab guid="{FCE91465-3E30-48F9-B1A6-52F60C98545E}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_c">
+                            <prefab_link>
+                              <instance guid="{0998135E-F0FB-516E-A719-68CF7179B9A6}" />
+                              <prefab guid="{7C9B432D-5BE3-4883-B1E1-4CCF7495CF7A}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                    </children>
+                  </entity>
+                  <entity name="bridge_connection_point">
+                    <prefab_link>
+                      <instance guid="{73D01C09-13A2-5E72-8E06-47D8010F043E}" />
+                      <prefab guid="{35D008CF-E264-43DA-AD54-EF2A55AB9570}" />
+                    </prefab_link>
+                    <transform>
+                      <position type_name="vec3" value="0.021, -0.528, 0.080" />
+                      <rotation_euler type_name="vec3" value="0.032, -0.038, 0.022" />
+                    </transform>
+                    <components>
+                      <meta_mesh_component name="editor_cube_centered">
+                        <prefab_link>
+                          <instance guid="{58D05206-07D8-538F-97E0-731A35E0B81E}" />
+                          <prefab guid="{A9C11F51-AF39-4B6E-AD13-6C4ED4EC9849}" />
+                        </prefab_link>
+                      </meta_mesh_component>
+                    </components>
+                  </entity>
+                  <entity name="bridge_source_point">
+                    <prefab_link>
+                      <instance guid="{E7982020-56AD-5625-8738-5AC618183618}" />
+                      <prefab guid="{5C3869D7-D9BC-4028-990D-A512B59641BD}" />
+                    </prefab_link>
+                    <transform>
+                      <position type_name="vec3" value="0.000, -0.396, -0.051" />
+                    </transform>
+                    <children>
+                      <entity name="pile_d">
+                        <prefab_link>
+                          <instance guid="{33451D8D-C1EC-5B25-A88C-D9B26D1D02FC}" />
+                          <prefab guid="{C6F44416-3E6A-4265-8868-F97E9BE18733}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_rope_a">
+                            <prefab_link>
+                              <instance guid="{6426275A-9692-5A16-9EBC-AC3E8058FF62}" />
+                              <prefab guid="{6EE167A4-6742-4496-9F7B-4553A69C60CC}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="crate_a">
+                        <prefab_link>
+                          <instance guid="{B72027D6-5E30-5A70-8605-67AE42916F7B}" />
+                          <prefab guid="{2D56BB30-4AAE-40B2-AE15-B6DDC8DF4562}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="crate_a">
+                            <prefab_link>
+                              <instance guid="{6630CCF6-76B0-5B89-AFA8-683058E3BD84}" />
+                              <prefab guid="{DE8D2DDB-2F49-48CF-8AC0-761112ADC1F7}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="bridge_end">
+                        <prefab_link>
+                          <instance guid="{4A73D7AD-A583-58CA-AC4B-93955AF7F56A}" />
+                          <prefab guid="{3A3802DD-AFDA-4CDA-842E-88D841CDF72E}" />
+                        </prefab_link>
+                        <misc>
+                          <is_visible type_name="bool" value="0" />
+                        </misc>
+                        <components>
+                          <meta_mesh_component name="boarding_bridge_hanged_end_a">
+                            <prefab_link>
+                              <instance guid="{DBE65C92-3261-5C9A-9A8C-8C4F5B965220}" />
+                              <prefab guid="{CBE26AF2-6E5E-4945-A236-45032A3BD501}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_c">
+                        <prefab_link>
+                          <instance guid="{B90F6BF4-B2E1-5B92-A260-463C4FEF8100}" />
+                          <prefab guid="{B439A65F-C18B-429E-9EB4-64F5140A311B}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_c">
+                            <prefab_link>
+                              <instance guid="{F9EF94B3-FD24-5B9E-AE76-FE5F288889F7}" />
+                              <prefab guid="{8F610E54-A1CB-43F5-8FA6-11F81E8DF1CD}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_a">
+                        <prefab_link>
+                          <instance guid="{6DBE3B3D-B57B-5856-B660-785326A218B3}" />
+                          <prefab guid="{19083F9B-134D-45DA-B9B4-4AE94A6E8991}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_a">
+                            <prefab_link>
+                              <instance guid="{8ACBDB32-1BAF-5A8B-A87A-CE1693303824}" />
+                              <prefab guid="{73D4E8AF-0BE0-42A4-BBC8-D6DA4E1340A5}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_b">
+                        <prefab_link>
+                          <instance guid="{90588181-6817-5971-A169-B252C945EE3E}" />
+                          <prefab guid="{5C816667-D8AA-445A-9B14-4E47F08A28E0}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_b">
+                            <prefab_link>
+                              <instance guid="{7C3BE0E4-8766-516F-9C5F-17FB745A0F28}" />
+                              <prefab guid="{A4A6FD7C-65DC-482A-876B-DC96E25E8958}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_d">
+                        <prefab_link>
+                          <instance guid="{32FD72D9-22FC-5663-BE3E-05FD2B668242}" />
+                          <prefab guid="{A1237635-E7ED-464E-BA66-3F59EEDEFBB9}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_d">
+                            <prefab_link>
+                              <instance guid="{42A782C0-746B-5BA1-8B40-920F55F2E1D6}" />
+                              <prefab guid="{53527919-5275-4400-AB25-3170F824AAD7}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="bd_sack_b">
+                        <prefab_link>
+                          <instance guid="{6B9552A9-DBB9-5F2E-BFAB-E6B6A9D76CD1}" />
+                          <prefab guid="{30C248BB-5A13-4B88-99FA-D82528CEFADC}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_sack_b">
+                            <prefab_link>
+                              <instance guid="{C5057FD8-0BEC-5E64-82E2-DCF6BEE89E79}" />
+                              <prefab guid="{6B26EE65-2884-4D2F-AD5E-56FB3CF5143B}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="crate_b">
+                        <prefab_link>
+                          <instance guid="{31E09EC5-AD6E-5EA4-B8F5-DD891DC24CC1}" />
+                          <prefab guid="{17AD6AD3-0FE2-441E-93AF-182B8D91A794}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="crate_b">
+                            <prefab_link>
+                              <instance guid="{75959BCF-03C8-5AD3-9DA6-0EBCAA35092A}" />
+                              <prefab guid="{CA7783B5-0B08-4465-B1F0-A44C708EC4A1}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="hanged">
+                        <prefab_link>
+                          <instance guid="{82B30305-B12D-558F-B73C-D0B783A016F7}" />
+                          <prefab guid="{CA9875A5-8552-4DBC-8915-015B14EAE9ED}" />
+                        </prefab_link>
+                        <transform>
+                          <position type_name="vec3" value="0.000, -0.043, 0.116" />
+                          <rotation_euler type_name="vec3" value="-0.460, 0.009, 0.020" />
+                        </transform>
+                        <components>
+                          <meta_mesh_component name="boarding_bridge_hanged_a">
+                            <prefab_link>
+                              <instance guid="{F18FF165-9DDF-5B99-A2D3-212CA498F9B9}" />
+                              <prefab guid="{BBE3DBD9-25C6-42DF-A2C6-0B7D261DBA6D}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="pile_c">
+                        <prefab_link>
+                          <instance guid="{E5F93990-5D32-5FFA-BCD3-63E1C3EB11B4}" />
+                          <prefab guid="{0D13683C-34FF-4680-AA72-2B8B1841BC54}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_rope_b">
+                            <prefab_link>
+                              <instance guid="{8F6CBCCC-1B73-5BB0-A5FC-7E3EB364A173}" />
+                              <prefab guid="{15B461F0-33C3-40CF-80D7-85B9E53A861B}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="pile_a">
+                        <prefab_link>
+                          <instance guid="{903092FE-718C-58B2-A3D4-0C36373DD771}" />
+                          <prefab guid="{0066EAE5-12AE-4723-9571-178F4A8FAF0B}" />
+                        </prefab_link>
+                        <misc>
+                          <is_visible type_name="bool" value="0" />
+                        </misc>
+                        <components>
+                          <meta_mesh_component name="boarding_bridge_pile_a">
+                            <prefab_link>
+                              <instance guid="{733D57CE-6A1C-51E2-BB7B-A2505EB0E71E}" />
+                              <prefab guid="{CEC9A7AC-C818-4F12-A780-5BB771DCAFD5}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="bd_sack_c">
+                        <prefab_link>
+                          <instance guid="{4ECBA858-A5AD-524A-B954-D10426BB3072}" />
+                          <prefab guid="{730FB827-067E-4301-839E-65A1CD6E5D6D}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_sack_c">
+                            <prefab_link>
+                              <instance guid="{CCAD04B6-C3F6-5BA0-87A7-470D1886965B}" />
+                              <prefab guid="{15B59BE6-ECFE-47E8-9A82-93718B9C1180}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="pile_b">
+                        <prefab_link>
+                          <instance guid="{E788307C-9EF9-57E7-80CC-290FA14EB3F3}" />
+                          <prefab guid="{85BAA7D0-38F0-479F-B340-64D30020DD28}" />
+                        </prefab_link>
+                        <misc>
+                          <is_visible type_name="bool" value="0" />
+                        </misc>
+                        <components>
+                          <meta_mesh_component name="boarding_bridge_pile_b">
+                            <prefab_link>
+                              <instance guid="{43BF1FFE-9302-5BC0-AEF7-3300122FFF98}" />
+                              <prefab guid="{BF91C425-9DCD-4857-8FCB-1B0E4ED3B986}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                    </children>
+                  </entity>
+                </children>
+              </entity>
+              <entity name="hook_attach_point">
+                <prefab_link>
+                  <instance guid="{08A35A5C-2048-5CBA-AB40-5FAAF1FCC5DE}" />
+                  <prefab guid="{D6710016-D762-4BA8-AF6E-4583CC96B5AA}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, 0.593, 0.784" />
+                </transform>
+                <components>
+                  <meta_mesh_component name="hook">
+                    <prefab_link>
+                      <instance guid="{0CD360BA-823B-51FC-9C1C-67233FD74690}" />
+                      <prefab guid="{66162C0C-FC3C-49E9-A811-DB1184F569A1}" />
+                    </prefab_link>
+                  </meta_mesh_component>
+                </components>
+              </entity>
+              <entity name="capsule_physics_a">
+                <prefab_link>
+                  <instance guid="{D0E47FC0-19EB-53E0-926D-AF6F7A521C77}" />
+                  <prefab guid="{F675235A-0B5F-4AB2-90B1-AEFDDB0A04DC}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.021, 0.275, 0.748" />
+                  <rotation_euler type_name="vec3" value="-0.088, 0.004, 0.017" />
+                </transform>
+              </entity>
+            </children>
+          </entity>
+          <entity name="distance_helper">
+            <prefab_link>
+              <instance guid="{44D07394-A2D9-5AF9-86CC-509B775E769B}" />
+              <prefab guid="{19DDB40F-68DB-440B-8BFA-EAC97FC47FBC}" />
+            </prefab_link>
+            <components>
+              <meta_mesh_component name="editor_cube_centered">
+                <prefab_link>
+                  <instance guid="{4010E14F-B47A-53AE-9740-1DA04CF8014D}" />
+                  <prefab guid="{8A6FE3DC-8593-477E-B1DB-7241CC5B3892}" />
+                </prefab_link>
+              </meta_mesh_component>
+            </components>
+          </entity>
+        </children>
+      </entity>
+      <entity name="attachment_machine_nested">
+        <prefab_link>
+          <instance guid="{B6E3B223-A267-5E32-9C61-8BE8C30C264B}" />
+          <prefab guid="{7693F16A-5698-4D61-9EA2-778DE25B050D}" />
+        </prefab_link>
+        <transform>
+          <position type_name="vec3" value="2.500, 3.250, 2.235" />
+          <rotation_euler type_name="vec3" value="0.000, 0.000, -1.570796" />
+        </transform>
+        <children>
+          <entity name="attachment_machine">
+            <prefab_link>
+              <instance guid="{2E9A6E2C-6062-5DE4-8CC4-B430B82D2989}" />
+              <prefab guid="{0F42C745-F3C8-4BA2-9F91-13D1DB95F59B}" />
+            </prefab_link>
+            <scripts>
+              <script name="ShipAttachmentMachine">
+                <prefab_link>
+                  <instance guid="{B22DF156-87EE-5DCA-B056-A206D43DE123}" />
+                  <prefab guid="{5F154543-AB20-490F-87E2-5BCA49CBEA4A}" />
+                </prefab_link>
+                <variables>
+                  <variable name="RelatedShipNavmeshOffset" type_name="int" value="2" />
+                </variables>
+              </script>
+            </scripts>
+            <children>
+              <entity name="focus_object">
+                <prefab_link>
+                  <instance guid="{487FDFCA-6C2D-5AAD-8B03-CE7E2E1DC646}" />
+                  <prefab guid="{0518019F-28AB-4467-ACA2-E586D266403C}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, -0.055, 0.322" />
+                </transform>
+              </entity>
+              <entity name="hook">
+                <prefab_link>
+                  <instance guid="{5DED76FE-FA25-5FAC-8600-62BEB4B81D78}" />
+                  <prefab guid="{4DD6F000-6E47-4E5D-B53F-CD3CA13B90E4}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, 0.116, 0.698" />
+                  <rotation_euler type_name="vec3" value="0.577, 3.138, -3.135" />
+                </transform>
+                <components>
+                  <meta_mesh_component name="hook">
+                    <prefab_link>
+                      <instance guid="{226BBCB3-AE36-5E6C-82EF-2ABB056D1C5C}" />
+                      <prefab guid="{918079DE-377B-416D-8936-975BFA069682}" />
+                    </prefab_link>
+                  </meta_mesh_component>
+                </components>
+              </entity>
+              <entity name="pilot">
+                <prefab_link>
+                  <instance guid="{DA2FBC16-FDFC-580C-9D79-56E44AAA10E6}" />
+                  <prefab guid="{F6A53312-57B3-4B73-9D4C-E05785D3745D}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, 0.000, 0.000" />
+                </transform>
+                <scripts>
+                  <script name="StandingPoint">
+                    <prefab_link>
+                      <instance guid="{00F03E8B-2493-5EAB-AE14-2F2B9E316BA7}" />
+                      <prefab guid="{D9A8DE85-40BF-4C0E-A1AA-3CD27730C701}" />
+                    </prefab_link>
+                    <variables>
+                      <variable name="_customPlayerInteractionDistance" type_name="float" value="0.000" />
+                    </variables>
+                  </script>
+                </scripts>
+                <components>
+                  <meta_mesh_component name="icon_man">
+                    <prefab_link>
+                      <instance guid="{D3FE25A6-CC69-56DD-AD9F-65967634CC89}" />
+                      <prefab guid="{9BBF9E7C-DCB7-4C1D-938A-2FCB16D2DBED}" />
+                    </prefab_link>
+                  </meta_mesh_component>
+                </components>
+              </entity>
+              <entity name="pile_holder">
+                <prefab_link>
+                  <instance guid="{1BF04F48-E3AB-5CA4-B312-38F8CA2E2AF8}" />
+                  <prefab guid="{346475D5-C9B2-4B29-95BE-625811F4008F}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, 0.213, 0.629" />
+                  <rotation_euler type_name="vec3" value="0.000, 0.500, 1.571" />
+                </transform>
+                <children>
+                  <entity name="pile">
+                    <prefab_link>
+                      <instance guid="{B58D84AA-B3D8-5207-9F23-8A1029E6C1E3}" />
+                      <prefab guid="{FD91DF25-B122-4A5C-B07D-2196569F09FB}" />
+                    </prefab_link>
+                    <scripts>
+                      <script name="RopePileBaked">
+                        <prefab_link>
+                          <instance guid="{0051E41E-2A4E-5D12-BF95-4D222A3D1467}" />
+                          <prefab guid="{B20BE16E-6FC6-430B-B47A-EAEDDBA9C2B8}" />
+                        </prefab_link>
+                      </script>
+                    </scripts>
+                    <components>
+                      <meta_mesh_component name="sail_rope_pile_d">
+                        <prefab_link>
+                          <instance guid="{48DC113A-5BD6-5B60-8517-1B088FD4E48D}" />
+                          <prefab guid="{C428D10A-D061-4C8C-B548-2A3E032E48C2}" />
+                        </prefab_link>
+                      </meta_mesh_component>
+                    </components>
+                  </entity>
+                  <entity name="hanger">
+                    <prefab_link>
+                      <instance guid="{7654AE3E-1C68-50AF-83BA-66D2F118CB31}" />
+                      <prefab guid="{3BEAC2D9-A7F2-4CA1-8FD5-2AD6EE3394D6}" />
+                    </prefab_link>
+                    <components>
+                      <meta_mesh_component name="rope_pile_hanger">
+                        <prefab_link>
+                          <instance guid="{70D67B06-E086-537B-9540-8AD05DDA5EF9}" />
+                          <prefab guid="{CB22DF89-F66B-4EF7-8D0F-5A6E35BC8674}" />
+                        </prefab_link>
+                        <children>
+                          <mesh name="rope_pile_hanger">
+                            <misc>
+                              <factor_color type_name="vec4" value="0.071, 0.075, 0.075, 1.000" />
+                            </misc>
+                          </mesh>
+                        </children>
+                      </meta_mesh_component>
+                    </components>
+                  </entity>
+                  <entity name="pile_floor_static">
+                    <prefab_link>
+                      <instance guid="{165B84EE-1505-553A-A6B5-FB8DD3461CD9}" />
+                      <prefab guid="{39CCAA3A-D8F6-4A18-9D9E-3EC9165641ED}" />
+                    </prefab_link>
+                    <misc>
+                      <is_visible type_name="bool" value="0" />
+                    </misc>
+                    <components>
+                      <meta_mesh_component name="sail_rope_pile_d_2">
+                        <prefab_link>
+                          <instance guid="{4CED17A3-CDAE-50C2-BFA7-1E1B10330765}" />
+                          <prefab guid="{467003D1-FAF5-4D54-930C-CD13CC6DEA71}" />
+                        </prefab_link>
+                      </meta_mesh_component>
+                    </components>
+                  </entity>
+                  <entity name="pile_hanged_static">
+                    <prefab_link>
+                      <instance guid="{EB3316BD-2FE2-51EF-A89C-EEB55F5F27A7}" />
+                      <prefab guid="{1B98EA6B-90C7-4E01-A337-D3B3E59903D8}" />
+                    </prefab_link>
+                    <components>
+                      <meta_mesh_component name="sail_rope_pile_d_1">
+                        <prefab_link>
+                          <instance guid="{01AD2DBE-ACD7-5D11-9F4A-698A7DDA6250}" />
+                          <prefab guid="{ECBCDACE-899D-4F2D-9EE4-6C8A0659B363}" />
+                        </prefab_link>
+                      </meta_mesh_component>
+                    </components>
+                  </entity>
+                </children>
+              </entity>
+            </children>
+          </entity>
+          <entity name="attachment_point_machine">
+            <prefab_link>
+              <instance guid="{67193950-4E16-54BB-8107-5B18F1E8C3F9}" />
+              <prefab guid="{A349BB86-333E-42DF-8735-3AD5CE722A5D}" />
+            </prefab_link>
+            <scripts>
+              <script name="ShipAttachmentPointMachine">
+                <prefab_link>
+                  <instance guid="{8CB5C81A-4654-54D8-84B6-7E01DDF01A39}" />
+                  <prefab guid="{357AF429-8B5E-4404-8D46-29C42AED7CEA}" />
+                </prefab_link>
+                <variables>
+                  <variable name="RelatedShipNavmeshOffset" type_name="int" value="2" />
+                </variables>
+              </script>
+            </scripts>
+            <children>
+              <entity name="focus_object">
+                <prefab_link>
+                  <instance guid="{B6E47CF0-F12B-50CE-AC91-2325342FD1D9}" />
+                  <prefab guid="{8B379159-A80B-462E-9A4D-E1001A6F61A5}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, 0.945, 0.710" />
+                </transform>
+              </entity>
+              <entity name="pilot">
+                <prefab_link>
+                  <instance guid="{2EC384E6-809A-51E4-89D7-6F29C2DEA380}" />
+                  <prefab guid="{A06F321E-4ACA-4BF6-B805-EF117053A26B}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, 0.000, 0.000" />
+                </transform>
+                <scripts>
+                  <script name="StandingPoint">
+                    <prefab_link>
+                      <instance guid="{40F358F5-9B8B-512F-BDB9-D9828978D9CD}" />
+                      <prefab guid="{2EFECD1D-1AE1-4EB3-8224-6330F3472202}" />
+                    </prefab_link>
+                    <variables>
+                      <variable name="_customPlayerInteractionDistance" type_name="float" value="0.000" />
+                    </variables>
+                  </script>
+                </scripts>
+                <components>
+                  <meta_mesh_component name="icon_man">
+                    <prefab_link>
+                      <instance guid="{073AE02B-7E66-5C0B-9CEF-13F3754AF1C1}" />
+                      <prefab guid="{29D1A9E6-9729-4678-93E0-A4575976C496}" />
+                    </prefab_link>
+                  </meta_mesh_component>
+                </components>
+              </entity>
+              <entity name="_barrier_ai_04x04m_nested">
+                <prefab_link>
+                  <instance guid="{9E80D8BD-45EB-5F3F-A75A-E81E657AE18D}" />
+                  <prefab guid="{91565B86-7863-460E-804A-DE4CCA13B8EA}" />
+                </prefab_link>
+                <components>
+                  <meta_mesh_component name="barrier">
+                    <prefab_link>
+                      <instance guid="{A4067781-5F6C-595C-8393-9BEE4CCDA8FE}" />
+                      <prefab guid="{2BC4FAA7-59D3-409B-BA41-2BE9C4778259}" />
+                    </prefab_link>
+                  </meta_mesh_component>
+                </components>
+              </entity>
+              <entity name="visual">
+                <prefab_link>
+                  <instance guid="{63C4C582-06E5-579C-A374-EE9BCFC3DEFA}" />
+                  <prefab guid="{536FCC32-6FD9-4CAE-8763-97310DA18DDC}" />
+                </prefab_link>
+                <children>
+                  <entity name="bridge_target_point">
+                    <prefab_link>
+                      <instance guid="{B619E63D-FBEB-5FB0-86D7-5C5E70EF2E15}" />
+                      <prefab guid="{908A9719-D289-429C-A042-F0BC45B03FB0}" />
+                    </prefab_link>
+                    <transform>
+                      <position type_name="vec3" value="0.000, -0.396, -0.051" />
+                    </transform>
+                    <children>
+                      <entity name="bd_sack_c">
+                        <prefab_link>
+                          <instance guid="{3EC110BC-8C2A-5739-8E76-51870BF866B9}" />
+                          <prefab guid="{53FD2DF1-26EC-4F54-8489-F7886EC16272}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_sack_c">
+                            <prefab_link>
+                              <instance guid="{AA1D3D3A-7CF5-545D-BF1B-778499C02F5A}" />
+                              <prefab guid="{A0F13FF7-ACF5-4196-BFA9-5E33465FC6DB}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="bridge_end">
+                        <prefab_link>
+                          <instance guid="{92A0FCE0-8E52-51EF-895C-BB828E30C448}" />
+                          <prefab guid="{BDB77FE8-15B6-4877-BB4B-5E16A813BF5F}" />
+                        </prefab_link>
+                        <transform>
+                          <position type_name="vec3" value="0.000, 0.057, 0.106" />
+                        </transform>
+                        <components>
+                          <meta_mesh_component name="boarding_bridge_hook">
+                            <prefab_link>
+                              <instance guid="{14031242-8F77-58B7-8A37-2F5C6BFC9BDC}" />
+                              <prefab guid="{7BD08BFE-75CD-488C-BC3B-0FBF15E591A1}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="crate_a">
+                        <prefab_link>
+                          <instance guid="{FDB31C6B-F43F-5718-A883-A046F78829D9}" />
+                          <prefab guid="{74FCE801-A35D-4048-844C-4C7003A95C95}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="crate_a">
+                            <prefab_link>
+                              <instance guid="{38618FDA-4F04-5DD1-94BD-E81A5C2408F0}" />
+                              <prefab guid="{12DE8DA4-48BC-40DD-8CA5-C00DC53C0C6A}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="pile_c">
+                        <prefab_link>
+                          <instance guid="{C788A963-9AD2-5144-BEAA-F0EB67AF27A7}" />
+                          <prefab guid="{1C3B241A-6DFA-4E6B-9DDB-BFA2BEB03DB2}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_rope_b">
+                            <prefab_link>
+                              <instance guid="{1A0C69D0-0B9E-5964-92FD-49BC84F3EB7F}" />
+                              <prefab guid="{EB41291F-D7CE-4397-AF82-5A2222732715}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="crate_b">
+                        <prefab_link>
+                          <instance guid="{FA271E4B-05B0-5767-82F3-0B528EC68969}" />
+                          <prefab guid="{73076A45-6696-4ABC-83A4-554DF7CED785}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="crate_b">
+                            <prefab_link>
+                              <instance guid="{B01E5741-06C1-50AA-B878-820884AAE4D3}" />
+                              <prefab guid="{60E66D4A-4636-44DC-A4DB-79314464B3D9}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="pile_d">
+                        <prefab_link>
+                          <instance guid="{8C7C4213-0966-5A26-843A-61589FCFF158}" />
+                          <prefab guid="{E918EFEA-83E9-4F7D-92D0-5544CF97A17A}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_rope_a">
+                            <prefab_link>
+                              <instance guid="{E988FDFE-B469-57CC-B766-13A6A9024AE9}" />
+                              <prefab guid="{E86AFEA2-2263-4A84-AB6A-19F04F7C0B19}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_b">
+                        <prefab_link>
+                          <instance guid="{0BAC07F6-291D-57E2-8E8A-849A8268D399}" />
+                          <prefab guid="{237FD6DD-6452-4167-9ABA-A396B0C24041}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_b">
+                            <prefab_link>
+                              <instance guid="{930030AB-EB91-5E6E-8C3D-20D0FFB9E303}" />
+                              <prefab guid="{FF0951C7-F243-434E-8C4C-D6229A5D08ED}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_d">
+                        <prefab_link>
+                          <instance guid="{938FEAF4-BC68-5392-A39A-F9783071EF24}" />
+                          <prefab guid="{779159AC-1FDD-4689-9A5C-DC081AFADE83}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_d">
+                            <prefab_link>
+                              <instance guid="{825CA937-4950-56CF-854C-BFDE4F1A47D6}" />
+                              <prefab guid="{76832485-29EC-4797-83DD-33DE415D494B}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_a">
+                        <prefab_link>
+                          <instance guid="{DC574D5B-640C-51F3-ABF9-76D54B9DE11E}" />
+                          <prefab guid="{75A13001-64EC-4C92-8A5E-4E6D41E074DA}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_a">
+                            <prefab_link>
+                              <instance guid="{6C3343E9-74E1-5FE6-8129-6A2919BFC414}" />
+                              <prefab guid="{06B9405F-6C3A-45B2-8B9A-55DA7B6E72F7}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="bd_sack_b">
+                        <prefab_link>
+                          <instance guid="{D28C717D-A9C1-534A-92C3-6DDD7F823C11}" />
+                          <prefab guid="{0BA91063-B63C-495A-B005-4E728B61CB07}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_sack_b">
+                            <prefab_link>
+                              <instance guid="{D107A9E3-60ED-5580-AB2D-8186144FB37D}" />
+                              <prefab guid="{53E484DF-8F92-40C8-8993-FA230635D988}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_c">
+                        <prefab_link>
+                          <instance guid="{7ACF11C1-A4E2-58F8-98DF-F882BAB51E11}" />
+                          <prefab guid="{FCE91465-3E30-48F9-B1A6-52F60C98545E}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_c">
+                            <prefab_link>
+                              <instance guid="{1D5E55BD-1915-5BD3-9985-FE781D01AA70}" />
+                              <prefab guid="{7C9B432D-5BE3-4883-B1E1-4CCF7495CF7A}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                    </children>
+                  </entity>
+                  <entity name="bridge_connection_point">
+                    <prefab_link>
+                      <instance guid="{27A97EDC-310D-58DE-BC39-2AA3E58E2E5F}" />
+                      <prefab guid="{35D008CF-E264-43DA-AD54-EF2A55AB9570}" />
+                    </prefab_link>
+                    <transform>
+                      <position type_name="vec3" value="0.021, -0.528, 0.080" />
+                      <rotation_euler type_name="vec3" value="0.032, -0.038, 0.022" />
+                    </transform>
+                    <components>
+                      <meta_mesh_component name="editor_cube_centered">
+                        <prefab_link>
+                          <instance guid="{2D80E8A8-704E-53C0-B087-05EE2A0D3559}" />
+                          <prefab guid="{A9C11F51-AF39-4B6E-AD13-6C4ED4EC9849}" />
+                        </prefab_link>
+                      </meta_mesh_component>
+                    </components>
+                  </entity>
+                  <entity name="bridge_source_point">
+                    <prefab_link>
+                      <instance guid="{0B69D65E-A347-5FBF-8AD2-FBCE03372B53}" />
+                      <prefab guid="{5C3869D7-D9BC-4028-990D-A512B59641BD}" />
+                    </prefab_link>
+                    <transform>
+                      <position type_name="vec3" value="0.000, -0.396, -0.051" />
+                    </transform>
+                    <children>
+                      <entity name="pile_d">
+                        <prefab_link>
+                          <instance guid="{217DC58F-8789-5FCC-B4DF-584B1FFBEC5B}" />
+                          <prefab guid="{C6F44416-3E6A-4265-8868-F97E9BE18733}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_rope_a">
+                            <prefab_link>
+                              <instance guid="{DC80EDA6-8C1C-55BF-A399-BA69EB5FE403}" />
+                              <prefab guid="{6EE167A4-6742-4496-9F7B-4553A69C60CC}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="crate_a">
+                        <prefab_link>
+                          <instance guid="{FAC3A515-8644-5874-9CF5-7C2F3AE82C9D}" />
+                          <prefab guid="{2D56BB30-4AAE-40B2-AE15-B6DDC8DF4562}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="crate_a">
+                            <prefab_link>
+                              <instance guid="{263B945F-30A9-54A8-8FEE-79B1F6D0650D}" />
+                              <prefab guid="{DE8D2DDB-2F49-48CF-8AC0-761112ADC1F7}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="bridge_end">
+                        <prefab_link>
+                          <instance guid="{27481477-9955-5ADE-AF28-BACDCB8525BA}" />
+                          <prefab guid="{3A3802DD-AFDA-4CDA-842E-88D841CDF72E}" />
+                        </prefab_link>
+                        <misc>
+                          <is_visible type_name="bool" value="0" />
+                        </misc>
+                        <components>
+                          <meta_mesh_component name="boarding_bridge_hanged_end_a">
+                            <prefab_link>
+                              <instance guid="{62C82C1F-7E73-5CD9-A496-E516CAE20924}" />
+                              <prefab guid="{CBE26AF2-6E5E-4945-A236-45032A3BD501}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_c">
+                        <prefab_link>
+                          <instance guid="{FDC265B8-1F72-5178-9048-73FDAC8FCCDF}" />
+                          <prefab guid="{B439A65F-C18B-429E-9EB4-64F5140A311B}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_c">
+                            <prefab_link>
+                              <instance guid="{A3326554-71CD-5CB2-BB4A-8335565BFA79}" />
+                              <prefab guid="{8F610E54-A1CB-43F5-8FA6-11F81E8DF1CD}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_a">
+                        <prefab_link>
+                          <instance guid="{94858AB3-95A9-525D-B282-3E7E2EBF5D97}" />
+                          <prefab guid="{19083F9B-134D-45DA-B9B4-4AE94A6E8991}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_a">
+                            <prefab_link>
+                              <instance guid="{D345B218-6445-5BCD-ADEE-1479FE4B01EB}" />
+                              <prefab guid="{73D4E8AF-0BE0-42A4-BBC8-D6DA4E1340A5}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_b">
+                        <prefab_link>
+                          <instance guid="{BD7203A1-9B78-5B69-A003-49B9B7EF51BF}" />
+                          <prefab guid="{5C816667-D8AA-445A-9B14-4E47F08A28E0}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_b">
+                            <prefab_link>
+                              <instance guid="{7C265B45-2083-56D3-80B0-75D89CBA2172}" />
+                              <prefab guid="{A4A6FD7C-65DC-482A-876B-DC96E25E8958}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="rope_segment_d">
+                        <prefab_link>
+                          <instance guid="{0A8B0F03-14A1-50EE-B3CF-FE67A8B7E101}" />
+                          <prefab guid="{A1237635-E7ED-464E-BA66-3F59EEDEFBB9}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="rope_segment_d">
+                            <prefab_link>
+                              <instance guid="{DDB83311-9A13-563F-9917-167A3607220C}" />
+                              <prefab guid="{53527919-5275-4400-AB25-3170F824AAD7}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="bd_sack_b">
+                        <prefab_link>
+                          <instance guid="{D6F557E0-7F48-5F1A-ACA4-22FC03C04108}" />
+                          <prefab guid="{30C248BB-5A13-4B88-99FA-D82528CEFADC}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_sack_b">
+                            <prefab_link>
+                              <instance guid="{8E0780E2-350B-5A05-B77C-E062EEC01B55}" />
+                              <prefab guid="{6B26EE65-2884-4D2F-AD5E-56FB3CF5143B}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="crate_b">
+                        <prefab_link>
+                          <instance guid="{BFEDC33F-941D-5417-B69D-FE9128138095}" />
+                          <prefab guid="{17AD6AD3-0FE2-441E-93AF-182B8D91A794}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="crate_b">
+                            <prefab_link>
+                              <instance guid="{B6B2B7F8-0F43-5EFD-819D-2A145325DD5E}" />
+                              <prefab guid="{CA7783B5-0B08-4465-B1F0-A44C708EC4A1}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="hanged">
+                        <prefab_link>
+                          <instance guid="{0EDC08BB-62F5-5F60-BF7E-92DA2A9F9E96}" />
+                          <prefab guid="{CA9875A5-8552-4DBC-8915-015B14EAE9ED}" />
+                        </prefab_link>
+                        <transform>
+                          <position type_name="vec3" value="0.000, -0.043, 0.116" />
+                          <rotation_euler type_name="vec3" value="-0.460, 0.009, 0.020" />
+                        </transform>
+                        <components>
+                          <meta_mesh_component name="boarding_bridge_hanged_a">
+                            <prefab_link>
+                              <instance guid="{EAB47159-52AD-5DFC-B995-0E84C21AB4F8}" />
+                              <prefab guid="{BBE3DBD9-25C6-42DF-A2C6-0B7D261DBA6D}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="pile_c">
+                        <prefab_link>
+                          <instance guid="{7D8450C5-4340-55C6-BDBB-CC56078D9D15}" />
+                          <prefab guid="{0D13683C-34FF-4680-AA72-2B8B1841BC54}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_rope_b">
+                            <prefab_link>
+                              <instance guid="{8C7768FE-AC99-5CB1-A98F-2D0D1BFF542F}" />
+                              <prefab guid="{15B461F0-33C3-40CF-80D7-85B9E53A861B}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="pile_a">
+                        <prefab_link>
+                          <instance guid="{0D8FF07B-F35E-5E76-AA85-CBCBDDBA741D}" />
+                          <prefab guid="{0066EAE5-12AE-4723-9571-178F4A8FAF0B}" />
+                        </prefab_link>
+                        <misc>
+                          <is_visible type_name="bool" value="0" />
+                        </misc>
+                        <components>
+                          <meta_mesh_component name="boarding_bridge_pile_a">
+                            <prefab_link>
+                              <instance guid="{3755C3D4-7582-5F60-A4C4-80748147F632}" />
+                              <prefab guid="{CEC9A7AC-C818-4F12-A780-5BB771DCAFD5}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="bd_sack_c">
+                        <prefab_link>
+                          <instance guid="{794272D3-2DBF-54C8-9438-7D5E713AFC41}" />
+                          <prefab guid="{730FB827-067E-4301-839E-65A1CD6E5D6D}" />
+                        </prefab_link>
+                        <components>
+                          <meta_mesh_component name="bd_sack_c">
+                            <prefab_link>
+                              <instance guid="{30840D3B-CB29-57F5-A76C-B9A62C8F73F1}" />
+                              <prefab guid="{15B59BE6-ECFE-47E8-9A82-93718B9C1180}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                      <entity name="pile_b">
+                        <prefab_link>
+                          <instance guid="{81B834ED-43DB-5C69-9F83-2A1983CCD867}" />
+                          <prefab guid="{85BAA7D0-38F0-479F-B340-64D30020DD28}" />
+                        </prefab_link>
+                        <misc>
+                          <is_visible type_name="bool" value="0" />
+                        </misc>
+                        <components>
+                          <meta_mesh_component name="boarding_bridge_pile_b">
+                            <prefab_link>
+                              <instance guid="{01FA9F1D-3335-59EC-9143-4393D5DB79C1}" />
+                              <prefab guid="{BF91C425-9DCD-4857-8FCB-1B0E4ED3B986}" />
+                            </prefab_link>
+                          </meta_mesh_component>
+                        </components>
+                      </entity>
+                    </children>
+                  </entity>
+                </children>
+              </entity>
+              <entity name="hook_attach_point">
+                <prefab_link>
+                  <instance guid="{45B291AD-2C18-58AA-AB19-87B75E354546}" />
+                  <prefab guid="{D6710016-D762-4BA8-AF6E-4583CC96B5AA}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.000, 0.593, 0.784" />
+                </transform>
+                <components>
+                  <meta_mesh_component name="hook">
+                    <prefab_link>
+                      <instance guid="{9888E294-86D0-51FC-AED0-F642EE717AE1}" />
+                      <prefab guid="{66162C0C-FC3C-49E9-A811-DB1184F569A1}" />
+                    </prefab_link>
+                  </meta_mesh_component>
+                </components>
+              </entity>
+              <entity name="capsule_physics_a">
+                <prefab_link>
+                  <instance guid="{76F5087B-5D4B-5724-810E-89841720AEFC}" />
+                  <prefab guid="{F675235A-0B5F-4AB2-90B1-AEFDDB0A04DC}" />
+                </prefab_link>
+                <transform>
+                  <position type_name="vec3" value="0.021, 0.275, 0.748" />
+                  <rotation_euler type_name="vec3" value="-0.088, 0.004, 0.017" />
+                </transform>
+              </entity>
+            </children>
+          </entity>
+          <entity name="distance_helper">
+            <prefab_link>
+              <instance guid="{D3F6A492-AD3A-5E44-9D07-D2A931752BC8}" />
+              <prefab guid="{19DDB40F-68DB-440B-8BFA-EAC97FC47FBC}" />
+            </prefab_link>
+            <components>
+              <meta_mesh_component name="editor_cube_centered">
+                <prefab_link>
+                  <instance guid="{E0202E06-7BE9-5B2A-AB57-D971FB8897D5}" />
+                  <prefab guid="{8A6FE3DC-8593-477E-B1DB-7241CC5B3892}" />
+                </prefab_link>
+              </meta_mesh_component>
+            </components>
+          </entity>
+        </children>
+      </entity>
+    </children>
+  </entity>
+</prefab_definition>
