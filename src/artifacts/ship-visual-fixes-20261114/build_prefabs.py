@@ -2,6 +2,7 @@
 from pathlib import Path
 import xml.etree.ElementTree as E
 import copy,json,uuid,hashlib,sys,shutil
+from prefab_links import ensure_definition_links
 BASE=Path(__file__).resolve().parent
 DATA=Path('D:/AI/blender-mcp/data/dadg_ship_visual_fixes_20261114_v1')
 MAP=BASE.parents[3]/'DellarteDellaGuerraMap'
@@ -37,6 +38,7 @@ def position(e,p,scale=None):
  tr=E.SubElement(e,'transform');E.SubElement(tr,'position',type_name='vec3',value=', '.join(f'{x:.6f}' for x in p))
  if scale is not None:E.SubElement(tr,'scale',type_name='vec3',value=', '.join([f'{scale:.6f}']*3))
 def write(path,e):
+ ensure_definition_links(e,path.parent.name+'/'+path.stem)
  path.parent.mkdir(parents=True,exist_ok=True);wrapper=E.Element('prefab_definition');wrapper.append(e);E.indent(wrapper,space='  ');E.ElementTree(wrapper).write(path,encoding='utf-8',xml_declaration=True)
 
 manifest={}

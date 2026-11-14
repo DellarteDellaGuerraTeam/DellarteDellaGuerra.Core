@@ -46,53 +46,53 @@
   },
   {
     "path": "prefab-manifest.json",
-    "bytes": 2572,
-    "sha256": "f2c21d5c61891ccb074901fd835ae91ce616ef8512dd1e0fd3a84b4cc12963b4"
+    "bytes": 2517,
+    "sha256": "45a440dcdc2cabee60af68b212cdf2cc679cc1b0fdbbf6ff68c1ed91ec88aaae"
   },
   {
     "path": "prefab-stage/carrack/rudders_holder.xml",
-    "bytes": 1586,
-    "sha256": "d2483efb5cededfd5e4edb96333b9a7ea9947d6207793b1a76febc1606fac33f"
+    "bytes": 1949,
+    "sha256": "72322cfac4a38c9c9e6e3a8b6de3768c1f2a081b18581836a70c62d564da5a01"
   },
   {
     "path": "prefab-stage/carrack/ship_burning_system.xml",
-    "bytes": 41950,
-    "sha256": "0abeb458668928202f7c2e44e919735f38eef7d5daa016cb0d9f8117a893aa94"
+    "bytes": 42459,
+    "sha256": "92a86940cf9fbca5cd7bb563cf4af988b0ec43909066c96e6922c55263d43f28"
   },
   {
     "path": "prefab-stage/carrack/ship_water_clip.xml",
-    "bytes": 497,
-    "sha256": "685a554c1f3a732322714ed5d3d8bdd9aa8b10df89d8a3921595f9e11976c55a"
+    "bytes": 829,
+    "sha256": "e830d84a955be9eba9a425f5244227ff73f2e3dd0cc935713c7245e928706a02"
   },
   {
     "path": "prefab-stage/english_boat_b/rudders_holder.xml",
-    "bytes": 1602,
-    "sha256": "380d7decd974d3bc1d887a9cbe9d45c3a2fa574e924ccb0073eeea2d5f92cfaa"
+    "bytes": 1965,
+    "sha256": "8498bd1878666360f6e6b5791636c01ac45e5e746aca88d3b40e6e5d1c09be60"
   },
   {
     "path": "prefab-stage/english_boat_b/ship_burning_system.xml",
-    "bytes": 33714,
-    "sha256": "9ff99823353f70efbfcd0a174a9863f61e927e84fe6df9eb1332c30c426d60e8"
+    "bytes": 34400,
+    "sha256": "5a75822344feba2167e5ab19745855f8bd8058afecf81761404caeaa8903d0c5"
   },
   {
     "path": "prefab-stage/english_boat_b/ship_water_clip.xml",
-    "bytes": 504,
-    "sha256": "1b94cb3ee9eced6678284d3b4a0f705ee37af345036eba7fa1cac531aa8da4f0"
+    "bytes": 836,
+    "sha256": "adbc29913f8000210cf7e32e376cbd067c02048a586ee275142b77f636bdddad"
   },
   {
     "path": "prefab-stage/kogge/rudders_holder.xml",
-    "bytes": 1583,
-    "sha256": "5e3a769a39b96ce5695cb74b36a0225c990bcd0f79ef3bf4ff78d31096ecb774"
+    "bytes": 1946,
+    "sha256": "8a507bd409b05181b5d823abb9cb12c8c2ffa6158a87cecaf7925030122a9341"
   },
   {
     "path": "prefab-stage/kogge/ship_burning_system.xml",
-    "bytes": 41955,
-    "sha256": "76099cf058a44e2b3e09d80c18937c3eb8c9c71a2ab6e971464e0f2d52080e94"
+    "bytes": 42464,
+    "sha256": "992de45458920048c5f1e675137bcdeb3eddfd6c29fd6248bae9b9fd82256c58"
   },
   {
     "path": "prefab-stage/kogge/ship_water_clip.xml",
-    "bytes": 495,
-    "sha256": "b04bd0f060772a01a3453532589da27c0b27318b9ca1908db1e46d0f987c33e4"
+    "bytes": 827,
+    "sha256": "ddbbd06ed250d8416da9383bf4f4323de243837e3cf7abb14c53652c5a15dd6a"
   },
   {
     "path": "roundtrip-verification.json",
