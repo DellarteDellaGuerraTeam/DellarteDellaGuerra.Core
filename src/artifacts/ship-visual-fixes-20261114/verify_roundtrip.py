@@ -18,7 +18,7 @@ def fingerprint(ob,extra=Matrix.Identity(4)):
 
 report={}
 for ship,a in auth.items():
- bpy.ops.wm.open_mainfile(filepath=a['source']);baseline=fingerprint(bpy.data.objects[a['body_metamesh']]);body_count=len(bpy.data.objects[a['body_metamesh']].data.polygons)
+ bpy.ops.wm.open_mainfile(filepath=a['source']);original_name=a.get('original_body_metamesh',a['body_metamesh']);baseline=fingerprint(bpy.data.objects[original_name]);body_count=len(bpy.data.objects[original_name].data.polygons)
  bpy.ops.wm.read_factory_settings(use_empty=True)
  bpy.ops.import_scene.fbx(filepath=a['body_fbx']);ob=next(o for o in bpy.data.objects if o.type=='MESH');body=fingerprint(ob)
  body_import_name=ob.name

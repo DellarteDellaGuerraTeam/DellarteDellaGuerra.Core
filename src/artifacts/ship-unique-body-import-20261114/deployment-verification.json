@@ -1,0 +1,38 @@
+[
+  {
+    "install": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord",
+    "source_folder": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_warsails\\rudder",
+    "fbx_files": [
+      "dadg_ws_carrack_body_no_rudder_v1.fbx",
+      "dadg_ws_carrack_rudder_v1.fbx",
+      "dadg_ws_english_boat_b_body_no_rudder_v1.fbx",
+      "dadg_ws_english_boat_b_rudder_v1.fbx",
+      "dadg_ws_kogge_body_no_rudder_v1.fbx",
+      "dadg_ws_kogge_rudder_v1.fbx"
+    ],
+    "live_body_prefabs_unchanged": {
+      "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap\\NestedPrefabs\\dadg_ws_english_boat_b_ship_nested\\mesh_holder.xml": "705f615def5d31e7edf4aa75e2abe5411fe666cccb209fee0ebe63feb145ef6b",
+      "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap\\NestedPrefabs\\dadg_ws_kogge_ship_nested\\mesh_holder.xml": "9efa33c9799910a43360ee81894e587fdf69804ce2ade62debbcc9b9fcf53879",
+      "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap\\NestedPrefabs\\dadg_ws_carrack_ship_nested\\mesh_holder.xml": "5e9b8bfb4252a6a006e24b34cd771537dd36535dd31ad0073710eb8eddadd163"
+    },
+    "native_import_verified": false
+  },
+  {
+    "install": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4",
+    "source_folder": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\AssetSources\\dadg_warsails\\rudder",
+    "fbx_files": [
+      "dadg_ws_carrack_body_no_rudder_v1.fbx",
+      "dadg_ws_carrack_rudder_v1.fbx",
+      "dadg_ws_english_boat_b_body_no_rudder_v1.fbx",
+      "dadg_ws_english_boat_b_rudder_v1.fbx",
+      "dadg_ws_kogge_body_no_rudder_v1.fbx",
+      "dadg_ws_kogge_rudder_v1.fbx"
+    ],
+    "live_body_prefabs_unchanged": {
+      "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\NestedPrefabs\\dadg_ws_english_boat_b_ship_nested\\mesh_holder.xml": "705f615def5d31e7edf4aa75e2abe5411fe666cccb209fee0ebe63feb145ef6b",
+      "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\NestedPrefabs\\dadg_ws_kogge_ship_nested\\mesh_holder.xml": "9efa33c9799910a43360ee81894e587fdf69804ce2ade62debbcc9b9fcf53879",
+      "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap\\NestedPrefabs\\dadg_ws_carrack_ship_nested\\mesh_holder.xml": "5e9b8bfb4252a6a006e24b34cd771537dd36535dd31ad0073710eb8eddadd163"
+    },
+    "native_import_verified": false
+  }
+]

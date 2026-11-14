@@ -40,6 +40,7 @@ def subset(source,keep,name):
  return ob
 
 def export(ob,path):
+ ob.hide_set(False);ob.hide_viewport=False;ob.hide_render=False
  bpy.ops.object.select_all(action='DESELECT');ob.select_set(True);bpy.context.view_layer.objects.active=ob
  bpy.ops.export_scene.fbx(filepath=str(path),use_selection=True,object_types={'MESH'},apply_unit_scale=True,axis_forward='Y',axis_up='Z',use_mesh_modifiers=False,mesh_smooth_type='FACE',add_leaf_bones=False,bake_anim=False)
 
@@ -64,9 +65,9 @@ for ship,c in CONFIG.items():
  assert sorted(signature(body)+signature(rudder))==before,(ship,'body/rudder union differs')
  print('UNION PASSED',ship,flush=True)
  union_ok=True
- original_name=original.name;original.name=original_name+'_reference';body.name=original_name
- # Export body at its original source frame, retaining metamesh name/material slots.
- export(body,OUT/(c['source'].replace('.blend','_rudder_separated_v1.fbx')))
+ original_name=original.name;original.name=original_name+'_reference';body.name='dadg_ws_'+ship+'_body_no_rudder_v1';body.data.name=body.name
+ # Keep the original resource intact; import the separated body under its own name.
+ body_fbx=OUT/(body.name+'.fbx');export(body,body_fbx)
  # Bake rudder to its local pivot. Prefab neutral frame restores original geometry exactly.
  mw=rudder.matrix_world.copy()
  original_rudder=[mw@v.co for v in rudder.data.vertices]
@@ -112,7 +113,7 @@ for ship,c in CONFIG.items():
   if ob not in [body,rudder,sdf,original]:ob.hide_render=True;ob.hide_set(True)
  sdf.hide_render=True;sdf.hide_set(True)
  bpy.ops.wm.save_as_mainfile(filepath=str(OUT/('dadg_ws_'+ship+'_visual_sources_v1.blend')))
- report[ship]={'source':str(MAP/'AssetSources'/c['source']),'source_sha256':hashlib.sha256((MAP/'AssetSources'/c['source']).read_bytes()).hexdigest(),'body_metamesh':body.name,'body_fbx':str(OUT/c['source'].replace('.blend','_rudder_separated_v1.fbx')),'rudder_metamesh':rudder.name,'rudder_fbx':str(OUT/(rudder.name+'.fbx')),'rudder_pivot_root':list(pivot),'rudder_initial_rotation_x':angle,'rudder_hinge_source_points':[list(p) for p in hinge],'rudder_neutral_pose_max_error_m':neutral_error,'body_z_offset':c['z'],'body_vertices_before':len(original.data.vertices),'body_vertices_after':len(body.data.vertices),'rudder_vertices':len(rudder.data.vertices),'geometry_uv_material_union_exact':union_ok,'sdf_mesh':sdf.name,'sdf_fbx':str(OUT/(sdf.name+'.fbx')),'sdf_nonmanifold_edges':nonmanifold,'sdf_volume_m3':volume,'sdf_method':'convex envelope of original hull points clipped above central deck; native visual fit validation required','sdf_cap_root_z':c['cap']+c['z'],'fire_points_root':fire,'status':'sources_only_native_import_required'}
+ report[ship]={'source':str(MAP/'AssetSources'/c['source']),'source_sha256':hashlib.sha256((MAP/'AssetSources'/c['source']).read_bytes()).hexdigest(),'original_body_metamesh':original_name,'body_metamesh':body.name,'body_fbx':str(body_fbx),'rudder_metamesh':rudder.name,'rudder_fbx':str(OUT/(rudder.name+'.fbx')),'rudder_pivot_root':list(pivot),'rudder_initial_rotation_x':angle,'rudder_hinge_source_points':[list(p) for p in hinge],'rudder_neutral_pose_max_error_m':neutral_error,'body_z_offset':c['z'],'body_vertices_before':len(original.data.vertices),'body_vertices_after':len(body.data.vertices),'rudder_vertices':len(rudder.data.vertices),'geometry_uv_material_union_exact':union_ok,'sdf_mesh':sdf.name,'sdf_fbx':str(OUT/(sdf.name+'.fbx')),'sdf_nonmanifold_edges':nonmanifold,'sdf_volume_m3':volume,'sdf_method':'convex envelope of original hull points clipped above central deck; native visual fit validation required','sdf_cap_root_z':c['cap']+c['z'],'fire_points_root':fire,'status':'sources_only_native_import_required'}
  print('AUTHORED',ship,'firepoints',len(fire),'SDF volume',volume,'union verified')
  (OUT/'source-authoring.json').write_text(json.dumps(report,indent=2))
 print('ALL SHIPS AUTHORED')

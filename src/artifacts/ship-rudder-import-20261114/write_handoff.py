@@ -1,39 +1,31 @@
-"""Write the exact manual native-import handoff; never edits compiled resources."""
-import hashlib,json
+"""Write the six-mesh native import handoff without changing compiled resources."""
+import json
 from pathlib import Path
 
-OUT=Path(__file__).resolve().parent;ROOT=OUT.parents[1]
+OUT=Path(__file__).resolve().parent
+ROOT=OUT.parents[1]
 MAP=ROOT.parent.parent/'DellarteDellaGuerraMap'
 PACKAGE=MAP/'Tools/WarSailsShips/visual-fixes-20261114'
 plan=json.loads((OUT/'import-plan.json').read_text())
-inventory=json.loads((OUT/'before/manifest.json').read_text())
-baseline=[]
+baseline=json.loads((OUT/'compiled-before.json').read_text())
+lines=['# Rudder and separated-body import handoff','',
+'The result is six new mesh resources: one body without its static rudder and one separate rudder for each ship. Original body resources are retained. Ship references are switched only after the six new meshes are verified.','',
+'## Why the earlier body packages were empty','',
+'The earlier separated-body FBXs reused existing original body mesh names. Native imports into the new rudder folder produced empty body packages while original body packages stayed unchanged. Replacement FBXs now use unique `body_no_rudder_v1` mesh names with the same geometry, UVs and material assignments.','',
+'## Import','',
+'Source folder: `AssetSources/dadg_warsails/rudder/` in this Map module; exactly six FBXs.','',
+'Import the three new body FBXs as new geometry resources. Keep already imported matching rudder resources: their source files have not changed. Preserve the original body resources.','',
+'Settings: Convert to unit **m**; **Import meshes ON**; Convert to Z-up OFF (already Z-up); skeletons, skeletal animations, morph animations and physics shapes OFF. Keep authored scale, pivot and material names.','',
+'| Ship | New body mesh / FBX | Rudder mesh / FBX |','|---|---|---|']
 for row in plan:
-    body=next(e for e in inventory['Meshes'] if e['MeshId']==row['body_metamesh'])
-    blade=next(e for e in inventory['Meshes'] if e['MeshId']==row['rudder_metamesh'])
-    assert body['AssetGuid'] and body['DuplicateAssetCount']==1
-    assert blade['Status']=='missing','An existing blade resource needs independent review'
-    package=Path(body['SourcePackage'])
-    baseline.append({'ship':row['ship'],'body_metamesh':row['body_metamesh'],'body_guid':body['AssetGuid'],'body_package':str(package),'body_package_sha256':hashlib.sha256(package.read_bytes()).hexdigest(),'new_rudder_metamesh':row['rudder_metamesh'],'new_rudder_present_before':False})
-(OUT/'compiled-before.json').write_text(json.dumps(baseline,indent=2))
-lines=['# Rudder import handoff','',
-'Status: six verified FBXs are ready. Native imports and the final prefab activation are pending. The rudder animation adapter is already registered and built; it becomes active when the tagged separate blades are installed.','',
-'## Import now','',
-'Source folder: `AssetSources/dadg_warsails/rudder/` in the Map module.','',
-'1. For each existing body resource below, change its source binding to the listed separated-body FBX and reimport that existing geometry resource. Preserve the listed metamesh identity and its current import settings/material bindings. The new body removes the baked static rudder.','',
-'2. Import each corresponding rudder FBX as a new geometry resource. Keep its exact metamesh name below, native metre units and authored pivot. Preserve the existing source material names. Do not recenter or apply an extra ship waterline offset.','',
-'| Ship | Reimport existing body resource | Separated body FBX | Import new rudder resource / FBX |','|---|---|---|---|']
-for row in plan:
-    lines.append(f'| {row["ship"]} | `{row["body_metamesh"]}` | `{Path(row["body_fbx"]).name}` | `{row["rudder_metamesh"]}` / `{Path(row["rudder_fbx"]).name}` |')
+    lines.append(f'| {row["ship"]} | `{row["body_metamesh"]}` / `{Path(row["body_fbx"]).name}` | `{row["rudder_metamesh"]}` / `{Path(row["rudder_fbx"]).name}` |')
 lines += ['',
-'3. Save the packages, then report that the imports are complete. Do not change the ship body entity transforms. Existing live body offsets remain English +.15m, kogge -.8m, carrack -1.4m.','',
-'## Final activation after imports','',
-'The assistant will check that all three blade resources exist, that the existing body resource identities are preserved and the bodies have been reimported without their baked rudders. It will then install only `authoring/prefab-stage/<ship>/rudders_holder.xml` into the matching live ship prefab folder.','',
-'Those holder files preserve each original physics stock marker. English boat uses native `rudder_rotation_entity`; kogge and carrack use `dadg_rudder_visual` with the registered adapter, preserving their existing tiller/whipstaff controllers. SDF import/activation is a separate task and is not part of this rudder cutover.','',
-'Do not launch a ship mission between reimporting a body and activating its blade holder: the body and separate blade form one complete visual assembly. Native editor/game inspection after activation must verify one blade per ship, neutral alignment, both turning directions and unchanged steering controls.','',
-'## Verification already completed','',
-'The original body geometry equals the separated body plus rudder, including polygon UV/material assignments, after independent FBX roundtrip. Neutral-pose errors are below 0.000001m. The six copied source hashes match the committed authoring manifest. Existing stock-marker XML is semantically identical to the prepared holders. The production-source rudder adapter self-check passed.','',
-'Current compiled body resource GUIDs and TPAC package hashes were recorded before import, and the three new blade names are absent. A baseline FBX export encountered unresolved external material dependencies; no claim is made that compiled-body geometry was exported successfully. This does not alter the verified authoring FBXs. Native import and rendering remain unverified.','']
+'Save the packages. Expect six mesh resources. FBX/package box icons are containers and do not count as mesh previews. Old empty separated-body packages are not replacement bodies.','',
+'## Activation after verification','',
+'The assistant will verify the six mesh names, geometry/materials and preservation of original resources, then install the staged `mesh_holder.xml` and `rudders_holder.xml` together. Copying source files does not activate new references.','',
+'Body offsets remain English +.15m, kogge -.8m and carrack -1.4m. Physics stock markers and tiller/whipstaff controllers remain unchanged. English uses native `rudder_rotation_entity`; kogge/carrack use the registered `dadg_rudder_visual` adapter.','',
+'After activation, restart/rescan the editor and verify one blade per ship, neutral alignment and both steering directions. SDF water clipping is separate.','',
+'The original body-plus-rudder geometry, UVs and materials passed independent FBX roundtrip. New uniquely named bodies are compared with those verified sources in `authoring/unique-body-import-audit.json`. Native import and rendering of the new bodies remain to be checked.','']
 (PACKAGE/'RUDDER_IMPORT.md').write_text('\n'.join(lines),encoding='utf-8')
 (PACKAGE/'rudder-import-plan.json').write_text(json.dumps({'sources':plan,'compiled_before':baseline},indent=2))
 print(PACKAGE/'RUDDER_IMPORT.md')

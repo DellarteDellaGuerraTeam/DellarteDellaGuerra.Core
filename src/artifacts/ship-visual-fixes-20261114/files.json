@@ -1,5 +1,15 @@
 [
   {
+    "path": "dadg_ws_carrack_body_no_rudder_v1.blend",
+    "bytes": 3102162,
+    "sha256": "12baad5563d28a3899d22bcc954075ac4ef1771d39be54cd580040921a665eb6"
+  },
+  {
+    "path": "dadg_ws_carrack_body_no_rudder_v1.fbx",
+    "bytes": 5078396,
+    "sha256": "0d6e30f32f9b461356ffc6e4f28de9056f094c43f75dedff0f0f4e80c6589194"
+  },
+  {
     "path": "dadg_ws_carrack_body_without_yards_v1_rudder_separated_v1.fbx",
     "bytes": 5078284,
     "sha256": "e03fd4536799c3b7c9c333810c0e0907c4d070bd23926090eae37cf8697a1180"
@@ -15,6 +25,16 @@
     "sha256": "5c934768aad9515bdf45f4c4cd4bbdef5c960f947d223a330a813a19203f90b1"
   },
   {
+    "path": "dadg_ws_english_boat_b_body_no_rudder_v1.blend",
+    "bytes": 122526,
+    "sha256": "83dc6c30141d383ac65a6cacc8021c691291a1eb384624d5f671302b148e16fb"
+  },
+  {
+    "path": "dadg_ws_english_boat_b_body_no_rudder_v1.fbx",
+    "bytes": 74204,
+    "sha256": "c934d1306530441e14a8ae5f69f1e2ebda4dcebc7d3202d42ef52a1977586b7f"
+  },
+  {
     "path": "dadg_ws_english_boat_b_rudder_separated_v1.fbx",
     "bytes": 74076,
     "sha256": "caa8d42d3e55378e52b965755ad3914ba21a36f83e807e0ad69edc5a98482ec3"
@@ -28,6 +48,16 @@
     "path": "dadg_ws_english_boat_b_visual_sources_v1.blend",
     "bytes": 355714,
     "sha256": "3b6b8d6409630529b2da9c3bc3b688dbcbbb6fcaaa6e33b1e75e48a2b7013a94"
+  },
+  {
+    "path": "dadg_ws_kogge_body_no_rudder_v1.blend",
+    "bytes": 1316876,
+    "sha256": "82f1acf146db194e785e16f09473d37745af89fcc12a5ad2f66b4e3c2697602e"
+  },
+  {
+    "path": "dadg_ws_kogge_body_no_rudder_v1.fbx",
+    "bytes": 2241548,
+    "sha256": "17d6d8fb034d624486dd53d0d8218b13f0b6ec37d931aff0b1e76bc7b5b6cfc0"
   },
   {
     "path": "dadg_ws_kogge_body_without_yards_v1_rudder_separated_v1.fbx",
@@ -50,6 +80,11 @@
     "sha256": "45a440dcdc2cabee60af68b212cdf2cc679cc1b0fdbbf6ff68c1ed91ec88aaae"
   },
   {
+    "path": "prefab-stage/carrack/mesh_holder.xml",
+    "bytes": 7913,
+    "sha256": "bc65e267e5f8b264819ec6a62d79a2d5945f2fc761365f5c544d4f82771c9e73"
+  },
+  {
     "path": "prefab-stage/carrack/rudders_holder.xml",
     "bytes": 1949,
     "sha256": "72322cfac4a38c9c9e6e3a8b6de3768c1f2a081b18581836a70c62d564da5a01"
@@ -65,6 +100,11 @@
     "sha256": "e830d84a955be9eba9a425f5244227ff73f2e3dd0cc935713c7245e928706a02"
   },
   {
+    "path": "prefab-stage/english_boat_b/mesh_holder.xml",
+    "bytes": 1427,
+    "sha256": "62dc89eab35768be975b2f1d852953fb5faaa6e3106ca565d9885e86350b70f7"
+  },
+  {
     "path": "prefab-stage/english_boat_b/rudders_holder.xml",
     "bytes": 1965,
     "sha256": "8498bd1878666360f6e6b5791636c01ac45e5e746aca88d3b40e6e5d1c09be60"
@@ -78,6 +118,11 @@
     "path": "prefab-stage/english_boat_b/ship_water_clip.xml",
     "bytes": 836,
     "sha256": "adbc29913f8000210cf7e32e376cbd067c02048a586ee275142b77f636bdddad"
+  },
+  {
+    "path": "prefab-stage/kogge/mesh_holder.xml",
+    "bytes": 26710,
+    "sha256": "cb9d2eb0f49b7367b05ec12318ef65dc2e0628af86529a2f2f9bd60dac54a9f0"
   },
   {
     "path": "prefab-stage/kogge/rudders_holder.xml",
@@ -126,12 +171,17 @@
   },
   {
     "path": "source-authoring.json",
-    "bytes": 8667,
-    "sha256": "ca30ec78d461d66230b9a1d26d8d17a3326f6e6bb87575cb28af4be2a9bca149"
+    "bytes": 8726,
+    "sha256": "ea1609b07181453b3e55309963cfce7e4f8b415a0bb45eb5c3e7d7781fdfa155"
   },
   {
     "path": "source-inspection.json",
     "bytes": 401446,
     "sha256": "72b225fd9fd459d9da6c4ece55f8f5bda8a07fcb4740f1f7e2c2a0404cfd1e8c"
+  },
+  {
+    "path": "unique-body-import-audit.json",
+    "bytes": 20012,
+    "sha256": "71e4f67cf7bd6ce8143321067c53c74f24783a9e10cfe65fc0ffca236f2cc1ab"
   }
 ]

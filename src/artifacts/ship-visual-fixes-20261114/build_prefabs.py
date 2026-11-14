@@ -7,7 +7,8 @@ BASE=Path(__file__).resolve().parent
 DATA=Path('D:/AI/blender-mcp/data/dadg_ship_visual_fixes_20261114_v1')
 MAP=BASE.parents[3]/'DellarteDellaGuerraMap'
 NATIVE=BASE.parent/'ship-comparison-20261114/cog_ship_nested.xml'
-AUTH=json.loads((DATA/'source-authoring.json').read_text())
+AUTH_PATH=MAP/'Tools/WarSailsShips/visual-fixes-20261114/authoring/source-authoring.json'
+AUTH=json.loads((AUTH_PATH if AUTH_PATH.exists() else DATA/'source-authoring.json').read_text())
 ZERO='{00000000-0000-0000-0000-000000000000}'
 ns=uuid.UUID('b5e20c1a-8177-4d38-ad42-0a78fd08b68f')
 native=E.parse(NATIVE).getroot().find("./prefab_file[@name='ship_burning_system']/entity")
@@ -70,6 +71,11 @@ for ship,a in AUTH.items():
  write(stage/'ship_burning_system.xml',root)
  # New geometry references stay staged until the editor imports/reimports all assets.
  live=MAP/'NestedPrefabs'/('dadg_ws_'+ship+'_ship_nested')
+ if 'original_body_metamesh' in a:
+  holder=E.parse(live/'mesh_holder.xml').getroot().find('entity')
+  old_components=[n for n in holder.iter('meta_mesh_component') if n.get('name')==a['original_body_metamesh']]
+  assert len(old_components)==1,'Expected exactly one original body reference'
+  old_components[0].set('name',a['body_metamesh']);write(stage/'mesh_holder.xml',holder)
  rudder=E.parse(live/'rudders_holder.xml').getroot().find('entity')
  pivot=entity('dadg_ws_'+ship+'_rudder_rotation');tags(pivot,'rudder_rotation_entity' if ship=='english_boat_b' else 'dadg_rudder_visual');position(pivot,a['rudder_pivot_root'])
  E.SubElement(pivot.find('transform'),'rotation_euler',type_name='vec3',value=f"{a['rudder_initial_rotation_x']:.9f}, 0.000000000, 0.000000000")

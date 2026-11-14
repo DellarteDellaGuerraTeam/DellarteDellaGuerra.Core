@@ -12,6 +12,15 @@ rows=[]
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 for ship,a in auth.items():
     row={'ship':ship,'body_metamesh':a['body_metamesh'],'rudder_metamesh':a['rudder_metamesh'],'pivot_root':a['rudder_pivot_root'],'rotation_x':a['rudder_initial_rotation_x'],'live_body_z_offset_unchanged':a['body_z_offset']}
+    if 'original_body_metamesh' in a:
+        row['original_body_metamesh']=a['original_body_metamesh']
+        body_live=MAP/f'NestedPrefabs/dadg_ws_{ship}_ship_nested/mesh_holder.xml'
+        body_candidate=PACKAGE/f'authoring/prefab-stage/{ship}/mesh_holder.xml'
+        body_tree=ET.parse(body_candidate)
+        assert body_tree.find(f'.//meta_mesh_component[@name="{a["body_metamesh"]}"]') is not None
+        row['body_prefab_candidate']=str(body_candidate)
+        row['live_body_prefab_before_sha256']=sha(body_live)
+        row['body_prefab_candidate_sha256']=sha(body_candidate)
     for role in ('body','rudder'):
         name=Path(a[f'{role}_fbx']).name
         source=PACKAGE/'authoring'/name;dest=DEST/name
@@ -33,4 +42,4 @@ for ship,a in auth.items():
     rows.append(row)
 (OUT/'import-plan.json').write_text(json.dumps(rows,indent=2))
 print('Prepared',len(rows)*2,'verified FBX sources in',DEST)
-print('Native mesh import and body reimport remain pending. No prefab cutover was performed.')
+print('Import the three separate bodies and three rudders as unique new meshes. No prefab cutover was performed.')
