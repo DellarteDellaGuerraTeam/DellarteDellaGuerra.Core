@@ -1,0 +1,354 @@
+[
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_carrack_window_mtl.tpac",
+    "PackageGuid": "406c574f-c56c-43aa-8cda-1e916dbc72f6",
+    "Assets": [
+      {
+        "Name": "dadg_ws_carrack_window",
+        "Guid": "2b5c92c9-7229-4dd9-beda-f807854deb3d",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_dawa_light_wooden_planks_mtl.tpac",
+    "PackageGuid": "9ef30960-07be-484d-b022-8257625cd8bb",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_light_wooden_planks",
+        "Guid": "3d2ad73f-0262-4900-b6c7-96e0cc812983",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_dawa_rich_wood_mtl.tpac",
+    "PackageGuid": "8d0a5a03-be2d-4f07-8582-a6c5a5f046d8",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_rich_wood",
+        "Guid": "8e7e6590-2165-48a9-bd34-4e86b93cd04c",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_dawa_shields_mtl.tpac",
+    "PackageGuid": "cbe01bc4-ba1e-4290-add3-eb8edee91bfb",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_shields",
+        "Guid": "88eec21d-7d3c-4c80-a766-025f2be63193",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_dawa_wooden_planks_mtl.tpac",
+    "PackageGuid": "7b616963-724b-459b-b27e-36c58db13aaa",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_wooden_planks",
+        "Guid": "39c056ee-9c7e-4712-8d3e-d6a60c67cdea",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_plank_fine_a_mtl.tpac",
+    "PackageGuid": "2ce0ac94-647c-4e13-a2ce-bc017142b1fd",
+    "Assets": [
+      {
+        "Name": "dadg_ws_plank_fine_a",
+        "Guid": "fc8b36d8-9015-4dac-bc56-6996c46b0d13",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_plank_fine_b_mtl.tpac",
+    "PackageGuid": "65dadbdd-197f-47ca-9bef-fc0e7b3aa8ec",
+    "Assets": [
+      {
+        "Name": "dadg_ws_plank_fine_b",
+        "Guid": "fba2df5b-ec31-451c-9f69-0bd0affe1281",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_sails_heraldry_mtl.tpac",
+    "PackageGuid": "0bce10a4-2caa-4d66-89ec-b450401e396b",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sails_heraldry",
+        "Guid": "30747764-43a2-43f2-be8e-2d23a2aa1f0b",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_sails_plain_mtl.tpac",
+    "PackageGuid": "3da3d212-dae0-41c8-a6b2-180eb949b953",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sails_plain",
+        "Guid": "80ca1705-aaed-4889-bba1-a8f291a0ccaf",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_sho_rope_mtl.tpac",
+    "PackageGuid": "b6dabef9-6b42-41dd-a801-cf58db1236fb",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sho_rope",
+        "Guid": "1131d58f-bf61-459d-a431-349e303602a2",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dadg_fine_plank_a_tex.tpac",
+    "PackageGuid": "b0436cab-96ba-4f05-b5e3-76677e7f79dd",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dadg_fine_plank_a",
+        "Guid": "f775839f-ee2d-4f37-bb57-bbb618039100",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dadg_fine_plank_b_tex.tpac",
+    "PackageGuid": "2f042a99-bade-4d68-8438-cc68c86409ee",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dadg_fine_plank_b",
+        "Guid": "fc1a1a8b-8705-43e7-8780-6e047f03a8a3",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_light_wooden_planks_d_tex.tpac",
+    "PackageGuid": "1a753c6b-49e7-408f-a794-06b7ce84cffb",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_light_wooden_planks_d",
+        "Guid": "99aba975-f36f-40e4-b3c4-9d1281a0c5ef",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_light_wooden_planks_n_tex.tpac",
+    "PackageGuid": "b93b53ab-7d0c-4608-ae3f-fd4823589bb2",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_light_wooden_planks_n",
+        "Guid": "33b56311-fcc3-4695-868e-eb73bf388bfc",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_rich_wood_d_tex.tpac",
+    "PackageGuid": "fc5caebd-558e-4bc0-9fa1-6130cfdb5794",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_rich_wood_d",
+        "Guid": "d365ab74-37af-446e-8fcf-2b339d45c362",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_rich_wood_n_tex.tpac",
+    "PackageGuid": "3e049194-f240-49c2-82f1-2a8a318cbe64",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_rich_wood_n",
+        "Guid": "8ba777ef-a483-4c44-ac69-fe6a34c80a86",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_rich_wood_s_tex.tpac",
+    "PackageGuid": "c44b1ccf-7b37-4dcd-9976-1b08fbb412f5",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_rich_wood_s",
+        "Guid": "22b05c89-38b3-4e25-9fa7-bc4543d11ee9",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_shields_d_tex.tpac",
+    "PackageGuid": "71facbba-7191-4470-89d4-e6300092db94",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_shields_d",
+        "Guid": "f9c38fd1-d5af-45fa-b8dc-0800f4c1728a",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_shields_n_tex.tpac",
+    "PackageGuid": "0ca30fb1-bb31-455f-88d4-08369032f126",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_shields_n",
+        "Guid": "0d59750d-d83e-418d-b87e-7ed01498cba4",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_wooden_planks_d_tex.tpac",
+    "PackageGuid": "b5d77523-fe38-4266-aeb2-1338e13a0d0d",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_wooden_planks_d",
+        "Guid": "0815960e-e823-4b26-ae20-4ac8f4cbb43b",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_wooden_planks_n_tex.tpac",
+    "PackageGuid": "dbc3df31-5a14-4e83-b3d8-9273c9aebba0",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_wooden_planks_n",
+        "Guid": "6a39aea2-31e5-4996-9cb6-14f1ddf71fe1",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_mow_sails_plain_d_tex.tpac",
+    "PackageGuid": "e984dc1f-4b49-4ff6-a227-37da798bb110",
+    "Assets": [
+      {
+        "Name": "dadg_ws_mow_sails_plain_d",
+        "Guid": "409f88c4-86bc-4019-b028-f2ccf74ea311",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_mow_sails_plain_n_tex.tpac",
+    "PackageGuid": "fd885b82-7457-4fe9-89bc-7b9162e60fcc",
+    "Assets": [
+      {
+        "Name": "dadg_ws_mow_sails_plain_n",
+        "Guid": "b3013c1b-341c-4c40-84c8-fcbf883cdb8b",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_mow_sails_plain_s_tex.tpac",
+    "PackageGuid": "ed27f883-f11d-4562-91ea-9c428f86d501",
+    "Assets": [
+      {
+        "Name": "dadg_ws_mow_sails_plain_s",
+        "Guid": "0d5c5c19-6d70-4a3f-b39c-8511fa9e6877",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sail_heraldry_d_tex.tpac",
+    "PackageGuid": "0622b8d3-3e87-452b-8ff1-c894de981d46",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sail_heraldry_d",
+        "Guid": "e92c3630-53b7-4bde-a78d-7e2466990ae9",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sail_heraldry_n_tex.tpac",
+    "PackageGuid": "d8380971-1d06-4cc3-ad5b-3b3d386bc94a",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sail_heraldry_n",
+        "Guid": "7315b30d-01ae-49c4-b62d-bb993a0bd2a7",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sho_rope_d_tex.tpac",
+    "PackageGuid": "f5aad3fd-4d9f-42bd-93d9-ef2723cb92bb",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sho_rope_d",
+        "Guid": "2d4e307d-f866-46d2-8729-312a723d35f5",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sho_rope_n_tex.tpac",
+    "PackageGuid": "f6d2fd1a-106c-46d4-9b3b-da68b8b883f3",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sho_rope_n",
+        "Guid": "bffcd949-1901-46de-8a77-3a049e19496a",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sho_rope_s_tex.tpac",
+    "PackageGuid": "88e40b18-e98a-4c5d-97ce-e62d948e2dfb",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sho_rope_s",
+        "Guid": "0c3e2ebd-e83b-40c0-9442-1897b185485c",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_window_low_carrack_s_tex.tpac",
+    "PackageGuid": "3ed8a7bd-0712-4cab-ada6-4ddbe6046ba4",
+    "Assets": [
+      {
+        "Name": "dadg_ws_window_low_carrack_s",
+        "Guid": "21be8963-c2ef-4175-b63f-1acece0a9d27",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_window_low_carrack_window_basecolor_tex.tpac",
+    "PackageGuid": "497969ff-a053-436d-8c71-38d6d9672042",
+    "Assets": [
+      {
+        "Name": "dadg_ws_window_low_carrack_window_BaseColor",
+        "Guid": "52d04fb7-899b-46b0-a4a8-546afeafb4e8",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_window_low_carrack_window_normalopengl_tex.tpac",
+    "PackageGuid": "29a6e2d4-8895-4ea9-ba13-5e47478ffe0e",
+    "Assets": [
+      {
+        "Name": "dadg_ws_window_low_carrack_window_NormalOpenGL",
+        "Guid": "cd6b0fde-ac88-4774-90ef-5b67c1c8d07c",
+        "Type": "Texture"
+      }
+    ]
+  }
+]

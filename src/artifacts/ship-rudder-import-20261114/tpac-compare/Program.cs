@@ -33,6 +33,42 @@ static object Snapshot(string path)
     }).ToArray();
 }
 
+if (args.Length == 3 && args[0] == "--package-cache-index")
+{
+    var packageRows = new List<object>();
+    foreach (var path in Directory.EnumerateFiles(args[1], "*.tpac", SearchOption.AllDirectories))
+    {
+        try
+        {
+            var package = new AssetPackage(path);
+            package.Load();
+            packageRows.Add(new { Package = path, PackageGuid = package.Guid,
+                Assets = package.Items.Select(asset => new { asset.Name, asset.Guid, Type = asset.GetType().Name }).ToArray() });
+        }
+        catch (Exception error)
+        {
+            packageRows.Add(new { Package = path, Error = error.Message });
+        }
+    }
+    File.WriteAllText(args[2], JsonSerializer.Serialize(packageRows, new JsonSerializerOptions { WriteIndented = true }));
+    Console.WriteLine($"Indexed {packageRows.Count} packages without changing compiled assets.");
+    return;
+}
+if (args.Length == 3 && args[0] == "--mesh-cache-index")
+{
+    var cacheRows = new List<object>();
+    foreach (var path in Directory.EnumerateFiles(args[1], "*.tpac", SearchOption.AllDirectories))
+    {
+        var package = new AssetPackage(path);
+        package.Load();
+        foreach (var asset in package.Items.OfType<Metamesh>())
+            cacheRows.Add(new { Package = path, PackageGuid = package.Guid, asset.Name, asset.Guid,
+                Meshes = asset.Meshes.Select(mesh => new { mesh.Name, mesh.Guid, mesh.VertexCount }).ToArray() });
+    }
+    File.WriteAllText(args[2], JsonSerializer.Serialize(cacheRows, new JsonSerializerOptions { WriteIndented = true }));
+    Console.WriteLine($"Indexed {cacheRows.Count} metameshes without changing compiled assets.");
+    return;
+}
 if (args.Length == 2 && args[0] == "--inventory")
 {
     var names = new HashSet<string> {

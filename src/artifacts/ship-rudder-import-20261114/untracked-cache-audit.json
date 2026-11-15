@@ -1,0 +1,883 @@
+{
+  "repositories": [
+    {
+      "root": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerra",
+      "untracked_caches": 2,
+      "paths": [
+        "RuntimeDataCache/76A09545-19DE-4297-B16F-1E728D927744.rdc",
+        "RuntimeDataCache/816D33B2-EBB6-4A2C-8561-74BD1B6AAA06.rdc"
+      ]
+    },
+    {
+      "root": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraMap",
+      "untracked_caches": 0,
+      "paths": []
+    },
+    {
+      "root": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerraScenes",
+      "untracked_caches": 0,
+      "paths": []
+    },
+    {
+      "root": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerra.Core",
+      "untracked_caches": 0,
+      "paths": []
+    },
+    {
+      "root": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerra",
+      "untracked_caches": 2,
+      "paths": [
+        "RuntimeDataCache/76A09545-19DE-4297-B16F-1E728D927744.rdc",
+        "RuntimeDataCache/816D33B2-EBB6-4A2C-8561-74BD1B6AAA06.rdc"
+      ]
+    },
+    {
+      "root": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraMap",
+      "untracked_caches": 22,
+      "paths": [
+        "RuntimeDataCache/0622B8D3-3E87-452B-8FF1-C894DE981D46.rdc",
+        "RuntimeDataCache/0CA30FB1-BB31-455F-88D4-08369032F126.rdc",
+        "RuntimeDataCache/1A753C6B-49E7-408F-A794-06B7CE84CFFB.rdc",
+        "RuntimeDataCache/29A6E2D4-8895-4EA9-BA13-5E47478FFE0E.rdc",
+        "RuntimeDataCache/2F042A99-BADE-4D68-8438-CC68C86409EE.rdc",
+        "RuntimeDataCache/3E049194-F240-49C2-82F1-2A8A318CBE64.rdc",
+        "RuntimeDataCache/3ED8A7BD-0712-4CAB-ADA6-4DDBE6046BA4.rdc",
+        "RuntimeDataCache/497969FF-A053-436D-8C71-38D6D9672042.rdc",
+        "RuntimeDataCache/71FACBBA-7191-4470-89D4-E6300092DB94.rdc",
+        "RuntimeDataCache/88E40B18-E98A-4C5D-97CE-E62D948E2DFB.rdc",
+        "RuntimeDataCache/B0436CAB-96BA-4F05-B5E3-76677E7F79DD.rdc",
+        "RuntimeDataCache/B5D77523-FE38-4266-AEB2-1338E13A0D0D.rdc",
+        "RuntimeDataCache/B93B53AB-7D0C-4608-AE3F-FD4823589BB2.rdc",
+        "RuntimeDataCache/C44B1CCF-7B37-4DCD-9976-1B08FBB412F5.rdc",
+        "RuntimeDataCache/D8380971-1D06-4CC3-AD5B-3B3D386BC94A.rdc",
+        "RuntimeDataCache/DBC3DF31-5A14-4E83-B3D8-9273C9AEBBA0.rdc",
+        "RuntimeDataCache/E984DC1F-4B49-4FF6-A227-37DA798BB110.rdc",
+        "RuntimeDataCache/ED27F883-F11D-4562-91EA-9C428F86D501.rdc",
+        "RuntimeDataCache/F5AAD3FD-4D9F-42BD-93D9-EF2723CB92BB.rdc",
+        "RuntimeDataCache/F6D2FD1A-106C-46D4-9B3B-DA68B8B883F3.rdc",
+        "RuntimeDataCache/FC5CAEBD-558E-4BC0-9FA1-6130CFDB5794.rdc",
+        "RuntimeDataCache/FD885B82-7457-4FE9-89BC-7B9162E60FCC.rdc"
+      ]
+    },
+    {
+      "root": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerraScenes",
+      "untracked_caches": 0,
+      "paths": []
+    },
+    {
+      "root": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerra.Core",
+      "untracked_caches": 0,
+      "paths": []
+    }
+  ],
+  "untracked_map_cache_count": 22,
+  "rudder_cache_count": 0,
+  "other_current_packages": 0,
+  "no_current_map_package": 22,
+  "matched_previous_texture_packages": 22,
+  "untracked_map_cache_bytes": 103463542,
+  "caches": [
+    {
+      "path": "RuntimeDataCache/0622B8D3-3E87-452B-8FF1-C894DE981D46.rdc",
+      "bytes": 2796381,
+      "sha256": "3fcabeb7db39073f6d209547df81bbb78a4981863e60517499bcf2d9c3ad28b5",
+      "modified_utc": "2026-11-13T23:21:45.485071+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sail_heraldry_d_tex.tpac",
+        "PackageGuid": "0622b8d3-3e87-452b-8ff1-c894de981d46",
+        "Assets": [
+          {
+            "Name": "dadg_ws_sail_heraldry_d",
+            "Guid": "e92c3630-53b7-4bde-a78d-7e2466990ae9",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sail_heraldry_d_tex.tpac",
+        "PackageGuid": "57e5b551-05a9-408e-8f42-7ab80f359c89",
+        "Assets": [
+          {
+            "Name": "dadg_ws_sail_heraldry_d",
+            "Guid": "335275c2-103c-4de6-bb4f-8f3bfa63d6f6",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/0CA30FB1-BB31-455F-88D4-08369032F126.rdc",
+      "bytes": 5592597,
+      "sha256": "eadc9331aae7867925de3e707d8e1f4847f2053e0870a91b27046bf04e19714d",
+      "modified_utc": "2026-11-13T23:21:00.273274+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_shields_n_tex.tpac",
+        "PackageGuid": "0ca30fb1-bb31-455f-88d4-08369032f126",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_shields_n",
+            "Guid": "0d59750d-d83e-418d-b87e-7ed01498cba4",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_shields_n_tex.tpac",
+        "PackageGuid": "a6cf6134-4188-4da3-9c3e-85d7a06d7576",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_shields_n",
+            "Guid": "1fe60829-8dbd-4682-b0fe-ec9c43ab7b38",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/1A753C6B-49E7-408F-A794-06B7CE84CFFB.rdc",
+      "bytes": 11184989,
+      "sha256": "2252d16b2988d543a0bedfc6d7b1d90588a84e0e9d4738849d4ce0ad5dd109f4",
+      "modified_utc": "2026-11-13T23:17:48.685565+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_light_wooden_planks_d_tex.tpac",
+        "PackageGuid": "1a753c6b-49e7-408f-a794-06b7ce84cffb",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_light_wooden_planks_d",
+            "Guid": "99aba975-f36f-40e4-b3c4-9d1281a0c5ef",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_light_wooden_planks_d_tex.tpac",
+        "PackageGuid": "0e2076ff-2d54-4f90-9c01-36b755fa4f86",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_light_wooden_planks_d",
+            "Guid": "49cbefa6-a099-4ae5-901c-e88d3357b8ac",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/29A6E2D4-8895-4EA9-BA13-5E47478FFE0E.rdc",
+      "bytes": 2796381,
+      "sha256": "ff56d725b6e7e136bc3ce698ebf7c528fa571ff6222eb064ad5cf3c638e44c9f",
+      "modified_utc": "2026-11-13T23:22:36.090899+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_window_low_carrack_window_normalopengl_tex.tpac",
+        "PackageGuid": "29a6e2d4-8895-4ea9-ba13-5e47478ffe0e",
+        "Assets": [
+          {
+            "Name": "dadg_ws_window_low_carrack_window_NormalOpenGL",
+            "Guid": "cd6b0fde-ac88-4774-90ef-5b67c1c8d07c",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_window_low_carrack_window_NormalOpenGL_tex.tpac",
+        "PackageGuid": "e607c94b-a733-424a-8964-fb58b9dc754f",
+        "Assets": [
+          {
+            "Name": "dadg_ws_window_low_carrack_window_normalopengl",
+            "Guid": "51d804af-50a3-4bc5-b9cd-85028c28218b",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/2F042A99-BADE-4D68-8438-CC68C86409EE.rdc",
+      "bytes": 1398293,
+      "sha256": "e3c4a173d3c0b47ef6e8a3fe07c6657c7d833b8a68273790d8723ccaa84b09c4",
+      "modified_utc": "2026-11-13T23:17:39.583645+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dadg_fine_plank_b_tex.tpac",
+        "PackageGuid": "2f042a99-bade-4d68-8438-cc68c86409ee",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dadg_fine_plank_b",
+            "Guid": "fc1a1a8b-8705-43e7-8780-6e047f03a8a3",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dadg_fine_plank_b_tex.tpac",
+        "PackageGuid": "00eba358-f7ce-4169-8186-2942c41471a8",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dadg_fine_plank_b",
+            "Guid": "acc4ddd2-a66a-4d0a-a4cd-72073fdc66e4",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/3E049194-F240-49C2-82F1-2A8A318CBE64.rdc",
+      "bytes": 5592597,
+      "sha256": "414cf1d5dacd345c9eff0aad4e121fd4dcd403d6d51db4616bbe063cd51ebd8b",
+      "modified_utc": "2026-11-13T23:20:46.185991+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_rich_wood_n_tex.tpac",
+        "PackageGuid": "3e049194-f240-49c2-82f1-2a8a318cbe64",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_rich_wood_n",
+            "Guid": "8ba777ef-a483-4c44-ac69-fe6a34c80a86",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_rich_wood_n_tex.tpac",
+        "PackageGuid": "d834c186-41a3-4e6e-913f-f9272f2a3cb5",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_rich_wood_n",
+            "Guid": "a5b1c5aa-a72a-4ba3-95fa-54a05a2e262e",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/3ED8A7BD-0712-4CAB-ADA6-4DDBE6046BA4.rdc",
+      "bytes": 2796381,
+      "sha256": "f12a1f93b70a3ba4077684c15723295fa28e7d770564b54c62827b52cc88b4dd",
+      "modified_utc": "2026-11-13T23:22:31.023921+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_window_low_carrack_s_tex.tpac",
+        "PackageGuid": "3ed8a7bd-0712-4cab-ada6-4ddbe6046ba4",
+        "Assets": [
+          {
+            "Name": "dadg_ws_window_low_carrack_s",
+            "Guid": "21be8963-c2ef-4175-b63f-1acece0a9d27",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_window_low_carrack_s_tex.tpac",
+        "PackageGuid": "83341baa-ec3a-4471-88f4-85c631b0fa41",
+        "Assets": [
+          {
+            "Name": "dadg_ws_window_low_carrack_s",
+            "Guid": "4872a4da-40a7-46a6-8ea9-9421cc9ed70e",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/497969FF-A053-436D-8C71-38D6D9672042.rdc",
+      "bytes": 2796381,
+      "sha256": "d73224bca484667dbc3b21bae09c731aabb04237eb54965d74a5846a1da766ef",
+      "modified_utc": "2026-11-13T23:22:33.430735+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_window_low_carrack_window_basecolor_tex.tpac",
+        "PackageGuid": "497969ff-a053-436d-8c71-38d6d9672042",
+        "Assets": [
+          {
+            "Name": "dadg_ws_window_low_carrack_window_BaseColor",
+            "Guid": "52d04fb7-899b-46b0-a4a8-546afeafb4e8",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_window_low_carrack_window_BaseColor_tex.tpac",
+        "PackageGuid": "2406c052-14da-44fd-8f4f-c32d6b74b547",
+        "Assets": [
+          {
+            "Name": "dadg_ws_window_low_carrack_window_basecolor",
+            "Guid": "a9da8120-6843-4581-8571-cf8811ab0945",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/71FACBBA-7191-4470-89D4-E6300092DB94.rdc",
+      "bytes": 2796381,
+      "sha256": "c4b13c70ba30094c4089f19a80db114855f1bb148be10a16881c30e42238a6ca",
+      "modified_utc": "2026-11-13T23:20:51.437461+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_shields_d_tex.tpac",
+        "PackageGuid": "71facbba-7191-4470-89d4-e6300092db94",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_shields_d",
+            "Guid": "f9c38fd1-d5af-45fa-b8dc-0800f4c1728a",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_shields_d_tex.tpac",
+        "PackageGuid": "8228652f-def4-445b-b044-f1569d285f9c",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_shields_d",
+            "Guid": "074197a2-a418-480a-9143-7f01668523e0",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/88E40B18-E98A-4C5D-97CE-E62D948E2DFB.rdc",
+      "bytes": 2796381,
+      "sha256": "1c49b6e815d7cc4cad69e5a5806fdae63daa92af93b9822b8e3ca69dbfb7cf72",
+      "modified_utc": "2026-11-13T23:22:28.862767+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sho_rope_s_tex.tpac",
+        "PackageGuid": "88e40b18-e98a-4c5d-97ce-e62d948e2dfb",
+        "Assets": [
+          {
+            "Name": "dadg_ws_sho_rope_s",
+            "Guid": "0c3e2ebd-e83b-40c0-9442-1897b185485c",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sho_rope_s_tex.tpac",
+        "PackageGuid": "d04f5b60-7ab3-4cf2-a3dd-7699c706f053",
+        "Assets": [
+          {
+            "Name": "dadg_ws_sho_rope_s",
+            "Guid": "7713af7c-3320-48f2-9d98-135a72b844b5",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/B0436CAB-96BA-4F05-B5E3-76677E7F79DD.rdc",
+      "bytes": 1398293,
+      "sha256": "bd2a719dde48a737c9e0d9957d392ed05d16c1c07dc5834ea95f841e5626d068",
+      "modified_utc": "2026-11-13T23:17:38.344107+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dadg_fine_plank_a_tex.tpac",
+        "PackageGuid": "b0436cab-96ba-4f05-b5e3-76677e7f79dd",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dadg_fine_plank_a",
+            "Guid": "f775839f-ee2d-4f37-bb57-bbb618039100",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dadg_fine_plank_a_tex.tpac",
+        "PackageGuid": "1002415f-ef3b-411d-bc19-091a12e6548d",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dadg_fine_plank_a",
+            "Guid": "06f15b19-5dcd-4b49-b55e-76218f936bb7",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/B5D77523-FE38-4266-AEB2-1338E13A0D0D.rdc",
+      "bytes": 2796381,
+      "sha256": "92bd51b9aaecd1c5ae72e4f6582131c081667345355f4d9f1f223657cdab33e7",
+      "modified_utc": "2026-11-13T23:21:02.789398+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_wooden_planks_d_tex.tpac",
+        "PackageGuid": "b5d77523-fe38-4266-aeb2-1338e13a0d0d",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_wooden_planks_d",
+            "Guid": "0815960e-e823-4b26-ae20-4ac8f4cbb43b",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_wooden_planks_d_tex.tpac",
+        "PackageGuid": "d6d6f474-26dc-4d69-adb0-4a0ea1dcb1f1",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_wooden_planks_d",
+            "Guid": "2d8a0807-c3ae-4bd6-8007-ffbe3700d76b",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/B93B53AB-7D0C-4608-AE3F-FD4823589BB2.rdc",
+      "bytes": 22369813,
+      "sha256": "19f45f4d0bb3efa97928db75d94830b3df15f84e081fc89a75be0352cb373b99",
+      "modified_utc": "2026-11-13T23:20:13.027016+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_light_wooden_planks_n_tex.tpac",
+        "PackageGuid": "b93b53ab-7d0c-4608-ae3f-fd4823589bb2",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_light_wooden_planks_n",
+            "Guid": "33b56311-fcc3-4695-868e-eb73bf388bfc",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_light_wooden_planks_n_tex.tpac",
+        "PackageGuid": "da772979-e160-4471-bf52-f3619346a161",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_light_wooden_planks_n",
+            "Guid": "59777cb7-613a-4182-b0f8-c7039eba6e78",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/C44B1CCF-7B37-4DCD-9976-1B08FBB412F5.rdc",
+      "bytes": 2796381,
+      "sha256": "83c810389e5461efbbd10dc53cd28020fee8ddbd6f7dfbeb9a58ab4e407be7e7",
+      "modified_utc": "2026-11-13T23:20:48.894856+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_rich_wood_s_tex.tpac",
+        "PackageGuid": "c44b1ccf-7b37-4dcd-9976-1b08fbb412f5",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_rich_wood_s",
+            "Guid": "22b05c89-38b3-4e25-9fa7-bc4543d11ee9",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_rich_wood_s_tex.tpac",
+        "PackageGuid": "2d0f0f4a-840a-4c9a-865e-81c515794674",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_rich_wood_s",
+            "Guid": "838b9fee-9fd7-47f0-bcac-2dc152d6face",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/D8380971-1D06-4CC3-AD5B-3B3D386BC94A.rdc",
+      "bytes": 5592597,
+      "sha256": "a1adfb37c2d51aed6bb324c3e3ab49d9e12817718a6f43a86f8a0b933c6ffc8d",
+      "modified_utc": "2026-11-13T23:22:04.108132+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sail_heraldry_n_tex.tpac",
+        "PackageGuid": "d8380971-1d06-4cc3-ad5b-3b3d386bc94a",
+        "Assets": [
+          {
+            "Name": "dadg_ws_sail_heraldry_n",
+            "Guid": "7315b30d-01ae-49c4-b62d-bb993a0bd2a7",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sail_heraldry_n_tex.tpac",
+        "PackageGuid": "a758e202-e80d-40ac-a5cb-645c87d90153",
+        "Assets": [
+          {
+            "Name": "dadg_ws_sail_heraldry_n",
+            "Guid": "795d14b1-6b5f-4274-9c89-3dec6ccb3fb2",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/DBC3DF31-5A14-4E83-B3D8-9273C9AEBBA0.rdc",
+      "bytes": 5592597,
+      "sha256": "ac6058bdac49c50f06c87bb8f37b84e27251941888f7e1932add80315d9595df",
+      "modified_utc": "2026-11-13T23:21:32.793000+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_wooden_planks_n_tex.tpac",
+        "PackageGuid": "dbc3df31-5a14-4e83-b3d8-9273c9aebba0",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_wooden_planks_n",
+            "Guid": "6a39aea2-31e5-4996-9cb6-14f1ddf71fe1",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_wooden_planks_n_tex.tpac",
+        "PackageGuid": "3aa3ea8b-4f0e-482f-a410-873e3d68f634",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_wooden_planks_n",
+            "Guid": "5783fbee-a036-4889-8816-f38a6f67963e",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/E984DC1F-4B49-4FF6-A227-37DA798BB110.rdc",
+      "bytes": 2796381,
+      "sha256": "c33afbde3128e1d563b62c1309ace6fdc1fc66c7698e162c46e2991164270f08",
+      "modified_utc": "2026-11-13T23:21:35.094249+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_mow_sails_plain_d_tex.tpac",
+        "PackageGuid": "e984dc1f-4b49-4ff6-a227-37da798bb110",
+        "Assets": [
+          {
+            "Name": "dadg_ws_mow_sails_plain_d",
+            "Guid": "409f88c4-86bc-4019-b028-f2ccf74ea311",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_mow_sails_plain_d_tex.tpac",
+        "PackageGuid": "222a0411-2ad7-4796-946e-0dd3879b0fef",
+        "Assets": [
+          {
+            "Name": "dadg_ws_mow_sails_plain_d",
+            "Guid": "bf006501-abdb-4c07-915d-48db297a6260",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/ED27F883-F11D-4562-91EA-9C428F86D501.rdc",
+      "bytes": 2796381,
+      "sha256": "3dd7fb76742abdd17c8a8dea03d3728ef3220df2d4971901f7004b6292711d31",
+      "modified_utc": "2026-11-13T23:21:43.595006+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_mow_sails_plain_s_tex.tpac",
+        "PackageGuid": "ed27f883-f11d-4562-91ea-9c428f86d501",
+        "Assets": [
+          {
+            "Name": "dadg_ws_mow_sails_plain_s",
+            "Guid": "0d5c5c19-6d70-4a3f-b39c-8511fa9e6877",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_mow_sails_plain_s_tex.tpac",
+        "PackageGuid": "d9dbd67e-19d8-4771-8011-6a524be8907f",
+        "Assets": [
+          {
+            "Name": "dadg_ws_mow_sails_plain_s",
+            "Guid": "476b04eb-cad8-428b-b7f6-572516e0278b",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/F5AAD3FD-4D9F-42BD-93D9-EF2723CB92BB.rdc",
+      "bytes": 2796381,
+      "sha256": "b9346a7d4e78c1a9e7a612f4a8790cbd7ad467113f325cf69d02c8badb126b7e",
+      "modified_utc": "2026-11-13T23:22:06.868700+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sho_rope_d_tex.tpac",
+        "PackageGuid": "f5aad3fd-4d9f-42bd-93d9-ef2723cb92bb",
+        "Assets": [
+          {
+            "Name": "dadg_ws_sho_rope_d",
+            "Guid": "2d4e307d-f866-46d2-8729-312a723d35f5",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sho_rope_d_tex.tpac",
+        "PackageGuid": "49197a94-4dbf-424b-a335-b37ac1a9afe8",
+        "Assets": [
+          {
+            "Name": "dadg_ws_sho_rope_d",
+            "Guid": "c6d0b848-4134-461c-8b36-703ee16605ae",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/F6D2FD1A-106C-46D4-9B3B-DA68B8B883F3.rdc",
+      "bytes": 5592597,
+      "sha256": "3df0969db5858572285d6d517f88df5afea69d902d01c93fb49f988eee99c220",
+      "modified_utc": "2026-11-13T23:22:26.478424+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sho_rope_n_tex.tpac",
+        "PackageGuid": "f6d2fd1a-106c-46d4-9b3b-da68b8b883f3",
+        "Assets": [
+          {
+            "Name": "dadg_ws_sho_rope_n",
+            "Guid": "bffcd949-1901-46de-8a77-3a049e19496a",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sho_rope_n_tex.tpac",
+        "PackageGuid": "4aabdcd9-604e-4a38-89ef-1faef3d1c01e",
+        "Assets": [
+          {
+            "Name": "dadg_ws_sho_rope_n",
+            "Guid": "ed41628e-c7a0-48a7-9d7e-06dac2849c10",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/FC5CAEBD-558E-4BC0-9FA1-6130CFDB5794.rdc",
+      "bytes": 2796381,
+      "sha256": "9a48945a777a47d8b431a47e80352f3bedd588d6a6a25007c1d258f4909be54f",
+      "modified_utc": "2026-11-13T23:20:15.821197+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_rich_wood_d_tex.tpac",
+        "PackageGuid": "fc5caebd-558e-4bc0-9fa1-6130cfdb5794",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_rich_wood_d",
+            "Guid": "d365ab74-37af-446e-8fcf-2b339d45c362",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_rich_wood_d_tex.tpac",
+        "PackageGuid": "7f39dd8c-b367-4c86-94c2-cdbf62d3d246",
+        "Assets": [
+          {
+            "Name": "dadg_ws_dawa_rich_wood_d",
+            "Guid": "4bf5d5d6-8cf8-467a-8d02-6de81e7f00c1",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    },
+    {
+      "path": "RuntimeDataCache/FD885B82-7457-4FE9-89BC-7B9162E60FCC.rdc",
+      "bytes": 5592597,
+      "sha256": "b14d8c143ec1d35902629bbca15388932f262c46bb356056a3153d781d4c4a7b",
+      "modified_utc": "2026-11-13T23:21:41.544834+00:00",
+      "current_package": null,
+      "rudder_import": false,
+      "primary_exists": false,
+      "primary_identical": false,
+      "previous_package": {
+        "Package": "artifacts/ship-rudder-import-20261114/v14-mirror/backup/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_mow_sails_plain_n_tex.tpac",
+        "PackageGuid": "fd885b82-7457-4fe9-89bc-7b9162e60fcc",
+        "Assets": [
+          {
+            "Name": "dadg_ws_mow_sails_plain_n",
+            "Guid": "b3013c1b-341c-4c40-84c8-fcbf883cdb8b",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_package": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_mow_sails_plain_n_tex.tpac",
+        "PackageGuid": "4c6d35ad-1e50-4a35-a42d-782224fe0dce",
+        "Assets": [
+          {
+            "Name": "dadg_ws_mow_sails_plain_n",
+            "Guid": "ca405ec7-f0c5-404c-a6a9-0a6f8e339611",
+            "Type": "Texture"
+          }
+        ]
+      },
+      "replacement_cache_exists_and_is_tracked": true
+    }
+  ],
+  "main_module_packages_unreadable": [
+    {
+      "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerra/Assets\\shields\\burgundian_a_mtl.tpac",
+      "Error": "Not a Tpac file: D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerra\\Assets\\shields\\burgundian_a_mtl.tpac"
+    }
+  ],
+  "main_module_untracked_caches": [
+    {
+      "path": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerra\\RuntimeDataCache\\76A09545-19DE-4297-B16F-1E728D927744.rdc",
+      "bytes": 3328,
+      "sha256": "ea4927a508c148fca20dbd646d68d47a4d3844e06c8e9423bd8f8cb75d7c5ac9",
+      "modified_utc": "2026-10-25T21:54:43.272585+00:00",
+      "owner": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerra/Assets\\customanimations\\visor\\new_animation_clip_anm.tpac",
+        "PackageGuid": "76a09545-19de-4297-b16f-1e728d927744",
+        "Assets": [
+          {
+            "Name": "visor_open_conversation",
+            "Guid": "a79c825b-daf7-4424-8c35-fd38b5359b15",
+            "Type": "AssetItem"
+          }
+        ]
+      }
+    },
+    {
+      "path": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord\\Modules\\DellarteDellaGuerra\\RuntimeDataCache\\816D33B2-EBB6-4A2C-8561-74BD1B6AAA06.rdc",
+      "bytes": 14180,
+      "sha256": "fdcf71aa1138d3d960ca9f0fccd7bf35cdffc369f40d481bce446d29892acb24",
+      "modified_utc": "2026-10-02T17:49:42.150536+00:00",
+      "owner": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerra/Assets\\customanimations\\firearms\\reload_firearm_long_new_anm.tpac",
+        "PackageGuid": "816d33b2-ebb6-4a2c-8561-74bd1b6aaa06",
+        "Assets": [
+          {
+            "Name": "reload_firearm_long_new",
+            "Guid": "805c7592-1691-4eb6-96d4-778f36254021",
+            "Type": "AssetItem"
+          }
+        ]
+      }
+    },
+    {
+      "path": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerra\\RuntimeDataCache\\76A09545-19DE-4297-B16F-1E728D927744.rdc",
+      "bytes": 3328,
+      "sha256": "ea4927a508c148fca20dbd646d68d47a4d3844e06c8e9423bd8f8cb75d7c5ac9",
+      "modified_utc": "2026-10-25T21:54:43.272585+00:00",
+      "owner": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerra/Assets\\customanimations\\visor\\new_animation_clip_anm.tpac",
+        "PackageGuid": "76a09545-19de-4297-b16f-1e728d927744",
+        "Assets": [
+          {
+            "Name": "visor_open_conversation",
+            "Guid": "a79c825b-daf7-4424-8c35-fd38b5359b15",
+            "Type": "AssetItem"
+          }
+        ]
+      }
+    },
+    {
+      "path": "D:\\SteamLibrary\\steamapps\\common\\Mount & Blade II Bannerlord-v1.4\\Modules\\DellarteDellaGuerra\\RuntimeDataCache\\816D33B2-EBB6-4A2C-8561-74BD1B6AAA06.rdc",
+      "bytes": 14180,
+      "sha256": "fdcf71aa1138d3d960ca9f0fccd7bf35cdffc369f40d481bce446d29892acb24",
+      "modified_utc": "2026-10-02T17:49:42.150536+00:00",
+      "owner": {
+        "Package": "D:/SteamLibrary/steamapps/common/Mount & Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerra/Assets\\customanimations\\firearms\\reload_firearm_long_new_anm.tpac",
+        "PackageGuid": "816d33b2-ebb6-4a2c-8561-74bd1b6aaa06",
+        "Assets": [
+          {
+            "Name": "reload_firearm_long_new",
+            "Guid": "805c7592-1691-4eb6-96d4-778f36254021",
+            "Type": "AssetItem"
+          }
+        ]
+      }
+    }
+  ]
+}

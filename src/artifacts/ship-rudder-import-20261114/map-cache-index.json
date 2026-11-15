@@ -1,0 +1,1784 @@
+[
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\dadg_main_map_water_color_map_tex.tpac",
+    "PackageGuid": "6737e547-a4ca-403e-a50e-b4c05716cfda",
+    "Assets": [
+      {
+        "Name": "dadg_main_map_water_color_map",
+        "Guid": "44986a6c-c4a7-4307-b3fc-eb49635fc1db",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\dadg_naval_worldmap_water_mtl.tpac",
+    "PackageGuid": "cd800d9e-bd10-4228-b192-0ac9ea341574",
+    "Assets": [
+      {
+        "Name": "dadg_naval_worldmap_water",
+        "Guid": "59263c98-a651-4a49-9a5f-c73e76a56589",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\dadg_worldmap_river_mask_tex.tpac",
+    "PackageGuid": "50c8a988-124f-42e1-bf98-ff18895682e9",
+    "Assets": [
+      {
+        "Name": "dadg_worldmap_river_mask",
+        "Guid": "d95ed0e3-d46e-4c9d-a5da-58a381cee816",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\dadg_world_map_heightmap_tex.tpac",
+    "PackageGuid": "a577146d-71c9-4d9c-aaae-9e9cff66fb9f",
+    "Assets": [
+      {
+        "Name": "dadg_world_map_heightmap",
+        "Guid": "cb7e0aeb-ed4f-46cb-8bae-6b3fa85b93e4",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\DDG_colourmap_tex.tpac",
+    "PackageGuid": "ba03f126-992b-4a50-8fe4-80fa22beab98",
+    "Assets": [
+      {
+        "Name": "DDG_colourmap",
+        "Guid": "619702ac-6766-46df-86ad-ac8b45cf3bb5",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\DDG_normalmap_tex.tpac",
+    "PackageGuid": "e4528200-30d5-4bee-96d0-da874d0249e3",
+    "Assets": [
+      {
+        "Name": "DDG_normalmap",
+        "Guid": "dd48f6be-c282-4b22-b8c7-45378376252d",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\DDG_reliefmap_tex.tpac",
+    "PackageGuid": "45c5e36b-2072-4e52-a657-edf880a1b631",
+    "Assets": [
+      {
+        "Name": "DDG_reliefmap",
+        "Guid": "9acc8691-544c-418e-a6fe-9be566c1e103",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\england_settlement_placement_tex.tpac",
+    "PackageGuid": "cd096d9f-03fb-44ec-bf9a-611719970044",
+    "Assets": [
+      {
+        "Name": "england_settlement_placement",
+        "Guid": "7fae71b6-a2ee-4f8b-bc09-44990a35a3ad",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\flora_color_variation worldmap_tex.tpac",
+    "PackageGuid": "4110f529-8809-4a44-b326-13da23a5163f",
+    "Assets": [
+      {
+        "Name": "flora_color_variation worldmap",
+        "Guid": "966d4125-3d9b-4039-8800-e73b0d6be865",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\main_map_snow_flowmap_tex.tpac",
+    "PackageGuid": "5e8d74d0-1f69-4537-8086-1273ecbb483a",
+    "Assets": [
+      {
+        "Name": "main_map_snow_flowmap",
+        "Guid": "67e95d7b-73fa-4c57-90bd-d41b122ebeb5",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\naval_worldmap_river_mtl.tpac",
+    "PackageGuid": "5ab19441-c4a5-4c89-a8eb-a796904ac1f4",
+    "Assets": [
+      {
+        "Name": "naval_worldmap_river",
+        "Guid": "1dbdc933-cf37-4930-82dd-74d5df0ac687",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\worldmap_battle_scene_grid_tex.tpac",
+    "PackageGuid": "f6c8e08c-bdad-48ee-a58b-235ba7e8e5fe",
+    "Assets": [
+      {
+        "Name": "worldmap_battle_scene_grid",
+        "Guid": "5ca4f0de-6df0-4f4a-b2c9-9055e3c23015",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\worldmap_snow_flowmap_tex.tpac",
+    "PackageGuid": "94014d45-1ec8-4983-99b4-8159d4125e52",
+    "Assets": [
+      {
+        "Name": "worldmap_snow_flowmap",
+        "Guid": "3573fc2e-1224-49b5-ad26-b84739810ade",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ddg_mainmap\\worldmap_wave_map_tex.tpac",
+    "PackageGuid": "3fdabab1-7441-45c7-8ff1-99d69053b9d4",
+    "Assets": [
+      {
+        "Name": "worldmap_wave_map",
+        "Guid": "c47014f5-2b27-44d6-b81d-43b590c70c92",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\DADG_customui2_1_tex.tpac",
+    "PackageGuid": "4411302d-13e4-4e4f-a419-90ed8126ff87",
+    "Assets": [
+      {
+        "Name": "DADG_customui2_1",
+        "Guid": "f702c9a8-415a-4566-b96c-ffe75b090f3d",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\DADG_customui3_1_tex.tpac",
+    "PackageGuid": "8d7f19f7-f33d-4016-92af-3b6c02c4ece0",
+    "Assets": [
+      {
+        "Name": "DADG_customui3_1",
+        "Guid": "1b123813-46b2-4117-98d4-e7aaf40be553",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\dadg_hair_1_tex.tpac",
+    "PackageGuid": "e65537d8-5303-4fa9-bfc8-074e854331b8",
+    "Assets": [
+      {
+        "Name": "dadg_hair_1",
+        "Guid": "24007095-3582-473e-ab30-5c2755d866cc",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\dadg_political_map_1_tex.tpac",
+    "PackageGuid": "f99c05b8-bc54-4cfb-a599-5c196c68af5e",
+    "Assets": [
+      {
+        "Name": "dadg_political_map_1",
+        "Guid": "5232b5ab-d167-4cf9-bc64-eeeb7eced1c9",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\dadg_rose_loading_1_tex.tpac",
+    "PackageGuid": "57de0ae1-0e21-4216-99f9-1a80af03e78f",
+    "Assets": [
+      {
+        "Name": "dadg_rose_loading_1",
+        "Guid": "ba81f0c0-2de0-4891-9ed1-a06a28cbd7cb",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\dadg_ui_cannon_1_tex.tpac",
+    "PackageGuid": "2d9bd0c3-a1cb-459e-b9d5-0ffd32d75fa7",
+    "Assets": [
+      {
+        "Name": "dadg_ui_cannon_1",
+        "Guid": "b377618e-159e-44fe-b19b-c5f429a806b0",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_armymanagement_1_tex.tpac",
+    "PackageGuid": "fbeab96d-16e2-43df-a47e-7453e42cab92",
+    "Assets": [
+      {
+        "Name": "ui_armymanagement_1",
+        "Guid": "f3d2fe78-d05b-4a1b-b535-dae95b1ccd8f",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_barter_1_tex.tpac",
+    "PackageGuid": "29d8bdb7-1175-44c3-86c7-4719173403f3",
+    "Assets": [
+      {
+        "Name": "ui_barter_1",
+        "Guid": "f9a7d017-e0fd-4ba7-9318-df6e8d9e630e",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_characterdeveloper_1_tex.tpac",
+    "PackageGuid": "e267b2a2-a6bf-40b8-b482-615adb2fcd89",
+    "Assets": [
+      {
+        "Name": "ui_characterdeveloper_1",
+        "Guid": "f299edde-580f-4c3c-bd25-0455e2cc5453",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_clan_1_tex.tpac",
+    "PackageGuid": "7d786b01-cc31-4048-bfe4-a4574c27b7a4",
+    "Assets": [
+      {
+        "Name": "ui_clan_1",
+        "Guid": "f99d740c-fa8c-4e66-a115-af6425b0c8f2",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_conversation_1_tex.tpac",
+    "PackageGuid": "bf4249ec-a1d0-43e4-8e99-d85d82cc658c",
+    "Assets": [
+      {
+        "Name": "ui_conversation_1",
+        "Guid": "74082dad-4ecf-4b8b-9d80-317512aab8d2",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_crafting_1_tex.tpac",
+    "PackageGuid": "f9be1150-5fdc-4b03-aaa6-c33d2346a8f6",
+    "Assets": [
+      {
+        "Name": "ui_crafting_1",
+        "Guid": "8cfdfea1-1926-4d8b-8225-8fd559c765b9",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_custom_fonts_1_tex.tpac",
+    "PackageGuid": "6c1e2065-a671-4a24-b49d-32660fdf6ed4",
+    "Assets": [
+      {
+        "Name": "ui_custom_fonts_1",
+        "Guid": "d58cd930-b1e7-434c-94e0-f13c7c11e0f1",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_dadg_group1_1_tex.tpac",
+    "PackageGuid": "67619f19-d523-4eb8-ac40-493017c805ae",
+    "Assets": [
+      {
+        "Name": "ui_dadg_group1_1",
+        "Guid": "f36d2a88-ab8b-4e9f-b002-844571ec2be6",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_dadg_recruitment_1_tex.tpac",
+    "PackageGuid": "d7b327bc-34db-4510-b0a8-7d7012cc613e",
+    "Assets": [
+      {
+        "Name": "ui_dadg_recruitment_1",
+        "Guid": "2397ed9a-7fb7-4702-902c-1d46be30e019",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_encyclopedia_1_tex.tpac",
+    "PackageGuid": "7d2cadb5-684c-4b20-967f-97a7d85f0237",
+    "Assets": [
+      {
+        "Name": "ui_encyclopedia_1",
+        "Guid": "7034593b-9980-4483-b980-aef81cc58456",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_fullbackgrounds_1_tex.tpac",
+    "PackageGuid": "a106bbf2-7025-4e3c-976e-857810515843",
+    "Assets": [
+      {
+        "Name": "ui_fullbackgrounds_1",
+        "Guid": "1ed20b89-7be2-4a4c-a572-dceace90bbfd",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_fullbackgrounds_2_tex.tpac",
+    "PackageGuid": "f1a47fd2-b84a-4a2a-a850-cdcd00d19b16",
+    "Assets": [
+      {
+        "Name": "ui_fullbackgrounds_2",
+        "Guid": "790bc7e1-30c2-4d1d-a18b-79918dd1d705",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_group1_1_tex.tpac",
+    "PackageGuid": "1075b1c3-f3e7-407a-9be8-a73c4ee10f06",
+    "Assets": [
+      {
+        "Name": "ui_group1_1",
+        "Guid": "2ab41b6f-dd17-4009-b8d2-46271e17a51e",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_group1_2_tex.tpac",
+    "PackageGuid": "40eb8777-582b-44e8-93cd-3bbabb2360a8",
+    "Assets": [
+      {
+        "Name": "ui_group1_2",
+        "Guid": "bd3d6e3a-bc24-4d89-94d1-d53d48748776",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_group1_3_tex.tpac",
+    "PackageGuid": "dc03d8d7-bc97-4179-80e8-198f128d5ff9",
+    "Assets": [
+      {
+        "Name": "ui_group1_3",
+        "Guid": "20ca64fa-fca8-4ebb-a005-88de25ba6d42",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_inventory_1_tex.tpac",
+    "PackageGuid": "6209d9f2-0d30-4696-9185-831332c101ff",
+    "Assets": [
+      {
+        "Name": "ui_inventory_1",
+        "Guid": "9e145780-cbc0-453d-adc0-086a93d2537b",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_kingdom_1_tex.tpac",
+    "PackageGuid": "8ade39d5-f04a-4b60-a18b-5d99c2da85a7",
+    "Assets": [
+      {
+        "Name": "ui_kingdom_1",
+        "Guid": "0df36114-c85a-48bb-abed-dd9d85a7bc75",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_launcher_1_tex.tpac",
+    "PackageGuid": "853ce871-10d6-43e6-8904-f5e2b197342d",
+    "Assets": [
+      {
+        "Name": "ui_launcher_1",
+        "Guid": "131cf92d-d63c-4d67-8e75-5464e218403f",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_partyscreen_1_tex.tpac",
+    "PackageGuid": "0749a7ed-64f5-44aa-9fb6-f22b6d331d62",
+    "Assets": [
+      {
+        "Name": "ui_partyscreen_1",
+        "Guid": "67168007-3e93-4d43-90f0-62cdfc381e36",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_quest_1_tex.tpac",
+    "PackageGuid": "e3e16826-9fb7-4278-8c4f-6175429a4125",
+    "Assets": [
+      {
+        "Name": "ui_quest_1",
+        "Guid": "3f1c0522-804f-4fb5-a286-eb958f855642",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\GauntletUI\\ui_saveload_1_tex.tpac",
+    "PackageGuid": "b9c90d8c-7c7e-411a-992f-9a0ad8746db2",
+    "Assets": [
+      {
+        "Name": "ui_saveload_1",
+        "Guid": "99132edb-48b8-4484-a472-567afdee445c",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\scottish_campaign\\dadg_scottish_merged_v3_geo.tpac",
+    "PackageGuid": "1d1ff9c7-1177-4966-9d7e-cd73a8bf4219",
+    "Assets": [
+      {
+        "Name": "dadg_sco_merged_ee716dd80bc6",
+        "Guid": "4ce9950c-9bb4-45e3-8b74-2701dbda194a",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_sco_merged_99d05bca5ff7",
+        "Guid": "253d9d0c-c454-42cf-9e97-61f364ab0a17",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_sco_merged_64c63205a7eb",
+        "Guid": "d3b0ce0c-33f3-4ec8-9ada-59d7a9677379",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_sco_merged_a66dad07a3b5",
+        "Guid": "96e92b17-4906-470c-879a-05dcfe7a2207",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_sco_merged_4d4bff4aa02e",
+        "Guid": "ba8dd61f-2b3c-4422-b9e7-3d4f493a397f",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_sco_merged_0aece6a77664",
+        "Guid": "485a7136-ede2-42f2-a511-d638d9bf77d0",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_sco_merged_1be1c8e87e9c",
+        "Guid": "1403813e-9471-4f9b-a697-aa782fa1796d",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_sco_merged_700e6771a359",
+        "Guid": "ba6feb53-850a-4496-99e5-37be547e7039",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_sco_merged_ba41e6e55f5c",
+        "Guid": "9005c96d-8770-4c28-b0c6-9d7fd0986ce9",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_sco_merged_1f43a4cf7031",
+        "Guid": "0b2e6074-295e-44aa-a03b-c141de965864",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_sco_merged_66ccc2037f8a",
+        "Guid": "aad0dd76-b835-486c-b69a-019dd18c3b98",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_sco_merged_9fcf341db10d",
+        "Guid": "e9df6d8f-cb47-4034-886f-3e67e6f8eb39",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_scottish_merged_v3.fbx",
+        "Guid": "0b3f709c-67b2-4912-8488-fd59b932305f",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_sco_merged_89ac969c2086",
+        "Guid": "faf738b5-1082-455a-a505-f3d62c09a8f6",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_sco_merged_8bca74d13bd5",
+        "Guid": "4d7bd6c4-cee1-4205-aeef-7978e62c2b1a",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_sco_merged_cb741080477d",
+        "Guid": "3e536df7-dfa9-4b75-bfed-ace4fd64b660",
+        "Type": "Metamesh"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\banner_alpha_mtl.tpac",
+    "PackageGuid": "f7671348-a927-4969-957f-37a5025d8132",
+    "Assets": [
+      {
+        "Name": "banner_alpha",
+        "Guid": "3ed2ae70-f0cb-4b71-a7b6-b4957ea83e22",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\banner_bigger_scene_mtl.tpac",
+    "PackageGuid": "a95e21a4-51ba-410a-97af-ec98940c1aac",
+    "Assets": [
+      {
+        "Name": "banner_bigger_scene",
+        "Guid": "76f1aac1-f0e3-43c6-90b7-b8aec65d411f",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\campaign_flag_geo.tpac",
+    "PackageGuid": "8c9cc253-fc58-4660-bcb0-20a5bddbc1fd",
+    "Assets": [
+      {
+        "Name": "campaign_flag",
+        "Guid": "7f9b7bb1-968b-4935-89ee-504186cf622d",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "campaign_flag.fbx",
+        "Guid": "d7bf16d2-a29c-4db7-8a9c-c8e4a57304c1",
+        "Type": "Geometry"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\core_loading_2_tex.tpac",
+    "PackageGuid": "3d81339b-f2ca-4a50-90a9-c334ecfd735d",
+    "Assets": [
+      {
+        "Name": "core_loading_2",
+        "Guid": "13368af3-8dc3-4f12-8fed-29a01f557411",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\core_loading_tex.tpac",
+    "PackageGuid": "9740e288-706d-4394-8cbb-7bb5004582e0",
+    "Assets": [
+      {
+        "Name": "core_loading",
+        "Guid": "5bed7eee-7584-402e-8bc1-1291f84ebca6",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\custom_banner_icons_02_tex.tpac",
+    "PackageGuid": "a1147122-b7c7-46a9-9f96-e0b369e9d30f",
+    "Assets": [
+      {
+        "Name": "custom_banner_icons_02",
+        "Guid": "a474ddf9-8d6b-4804-ba83-0d0495e02ced",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\custom_banner_icons_03_tex.tpac",
+    "PackageGuid": "c6bc7380-7cc0-4b9c-8da2-ac6502a6446a",
+    "Assets": [
+      {
+        "Name": "custom_banner_icons_03",
+        "Guid": "09fcf700-1b86-4081-9f6a-67556284d1ee",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\custom_banner_icons_04_tex.tpac",
+    "PackageGuid": "c8ecdfec-7ad4-40a8-9840-d5e89c858b36",
+    "Assets": [
+      {
+        "Name": "custom_banner_icons_04",
+        "Guid": "08ecbdc2-cd68-40df-995e-89e869da3051",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\custom_banner_icons_05_tex.tpac",
+    "PackageGuid": "2abb5d10-d3d4-408e-88c8-b909bd22f8c9",
+    "Assets": [
+      {
+        "Name": "custom_banner_icons_05",
+        "Guid": "b67f35e7-7f89-4519-a3e0-d9881fa63b98",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\custom_banner_icons_11_tex.tpac",
+    "PackageGuid": "6678e527-4222-4cbb-ac2d-9315d9ee70ca",
+    "Assets": [
+      {
+        "Name": "custom_banner_icons_11",
+        "Guid": "4c683f88-2844-461b-9a8e-00fb68418634",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\custom_banner_icons_tex.tpac",
+    "PackageGuid": "ae2f2851-9ba8-4f21-85dd-91b04229f031",
+    "Assets": [
+      {
+        "Name": "custom_banner_icons",
+        "Guid": "c5d463c3-4eae-449e-adf5-8b6363c5b715",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\dadg_scene_banner_a_geo.tpac",
+    "PackageGuid": "c0fbfebb-fdd3-48c1-83b1-7466d709da04",
+    "Assets": [
+      {
+        "Name": "dadg_scene_banner_a.fbx",
+        "Guid": "26bbfc05-e21e-4889-9423-27f45e9e4b1a",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_scene_banner_a",
+        "Guid": "d4d5cc56-67a9-4c92-ad4c-bb980b0042ec",
+        "Type": "Metamesh"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\loadingscreen_texture_1_tex.tpac",
+    "PackageGuid": "e4e584fb-47e6-499e-80c2-1b1bf6961ddf",
+    "Assets": [
+      {
+        "Name": "loadingscreen_texture_1",
+        "Guid": "f2827873-5285-42f6-b857-f76a790b7bf6",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\main_menu_logo_960_tex.tpac",
+    "PackageGuid": "394bfd7a-f706-49c4-9e62-d3accaa21dd2",
+    "Assets": [
+      {
+        "Name": "main_menu_logo_960",
+        "Guid": "16526b53-6d37-48cd-ba91-21e776dd492a",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\main_menu_logo_tex.tpac",
+    "PackageGuid": "aa4198f1-d22e-4202-9f3d-3230ab2a2778",
+    "Assets": [
+      {
+        "Name": "main_menu_logo",
+        "Guid": "17ff68a4-d1c8-494d-8823-f4722f3f270e",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\ui_bannericons_1_tex.tpac",
+    "PackageGuid": "39669737-65eb-47fe-ad53-4a036dae4a8a",
+    "Assets": [
+      {
+        "Name": "ui_bannericons_1",
+        "Guid": "b68ff44e-babd-4a0a-ad19-972cf1f962f5",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\ui_loading_10_tex.tpac",
+    "PackageGuid": "73853731-d194-4922-8e88-7bcdc947e3d5",
+    "Assets": [
+      {
+        "Name": "ui_loading_10",
+        "Guid": "cc5f4cbc-40a8-4d7e-a301-a6979a335918",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\ui_loading_11_tex.tpac",
+    "PackageGuid": "8e13e900-9bde-4510-8309-928701f43172",
+    "Assets": [
+      {
+        "Name": "ui_loading_11",
+        "Guid": "7d7460a8-0119-4239-a2b7-0004efa59e3d",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\ui_loading_12_tex.tpac",
+    "PackageGuid": "0742a065-03f5-4749-8e11-addbf7d498e1",
+    "Assets": [
+      {
+        "Name": "ui_loading_12",
+        "Guid": "b158431d-91ee-4d3a-93a4-5ac6e6882c84",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\ui_loading_1_tex.tpac",
+    "PackageGuid": "c7177ddf-ec6e-422c-9639-c48209039200",
+    "Assets": [
+      {
+        "Name": "ui_loading_1",
+        "Guid": "3755049c-b029-4fe4-97e6-5973f1c86647",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\ui_loading_2_tex.tpac",
+    "PackageGuid": "c0033669-7966-41f8-9809-7bced39ab88e",
+    "Assets": [
+      {
+        "Name": "ui_loading_2",
+        "Guid": "f3a17965-b0d3-456c-b8b7-0f10165e59f1",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\ui_loading_3_tex.tpac",
+    "PackageGuid": "d05facf0-f4ff-438d-86eb-c32fef7ea83c",
+    "Assets": [
+      {
+        "Name": "ui_loading_3",
+        "Guid": "9d06ed8f-ed04-421f-acf1-97554fde91a0",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\ui_loading_4_tex.tpac",
+    "PackageGuid": "73da65bd-b84e-4a02-8700-21c0a2b62f97",
+    "Assets": [
+      {
+        "Name": "ui_loading_4",
+        "Guid": "949465c7-33d9-468d-9664-9739f4cb310b",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\ui_loading_5_tex.tpac",
+    "PackageGuid": "14873595-ed11-485a-a548-4d46d77a6ba3",
+    "Assets": [
+      {
+        "Name": "ui_loading_5",
+        "Guid": "4f59118c-3a19-4e24-bb72-6b3e4a1a50b2",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\ui_loading_6_tex.tpac",
+    "PackageGuid": "6b385b8c-0461-49ae-8235-fb73d4bc183c",
+    "Assets": [
+      {
+        "Name": "ui_loading_6",
+        "Guid": "9872551c-201e-4da5-963e-de1dd3c2ce62",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\ui_loading_7_tex.tpac",
+    "PackageGuid": "10187f8b-cdc5-40c3-98e1-b0b2e22d72e3",
+    "Assets": [
+      {
+        "Name": "ui_loading_7",
+        "Guid": "040f1eeb-62bb-443e-be81-9107115e8f2f",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\ui_loading_8_tex.tpac",
+    "PackageGuid": "49239712-8746-4a7d-be1a-77131b9b2f80",
+    "Assets": [
+      {
+        "Name": "ui_loading_8",
+        "Guid": "2027b47b-bd45-4fb8-a354-1cf50ef19d0e",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\ui_loading_9_tex.tpac",
+    "PackageGuid": "2ca591b6-8a2a-4843-b1d3-b8e0d2f3e027",
+    "Assets": [
+      {
+        "Name": "ui_loading_9",
+        "Guid": "7609003e-a7b4-41e9-a75a-11f6c5ad765b",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\ui\\vlandia_tier_1_banner_geo.tpac",
+    "PackageGuid": "4f9ce8da-be2b-4779-9187-dda033987473",
+    "Assets": [
+      {
+        "Name": "vlandia_tier_1_banner.fbx",
+        "Guid": "797dcc5d-ebe0-4087-a567-c3a96141aabe",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "vlandia_tier_1_banner",
+        "Guid": "2db7f3de-c66e-4ff0-91c5-9d108b2690bb",
+        "Type": "Metamesh"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_outermesh\\dadg_europeoutermesh\\dadg_eu_outer_mesh_geo.tpac",
+    "PackageGuid": "848b7a05-39f0-415f-b679-d624c07d3b7c",
+    "Assets": [
+      {
+        "Name": "dadg_eu_outer_mesh",
+        "Guid": "7faf7c0a-ece5-42e8-a9a8-c5038ebc6d3e",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_eu_outer_mesh.fbx",
+        "Guid": "b76a8e12-83f9-41dd-ab40-b48902c4579f",
+        "Type": "Geometry"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_outermesh\\dadg_europeoutermesh\\DDG_EOM_normalmap_tex.tpac",
+    "PackageGuid": "0b5ffc40-eb3b-4f28-b26e-8f78e88af9e2",
+    "Assets": [
+      {
+        "Name": "DDG_EOM_normalmap",
+        "Guid": "86458fd8-ff28-465b-8a48-71fdf3e2a30d",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_outermesh\\dadg_europeoutermesh\\ddg_eom_reliefmap_mtl.tpac",
+    "PackageGuid": "899739d8-31ed-4341-bbed-446264247eae",
+    "Assets": [
+      {
+        "Name": "ddg_eom_reliefmap",
+        "Guid": "feed3e1c-1208-427c-b627-e7f273342688",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_outermesh\\dadg_europeoutermesh\\DDG_EOM_reliefmap_tex.tpac",
+    "PackageGuid": "b8f6548e-b35e-4a08-bc7c-3efce1fb612c",
+    "Assets": [
+      {
+        "Name": "DDG_EOM_reliefmap",
+        "Guid": "6ce9dcf6-592a-483a-8280-3c7bd9ea093c",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\carrack\\dadg_ws_carrack_body_without_yards_v1_geo.tpac",
+    "PackageGuid": "68f35fb1-a006-4346-a214-51fc27cdfc94",
+    "Assets": [
+      {
+        "Name": "dadg_ws_carrack_body_without_yards_v1.fbx",
+        "Guid": "85c28a1d-db58-4320-8342-1d6e3fd132e4",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_ws_carrack_body_without_yards_v1",
+        "Guid": "a4affe6f-75d4-4097-a09e-965c716808f7",
+        "Type": "Metamesh"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\carrack\\dadg_ws_carrack_sail01_v3_geo.tpac",
+    "PackageGuid": "c024ba49-bc72-4469-969f-279bd12ed6c2",
+    "Assets": [
+      {
+        "Name": "dadg_ws_carrack_sail01_v3.fbx",
+        "Guid": "336a7728-aaae-4223-967b-3a881eadbcf7",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail01_v1_yard",
+        "Guid": "45d1f334-100f-4193-8905-afe40b1c8a7b",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail01_v1_burning",
+        "Guid": "9ffbc856-956c-4ca6-a635-1f1a98a367d2",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail01_v1_skeleton",
+        "Guid": "32a96c5e-782b-49cd-93c2-e61e9059d55a",
+        "Type": "Skeleton"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail01_v1_cloth",
+        "Guid": "5e242692-13bb-4eb6-83ed-06e690530aa4",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail01_v1_folded",
+        "Guid": "802b3397-4b6d-4b36-bf61-a33cd104a3b7",
+        "Type": "Metamesh"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\carrack\\dadg_ws_carrack_sail02_v3_geo.tpac",
+    "PackageGuid": "0e583daa-d56a-4755-9d96-9708a0fa372a",
+    "Assets": [
+      {
+        "Name": "dadg_ws_carrack_sail02_v1_skeleton",
+        "Guid": "4d489d18-93c5-4b63-8a22-5171aab6f8c0",
+        "Type": "Skeleton"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail02_v3.fbx",
+        "Guid": "fa8c2529-64c3-4296-bf36-f4c4f54171b1",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail02_v1_yard",
+        "Guid": "3f8aab69-a1d0-4ed6-9920-637f5292461b",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail02_v1_folded",
+        "Guid": "def887a3-42b3-45dc-8c27-aedc15a36f96",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail02_v1_burning",
+        "Guid": "fa5eb8ad-9d96-42c7-ac55-9d703d14fdc8",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail02_v1_cloth",
+        "Guid": "94c638b2-98d8-4f1f-8900-bdee58c8828b",
+        "Type": "Metamesh"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\carrack\\dadg_ws_carrack_sail03_v3_geo.tpac",
+    "PackageGuid": "492a7cef-33db-4afb-b1d4-0c7a0f321755",
+    "Assets": [
+      {
+        "Name": "dadg_ws_carrack_sail03_v3.fbx",
+        "Guid": "6bda2600-bc47-4a6f-b40e-a6c1b9040da6",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail03_v1_burning",
+        "Guid": "bbc8df13-acc1-4fde-a4fa-c3d22fe42f1e",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail03_v1_cloth",
+        "Guid": "b6243165-633f-4bf7-81b6-b8c00644ebef",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail03_v1_folded",
+        "Guid": "540b9a8e-d44d-42d2-b15d-5bc55675a004",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail03_v1_yard",
+        "Guid": "072de9a3-657c-4487-9e05-4d729767c7d9",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail03_v1_skeleton",
+        "Guid": "f488f0f8-addd-441c-95d7-0c2339353f3e",
+        "Type": "Skeleton"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\carrack\\dadg_ws_carrack_sail04_v3_geo.tpac",
+    "PackageGuid": "6c6642df-37c9-48d6-908b-5ba93d5eab4c",
+    "Assets": [
+      {
+        "Name": "dadg_ws_carrack_sail04_v1_burning",
+        "Guid": "3b4ad100-1321-4312-ad36-4c5ff8340b63",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail04_v1_folded",
+        "Guid": "badccf1f-950a-4343-baeb-f7c3d46035cf",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail04_v3.fbx",
+        "Guid": "9b45922f-d465-4e00-96ec-e7e080d6989b",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail04_v1_yard",
+        "Guid": "8dcc186f-650c-4fed-b737-33b3499d38ec",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail04_v1_skeleton",
+        "Guid": "a14cde70-9d06-403d-9a44-8cfd798e4b84",
+        "Type": "Skeleton"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail04_v1_cloth",
+        "Guid": "bb01aa83-842d-4f54-91c6-90d19e415877",
+        "Type": "Metamesh"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\carrack\\dadg_ws_carrack_sail05_v3_geo.tpac",
+    "PackageGuid": "8b80c117-43f8-4289-9107-f5dddd3fcf36",
+    "Assets": [
+      {
+        "Name": "dadg_ws_carrack_sail05_v1_burning",
+        "Guid": "0fb6c813-129a-462f-9469-c6d0f9af4615",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail05_v3.fbx",
+        "Guid": "59f77056-0733-464e-83fd-0d1eb6a76f3d",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail05_v1_cloth",
+        "Guid": "e9a3665b-f9f8-4307-bf81-9c2c1d877144",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail05_v1_folded",
+        "Guid": "1049dea6-67e4-4635-9881-ac9e508c6882",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail05_v1_yard",
+        "Guid": "feef14c4-5053-4932-a1c8-f69b16557e04",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_sail05_v1_skeleton",
+        "Guid": "55af51c5-f58f-44df-99eb-33faa93e1050",
+        "Type": "Skeleton"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\collision\\dadg_ws_collision_sources_v1_geo.tpac",
+    "PackageGuid": "32335a78-3060-44a7-bed5-d77e603e30cf",
+    "Assets": [
+      {
+        "Name": "bo_dadg_ws_english_boat_b_detailed",
+        "Guid": "0d8ba822-51ed-41cb-a393-f715872ee70d",
+        "Type": "PhysicsShape"
+      },
+      {
+        "Name": "dadg_ws_collision_sources_v1.fbx",
+        "Guid": "96621a42-676a-4078-bd26-031ea79ff2fe",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "bo_conv_dadg_ws_carrack_hull",
+        "Guid": "96453454-0405-4068-a50c-3624178574a9",
+        "Type": "PhysicsShape"
+      },
+      {
+        "Name": "bo_conv_dadg_ws_kogge_hull",
+        "Guid": "ec95c893-a422-4c90-9c52-507cb2372e15",
+        "Type": "PhysicsShape"
+      },
+      {
+        "Name": "bo_conv_dadg_ws_english_boat_b_hull",
+        "Guid": "8c348cdf-95dc-44d9-9faf-c4e674565e53",
+        "Type": "PhysicsShape"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\collision\\dadg_ws_remaining_detailed_collision_v1_geo.tpac",
+    "PackageGuid": "cd0f640b-4f6e-4b71-95a9-870a65c4a466",
+    "Assets": [
+      {
+        "Name": "bo_dadg_ws_kogge_detailed",
+        "Guid": "1e153633-9e3d-43fe-8fb7-e65659ff20aa",
+        "Type": "PhysicsShape"
+      },
+      {
+        "Name": "bo_dadg_ws_carrack_detailed",
+        "Guid": "e5de4e71-e2f4-474e-a2d3-30f0dfe1b6ce",
+        "Type": "PhysicsShape"
+      },
+      {
+        "Name": "dadg_ws_remaining_detailed_collision_v1.fbx",
+        "Guid": "a3aa8cf8-6549-4e1b-a6be-c1a6bec9589d",
+        "Type": "Geometry"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\english_boat_b\\dadg_ws_english_boat_b_geo.tpac",
+    "PackageGuid": "67a7898e-4630-478d-b884-b0a01a4996ce",
+    "Assets": [
+      {
+        "Name": "dadg_ws_english_boat_b_body",
+        "Guid": "13346306-04a2-41e6-b20d-5e8429ca16ec",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_canvas_01",
+        "Guid": "99713539-bc4b-4e80-a400-dcdf2ffbb85f",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_sail",
+        "Guid": "03ebcb43-4f54-4023-853f-9286c8c6b23e",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_english_boat_b.fbx",
+        "Guid": "e6df9a8f-ceaf-4ef2-8402-31ccfb756a0d",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_sail_rig_static",
+        "Guid": "ab793ca8-4bf6-4306-a265-73f6afb1b62f",
+        "Type": "Metamesh"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\english_boat_b\\dadg_ws_english_boat_b_sail_source_v4_geo.tpac",
+    "PackageGuid": "d0c609ea-9654-49bc-ac47-79c1cfb2a92f",
+    "Assets": [
+      {
+        "Name": "dadg_ws_english_boat_b_sail_source_v4.fbx",
+        "Guid": "b39a8f43-c119-4f0b-a5f8-d9c0cc506a70",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_skeleton_v4",
+        "Guid": "f5244c68-ec51-4eab-86cb-b3462588fb45",
+        "Type": "Skeleton"
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_fixed_rig_v4",
+        "Guid": "62e1256a-2404-4eab-b2ff-1e4234694866",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_folded_v4",
+        "Guid": "806c3c8f-374e-4c74-b357-447e51570885",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_burning_v4",
+        "Guid": "3bf2a2cc-0b67-48e6-b756-6bc4fa61e8f5",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_cloth_v4",
+        "Guid": "4c20dcdc-123d-42e8-a63d-efc9255e139a",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_yard_v4",
+        "Guid": "f7dc6be1-184b-4387-bf3c-74f033385427",
+        "Type": "Metamesh"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\helm\\dadg_ws_helm_v1_geo.tpac",
+    "PackageGuid": "55c16eb3-aede-41bd-bd86-6b65335bcf04",
+    "Assets": [
+      {
+        "Name": "dadg_ws_kogge_tiller",
+        "Guid": "6fe89399-4137-46fe-ab0b-97bbc62b28a0",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_whipstaff_frame",
+        "Guid": "4faa69af-99fd-4d0b-aa5e-fdd4bad564bb",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_helm_v1.fbx",
+        "Guid": "632bcfd0-53e1-4fc5-aef4-593fb92c0b32",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_ws_whipstaff",
+        "Guid": "44890cd9-362f-4324-9be5-153ad753c3b8",
+        "Type": "Metamesh"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\kogge\\dadg_ws_kogge_body_without_yards_v1_geo.tpac",
+    "PackageGuid": "0707a871-6195-4f02-a98f-906a9ec3dbfa",
+    "Assets": [
+      {
+        "Name": "dadg_ws_kogge_body_without_yards_v1",
+        "Guid": "88e6e519-69bc-4ac9-8bd8-3bd567c5eb66",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_kogge_body_without_yards_v1.fbx",
+        "Guid": "b53a29d4-be6f-44b8-bd4e-dc2835d7f17f",
+        "Type": "Geometry"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\kogge\\dadg_ws_kogge_mast_v1_geo.tpac",
+    "PackageGuid": "368191a2-d43f-4c41-aedf-00233606b9ae",
+    "Assets": [
+      {
+        "Name": "dadg_ws_kogge_mast_v1",
+        "Guid": "720a3280-6aab-487b-aaa0-f3d16e0cc983",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_kogge_mast_v1.fbx",
+        "Guid": "a74164f9-9222-4717-a678-2ef44b04ed4b",
+        "Type": "Geometry"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\kogge\\dadg_ws_kogge_sail01_v3_geo.tpac",
+    "PackageGuid": "9393ed51-0b07-447d-aac3-3314a66edd64",
+    "Assets": [
+      {
+        "Name": "dadg_ws_kogge_sail01_v1_yard",
+        "Guid": "5a597a0e-d8db-4f2a-8a90-58e062fc6d6a",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_kogge_sail01_v1_skeleton",
+        "Guid": "ee4adb2f-284b-41fb-8d69-3573e91b6963",
+        "Type": "Skeleton"
+      },
+      {
+        "Name": "dadg_ws_kogge_sail01_v1_burning",
+        "Guid": "a3e66036-1dd2-47c6-a847-c941d6217aa4",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_kogge_sail01_v1_folded",
+        "Guid": "2796a13d-0a2a-4543-8c67-3dab38a7bc93",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_kogge_sail01_v3.fbx",
+        "Guid": "bd223b41-e6f2-4bd9-9925-3e8d00569e4a",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_ws_kogge_sail01_v1_cloth",
+        "Guid": "6299a69f-21b1-4406-ac5d-4583a12440a8",
+        "Type": "Metamesh"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_carrack_window_mtl.tpac",
+    "PackageGuid": "406c574f-c56c-43aa-8cda-1e916dbc72f6",
+    "Assets": [
+      {
+        "Name": "dadg_ws_carrack_window",
+        "Guid": "2b5c92c9-7229-4dd9-beda-f807854deb3d",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_dawa_light_wooden_planks_mtl.tpac",
+    "PackageGuid": "9ef30960-07be-484d-b022-8257625cd8bb",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_light_wooden_planks",
+        "Guid": "3d2ad73f-0262-4900-b6c7-96e0cc812983",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_dawa_rich_wood_mtl.tpac",
+    "PackageGuid": "8d0a5a03-be2d-4f07-8582-a6c5a5f046d8",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_rich_wood",
+        "Guid": "8e7e6590-2165-48a9-bd34-4e86b93cd04c",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_dawa_shields_mtl.tpac",
+    "PackageGuid": "cbe01bc4-ba1e-4290-add3-eb8edee91bfb",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_shields",
+        "Guid": "88eec21d-7d3c-4c80-a766-025f2be63193",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_dawa_wooden_planks_mtl.tpac",
+    "PackageGuid": "7b616963-724b-459b-b27e-36c58db13aaa",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_wooden_planks",
+        "Guid": "39c056ee-9c7e-4712-8d3e-d6a60c67cdea",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_plank_fine_a_mtl.tpac",
+    "PackageGuid": "2ce0ac94-647c-4e13-a2ce-bc017142b1fd",
+    "Assets": [
+      {
+        "Name": "dadg_ws_plank_fine_a",
+        "Guid": "fc8b36d8-9015-4dac-bc56-6996c46b0d13",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_plank_fine_b_mtl.tpac",
+    "PackageGuid": "65dadbdd-197f-47ca-9bef-fc0e7b3aa8ec",
+    "Assets": [
+      {
+        "Name": "dadg_ws_plank_fine_b",
+        "Guid": "fba2df5b-ec31-451c-9f69-0bd0affe1281",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_sails_heraldry_mtl.tpac",
+    "PackageGuid": "0bce10a4-2caa-4d66-89ec-b450401e396b",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sails_heraldry",
+        "Guid": "30747764-43a2-43f2-be8e-2d23a2aa1f0b",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_sails_plain_mtl.tpac",
+    "PackageGuid": "3da3d212-dae0-41c8-a6b2-180eb949b953",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sails_plain",
+        "Guid": "80ca1705-aaed-4889-bba1-a8f291a0ccaf",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\materials\\dadg_ws_sho_rope_mtl.tpac",
+    "PackageGuid": "b6dabef9-6b42-41dd-a801-cf58db1236fb",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sho_rope",
+        "Guid": "1131d58f-bf61-459d-a431-349e303602a2",
+        "Type": "Material"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\rudder\\dadg_ws_carrack_body_no_rudder_v1_geo.tpac",
+    "PackageGuid": "7e89fe5f-9829-488f-a483-c71a35c7a4ae",
+    "Assets": [
+      {
+        "Name": "dadg_ws_carrack_body_no_rudder_v1",
+        "Guid": "6a5d0d49-a875-4780-a316-f3a0515e32af",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_body_no_rudder_v1.fbx",
+        "Guid": "898de3e5-e983-4d84-9d08-452d0117d4d1",
+        "Type": "Geometry"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\rudder\\dadg_ws_carrack_rudder_v1_geo.tpac",
+    "PackageGuid": "a84a393f-7c22-4dbf-b008-abdeec442901",
+    "Assets": [
+      {
+        "Name": "dadg_ws_carrack_rudder_v1",
+        "Guid": "77d98f74-fed1-4647-a8fc-6aca068aa859",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_carrack_rudder_v1.fbx",
+        "Guid": "01834680-8b9e-49fe-8dfd-77144dd548eb",
+        "Type": "Geometry"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\rudder\\dadg_ws_english_boat_b_body_no_rudder_v1_geo.tpac",
+    "PackageGuid": "9330a6e5-6557-4a0b-b7db-225826df059b",
+    "Assets": [
+      {
+        "Name": "dadg_ws_english_boat_b_body_no_rudder_v1.fbx",
+        "Guid": "edb73e1f-313d-43b5-b46c-fcd8f7ddd8e2",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_body_no_rudder_v1",
+        "Guid": "f34fe96e-4947-4c72-b3a8-19fcd07721b1",
+        "Type": "Metamesh"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\rudder\\dadg_ws_english_boat_b_rudder_v1_geo.tpac",
+    "PackageGuid": "0bdcee3f-aa5d-4aa0-949d-1e0b120a0d17",
+    "Assets": [
+      {
+        "Name": "dadg_ws_english_boat_b_rudder_v1.fbx",
+        "Guid": "54027b16-956e-4444-ae09-91c2f93a8832",
+        "Type": "Geometry"
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_rudder_v1",
+        "Guid": "c460926f-749b-4545-bca7-16f2b27127bf",
+        "Type": "Metamesh"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\rudder\\dadg_ws_kogge_body_no_rudder_v1_geo.tpac",
+    "PackageGuid": "568b6a7e-e27b-4ea4-a789-9bb0c3cadbb1",
+    "Assets": [
+      {
+        "Name": "dadg_ws_kogge_body_no_rudder_v1",
+        "Guid": "cc25ba90-8105-4bac-8958-35ebc2a702aa",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_kogge_body_no_rudder_v1.fbx",
+        "Guid": "c9681ba8-bb78-460d-90a7-738a6c56ac89",
+        "Type": "Geometry"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\rudder\\dadg_ws_kogge_rudder_v1_geo.tpac",
+    "PackageGuid": "25e5912a-949c-4c02-ac34-a916cf82cdfa",
+    "Assets": [
+      {
+        "Name": "dadg_ws_kogge_rudder_v1",
+        "Guid": "ce2ce47d-bb30-40ad-903f-431f4f0fe345",
+        "Type": "Metamesh"
+      },
+      {
+        "Name": "dadg_ws_kogge_rudder_v1.fbx",
+        "Guid": "eb7862d6-0758-4d79-b53b-f1312c5a6ef6",
+        "Type": "Geometry"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dadg_fine_plank_a_tex.tpac",
+    "PackageGuid": "1002415f-ef3b-411d-bc19-091a12e6548d",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dadg_fine_plank_a",
+        "Guid": "06f15b19-5dcd-4b49-b55e-76218f936bb7",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dadg_fine_plank_b_tex.tpac",
+    "PackageGuid": "00eba358-f7ce-4169-8186-2942c41471a8",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dadg_fine_plank_b",
+        "Guid": "acc4ddd2-a66a-4d0a-a4cd-72073fdc66e4",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_light_wooden_planks_d_tex.tpac",
+    "PackageGuid": "0e2076ff-2d54-4f90-9c01-36b755fa4f86",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_light_wooden_planks_d",
+        "Guid": "49cbefa6-a099-4ae5-901c-e88d3357b8ac",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_light_wooden_planks_n_tex.tpac",
+    "PackageGuid": "da772979-e160-4471-bf52-f3619346a161",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_light_wooden_planks_n",
+        "Guid": "59777cb7-613a-4182-b0f8-c7039eba6e78",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_rich_wood_d_tex.tpac",
+    "PackageGuid": "7f39dd8c-b367-4c86-94c2-cdbf62d3d246",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_rich_wood_d",
+        "Guid": "4bf5d5d6-8cf8-467a-8d02-6de81e7f00c1",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_rich_wood_n_tex.tpac",
+    "PackageGuid": "d834c186-41a3-4e6e-913f-f9272f2a3cb5",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_rich_wood_n",
+        "Guid": "a5b1c5aa-a72a-4ba3-95fa-54a05a2e262e",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_rich_wood_s_tex.tpac",
+    "PackageGuid": "2d0f0f4a-840a-4c9a-865e-81c515794674",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_rich_wood_s",
+        "Guid": "838b9fee-9fd7-47f0-bcac-2dc152d6face",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_shields_d_tex.tpac",
+    "PackageGuid": "8228652f-def4-445b-b044-f1569d285f9c",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_shields_d",
+        "Guid": "074197a2-a418-480a-9143-7f01668523e0",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_shields_n_tex.tpac",
+    "PackageGuid": "a6cf6134-4188-4da3-9c3e-85d7a06d7576",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_shields_n",
+        "Guid": "1fe60829-8dbd-4682-b0fe-ec9c43ab7b38",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_wooden_planks_d_tex.tpac",
+    "PackageGuid": "d6d6f474-26dc-4d69-adb0-4a0ea1dcb1f1",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_wooden_planks_d",
+        "Guid": "2d8a0807-c3ae-4bd6-8007-ffbe3700d76b",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_dawa_wooden_planks_n_tex.tpac",
+    "PackageGuid": "3aa3ea8b-4f0e-482f-a410-873e3d68f634",
+    "Assets": [
+      {
+        "Name": "dadg_ws_dawa_wooden_planks_n",
+        "Guid": "5783fbee-a036-4889-8816-f38a6f67963e",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_mow_sails_plain_d_tex.tpac",
+    "PackageGuid": "222a0411-2ad7-4796-946e-0dd3879b0fef",
+    "Assets": [
+      {
+        "Name": "dadg_ws_mow_sails_plain_d",
+        "Guid": "bf006501-abdb-4c07-915d-48db297a6260",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_mow_sails_plain_n_tex.tpac",
+    "PackageGuid": "4c6d35ad-1e50-4a35-a42d-782224fe0dce",
+    "Assets": [
+      {
+        "Name": "dadg_ws_mow_sails_plain_n",
+        "Guid": "ca405ec7-f0c5-404c-a6a9-0a6f8e339611",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_mow_sails_plain_s_tex.tpac",
+    "PackageGuid": "d9dbd67e-19d8-4771-8011-6a524be8907f",
+    "Assets": [
+      {
+        "Name": "dadg_ws_mow_sails_plain_s",
+        "Guid": "476b04eb-cad8-428b-b7f6-572516e0278b",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sail_heraldry_d_tex.tpac",
+    "PackageGuid": "57e5b551-05a9-408e-8f42-7ab80f359c89",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sail_heraldry_d",
+        "Guid": "335275c2-103c-4de6-bb4f-8f3bfa63d6f6",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sail_heraldry_n_tex.tpac",
+    "PackageGuid": "a758e202-e80d-40ac-a5cb-645c87d90153",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sail_heraldry_n",
+        "Guid": "795d14b1-6b5f-4274-9c89-3dec6ccb3fb2",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sho_rope_d_tex.tpac",
+    "PackageGuid": "49197a94-4dbf-424b-a335-b37ac1a9afe8",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sho_rope_d",
+        "Guid": "c6d0b848-4134-461c-8b36-703ee16605ae",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sho_rope_n_tex.tpac",
+    "PackageGuid": "4aabdcd9-604e-4a38-89ef-1faef3d1c01e",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sho_rope_n",
+        "Guid": "ed41628e-c7a0-48a7-9d7e-06dac2849c10",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_sho_rope_s_tex.tpac",
+    "PackageGuid": "d04f5b60-7ab3-4cf2-a3dd-7699c706f053",
+    "Assets": [
+      {
+        "Name": "dadg_ws_sho_rope_s",
+        "Guid": "7713af7c-3320-48f2-9d98-135a72b844b5",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_window_low_carrack_s_tex.tpac",
+    "PackageGuid": "83341baa-ec3a-4471-88f4-85c631b0fa41",
+    "Assets": [
+      {
+        "Name": "dadg_ws_window_low_carrack_s",
+        "Guid": "4872a4da-40a7-46a6-8ea9-9421cc9ed70e",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_window_low_carrack_window_BaseColor_tex.tpac",
+    "PackageGuid": "2406c052-14da-44fd-8f4f-c32d6b74b547",
+    "Assets": [
+      {
+        "Name": "dadg_ws_window_low_carrack_window_basecolor",
+        "Guid": "a9da8120-6843-4581-8571-cf8811ab0945",
+        "Type": "Texture"
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets\\dadg_warsails\\textures\\dadg_ws_window_low_carrack_window_NormalOpenGL_tex.tpac",
+    "PackageGuid": "e607c94b-a733-424a-8964-fb58b9dc754f",
+    "Assets": [
+      {
+        "Name": "dadg_ws_window_low_carrack_window_normalopengl",
+        "Guid": "51d804af-50a3-4bc5-b9cd-85028c28218b",
+        "Type": "Texture"
+      }
+    ]
+  }
+]

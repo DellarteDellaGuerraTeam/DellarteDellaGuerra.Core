@@ -1,0 +1,170 @@
+[
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets/dadg_warsails/rudder\\dadg_ws_carrack_body_no_rudder_v1_geo.tpac",
+    "PackageGuid": "7e89fe5f-9829-488f-a483-c71a35c7a4ae",
+    "Name": "dadg_ws_carrack_body_no_rudder_v1",
+    "Guid": "6a5d0d49-a875-4780-a316-f3a0515e32af",
+    "Meshes": [
+      {
+        "Name": "dadg_ws_carrack_body_no_rudder_v1.0",
+        "Guid": "a8e83e4f-0df7-4b30-9821-350733bec3aa",
+        "VertexCount": 51753
+      },
+      {
+        "Name": "dadg_ws_carrack_body_no_rudder_v1.1",
+        "Guid": "8c6ae0df-a071-4045-999a-c83869d646bc",
+        "VertexCount": 3278
+      },
+      {
+        "Name": "dadg_ws_carrack_body_no_rudder_v1.2",
+        "Guid": "0e4bbc23-ca6c-4796-9be4-5fcd9b3c0f04",
+        "VertexCount": 4731
+      },
+      {
+        "Name": "dadg_ws_carrack_body_no_rudder_v1.3",
+        "Guid": "45418177-b08d-47c2-b868-ff1358c8ded2",
+        "VertexCount": 296
+      },
+      {
+        "Name": "dadg_ws_carrack_body_no_rudder_v1.4",
+        "Guid": "75c3dad9-4105-4ac5-9027-81758cb44e32",
+        "VertexCount": 25152
+      },
+      {
+        "Name": "dadg_ws_carrack_body_no_rudder_v1.5",
+        "Guid": "9ff47fa5-8991-42c6-b38f-05694d03d20a",
+        "VertexCount": 3486
+      },
+      {
+        "Name": "dadg_ws_carrack_body_no_rudder_v1.6",
+        "Guid": "640d4161-5193-4806-a233-d96df38562ad",
+        "VertexCount": 53129
+      },
+      {
+        "Name": "dadg_ws_carrack_body_no_rudder_v1.7",
+        "Guid": "cbde9205-e578-40f9-8857-590c3592c6d3",
+        "VertexCount": 3876
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets/dadg_warsails/rudder\\dadg_ws_carrack_rudder_v1_geo.tpac",
+    "PackageGuid": "a84a393f-7c22-4dbf-b008-abdeec442901",
+    "Name": "dadg_ws_carrack_rudder_v1",
+    "Guid": "77d98f74-fed1-4647-a8fc-6aca068aa859",
+    "Meshes": [
+      {
+        "Name": "dadg_ws_carrack_rudder_v1",
+        "Guid": "a833d095-e527-42bb-84a7-5d7bef24b03b",
+        "VertexCount": 284
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets/dadg_warsails/rudder\\dadg_ws_english_boat_b_body_no_rudder_v1_geo.tpac",
+    "PackageGuid": "9330a6e5-6557-4a0b-b7db-225826df059b",
+    "Name": "dadg_ws_english_boat_b_body_no_rudder_v1",
+    "Guid": "f34fe96e-4947-4c72-b3a8-19fcd07721b1",
+    "Meshes": [
+      {
+        "Name": "dadg_ws_english_boat_b_body_no_rudder_v1.0",
+        "Guid": "d0205d23-ad06-44f9-bef7-e5ada1e671c6",
+        "VertexCount": 552
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_body_no_rudder_v1.1",
+        "Guid": "fd4f451e-5b42-4903-ae32-2c936bb577d6",
+        "VertexCount": 400
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_body_no_rudder_v1.2",
+        "Guid": "09d95090-c766-411b-b9b8-d704e8d9162e",
+        "VertexCount": 96
+      },
+      {
+        "Name": "dadg_ws_english_boat_b_body_no_rudder_v1.3",
+        "Guid": "271a0eb9-ee19-4058-b73e-b0cf12a52186",
+        "VertexCount": 48
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets/dadg_warsails/rudder\\dadg_ws_english_boat_b_rudder_v1_geo.tpac",
+    "PackageGuid": "0bdcee3f-aa5d-4aa0-949d-1e0b120a0d17",
+    "Name": "dadg_ws_english_boat_b_rudder_v1",
+    "Guid": "c460926f-749b-4545-bca7-16f2b27127bf",
+    "Meshes": [
+      {
+        "Name": "dadg_ws_english_boat_b_rudder_v1",
+        "Guid": "363bfb15-7935-47f5-a57e-5cd966fa0255",
+        "VertexCount": 60
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets/dadg_warsails/rudder\\dadg_ws_kogge_body_no_rudder_v1_geo.tpac",
+    "PackageGuid": "568b6a7e-e27b-4ea4-a789-9bb0c3cadbb1",
+    "Name": "dadg_ws_kogge_body_no_rudder_v1",
+    "Guid": "cc25ba90-8105-4bac-8958-35ebc2a702aa",
+    "Meshes": [
+      {
+        "Name": "dadg_ws_kogge_body_no_rudder_v1.0",
+        "Guid": "1368d641-7ab4-4c95-8a15-f96a9e08373a",
+        "VertexCount": 15636
+      },
+      {
+        "Name": "dadg_ws_kogge_body_no_rudder_v1.1",
+        "Guid": "435767d8-be83-4309-a6c8-113565aeb389",
+        "VertexCount": 17197
+      },
+      {
+        "Name": "dadg_ws_kogge_body_no_rudder_v1.2",
+        "Guid": "2f04e4b8-09b2-442d-a249-19194e3e7829",
+        "VertexCount": 3060
+      },
+      {
+        "Name": "dadg_ws_kogge_body_no_rudder_v1.3",
+        "Guid": "65868ae3-cc55-492c-9a3e-cc1b11c84dd0",
+        "VertexCount": 3888
+      },
+      {
+        "Name": "dadg_ws_kogge_body_no_rudder_v1.4",
+        "Guid": "31d6cd71-9d5d-46b0-b0d0-1dfca00c6b64",
+        "VertexCount": 588
+      },
+      {
+        "Name": "dadg_ws_kogge_body_no_rudder_v1.5",
+        "Guid": "720f452c-4e93-4458-9458-3b457bb73285",
+        "VertexCount": 4
+      },
+      {
+        "Name": "dadg_ws_kogge_body_no_rudder_v1.6",
+        "Guid": "3609bf3e-6833-424a-9f83-5a1187dd3f09",
+        "VertexCount": 11180
+      },
+      {
+        "Name": "dadg_ws_kogge_body_no_rudder_v1.7",
+        "Guid": "cc9872d9-5b2b-4caf-a799-3fa0e279de5e",
+        "VertexCount": 3939
+      }
+    ]
+  },
+  {
+    "Package": "D:/SteamLibrary/steamapps/common/Mount \u0026 Blade II Bannerlord-v1.4/Modules/DellarteDellaGuerraMap/Assets/dadg_warsails/rudder\\dadg_ws_kogge_rudder_v1_geo.tpac",
+    "PackageGuid": "25e5912a-949c-4c02-ac34-a916cf82cdfa",
+    "Name": "dadg_ws_kogge_rudder_v1",
+    "Guid": "ce2ce47d-bb30-40ad-903f-431f4f0fe345",
+    "Meshes": [
+      {
+        "Name": "dadg_ws_kogge_rudder_v1.0",
+        "Guid": "7b0653ca-e78c-4ecf-9228-31cac30f2838",
+        "VertexCount": 127
+      },
+      {
+        "Name": "dadg_ws_kogge_rudder_v1.1",
+        "Guid": "22f36dfa-4fb3-45fe-97b9-9cbf09cba6ef",
+        "VertexCount": 772
+      }
+    ]
+  }
+]
