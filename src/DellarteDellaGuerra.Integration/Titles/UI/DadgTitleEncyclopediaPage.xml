@@ -74,7 +74,7 @@
                                     </Widget>
                                   </ItemTemplate>
                                 </NavigatableGridWidget>
-                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="25" MarginRight="25" MarginTop="20" Brush="Encyclopedia.SubPage.Info.Text" Text="@OccupancyText" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="25" MarginRight="25" MarginTop="20" Brush="Encyclopedia.SubPage.Info.Text" Text="@OccupancyText" IsVisible="@HasOccupancyText" />
                                 <EncyclopediaDivider Id="SettlementsDivider" MarginTop="35" Parameter.Title="@SettlementsText" Parameter.ItemList="..\SettlementsGrid" />
                                 <NavigatableGridWidget Id="SettlementsGrid" DataSource="{Settlements}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" SuggestedWidth="350" SuggestedHeight="350" HorizontalAlignment="Left" MarginTop="5" DefaultCellWidth="100" DefaultCellHeight="140" ColumnCount="7" MarginLeft="20" MarginBottom="50">
                                   <ItemTemplate>

@@ -101,7 +101,7 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
         SettlementImageID = seat?.SettlementComponent?.WaitMeshName ?? "";
         HasSeatImage = SettlementImageID.Length > 0;
         SeatText = seat is null ? "No single seat" : "Seat: " + seat.Name;
-        OccupancyText = entry.IsLocalTerritory ? "The towns and castles of this territory are listed with their present owners."
+        OccupancyText = entry.IsLocalTerritory ? ""
             : title?.OccupantClanId is { } occupant
             ? "The seat is occupied by " + (FindClan(occupant)?.Name.ToString() ?? occupant) + ". The recognised holder retains the title."
             : "The actual domain includes controlled holdings and attached vassals.";
@@ -144,6 +144,7 @@ public sealed class TitleEncyclopediaPageVM : EncyclopediaContentPageVM
     [DataSourceProperty] public HeroVM? Holder { get; }
     [DataSourceProperty] public bool HasHolder { get; }
     [DataSourceProperty] public string OccupancyText { get; } = "";
+    [DataSourceProperty] public bool HasOccupancyText => OccupancyText.Length > 0;
     [DataSourceProperty] public string HolderText { get; } = "";
     [DataSourceProperty] public string SettlementsText { get; } = "";
     [DataSourceProperty] public string ClaimsText { get; } = "";
