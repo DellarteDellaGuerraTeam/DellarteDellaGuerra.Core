@@ -50,8 +50,8 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap
                 }
                 else if (selection.View == PoliticalMapView.DeJure
                     || selection.View == PoliticalMapView.Owners && selection.Mode == PoliticalMapLabelMode.Titles)
-                    TitleEncyclopediaEntry.Open(selection.Key, selection.View == PoliticalMapView.Owners
-                        && selection.Level == PoliticalMapOwnerLevel.SubVassals);
+                    TitleEncyclopediaEntry.Open(selection.Key, localTerritory: selection.View == PoliticalMapView.DeJure
+                        || selection.Level == PoliticalMapOwnerLevel.SubVassals);
                 else
                 {
                     IFaction? faction = selection.View == PoliticalMapView.Kingdom

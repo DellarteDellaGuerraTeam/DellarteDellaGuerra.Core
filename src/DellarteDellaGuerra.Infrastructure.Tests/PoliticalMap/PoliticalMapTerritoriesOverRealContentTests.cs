@@ -59,6 +59,7 @@ public class PoliticalMapTerritoriesOverRealContentTests
     [InlineData("Pembroke_town", PoliticalMapOwnerLevel.SubVassals, "county_pembroke", "Earldom of Pembroke")]
     [InlineData("Exeter_town", PoliticalMapOwnerLevel.Vassals, "region_western_circuit", "Western Circuit")]
     [InlineData("Exeter_town", PoliticalMapOwnerLevel.SubVassals, "shire_devon", "Devon")]
+    [InlineData("Newcastle_upon_Tyne_town", PoliticalMapOwnerLevel.SubVassals, "county_westmorland", "Borough of Newcastle upon Tyne")]
     [InlineData("dadg_sco_dumfries_town", PoliticalMapOwnerLevel.Vassals, "region_scottish_marches", "Scottish Marches")]
     [InlineData("dadg_sco_dumfries_town", PoliticalMapOwnerLevel.SubVassals, "shire_dumfries", "Sheriffdom of Dumfries")]
     [InlineData("dadg_sco_hermitage_castle", PoliticalMapOwnerLevel.Vassals, "region_scottish_marches", "Scottish Marches")]

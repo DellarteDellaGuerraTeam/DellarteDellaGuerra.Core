@@ -4,6 +4,18 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap
 {
     public class PoliticalMapGridBuilderTests
     {
+        [Theory]
+        [InlineData(5.2f)]
+        [InlineData(5.0f)]
+        public void AdjacentSettlementsKeepTheCellsTheyStandIn(float eastX)
+        {
+            var terrain = new PoliticalMapHeightField(2, new ushort[4], 20, 20, 12);
+            var grid = PoliticalMapGridBuilder.Build(terrain, new[] { Seed("west", 4.8f, 5.2f), Seed("east", eastX, 5.2f) });
+
+            Assert.Equal("west", grid.SettlementAt(4.8f, 5.2f));
+            Assert.Equal("east", grid.SettlementAt(eastX, 5.2f));
+        }
+
         [Fact]
         public void LandGoesToTheNearestSettlementAndWaterToNone()
         {

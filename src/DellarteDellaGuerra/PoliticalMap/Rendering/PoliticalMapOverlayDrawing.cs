@@ -74,18 +74,17 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             RefreshSelectionLayers();
         }
 
+        public (string SettlementId, string? Key)? HitTest(float x, float y) =>
+            _visible && _shown is { } shown ? _layers[shown].DisplayedFrontiers?.HitTest(x, y) : null;
+
         public void SelectAt(float x, float y)
         {
             if (!_visible || _shown is not { } shown) return;
-            PoliticalMapSettlementPaint[] paints = Paint(shown);
-            string?[] keys = _painter.LabelKeysOf(shown.View, shown.Mode, Grid.SettlementIds, paints, _world, shown.Level);
-            string? settlement = Grid.SettlementAt(x, y);
-            int index = settlement is null ? -1 : Array.IndexOf(Grid.SettlementIds.ToArray(), settlement);
-            string? key = index >= 0 && paints[index].Fill != 0 ? keys[index] : null;
-            PoliticalMapSelection? selection = key is null ? null : new(shown.View, shown.Level, shown.Mode, key);
+            var hit = HitTest(x, y);
+            PoliticalMapSelection? selection = hit?.Key is { } key ? new(shown.View, shown.Level, shown.Mode, key) : null;
+            _selectedSettlementId = selection is null ? null : hit?.SettlementId;
             if (Selection == selection) return;
             Selection = selection;
-            _selectedSettlementId = selection is null ? null : settlement;
             RefreshSelectionLayers();
         }
 

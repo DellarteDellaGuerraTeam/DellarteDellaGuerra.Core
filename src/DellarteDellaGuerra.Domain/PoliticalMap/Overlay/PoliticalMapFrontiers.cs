@@ -1,19 +1,24 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DellarteDellaGuerra.Domain.PoliticalMap.Grid;
 
 namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
 {
     /// <summary>One shared, relaxed boundary network for all paints, independent of terrain blocks.</summary>
-    internal sealed class PoliticalMapFrontiers
+    public sealed class PoliticalMapFrontiers
     {
         internal const int Iterations = 16;
         private const float MaxOffset = 0.49f;
         private readonly int _stride;
         private readonly PoliticalMapPoint[] _offsets;
+        private readonly PoliticalMapGrid _grid;
+        private readonly PoliticalMapSettlementPaint[] _paints;
 
         internal PoliticalMapFrontiers(PoliticalMapGrid grid, IReadOnlyList<PoliticalMapSettlementPaint> paints)
         {
+            _grid = grid;
+            _paints = paints.ToArray();
             _stride = grid.Width + 1;
             _offsets = new PoliticalMapPoint[_stride * (grid.Height + 1)];
             var next = new PoliticalMapPoint[_offsets.Length];
@@ -75,13 +80,55 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         internal PoliticalMapPoint At(int vertex) => new(vertex % _stride + _offsets[vertex].Column,
             vertex / _stride + _offsets[vertex].Row);
 
+        internal bool Matches(IReadOnlyList<PoliticalMapSettlementPaint> paints)
+        {
+            if (_paints.Length != paints.Count) return false;
+            for (int i = 0; i < paints.Count; i++)
+                if (!_paints[i].HasSameGeometry(paints[i])) return false;
+            return true;
+        }
+
+        /// <summary>Finds the painted settlement and political identity in this mesh revision.</summary>
+        public (string SettlementId, string? Key)? HitTest(float x, float y)
+        {
+            var point = new PoliticalMapPoint(x / _grid.CellSize, y / _grid.CellSize);
+            if (!(point.Column >= 0 && point.Column < _grid.Width && point.Row >= 0 && point.Row < _grid.Height))
+                return null;
+
+            int column = (int)point.Column, row = (int)point.Row;
+            // Smoothing moves each corner less than half a cell. Only the eight neighbours can overlap.
+            if (HitCell(column, row) is { } centre) return centre;
+            for (int r = Math.Max(0, row - 1); r <= Math.Min(_grid.Height - 1, row + 1); r++)
+            for (int c = Math.Max(0, column - 1); c <= Math.Min(_grid.Width - 1, column + 1); c++)
+                if ((r != row || c != column) && HitCell(c, r) is { } hit) return hit;
+            return null;
+
+            (string, string?)? HitCell(int cellColumn, int cellRow)
+            {
+                int index = _grid.At(cellColumn, cellRow) - 1;
+                if (index < 0 || _paints[index].Fill == 0) return null;
+                int vertex = cellRow * _stride + cellColumn;
+                PoliticalMapPoint a = At(vertex), b = At(vertex + 1), c = At(vertex + _stride + 1), d = At(vertex + _stride);
+                bool inside = UsesFirstDiagonal(a, b, c, d)
+                    ? InsideTriangle(a, b, c, point) || InsideTriangle(a, c, d, point)
+                    : InsideTriangle(a, b, d, point) || InsideTriangle(b, c, d, point);
+                return inside ? (_grid.SettlementIds[index], _paints[index].FrontierKey) : null;
+            }
+        }
+
+        private static bool InsideTriangle(PoliticalMapPoint a, PoliticalMapPoint b, PoliticalMapPoint c, PoliticalMapPoint point) =>
+            Cross(a, b, point) >= 0 && Cross(b, c, point) >= 0 && Cross(c, a, point) >= 0;
+
+        private static bool UsesFirstDiagonal(PoliticalMapPoint a, PoliticalMapPoint b, PoliticalMapPoint c, PoliticalMapPoint d) =>
+            Cross(a, b, c) > 0 && Cross(a, c, d) > 0;
+
         internal bool AddCell(List<PoliticalMapTriangle> triangles, int column, int row, uint color)
         {
             int vertex = row * _stride + column;
             if (!Moved(vertex) && !Moved(vertex + 1) && !Moved(vertex + _stride) && !Moved(vertex + _stride + 1)) return false;
             if (color == 0) return true;
             PoliticalMapPoint a = At(vertex), b = At(vertex + 1), c = At(vertex + _stride + 1), d = At(vertex + _stride);
-            if (Cross(a, b, c) > 0 && Cross(a, c, d) > 0)
+            if (UsesFirstDiagonal(a, b, c, d))
             {
                 AddTriangle(triangles, a, b, c, color);
                 AddTriangle(triangles, a, c, d, color);
