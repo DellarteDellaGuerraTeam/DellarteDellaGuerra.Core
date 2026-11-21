@@ -152,6 +152,18 @@ public class PoliticalMapTitleDomainsTests
     }
 
     [Fact]
+    public void ASettlementFallbackStillListsItsLocalTitleAndBoundVillage()
+    {
+        _world.Owners["pembroke_seat"] = "untitled_owner";
+        var domains = Domains();
+        Assert.Equal("settlement:pembroke_seat", domains.KeyOf("pembroke_seat", PoliticalMapOwnerLevel.SubVassals));
+        Assert.True(domains.ContainsLocal("pembroke", "pembroke_seat"));
+        Assert.True(domains.ContainsLocal("pembroke", "village"));
+        Assert.False(domains.ContainsLocal("duchy", "pembroke_seat"));
+        Assert.False(domains.ContainsLocal("pembroke", "outsider_seat"));
+    }
+
+    [Fact]
     public void OverviewClickOnACastleWhoseOwnerHasNoTitleHighlightsItsBoundVillageToo()
     {
         _world.Owners["pembroke_seat"] = "untitled_owner";
