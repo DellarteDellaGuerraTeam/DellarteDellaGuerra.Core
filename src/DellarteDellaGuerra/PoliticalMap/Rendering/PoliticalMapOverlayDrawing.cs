@@ -61,7 +61,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         public PoliticalMapGrid Grid { get; }
         public IReadOnlyDictionary<string, string> Folds { get; }
         public int TerritoryCount { get; }
-        public PoliticalMapView DisplayedView => _visible && _shown is { } shown ? shown.View : PoliticalMapView.Off;
+        public PoliticalMapView DisplayedView => _visible && PoliticalMapZoom.ShowsWash(_band) && _shown is { } shown ? shown.View : PoliticalMapView.Off;
         public PoliticalMapOwnerLevel DisplayedOwnerLevel => _shown?.Level ?? _cameraLevel;
         public PoliticalMapLabelMode DisplayedLabelMode => _shown?.Mode ?? PoliticalMapLabelMode.Clans;
         public PoliticalMapSelection? Selection { get; private set; }
@@ -75,11 +75,11 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         }
 
         public (string SettlementId, string? Key)? HitTest(float x, float y) =>
-            _visible && _shown is { } shown ? _layers[shown].DisplayedFrontiers?.HitTest(x, y) : null;
+            DisplayedView != PoliticalMapView.Off && _shown is { } shown ? _layers[shown].DisplayedFrontiers?.HitTest(x, y) : null;
 
         public void SelectAt(float x, float y)
         {
-            if (!_visible || _shown is not { } shown) return;
+            if (DisplayedView == PoliticalMapView.Off || _shown is not { } shown) return;
             var hit = HitTest(x, y);
             PoliticalMapSelection? selection = hit?.Key is { } key ? new(shown.View, shown.Level, shown.Mode, key) : null;
             _selectedSettlementId = selection is null ? null : hit?.SettlementId;
