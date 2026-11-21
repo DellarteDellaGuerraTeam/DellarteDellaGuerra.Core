@@ -24,8 +24,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         private readonly Dictionary<string, List<int>> _cellsByTerritory = new();
         private readonly IReadOnlyList<string> _territoryOfSettlement;
         public const int SmoothingReach = PoliticalMapFrontiers.Iterations + 2;
-        private PoliticalMapFrontiers? _frontiers;
-        private PoliticalMapSettlementPaint[] _frontierPaints = Array.Empty<PoliticalMapSettlementPaint>();
+        public PoliticalMapFrontiers? Frontiers { get; private set; }
         private Dictionary<string, List<PoliticalMapTriangle>> _strokes = new();
 
         /// <param name="grid">The settlement grid.</param>
@@ -79,7 +78,7 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
                 int column = index % width, row = index / width;
                 PoliticalMapSettlementPaint paint = paints[_grid.Cells[index] - 1];
                 uint color = paint.Hatch != 0 && (column + row) / 4 % 2 == 1 ? paint.Hatch : paint.Fill;
-                if (!_frontiers!.AddCell(triangles, column, row, color)) fill[box.Local(column, row)] = color;
+                if (!Frontiers!.AddCell(triangles, column, row, color)) fill[box.Local(column, row)] = color;
             }
 
             PoliticalMapQuadPacker.AddChunks(chunks, PoliticalMapQuadPacker.Rectangles(fill, box), triangles);
@@ -94,15 +93,10 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
 
         private void UpdateFrontiers(IReadOnlyList<PoliticalMapSettlementPaint> paints)
         {
-            bool changed = _frontiers is null || _frontierPaints.Length != paints.Count;
-            for (int i = 0; !changed && i < paints.Count; i++)
-                changed = !_frontierPaints[i].HasSameGeometry(paints[i]);
-            if (!changed) return;
-
-            _frontiers = new PoliticalMapFrontiers(_grid, paints);
-            _strokes = PoliticalMapFrontierStrokes.Build(_grid, paints, _territoryOfSettlement, _frontiers);
-            _frontierPaints = new PoliticalMapSettlementPaint[paints.Count];
-            for (int i = 0; i < paints.Count; i++) _frontierPaints[i] = paints[i];
+            if (Frontiers?.Matches(paints) == true) return;
+            var frontiers = new PoliticalMapFrontiers(_grid, paints);
+            _strokes = PoliticalMapFrontierStrokes.Build(_grid, paints, _territoryOfSettlement, frontiers);
+            Frontiers = frontiers;
         }
     }
 }

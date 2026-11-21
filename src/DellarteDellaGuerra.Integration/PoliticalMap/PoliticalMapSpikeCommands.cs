@@ -280,9 +280,8 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap
         {
             TaleWorlds.Engine.Scene? scene = MapSceneOrNull();
             var grids = Campaign.Current?.GetCampaignBehavior<DellarteDellaGuerra.PoliticalMap.Api.Campaign.PoliticalMapGridCampaignBehavior>();
-            DellarteDellaGuerra.Domain.PoliticalMap.Overlay.PoliticalMapSheet? sheet = grids?.Sheet;
-            DellarteDellaGuerra.Domain.PoliticalMap.Grid.PoliticalMapGrid? grid = grids?.Grid;
-            if (scene is null || sheet is null || grid is null) return "Open the campaign map once the grid is built.";
+            if (scene is null || grids?.Surface is not { } surface) return "Open the campaign map once the grid is built.";
+            var (grid, sheet) = surface;
 
             int count = args.Count > 0 ? int.Parse(args[0], CultureInfo.InvariantCulture) : 20000;
             var random = new Random(1);

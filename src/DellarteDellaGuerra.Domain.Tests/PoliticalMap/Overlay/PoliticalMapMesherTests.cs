@@ -31,6 +31,43 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
         };
 
         [Fact]
+        public void PickingFollowsTheRoundedIslandCornerAndTheCommittedOwner()
+        {
+            var cells = new ushort[100];
+            for (int row = 3; row < 7; row++)
+            for (int column = 3; column < 7; column++) cells[row * 10 + column] = 1;
+            var grid = new PoliticalMapGrid(10, 10, 2f, new[] { "island" }, cells);
+            var mesher = new PoliticalMapMesher(grid, grid.SettlementIds);
+            var paints = new[] { new PoliticalMapSettlementPaint(Red, 0, null, null, "old_kingdom") };
+            mesher.Build("island", paints);
+            var displayed = mesher.Frontiers!;
+
+            Assert.Equal("island", grid.SettlementAt(6.1f, 6.1f));
+            Assert.Null(displayed.HitTest(6.1f, 6.1f));
+            paints[0] = paints[0] with { RealmKey = "new_kingdom" };
+            mesher.Build("island", paints);
+            Assert.Equal(("island", "old_kingdom"), displayed.HitTest(7, 7));
+            Assert.Equal(("island", "new_kingdom"), mesher.Frontiers!.HitTest(7, 7));
+        }
+
+        [Fact]
+        public void PickingASmoothedLandBorderFindsTheNeighbouringRegionsFill()
+        {
+            var cells = Enumerable.Repeat((ushort)2, 100).ToArray();
+            for (int row = 3; row < 7; row++)
+            for (int column = 3; column < 7; column++) cells[row * 10 + column] = 1;
+            var grid = new PoliticalMapGrid(10, 10, 1f, new[] { "enclave", "surrounds" }, cells);
+            var mesher = new PoliticalMapMesher(grid, grid.SettlementIds);
+            var paints = new[] {
+                new PoliticalMapSettlementPaint(Red, 0, null, null, null, "inner"),
+                new PoliticalMapSettlementPaint(Red, 0, null, null, null, "outer")
+            };
+            mesher.Build("enclave", paints);
+            Assert.Equal(("surrounds", "outer"), mesher.Frontiers!.HitTest(3.05f, 3.05f));
+            Assert.Equal(("enclave", "inner"), mesher.Frontiers.HitTest(3.5f, 3.5f));
+        }
+
+        [Fact]
         public void FrontierStrokesAreSeparateFromTheUnchangedTerritoryFill()
         {
             IReadOnlyList<PoliticalMapMeshChunk> chunks = Mesher(TwoHalves()).Build("county_west", Paints("r1", "r2"));

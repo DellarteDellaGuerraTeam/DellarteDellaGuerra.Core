@@ -255,15 +255,14 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             sceneView.TranslateMouse(ref near, ref far, -1f);
             if (!mapScreen.MapScene.RayCastForClosestEntityOrTerrain(near, far, out float _, out Vec3 point, 0.01f, CursorRayExcludeFlags)) return null;
 
-            if (_drawing!.Grid.SettlementAt(point.x, point.y) is not { } settlementId) return null;
-            return _hoverDescriber.Describe(DisplayedView, settlementId, _world, _world, DisplayedOwnerLevel);
+            if (_drawing!.HitTest(point.x, point.y) is not { } hit) return null;
+            return _hoverDescriber.Describe(DisplayedView, hit.SettlementId, _world, _world, DisplayedOwnerLevel);
         }
 
         private bool TryInitialise(MapScreen mapScreen)
         {
-            PoliticalMapGrid? grid = _gridBehavior.Grid;
-            PoliticalMapSheet? sheet = _gridBehavior.Sheet;
-            if (grid is null || sheet is null) return false;
+            if (_gridBehavior.Surface is not { } surface) return false;
+            var (grid, sheet) = surface;
             if (_failedInitialisation is { } failed && failed.Scene == mapScreen.MapScene && failed.Grid == grid)
                 return false;
 

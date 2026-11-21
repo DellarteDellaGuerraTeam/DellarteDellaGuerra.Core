@@ -40,6 +40,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
         }
 
         public bool IsReady => _plan.IsReady;
+        public PoliticalMapFrontiers? DisplayedFrontiers { get; private set; }
         public void SetVisibility(PoliticalMapZoomBand band, bool visible) => _renderer.SetVisibility(band, visible);
 
         public void Repaint(PoliticalMapSettlementPaint[] paints)
@@ -115,6 +116,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Rendering
             {
                 // All neighbours swap together; an empty territory loses its old mesh too.
                 foreach (string territory in _uploadRequest!.Territories) _renderer.Commit(territory);
+                DisplayedFrontiers = _mesher.Frontiers;
                 _plan.Complete(_uploadRequest);
                 _meshes = null;
                 _uploadRequest = null;

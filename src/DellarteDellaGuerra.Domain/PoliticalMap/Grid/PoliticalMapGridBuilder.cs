@@ -44,7 +44,9 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Grid
             bool[] land = LandMask(terrain, side, cellSize, seaLevel);
             int bridge = Math.Max(1, (int)Math.Round(riverBridge / cellSize / 2, MidpointRounding.ToEven));
             bool[] landmass = Close(land, side, bridge);
-            int[] owner = AssignOverLand(landmass, side, seeds.Select(seed => NearestCell(landmass, side, seed.Y / cellSize, seed.X / cellSize)));
+            // NearestCell measures distance to integer indices. Index (0, 0) denotes the first cell centre.
+            int[] owner = AssignOverLand(landmass, side, seeds.Select(seed =>
+                NearestCell(landmass, side, seed.Y / cellSize - 0.5, seed.X / cellSize - 0.5)));
 
             var cells = new ushort[side * side];
             for (int cell = 0; cell < cells.Length; cell++)
@@ -112,8 +114,8 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Grid
         /// </summary>
         private static int NearestCell(bool[] landmass, int side, double row, double column)
         {
-            int centreRow = (int)Math.Round(row);
-            int centreColumn = (int)Math.Round(column);
+            int centreRow = (int)Math.Floor(row + 0.5);
+            int centreColumn = (int)Math.Floor(column + 0.5);
             int best = -1;
             double bestDistance = double.MaxValue;
 
