@@ -3,6 +3,7 @@ using DellarteDellaGuerra.Domain.Common.Logging.Port;
 using DellarteDellaGuerra.PoliticalMap.Labels;
 using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
+using SandBox.ViewModelCollection;
 using SandBox.ViewModelCollection.Nameplate;
 using TaleWorlds.Library;
 
@@ -11,7 +12,7 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap
     /// <summary>
     /// Hides the settlement nameplates while the political map names its regions
     /// (<see cref="PoliticalMapNameplates"/>), by answering "not visible" from the nameplate's own
-    /// per-frame visibility check. Settlements under siege or raid and hideouts keep theirs,
+    /// per-frame visibility check. Settlements under siege and hideouts keep theirs,
     /// unless bookmarked; bookmark state itself is unchanged.
     /// </summary>
     /// <remarks>
@@ -44,7 +45,9 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap
         private static void Postfix(SettlementNameplateVM __instance, ref bool __result)
         {
             if (!__result || !PoliticalMapNameplates.HideNativeOverlays) return;
-            if (!__instance.IsTracked && (__instance.MapEventVisualType != 0 || __instance.Settlement.IsHideout)) return;
+            var mapEvent = (SandBoxUIHelper.MapEventVisualTypes)__instance.MapEventVisualType;
+            if (!__instance.IsTracked && (__instance.Settlement.IsHideout ||
+                mapEvent is not (SandBoxUIHelper.MapEventVisualTypes.None or SandBoxUIHelper.MapEventVisualTypes.Raid))) return;
 
             __result = false;
         }

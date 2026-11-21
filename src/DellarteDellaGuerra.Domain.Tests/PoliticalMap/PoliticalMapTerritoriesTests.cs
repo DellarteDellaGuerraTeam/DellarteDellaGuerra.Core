@@ -24,6 +24,13 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap
 
         private PoliticalMapTerritories Territories() => new(_structure, _titles);
 
+        [Fact]
+        public void CyclicParentageWithoutACountyKeepsTheSeatsOwnTerritory()
+        {
+            _structure.Reattach("duchy_lancaster", "barony_clitheroe");
+            Assert.Equal("barony_clitheroe", Territories().GetTerritoryOfSeat("castle_clitheroe"));
+        }
+
         [Theory]
         [InlineData("town_lancaster", "county_lancashire")]
         [InlineData("castle_piel", "county_lancashire")]

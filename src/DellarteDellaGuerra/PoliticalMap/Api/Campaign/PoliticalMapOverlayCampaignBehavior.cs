@@ -67,6 +67,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
         private PoliticalMapOwnerLevel _ownerLevel = PoliticalMapOwnerLevel.SubVassals;
 
         private PoliticalMapOverlayDrawing? _drawing;
+        private (TaleWorlds.Engine.Scene Scene, PoliticalMapGrid Grid)? _failedInitialisation;
         private double _clock;
         private float _sinceRepaint;
         private bool _repaintNow;
@@ -220,6 +221,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             _view = PoliticalMapView.Off;
             // The old scene's entities went with it: drop the references without touching them.
             _drawing = null;
+            _failedInitialisation = null;
             _legend = Array.Empty<PoliticalMapLegendEntry>();
             _hover = null;
             Changed?.Invoke();
@@ -262,11 +264,14 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             PoliticalMapGrid? grid = _gridBehavior.Grid;
             PoliticalMapSheet? sheet = _gridBehavior.Sheet;
             if (grid is null || sheet is null) return false;
+            if (_failedInitialisation is { } failed && failed.Scene == mapScreen.MapScene && failed.Grid == grid)
+                return false;
 
             try
             {
                 var clock = Stopwatch.StartNew();
                 _drawing = new PoliticalMapOverlayDrawing(mapScreen.MapScene, grid, sheet, _painter, _scheduler, _world, _logger, LabelModes);
+                _failedInitialisation = null;
                 _repaintNow = true;
                 _logger.Info(
                     $"Political map overlay ready: {_drawing.TerritoryCount} territories, "
@@ -276,6 +281,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             }
             catch (Exception exception)
             {
+                _failedInitialisation = (mapScreen.MapScene, grid);
                 _logger.Error("Could not set up the political map overlay; the map stays blank.", exception);
                 _drawing = null;
                 return false;

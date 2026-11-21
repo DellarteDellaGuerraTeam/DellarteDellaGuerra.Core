@@ -160,8 +160,8 @@ namespace DellarteDellaGuerra.Domain.Tests.PoliticalMap.Overlay
             string?[] clans = painter.LabelKeysOf(PoliticalMapView.Owners, PoliticalMapLabelMode.Clans, Settlements, paints, _world, level);
 
             Assert.Equal(level == PoliticalMapOwnerLevel.Vassals
-                ? new[] { "duchy_lancaster", "duchy_lancaster", "duchy_lancaster", "county_kent", "kingdom_england", "duchy_lancaster" }
-                : new[] { "county_lancashire", "county_lancashire", "duchy_lancaster", "county_kent", "kingdom_england", "county_rivers" }, titles);
+                ? new[] { "duchy_lancaster", "duchy_lancaster", "duchy_lancaster", "county_kent", "settlement:castle_lonely", "duchy_lancaster" }
+                : new[] { "county_lancashire", "county_lancashire", "duchy_lancaster", "county_kent", "settlement:castle_lonely", "county_rivers" }, titles);
             Assert.Equal(paints.Select(paint => paint.RegionKey), clans);
             Assert.Equal(titles[0], titles[1]); // The bound village follows its seat.
             if (level == PoliticalMapOwnerLevel.Vassals)

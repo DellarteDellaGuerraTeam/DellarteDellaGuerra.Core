@@ -5,6 +5,7 @@ using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using SandBox.View.Map;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.InputSystem;
 using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
 using DellarteDellaGuerra.Domain.PoliticalMap.Labels;
@@ -42,15 +43,20 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap
             if ((Input.IsKeyDown(InputKey.LeftControl) || Input.IsKeyDown(InputKey.RightControl))
                 && behavior.Selection is { } selection)
             {
-                if (selection.View == PoliticalMapView.DeJure
+                if (PoliticalMapPainter.SettlementIdFromKey(selection.Key) is { } seat)
+                {
+                    if (Settlement.Find(seat) is { } settlement)
+                        Campaign.Current.EncyclopediaManager.GoToLink(settlement.EncyclopediaLink);
+                }
+                else if (selection.View == PoliticalMapView.DeJure
                     || selection.View == PoliticalMapView.Owners && selection.Mode == PoliticalMapLabelMode.Titles)
                     TitleEncyclopediaEntry.Open(selection.Key, selection.View == PoliticalMapView.Owners
                         && selection.Level == PoliticalMapOwnerLevel.SubVassals);
                 else
                 {
                     IFaction? faction = selection.View == PoliticalMapView.Kingdom
-                        ? Campaign.Current?.CampaignObjectManager.Find<Kingdom>(selection.Key)
-                        : Campaign.Current?.CampaignObjectManager.Find<Clan>(selection.Key);
+                        ? Campaign.Current?.CampaignObjectManager.Find<Kingdom>(selection.Key) : null;
+                    faction ??= Campaign.Current?.CampaignObjectManager.Find<Clan>(selection.Key);
                     if (faction is not null) Campaign.Current?.EncyclopediaManager.GoToLink(faction.EncyclopediaLink);
                 }
             }

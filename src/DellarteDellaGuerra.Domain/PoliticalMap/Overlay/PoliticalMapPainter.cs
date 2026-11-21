@@ -29,7 +29,10 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
     /// </remarks>
     public class PoliticalMapPainter
     {
-        private const string SettlementTerritoryPrefix = "settlement:";
+        public const string SettlementTerritoryPrefix = "settlement:";
+
+        public static string? SettlementIdFromKey(string key) =>
+            key.StartsWith(SettlementTerritoryPrefix, StringComparison.Ordinal) ? key.Substring(SettlementTerritoryPrefix.Length) : null;
 
         private static readonly IReadOnlyDictionary<string, uint> NoColours = new Dictionary<string, uint>();
 
@@ -153,14 +156,16 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
                 return keys;
             }
             if (selection.View != PoliticalMapView.Owners) return keys;
+            if (selection.Mode == PoliticalMapLabelMode.Titles && selection.Level == PoliticalMapOwnerLevel.SubVassals)
+                return keys;
             PoliticalMapTitleDomains domains = TitleDomainsOf(world);
             PoliticalMapVassalHierarchy hierarchy = HierarchyOf(world);
             for (int i = 0; i < keys.Length; i++)
             {
+                // A live title-mode key is selectable even when it names a settlement without a held title.
+                if (selection.Mode == PoliticalMapLabelMode.Titles && keys[i] == selection.Key) continue;
                 bool contains = selection.Mode == PoliticalMapLabelMode.Titles
-                    ? selection.Level == PoliticalMapOwnerLevel.SubVassals
-                        ? domains.ContainsLocal(selection.Key, settlementIds[i])
-                        : domains.Contains(selection.Key, settlementIds[i])
+                    ? domains.Contains(selection.Key, settlementIds[i])
                     : world.OwnerClanOf(settlementIds[i]) is { } owner && hierarchy.ChainOf(owner).Contains(selection.Key);
                 // Never keep a label key that matched before a transfer but no longer belongs to this domain.
                 keys[i] = contains ? selection.Key : keys[i] == selection.Key ? null : keys[i];

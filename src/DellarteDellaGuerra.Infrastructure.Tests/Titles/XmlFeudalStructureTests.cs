@@ -139,6 +139,34 @@ public class XmlFeudalStructureTests
     }
 
     [Fact]
+    public void CyclicMovesLeaveTheExistingHierarchyAndSaveIntact()
+    {
+        _feudalStructure.Reattach("duchy_york", "barony_middleham");
+        _feudalStructure.InitialiseReattachments(new Dictionary<string, string?>
+        {
+            ["duchy_york"] = "barony_middleham",
+            ["county_kent"] = "county_kent"
+        });
+        Assert.Equal("kingdom_england", _feudalStructure.GetDeJureSuzerainTitleId("duchy_york"));
+        Assert.Equal("kingdom_england", _feudalStructure.GetDeJureSuzerainTitleId("county_kent"));
+        Assert.Empty(_feudalStructure.GetDeJureVassalTitleIds("barony_middleham"));
+        Assert.Empty(_feudalStructure.SnapshotReattachments());
+    }
+
+    [Fact]
+    public void ValidSavedMovesCanReverseAnAncestorRelationshipInEitherLoadOrder()
+    {
+        _feudalStructure.InitialiseReattachments(new Dictionary<string, string?>
+        {
+            ["duchy_york"] = "county_richmond",
+            ["county_richmond"] = "kingdom_england"
+        });
+        Assert.Equal("county_richmond", _feudalStructure.GetDeJureSuzerainTitleId("duchy_york"));
+        Assert.Equal("kingdom_england", _feudalStructure.GetDeJureSuzerainTitleId("county_richmond"));
+        Assert.Equal(2, _feudalStructure.SnapshotReattachments().Count);
+    }
+
+    [Fact]
     public void ShouldSkipSavedReattachmentsOfUnknownTitles()
     {
         _feudalStructure.InitialiseReattachments(new Dictionary<string, string?>
