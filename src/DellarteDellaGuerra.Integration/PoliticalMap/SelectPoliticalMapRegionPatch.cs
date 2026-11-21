@@ -10,6 +10,7 @@ using TaleWorlds.InputSystem;
 using DellarteDellaGuerra.Domain.PoliticalMap.Overlay;
 using DellarteDellaGuerra.Domain.PoliticalMap.Labels;
 using DellarteDellaGuerra.Integration.Titles.UI;
+using DellarteDellaGuerra.Titles.Api;
 
 namespace DellarteDellaGuerra.Integration.PoliticalMap
 {
@@ -45,7 +46,11 @@ namespace DellarteDellaGuerra.Integration.PoliticalMap
             {
                 if (PoliticalMapPainter.SettlementIdFromKey(selection.Key) is { } seat)
                 {
-                    if (Settlement.Find(seat) is { } settlement)
+                    if ((selection.View == PoliticalMapView.DeJure
+                            || selection.View == PoliticalMapView.Owners && selection.Mode == PoliticalMapLabelMode.Titles)
+                        && FeudalServices.Structure?.GetTitleIdBySeat(seat) is { } localTitle)
+                        TitleEncyclopediaEntry.Open(localTitle, localTerritory: true);
+                    else if (Settlement.Find(seat) is { } settlement)
                         Campaign.Current.EncyclopediaManager.GoToLink(settlement.EncyclopediaLink);
                 }
                 else if (selection.View == PoliticalMapView.DeJure

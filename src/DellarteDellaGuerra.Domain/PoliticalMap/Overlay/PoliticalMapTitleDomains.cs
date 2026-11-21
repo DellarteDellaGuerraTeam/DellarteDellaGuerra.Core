@@ -31,8 +31,12 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
         }
 
         /// <summary>The local territory displayed at close zoom, rather than its holder's whole dignity.</summary>
-        public bool ContainsLocal(string titleId, string settlementId) =>
-            KeyOf(settlementId, PoliticalMapOwnerLevel.SubVassals) == titleId;
+        public bool ContainsLocal(string titleId, string settlementId)
+        {
+            string? key = KeyOf(settlementId, PoliticalMapOwnerLevel.SubVassals);
+            return key == titleId || key is not null && PoliticalMapPainter.SettlementIdFromKey(key) is { } seat
+                && _structure.GetTitleIdBySeat(seat) == titleId;
+        }
 
         /// <summary>Membership is independent of camera level and never includes an unrelated owner's land.</summary>
         public bool Contains(string titleId, string settlementId)
