@@ -42,10 +42,13 @@ internal static class PoliticalMapToolbar
             ImageFitType = ImageFit.ImageFitTypes.Contain,
             ImageFitHorizontalAlignment = ImageFit.ImageHorizontalAlignments.Center,
             ImageFitVerticalAlignment = ImageFit.ImageVerticalAlignments.Center,
-            SaturationFactor = 0f,
-            ValueFactor = 0.65f,
-            ExtendTop = -2,
-            ExtendBottom = -2
+            // Gauntlet HSV factors are percentage offsets, with zero leaving the sprite unchanged.
+            SaturationFactor = -100f,
+            ValueFactor = -40f,
+            ExtendTop = -4,
+            ExtendBottom = -4,
+            ExtendLeft = -4,
+            ExtendRight = -4
         });
     }
 }
