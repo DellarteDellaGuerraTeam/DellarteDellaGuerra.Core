@@ -39,7 +39,8 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap
         /// <summary>The nearest county at or above the title, or the title itself when none is.</summary>
         public string GetTerritoryOfTitle(string titleId)
         {
-            for (string? current = titleId; current is not null; current = _feudalStructure.GetDeJureSuzerainTitleId(current))
+            var seen = new HashSet<string>();
+            for (string? current = titleId; current is not null && seen.Add(current); current = _feudalStructure.GetDeJureSuzerainTitleId(current))
             {
                 if (_feudalStructure.GetRank(current) == TitleRank.Earl) return current;
             }

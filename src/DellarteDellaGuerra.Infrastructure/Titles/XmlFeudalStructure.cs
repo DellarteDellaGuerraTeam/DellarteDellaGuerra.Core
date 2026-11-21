@@ -89,8 +89,16 @@ public class XmlFeudalStructure : IFeudalStructure
     public TitleRank? GetMapLabelRank(string titleId) =>
         _nodesByTitleId.TryGetValue(titleId, out var node) ? node.MapLabelRank ?? node.Rank : null;
 
-    public void Reattach(string titleId, string? suzerainTitleId)
+    public void Reattach(string titleId, string? suzerainTitleId) => TryReattach(titleId, suzerainTitleId);
+
+    private bool TryReattach(string titleId, string? suzerainTitleId)
     {
+        if (!_nodesByTitleId.ContainsKey(titleId) || (suzerainTitleId is not null && !_nodesByTitleId.ContainsKey(suzerainTitleId)))
+            return false;
+        var seen = new HashSet<string> { titleId };
+        for (string? parent = suzerainTitleId; parent is not null; parent = GetDeJureSuzerainTitleId(parent))
+            if (!seen.Add(parent)) return false;
+
         if (GetDeJureSuzerainTitleId(titleId) is { } formerSuzerainTitleId)
         {
             _childTitleIdsByTitleId[formerSuzerainTitleId].Remove(titleId);
@@ -105,6 +113,7 @@ public class XmlFeudalStructure : IFeudalStructure
 
         _reattachedSuzerainByTitleId[titleId] = suzerainTitleId;
         Interlocked.Increment(ref _revision);
+        return true;
     }
 
     /**
@@ -134,11 +143,11 @@ public class XmlFeudalStructure : IFeudalStructure
         _reattachedSuzerainByTitleId.Clear();
         IndexForest();
 
-        foreach (KeyValuePair<string, string?> reattachment in reattachments)
+        // A valid saved move can depend on another title moving out of its old subtree first.
+        var pending = new List<KeyValuePair<string, string?>>(reattachments);
+        while (pending.Count > 0)
         {
-            if (!_nodesByTitleId.ContainsKey(reattachment.Key)) continue;
-            if (reattachment.Value is not null && !_nodesByTitleId.ContainsKey(reattachment.Value)) continue;
-            Reattach(reattachment.Key, reattachment.Value);
+            if (pending.RemoveAll(move => TryReattach(move.Key, move.Value)) == 0) break;
         }
         Interlocked.Increment(ref _revision);
     }

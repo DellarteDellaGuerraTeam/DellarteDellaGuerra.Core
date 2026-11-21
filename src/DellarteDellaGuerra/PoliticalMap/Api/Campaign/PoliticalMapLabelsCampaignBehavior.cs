@@ -418,8 +418,8 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
                     string? titleName = _keysView == PoliticalMapView.DeJure
                         ? _painter.GeographicLabelNameOf(key) : _painter.DomainLabelNameOf(key, _keysLevel);
                     if (titleName is not null) return new TextObject(titleName).ToString();
-                    return key.StartsWith("settlement:", StringComparison.Ordinal)
-                        ? _world.SettlementName(key.Substring("settlement:".Length))?.Trim(' ', '\u00b7') : null;
+                    return PoliticalMapPainter.SettlementIdFromKey(key) is { } seat
+                        ? _world.SettlementName(seat)?.Trim(' ', '\u00b7') : null;
                 default:
                     return null;
             }
@@ -464,7 +464,7 @@ namespace DellarteDellaGuerra.PoliticalMap.Api.Campaign
             }
 
             IReadOnlyList<PoliticalMapPlacedLabel> placed = PoliticalMapLabelLayout.Place(
-                _candidates, width, height, includeOffscreen: true);
+                _candidates, width, height, previouslyShown: _eligibleLabels.Count > 0 ? _eligibleLabels : null, includeOffscreen: true);
 
             _shownLabels.Clear();
             _eligibleLabels.Clear();

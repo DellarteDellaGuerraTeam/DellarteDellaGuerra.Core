@@ -25,7 +25,8 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
             if (_world.OwnerClanOf(settlementId) is not { } owner) return null;
             string holder = _hierarchy.RegionHolderOf(owner, level);
             string? title = LocalDomainOf(settlementId, holder);
-            return title is null ? "settlement:" + (_world.SeatOf(settlementId) ?? settlementId)
+            return title is null || _hierarchy.RankOf(title) == TitleRank.King
+                ? PoliticalMapPainter.SettlementTerritoryPrefix + (_world.SeatOf(settlementId) ?? settlementId)
                 : level == PoliticalMapOwnerLevel.Vassals ? SuperiorOwnedTitle(title, holder) : title;
         }
 
@@ -54,12 +55,14 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
                 if (chain[i] == holder) { holderIndex = i; break; }
             if (holderIndex < 0) return null;
 
-            string? primary = _hierarchy.HighestTitleOf(holder)?.Id;
+            Title? primary = _hierarchy.HighestTitleOf(holder);
             if (owner == holder)
             {
                 string seat = _world.SeatOf(settlementId) ?? settlementId;
                 string? local = _structure.GetTitleIdBySeat(seat);
-                return local is not null && _hierarchy.ControllerOf(local) == holder ? local : primary;
+                if (local is not null && _hierarchy.ControllerOf(local) == holder) return local;
+                // Personal land follows the holder's landed dignity. Realm vassals follow their allegiance below.
+                return primary?.Rank == TitleRank.King ? _hierarchy.HighestLandTitleOf(holder)?.Id ?? primary.Id : primary?.Id;
             }
 
             // A whole vassal branch follows its direct lord's attachment, including distant holdings.
@@ -73,8 +76,8 @@ namespace DellarteDellaGuerra.Domain.PoliticalMap.Overlay
 
             // Ruling a faction does not attach all its subjects to the ruler's personal duchy.
             if (_world.KingdomOfClan(holder) is { } kingdom && _world.RulerClanOf(kingdom) == holder
-                && _hierarchy.HighestTitleOf(holder)?.Rank < TitleRank.King) return null;
-            return primary;
+                && primary?.Rank < TitleRank.King) return null;
+            return primary?.Id;
         }
 
         private string SuperiorOwnedTitle(string title, string holder)

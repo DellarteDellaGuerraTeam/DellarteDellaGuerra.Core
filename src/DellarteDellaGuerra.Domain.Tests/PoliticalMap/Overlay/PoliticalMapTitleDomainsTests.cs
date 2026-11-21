@@ -131,7 +131,7 @@ public class PoliticalMapTitleDomainsTests
     }
 
     [Fact]
-    public void PrimaryTitleGathersUnattachedVassalsAndUntitledPersonalLand()
+    public void RoyalPersonalLandFollowsTheDuchyWhileUnattachedVassalsRemainUnderTheCrown()
     {
         // Unattached clans answer to the Crown, not to a secondary duchy held by the king.
         _titles.SaveTitle(_titles.GetTitle("crown")!.GrantTo("lord", 1));
@@ -142,11 +142,33 @@ public class PoliticalMapTitleDomainsTests
         Assert.True(domains.Contains("crown", "unattached_seat"));
         Assert.True(domains.Contains("crown", "untitled"));
         Assert.False(domains.Contains("duchy", "unattached_seat"));
-        Assert.False(domains.Contains("duchy", "untitled"));
+        Assert.True(domains.Contains("duchy", "untitled"));
+        Assert.Equal("duchy", domains.KeyOf("untitled", PoliticalMapOwnerLevel.Vassals));
+        Assert.Equal("duchy", domains.KeyOf("untitled", PoliticalMapOwnerLevel.SubVassals));
         Assert.False(domains.Contains("pembroke", "unattached_seat"));
         Assert.False(domains.Contains("duchy", "pembroke_seat"));
         // A direct Crown vassal retains its own label; selecting the ruler's primary domain includes it.
         Assert.Equal("unattached", domains.KeyOf("unattached_seat", PoliticalMapOwnerLevel.Vassals));
+    }
+
+    [Fact]
+    public void OverviewClickOnACastleWhoseOwnerHasNoTitleHighlightsItsBoundVillageToo()
+    {
+        _world.Owners["pembroke_seat"] = "untitled_owner";
+        var painter = Painter();
+        var ids = new[] { "pembroke_seat", "village", "outsider_seat" };
+        var view = PoliticalMapView.Owners;
+        var level = PoliticalMapOwnerLevel.Vassals;
+        var mode = PoliticalMapLabelMode.Titles;
+        var paints = painter.Paint(view, ids, ids.Select(id => painter.TerritoryOf(id, _world)).ToArray(),
+            new Dictionary<string, string>(), _world, level: level, mode: mode);
+        string clicked = painter.LabelKeysOf(view, mode, ids, paints, _world, level)[0]!;
+        Assert.Equal("settlement:pembroke_seat", clicked);
+        var selection = new PoliticalMapSelection(view, level, mode, clicked);
+        var highlighted = selection.Apply(paints, painter.SelectionKeysOf(selection, ids, paints, _world));
+        Assert.NotEqual(paints[0].Fill, highlighted[0].Fill);
+        Assert.NotEqual(paints[1].Fill, highlighted[1].Fill);
+        Assert.Equal(paints[2], highlighted[2]);
     }
 
     [Fact]
