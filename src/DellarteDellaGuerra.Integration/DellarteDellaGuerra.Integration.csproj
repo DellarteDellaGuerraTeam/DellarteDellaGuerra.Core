@@ -46,8 +46,8 @@
 
     <!-- Project properties -->
     <Target Name="CopyTitleEncyclopediaContent" AfterTargets="Build" Condition="'$(BuildForWindows)' == 'true'">
-        <MakeDir Directories="$(MSBuildThisFileDirectory)..\..\GUI\Prefabs\FeudalTitles" />
-        <Copy SourceFiles="$(MSBuildThisFileDirectory)Titles\UI\DadgTitleEncyclopediaPage.xml" DestinationFolder="$(MSBuildThisFileDirectory)..\..\GUI\Prefabs\FeudalTitles" />
+        <MakeDir Directories="$(GameFolder)\Modules\DellarteDellaGuerraMap\GUI\Prefabs\FeudalTitles" />
+        <Copy SourceFiles="$(MSBuildThisFileDirectory)Titles\UI\DadgTitleEncyclopediaPage.xml" DestinationFolder="$(GameFolder)\Modules\DellarteDellaGuerraMap\GUI\Prefabs\FeudalTitles" />
         <Copy SourceFiles="$(MSBuildThisFileDirectory)..\technical-config\titles.config.xml" DestinationFolder="$(MSBuildThisFileDirectory)..\..\config" />
         <Copy SourceFiles="$(MSBuildThisFileDirectory)Titles\UI\TitleArticles.xml" DestinationFolder="$(MSBuildThisFileDirectory)..\..\config" />
     </Target>
