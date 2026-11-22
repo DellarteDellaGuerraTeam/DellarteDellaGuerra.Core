@@ -4,7 +4,7 @@ dependencies:
 - repo_url: alirezarezvani/claude-skills
   name: adversarial-reviewer
   host: github.com
-  resolved_commit: 27cfcd0fb0a41f60adffcbd5271fdf8839f86ed2
+  resolved_commit: 5909a72e62b5fbb809935fb6a55b58bdbe175074
   version: unknown
   virtual_path: engineering-team/skills/adversarial-reviewer
   is_virtual: true
@@ -15,14 +15,14 @@ dependencies:
   - .claude/skills/adversarial-reviewer
   - .claude/skills/adversarial-reviewer/SKILL.md
   deployed_file_hashes:
-    .agents/skills/adversarial-reviewer/SKILL.md: sha256:5243a4f395e82c45572a355150c7c84bf1a726f684c181e2f1ec6df401a2967e
-    .claude/skills/adversarial-reviewer/SKILL.md: sha256:5243a4f395e82c45572a355150c7c84bf1a726f684c181e2f1ec6df401a2967e
-  content_hash: sha256:5323014033df637ae18baeb9f25ceeeab16d8e691030b01ea888f73c638554d8
+    .agents/skills/adversarial-reviewer/SKILL.md: sha256:0cbf8ac863201f1480eec37493cdea50339220d7ec5d4ab01a4ab576d2f6378c
+    .claude/skills/adversarial-reviewer/SKILL.md: sha256:0cbf8ac863201f1480eec37493cdea50339220d7ec5d4ab01a4ab576d2f6378c
+  content_hash: sha256:26ebe40c2b5a362c021b6e16098d824f96a765573bdfff8e34c7956c420fe78c
 - repo_url: dietrichgebert/ponytail
   materialization_repo_url: DietrichGebert/ponytail
   name: ponytail
   host: github.com
-  resolved_commit: 09c434ab73ca43761c5d8b0c5d341926c2fba710
+  resolved_commit: ebd8654c2c627f721eb8f9c0d1bd4090a29f9e10
   version: unknown
   virtual_path: skills/ponytail
   is_virtual: true
@@ -40,9 +40,9 @@ dependencies:
   materialization_repo_url: JoeFwd/dadg-agent
   name: dadg-agent
   host: github.com
-  resolved_commit: a241a407b247279f4bce0d051f8d460fd8b9ad51
-  resolved_ref: v0.3.1
-  version: 0.3.1
+  resolved_commit: 27af40666ec84045ec4cac5946486e7adcf82341
+  resolved_ref: v0.3.2
+  version: 0.3.2
   package_type: apm_package
   deployed_files:
   - .agents/skills/bannerlord-agent-settings
@@ -124,14 +124,14 @@ dependencies:
     .claude/skills/dadg-project-context/references/navmesh-setup-and-repair.md: sha256:e400d72264d61c0cb36161ca17070df4927da1cf2152769a3c62f38886c16090
     .claude/skills/dadg-project-context/references/war-sails-ships.md: sha256:979cfb68d40630ad7b43025185800165fce3f6d4f6534a38c38e770d698f0e4c
     .codex/hooks/dadg-agent/.apm/hooks/context/dadg-agent.md: sha256:327909fd66df3f5cb69f8c2e363132fb640835266ea4841e30c043c71694de03
-  content_hash: sha256:37f16d29426bd71b654dade0fc6f69cfebe74690cb74e95317c3ce4a7f97a414
+  content_hash: sha256:49a80eed2f776472c80158a304de6ef7585d8c5480fefa53c2e119b1ccf07e89
 - repo_url: joefwd/bannerlord-agent
   materialization_repo_url: JoeFwd/bannerlord-agent
   name: bannerlord-agent
   host: github.com
-  resolved_commit: 1d5d2e50a7ed8677448fa1bab6a534c51f0876d6
-  resolved_ref: v0.2.1
-  version: 0.2.1
+  resolved_commit: 46ba6ddbd6a83379be85b08b23d062ad262806fd
+  resolved_ref: v0.2.2
+  version: 0.2.2
   depth: 2
   resolved_by: JoeFwd/dadg-agent
   package_type: apm_package
@@ -289,7 +289,7 @@ dependencies:
     .codex/hooks/bannerlord-agent/.apm/hooks/context/bannerlord-agent.md: sha256:252933fded3fc9438a530ebc033ed94dee09b2fef1b7ba81594c89c781c67ddb
     .codex/hooks/bannerlord-agent/.apm/hooks/scripts/jb-pause-guard.ps1: sha256:b9b0cd0323fef3f8fad1b1a2b720583772b99f466ae251c259cd3d1358e657c3
     .codex/hooks/bannerlord-agent/.apm/hooks/scripts/session-start.ps1: sha256:6c85e41a38541e92297dfc8dde4485dc375304b7634f83b0ba95e48ebacfdb9c
-  content_hash: sha256:52ca9001cffe90cca0c94b2037b2bf72a3d86f1185e9eb1fa9d93ed2227ae32d
+  content_hash: sha256:218eeba36d3af7f0668f0aa4b5721e91b960706b0752e1ae87197599c2b9dfc6
 deployments:
 - kind: project-relative
   target: claude
@@ -353,7 +353,7 @@ deployments:
   owners:
   - alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
   active_owner: alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
-  content_hash: sha256:5243a4f395e82c45572a355150c7c84bf1a726f684c181e2f1ec6df401a2967e
+  content_hash: sha256:0cbf8ac863201f1480eec37493cdea50339220d7ec5d4ab01a4ab576d2f6378c
 - kind: project-relative
   target: claude
   value: .claude/skills/bannerlord-agent-settings
@@ -938,7 +938,7 @@ deployments:
   owners:
   - alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
   active_owner: alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
-  content_hash: sha256:5243a4f395e82c45572a355150c7c84bf1a726f684c181e2f1ec6df401a2967e
+  content_hash: sha256:0cbf8ac863201f1480eec37493cdea50339220d7ec5d4ab01a4ab576d2f6378c
 - kind: project-relative
   target: codex
   value: .agents/skills/bannerlord-agent-settings
