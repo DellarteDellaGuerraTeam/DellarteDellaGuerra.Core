@@ -13,7 +13,6 @@ using DellarteDellaGuerra.Integration.Visor.Mission;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.Campaign;
 using DellarteDellaGuerra.Infrastructure.Events;
-using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.Integration.CampaignTime;
@@ -228,12 +227,6 @@ namespace DellarteDellaGuerra.Integration
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<ShipRudderVisualMissionLogic>());
             if (_serviceProvider.GetRequiredService<CombatFeatureInstaller>().IsEnabled)
                 mission.AddMissionBehavior(_serviceProvider.GetRequiredService<CombatBalanceMissionLogic>());
-        }
-
-        public override void RegisterSubModuleObjects(bool isSavedCmapaign)
-        {
-            foreach (var provider in _serviceProvider.GetServices<IMBObjectProvider<SkillObject>>())
-                MBObjectManager.Instance.RegisterPresumedObject(provider.GetMbObject());
         }
 
         private void LoadDadgBattleScenes()

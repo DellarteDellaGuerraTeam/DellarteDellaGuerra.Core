@@ -28,11 +28,9 @@ using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.DI;
 using DellarteDellaGuerra.Infrastructure.DisplayCompilingShaders.Providers;
 using DellarteDellaGuerra.Infrastructure.Events;
-using DellarteDellaGuerra.Infrastructure.Firearm;
 using DellarteDellaGuerra.Infrastructure.Firearm.Patches;
 using DellarteDellaGuerra.Infrastructure.Heraldry.Patches;
 using DellarteDellaGuerra.Infrastructure.Logging;
-using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.MainMenu.Patches;
 using DellarteDellaGuerra.Infrastructure.Steam.Patches;
 using DellarteDellaGuerra.Infrastructure.Visor.Spi;
@@ -61,7 +59,6 @@ using Harmony.DependencyInjection;
 using Harmony.DependencyInjection.Patches;
 using Microsoft.Extensions.DependencyInjection;
 using NLog.Extensions.Logging;
-using TaleWorlds.Core;
 
 namespace DellarteDellaGuerra.Integration.DI;
 
@@ -114,8 +111,6 @@ public class DadgServiceContainer
         services.AddSingleton<DadgCampaignTimeModel>();
         services.AddSingleton<DadgCampaignStartButtonAdder>();
         services.AddSingleton<VanillaCampaignButtonsRemover>();
-        services.AddSingleton<FirearmSkillProvider>();
-        services.AddSingleton<IMBObjectProvider<SkillObject>>(sp => sp.GetRequiredService<FirearmSkillProvider>());
     }
 
     private static void RegisterEvent<TEvent>(IServiceCollection services)
@@ -252,7 +247,7 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, KeepBannerTabardMeshUntilTextureAppliedPatch>();
         services.AddSingleton<IPatch, ReleaseBannerTabardMeshAfterTextureAppliedPatch>();
         // Firearm
-        services.AddSingleton<IPatch, AddFirearmSkillAsRelevantSkillPatch>();
+        services.AddSingleton<IPatch, UseCrossbowSkillForFirearmsPatch>();
         services.AddSingleton<IPatch, GetHolsterImageForBuIletsInInventoryPatch>();
         // Steam
         services.AddSingleton<IPatch, FixSettlementFilePathPatch>();
