@@ -1,4 +1,5 @@
 using System;
+using DellarteDellaGuerra.PoliticalMap.Api.Campaign;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.Core;
@@ -19,8 +20,19 @@ namespace DellarteDellaGuerra.Integration.Weather
         public override AtmosphereState GetInterpolatedAtmosphereState(TaleWorlds.CampaignSystem.CampaignTime timeOfYear, Vec3 pos) =>
             _inner.GetInterpolatedAtmosphereState(timeOfYear, ClampToWeatherGrid(pos));
 
-        public override void GetSeasonTimeFactorOfCampaignTime(TaleWorlds.CampaignSystem.CampaignTime ct, out float timeFactorForSnow, out float timeFactorForRain, bool snapCampaignTimeToWeatherPeriod = true) =>
+        public override void GetSeasonTimeFactorOfCampaignTime(TaleWorlds.CampaignSystem.CampaignTime ct, out float timeFactorForSnow, out float timeFactorForRain, bool snapCampaignTimeToWeatherPeriod = true)
+        {
             _inner.GetSeasonTimeFactorOfCampaignTime(ct, out timeFactorForSnow, out timeFactorForRain, snapCampaignTimeToWeatherPeriod);
+
+            // Unsnapped is only the map screen's per-frame call that sets the scene's snow cover
+            // (MapScreen.TickVisuals -> MBMapScene.SetSeasonTimeFactor). The political map holds the
+            // snow back there while it is drawn; weather, the snapped callers, is left alone.
+            if (!snapCampaignTimeToWeatherPeriod)
+            {
+                timeFactorForSnow = Campaign.Current?.GetCampaignBehavior<PoliticalMapOverlayCampaignBehavior>()?.MapSnowSeasonFactor(timeFactorForSnow)
+                    ?? timeFactorForSnow;
+            }
+        }
 
         public override void InitializeCaches() => _inner.InitializeCaches();
 

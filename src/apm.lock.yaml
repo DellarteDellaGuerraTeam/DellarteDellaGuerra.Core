@@ -1,13 +1,48 @@
 lockfile_version: '1'
 apm_version: 0.33.0
 dependencies:
+- repo_url: alirezarezvani/claude-skills
+  name: adversarial-reviewer
+  host: github.com
+  resolved_commit: 5909a72e62b5fbb809935fb6a55b58bdbe175074
+  version: unknown
+  virtual_path: engineering-team/skills/adversarial-reviewer
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/adversarial-reviewer
+  - .agents/skills/adversarial-reviewer/SKILL.md
+  - .claude/skills/adversarial-reviewer
+  - .claude/skills/adversarial-reviewer/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/adversarial-reviewer/SKILL.md: sha256:0cbf8ac863201f1480eec37493cdea50339220d7ec5d4ab01a4ab576d2f6378c
+    .claude/skills/adversarial-reviewer/SKILL.md: sha256:0cbf8ac863201f1480eec37493cdea50339220d7ec5d4ab01a4ab576d2f6378c
+  content_hash: sha256:26ebe40c2b5a362c021b6e16098d824f96a765573bdfff8e34c7956c420fe78c
+- repo_url: dietrichgebert/ponytail
+  materialization_repo_url: DietrichGebert/ponytail
+  name: ponytail
+  host: github.com
+  resolved_commit: ebd8654c2c627f721eb8f9c0d1bd4090a29f9e10
+  version: unknown
+  virtual_path: skills/ponytail
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/ponytail
+  - .agents/skills/ponytail/SKILL.md
+  - .claude/skills/ponytail
+  - .claude/skills/ponytail/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/ponytail/SKILL.md: sha256:9badd22a32e19cb884e46dfa8d3aae82bb81dfa5484105b8b4f0262df823a509
+    .claude/skills/ponytail/SKILL.md: sha256:9badd22a32e19cb884e46dfa8d3aae82bb81dfa5484105b8b4f0262df823a509
+  content_hash: sha256:061f887d9e3e735f85db3be3655a8936a00f24d5fb65ac4ab74a968a770fe342
 - repo_url: joefwd/dadg-agent
   materialization_repo_url: JoeFwd/dadg-agent
   name: dadg-agent
   host: github.com
-  resolved_commit: 4b0c93e525c69e5b0ce7c0a5208c5ed047f8c662
-  resolved_ref: v0.3.0
-  version: 0.3.0
+  resolved_commit: 27af40666ec84045ec4cac5946486e7adcf82341
+  resolved_ref: v0.3.2
+  version: 0.3.2
   package_type: apm_package
   deployed_files:
   - .agents/skills/bannerlord-agent-settings
@@ -89,14 +124,14 @@ dependencies:
     .claude/skills/dadg-project-context/references/navmesh-setup-and-repair.md: sha256:e400d72264d61c0cb36161ca17070df4927da1cf2152769a3c62f38886c16090
     .claude/skills/dadg-project-context/references/war-sails-ships.md: sha256:979cfb68d40630ad7b43025185800165fce3f6d4f6534a38c38e770d698f0e4c
     .codex/hooks/dadg-agent/.apm/hooks/context/dadg-agent.md: sha256:327909fd66df3f5cb69f8c2e363132fb640835266ea4841e30c043c71694de03
-  content_hash: sha256:770df04edc860b57027411c95f798c06d5d53fd17d68854ec3ba2cd7885f1dfd
+  content_hash: sha256:49a80eed2f776472c80158a304de6ef7585d8c5480fefa53c2e119b1ccf07e89
 - repo_url: joefwd/bannerlord-agent
   materialization_repo_url: JoeFwd/bannerlord-agent
   name: bannerlord-agent
   host: github.com
-  resolved_commit: 44cc8a32ca320f577ecdcc17d7a0b8a882c3e7d6
-  resolved_ref: v0.2.0
-  version: 0.2.0
+  resolved_commit: 46ba6ddbd6a83379be85b08b23d062ad262806fd
+  resolved_ref: v0.2.2
+  version: 0.2.2
   depth: 2
   resolved_by: JoeFwd/dadg-agent
   package_type: apm_package
@@ -201,7 +236,7 @@ dependencies:
     .agents/skills/bannerlord-debug/references/gabs-runtime-workarounds.md: sha256:d66149dd9d006bc5c5f934ca473f28511ec7a0b7f75971f39e74708bc22bb198
     .agents/skills/bannerlord-debug/references/jetbrains-debugger-tips.md: sha256:99925a81583b5b61ba191b67c904059ae7ff2964da71afed82c919f7018a54a6
     .agents/skills/bannerlord-gabs-battle-manager/SKILL.md: sha256:a3de17a74a2c5f1f76cbfd5b303a7d34e1a1b5ddc48fe2fd8d184207c5907855
-    .agents/skills/bannerlord-gabs-session-reset/SKILL.md: sha256:bdf65713c4047a87d8f5d3f52fdcd28fb92f2a6cddf0691a5abf2389dbe9479a
+    .agents/skills/bannerlord-gabs-session-reset/SKILL.md: sha256:29d45d120e0e240b0159e2a455d40c195c2ed32c3ae31d71c32fcce8beb87d14
     .agents/skills/bannerlord-gabs-start/SKILL.md: sha256:41d5379ea49c5649682488a28837def6637961f278fa90b77fef04d680c0feea
     .agents/skills/bannerlord-lord-hall-battle/SKILL.md: sha256:aa0c81a6be11e8ce5407e22a648ed798c72fb85a1a579db8e034b60070cd732a
     .agents/skills/bannerlord-lord-hall-battle/agents/openai.yaml: sha256:26357ddcbd7753158c304ad41ec7dd7e90470bb66a700d98101eb7aa0c9adc0b
@@ -213,13 +248,13 @@ dependencies:
     .agents/skills/bannerlord-music-classify/SKILL.md: sha256:d2d5b6cd58ab45dbf20ab9b17a3a170cfa889c74f7f775b9932abfc43f84556f
     .agents/skills/bannerlord-navmesh-preview/SKILL.md: sha256:32e6cb871a1bef63a842bda34a5b4a21bc5fd803911be28b2432df52ac255a72
     .agents/skills/bannerlord-navmesh-preview/scripts/render_navmesh_preview.py: sha256:c0d0f10fdb20a23e098ae3e64b13e5dde066b0f86cfa730e32f2078c8f730fad
-    .agents/skills/bannerlord-navmesh-studio/SKILL.md: sha256:25c0076173e1246b5f6a3a9680a95b739d285c78ce9a11e005c4e84aafa1815b
+    .agents/skills/bannerlord-navmesh-studio/SKILL.md: sha256:2383a3f2c79a7b264b59021cfdfc7194e5f332284c34ef214e463cdd381fa06b
     .agents/skills/bannerlord-navmesh-studio/requirements.txt: sha256:7c5ac097ee8de36da2332eeab81666c24df70f72e2b76835f4ec2b2b7460dfb4
     .agents/skills/bannerlord-sprite-analyze/SKILL.md: sha256:f6c96740bc10de3528af30cf99a01dbdbff325a0051a3af150326ede374ad9c3
     .agents/skills/bannerlord-sprite-extract/SKILL.md: sha256:b0fa8ec87a865aae45732096662e4d3c3e3733be5aad769e4359f21db67985bf
     .agents/skills/bannerlord-sprite-inject/SKILL.md: sha256:418760d7dd821a1e178602903f65c0bb994b4c16745665214b3183fbd683ea20
     .agents/skills/bannerlord-sprite-list/SKILL.md: sha256:ba0e7b823e25da11a3586f7e3c93a02075d7e33d294efa0a5d73b57123bc441e
-    .claude/agents/bannerlord-debug-playtester.md: sha256:de2c797983b7fe50b7160228450e1d335ac884b2158a3578b01c20f826c432e7
+    .claude/agents/bannerlord-debug-playtester.md: sha256:e4633a5c8479276552f7036e0729f80abc15aa0be2c7c20c190500c1d797c3b4
     .claude/hooks/bannerlord-agent/.apm/hooks/context/bannerlord-agent.md: sha256:252933fded3fc9438a530ebc033ed94dee09b2fef1b7ba81594c89c781c67ddb
     .claude/hooks/bannerlord-agent/.apm/hooks/scripts/jb-pause-guard.ps1: sha256:b9b0cd0323fef3f8fad1b1a2b720583772b99f466ae251c259cd3d1358e657c3
     .claude/hooks/bannerlord-agent/.apm/hooks/scripts/session-start.ps1: sha256:6c85e41a38541e92297dfc8dde4485dc375304b7634f83b0ba95e48ebacfdb9c
@@ -232,7 +267,7 @@ dependencies:
     .claude/skills/bannerlord-debug/references/gabs-runtime-workarounds.md: sha256:d66149dd9d006bc5c5f934ca473f28511ec7a0b7f75971f39e74708bc22bb198
     .claude/skills/bannerlord-debug/references/jetbrains-debugger-tips.md: sha256:99925a81583b5b61ba191b67c904059ae7ff2964da71afed82c919f7018a54a6
     .claude/skills/bannerlord-gabs-battle-manager/SKILL.md: sha256:a3de17a74a2c5f1f76cbfd5b303a7d34e1a1b5ddc48fe2fd8d184207c5907855
-    .claude/skills/bannerlord-gabs-session-reset/SKILL.md: sha256:bdf65713c4047a87d8f5d3f52fdcd28fb92f2a6cddf0691a5abf2389dbe9479a
+    .claude/skills/bannerlord-gabs-session-reset/SKILL.md: sha256:29d45d120e0e240b0159e2a455d40c195c2ed32c3ae31d71c32fcce8beb87d14
     .claude/skills/bannerlord-gabs-start/SKILL.md: sha256:41d5379ea49c5649682488a28837def6637961f278fa90b77fef04d680c0feea
     .claude/skills/bannerlord-lord-hall-battle/SKILL.md: sha256:aa0c81a6be11e8ce5407e22a648ed798c72fb85a1a579db8e034b60070cd732a
     .claude/skills/bannerlord-lord-hall-battle/agents/openai.yaml: sha256:26357ddcbd7753158c304ad41ec7dd7e90470bb66a700d98101eb7aa0c9adc0b
@@ -244,17 +279,17 @@ dependencies:
     .claude/skills/bannerlord-music-classify/SKILL.md: sha256:d2d5b6cd58ab45dbf20ab9b17a3a170cfa889c74f7f775b9932abfc43f84556f
     .claude/skills/bannerlord-navmesh-preview/SKILL.md: sha256:32e6cb871a1bef63a842bda34a5b4a21bc5fd803911be28b2432df52ac255a72
     .claude/skills/bannerlord-navmesh-preview/scripts/render_navmesh_preview.py: sha256:c0d0f10fdb20a23e098ae3e64b13e5dde066b0f86cfa730e32f2078c8f730fad
-    .claude/skills/bannerlord-navmesh-studio/SKILL.md: sha256:25c0076173e1246b5f6a3a9680a95b739d285c78ce9a11e005c4e84aafa1815b
+    .claude/skills/bannerlord-navmesh-studio/SKILL.md: sha256:2383a3f2c79a7b264b59021cfdfc7194e5f332284c34ef214e463cdd381fa06b
     .claude/skills/bannerlord-navmesh-studio/requirements.txt: sha256:7c5ac097ee8de36da2332eeab81666c24df70f72e2b76835f4ec2b2b7460dfb4
     .claude/skills/bannerlord-sprite-analyze/SKILL.md: sha256:f6c96740bc10de3528af30cf99a01dbdbff325a0051a3af150326ede374ad9c3
     .claude/skills/bannerlord-sprite-extract/SKILL.md: sha256:b0fa8ec87a865aae45732096662e4d3c3e3733be5aad769e4359f21db67985bf
     .claude/skills/bannerlord-sprite-inject/SKILL.md: sha256:418760d7dd821a1e178602903f65c0bb994b4c16745665214b3183fbd683ea20
     .claude/skills/bannerlord-sprite-list/SKILL.md: sha256:ba0e7b823e25da11a3586f7e3c93a02075d7e33d294efa0a5d73b57123bc441e
-    .codex/agents/bannerlord-debug-playtester.toml: sha256:8ab2ad467b5738d58922bac6d0acd31cc7e1ab486824aedde6626f9d963f30d4
+    .codex/agents/bannerlord-debug-playtester.toml: sha256:79d83cd4ae3dfd3c588aa16586bc395bd70b8590cbb059540c0ea70602744ce6
     .codex/hooks/bannerlord-agent/.apm/hooks/context/bannerlord-agent.md: sha256:252933fded3fc9438a530ebc033ed94dee09b2fef1b7ba81594c89c781c67ddb
     .codex/hooks/bannerlord-agent/.apm/hooks/scripts/jb-pause-guard.ps1: sha256:b9b0cd0323fef3f8fad1b1a2b720583772b99f466ae251c259cd3d1358e657c3
     .codex/hooks/bannerlord-agent/.apm/hooks/scripts/session-start.ps1: sha256:6c85e41a38541e92297dfc8dde4485dc375304b7634f83b0ba95e48ebacfdb9c
-  content_hash: sha256:1d664f2a59dcba0e22c31d1b46f07a886697f194a64366d498bf251409c31bcb
+  content_hash: sha256:218eeba36d3af7f0668f0aa4b5721e91b960706b0752e1ae87197599c2b9dfc6
 deployments:
 - kind: project-relative
   target: claude
@@ -264,7 +299,7 @@ deployments:
   owners:
   - joefwd/bannerlord-agent
   active_owner: joefwd/bannerlord-agent
-  content_hash: sha256:de2c797983b7fe50b7160228450e1d335ac884b2158a3578b01c20f826c432e7
+  content_hash: sha256:e4633a5c8479276552f7036e0729f80abc15aa0be2c7c20c190500c1d797c3b4
 - kind: project-relative
   target: claude
   value: .claude/hooks/bannerlord-agent/.apm/hooks/context/bannerlord-agent.md
@@ -301,6 +336,24 @@ deployments:
   - joefwd/dadg-agent
   active_owner: joefwd/dadg-agent
   content_hash: sha256:327909fd66df3f5cb69f8c2e363132fb640835266ea4841e30c043c71694de03
+- kind: project-relative
+  target: claude
+  value: .claude/skills/adversarial-reviewer
+  runtime: null
+  scope: project
+  owners:
+  - alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
+  active_owner: alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/adversarial-reviewer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
+  active_owner: alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
+  content_hash: sha256:0cbf8ac863201f1480eec37493cdea50339220d7ec5d4ab01a4ab576d2f6378c
 - kind: project-relative
   target: claude
   value: .claude/skills/bannerlord-agent-settings
@@ -444,7 +497,7 @@ deployments:
   owners:
   - joefwd/bannerlord-agent
   active_owner: joefwd/bannerlord-agent
-  content_hash: sha256:bdf65713c4047a87d8f5d3f52fdcd28fb92f2a6cddf0691a5abf2389dbe9479a
+  content_hash: sha256:29d45d120e0e240b0159e2a455d40c195c2ed32c3ae31d71c32fcce8beb87d14
 - kind: project-relative
   target: claude
   value: .claude/skills/bannerlord-gabs-start
@@ -606,7 +659,7 @@ deployments:
   owners:
   - joefwd/bannerlord-agent
   active_owner: joefwd/bannerlord-agent
-  content_hash: sha256:25c0076173e1246b5f6a3a9680a95b739d285c78ce9a11e005c4e84aafa1815b
+  content_hash: sha256:2383a3f2c79a7b264b59021cfdfc7194e5f332284c34ef214e463cdd381fa06b
 - kind: project-relative
   target: claude
   value: .claude/skills/bannerlord-navmesh-studio/requirements.txt
@@ -851,6 +904,42 @@ deployments:
   active_owner: joefwd/dadg-agent
   content_hash: sha256:979cfb68d40630ad7b43025185800165fce3f6d4f6534a38c38e770d698f0e4c
 - kind: project-relative
+  target: claude
+  value: .claude/skills/ponytail
+  runtime: null
+  scope: project
+  owners:
+  - dietrichgebert/ponytail/skills/ponytail
+  active_owner: dietrichgebert/ponytail/skills/ponytail
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ponytail/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - dietrichgebert/ponytail/skills/ponytail
+  active_owner: dietrichgebert/ponytail/skills/ponytail
+  content_hash: sha256:9badd22a32e19cb884e46dfa8d3aae82bb81dfa5484105b8b4f0262df823a509
+- kind: project-relative
+  target: codex
+  value: .agents/skills/adversarial-reviewer
+  runtime: null
+  scope: project
+  owners:
+  - alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
+  active_owner: alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/adversarial-reviewer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
+  active_owner: alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
+  content_hash: sha256:0cbf8ac863201f1480eec37493cdea50339220d7ec5d4ab01a4ab576d2f6378c
+- kind: project-relative
   target: codex
   value: .agents/skills/bannerlord-agent-settings
   runtime: null
@@ -993,7 +1082,7 @@ deployments:
   owners:
   - joefwd/bannerlord-agent
   active_owner: joefwd/bannerlord-agent
-  content_hash: sha256:bdf65713c4047a87d8f5d3f52fdcd28fb92f2a6cddf0691a5abf2389dbe9479a
+  content_hash: sha256:29d45d120e0e240b0159e2a455d40c195c2ed32c3ae31d71c32fcce8beb87d14
 - kind: project-relative
   target: codex
   value: .agents/skills/bannerlord-gabs-start
@@ -1155,7 +1244,7 @@ deployments:
   owners:
   - joefwd/bannerlord-agent
   active_owner: joefwd/bannerlord-agent
-  content_hash: sha256:25c0076173e1246b5f6a3a9680a95b739d285c78ce9a11e005c4e84aafa1815b
+  content_hash: sha256:2383a3f2c79a7b264b59021cfdfc7194e5f332284c34ef214e463cdd381fa06b
 - kind: project-relative
   target: codex
   value: .agents/skills/bannerlord-navmesh-studio/requirements.txt
@@ -1401,13 +1490,31 @@ deployments:
   content_hash: sha256:979cfb68d40630ad7b43025185800165fce3f6d4f6534a38c38e770d698f0e4c
 - kind: project-relative
   target: codex
+  value: .agents/skills/ponytail
+  runtime: null
+  scope: project
+  owners:
+  - dietrichgebert/ponytail/skills/ponytail
+  active_owner: dietrichgebert/ponytail/skills/ponytail
+  content_hash: null
+- kind: project-relative
+  target: codex
+  value: .agents/skills/ponytail/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - dietrichgebert/ponytail/skills/ponytail
+  active_owner: dietrichgebert/ponytail/skills/ponytail
+  content_hash: sha256:9badd22a32e19cb884e46dfa8d3aae82bb81dfa5484105b8b4f0262df823a509
+- kind: project-relative
+  target: codex
   value: .codex/agents/bannerlord-debug-playtester.toml
   runtime: null
   scope: project
   owners:
   - joefwd/bannerlord-agent
   active_owner: joefwd/bannerlord-agent
-  content_hash: sha256:8ab2ad467b5738d58922bac6d0acd31cc7e1ab486824aedde6626f9d963f30d4
+  content_hash: sha256:79d83cd4ae3dfd3c588aa16586bc395bd70b8590cbb059540c0ea70602744ce6
 - kind: project-relative
   target: codex
   value: .codex/hooks/bannerlord-agent/.apm/hooks/context/bannerlord-agent.md

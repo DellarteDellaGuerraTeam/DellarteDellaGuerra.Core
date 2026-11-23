@@ -1,0 +1,11 @@
+sturgia|fieldStrength=4833.53164672852|garrisonStrength=9006.59973144531
+vlandia|fieldStrength=7484.55277460814|garrisonStrength=7861.13967895508
+battania|fieldStrength=3044.79393768311|garrisonStrength=2138.89996337891
+khuzait|fieldStrength=3793.65565490723|garrisonStrength=4634.87985992432
+SETTLEMENT COUNT=568
+TaleWorlds.CampaignSystem.Settlements.Settlement Bound
+TaleWorlds.CampaignSystem.Settlements.Settlement TradeBound
+Int32 MercenaryWallet
+Int32 TributeWallet
+Int32 KingdomBudgetWallet
+Int32 CallToWarWallet

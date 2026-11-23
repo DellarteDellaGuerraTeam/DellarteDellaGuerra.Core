@@ -1,0 +1,2 @@
+# Force LF for files that must run on Linux/WSL regardless of the host OS.
+*.sh        text eol=lf

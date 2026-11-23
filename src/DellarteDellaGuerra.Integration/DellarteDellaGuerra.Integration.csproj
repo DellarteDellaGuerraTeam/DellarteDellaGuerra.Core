@@ -29,6 +29,9 @@
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Native" Version="$(GameVersion).*-*" PrivateAssets="All"/>
 
+        <!-- Compile-time only: the DLL is provided at runtime by the Bannerlord.UIExtenderEx module -->
+        <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.2" IncludeAssets="compile" PrivateAssets="all"/>
+
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj"/>
         <ProjectReference Include="..\DellarteDellaGuerra.Infrastructure\DellarteDellaGuerra.Infrastructure.csproj"/>
         <ProjectReference Include="..\DellarteDellaGuerra\DellarteDellaGuerra.csproj"/>
@@ -42,6 +45,12 @@
     </ItemGroup>
 
     <!-- Project properties -->
+    <Target Name="CopyTitleEncyclopediaContent" AfterTargets="Build" Condition="'$(BuildForWindows)' == 'true'">
+        <MakeDir Directories="$(GameFolder)\Modules\DellarteDellaGuerraMap\GUI\Prefabs\FeudalTitles" />
+        <Copy SourceFiles="$(MSBuildThisFileDirectory)Titles\UI\DadgTitleEncyclopediaPage.xml" DestinationFolder="$(GameFolder)\Modules\DellarteDellaGuerraMap\GUI\Prefabs\FeudalTitles" />
+        <Copy SourceFiles="$(MSBuildThisFileDirectory)..\technical-config\titles.config.xml" DestinationFolder="$(MSBuildThisFileDirectory)..\..\config" />
+        <Copy SourceFiles="$(MSBuildThisFileDirectory)Titles\UI\TitleArticles.xml" DestinationFolder="$(MSBuildThisFileDirectory)..\..\config" />
+    </Target>
     <PropertyGroup>
         <Env Condition="'$(Configuration)'=='Release'">prod</Env>
         <Env Condition="'$(Configuration)'=='Debug'">dev</Env>
@@ -58,12 +67,13 @@
 
     <Target Name="Copy module binaries to wEditor" AfterTargets="CopyBinariesWindows"
             Condition="$(BuildForWindows) == 'true' AND $(ModuleId) != '' AND Exists($(GameFolder))">
-        <CreateDirectory Directory="$(GameFolder)/Modules/$(ModuleId)/bin/Win64_Shipping_wEditor" />
+        <CreateDirectory Directory="$(GameFolder)/Modules/$(ModuleId)/bin/Win64_Shipping_wEditor" ContinueOnError="WarnAndContinue" />
 
         <CopyFolder FromDirectory="$(TargetDir)"
                     ToDirectory="$(GameFolder)/Modules/$(ModuleId)/bin/Win64_Shipping_wEditor"
                     Regex="$(PostBuildCopyToModulesRegex)"
-                    Clean="true" />
+                    Clean="true"
+                    ContinueOnError="WarnAndContinue" />
     </Target>
 
 </Project>

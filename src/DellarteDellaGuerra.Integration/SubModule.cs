@@ -13,11 +13,15 @@ using DellarteDellaGuerra.Integration.Visor.Mission;
 using DellarteDellaGuerra.Infrastructure.Configuration.Providers;
 using DellarteDellaGuerra.Infrastructure.Campaign;
 using DellarteDellaGuerra.Infrastructure.Events;
-using DellarteDellaGuerra.Infrastructure.MbObjects;
 using DellarteDellaGuerra.Infrastructure.SiegeEngines;
 using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.Integration.CampaignTime;
 using DellarteDellaGuerra.Integration.DI;
+using DellarteDellaGuerra.Integration.Music.Patches;
+using DellarteDellaGuerra.Integration.Naval;
+using DellarteDellaGuerra.Integration.PrivateWars;
+using HarmonyLib;
+using DellarteDellaGuerra.Integration.ExpandedTemplateApi.Logging;
 using DellarteDellaGuerra.Integration.Music.Patches;
 using HarmonyLib;
 using DellarteDellaGuerra.Integration.ExpandedTemplateApi.Logging;
@@ -25,6 +29,16 @@ using DellarteDellaGuerra.Integration.Initialisation;
 using DellarteDellaGuerra.Integration.SiegeEngines;
 using DellarteDellaGuerra.Integration.SiegeEngines.Campaign;
 using DellarteDellaGuerra.Integration.SiegeEngines.Mission;
+using Bannerlord.PrivateWars.Api;
+using DellarteDellaGuerra.Domain.Titles.Port;
+using DellarteDellaGuerra.Domain.Titles;
+using DellarteDellaGuerra.Domain.Tournament.Jousting.Port;
+using DellarteDellaGuerra.Infrastructure.Titles;
+using DellarteDellaGuerra.Integration.Titles;
+using DellarteDellaGuerra.Integration.Titles.UI;
+using DellarteDellaGuerra.PoliticalMap.Api.Campaign;
+using DellarteDellaGuerra.Titles.Api;
+using DellarteDellaGuerra.Titles.Api.Campaign;
 using DellarteDellaGuerra.Integration.SiegeTactics.Mission;
 using DellarteDellaGuerra.Integration.Tournament.Jousting;
 using DellarteDellaGuerra.Integration.Weather;
@@ -34,12 +48,14 @@ using Harmony.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.CampaignSystem.ComponentInterfaces;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 using ILogger = DellarteDellaGuerra.Domain.Common.Logging.Port.ILogger;
+using TournamentSettlementAccessModel = DellarteDellaGuerra.Tournament.Api.DadgSettlementAccessModel;
 using DellarteDellaGuerra.Integration.Combat;
 
 namespace DellarteDellaGuerra.Integration
@@ -71,6 +87,7 @@ namespace DellarteDellaGuerra.Integration
         {
             // Deferred until here so that the brush factory and the sprite categories are loaded.
             _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().RegisterNameplateBrush();
+            PoliticalMap.UI.PoliticalMapToolbar.RegisterIcon(_logger);
             InfoPrinter.Display("DADG loaded");
             var currentModule = TaleWorlds.MountAndBlade.Module.CurrentModule;
             _serviceProvider.GetRequiredService<DadgCampaignStartButtonAdder>().AddDadgCampaignStartButton(currentModule);
@@ -89,7 +106,7 @@ namespace DellarteDellaGuerra.Integration
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
 
             _serviceProvider.GetRequiredService<DadgUIExtenderRegistrar>().RegisterAndEnable();
-            BannerTabardMeshLifetimeCrashPatch.Apply();
+            UI.Loading.DadgLoadingArtworkPatch.Apply();
             _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().InstallOnSubModuleLoad();
         }
 
@@ -109,9 +126,29 @@ namespace DellarteDellaGuerra.Integration
                 _serviceProvider,
                 campaignGameStarter.Models.OfType<HeroCreationModel>().Last()));
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgCampaignTimeModel>());
+            // Supply the private-war mechanism with DADG's feudal hierarchy and configured nameplate
+            // tints. The Bannerlord.PrivateWars module has self-wired its own behaviours, models, and
+            // patches by this point; DADG only feeds it the two consumer-provided collaborators.
+            var privateWarsApi = _serviceProvider.GetRequiredService<IPrivateWarsApi>();
+            var feudalHierarchy = new FeudalHierarchyAdapter(
+                _serviceProvider.GetRequiredService<SuzeraintyPolicy>(),
+                _serviceProvider.GetRequiredService<InMemoryTitleRegistry>(),
+                _serviceProvider.GetRequiredService<XmlFeudalStructure>());
+            campaignGameStarter.AddBehavior(feudalHierarchy);
+            privateWarsApi.SetSuzerainProvider(feudalHierarchy);
+            var privateWarConfig = _serviceProvider.GetRequiredService<DadgConfigWatcher>().Config?.PrivateWarConfig;
+            privateWarsApi.SetNameplateColors(
+                privateWarConfig?.PrivateWarEnemyNameplateColorArgb,
+                privateWarConfig?.PrivateWarAllyNameplateColorArgb);
+
             campaignGameStarter.AddModel(new DadgMapWeatherModel(
                 campaignGameStarter.Models.OfType<MapWeatherModel>().Last()));
             campaignGameStarter.AddModel(_serviceProvider.GetRequiredService<DadgTournamentModel>());
+            var joustRequirementsProvider = _serviceProvider.GetRequiredService<IJoustRequirementsProvider>();
+            SettlementAccessModel settlementAccessModel = new TournamentSettlementAccessModel(
+                campaignGameStarter.Models.OfType<SettlementAccessModel>().Last(),
+                joustRequirementsProvider);
+            campaignGameStarter.AddModel(settlementAccessModel);
             _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().InstallCampaign(campaignGameStarter);
 
             var loggerFactory = _serviceProvider.GetRequiredService<ILoggerFactory>();
@@ -123,8 +160,47 @@ namespace DellarteDellaGuerra.Integration
                 _serviceProvider,
                 campaignGameStarter.Models.OfType<SiegeEventModel>().Last()));
 
+            // Feudal title campaign behaviour
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<FeudalTitleCampaignBehavior>());
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<ClaimPressureCampaignBehavior>());
+
+            // Political map: the refresh behaviour marks the territories campaign events repaint, the
+            // grid behaviour builds the settlement grid, and the overlay draws it and drains the marks
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<PoliticalMapRefreshCampaignBehavior>());
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<PoliticalMapGridCampaignBehavior>());
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<PoliticalMapOverlayCampaignBehavior>());
+            campaignGameStarter.AddBehavior(_serviceProvider.GetRequiredService<PoliticalMapLabelsCampaignBehavior>());
+
+            // Initialise the static service locator used by the feudal campaign layer
+            FeudalServices.Initialise(
+                _serviceProvider.GetRequiredService<ITitleRepository>(),
+                _serviceProvider.GetRequiredService<IClaimRepository>(),
+                _serviceProvider.GetRequiredService<IFeudalStructure>(),
+                _serviceProvider.GetRequiredService<IAssignTitleUseCase>(),
+                _serviceProvider.GetRequiredService<SuzeraintyPolicy>(),
+                _serviceProvider.GetRequiredService<IEvaluateClaimUseCase>());
+
+            // Initialise the static service locator used by the feudal UI
+            // (encyclopedia mixins and the hierarchy screen are created by the game's UI
+            // machinery, not by the DI container)
+            FeudalUiServices.Initialise(
+                _serviceProvider.GetRequiredService<ITitleRepository>(),
+                _serviceProvider.GetRequiredService<IFeudalStructure>(),
+                _serviceProvider.GetRequiredService<SuzeraintyPolicy>(),
+                _serviceProvider.GetRequiredService<IGetDirectVassalsUseCase>(),
+                _serviceProvider.GetRequiredService<IBuildFeudalMapUseCase>(),
+                _serviceProvider.GetRequiredService<IGenealogy>());
+
             CompilingShaderNotifier.Init(_serviceProvider.GetRequiredService<DisplayShaderNumber>());
             game.AddGameHandler<CompilingShaderNotifier>();
+        }
+
+        // The political map overlay is ticked here rather than on the campaign tick, which stops while paused.
+        protected override void OnApplicationTick(float dt)
+        {
+            PoliticalMap.UI.MapBarPoliticalMapMixin.TickInput();
+            Campaign.Current?.GetCampaignBehavior<PoliticalMapOverlayCampaignBehavior>()?.Tick(dt);
+            Campaign.Current?.GetCampaignBehavior<PoliticalMapLabelsCampaignBehavior>()?.Tick(dt);
         }
 
         public override void OnGameInitializationFinished(Game game)
@@ -132,6 +208,7 @@ namespace DellarteDellaGuerra.Integration
             if (game.GameType is not Campaign) return;
             _serviceProvider.GetRequiredService<CampaignBehaviourDisabler>()
                 .Disable(Campaign.Current.CampaignBehaviorManager);
+            OrphanedFigureheads.Remove();
             LoadDadgBattleScenes();
         }
 
@@ -146,14 +223,11 @@ namespace DellarteDellaGuerra.Integration
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<BannerSurcoatMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<TournamentRecapBannerMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<VisorToggleMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<ShipSwivelGunCrewMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<ShipRudderVisualMissionLogic>());
+            mission.AddMissionBehavior(_serviceProvider.GetRequiredService<NavalRaidSailMissionLogic>());
             if (_serviceProvider.GetRequiredService<CombatFeatureInstaller>().IsEnabled)
                 mission.AddMissionBehavior(_serviceProvider.GetRequiredService<CombatBalanceMissionLogic>());
-        }
-
-        public override void RegisterSubModuleObjects(bool isSavedCmapaign)
-        {
-            foreach (var provider in _serviceProvider.GetServices<IMBObjectProvider<SkillObject>>())
-                MBObjectManager.Instance.RegisterPresumedObject(provider.GetMbObject());
         }
 
         private void LoadDadgBattleScenes()

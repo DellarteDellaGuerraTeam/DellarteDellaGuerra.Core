@@ -1,0 +1,120 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using DellarteDellaGuerra.Domain.Titles.Model;
+using DellarteDellaGuerra.Domain.Titles.Port;
+
+namespace DellarteDellaGuerra.Infrastructure.Titles;
+
+/**
+ * <summary>
+ * An in-memory registry of the feudal titles and their current holders.
+ * <br/>
+ * <br/>
+ * The campaign tick is single-threaded, so plain dictionaries are sufficient.
+ * </summary>
+ */
+public class InMemoryTitleRegistry : ITitleRepository
+{
+    private readonly IGenealogy _genealogy;
+    private long _revision;
+    public long Revision => Interlocked.Read(ref _revision);
+    private readonly Dictionary<string, Title> _titlesByTitleId = new Dictionary<string, Title>();
+    private readonly Dictionary<string, string> _titleIdBySeatSettlementId = new Dictionary<string, string>();
+    private bool _initialising;
+
+    /**
+     * <summary>
+     * Raised with the title id after a save changes a title's holder or occupant, which is how the
+     * political map learns which county to repaint. Not raised by Initialise, which replaces the
+     * whole state at once.
+     * </summary>
+     */
+    public event Action<string>? HolderOrOccupantChanged;
+
+    public InMemoryTitleRegistry(IGenealogy genealogy)
+    {
+        _genealogy = genealogy;
+    }
+
+    /**
+     * <summary>
+     * Clears the registry and loads the given titles, typically on campaign start or save load.
+     * </summary>
+     */
+    public void Initialise(IEnumerable<Title> titles)
+    {
+        _titlesByTitleId.Clear();
+        _titleIdBySeatSettlementId.Clear();
+        Interlocked.Increment(ref _revision);
+        _initialising = true;
+        try
+        {
+            foreach (Title title in titles)
+            {
+                SaveTitle(title);
+            }
+        }
+        finally
+        {
+            _initialising = false;
+        }
+    }
+
+    /**
+     * <summary>
+     * Returns a copy of all the registered titles, typically for save game serialisation.
+     * </summary>
+     */
+    public IReadOnlyList<Title> Snapshot()
+    {
+        return _titlesByTitleId.Values.ToList();
+    }
+
+    public Title? GetTitle(string titleId)
+    {
+        return _titlesByTitleId.TryGetValue(titleId, out Title title) ? title : null;
+    }
+
+    public Title? GetTitleBySeat(string settlementId)
+    {
+        return _titleIdBySeatSettlementId.TryGetValue(settlementId, out string titleId)
+            ? GetTitle(titleId)
+            : null;
+    }
+
+    public IReadOnlyList<Title> GetTitlesByClan(string clanId)
+    {
+        return _titlesByTitleId.Values.Where(title => _genealogy.GetHolderClanOf(title) == clanId).ToList();
+    }
+
+    public IReadOnlyList<Title> GetAllTitles()
+    {
+        return _titlesByTitleId.Values.ToList();
+    }
+
+    public void SaveTitle(Title title)
+    {
+        bool existed = _titlesByTitleId.TryGetValue(title.Id, out Title existingTitle);
+        bool holderOrOccupantChanged = !existed
+                                       || existingTitle.HolderHeroId != title.HolderHeroId
+                                       || existingTitle.OccupantClanId != title.OccupantClanId;
+
+        if (existed
+            && existingTitle.SeatSettlementId.Length > 0
+            && existingTitle.SeatSettlementId != title.SeatSettlementId)
+        {
+            _titleIdBySeatSettlementId.Remove(existingTitle.SeatSettlementId);
+        }
+
+        _titlesByTitleId[title.Id] = title;
+        if (title.SeatSettlementId.Length > 0)
+        {
+            _titleIdBySeatSettlementId[title.SeatSettlementId] = title.Id;
+        }
+        Interlocked.Increment(ref _revision);
+
+        if (holderOrOccupantChanged && !_initialising) HolderOrOccupantChanged?.Invoke(title.Id);
+    }
+}

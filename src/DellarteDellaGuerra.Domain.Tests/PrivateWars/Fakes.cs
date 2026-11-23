@@ -1,0 +1,103 @@
+using System.Collections.Generic;
+using Bannerlord.PrivateWars.Domain;
+using Bannerlord.PrivateWars.Domain.Model;
+using Bannerlord.PrivateWars.Domain.Port;
+
+namespace DellarteDellaGuerra.Domain.Tests.PrivateWars
+{
+    internal sealed class FakePrivateWarRepository : IPrivateWarRepository
+    {
+        private readonly Dictionary<string, PrivateWar> _wars = new();
+
+        public FakePrivateWarRepository(params PrivateWar[] wars)
+        {
+            foreach (var war in wars) _wars[war.Id] = war;
+        }
+
+        public PrivateWar? Get(string id) => _wars.TryGetValue(id, out var war) ? war : null;
+
+        public IReadOnlyList<PrivateWar> GetByPrincipalPair(string attackerPrincipalClanId, string defenderPrincipalClanId) =>
+            _wars.Values
+                .Where(w => w.AttackerPrincipalClanId == attackerPrincipalClanId
+                            && w.DefenderPrincipalClanId == defenderPrincipalClanId)
+                .ToList();
+
+        public IReadOnlyList<PrivateWar> GetByClan(string principalClanId) =>
+            _wars.Values
+                .Where(w => w.AttackerPrincipalClanId == principalClanId
+                            || w.DefenderPrincipalClanId == principalClanId)
+                .ToList();
+
+        public IReadOnlyList<PrivateWar> GetAll() => _wars.Values.ToList();
+
+        public void Add(PrivateWar war) => _wars[war.Id] = war;
+
+        public void Update(PrivateWar war) => _wars[war.Id] = war;
+
+        public void Remove(string id) => _wars.Remove(id);
+
+        public void Initialise(IEnumerable<PrivateWar> wars)
+        {
+            _wars.Clear();
+            foreach (var war in wars) _wars[war.Id] = war;
+        }
+    }
+
+    internal sealed class FakePrivateWarSidesProvider : IPrivateWarSidesProvider
+    {
+        private readonly IReadOnlyDictionary<string, string> _suzerains;
+
+        public FakePrivateWarSidesProvider(IReadOnlyDictionary<string, string>? suzerains = null)
+        {
+            _suzerains = suzerains ?? new Dictionary<string, string>();
+        }
+
+        public WarSide? ResolveSide(string clanId, PrivateWar war) =>
+            new WarSideResolver().ResolveSide(clanId, war, GetSuzerain);
+
+        public string? GetSuzerain(string clanId) => _suzerains.TryGetValue(clanId, out var suzerain) ? suzerain : null;
+    }
+
+    /// <summary>Shared builders so tests state only the fields they care about.</summary>
+    internal static class PrivateWarTestData
+    {
+        public static readonly PrivateWarObservations NoControl = new(
+            AttackerHoldsMainGoal: false,
+            DefenderSideTownsHeldByAttacker: 0,
+            DefenderSideCastlesHeldByAttacker: 0,
+            AttackerSideTownsHeldByDefender: 0,
+            AttackerSideCastlesHeldByDefender: 0,
+            DefenderClanPrisonersHeldByAttackerSide: 0,
+            AttackerClanPrisonersHeldByDefenderSide: 0,
+            AccumulatedBattleScore: 0f);
+
+        public static readonly IReadOnlyCollection<string> NoSupporters = Array.Empty<string>();
+
+        public static PrivateWar War(
+            string attacker = "clan_attacker",
+            string defender = "clan_defender",
+            string title = "title_county",
+            string mainGoal = "settlement_goal",
+            float battleScore = 0f,
+            IReadOnlyDictionary<string, string>? fiefSnapshot = null,
+            float startDay = 0f,
+            float? goalLastTakenDay = null,
+            IReadOnlyCollection<string>? attackerSupporters = null,
+            IReadOnlyCollection<string>? defenderSupporters = null) =>
+            new(
+                Id: $"pw_{attacker}_{defender}",
+                AttackerPrincipalClanId: attacker,
+                DefenderPrincipalClanId: defender,
+                AttackerSupporters: attackerSupporters ?? NoSupporters,
+                DefenderSupporters: defenderSupporters ?? NoSupporters,
+                CasusBelliType: "claim",
+                TitleId: title,
+                MainGoalSettlementId: mainGoal,
+                OriginalFiefOwners: fiefSnapshot ?? new Dictionary<string, string>(),
+                BattleScore: battleScore,
+                Score: 0f,
+                StartDay: startDay,
+                GoalLastTakenDay: goalLastTakenDay ?? startDay,
+                Status: PrivateWarStatus.Active);
+    }
+}

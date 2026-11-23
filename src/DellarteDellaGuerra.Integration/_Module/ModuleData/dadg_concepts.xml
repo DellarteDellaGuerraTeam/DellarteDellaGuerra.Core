@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Concepts>
+	<Concept
+		title="{=dadg_concept_lordships_title}Lordships"
+		id="str_dadg_concept_lordships"
+		group="DadgTitles"
+		link_id="DADG_LORDSHIPS_LINK"
+		text="{=dadg_concept_lordships_text}The Lordships view of the political map shows which noble house each town, castle and village answers to. From afar, a house's lands are shown under the great lord it follows; up close, each house appears on its own.{newline}{newline}In 1471 few towns were any lord's property. Cities and boroughs held royal charters, governed themselves through their mayors and aldermen, and paid their dues to the Crown. Yet the great houses dominated the country around their seats. They held the surrounding manors, kept royal castles and honours as stewards and constables, and led affinities of lesser gentry who filled the local offices and sat for the shire in Parliament. The game therefore places each town in the hands of the house whose influence ran strongest there. The Lordships view shows these spheres of influence, not legal ownership.{newline}{newline}The Jurisdictions view shows a different order: the palatinates, marches, assize circuits and shires through which the King's justice and administration ran." />
+</Concepts>

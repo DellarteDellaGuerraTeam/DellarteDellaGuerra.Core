@@ -42,11 +42,25 @@
       <Tags />
     </SubModule>
     <SubModule>
+      <Name value="Bannerlord.PrivateWars"/>
+      <DLLName value="Bannerlord.PrivateWars.dll"/>
+      <SubModuleClassType value="Bannerlord.PrivateWars.SubModule"/>
+      <Tags />
+    </SubModule>
+    <SubModule>
       <Name value="PocColor"/>
       <DLLName value="PocColor.Integration.dll"/>
       <SubModuleClassType value="PocColor.PocColorSubModule"/>
       <Tags />
     </SubModule>
   </SubModules>
-  <Xmls/>
+  <Xmls>
+    <XmlNode>
+      <XmlName id="Concepts" path="dadg_concepts"/>
+      <IncludedGameTypes>
+        <GameType value="Campaign"/>
+        <GameType value="CampaignStoryMode"/>
+      </IncludedGameTypes>
+    </XmlNode>
+  </Xmls>
 </Module>

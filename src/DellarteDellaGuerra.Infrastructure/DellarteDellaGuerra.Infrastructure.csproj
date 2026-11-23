@@ -34,6 +34,10 @@
         <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.Domain\Bannerlord.Cannons.Domain.csproj" />
         <ProjectReference Include="..\submodules\Cannons\Bannerlord.Cannons.Infrastructure\Bannerlord.Cannons.Infrastructure.csproj" />
 
+        <ProjectReference Include="..\submodules\PrivateWars\Bannerlord.PrivateWars.API\Bannerlord.PrivateWars.API.csproj" />
+        <ProjectReference Include="..\submodules\PrivateWars\Bannerlord.PrivateWars\Bannerlord.PrivateWars.csproj" />
+        <ProjectReference Include="..\submodules\PrivateWars\Bannerlord.PrivateWars.Domain\Bannerlord.PrivateWars.Domain.csproj" />
+
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj" />
         <ProjectReference Include="..\DellarteDellaGuerra\DellarteDellaGuerra.csproj" />
 
@@ -68,6 +72,8 @@
         <Copy
                 SourceFiles="@(ClientFiles)"
                 DestinationFolder="$(MSBuildThisFileDirectory)..\..\bin\Win64_Shipping_wEditor\%(RecursiveDir)"
-                SkipUnchangedFiles="true" />
+                SkipUnchangedFiles="true"
+                Retries="0"
+                ContinueOnError="WarnAndContinue" />
     </Target>
 </Project>

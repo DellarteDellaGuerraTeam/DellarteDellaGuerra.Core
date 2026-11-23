@@ -36,6 +36,14 @@ namespace DellarteDellaGuerra.Infrastructure.Configuration.Models
 
         /**
          * <summary>
+         * Gets or sets configuration for the private-war feature.
+         * </summary>
+         */
+        [XmlElement(ElementName = "PrivateWarConfig")]
+        public PrivateWarConfig PrivateWarConfig { get; set; } = new PrivateWarConfig();
+
+        /**
+         * <summary>
          * Gets or sets whether the combat overhaul's damage rules and item tiers are installed.
          * </summary>
          */

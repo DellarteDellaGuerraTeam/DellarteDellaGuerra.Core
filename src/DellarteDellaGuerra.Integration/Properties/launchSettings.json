@@ -18,13 +18,46 @@
     "Standalone": {
       "commandName": "Executable",
       "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_Client\\Bannerlord.exe",
-      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Bannerlord.ButterLib*Bannerlord.UIExtenderEx*Bannerlord.MBOptionScreen*Bannerlord.GABS*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*DellarteDellaGuerra.Core*DellarteDellaGuerra*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*_MODULES_",
+      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Bannerlord.ButterLib*Bannerlord.UIExtenderEx*Bannerlord.MBOptionScreen*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*DellarteDellaGuerra.Core*DellarteDellaGuerra*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*Bannerlord.GABS*_MODULES_",
       "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_Client",
       "environmentVariables": {
         "GABP_SERVER_PORT": "4825",
         "GABP_TOKEN": "80c93be27f02d35bedbe46493ce7a12f3d9976cc195cce2ece727cfdd0f09f9d",
         "GABS_GAME_ID": "bannerlord",
-        "GABS_BRIDGE_PATH": "C:\\Users\\Joe\\.gabs\\bannerlord\\bridge.json"
+        "GABS_BRIDGE_PATH": "C:\\Users\\Joe\\.gabs\\bannerlord\\bridge.json",
+        "COMPlus_JITMinOpts": "1",
+        "DOTNET_ReadyToRun": "0",
+        "COMPlus_ReadyToRun": "0"
+      }
+    },
+    "Standalone.WarSails.Audit": {
+      "commandName": "Executable",
+      "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_Client\\Bannerlord.exe",
+      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Bannerlord.ButterLib*Bannerlord.UIExtenderEx*Bannerlord.MBOptionScreen*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*NavalDLC*DellarteDellaGuerra.Core*DellarteDellaGuerra*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*Bannerlord.GABS*CampaignAudit*_MODULES_",
+      "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_Client",
+      "environmentVariables": {
+        "GABP_SERVER_PORT": "4825",
+        "GABP_TOKEN": "80c93be27f02d35bedbe46493ce7a12f3d9976cc195cce2ece727cfdd0f09f9d",
+        "GABS_GAME_ID": "bannerlord",
+        "GABS_BRIDGE_PATH": "C:\\Users\\Joe\\.gabs\\bannerlord\\bridge.json",
+        "COMPlus_JITMinOpts": "1",
+        "DOTNET_ReadyToRun": "0",
+        "COMPlus_ReadyToRun": "0"
+      }
+    },
+    "Standalone.WarSails": {
+      "commandName": "Executable",
+      "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_Client\\Bannerlord.exe",
+      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Bannerlord.ButterLib*Bannerlord.UIExtenderEx*Bannerlord.MBOptionScreen*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*NavalDLC*DellarteDellaGuerra.Core*DellarteDellaGuerra*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*Bannerlord.GABS*_MODULES_",
+      "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_Client",
+      "environmentVariables": {
+        "GABP_SERVER_PORT": "4825",
+        "GABP_TOKEN": "80c93be27f02d35bedbe46493ce7a12f3d9976cc195cce2ece727cfdd0f09f9d",
+        "GABS_GAME_ID": "bannerlord",
+        "GABS_BRIDGE_PATH": "C:\\Users\\Joe\\.gabs\\bannerlord\\bridge.json",
+        "COMPlus_JITMinOpts": "1",
+        "DOTNET_ReadyToRun": "0",
+        "COMPlus_ReadyToRun": "0"
       }
     },
     "Standalone.Editor": {
@@ -32,7 +65,13 @@
       "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_wEditor\\Bannerlord.exe",
       "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Bannerlord.UIExtenderEx*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*DellarteDellaGuerra.Core*DellarteDellaGuerra*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*_MODULES_",
       "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_wEditor"
-    },    
+    },
+    "Standalone.Editor.WarSails": {
+      "commandName": "Executable",
+      "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_wEditor\\Bannerlord.exe",
+      "commandLineArgs": "/singleplayer _MODULES_*Bannerlord.Harmony*Bannerlord.UIExtenderEx*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*NavalDLC*DellarteDellaGuerra.Core*DellarteDellaGuerra*DellarteDellaGuerraMap*DellarteDellaGuerraScenes*_MODULES_",
+      "workingDirectory": "$(GameFolder)\\bin\\Win64_Shipping_wEditor"
+    },
     "Standalone.BLSE": {
       "commandName": "Executable",
       "executablePath": "$(GameFolder)\\bin\\Win64_Shipping_Client\\Bannerlord.BLSE.Standalone.exe",
