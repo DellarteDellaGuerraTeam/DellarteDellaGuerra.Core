@@ -226,6 +226,8 @@ namespace DellarteDellaGuerra.Integration
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<ShipSwivelGunCrewMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<ShipRudderVisualMissionLogic>());
             mission.AddMissionBehavior(_serviceProvider.GetRequiredService<NavalRaidSailMissionLogic>());
+            if (mission.MissionBehaviors.Any(b => b.GetType().FullName == "NavalDLC.Missions.MissionLogics.NavalShipsLogic"))
+                mission.AddMissionBehavior(new FleetSailOrderMissionLogic());
             if (_serviceProvider.GetRequiredService<CombatFeatureInstaller>().IsEnabled)
                 mission.AddMissionBehavior(_serviceProvider.GetRequiredService<CombatBalanceMissionLogic>());
         }
