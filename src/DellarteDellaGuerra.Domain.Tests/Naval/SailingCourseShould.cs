@@ -39,6 +39,27 @@ public class SailingCourseShould
     }
 
     [Fact]
+    public void LeaveTheTackWhenLeewayOpensADirectCourse()
+    {
+        var mark = new Vector2(0f, 100f);
+        Assert.True(_course.TryTack(Vector2.Zero, mark, Vector2.UnitX, Wind, 30, _ => true, out _));
+        Assert.False(_course.TryTack(new Vector2(70f, 80f), mark, Vector2.UnitX, Wind, 30, _ => true, out var next));
+        Assert.Equal(mark, next);
+    }
+
+    [Fact]
+    public void TurnAfterPassingTheWaypointAbeam()
+    {
+        Assert.True(_course.TryTack(Vector2.Zero, UpwindMark, Vector2.UnitX, Wind, 30, _ => true, out var leg));
+        var direction = Vector2.Normalize(leg);
+        var sideways = new Vector2(-direction.Y, direction.X) * 25f;
+        var position = leg + sideways;
+        Assert.True(_course.TryTack(position, UpwindMark, direction, Wind, 30, _ => true, out var next));
+        Assert.NotEqual(leg, next);
+        Assert.True(next.X < position.X);
+    }
+
+    [Fact]
     public void UseTheClearSideAndYieldWhenBothLegsAreBlocked()
     {
         Assert.True(_course.TryTack(Vector2.Zero, UpwindMark, Vector2.UnitX, Wind, 30, p => p.X < 0f, out var leg));

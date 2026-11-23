@@ -10,6 +10,7 @@ namespace DellarteDellaGuerra.Domain.Naval
         private const float TackSin = 0.93969262f;
         private const float CloseHauledCos = 0.5f;
         private Vector2 _waypoint;
+        private Vector2 _legDirection;
         private Vector2 _destination;
         private Vector2 _upwind;
         private bool _onLeg;
@@ -31,10 +32,11 @@ namespace DellarteDellaGuerra.Domain.Naval
 
             var upwind = -Vector2.Normalize(wind);
             var along = Vector2.Dot(delta, upwind);
-            // Keep a committed leg until its endpoint, a changed order/wind, or an obstruction.
+            // Leeway can carry the hull past the turn without passing through the waypoint.
             if (_onLeg && Vector2.DistanceSquared(destination, _destination) < arrival * arrival
                 && Vector2.Dot(upwind, _upwind) > 0.96f
-                && Vector2.Distance(position, _waypoint) > arrival && isClear(_waypoint))
+                && along > TackCos * distance
+                && Vector2.Dot(_waypoint - position, _legDirection) > arrival && isClear(_waypoint))
             {
                 waypoint = _waypoint;
                 return true;
@@ -57,6 +59,7 @@ namespace DellarteDellaGuerra.Domain.Naval
                 if (leg <= arrival || !isClear(candidate)) continue;
                 _destination = destination;
                 _upwind = upwind;
+                _legDirection = direction;
                 _waypoint = waypoint = candidate;
                 _onLeg = true;
                 return true;
