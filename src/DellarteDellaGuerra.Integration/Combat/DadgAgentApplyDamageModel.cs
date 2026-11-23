@@ -89,10 +89,10 @@ namespace DellarteDellaGuerra.Integration.Combat
             return BaseModel.CalculateAlternativeAttackDamage(in attackInformation, in collisionData, weapon);
         }
 
-        public override float CalculatePassiveAttackDamage(BasicCharacterObject attackerCharacter,
+        public override float CalculatePassiveAttackDamage(in AttackInformation attackInformation,
             in AttackCollisionData collisionData, float baseDamage)
         {
-            return BaseModel.CalculatePassiveAttackDamage(attackerCharacter, in collisionData, baseDamage);
+            return BaseModel.CalculatePassiveAttackDamage(in attackInformation, in collisionData, baseDamage);
         }
 
         public override MeleeCollisionReaction DecidePassiveAttackCollisionReaction(Agent attacker, Agent defender,

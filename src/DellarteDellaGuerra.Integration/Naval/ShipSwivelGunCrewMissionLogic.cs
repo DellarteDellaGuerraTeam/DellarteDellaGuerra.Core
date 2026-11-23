@@ -91,7 +91,7 @@ public class ShipSwivelGunCrewMissionLogic : MissionLogic
             formation.StartUsingMachine(gun, isPlayerOrder: true);
         _joinedFormations[gun] = formation;
         // Vanilla only fills the target list of ShipSiegeWeapon; an AI pilot on any other gun NREs in GetAllThreats
-        (gun.Ai as RangedSiegeWeaponAi)?.InitializeThreatSeeker();
+        (gun.Ai as RangedSiegeWeaponAi)?.ResetThreatSeeker();
         gun.AddAgentAtSlotIndex(crew, gun.PilotStandingPointSlotIndex);
     }
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using SandBox;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.AdvancedStartOptions;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
 
@@ -21,7 +22,7 @@ namespace DellarteDellaGuerra.MainMenu
 
         private static void OnClick()
         {
-            MBGameManager gameManager = new SandBoxGameManager(() => new Campaign(CampaignGameMode.Campaign));
+            MBGameManager gameManager = new SandBoxGameManager(() => new Campaign(CampaignGameMode.Campaign, new AdvancedStartOptionsData()));
             MBGameManager.StartNewGame(gameManager);
         }
 
