@@ -11,6 +11,6 @@ internal sealed class ArmyBannerStateChangerPatch : PrefabExtensionInsertPatch
     [PrefabExtensionText]
     public string StateChanger =>
         """
-        <BoolStateChangerWidget DataSource="{..}" TargetWidget="..\." BooleanCheck="@IsArmy" TrueState="Army" FalseState="Default" />
+        <BoolStateChangerBrushWidget DataSource="{..}" TargetWidget="..\." BooleanCheck="@IsArmy" TrueState="Army" FalseState="Default" />
         """;
 }
