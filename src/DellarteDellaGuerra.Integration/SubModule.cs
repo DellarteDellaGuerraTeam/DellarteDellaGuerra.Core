@@ -88,6 +88,7 @@ namespace DellarteDellaGuerra.Integration
             // Deferred until here so that the brush factory and the sprite categories are loaded.
             _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().RegisterNameplateBrush();
             PoliticalMap.UI.PoliticalMapToolbar.RegisterIcon(_logger);
+            ShipThumbnailBrushes.Register();
             InfoPrinter.Display("DADG loaded");
             var currentModule = TaleWorlds.MountAndBlade.Module.CurrentModule;
             _serviceProvider.GetRequiredService<DadgCampaignStartButtonAdder>().AddDadgCampaignStartButton(currentModule);
