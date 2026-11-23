@@ -40,9 +40,9 @@ dependencies:
   materialization_repo_url: JoeFwd/dadg-agent
   name: dadg-agent
   host: github.com
-  resolved_commit: 27af40666ec84045ec4cac5946486e7adcf82341
-  resolved_ref: v0.3.2
-  version: 0.3.2
+  resolved_commit: f4718f6ca1c4732a479c5ad1554ae93290bbf8e7
+  resolved_ref: v0.3.3
+  version: 0.3.3
   package_type: apm_package
   deployed_files:
   - .agents/skills/bannerlord-agent-settings
@@ -88,7 +88,7 @@ dependencies:
   - .claude/skills/dadg-project-context/references/war-sails-ships.md
   - .codex/hooks/dadg-agent/.apm/hooks/context/dadg-agent.md
   deployed_file_hashes:
-    .agents/skills/bannerlord-agent-settings/SKILL.md: sha256:c47ef207256230fbd468fc945fc67cd0e60b9bf1f2527631a0462c2921ca75d7
+    .agents/skills/bannerlord-agent-settings/SKILL.md: sha256:f09fa4d4756291aaf852a61fb403afaf142f38fcd5028814fb90bb9ccc976368
     .agents/skills/bannerlord-scotland-settlement-placement/SKILL.md: sha256:be0ba883d87fce6a0c9f9d22531cd133223e738a5c858f12aaa183315692343f
     .agents/skills/bannerlord-scotland-settlement-placement/agents/openai.yaml: sha256:76cd2ad72a4cfebe5aa92231d0a67d3320672178916e6ca0b4b818d048a948be
     .agents/skills/bannerlord-scotland-settlement-placement/assets/crown-of-scotland-locations.kmz: sha256:783f86376a636e8e6e7309548a31761b25827173ccbc1019f218dad0f12e0b49
@@ -106,7 +106,7 @@ dependencies:
     .agents/skills/dadg-project-context/references/navmesh-setup-and-repair.md: sha256:e400d72264d61c0cb36161ca17070df4927da1cf2152769a3c62f38886c16090
     .agents/skills/dadg-project-context/references/war-sails-ships.md: sha256:979cfb68d40630ad7b43025185800165fce3f6d4f6534a38c38e770d698f0e4c
     .claude/hooks/dadg-agent/.apm/hooks/context/dadg-agent.md: sha256:327909fd66df3f5cb69f8c2e363132fb640835266ea4841e30c043c71694de03
-    .claude/skills/bannerlord-agent-settings/SKILL.md: sha256:c47ef207256230fbd468fc945fc67cd0e60b9bf1f2527631a0462c2921ca75d7
+    .claude/skills/bannerlord-agent-settings/SKILL.md: sha256:f09fa4d4756291aaf852a61fb403afaf142f38fcd5028814fb90bb9ccc976368
     .claude/skills/bannerlord-scotland-settlement-placement/SKILL.md: sha256:be0ba883d87fce6a0c9f9d22531cd133223e738a5c858f12aaa183315692343f
     .claude/skills/bannerlord-scotland-settlement-placement/agents/openai.yaml: sha256:76cd2ad72a4cfebe5aa92231d0a67d3320672178916e6ca0b4b818d048a948be
     .claude/skills/bannerlord-scotland-settlement-placement/assets/crown-of-scotland-locations.kmz: sha256:783f86376a636e8e6e7309548a31761b25827173ccbc1019f218dad0f12e0b49
@@ -124,7 +124,7 @@ dependencies:
     .claude/skills/dadg-project-context/references/navmesh-setup-and-repair.md: sha256:e400d72264d61c0cb36161ca17070df4927da1cf2152769a3c62f38886c16090
     .claude/skills/dadg-project-context/references/war-sails-ships.md: sha256:979cfb68d40630ad7b43025185800165fce3f6d4f6534a38c38e770d698f0e4c
     .codex/hooks/dadg-agent/.apm/hooks/context/dadg-agent.md: sha256:327909fd66df3f5cb69f8c2e363132fb640835266ea4841e30c043c71694de03
-  content_hash: sha256:49a80eed2f776472c80158a304de6ef7585d8c5480fefa53c2e119b1ccf07e89
+  content_hash: sha256:85b68e10091d8bbccb2986a7b63116b0d6eda94a5ad32b64119a0ce0581cf080
 - repo_url: joefwd/bannerlord-agent
   materialization_repo_url: JoeFwd/bannerlord-agent
   name: bannerlord-agent
@@ -371,7 +371,7 @@ deployments:
   owners:
   - joefwd/dadg-agent
   active_owner: joefwd/dadg-agent
-  content_hash: sha256:c47ef207256230fbd468fc945fc67cd0e60b9bf1f2527631a0462c2921ca75d7
+  content_hash: sha256:f09fa4d4756291aaf852a61fb403afaf142f38fcd5028814fb90bb9ccc976368
 - kind: project-relative
   target: claude
   value: .claude/skills/bannerlord-crafting-offsets
@@ -956,7 +956,7 @@ deployments:
   owners:
   - joefwd/dadg-agent
   active_owner: joefwd/dadg-agent
-  content_hash: sha256:c47ef207256230fbd468fc945fc67cd0e60b9bf1f2527631a0462c2921ca75d7
+  content_hash: sha256:f09fa4d4756291aaf852a61fb403afaf142f38fcd5028814fb90bb9ccc976368
 - kind: project-relative
   target: codex
   value: .agents/skills/bannerlord-crafting-offsets
@@ -1556,6 +1556,7 @@ mcp_servers:
 - bannerlord-search-1_2_12
 - bannerlord-search-1_3_15
 - bannerlord-search-1_4_8
+- bannerlord-search-1_5_7
 - jetbrains-debugger
 - music-analysis
 mcp_configs:
@@ -1607,6 +1608,18 @@ mcp_configs:
     - http://localhost:5002
     registry: false
     command: uv
+  bannerlord-search-1_5_7:
+    name: bannerlord-search-1_5_7
+    transport: stdio
+    args:
+    - run
+    - --isolated
+    - --no-project
+    - apm_modules/JoeFwd/bannerlord-agent/.apm/mcp/mcp-http-stdio-bridge.py
+    - --url
+    - http://localhost:5003
+    registry: false
+    command: uv
   jetbrains-debugger:
     name: jetbrains-debugger
     transport: stdio
@@ -1634,5 +1647,6 @@ mcp_config_provenance:
   bannerlord-search-1_2_12: dadg-agent
   bannerlord-search-1_3_15: dadg-agent
   bannerlord-search-1_4_8: dadg-agent
+  bannerlord-search-1_5_7: dadg-agent
   jetbrains-debugger: dadg-agent
   music-analysis: dadg-agent

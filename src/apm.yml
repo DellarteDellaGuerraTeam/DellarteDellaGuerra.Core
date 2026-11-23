@@ -8,6 +8,6 @@ targets:
   - codex
 dependencies:
   apm:
-    - JoeFwd/dadg-agent#v0.3.2
+    - JoeFwd/dadg-agent#v0.3.3
     - DietrichGebert/ponytail/skills/ponytail
     - alirezarezvani/claude-skills/engineering-team/skills/adversarial-reviewer
