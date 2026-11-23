@@ -21,6 +21,8 @@ using DellarteDellaGuerra.Domain.Visor.Port;
 using DellarteDellaGuerra.Firearm;
 using DellarteDellaGuerra.Firearm.Reload;
 using DellarteDellaGuerra.Heraldry;
+using DellarteDellaGuerra.Integration.Visor;
+using DellarteDellaGuerra.Integration.Visor.MapConversation;
 using DellarteDellaGuerra.Integration.Visor.Mission;
 using DellarteDellaGuerra.Infrastructure.CharacterCreation.Patches;
 using DellarteDellaGuerra.Infrastructure.Configuration.Models;
@@ -160,6 +162,8 @@ public class DadgServiceContainer
         services.AddTransient<TournamentRecapBannerMissionLogic>();
         services.AddSingleton<IVisorVariantRepository, VisorVariantXmlRepository>();
         services.AddSingleton<VisorVariantCatalog>();
+        services.AddSingleton<VisorHelmetResolver>();
+        services.AddSingleton<MapConversationVisorOpener>();
         services.AddTransient<VisorToggleMissionLogic>();
         services.AddTransient<ShipSwivelGunCrewMissionLogic>();
         services.AddTransient<ShipRudderVisualMissionLogic>();
@@ -266,5 +270,7 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, HidePlayerPartyLabelsPatch>();
         services.AddSingleton<IPatch, HidePlayerMapTrackerPatch>();
         services.AddSingleton<IPatch, HideBookmarkedMapTrackersPatch>();
+        // Visor
+        services.AddSingleton<IPatch, MapConversationTableauTickPatch>();
     }
 }

@@ -1,15 +1,17 @@
+using System.Collections.Generic;
+using System.Linq;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
-using DellarteDellaGuerra.Domain.Visor;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
 using TaleWorlds.InputSystem;
 using TaleWorlds.MountAndBlade;
-using TaleWorlds.ObjectSystem;
 
 namespace DellarteDellaGuerra.Integration.Visor.Mission
 {
     /// <summary>
-    /// Plays the visor open/close animations on the player's agent when the toggle key is pressed,
-    /// and swaps the equipped helmet to its open/closed counterpart from <see cref="VisorVariantCatalog"/>.
+    /// Plays the visor open/close animations on the player's agent when the toggle key is pressed, and opens the
+    /// visor of lords the player talks to, swapping the helmet to its counterpart from <see cref="VisorHelmetResolver"/>.
     /// The animations come from the DellarteDellaGuerra content module
     /// (ModuleData/Animations/dadg_action_types.xml and dadg_action_sets.xml).
     /// </summary>
@@ -18,9 +20,9 @@ namespace DellarteDellaGuerra.Integration.Visor.Mission
         // TODO: make it configurable
         private const InputKey ToggleKey = InputKey.V;
         private const int UpperBodyChannel = 1;
-        private const float SwapProgress = 0.35f;
+        internal const float SwapProgress = 0.35f;
 
-        private static readonly ActionIndexCache VisorOpen = ActionIndexCache.Create("act_visor_open");
+        private static readonly ActionIndexCache VisorOpen =ActionIndexCache.Create("act_visor_open");
         private static readonly ActionIndexCache VisorOpenLeftStance = ActionIndexCache.Create("act_visor_open_leftstance");
         private static readonly ActionIndexCache VisorClose = ActionIndexCache.Create("act_visor_close");
         private static readonly ActionIndexCache VisorCloseLeftStance = ActionIndexCache.Create("act_visor_close_leftstance");
@@ -28,113 +30,133 @@ namespace DellarteDellaGuerra.Integration.Visor.Mission
         private static readonly ActionIndexCache VisorCloseHorseback = ActionIndexCache.Create("act_visor_close_horseback");
 
         private readonly ILogger _logger;
-        private readonly VisorVariantCatalog _catalog;
+        private readonly VisorHelmetResolver _resolver;
 
-        private Agent? _pendingAgent;
-        private ItemObject? _pendingHelmet;
-        private ActionIndexCache _pendingAction;
-        private bool _pendingActionStarted;
+        private readonly Dictionary<Agent, PendingSwap> _pendingSwaps = new();
+        private bool _openVisorsForConversation;
 
-        public VisorToggleMissionLogic(ILoggerFactory loggerFactory, VisorVariantCatalog catalog)
+        public VisorToggleMissionLogic(ILoggerFactory loggerFactory, VisorHelmetResolver resolver)
         {
             _logger = loggerFactory.CreateLogger<VisorToggleMissionLogic>();
-            _catalog = catalog;
+            _resolver = resolver;
+        }
+
+        public override void OnMissionModeChange(MissionMode oldMissionMode, bool atStart)
+        {
+            base.OnMissionModeChange(oldMissionMode, atStart);
+            _openVisorsForConversation = Mission.Mode == MissionMode.Conversation;
         }
 
         public override void OnMissionTick(float dt)
         {
             base.OnMissionTick(dt);
 
-            if (_pendingAgent is not null)
+            if (_pendingSwaps.Count > 0)
+                foreach (var pendingAgent in _pendingSwaps.Keys.ToList())
+                    TickPendingSwap(pendingAgent, _pendingSwaps[pendingAgent]);
+
+            // Mission conversations start after rendering has started, but the loading screen can still be up.
+            if (_openVisorsForConversation && !LoadingWindow.IsLoadingWindowActive)
             {
-                TickPendingSwap();
-                return;
+                _openVisorsForConversation = false;
+                OpenConversationPartnerVisors();
             }
 
             if (!Input.IsKeyPressed(ToggleKey)) return;
 
             var agent = Mission.MainAgent;
-            if (agent is null || !agent.IsActive() || !agent.IsHuman) return;
+            if (agent is null || _pendingSwaps.ContainsKey(agent)) return;
 
-            if (IsPlayingVisorAction(agent)) return;
+            TryStartVisorAction(agent, null);
+        }
 
-            var head = agent.SpawnEquipment[EquipmentIndex.Head];
-            var currentItemId = head.Item?.StringId;
-            if (currentItemId is null || !_catalog.TryFindPair(currentItemId, out var pair)) return;
+        /// <summary>
+        /// Plays the visor animation on <paramref name="agent"/> and swaps the helmet so the visor ends up
+        /// open or closed. Returns false when nothing was started: no visor variant, already in that state,
+        /// a visor action in progress, or the animation cannot play.
+        /// </summary>
+        public bool TrySetVisor(Agent agent, bool open)
+        {
+            return !_pendingSwaps.ContainsKey(agent) && TryStartVisorAction(agent, open);
+        }
 
-            var result = VisorToggleResult.From(pair, currentItemId);
-            var nextItem = MBObjectManager.Instance.GetObject<ItemObject>(result.NextItemId);
-            if (nextItem is null)
+        private void OpenConversationPartnerVisors()
+        {
+            var conversationAgents = Campaign.Current?.ConversationManager?.ConversationAgents;
+            if (conversationAgents is null) return;
+
+            foreach (var conversationAgent in conversationAgents)
             {
-                _logger.Error(
-                    $"Could not toggle the visor of '{currentItemId}' because item '{result.NextItemId}' does not exist. " +
-                    "Check dadg_visor_variants.xml against the item XML.");
-                return;
+                // A seated lord's pose would be broken by the upper-body action.
+                if (conversationAgent is Agent { IsMainAgent: false, IsHero: true } agent && !agent.IsSitting())
+                    TrySetVisor(agent, true);
             }
+        }
 
-            var action = GetVisorAction(result.IsOpen, agent.HasMount, agent.GetIsLeftStance());
+        private bool TryStartVisorAction(Agent agent, bool? open)
+        {
+            if (!agent.IsActive() || !agent.IsHuman) return false;
+
+            if (IsPlayingVisorAction(agent)) return false;
+
+            if (!_resolver.TryResolve(agent.SpawnEquipment[EquipmentIndex.Head].Item, open, out var nextItem,
+                    out var isOpen)) return false;
+
+            var action = GetVisorAction(isOpen, agent.HasMount, agent.GetIsLeftStance());
             if (action == ActionIndexCache.act_none)
             {
                 _logger.Error(
                     "Could not play the visor animation because the action is not registered. " +
                     "The DellarteDellaGuerra module needs the visor entries in ModuleData/Animations.");
-                return;
+                return false;
             }
 
-            if (!agent.SetActionChannel(UpperBodyChannel, in action)) return;
+            if (!MBActionSet.CheckActionAnimationClipExists(agent.ActionSet, in action)) return false;
 
-            _pendingAgent = agent;
-            _pendingHelmet = nextItem;
-            _pendingAction = action;
-            _pendingActionStarted = false;
+            if (!agent.SetActionChannel(UpperBodyChannel, in action)) return false;
+
+            _pendingSwaps[agent] = new PendingSwap(nextItem, action);
+            return true;
         }
 
         // The equipment refresh cancels the upper-body action, so the swap waits for SwapProgress and the action
         // is then restarted from where it was cut.
-        private void TickPendingSwap()
+        private void TickPendingSwap(Agent agent, PendingSwap pending)
         {
-            var agent = _pendingAgent!;
             if (!agent.IsActive())
             {
-                ClearPendingSwap();
+                _pendingSwaps.Remove(agent);
                 return;
             }
 
             if (IsPlayingVisorAction(agent))
             {
-                _pendingActionStarted = true;
+                pending.ActionStarted = true;
                 var progress = agent.GetCurrentActionProgress(UpperBodyChannel);
                 if (progress < SwapProgress) return;
 
-                var action = _pendingAction;
-                SwapPendingHelmet(agent);
+                var action = pending.Action;
+                SwapPendingHelmet(agent, pending.Helmet);
                 agent.SetActionChannel(UpperBodyChannel, in action, ignorePriority: true, blendInPeriod: 0f,
                     startProgress: progress);
                 return;
             }
 
             // The action may not be reported on the tick it was set; wait until it has been seen playing.
-            if (!_pendingActionStarted) return;
+            if (!pending.ActionStarted) return;
 
             // Interrupted before SwapProgress: the visor never moved, so keep the current helmet.
-            ClearPendingSwap();
+            _pendingSwaps.Remove(agent);
         }
 
-        private void SwapPendingHelmet(Agent agent)
+        private void SwapPendingHelmet(Agent agent, ItemObject helmet)
         {
             // Clone rather than mutate: SpawnEquipment can be shared with the character's own equipment.
             var equipment = new Equipment(agent.SpawnEquipment);
             var head = equipment[EquipmentIndex.Head];
-            equipment[EquipmentIndex.Head] = new EquipmentElement(_pendingHelmet, head.ItemModifier);
-            ClearPendingSwap();
+            equipment[EquipmentIndex.Head] = new EquipmentElement(helmet, head.ItemModifier);
+            _pendingSwaps.Remove(agent);
             SwapSpawnEquipmentKeepingWeapons(agent, equipment);
-        }
-
-        private void ClearPendingSwap()
-        {
-            _pendingAgent = null;
-            _pendingHelmet = null;
-            _pendingActionStarted = false;
         }
 
         /// <summary>
@@ -183,6 +205,19 @@ namespace DellarteDellaGuerra.Integration.Visor.Mission
                    || currentAction == VisorCloseLeftStance
                    || currentAction == VisorOpenHorseback
                    || currentAction == VisorCloseHorseback;
+        }
+
+        private class PendingSwap
+        {
+            public PendingSwap(ItemObject helmet, ActionIndexCache action)
+            {
+                Helmet = helmet;
+                Action = action;
+            }
+
+            public ItemObject Helmet { get; }
+            public ActionIndexCache Action { get; }
+            public bool ActionStarted { get; set; }
         }
     }
 }
