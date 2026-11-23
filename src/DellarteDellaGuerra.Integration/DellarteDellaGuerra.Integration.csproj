@@ -23,7 +23,7 @@
         <PackageReference Include="Harmony.DependencyInjection" Version="0.2.0"/>
 
         <!-- Compile-time only: the DLL is provided at runtime by the Bannerlord.UIExtenderEx module -->
-        <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.2" IncludeAssets="compile" PrivateAssets="all"/>
+        <PackageReference Include="Bannerlord.UIExtenderEx" Version="3.0.3" IncludeAssets="compile" PrivateAssets="all"/>
 
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="$(GameVersion).*-*" PrivateAssets="All"/>
         <PackageReference Include="Bannerlord.ReferenceAssemblies.Sandbox" Version="$(GameVersion).*-*" PrivateAssets="All"/>
@@ -31,7 +31,7 @@
         <PackageReference Include="Bannerlord.ReferenceAssemblies.NavalDLC" Version="$(GameVersion).*-*" IncludeAssets="compile" PrivateAssets="All"/>
 
         <!-- Compile-time only: the DLL is provided at runtime by the Bannerlord.UIExtenderEx module -->
-        <PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.2" IncludeAssets="compile" PrivateAssets="all"/>
+        <PackageReference Include="Bannerlord.UIExtenderEx" Version="3.0.3" IncludeAssets="compile" PrivateAssets="all"/>
 
         <ProjectReference Include="..\DellarteDellaGuerra.Domain\DellarteDellaGuerra.Domain.csproj"/>
         <ProjectReference Include="..\DellarteDellaGuerra.Infrastructure\DellarteDellaGuerra.Infrastructure.csproj"/>
