@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using DellarteDellaGuerra.Domain.Common.Logging.Port;
+using DellarteDellaGuerra.Infrastructure.Utils;
 using DellarteDellaGuerra.Integration.Visor.Mission;
 using HarmonyLib;
 using SandBox.View.Map;
@@ -30,7 +31,7 @@ namespace DellarteDellaGuerra.Integration.Visor.MapConversation
         // tried first.
         private const string ExternalSoundEvent = "event:/Extra/external";
         private const string VoiceOverEvent = "event:/Extra/voiceover";
-        private const string VisorOpenSoundFiles = "DellarteDellaGuerra/ModuleSounds/Visor/visoropen_0{0}.ogg";
+        private const string VisorOpenSoundFiles = "Visor/visoropen_0{0}.ogg";
         private const int VisorOpenSoundFileCount = 2;
         // Used when the clip declares no blend out; the shortest fade that hides the snap back to the idle.
         private const float MinBlendOutSeconds = 0.25f;
@@ -195,11 +196,11 @@ namespace DellarteDellaGuerra.Integration.Visor.MapConversation
             var scene = TableauSceneField?.Invoke(tableau);
             if (scene is null) return;
 
-            var file = System.IO.Path.Combine(BasePath.Name, "Modules",
-                string.Format(VisorOpenSoundFiles, _random.Next(VisorOpenSoundFileCount) + 1));
-            if (!System.IO.File.Exists(file))
+            var relativeFile = string.Format(VisorOpenSoundFiles, _random.Next(VisorOpenSoundFileCount) + 1);
+            var file = ResourceLocator.GetModuleSoundFilePath(relativeFile);
+            if (file is null)
             {
-                _logger.Error($"Could not play the visor sound because {file} does not exist.");
+                _logger.Error($"Could not play the visor sound because ModuleSounds/{relativeFile} was not found in any DellarteDellaGuerra module.");
                 return;
             }
             if (SoundEvent.CreateEventFromExternalFile(ExternalSoundEvent, file, scene, true, false).Play()) return;

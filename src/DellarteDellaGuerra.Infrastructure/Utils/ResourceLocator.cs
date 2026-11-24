@@ -146,6 +146,20 @@ namespace DellarteDellaGuerra.Infrastructure.Utils
             return GetModuleDataFile("dadg_battle_scenes.xml");
         }
 
+        /**
+         * <summary>
+         * Gets the path to a file in the ModuleSounds folder.
+         * Its existence is checked.
+         * </summary>
+         * <returns>
+         * The first found among all of the mod's modules or null if not found.
+         * </returns>
+         */
+        public static string? GetModuleSoundFilePath(string pathRelativeToModuleSounds)
+        {
+            return GetResourceFromModModules(Path.Combine("ModuleSounds", pathRelativeToModuleSounds));
+        }
+
         private static string? GetCustomXmlFile(string filename)
         {
             return GetModuleDataFile(Path.Combine("CustomXml", filename));
