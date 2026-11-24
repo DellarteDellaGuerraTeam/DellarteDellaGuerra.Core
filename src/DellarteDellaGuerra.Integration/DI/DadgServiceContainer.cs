@@ -245,6 +245,7 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, CampaignMusicHandlerTickPatch>();
         // Character creation
         services.AddSingleton<IPatch, DisableSortingBehaviourInCultureMenuPatch>();
+        services.AddSingleton<IPatch, MainCulturesOnlyInCultureMenuPatch>();
         // Heraldry
         services.AddSingleton<IPatch, AllowSingleplayerExtendedBannerCodeParsingPatch>();
         services.AddSingleton<IPatch, AllowSingleplayerExtendedBannerAppendLayerPatch>();
