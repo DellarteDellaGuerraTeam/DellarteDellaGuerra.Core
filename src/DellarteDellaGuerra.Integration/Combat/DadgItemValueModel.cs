@@ -27,9 +27,16 @@ namespace DellarteDellaGuerra.Integration.Combat
             if (_catalog.TryGetTier(item.StringId, out var tier)) return tier;
 
             var vanillaTier = BaseModel.CalculateTier(item);
-            if ((item.WeaponComponent != null || item.ArmorComponent != null) && _loggedFallbacks.TryAdd(item.StringId, 0))
-                _logger.Info($"{item.StringId} has no tier in dadg_combat_items.xml nor a tier_override: using the vanilla tier {vanillaTier:0.##}");
+            if ((item.WeaponComponent != null || item.ArmorComponent != null) && !IsRuntimeCrafted(item) && _loggedFallbacks.TryAdd(item.StringId, 0))
+                _logger.Debug($"{item.StringId} has no tier in dadg_combat_items.xml nor a tier_override: using the vanilla tier {vanillaTier:0.##}");
             return vanillaTier;
+        }
+
+        // Smithing and town crafting orders mint a fresh id per weapon (crafted_item_N, town_order_N),
+        // so they can never be listed in the table and would log once per generated weapon.
+        private static bool IsRuntimeCrafted(ItemObject item)
+        {
+            return item.IsCraftedByPlayer || item.StringId.StartsWith("town_order_");
         }
 
         public override float GetEquipmentValueFromTier(float itemTierf)

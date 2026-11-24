@@ -91,8 +91,8 @@ namespace DellarteDellaGuerra.Integration.Combat
         {
             base.OnEndMission();
 
-            foreach (var row in _weapons.Report()) _logger.Info($"[combat-balance weapon] {row}");
-            foreach (var row in _armour.Report()) _logger.Info($"[combat-balance armour] {row}");
+            foreach (var row in _weapons.Report()) _logger.Debug($"[combat-balance weapon] {row}");
+            foreach (var row in _armour.Report()) _logger.Debug($"[combat-balance armour] {row}");
         }
     }
 }
