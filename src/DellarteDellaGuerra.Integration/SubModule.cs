@@ -98,7 +98,6 @@ namespace DellarteDellaGuerra.Integration
         protected override void OnSubModuleLoad()
         {
             NavalXmlSelector.Apply();
-            CampaignNavigationSelector.Install();
             _serviceProvider = new DadgServiceContainer().Build();
             _serviceProvider.GetRequiredService<IEventPublisher<SubModuleLoadEvent>>()
                 .Publish(new SubModuleLoadEvent());

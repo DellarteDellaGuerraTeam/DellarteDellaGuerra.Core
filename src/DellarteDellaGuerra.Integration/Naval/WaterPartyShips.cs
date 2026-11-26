@@ -1,4 +1,6 @@
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using SandBox.View.Map.Visuals;
 using SandBox.View.Map.Managers;
@@ -25,18 +27,7 @@ internal static class WaterPartyShips
         internal bool OnWater;
     }
 
-    internal static void Install(HarmonyLib.Harmony harmony)
-    {
-        harmony.Patch(AccessTools.Method(typeof(MobilePartyVisualManager), nameof(MobilePartyVisualManager.OnTick)),
-            prefix: new HarmonyMethod(typeof(WaterPartyShips), nameof(MarkChangedParties)));
-        harmony.Patch(AccessTools.Method(typeof(MobilePartyVisual), "ResetPartyIcon"),
-            prefix: new HarmonyMethod(typeof(WaterPartyShips), nameof(RemoveShip)));
-        harmony.Patch(AccessTools.Method(typeof(MobilePartyVisual), "AddMobileIconComponents"),
-            prefix: new HarmonyMethod(typeof(WaterPartyShips), nameof(AddShip)));
-    }
-
-    // Runs on the main thread before the parallel visual tick, so the dirty flag is seen this frame.
-    private static void MarkChangedParties()
+    internal static void MarkChangedParties()
     {
         foreach (var party in MobileParty.All)
         {
@@ -51,21 +42,21 @@ internal static class WaterPartyShips
         }
     }
 
-    private static void RemoveShip(MobilePartyVisual __instance)
+    internal static void RemoveShip(MobilePartyVisual visual)
     {
-        if (!Ships.TryGetValue(__instance, out var ship)) return;
-        Ships.Remove(__instance);
-        __instance.StrategicEntity?.RemoveChild(ship, false, false, false, 0);
+        if (!Ships.TryGetValue(visual, out var ship)) return;
+        Ships.Remove(visual);
+        visual.StrategicEntity?.RemoveChild(ship, false, false, false, 0);
     }
 
-    private static bool AddShip(MobilePartyVisual __instance, PartyBase party)
+    internal static bool AddShip(MobilePartyVisual visual, PartyBase party)
     {
         var mobile = party.MobileParty;
         if (mobile == null || !States.TryGetValue(mobile, out var state) || !state.OnWater) return true;
-        var ship = GameEntity.Instantiate(__instance.StrategicEntity.Scene, ShipFor(mobile), false, false);
+        var ship = GameEntity.Instantiate(visual.StrategicEntity.Scene, ShipFor(mobile), false, false);
         if (ship == null) return true;
-        __instance.StrategicEntity.AddChild(ship);
-        Ships.Add(__instance, ship);
+        visual.StrategicEntity.AddChild(ship);
+        Ships.Add(visual, ship);
         return false;
     }
 
@@ -76,4 +67,43 @@ internal static class WaterPartyShips
         if (party.IsVillager || party.Party.PartySizeLimit < SmallPartyLimit) return "dadg_map_ship_english_boat";
         return "dadg_map_ship_cog";
     }
+}
+
+/// <summary>Redraws a party's icon when it moves between land and water.</summary>
+public class MarkWaterPartiesPatch : IPatch
+{
+    public MethodInfo? TargetMethod =>
+        AccessTools.Method(typeof(MobilePartyVisualManager), nameof(MobilePartyVisualManager.OnTick));
+
+    public MethodInfo? PatchMethod => AccessTools.Method(typeof(MarkWaterPartiesPatch), nameof(Prefix));
+
+    public PatchType PatchType => PatchType.Prefix;
+
+    // Runs on the main thread before the parallel visual tick, so the dirty flag is seen this frame.
+    private static void Prefix() => WaterPartyShips.MarkChangedParties();
+}
+
+/// <summary>Drops the ship along with the rest of the party icon.</summary>
+public class RemoveWaterPartyShipPatch : IPatch
+{
+    public MethodInfo? TargetMethod => AccessTools.Method(typeof(MobilePartyVisual), "ResetPartyIcon");
+
+    public MethodInfo? PatchMethod => AccessTools.Method(typeof(RemoveWaterPartyShipPatch), nameof(Prefix));
+
+    public PatchType PatchType => PatchType.Prefix;
+
+    private static void Prefix(MobilePartyVisual __instance) => WaterPartyShips.RemoveShip(__instance);
+}
+
+/// <summary>Builds a ship in place of the land icon for a party on water.</summary>
+public class AddWaterPartyShipPatch : IPatch
+{
+    public MethodInfo? TargetMethod => AccessTools.Method(typeof(MobilePartyVisual), "AddMobileIconComponents");
+
+    public MethodInfo? PatchMethod => AccessTools.Method(typeof(AddWaterPartyShipPatch), nameof(Prefix));
+
+    public PatchType PatchType => PatchType.Prefix;
+
+    private static bool Prefix(MobilePartyVisual __instance, PartyBase party) =>
+        WaterPartyShips.AddShip(__instance, party);
 }

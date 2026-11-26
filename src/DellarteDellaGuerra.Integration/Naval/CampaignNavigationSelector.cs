@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Reflection.Emit;
+using Harmony.DependencyInjection.Patches;
 using HarmonyLib;
 using SandBox;
 using SandBox.View.Map;
@@ -22,71 +24,10 @@ internal static class CampaignNavigationSelector
     private static WeakReference<EngineScene>? _landMap;
     private static string _landCache = string.Empty;
 
-    internal static void Install()
-    {
-        if (ModuleHelper.IsModuleActive("NavalDLC")) return;
+    // The patches below only apply without War Sails.
+    internal static bool IsActive => !ModuleHelper.IsModuleActive("NavalDLC");
 
-        var harmony = new HarmonyLib.Harmony("dadg.non_naval_campaign_map");
-        harmony.Patch(AccessTools.Method(typeof(SettlementPositionScript), "ReadNavigationCacheForNavigationTypeOnGameLoad"),
-            prefix: new HarmonyMethod(typeof(CampaignNavigationSelector), nameof(ReadCache)));
-        harmony.Patch(AccessTools.Method(typeof(MapScene), nameof(MapScene.Load)),
-            transpiler: new HarmonyMethod(typeof(CampaignNavigationSelector), nameof(ReplaceMapRead)));
-        harmony.Patch(AccessTools.Method(typeof(MobileParty), "DoAiPathMode"),
-            postfix: new HarmonyMethod(typeof(CampaignNavigationSelector), nameof(StopDirectMoveAtShore)));
-        harmony.Patch(AccessTools.PropertySetter(typeof(MobileParty), nameof(MobileParty.IsCurrentlyAtSea)),
-            prefix: new HarmonyMethod(typeof(CampaignNavigationSelector), nameof(KeepOnLand)));
-        LandingNameplates.Install(harmony);
-        WaterPartyShips.Install(harmony);
-    }
-
-    private static readonly AccessTools.FieldRef<MobileParty, bool> PathMode =
-        AccessTools.FieldRefAccess<MobileParty, bool>("_pathMode");
-
-    // Without a path, vanilla moves straight at the target and accepts any step that lands on a face of the
-    // same island. The generated sea shares the land's island, so that step can jump the thin shore wall.
-    // Stop the straight move where it first meets terrain a land party cannot cross.
-    private static void StopDirectMoveAtShore(MobileParty __instance)
-    {
-        if (PathMode(__instance) || __instance.IsTransitionInProgress || !__instance.CurrentNavigationFace.IsValid()) return;
-        Vec2 from = __instance.Position.ToVec2(), to = __instance.NextTargetPosition.ToVec2();
-        if ((to - from).LengthSquared < 1e-6f) return;
-        var invalid = Campaign.Current.Models.PartyNavigationModel
-            .GetInvalidTerrainTypesForNavigationType(MobileParty.NavigationType.Default);
-        // A party already on such terrain (e.g. under a bridge) would be clamped in place forever.
-        var face = (int)Campaign.Current.MapSceneWrapper.GetFaceTerrainType(__instance.CurrentNavigationFace);
-        if (Array.IndexOf(invalid, face) >= 0) return;
-        var edge = Campaign.Current.MapSceneWrapper.GetLastPointOnNavigationMeshFromPositionToDestination(
-            __instance.CurrentNavigationFace, from, to, invalid);
-        if ((edge - to).LengthSquared < 1e-6f) return;
-        var back = from - edge;
-        float length = back.Normalize();
-        __instance.NextTargetPosition = new CampaignVec2(edge + back * Math.Min(0.05f, length), true);
-    }
-
-    // The generated sea is land terrain, so no party is ever at sea without War Sails. A stray flag would send
-    // the next settlement encounter to NavalDLC's port_menu, which does not exist here.
-    private static void KeepOnLand(ref bool value) => value = false;
-
-    private static IEnumerable<CodeInstruction> ReplaceMapRead(IEnumerable<CodeInstruction> instructions)
-    {
-        var read = AccessTools.Method(typeof(EngineScene), nameof(EngineScene.Read),
-            new[] { typeof(string), typeof(string), typeof(SceneInitializationData).MakeByRefType(), typeof(string) });
-        var replacement = AccessTools.Method(typeof(CampaignNavigationSelector), nameof(ReadMap));
-        bool found = false;
-        foreach (var instruction in instructions)
-        {
-            if (instruction.Calls(read))
-            {
-                instruction.opcode = OpCodes.Call;
-                instruction.operand = replacement;
-                found = true;
-            }
-            yield return instruction;
-        }
-        if (!found) throw new MissingMethodException("Campaign map loader no longer calls the module-qualified Scene.Read.");
-    }
-
-    private static void ReadMap(EngineScene scene, string name, string moduleId, ref SceneInitializationData init, string atmosphere)
+    internal static void ReadMap(EngineScene scene, string name, string moduleId, ref SceneInitializationData init, string atmosphere)
     {
         _landMap = null;
         var module = ModuleHelper.GetModuleFullPath(moduleId);
@@ -133,19 +74,114 @@ internal static class CampaignNavigationSelector
         }
     }
 
-    private static bool ReadCache(SettlementPositionScript __instance, MobileParty.NavigationType navigationCapability,
-        ref SandBoxNavigationCache __result)
+    internal static bool ReadCache(SettlementPositionScript script, MobileParty.NavigationType navigationCapability,
+        ref SandBoxNavigationCache result)
     {
         if (navigationCapability != MobileParty.NavigationType.Default || _landMap == null ||
-            !_landMap.TryGetTarget(out var scene) || scene != __instance.Scene) return true;
+            !_landMap.TryGetTarget(out var scene) || scene != script.Scene) return true;
 
         // Native deserialization reads these CRCs but does not enforce them in 1.5.7.
         using (var header = new BinaryReader(File.OpenRead(_landCache)))
             if (header.ReadUInt32() != scene.GetSceneXMLCRC() || header.ReadUInt32() != scene.GetNavigationMeshCRC())
                 throw new InvalidDataException($"DADG land cache disagrees with the loaded campaign scene: {_landCache}");
 
-        __result = new SandBoxNavigationCache(navigationCapability);
-        __result.Deserialize(_landCache);
+        result = new SandBoxNavigationCache(navigationCapability);
+        result.Deserialize(_landCache);
         return false;
     }
+}
+
+/// <summary>Loads the generated no-War-Sails scene variant in place of Main_map.</summary>
+public class ReadNoWarSailsMapPatch : IPatch
+{
+    public MethodInfo? TargetMethod => AccessTools.Method(typeof(MapScene), nameof(MapScene.Load));
+
+    public MethodInfo? PatchMethod => AccessTools.Method(typeof(ReadNoWarSailsMapPatch), nameof(Transpiler));
+
+    public PatchType PatchType => PatchType.Transpiler;
+
+    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    {
+        var read = AccessTools.Method(typeof(EngineScene), nameof(EngineScene.Read),
+            new[] { typeof(string), typeof(string), typeof(SceneInitializationData).MakeByRefType(), typeof(string) });
+        var replacement = AccessTools.Method(typeof(CampaignNavigationSelector), nameof(CampaignNavigationSelector.ReadMap));
+        bool found = false;
+        foreach (var instruction in instructions)
+        {
+            if (instruction.Calls(read))
+            {
+                instruction.opcode = OpCodes.Call;
+                instruction.operand = replacement;
+                found = true;
+            }
+            yield return instruction;
+        }
+        if (!found) throw new MissingMethodException("Campaign map loader no longer calls the module-qualified Scene.Read.");
+    }
+}
+
+/// <summary>Reads the land distance cache baked for the generated scene variant.</summary>
+public class ReadNoWarSailsCachePatch : IPatch
+{
+    public MethodInfo? TargetMethod =>
+        AccessTools.Method(typeof(SettlementPositionScript), "ReadNavigationCacheForNavigationTypeOnGameLoad");
+
+    public MethodInfo? PatchMethod => AccessTools.Method(typeof(ReadNoWarSailsCachePatch), nameof(Prefix));
+
+    public PatchType PatchType => PatchType.Prefix;
+
+    private static bool Prefix(SettlementPositionScript __instance, MobileParty.NavigationType navigationCapability,
+        ref SandBoxNavigationCache __result) =>
+        CampaignNavigationSelector.ReadCache(__instance, navigationCapability, ref __result);
+}
+
+/// <summary>
+/// Without a path, vanilla moves straight at the target and accepts any step that lands on a face of the
+/// same island. The generated sea shares the land's island, so that step can jump the thin shore wall.
+/// Stop the straight move where it first meets terrain a land party cannot cross.
+/// </summary>
+public class StopDirectMoveAtShorePatch : IPatch
+{
+    private static readonly AccessTools.FieldRef<MobileParty, bool> PathMode =
+        AccessTools.FieldRefAccess<MobileParty, bool>("_pathMode");
+
+    public MethodInfo? TargetMethod => AccessTools.Method(typeof(MobileParty), "DoAiPathMode");
+
+    public MethodInfo? PatchMethod => AccessTools.Method(typeof(StopDirectMoveAtShorePatch), nameof(Postfix));
+
+    public PatchType PatchType => PatchType.Postfix;
+
+    private static void Postfix(MobileParty __instance)
+    {
+        if (PathMode(__instance) || __instance.IsTransitionInProgress || !__instance.CurrentNavigationFace.IsValid()) return;
+        Vec2 from = __instance.Position.ToVec2(), to = __instance.NextTargetPosition.ToVec2();
+        if ((to - from).LengthSquared < 1e-6f) return;
+        var invalid = Campaign.Current.Models.PartyNavigationModel
+            .GetInvalidTerrainTypesForNavigationType(MobileParty.NavigationType.Default);
+        // A party already on such terrain (e.g. under a bridge) would be clamped in place forever.
+        var face = (int)Campaign.Current.MapSceneWrapper.GetFaceTerrainType(__instance.CurrentNavigationFace);
+        if (Array.IndexOf(invalid, face) >= 0) return;
+        var edge = Campaign.Current.MapSceneWrapper.GetLastPointOnNavigationMeshFromPositionToDestination(
+            __instance.CurrentNavigationFace, from, to, invalid);
+        if ((edge - to).LengthSquared < 1e-6f) return;
+        var back = from - edge;
+        float length = back.Normalize();
+        __instance.NextTargetPosition = new CampaignVec2(edge + back * Math.Min(0.05f, length), true);
+    }
+}
+
+/// <summary>
+/// The generated sea is land terrain, so no party is ever at sea without War Sails. A stray flag would send
+/// the next settlement encounter to NavalDLC's port_menu, which does not exist here.
+/// </summary>
+public class KeepPartiesOnLandPatch : IPatch
+{
+    public MethodInfo? TargetMethod =>
+        AccessTools.PropertySetter(typeof(MobileParty), nameof(MobileParty.IsCurrentlyAtSea));
+
+    public MethodInfo? PatchMethod => AccessTools.Method(typeof(KeepPartiesOnLandPatch), nameof(Prefix));
+
+    public PatchType PatchType => PatchType.Prefix;
+
+    private static void Prefix(ref bool value) => value = false;
 }

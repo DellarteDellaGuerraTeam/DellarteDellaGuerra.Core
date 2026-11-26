@@ -273,5 +273,17 @@ public class DadgServiceContainer
         services.AddSingleton<IPatch, HideBookmarkedMapTrackersPatch>();
         // Visor
         services.AddSingleton<IPatch, MapConversationTableauTickPatch>();
+        // Naval: the generated no-War-Sails campaign map
+        if (CampaignNavigationSelector.IsActive)
+        {
+            services.AddSingleton<IPatch, ReadNoWarSailsMapPatch>();
+            services.AddSingleton<IPatch, ReadNoWarSailsCachePatch>();
+            services.AddSingleton<IPatch, StopDirectMoveAtShorePatch>();
+            services.AddSingleton<IPatch, KeepPartiesOnLandPatch>();
+            services.AddSingleton<IPatch, MarkLandingNameplatesPatch>();
+            services.AddSingleton<IPatch, MarkWaterPartiesPatch>();
+            services.AddSingleton<IPatch, RemoveWaterPartyShipPatch>();
+            services.AddSingleton<IPatch, AddWaterPartyShipPatch>();
+        }
     }
 }
