@@ -97,6 +97,8 @@ namespace DellarteDellaGuerra.Integration
 
         protected override void OnSubModuleLoad()
         {
+            NavalXmlSelector.Apply();
+            CampaignNavigationSelector.Install();
             _serviceProvider = new DadgServiceContainer().Build();
             _serviceProvider.GetRequiredService<IEventPublisher<SubModuleLoadEvent>>()
                 .Publish(new SubModuleLoadEvent());
@@ -107,6 +109,7 @@ namespace DellarteDellaGuerra.Integration
             _serviceProvider.GetRequiredService<IHarmonyPatcher>().ApplyPatches();
 
             _serviceProvider.GetRequiredService<DadgUIExtenderRegistrar>().RegisterAndEnable();
+            LandingNameplates.DisableIconsWithNavalDLC(_serviceProvider.GetRequiredService<DadgUIExtenderRegistrar>());
             UI.Loading.DadgLoadingArtworkPatch.Apply();
             _serviceProvider.GetRequiredService<JoustingFeatureInstaller>().InstallOnSubModuleLoad();
         }

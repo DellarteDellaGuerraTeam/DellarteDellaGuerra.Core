@@ -1,2 +1,0 @@
-clan_york|Clan.Villages=36|unique=25|Fiefs.Villages=25
-clan_lancaster|Clan.Villages=56|unique=41|Fiefs.Villages=41

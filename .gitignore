@@ -107,3 +107,4 @@ src/.agents/
 src/.claude/
 src/.codex/
 src/doc
+src/runtime-evidence/
